@@ -1,11 +1,7 @@
 <template>
   <div class="chatbot-container ma-4 elevation-4 row">
-    <div class="fill-height col-5">
-      <Chat />
-    </div>
-    <div class="col-7">
-      <Resources />
-    </div>
+    <Chat class="pa-0 col-5" />
+    <Resources class="col-7" />
   </div>
 </template>
 
