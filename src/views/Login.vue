@@ -29,6 +29,8 @@
 
 <script>
 import { loginTeacher } from "@/services/loginService";
+import { setSession } from "@/services/security";
+import { redirect } from "@/services/tools.js";
 
 export default {
   data: () => ({
@@ -41,13 +43,15 @@ export default {
     loading_login: false
   }),
   methods: {
+    redirect,
     login() {
       if (this.$refs.form_login.validate()) {
         this.loading_login = true;
         loginTeacher(this.user, this.pass).then(res => {
-          let profesor_id = res["profesor_id"];
-          if (profesor_id) {
-            // this.$router.push({ name: "cursos" });
+          let token = res["profesor_id"];
+          if (token) {
+            setSession(token, 0);
+            this.redirect("panel");
           } else this.alert_error = true;
           this.loading_login = false;
         });

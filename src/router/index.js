@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 
+import { verifySession } from '@/services/security'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -10,10 +12,16 @@ const routes = [
     name: 'home',
     component: Home
   },
+  { path: '*', redirect: { name: 'home' } },
   {
     path: '/login',
     name: 'login',
     component: () => import('../views/Login.vue')
+  },
+  {
+    path: '/panel',
+    name: 'panel',
+    component: () => import('../views/Panel.vue')
   },
   {
     path: '/chatbot',
@@ -26,6 +34,14 @@ const router = new VueRouter({
   // mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+router.beforeEach((to, from, next) => {
+  const paths = ['panel', 'chatbot']
+  if (paths.includes(to.name)) {
+    verifySession(next, () => next({ name: 'login' }))
+  } else {
+    next()
+  }
 })
 
 export default router
