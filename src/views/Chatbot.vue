@@ -1,7 +1,9 @@
 <template>
-  <div class="chatbot-container ma-4 elevation-4 row">
-    <Chat class="pa-0 col-5" />
-    <Resources class="col-7" />
+  <div class="chatbot-container ma-4 elevation-4">
+    <div class="row">
+      <Chat class="pa-0 col-5" />
+      <Resources class="col-7" />
+    </div>
   </div>
 </template>
 

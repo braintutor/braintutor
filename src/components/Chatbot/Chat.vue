@@ -13,11 +13,11 @@ import ChatAvatar from "./ChatAvatar";
 
 export default {
   data: () => ({
-    messages: Array(16).fill("sadsadad sadsa dad sad sa ")
+    messages: Array(16).fill("mensaje de prueba")
   }),
   methods: {
     add() {
-      this.messages.push("probando");
+      this.messages.push("nuevo mensaje");
     }
   },
   components: {
