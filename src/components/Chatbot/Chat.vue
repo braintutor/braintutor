@@ -13,7 +13,7 @@ import ChatAvatar from "./ChatAvatar";
 
 export default {
   data: () => ({
-    messages: Array(16).fill("mensaje de prueba")
+    messages: Array(10).fill("mensaje de prueba")
   }),
   methods: {
     add() {
