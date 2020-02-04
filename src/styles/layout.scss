@@ -1,0 +1,18 @@
+.m-fullscreen {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .m-fullscreen-content {
+    flex-grow: 1;
+    overflow: auto;
+  }
+}
+
+.m-fullcenter {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
