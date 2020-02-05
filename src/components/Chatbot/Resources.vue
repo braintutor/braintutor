@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="resources-container">
     <h1>Resources ---</h1>
   </div>
 </template>
@@ -8,5 +8,8 @@
 export default {};
 </script>
 
-<style>
+<style lang='scss' scoped>
+.resources-container {
+  background: #ccc
+}
 </style>

@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 
 import { verifySession } from '@/services/security'
+import { redirect } from '@/services/tools'
 
 Vue.use(VueRouter)
 
@@ -36,20 +37,16 @@ const router = new VueRouter({
   routes
 })
 router.beforeEach((to, from, next) => {
-  const paths = ['panel', 'chatbot']
+  const paths = ['panel', 'chatbot'] // Require Session Exists
   let to_name = to.name
 
   if (paths.includes(to_name)) {
-    verifySession(next, redirect('login'))
+    verifySession(next, () => redirect('login'))
   } else if (to_name === 'login') {
-    verifySession(redirect('panel'), next)
+    verifySession(() => redirect('panel'), next)
   } else {
     next()
   }
 })
-
-function redirect(name) {
-  return () => router.push({ name }).catch(() => { })
-}
 
 export default router

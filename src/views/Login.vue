@@ -63,7 +63,7 @@ export default {
 };
 </script>
 
-<style lang='scss'>
+<style lang='scss' scoped>
 .login_container {
   width: 340px;
   padding: 24px 0 0;

@@ -78,7 +78,7 @@ export default {
 };
 </script>
 
-<style lang='scss'>
+<style lang='scss' scoped>
 .chat-container {
   background: #f9ceff !important;
 

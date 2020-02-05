@@ -1,5 +1,14 @@
+import router from '../router'
+
 function redirect(name) {
-  this.$router.push({ name }).catch(() => { })
+  router.push({ name }).catch(() => { })
 }
 
-export { redirect }
+function scrollDown(element_id) {
+  var element = document.getElementById(element_id);
+  setTimeout(() => {
+    element.scrollTop = element.scrollHeight;
+  }, 0);
+}
+
+export { redirect, scrollDown }

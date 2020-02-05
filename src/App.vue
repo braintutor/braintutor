@@ -24,7 +24,7 @@ export default {
 <style lang="scss">
 /*Scrollbar*/
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 ::-webkit-scrollbar-thumb {
   background: rgb(224, 223, 223);

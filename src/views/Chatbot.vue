@@ -1,8 +1,8 @@
 <template>
-  <div class="chatbot-container ma-4 elevation-4">
-    <v-container fluid class="fill-height py-0">
-      <v-row class="fill-height">
-        <Chat class="col-4 pa-0" />
+  <div class="chatbot-container ma-3 elevation-4">
+    <v-container fluid class="fill-height pa-0">
+      <v-row no-gutters class="fill-height">
+        <Chat class="col-4" />
         <Resources class="col-8" />
       </v-row>
     </v-container>
@@ -21,8 +21,8 @@ export default {
 };
 </script>
 
-<style lang='scss'>
+<style lang='scss' scoped>
 .chatbot-container {
-  height: calc(100vh - 100px);
+  height: calc(100vh - 90px);
 }
 </style>
