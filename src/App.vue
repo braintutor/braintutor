@@ -21,15 +21,5 @@ export default {
 };
 </script>
 
-<style lang="scss">
-/*Scrollbar*/
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-thumb {
-  background: rgb(224, 223, 223);
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgb(206, 206, 206);
-}
+<style lang="scss" scoped>
 </style>

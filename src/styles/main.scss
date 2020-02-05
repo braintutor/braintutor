@@ -1,1 +1,18 @@
 @import './layout.scss';
+
+/* Background */
+.background-pattern-1 {
+  background-image: url("~@/assets/patterns/pattern1.png");
+  background-repeat: repeat;
+}
+
+/*Scrollbar*/
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(224, 223, 223);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(206, 206, 206);
+}

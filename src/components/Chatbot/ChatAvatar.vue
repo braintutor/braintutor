@@ -26,6 +26,7 @@ export default {
   data: () => ({
     src_avatar: "",
     time_emotion: 1000,
+    time_maximum: 2147483647,
     //
     fab_emotions: false,
     timeout_animation: null
@@ -71,6 +72,14 @@ export default {
       this.stopAnimation();
       this.startAnimation("normal", "blink", 3000, 250);
     },
+    startAnimationTalk(time = 2147483647) {
+      this.stopAnimation();
+      this.startAnimation("talk", "normal", 200, 200);
+      setTimeout(() => {
+        this.stopAnimation();
+        this.setAnimationNormal();
+      }, time);
+    },
     setImage(img) {
       this.src_avatar = require(`@/assets/avatar/${img}.png`);
     }
@@ -85,7 +94,7 @@ export default {
   .chat-img {
     display: block;
     margin: 0 auto;
-    max-width: 200px;
+    max-height: 190px;
   }
 }
 </style>

@@ -1,34 +1,25 @@
 <template>
   <div class="m-fullscreen">
     <!-- Avatar -->
-    <ChatAvatar />
+    <ChatAvatar ref="component_chat_avatar" />
     <!-- Messages -->
-    <div class="m-fullscreen-content" id="messages-container">
+    <div class="m-fullscreen-content background-pattern-1" id="messages-container">
       <div
         v-for="(message, m_idx) in messages"
         :key="m_idx"
-        class="d-flex"
-        :class="{ 'message-to-right': message.type==1 }"
+        class="message elevation-3"
+        :class="{ 'message-0': message.type===0, 'message-1 message-to-right': message.type===1 }"
+        v-ripple
       >
-        <v-card
-          v-ripple
-          class="message"
-          :class="{ 'message-0': message.type===0, 'message-1': message.type===1 }"
-        >
-          <span>{{message.text}}</span>
-        </v-card>
+        <span>{{message.text}}</span>
       </div>
     </div>
     <!-- Input -->
     <v-form class="input-container" @submit.prevent="sendMessage">
-      <v-text-field  v-model="message_text" class="mr-3 mt-3" dense autocomplete="off"></v-text-field>
-      <v-btn :loading="loading_message" fab icon small color="primary" @click="sendMessage()">
-        <v-icon dark>mdi-send</v-icon>
-      </v-btn>
-      <v-btn :loading="loading_microphone" fab icon small color="primary" @click="talkMessage()">
+      <v-text-field v-model="message_text" class="mr-3 mt-3" dense autocomplete="off"></v-text-field>
+      <v-btn :loading="loading_message" fab icon small color="primary" @click="talkMessage()">
         <v-icon dark>mdi-microphone</v-icon>
       </v-btn>
-
       <!-- <v-menu offset-y>
         <template v-slot:activator="{ on }">
           <v-btn fab icon dark small color="primary" v-on="on">
@@ -57,25 +48,58 @@
 <script>
 import ChatAvatar from "./ChatAvatar";
 import Message from "@/models/Message";
+
 import { scrollDown } from "@/services/tools";
+import { sendMessageTeacher } from "@/services/chatService";
+import { getSession } from "@/services/security";
+import { SpeechToText, TextToSpeech } from "@/services/speech";
 
 export default {
   data: () => ({
-    messages: Array(8).fill(new Message("probando", 0)),
+    chatbot_id: "5d7dcb7421e43265b405c307",
+    messages: [new Message("Hola.\n¿En qué puedo ayudarte?", 0)],
     message_text: "",
     //
-    loading_message: false,
-    loading_microphone: false
+    component_chat_avatar: null,
+    //
+    loading_message: false
   }),
+  mounted() {
+    this.component_chat_avatar = this.$refs.component_chat_avatar;
+  },
   methods: {
+    addMessage(text, type) {
+      if (type === 0) {
+        TextToSpeech(text, () => {
+          this.component_chat_avatar.startAnimationNormal();
+        });
+        setTimeout(() => this.component_chat_avatar.startAnimationTalk(), 100); // Fixed animation error
+      }
+      this.messages.push(new Message(text, type));
+      scrollDown("messages-container");
+    },
     sendMessage() {
-      if (this.message_text) {
-        this.messages.push(new Message(this.message_text, 1));
+      if (this.message_text && !this.loading_message) {
+        sendMessageTeacher(
+          this.chatbot_id,
+          this.message_text,
+          getSession().token
+        ).then(res => {
+          let response = res.respuesta;
+          if (response) this.addMessage(response, 0);
+          this.loading_message = false;
+        });
+        this.addMessage(this.message_text, 1);
         this.message_text = "";
-        scrollDown("messages-container");
+        this.loading_message = true;
       }
     },
-    talkMessage() {}
+    talkMessage() {
+      SpeechToText(text => {
+        this.message_text = text;
+        this.sendMessage();
+      });
+    }
   },
   components: {
     ChatAvatar
@@ -86,16 +110,18 @@ export default {
 <style lang='scss' scoped>
 #messages-container {
   padding: 10px;
+  display: flex;
+  flex-direction: column;
 
   .message {
-    margin: 2px 0;
+    margin: 3px 0;
     padding: 8px 14px;
-    cursor: pointer;
-    font-size: 14px;
-    border-radius: 6px;
     width: max-content;
     max-width: 70%;
+    border-radius: 6px;
+    font-size: 14px;
     white-space: pre-wrap;
+    cursor: pointer;
 
     &.message-0 {
       background: #fff;
@@ -107,7 +133,7 @@ export default {
     }
   }
   .message-to-right {
-    justify-content: flex-end;
+    margin-left: auto;
   }
 }
 
