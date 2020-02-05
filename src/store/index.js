@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import { sessionExists } from '@/services/security'
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    session_exists: false
+    session_exists: sessionExists()
   },
   mutations: {
     setSessionExists(state, bool) {

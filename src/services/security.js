@@ -1,6 +1,6 @@
 import store from '../store'
 
-function setSession (token, type) { // type 0:teacher 1:student
+function setSession(token, type) { // type 0:teacher 1:student
   localStorage.setItem('token', token);
   localStorage.setItem('type', type);
   store.commit("setSessionExists", true);
@@ -19,13 +19,14 @@ function removeSession() {
   store.commit("setSessionExists", false);
 }
 
-function verifySession(onSuccess, onError) {
+function sessionExists() {
   let { token, type } = getSession()
-  if (token && type) {
-    onSuccess()
-  } else {
-    onError()
-  }
+  return token && type
 }
 
-export { setSession, getSession, removeSession, verifySession }
+function verifySession(onSuccess, onError) {
+  if (sessionExists()) onSuccess()
+  else onError()
+}
+
+export { setSession, getSession, removeSession, sessionExists, verifySession }
