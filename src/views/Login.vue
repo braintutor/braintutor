@@ -52,7 +52,9 @@ export default {
           if (token) {
             setSession(token, 0);
             this.redirect("panel");
-          } else this.alert_error = true;
+          } else {
+            this.alert_error = true;
+          }
           this.loading_login = false;
         });
       }

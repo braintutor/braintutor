@@ -37,11 +37,19 @@ const router = new VueRouter({
 })
 router.beforeEach((to, from, next) => {
   const paths = ['panel', 'chatbot']
-  if (paths.includes(to.name)) {
-    verifySession(next, () => next({ name: 'login' }))
+  let to_name = to.name
+
+  if (paths.includes(to_name)) {
+    verifySession(next, redirect('login'))
+  } else if (to_name === 'login') {
+    verifySession(redirect('panel'), next)
   } else {
     next()
   }
 })
+
+function redirect(name) {
+  return () => router.push({ name }).catch(() => { })
+}
 
 export default router

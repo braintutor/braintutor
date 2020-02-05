@@ -4,19 +4,28 @@
       <v-img alt="BrainTutor Logo" src="@/assets/logo.png" width="160" />
     </div>
     <v-spacer></v-spacer>
-    <v-btn text @click="redirect('login')">Iniciar Sesión</v-btn>
+    <v-btn v-if="!session_exists" text @click="redirect('login')">Iniciar Sesión</v-btn>
+    <v-btn v-else text @click="closeSession()">Cerrar Sesión</v-btn>
   </v-app-bar>
 </template>
 
 <script>
 import { redirect } from "@/services/tools.js";
+import { removeSession } from "@/services/security.js";
 
 export default {
-  data: () => ({
-    dialog_login: false
-  }),
+  data: () => ({}),
+  computed: {
+    session_exists() {
+      return this.$store.state.session_exists;
+    }
+  },
   methods: {
-    redirect
+    redirect,
+    closeSession() {
+      removeSession();
+      this.redirect("home");
+    }
   }
 };
 </script>

@@ -2,8 +2,8 @@
   <div class="chatbot-container ma-4 elevation-4">
     <v-container fluid class="fill-height py-0">
       <v-row class="fill-height">
-        <Chat class="col-5 pa-0" />
-        <Resources class="col-7" />
+        <Chat class="col-4 pa-0" />
+        <Resources class="col-8" />
       </v-row>
     </v-container>
   </div>

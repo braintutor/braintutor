@@ -1,5 +1,7 @@
 <template>
-  <v-btn @click="redirect('chatbot')">Chatbot</v-btn>
+  <div>
+    <v-btn @click="redirect('chatbot')">Chatbot</v-btn>
+  </div>
 </template>
 
 <script>
@@ -9,9 +11,8 @@ export default {
   methods: {
     redirect
   }
-}
+};
 </script>
 
 <style>
-
 </style>
