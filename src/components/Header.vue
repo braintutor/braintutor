@@ -24,7 +24,7 @@ export default {
     redirect,
     closeSession() {
       removeSession();
-      this.redirect("home");
+      redirect("home");
     }
   }
 };

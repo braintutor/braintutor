@@ -7,11 +7,15 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    session_exists: sessionExists()
+    session_exists: sessionExists(),
+    resources: []
   },
   mutations: {
-    setSessionExists(state, bool) {
-      state.session_exists = bool
+    setSessionExists(state, session_exists) {
+      state.session_exists = session_exists
+    },
+    setResources(state, resources) {
+      state.resources = resources
     }
   },
   actions: {

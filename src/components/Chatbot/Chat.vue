@@ -20,27 +20,29 @@
       <v-btn :loading="loading_message" fab icon small color="primary" @click="talkMessage()">
         <v-icon dark>mdi-microphone</v-icon>
       </v-btn>
-      <!-- <v-menu offset-y>
+      <v-menu offset-y>
         <template v-slot:activator="{ on }">
           <v-btn fab icon dark small color="primary" v-on="on">
             <v-icon dark>mdi-help-circle-outline</v-icon>
           </v-btn>
         </template>
-        <div class="contenedor-preguntas-disponibles">
-          <p>Preguntas disponibles ({{conocimientos.length}})</p>
-          <div>
-            <v-list>
+        <div class="available-questions-container">
+          <p
+            class="available-questions-title"
+          >Preguntas disponibles ({{available_questions.length}})</p>
+          <div class="available-questions-content">
+            <v-list class="pa-0">
               <v-list-item
-                v-for="(conocimiento, c_idx) in conocimientos"
+                v-for="(available_question, c_idx) in available_questions"
                 :key="c_idx"
-                @click="escribirMensaje(conocimiento.preguntas[0]); if(!conocimiento.preguntas[0].includes('@')) enviarMensaje()"
+                @click="selectAvailableQuestion(available_question)"
               >
-                <v-list-item-title>{{ conocimiento.preguntas[0] }}</v-list-item-title>
+                <v-list-item-title>{{ available_question }}</v-list-item-title>
               </v-list-item>
             </v-list>
           </div>
         </div>
-      </v-menu>-->
+      </v-menu>
     </v-form>
   </div>
 </template>
@@ -51,6 +53,11 @@ import Message from "@/models/Message";
 
 import { scrollDown } from "@/services/tools";
 import { sendMessageTeacher } from "@/services/chatService";
+import { getKnowledge } from "@/services/knowledgeService";
+import {
+  getResources,
+  getResourcesQuestions
+} from "@/services/resourceService";
 import { getSession } from "@/services/security";
 import { SpeechToText, TextToSpeech } from "@/services/speech";
 
@@ -59,6 +66,8 @@ export default {
     chatbot_id: "5d7dcb7421e43265b405c307",
     messages: [new Message("Hola.\n¿En qué puedo ayudarte?", 0)],
     message_text: "",
+    available_questions: [],
+    resources: [],
     //
     component_chat_avatar: null,
     //
@@ -66,13 +75,33 @@ export default {
   }),
   mounted() {
     this.component_chat_avatar = this.$refs.component_chat_avatar;
+    getKnowledge(this.chatbot_id).then(res => {
+      this.available_questions = JSON.parse(res).map(item => item.preguntas[0]);
+      getResourcesQuestions().then(res => {
+        let questions = Object.values(res);
+        getResources(this.chatbot_id).then(res => {
+          let resources = JSON.parse(res);
+          this.$store.commit("setResources", resources);
+          resources.forEach(resource => {
+            questions.forEach(question => {
+              this.available_questions.push(
+                question.replace(/@/, resource.nombre)
+              );
+            });
+            resource.faq.forEach(item => {
+              this.available_questions.push(item.pregunta);
+            });
+          });
+        });
+      });
+    });
   },
   methods: {
     addMessage(text, type) {
       if (type === 0) {
-        TextToSpeech(text, () => {
-          this.component_chat_avatar.startAnimationNormal();
-        });
+        TextToSpeech(text, () =>
+          this.component_chat_avatar.startAnimationNormal()
+        );
         setTimeout(() => this.component_chat_avatar.startAnimationTalk(), 100); // Fixed animation error
       }
       this.messages.push(new Message(text, type));
@@ -86,7 +115,12 @@ export default {
           getSession().token
         ).then(res => {
           let response = res.respuesta;
-          if (response) this.addMessage(response, 0);
+          if (res.respuesta_item === "importancia")
+            this.addMessage(
+              this.getResourceItem(res.material_id, res.respuesta_item),
+              0
+            );
+          else if (response) this.addMessage(response, 0);
           this.loading_message = false;
         });
         this.addMessage(this.message_text, 1);
@@ -99,6 +133,16 @@ export default {
         this.message_text = text;
         this.sendMessage();
       });
+    },
+    selectAvailableQuestion(question) {
+      this.message_text = question;
+      if (!question.includes("@")) this.sendMessage();
+    },
+    getResourceItem(resource_id, item) {
+      let resource = this.resources.find(
+        resource => resource._id.$oid === resource_id
+      );
+      return resource[item];
     }
   },
   components: {
@@ -142,5 +186,20 @@ export default {
   display: flex;
   align-items: center;
   border-top: 1px solid #eeeeee;
+}
+
+.available-questions-container {
+  background: #fff;
+  .available-questions-title {
+    background: #2c81d5;
+    color: #fff;
+    text-align: center;
+    padding: 8px;
+    margin: 0;
+  }
+  .available-questions-content {
+    max-height: 400px;
+    overflow-y: auto;
+  }
 }
 </style>

@@ -1,5 +1,10 @@
 const service = 'https://braintutor-service.herokuapp.com'
 
+function fetch_get(name) {
+  return fetch(`${service}/${name}`)
+    .then(response => response.json())
+}
+
 function fetch_post(name, data) {
   return fetch(`${service}/${name}`, {
     method: 'POST',
@@ -11,4 +16,4 @@ function fetch_post(name, data) {
     .then(response => response.json())
 }
 
-export { service, fetch_post }
+export { service, fetch_get, fetch_post }

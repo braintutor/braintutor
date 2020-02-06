@@ -43,7 +43,6 @@ export default {
     loading_login: false
   }),
   methods: {
-    redirect,
     login() {
       if (this.$refs.form_login.validate()) {
         this.loading_login = true;
@@ -51,7 +50,7 @@ export default {
           let token = res["profesor_id"];
           if (token) {
             setSession(token, 0);
-            this.redirect("panel");
+            redirect("panel");
           } else {
             this.alert_error = true;
           }
