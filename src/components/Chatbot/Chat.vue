@@ -67,12 +67,16 @@ export default {
     messages: [new Message("Hola.\n¿En qué puedo ayudarte?", 0)],
     message_text: "",
     available_questions: [],
-    resources: [],
     //
     component_chat_avatar: null,
     //
     loading_message: false
   }),
+  computed: {
+    resources() {
+      return this.$store.state.resources;
+    }
+  },
   mounted() {
     this.component_chat_avatar = this.$refs.component_chat_avatar;
     getKnowledge(this.chatbot_id).then(res => {
@@ -115,12 +119,12 @@ export default {
           getSession().token
         ).then(res => {
           let response = res.respuesta;
-          if (res.respuesta_item === "importancia")
-            this.addMessage(
-              this.getResourceItem(res.material_id, res.respuesta_item),
-              0
-            );
-          else if (response) this.addMessage(response, 0);
+          if (res.material_id) {
+            let resource = this.getResource(res.material_id);
+            let item = res.respuesta_item;
+            this.$store.commit("setResourceSelected", resource);
+            if (item === "importancia") this.addMessage(resource[item], 0);
+          } else if (response) this.addMessage(response, 0);
           this.loading_message = false;
         });
         this.addMessage(this.message_text, 1);
@@ -138,11 +142,8 @@ export default {
       this.message_text = question;
       if (!question.includes("@")) this.sendMessage();
     },
-    getResourceItem(resource_id, item) {
-      let resource = this.resources.find(
-        resource => resource._id.$oid === resource_id
-      );
-      return resource[item];
+    getResource(resource_id) {
+      return this.resources.find(resource => resource._id.$oid === resource_id);
     }
   },
   components: {

@@ -28,20 +28,21 @@
 
 <script>
 export default {
-  data: () => ({
-    resource_selected: null
-  }),
+  data: () => ({}),
   computed: {
     resources() {
       return this.$store.state.resources;
+    },
+    resource_selected() {
+      return this.$store.state.resource_selected;
     }
   },
   methods: {
     selectResource(resource) {
-      this.resource_selected = resource;
+      this.$store.commit("setResourceSelected", resource);
     },
     unselectResource() {
-      this.resource_selected = null;
+      this.$store.commit("setResourceSelected", null);
     }
   }
 };

@@ -8,7 +8,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     session_exists: sessionExists(),
-    resources: []
+    resources: [],
+    resource_selected: null
   },
   mutations: {
     setSessionExists(state, session_exists) {
@@ -16,6 +17,9 @@ export default new Vuex.Store({
     },
     setResources(state, resources) {
       state.resources = resources
+    },
+    setResourceSelected(state, resource_selected) {
+      state.resource_selected = resource_selected
     }
   },
   actions: {
