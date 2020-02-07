@@ -1,7 +1,7 @@
 <template>
   <div class="m-fullscreen">
     <!-- Resource List -->
-    <v-container v-if="!resource_selected" fluid class="resources-container pa-2">
+    <v-container v-if="!resource_selected" fluid class="resources-container pa-3">
       <v-row no-gutters>
         <v-col
           cols="6"
@@ -16,24 +16,13 @@
       </v-row>
     </v-container>
     <!-- Resource Selected -->
-    <div v-else class="resource-container">
-      <v-toolbar dense flat>
-        <v-btn icon @click="unselectResource()">
-          <v-icon>mdi-arrow-left</v-icon>
-        </v-btn>
-        <v-toolbar-title>{{resource_selected.nombre}}</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-btn icon>
-          <v-icon>mdi-heart</v-icon>
-        </v-btn>
-      </v-toolbar>
-      <div class="resource-content"></div>
-    </div>
+    <Resource v-else :resource_selected="resource_selected"></Resource>
   </div>
 </template>
 
 <script>
 import Cartel from "./Cartel";
+import Resource from "./Resource";
 
 export default {
   data: () => ({}),
@@ -45,13 +34,10 @@ export default {
       return this.$store.state.resource_selected;
     }
   },
-  methods: {
-    unselectResource() {
-      this.$store.commit("setResourceSelected", null);
-    }
-  },
+  methods: {},
   components: {
-    Cartel
+    Cartel,
+    Resource
   }
 };
 </script>
@@ -59,10 +45,5 @@ export default {
 <style lang='scss' scoped>
 .resources-container {
   overflow: auto;
-}
-
-.resource-container {
-  .resource-content {
-  }
 }
 </style>

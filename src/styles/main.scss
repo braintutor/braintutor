@@ -1,4 +1,9 @@
+@import url('https://fonts.googleapis.com/css?family=Comfortaa:400,700&display=swap');
 @import './layout.scss';
+
+body, body * {
+  font-family: Comfortaa, Arial, Helvetica, sans-serif;
+}
 
 /* Background */
 .background-pattern-1 {

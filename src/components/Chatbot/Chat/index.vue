@@ -166,8 +166,11 @@ export default {
     border-radius: 6px;
     font-size: 14px;
     white-space: pre-wrap;
-    cursor: pointer;
+    word-wrap: break-word;
 
+    &:hover {
+      cursor: pointer;
+    }
     &.message-0 {
       background: #fff;
       color: #000;
