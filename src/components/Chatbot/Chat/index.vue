@@ -1,7 +1,7 @@
 <template>
   <div class="m-fullscreen">
     <!-- Avatar -->
-    <ChatAvatar ref="component_chat_avatar" />
+    <Avatar ref="component_chat_avatar" />
     <!-- Messages -->
     <div class="m-fullscreen-content background-pattern-1" id="messages-container">
       <div
@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import ChatAvatar from "./ChatAvatar";
+import Avatar from "./Avatar";
 import Message from "@/models/Message";
 
 import { scrollDown } from "@/services/tools";
@@ -147,7 +147,7 @@ export default {
     }
   },
   components: {
-    ChatAvatar
+    Avatar
   }
 };
 </script>

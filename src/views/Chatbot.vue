@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import Chat from "@/components/Chatbot/Chat";
-import Resources from "@/components/Chatbot/Resources";
+import Chat from "@/components/Chatbot/Chat/index";
+import Resources from "@/components/Chatbot/Resources/index";
 
 export default {
   components: {
@@ -29,6 +29,18 @@ export default {
 
   .chatbot-content {
     border-left: 1px solid #eee;
+    height: 100%;
+  }
+}
+
+@media only screen and (max-width: 599px) {
+  .chatbot-container {
+    .chatbot-content {
+      margin: 14px 0;
+      box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
+        0px 4px 5px 0px rgba(0, 0, 0, 0.14),
+        0px 1px 10px 0px rgba(0, 0, 0, 0.12) !important;
+    }
   }
 }
 </style>
