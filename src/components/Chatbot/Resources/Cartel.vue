@@ -4,7 +4,7 @@
       class="cartel-img"
       src="https://lh3.googleusercontent.com/proxy/UxHC3qd1RIASrgslHAYlrIEJ71l4Kl6M4ZFx4KADTc1zOzL1Ern_Xyr2DYhlT5lnEzXhho3YDd4MvVevKW9iJUiQdujhxN6IGipeucxZ9gmUys3Q9jr8itj0UXeRoPlXlw"
     />
-    <div class="cartel-title">{{resource.nombre}}</div>
+    <div class="cartel-title m-fullcenter">{{resource.nombre}}</div>
   </div>
 </template>
 
@@ -13,8 +13,6 @@ export default {
   props: ["resource"],
   methods: {
     selectResource(resource) {
-      console.log(resource);
-      
       this.$store.commit("setResourceSelected", resource);
     }
   }
@@ -51,12 +49,6 @@ export default {
     font-size: 13px;
     font-weight: bold;
     word-wrap: break-word;
-    //
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    flex-direction: column;
   }
 }
 </style>

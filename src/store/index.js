@@ -9,7 +9,9 @@ export default new Vuex.Store({
   state: {
     session_exists: sessionExists(),
     resources: [],
-    resource_selected: null
+    resource_selected: null,
+    //Components
+    component_avatar: null
   },
   mutations: {
     setSessionExists(state, session_exists) {
@@ -20,6 +22,10 @@ export default new Vuex.Store({
     },
     setResourceSelected(state, resource_selected) {
       state.resource_selected = resource_selected
+    },
+    //Components
+    setComponentAvatar(state, component_avatar) {
+      state.component_avatar = component_avatar
     }
   },
   actions: {

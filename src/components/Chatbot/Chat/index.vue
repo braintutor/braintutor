@@ -1,7 +1,7 @@
 <template>
   <div class="m-fullscreen">
     <!-- Avatar -->
-    <Avatar ref="component_chat_avatar" />
+    <Avatar ref="component_avatar" />
     <!-- Messages -->
     <div class="m-fullscreen-content background-pattern-1" id="messages-container">
       <div
@@ -59,7 +59,7 @@ import {
   getResourcesQuestions
 } from "@/services/resourceService";
 import { getSession } from "@/services/security";
-import { SpeechToText, TextToSpeech } from "@/services/speech";
+import { SpeechToText } from "@/services/speech";
 
 export default {
   data: () => ({
@@ -68,17 +68,19 @@ export default {
     message_text: "",
     available_questions: [],
     //
-    component_chat_avatar: null,
-    //
     loading_message: false
   }),
   computed: {
     resources() {
       return this.$store.state.resources;
+    },
+    component_avatar() {
+      return this.$store.state.component_avatar;
     }
   },
   mounted() {
-    this.component_chat_avatar = this.$refs.component_chat_avatar;
+    this.$store.commit("setComponentAvatar", this.$refs.component_avatar);
+
     getKnowledge(this.chatbot_id).then(res => {
       this.available_questions = JSON.parse(res).map(item => item.preguntas[0]);
       getResourcesQuestions().then(res => {
@@ -102,12 +104,7 @@ export default {
   },
   methods: {
     addMessage(text, type) {
-      if (type === 0) {
-        TextToSpeech(text, () =>
-          this.component_chat_avatar.startAnimationNormal()
-        );
-        setTimeout(() => this.component_chat_avatar.startAnimationTalk(), 100); // Fixed animation error
-      }
+      if (type === 0) this.component_avatar.starTalk(text);
       this.messages.push(new Message(text, type));
       scrollDown("messages-container");
     },
