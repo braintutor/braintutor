@@ -200,7 +200,7 @@ export default {
   }
   .available-questions-content {
     max-height: 400px;
-    overflow-y: auto;
+    overflow: auto;
   }
 }
 </style>

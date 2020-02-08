@@ -1,20 +1,16 @@
 @import url('https://fonts.googleapis.com/css?family=Comfortaa:400,700&display=swap');
 @import './layout.scss';
 @import './aspect-ratio.scss';
+@import './background.scss';
 
 body, body * {
   font-family: Comfortaa, Arial, Helvetica, sans-serif;
 }
 
-/* Background */
-.background-pattern-1 {
-  background-image: url("~@/assets/patterns/pattern1.png");
-  background-repeat: repeat;
-}
-
 /*Scrollbar*/
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-thumb {
   background: rgb(224, 223, 223);

@@ -1,9 +1,6 @@
 <template>
   <div class="cartel-container elevation-3" @click="selectResource(resource)">
-    <img
-      class="cartel-img"
-      src="https://lh3.googleusercontent.com/proxy/UxHC3qd1RIASrgslHAYlrIEJ71l4Kl6M4ZFx4KADTc1zOzL1Ern_Xyr2DYhlT5lnEzXhho3YDd4MvVevKW9iJUiQdujhxN6IGipeucxZ9gmUys3Q9jr8itj0UXeRoPlXlw"
-    />
+    <img class="cartel-img" src="@/assets/backgrounds/green.jpg" />
     <div class="cartel-title m-fullcenter">{{resource.nombre}}</div>
   </div>
 </template>
