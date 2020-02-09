@@ -53,17 +53,15 @@ import Message from "@/models/Message";
 
 import { scrollDown } from "@/services/tools";
 import { sendMessageTeacher } from "@/services/chatService";
-import { getKnowledge } from "@/services/knowledgeService";
-import { getResourcesQuestions } from "@/services/resourceService";
 import { getSession } from "@/services/security";
 import { SpeechToText } from "@/services/speech";
 import { getParam } from "@/services/router.js";
 
 export default {
+  props: ["available_questions"],
   data: () => ({
     messages: [new Message("Hola.\n¿En qué puedo ayudarte?", 0)],
     message_text: "",
-    available_questions: [],
     chatbot_id: "",
     //
     loading_message: false
@@ -79,22 +77,6 @@ export default {
   mounted() {
     this.chatbot_id = getParam("chatbot_id");
     this.$store.commit("setComponentAvatar", this.$refs.component_avatar);
-    getKnowledge(this.chatbot_id).then(res => {
-      this.available_questions = JSON.parse(res).map(item => item.preguntas[0]);
-      getResourcesQuestions().then(res => {
-        let questions = Object.values(res);
-        this.resources.forEach(resource => {
-          questions.forEach(question => {
-            this.available_questions.push(
-              question.replace(/@/, resource.nombre)
-            );
-          });
-          resource.faq.forEach(item => {
-            this.available_questions.push(item.pregunta);
-          });
-        });
-      });
-    });
   },
   methods: {
     addMessage(text, type) {

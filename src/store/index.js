@@ -8,6 +8,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     session_exists: sessionExists(),
+    //Resources
     resources: [],
     resource_selected: null,
     items: [],
@@ -19,8 +20,10 @@ export default new Vuex.Store({
     setSessionExists(state, session_exists) {
       state.session_exists = session_exists
     },
+    //Resources
     setResources(state, resources) {
       state.resources = resources
+      state.resource_selected = null
     },
     setResource(state, { resource, items }) {
       state.resource_selected = resource

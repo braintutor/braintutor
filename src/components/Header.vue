@@ -4,9 +4,16 @@
       <v-img alt="BrainTutor Logo" src="@/assets/logo.png" width="160" />
     </div>
     <v-spacer></v-spacer>
-    <v-btn text @click="redirect('panel')">Cursos</v-btn>
-    <v-btn v-if="!session_exists" text @click="redirect('login')">Iniciar Sesión</v-btn>
-    <v-btn v-else text @click="closeSession()">Cerrar Sesión</v-btn>
+    <div class="header-actions">
+      <v-btn class="header-action" text @click="redirect('panel')">Cursos</v-btn>
+      <v-btn
+        class="header-action"
+        v-if="!session_exists"
+        text
+        @click="redirect('login')"
+      >Iniciar Sesión</v-btn>
+      <v-btn class="header-action" v-else text @click="closeSession()">Cerrar Sesión</v-btn>
+    </div>
   </v-app-bar>
 </template>
 
@@ -35,6 +42,11 @@ export default {
 .header-logo {
   &:hover {
     cursor: pointer;
+  }
+}
+.header-actions {
+  .header-action {
+    font-weight: bold;
   }
 }
 </style>
