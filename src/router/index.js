@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 
 import { verifySession } from '@/services/security'
-import { redirect } from '@/services/tools'
+import { redirect } from '@/services/router'
 
 Vue.use(VueRouter)
 
@@ -25,7 +25,7 @@ const routes = [
     component: () => import('../views/Panel.vue')
   },
   {
-    path: '/chatbot',
+    path: '/chatbot/:chatbot_id',
     name: 'chatbot',
     component: () => import('../views/Chatbot.vue')
   }

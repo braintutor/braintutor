@@ -1,9 +1,3 @@
-import router from '../router'
-
-function redirect(name) {
-  router.push({ name }).catch(() => { })
-}
-
 function scrollDown(element_id) {
   var element = document.getElementById(element_id);
   setTimeout(() => {
@@ -11,4 +5,4 @@ function scrollDown(element_id) {
   }, 0);
 }
 
-export { redirect, scrollDown }
+export { scrollDown }

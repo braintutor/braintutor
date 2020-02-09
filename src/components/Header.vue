@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { redirect } from "@/services/tools.js";
+import { redirect } from "@/services/router.js";
 import { removeSession } from "@/services/security.js";
 
 export default {

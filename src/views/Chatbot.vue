@@ -22,6 +22,8 @@ export default {
     chatbot_id: "5d7dcb7421e43265b405c307"
   }),
   mounted() {
+    console.log(this.$router.currentRoute.params.chatbot_id);
+
     getResources(this.chatbot_id).then(res => {
       let resources = JSON.parse(res);
       this.$store.commit("setResources", resources);

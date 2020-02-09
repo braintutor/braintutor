@@ -30,7 +30,7 @@
 <script>
 import { loginTeacher } from "@/services/loginService";
 import { setSession } from "@/services/security";
-import { redirect } from "@/services/tools.js";
+import { redirect } from "@/services/router.js";
 
 export default {
   data: () => ({

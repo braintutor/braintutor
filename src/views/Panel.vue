@@ -2,8 +2,8 @@
   <!-- Course List -->
   <v-container fluid class="resources-container pa-3">
     <v-row no-gutters>
-      <v-col cols="6" md="3" lg="2" class="pa-2" v-for="(course, c_idx) in courses" :key="c_idx">
-        <Cartel :title="course.nombre" :callback="() => redirect('chatbot')" />
+      <v-col cols="6" md="3" lg="2" class="pa-2" v-for="(chatbot, c_idx) in chatbots" :key="c_idx">
+        <Cartel :title="chatbot.nombre" :callback="() => selectChatbot(chatbot)" />
       </v-col>
     </v-row>
   </v-container>
@@ -12,20 +12,32 @@
 <script>
 import Cartel from "@/components/Cartel";
 
-import { redirect } from "@/services/tools.js";
+import { redirect } from "@/services/router.js";
 import { getCourses } from "@/services/courseService.js";
+import { getChatbot } from "@/services/chatbotService.js";
 
 export default {
   data: () => ({
-    courses: []
+    chatbots: []
   }),
   mounted() {
     getCourses().then(res => {
-      this.courses = JSON.parse(res);
+      let courses = JSON.parse(res);
+      courses.forEach(course => {
+        getChatbot(course._id.$oid).then(res=> {
+          let chatbots = JSON.parse(res)
+          chatbots.forEach(chatbot => {
+            this.chatbots.push(chatbot)
+          })
+        })
+      });
     });
   },
   methods: {
-    redirect
+    redirect,
+    selectChatbot(chatbot) {
+      redirect("chatbot", { chatbot_id: chatbot._id.$oid });
+    }
   },
   components: {
     Cartel
