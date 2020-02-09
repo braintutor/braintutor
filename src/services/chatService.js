@@ -1,4 +1,4 @@
-import { fetch_post } from "./constants";
+import { fetch_post } from "./fetch";
 
 function sendMessageTeacher(chatbot_id, message, token) {
   return fetch_post('obtenerRespuestaProfesor', {

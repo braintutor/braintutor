@@ -1,4 +1,4 @@
-import { fetch_get, fetch_post } from "./constants";
+import { fetch_get, fetch_post } from "./fetch";
 
 function getResources(chatbot_id) {
   return fetch_post('obtenerMaterialPorTema', {

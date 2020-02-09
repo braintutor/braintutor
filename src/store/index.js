@@ -10,6 +10,8 @@ export default new Vuex.Store({
     session_exists: sessionExists(),
     resources: [],
     resource_selected: null,
+    items: [],
+    item_idx: 0,
     //Components
     component_avatar: null
   },
@@ -20,8 +22,23 @@ export default new Vuex.Store({
     setResources(state, resources) {
       state.resources = resources
     },
-    setResourceSelected(state, resource_selected) {
-      state.resource_selected = resource_selected
+    setResource(state, { resource, items }) {
+      state.resource_selected = resource
+      state.items = items || [
+        "texto",
+        "video",
+        "documento",
+        "imagen",
+        "quiz",
+        "ejemplos",
+        "importancia",
+        "explicacion",
+        "faq"
+      ]
+      state.item_idx = 0
+    },
+    setItemIdx(state, item_idx) {
+      state.item_idx = item_idx
     },
     //Components
     setComponentAvatar(state, component_avatar) {

@@ -2,7 +2,7 @@
   <!-- Course List -->
   <v-container fluid class="resources-container pa-3">
     <v-row no-gutters>
-      <v-col cols="6" md="3" lg="2" class="pa-2" v-for="(chatbot, c_idx) in chatbots" :key="c_idx">
+      <v-col cols="6" sm='4' md="3" lg="2" class="pa-2" v-for="(chatbot, c_idx) in chatbots" :key="c_idx">
         <Cartel :title="chatbot.nombre" :callback="() => selectChatbot(chatbot)" />
       </v-col>
     </v-row>

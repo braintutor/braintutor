@@ -15,16 +15,14 @@
 import Chat from "@/components/Chatbot/Chat/index";
 import Resources from "@/components/Chatbot/Resources/index";
 
+import { getParam } from "@/services/router.js";
 import { getResources } from "@/services/resourceService";
 
 export default {
-  data: () => ({
-    chatbot_id: "5d7dcb7421e43265b405c307"
-  }),
+  data: () => ({}),
   mounted() {
-    console.log(this.$router.currentRoute.params.chatbot_id);
-
-    getResources(this.chatbot_id).then(res => {
+    let chatbot_id = getParam("chatbot_id");
+    getResources(chatbot_id).then(res => {
       let resources = JSON.parse(res);
       this.$store.commit("setResources", resources);
     });

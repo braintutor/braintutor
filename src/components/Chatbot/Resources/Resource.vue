@@ -124,38 +124,33 @@
 </template>
 
 <script>
+import { Clamp } from "@/services/Math";
+
 export default {
   props: ["resource_selected"],
-  data: () => ({
-    item_idx: 0,
-    items: [
-      "texto",
-      "video",
-      "documento",
-      "imagen",
-      "quiz",
-      "ejemplos",
-      "importancia",
-      "explicacion",
-      "faq"
-    ]
-  }),
+  data: () => ({}),
   computed: {
     component_avatar() {
       return this.$store.state.component_avatar;
     },
     item_selected() {
       return this.items[this.item_idx];
+    },
+    items() {
+      return this.$store.state.items;
+    },
+    item_idx() {
+      return this.$store.state.item_idx;
     }
   },
   methods: {
     unselectResource() {
-      this.$store.commit("setResourceSelected", null);
+      this.$store.commit("setResource", { resource: null });
     },
     changeItem(direction) {
-      this.item_idx = Math.max(
-        0,
-        Math.min(this.item_idx + direction, this.items.length - 1)
+      this.$store.commit(
+        "setItemIdx",
+        Clamp(0, this.item_idx + direction, this.items.length - 1)
       );
     },
     starTalk(text) {
@@ -256,6 +251,7 @@ export default {
   &.item-image img {
     width: 100%;
     border-radius: 10px;
+    vertical-align: bottom;
   }
   &.item-video {
     iframe {

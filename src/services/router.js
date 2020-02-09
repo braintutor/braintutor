@@ -5,7 +5,7 @@ function redirect(name, params) {
 }
 
 function getParam(param) {
-  return this.$router.currentRoute.params[param]
+  return router.currentRoute.params[param]
 }
 
 export { redirect, getParam }

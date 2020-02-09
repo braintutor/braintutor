@@ -1,4 +1,4 @@
-import { fetch_post } from "./constants";
+import { fetch_post } from "./fetch";
 
 function loginTeacher(user, pass) {
   return fetch_post('iniciarSesionProfesor', {

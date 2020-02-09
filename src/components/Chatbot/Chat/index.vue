@@ -57,13 +57,14 @@ import { getKnowledge } from "@/services/knowledgeService";
 import { getResourcesQuestions } from "@/services/resourceService";
 import { getSession } from "@/services/security";
 import { SpeechToText } from "@/services/speech";
+import { getParam } from "@/services/router.js";
 
 export default {
   data: () => ({
-    chatbot_id: "5d7dcb7421e43265b405c307",
     messages: [new Message("Hola.\n¿En qué puedo ayudarte?", 0)],
     message_text: "",
     available_questions: [],
+    chatbot_id: "",
     //
     loading_message: false
   }),
@@ -76,6 +77,7 @@ export default {
     }
   },
   mounted() {
+    this.chatbot_id = getParam("chatbot_id");
     this.$store.commit("setComponentAvatar", this.$refs.component_avatar);
     getKnowledge(this.chatbot_id).then(res => {
       this.available_questions = JSON.parse(res).map(item => item.preguntas[0]);
@@ -110,9 +112,8 @@ export default {
           let response = res.respuesta;
           if (res.material_id) {
             let resource = this.getResource(res.material_id);
-            let item = res.respuesta_item;
-            this.$store.commit("setResourceSelected", resource);
-            if (item === "importancia") this.addMessage(resource[item], 0);
+            let items = [res.respuesta_item];
+            this.$store.commit("setResource", { resource, items });
           } else if (response) this.addMessage(response, 0);
           this.loading_message = false;
         });

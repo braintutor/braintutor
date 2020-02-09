@@ -4,6 +4,7 @@
       <v-img alt="BrainTutor Logo" src="@/assets/logo.png" width="160" />
     </div>
     <v-spacer></v-spacer>
+    <v-btn text @click="redirect('panel')">Cursos</v-btn>
     <v-btn v-if="!session_exists" text @click="redirect('login')">Iniciar Sesión</v-btn>
     <v-btn v-else text @click="closeSession()">Cerrar Sesión</v-btn>
   </v-app-bar>

@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     selectResource(resource) {
-      this.$store.commit("setResourceSelected", resource);
+      this.$store.commit("setResource", { resource });
     }
   },
   components: {

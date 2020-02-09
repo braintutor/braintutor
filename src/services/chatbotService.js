@@ -1,4 +1,4 @@
-import { fetch_post } from "./constants";
+import { fetch_post } from "./fetch";
 
 function getChatbot(course_id) {
   return fetch_post('obtenerTemaPorCurso', {
