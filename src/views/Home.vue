@@ -17,8 +17,10 @@
         </div>
       </v-container>
     </div>
+    <!-- Services -->
+
     <!-- Secondary -->
-    <div class="container">
+    <v-container>
       <div class="secondary-container row">
         <div class="secondary-content col-md-5">
           <h1 class="secondary-title">BrainTutor</h1>
@@ -41,7 +43,7 @@
           <img class="elevation-3" src="@/assets/ui/resources.png" alt />
         </div>
       </div>
-    </div>
+    </v-container>
     <!-- Footer -->
     <Footer />
   </div>
