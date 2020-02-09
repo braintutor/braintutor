@@ -92,9 +92,10 @@ export default {
           getSession().token
         ).then(res => {
           let response = res.respuesta;
-          if (res.material_id) {
-            let resource = this.getResource(res.material_id);
-            let items = [res.respuesta_item];
+          let material_id = res.material_id;
+          if (material_id) {
+            let resource = this.getResource(material_id);
+            let items = res.respuesta_item ? [res.respuesta_item] : null;
             this.$store.commit("setResource", { resource, items });
           } else if (response) this.addMessage(response, 0);
           this.loading_message = false;

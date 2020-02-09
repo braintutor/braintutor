@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="background">
-      <div class="container">
+      <v-container>
         <!-- Principal -->
         <div class="principal-container row">
           <div class="principal-content col-md-6">
@@ -15,7 +15,7 @@
             <img src="@/assets/avatar/normal.png" alt />
           </div>
         </div>
-      </div>
+      </v-container>
     </div>
     <!-- Secondary -->
     <div class="container">
