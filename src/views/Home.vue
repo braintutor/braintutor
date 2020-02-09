@@ -81,11 +81,11 @@ export default {
     margin-bottom: 20px;
     color: #fff;
     .principal-title {
-      font-size: 60px;
+      font-size: calc(14px + 5vw);
     }
     .principal-description {
       margin-top: 16px;
-      font-size: 18px;
+      font-size: calc(14px + 0.5vw);
       font-weight: lighter;
     }
     .principal-action {
@@ -113,11 +113,11 @@ export default {
   .secondary-content {
     margin-bottom: 20px;
     .secondary-title {
-      font-size: 46px;
+      font-size: calc(14px + 2.5vw);
     }
     .secondary-description {
       margin-top: 16px;
-      font-size: 19px;
+      font-size: calc(14px + 0.5vw);
       font-weight: lighter;
     }
     .secondary-action {
