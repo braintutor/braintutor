@@ -8,7 +8,7 @@ function loginTeacher(user, pass) {
 }
 
 function loginStudent(user, pass) {
-  return fetch_post('iniciarSesionProfesor', {
+  return fetch_post('iniciarSesionAlumno', {
     codigo: user,
     contrasena: pass
   })

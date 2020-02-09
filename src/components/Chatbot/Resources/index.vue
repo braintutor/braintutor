@@ -11,7 +11,7 @@
           v-for="(resource, r_idx) in resources"
           :key="r_idx"
         >
-          <Cartel :resource="resource" />
+          <Cartel :title="resource.nombre" :callback="() => selectResource(resource)" />
         </v-col>
       </v-row>
     </v-container>
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import Cartel from "./Cartel";
+import Cartel from "@/components/Cartel";
 import Resource from "./Resource";
 
 export default {
@@ -34,7 +34,11 @@ export default {
       return this.$store.state.resource_selected;
     }
   },
-  methods: {},
+  methods: {
+    selectResource(resource) {
+      this.$store.commit("setResourceSelected", resource);
+    }
+  },
   components: {
     Cartel,
     Resource

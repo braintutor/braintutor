@@ -54,10 +54,7 @@ import Message from "@/models/Message";
 import { scrollDown } from "@/services/tools";
 import { sendMessageTeacher } from "@/services/chatService";
 import { getKnowledge } from "@/services/knowledgeService";
-import {
-  getResources,
-  getResourcesQuestions
-} from "@/services/resourceService";
+import { getResourcesQuestions } from "@/services/resourceService";
 import { getSession } from "@/services/security";
 import { SpeechToText } from "@/services/speech";
 
@@ -80,23 +77,18 @@ export default {
   },
   mounted() {
     this.$store.commit("setComponentAvatar", this.$refs.component_avatar);
-
     getKnowledge(this.chatbot_id).then(res => {
       this.available_questions = JSON.parse(res).map(item => item.preguntas[0]);
       getResourcesQuestions().then(res => {
         let questions = Object.values(res);
-        getResources(this.chatbot_id).then(res => {
-          let resources = JSON.parse(res);
-          this.$store.commit("setResources", resources);
-          resources.forEach(resource => {
-            questions.forEach(question => {
-              this.available_questions.push(
-                question.replace(/@/, resource.nombre)
-              );
-            });
-            resource.faq.forEach(item => {
-              this.available_questions.push(item.pregunta);
-            });
+        this.resources.forEach(resource => {
+          questions.forEach(question => {
+            this.available_questions.push(
+              question.replace(/@/, resource.nombre)
+            );
+          });
+          resource.faq.forEach(item => {
+            this.available_questions.push(item.pregunta);
           });
         });
       });

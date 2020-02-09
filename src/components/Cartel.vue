@@ -1,18 +1,13 @@
 <template>
-  <div class="cartel-container elevation-3" @click="selectResource(resource)">
+  <div class="cartel-container transform-scale elevation-3" @click="callback()">
     <img class="cartel-img" src="@/assets/backgrounds/green.jpg" />
-    <div class="cartel-title m-fullcenter">{{resource.nombre}}</div>
+    <div class="cartel-title m-fullcenter">{{title}}</div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ["resource"],
-  methods: {
-    selectResource(resource) {
-      this.$store.commit("setResourceSelected", resource);
-    }
-  }
+  props: ["title", "image", "callback"]
 };
 </script>
 
@@ -27,8 +22,6 @@ export default {
   flex-direction: column;
 
   &:hover {
-    transition: all 200ms;
-    transform: scale(1.03);
     cursor: pointer;
     .cartel-img {
       opacity: 1;

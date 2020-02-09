@@ -11,7 +11,7 @@
         <!-- Item Text -->
         <div v-if="item_selected == 'texto'" class="item item-text">
           <div class="item-text-menu">
-            <div class="item-text-title">¿Qué es {{resource_selected.nombre}}?</div>
+            <div class="item-text-title">{{resource_selected.nombre}}</div>
             <v-btn icon @click="starTalk(resource_selected[item_selected])">
               <v-icon>mdi-volume-high</v-icon>
             </v-btn>
@@ -28,15 +28,28 @@
         </div>
         <!-- Item Document -->
         <div v-if="item_selected == 'documento'" class="item item-document">
-          <span>{{resource_selected[item_selected]}}</span>
+          <embed :src="resource_selected[item_selected]" alt />
         </div>
         <!-- Item Image -->
         <div v-if="item_selected == 'imagen'" class="item item-image">
           <img :src="resource_selected[item_selected]" alt />
         </div>
         <!-- Item Quiz -->
-        <div v-if="item_selected == 'quiz'">
-          <span>{{resource_selected[item_selected]}}</span>
+        <div v-if="item_selected == 'quiz'" class="item item-text">
+          <div class="item-text-menu">
+            <div class="item-text-title">Ejercicios</div>
+          </div>
+          <div v-for="(quiz, q_idx) in resource_selected[item_selected]" :key="q_idx" class="pb-6">
+            <div class="item-text-content">
+              <strong class="mr-3">{{q_idx+1}}.</strong>
+              <div>{{quiz.enunciado}}</div>
+            </div>
+            <div
+              v-for="(alternative, a_idx) in quiz.alternativas"
+              :key="a_idx"
+              class="item-text-alternative transform-scale ml-4"
+            >{{alternative}}</div>
+          </div>
         </div>
         <!-- Item Example -->
         <div v-if="item_selected == 'ejemplos'" class="item item-text">
@@ -55,7 +68,7 @@
         <!-- Item Importance -->
         <div v-if="item_selected == 'importancia'" class="item item-text">
           <div class="item-text-menu">
-            <div class="item-text-title">¿Por qué es importante {{resource_selected.nombre}}?</div>
+            <div class="item-text-title">¿Por qué es importante?</div>
             <v-btn icon @click="starTalk(resource_selected[item_selected])">
               <v-icon>mdi-volume-high</v-icon>
             </v-btn>
@@ -65,7 +78,7 @@
         <!-- Item Explication -->
         <div v-if="item_selected == 'explicacion'" class="item item-text">
           <div class="item-text-menu">
-            <div class="item-text-title">Para más información</div>
+            <div class="item-text-title">Más información</div>
           </div>
           <div
             v-for="(url, f_idx) in resource_selected[item_selected]"
@@ -170,7 +183,9 @@ export default {
     }
   }
   .resource-content {
-    margin: 0 4% 60px;
+    height: 100%;
+    padding: 20px;
+    padding-top: 5px;
   }
   .resource-navigator {
     position: absolute;
@@ -202,7 +217,7 @@ export default {
 }
 
 .item {
-  margin: 20px 0;
+  margin-bottom: 20px;
   border-radius: 10px;
   @include box-shadow;
 
@@ -226,16 +241,36 @@ export default {
       display: flex;
       align-items: flex-start;
     }
+    .item-text-alternative {
+      padding: 10px 18px; // padding - padding-bottom
+      margin-bottom: 10px;
+      border-radius: 10px;
+      font-size: 18px;
+      white-space: pre-wrap;
+      @include box-shadow;
+      &:hover {
+        cursor: pointer;
+      }
+    }
   }
   &.item-image img {
     width: 100%;
     border-radius: 10px;
   }
-  &.item-video iframe {
-    border: none;
-    border-radius: 10px;
+  &.item-video {
+    iframe {
+      border: none;
+      border-radius: 10px;
+    }
   }
   &.item-document {
+    height: 100%;
+    embed {
+      border: none;
+      border-radius: 10px;
+      height: 100%;
+      width: 100%;
+    }
   }
 }
 </style>
