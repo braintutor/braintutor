@@ -150,7 +150,7 @@ export default {
     changeItem(direction) {
       this.$store.commit(
         "setItemIdx",
-        Clamp(0, this.item_idx + direction, this.items.length - 1)
+        Clamp(this.item_idx + direction, 0, this.items.length - 1)
       );
     },
     starTalk(text) {
