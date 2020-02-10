@@ -24,7 +24,7 @@
       </div>
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" absolute temporary>
+    <v-navigation-drawer v-model="drawer" fixed temporary>
       <v-list>
         <v-list-item-group active-class="blue--text text--accent-4">
           <v-list-item
@@ -98,7 +98,7 @@ export default {
 }
 .header-actions {
   .header-action {
-    margin-right: 10px;
+    padding-right: 10px;
     font-weight: bold;
   }
 }
