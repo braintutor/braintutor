@@ -168,7 +168,7 @@ export default {
   padding: 0 10px 14vw 10px;
   .services-title {
     display: block;
-    margin-bottom: calc(6px + 1vw);
+    margin-bottom: calc(2px + 2vw);
     font-size: calc(28px + 1.5vw);
     font-weight: bold;
     text-align: center;
