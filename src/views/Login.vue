@@ -2,10 +2,10 @@
   <div class="m-fullcenter">
     <v-card class="login_container" elevation="6">
       <div class="login_icon">
-        <img src="@/assets/icon.png" width="100%" />
+        <img src="@/assets/braintutor/icon.png" width="100%" />
       </div>
       <div class="login_name">
-        <img src="@/assets/name.png" width="100%" />
+        <img src="@/assets/braintutor/name.png" width="100%" />
       </div>
       <v-form ref="form_login" @submit.prevent="login">
         <v-card-text class="login_content">
@@ -69,7 +69,7 @@ export default {
 
   .login_icon {
     max-width: 100px;
-    margin: 0 auto;
+    margin: 5px auto;
   }
   .login_name {
     max-width: 150px;

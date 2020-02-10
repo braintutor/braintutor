@@ -4,43 +4,58 @@
       <v-container>
         <!-- Principal -->
         <div class="principal-container row">
-          <div class="principal-content col-md-6">
+          <div class="principal-content col-sm-6">
             <h1 class="principal-title">BrainTutor</h1>
             <div
               class="principal-description"
-            >Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus esse laboriosam minus eveniet rem ullam quis libero, cum aspernatur deleniti totam quam at repellat vero nam repellendus officiis beatae magni. Accusamus esse laboriosam minus eveniet rem ullam quis libero, cum aspernatur deleniti totam.</div>
+            >Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus esse laboriosam minus eveniet rem ullam quis libero, cum aspernatur deleniti totam quam at repellat vero nam repellendus officiis beatae magni.</div>
             <v-btn class="principal-action" color="grey darken-3" @click="redirect('login')">Empezar</v-btn>
           </div>
-          <div class="principal-image col-md-6">
+          <div class="principal-image col-sm-6">
             <img src="@/assets/avatar/normal.png" alt />
           </div>
         </div>
       </v-container>
     </div>
     <!-- Services -->
-
+    <v-container>
+      <div class="services-container">
+        <span class="services-title">Servicios</span>
+        <div class="row">
+          <div v-for="(service, s_idx) in services" :key="s_idx" class="col-sm-6 col-md-4 pa-2">
+            <div class="service-container transform-scale">
+              <img class="service-image" :src="service.image" />
+              <div class="service-content">
+                <div class="service-title">{{service.title}}</div>
+                <div class="service-descripcion">{{service.description}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </v-container>
     <!-- Secondary -->
     <v-container>
       <div class="secondary-container row">
-        <div class="secondary-content col-md-5">
+        <div class="secondary-content col-sm-5">
           <h1 class="secondary-title">BrainTutor</h1>
           <div
             class="secondary-description"
           >Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus esse laboriosam minus eveniet rem ullam quis libero, cum aspernatur deleniti totam quam at repellat vero nam repellendus officiis beatae magni.</div>
         </div>
-        <div class="secondary-image col-md-7">
-          <img class="elevation-3" src="@/assets/ui/resources.png" alt />
+        <div class="secondary-image col-sm-7">
+          <img class="transform-scale elevation-3" src="@/assets/ui/resources.png" alt />
         </div>
       </div>
       <div class="secondary-container row">
-        <div class="secondary-content col-md-5">
+        <div class="secondary-content col-sm-5">
           <h1 class="secondary-title">BrainTutor</h1>
           <div
             class="secondary-description"
           >Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus esse laboriosam minus eveniet rem ullam quis libero, cum aspernatur deleniti totam quam at repellat vero nam repellendus officiis beatae magni.</div>
         </div>
-        <div class="secondary-image col-md-7">
-          <img class="elevation-3" src="@/assets/ui/resources.png" alt />
+        <div class="secondary-image col-sm-7">
+          <img class="transform-scale elevation-3" src="@/assets/ui/resources.png" alt />
         </div>
       </div>
     </v-container>
@@ -55,7 +70,44 @@ import Footer from "@/components/Footer";
 import { redirect } from "@/services/router.js";
 
 export default {
-  data: () => ({}),
+  data: () => ({
+    services: [
+      {
+        title: "Clases",
+        description: "Creación de clases virtuales",
+        image:
+          "https://seeklogo.com/images/E/educational-people-logo-66BC945BD1-seeklogo.com.png"
+      },
+      {
+        title: "Evaluaciones",
+        description: "Creación de evaluaciones constantes",
+        image:
+          "https://store-images.s-microsoft.com/image/apps.11856.811f7e45-09fd-4998-a57a-3f8bcf09f141.68aeb64e-c248-4331-9dc2-7591905fff66.7fd56d71-ad38-43b5-8ce8-b59254d440d2.png"
+      },
+      {
+        title: "Tareas",
+        description: "Cración de tareas programadas",
+        image: "https://img.icons8.com/cotton/2x/calendar.png"
+      },
+      {
+        title: "Chatbot",
+        description: "Chatbot como agente de apoyo",
+        image:
+          "https://www.stickpng.com/assets/images/580b57fbd9996e24bc43bdf6.png"
+      },
+      {
+        title: "Monitoreo",
+        description: "Monitorear el rendimiento",
+        image:
+          "https://www.searchpng.com/wp-content/uploads/2018/12/ic-search.png"
+      },
+      {
+        title: "Acceso",
+        description: "Accesible desde cualquier dispositivo",
+        image: "https://images.vexels.com/media/users/3/136857/isolated/preview/a9e86748f463c75ad1a6a58e06abf25d-icono-plana-smartphone-by-vexels.png"
+      }
+    ]
+  }),
   methods: {
     redirect
   },
@@ -66,19 +118,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/styles/box-shadow.scss";
+
 .background {
   background-image: url(~@/assets/backgrounds/waves.png),
     linear-gradient(237deg, #46b3ff 0%, #0752fe 100%);
-  background-size: 100% 650px;
+  background-size: 100% 600px;
   min-height: 600px;
 }
 @media only screen and (max-width: 960px) {
   .background {
-    background-size: auto 650px;
+    background-size: auto 600px;
   }
 }
 .principal-container {
-  padding: 5vw 10px 20vw 10px;
+  padding: calc(20px + 2vw) 10px 20vw 10px;
   .principal-content {
     margin-bottom: 20px;
     color: #fff;
@@ -103,19 +157,56 @@ export default {
     img {
       // width: 100%;
       max-height: 300px;
-      border-radius: 10px;
+      border-radius: 50%;
+      background: #6eb1fe;
     }
   }
 }
+
+.services-container {
+  padding: 0 10px 14vw 10px;
+  .services-title {
+    display: block;
+    margin-bottom: 20px;
+    font-size: calc(28px + 1.5vw);
+    font-weight: bold;
+    text-align: center;
+  }
+  .service-container {
+    height: 100%;
+    padding: 10px 16px;
+    @include box-shadow;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+
+    .service-image {
+      width: 60px;
+      height: 60px;
+    }
+    .service-content {
+      margin-left: 16px;
+      .service-title {
+        font-size: 17px;
+        font-weight: bold;
+      }
+      .service-descripcion {
+        font-size: 13px;
+        font-weight: lighter;
+      }
+    }
+  }
+}
+
 .secondary-container {
-  padding: 0 10px 18vw 10px;
+  padding: 0 10px 17vw 10px;
   &.secondary-principal {
     color: #fff;
   }
   .secondary-content {
     margin-bottom: 20px;
     .secondary-title {
-      font-size: calc(14px + 2.5vw);
+      font-size: calc(14px + 2.2vw);
     }
     .secondary-description {
       margin-top: 16px;

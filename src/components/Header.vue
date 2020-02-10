@@ -1,7 +1,7 @@
 <template>
   <v-app-bar app flat color="white">
     <div class="header-logo" @click="redirect('home')">
-      <v-img alt="BrainTutor Logo" src="@/assets/logo.png" width="160" />
+      <v-img alt="BrainTutor Logo" src="@/assets/braintutor/logo.png" width="160" />
     </div>
     <v-spacer></v-spacer>
     <div class="header-actions">
