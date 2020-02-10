@@ -98,6 +98,7 @@ export default {
 }
 .header-actions {
   .header-action {
+    margin-right: 10px;
     font-weight: bold;
   }
 }
