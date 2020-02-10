@@ -1,9 +1,12 @@
 <template>
-  <div class="chatbot-container elevation-4">
+  <div class="chatbot-container">
     <v-container fluid class="fill-height pa-0">
       <v-row no-gutters class="fill-height">
-        <Chat class="col-12 col-sm-5 col-md-4" :available_questions="available_questions"/>
-        <div class="col-12 col-sm-7 col-md-8 chatbot-content">
+        <Chat
+          class="chat-container col-12 col-sm-5 col-md-4"
+          :available_questions="available_questions"
+        />
+        <div class="chatbot-content col-12 col-sm-7 col-md-8">
           <Resources />
         </div>
       </v-row>
@@ -65,7 +68,11 @@ export default {
   height: calc(100vh - 93px);
   margin: 20px;
   margin-top: 8px;
+  @include box-shadow;
 
+  .chat-container {
+    min-height: 500px;
+  }
   .chatbot-content {
     border-left: 1px solid #eee;
     height: 100%;
@@ -74,6 +81,11 @@ export default {
 
 @media only screen and (max-width: 599px) {
   .chatbot-container {
+    box-shadow: none !important;
+
+    .chat-container {
+      @include box-shadow;
+    }
     .chatbot-content {
       margin: 14px 0;
       @include box-shadow;

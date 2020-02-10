@@ -1,6 +1,6 @@
 <template>
-  <v-card tile elevation="0" class="chat-container">
-    <img class="chat-img" :src="src_avatar" />
+  <v-card tile elevation="0" class="avatar-container">
+    <img class="avatar-image" :src="src_avatar" />
     <v-speed-dial v-model="fab_emotions" absolute bottom right direction="left">
       <template v-slot:activator>
         <v-btn v-model="fab_emotions" color="blue darken-2" small dark fab>
@@ -94,10 +94,10 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.chat-container {
+.avatar-container {
   background: #f9ceff !important;
 
-  .chat-img {
+  .avatar-image {
     display: block;
     margin: 0 auto;
     max-height: 190px;
