@@ -86,7 +86,7 @@ export default {
       },
       {
         title: "Tareas",
-        description: "Cración de tareas programadas",
+        description: "Creación de tareas programadas",
         image: "https://img.icons8.com/cotton/2x/calendar.png"
       },
       {
@@ -104,7 +104,8 @@ export default {
       {
         title: "Acceso",
         description: "Accesible desde cualquier dispositivo",
-        image: "https://images.vexels.com/media/users/3/136857/isolated/preview/a9e86748f463c75ad1a6a58e06abf25d-icono-plana-smartphone-by-vexels.png"
+        image:
+          "https://images.vexels.com/media/users/3/136857/isolated/preview/a9e86748f463c75ad1a6a58e06abf25d-icono-plana-smartphone-by-vexels.png"
       }
     ]
   }),
@@ -123,16 +124,16 @@ export default {
 .background {
   background-image: url(~@/assets/backgrounds/waves.png),
     linear-gradient(237deg, #46b3ff 0%, #0752fe 100%);
-  background-size: 100% 600px;
-  min-height: 600px;
+  background-size: 100% 640px;
+  min-height: 640px;
 }
 @media only screen and (max-width: 960px) {
   .background {
-    background-size: auto 600px;
+    background-size: auto 640px;
   }
 }
 .principal-container {
-  padding: calc(20px + 2vw) 10px 20vw 10px;
+  padding: calc(20px + 2.4vw) 10px 20vw 10px;
   .principal-content {
     margin-bottom: 20px;
     color: #fff;
