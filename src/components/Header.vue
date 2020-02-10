@@ -98,7 +98,7 @@ export default {
 }
 .header-actions {
   .header-action {
-    padding-right: 10px;
+    padding: 0 20px;
     font-weight: bold;
   }
 }
