@@ -17,7 +17,7 @@
         v-for="(chatbot, c_idx) in chatbots_filtered"
         :key="c_idx"
       >
-        <Cartel :title="chatbot.nombre" :callback="() => selectChatbot(chatbot)" />
+        <Cartel :title="chatbot.course" :description="chatbot.nombre" :callback="() => selectChatbot(chatbot)" />
       </v-col>
     </v-row>
   </v-container>
@@ -42,6 +42,7 @@ export default {
         getChatbot(course._id.$oid).then(res => {
           let chatbots = JSON.parse(res);
           chatbots.forEach(chatbot => {
+            chatbot.course = course.nombre
             this.chatbots.push(chatbot);
           });
         });
@@ -74,6 +75,7 @@ export default {
   .courses-title {
     display: block;
     margin: 20px 0;
+    color: #444444;
     text-align: center;
     font-size: calc(18px + 1.4vw);
     font-weight: bold;

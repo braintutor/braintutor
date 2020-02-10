@@ -1,13 +1,16 @@
 <template>
   <div class="cartel-container transform-scale elevation-3" @click="callback()">
     <img class="cartel-img" src="@/assets/backgrounds/green.jpg" />
-    <div class="cartel-title m-fullcenter">{{title}}</div>
+    <div class="cartel-content m-fullcenter">
+      <div v-if="title" class="cartel-title">{{title}}</div>
+      <div v-if="description" class="cartel-description">{{description}}</div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ["title", "image", "callback"]
+  props: ["title", "description", "image", "callback"]
 };
 </script>
 
@@ -32,13 +35,18 @@ export default {
     height: 130px;
     opacity: 0.8;
   }
-  .cartel-title {
-    margin: 0;
+  .cartel-content {
     padding: 12px 16px;
     text-align: center;
-    font-size: 13px;
-    font-weight: bold;
-    word-wrap: break-word;
+    .cartel-title {
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .cartel-description {
+      margin-top: 4px;
+      font-size: 13px;
+      font-weight: normal;
+    }
   }
 }
 </style>

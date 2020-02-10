@@ -11,7 +11,7 @@
           v-for="(resource, r_idx) in resources"
           :key="r_idx"
         >
-          <Cartel :title="resource.nombre" :callback="() => selectResource(resource)" />
+          <Cartel :description="resource.nombre" :callback="() => selectResource(resource)" />
         </v-col>
       </v-row>
     </v-container>
