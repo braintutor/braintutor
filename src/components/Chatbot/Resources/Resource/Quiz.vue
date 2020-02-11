@@ -2,6 +2,9 @@
   <div class="item item-text">
     <div class="item-text-menu">
       <div class="item-text-title">Ejercicios</div>
+      <v-btn icon @click="resetQuiz()">
+        <v-icon>mdi-restore</v-icon>
+      </v-btn>
     </div>
     <div v-for="(question, q_idx) in quiz" :key="q_idx" class="pb-6">
       <div class="item-text-content">
@@ -24,6 +27,12 @@
 export default {
   props: ["quiz", "talk"],
   methods: {
+    resetQuiz() {
+      this.quiz.forEach(question => {
+        (question.show_correct = false), (question.incorrect = -1);
+      });
+      this.$forceUpdate(); /* Correct Binding Update (:class) */
+    },
     selectAlternative(question, correct_idx, alternative_idx) {
       if (!question.show_correct) {
         question.show_correct = true;
