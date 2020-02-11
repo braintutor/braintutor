@@ -167,7 +167,7 @@ export default {
     align-items: center;
     .resource-title {
       margin: 0 12px;
-      font-size: 20px;
+      font-size: calc(9.5px + 1vw);
       font-weight: bold;
     }
   }
@@ -199,7 +199,8 @@ export default {
       .resource-action {
         margin: 0 8px;
         font-weight: bold;
-        font-size: 18px;
+      font-size: calc(11px + 1vw);
+        // font-size: 18px;
       }
     }
   }
@@ -218,14 +219,14 @@ export default {
       display: flex;
       justify-content: space-between;
       .item-text-title {
-        font-size: 23px;
+        font-size: calc(10px + 1.4vw);
         font-weight: bold;
         margin-right: 10px;
       }
     }
     .item-text-content {
       padding-bottom: 18px; // padding - padding-bottom
-      font-size: 18px;
+      font-size: calc(10px + 0.7vw);
       white-space: pre-wrap;
       display: flex;
       align-items: flex-start;

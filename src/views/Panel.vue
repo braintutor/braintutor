@@ -17,7 +17,11 @@
         v-for="(chatbot, c_idx) in chatbots_filtered"
         :key="c_idx"
       >
-        <Cartel :title="chatbot.course" :description="chatbot.nombre" :callback="() => selectChatbot(chatbot)" />
+        <Cartel
+          :title="chatbot.course"
+          :description="chatbot.nombre"
+          :callback="() => selectChatbot(chatbot)"
+        />
       </v-col>
     </v-row>
   </v-container>
@@ -42,7 +46,7 @@ export default {
         getChatbot(course._id.$oid).then(res => {
           let chatbots = JSON.parse(res);
           chatbots.forEach(chatbot => {
-            chatbot.course = course.nombre
+            chatbot.course = course.nombre;
             this.chatbots.push(chatbot);
           });
         });
@@ -51,9 +55,18 @@ export default {
   },
   computed: {
     chatbots_filtered() {
-      return this.chatbots.filter(chatbot =>
-        chatbot.nombre.toLowerCase().includes(this.chatbot_filter.toLowerCase())
+      return this.chatbots.filter(
+        chatbot =>
+          chatbot.nombre
+            .toLowerCase()
+            .includes(this.chatbot_filter.toLowerCase()) ||
+          chatbot.course
+            .toLowerCase()
+            .includes(this.chatbot_filter.toLowerCase())
       );
+    },
+    includes(text, filter) {
+      return text.toLowerCase().includes(filter.toLowerCase());
     }
   },
   methods: {
@@ -83,7 +96,7 @@ export default {
   .courses-search {
     max-width: 600px;
     margin: 20px auto;
-    padding: 10px 30px;
+    padding: 10px 24px 10px 32px;
     border-radius: 50px;
     @include box-shadow;
   }

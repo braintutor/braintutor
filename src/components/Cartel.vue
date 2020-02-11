@@ -39,12 +39,13 @@ export default {
     padding: 12px 16px;
     text-align: center;
     .cartel-title {
-      font-size: 16px;
+      padding: 3px 0;
+      font-size: calc(11px + .6vw);
       font-weight: bold;
     }
     .cartel-description {
-      margin-top: 4px;
-      font-size: 13px;
+      padding: 1px 0;
+      font-size: calc(11px + .4vw);
       font-weight: normal;
     }
   }

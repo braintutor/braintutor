@@ -56,7 +56,7 @@ export default {
   padding: 10px 18px; // padding - padding-bottom
   margin-bottom: 10px;
   border-radius: 10px;
-  font-size: 18px;
+  font-size: calc(10px + .7vw);
   white-space: pre-wrap;
   @include box-shadow;
   &:hover {
