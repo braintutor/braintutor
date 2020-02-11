@@ -85,7 +85,7 @@ export default {
     setImage(img) {
       this.src_avatar = require(`@/assets/avatar/${img}.png`);
     },
-    starTalk(text) {
+    startTalk(text) {
       setTimeout(() => this.startAnimationTalk(), 100); // Fixed animation error
       TextToSpeech(text, () => this.startAnimationNormal());
     }

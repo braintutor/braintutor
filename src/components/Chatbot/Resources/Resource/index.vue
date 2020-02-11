@@ -12,7 +12,7 @@
         <div v-if="item_selected == 'texto'" class="item item-text">
           <div class="item-text-menu">
             <div class="item-text-title">{{resource_selected.nombre}}</div>
-            <v-btn icon @click="starTalk(resource_selected[item_selected])">
+            <v-btn icon @click="startTalk(resource_selected[item_selected])">
               <v-icon>mdi-volume-high</v-icon>
             </v-btn>
           </div>
@@ -35,22 +35,11 @@
           <img :src="resource_selected[item_selected]" alt />
         </div>
         <!-- Item Quiz -->
-        <div v-if="item_selected == 'quiz'" class="item item-text">
-          <div class="item-text-menu">
-            <div class="item-text-title">Ejercicios</div>
-          </div>
-          <div v-for="(quiz, q_idx) in resource_selected[item_selected]" :key="q_idx" class="pb-6">
-            <div class="item-text-content">
-              <strong class="mr-3">{{q_idx+1}}.</strong>
-              <div>{{quiz.enunciado}}</div>
-            </div>
-            <div
-              v-for="(alternative, a_idx) in quiz.alternativas"
-              :key="a_idx"
-              class="item-text-alternative transform-scale ml-4"
-            >{{alternative}}</div>
-          </div>
-        </div>
+        <Quiz
+          v-if="item_selected == 'quiz'"
+          :quiz="resource_selected[item_selected]"
+          :talk="text => {startTalk(text)}"
+        />
         <!-- Item Example -->
         <div v-if="item_selected == 'ejemplos'" class="item item-text">
           <div class="item-text-menu">
@@ -69,7 +58,7 @@
         <div v-if="item_selected == 'importancia'" class="item item-text">
           <div class="item-text-menu">
             <div class="item-text-title">¿Por qué es importante?</div>
-            <v-btn icon @click="starTalk(resource_selected[item_selected])">
+            <v-btn icon @click="startTalk(resource_selected[item_selected])">
               <v-icon>mdi-volume-high</v-icon>
             </v-btn>
           </div>
@@ -98,7 +87,7 @@
           >
             <div class="item-text-menu">
               <div class="item-text-title">{{faq.pregunta}}</div>
-              <v-btn icon @click="starTalk(`${faq.pregunta}. ${faq.respuesta}`)">
+              <v-btn icon @click="startTalk(`${faq.pregunta}. ${faq.respuesta}`)">
                 <v-icon>mdi-volume-high</v-icon>
               </v-btn>
             </div>
@@ -124,6 +113,8 @@
 </template>
 
 <script>
+import Quiz from "./Quiz";
+
 import { Clamp } from "@/services/Math";
 
 export default {
@@ -153,14 +144,17 @@ export default {
         Clamp(this.item_idx + direction, 0, this.items.length - 1)
       );
     },
-    starTalk(text) {
-      this.component_avatar.starTalk(text);
+    startTalk(text) {
+      this.component_avatar.startTalk(text);
     }
+  },
+  components: {
+    Quiz
   }
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang='scss'>
 @import "@/styles/box-shadow.scss";
 
 .resource-container {
@@ -235,17 +229,6 @@ export default {
       white-space: pre-wrap;
       display: flex;
       align-items: flex-start;
-    }
-    .item-text-alternative {
-      padding: 10px 18px; // padding - padding-bottom
-      margin-bottom: 10px;
-      border-radius: 10px;
-      font-size: 18px;
-      white-space: pre-wrap;
-      @include box-shadow;
-      &:hover {
-        cursor: pointer;
-      }
     }
   }
   &.item-image img {

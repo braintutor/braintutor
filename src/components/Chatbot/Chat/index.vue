@@ -80,7 +80,7 @@ export default {
   },
   methods: {
     addMessage(text, type) {
-      if (type === 0) this.component_avatar.starTalk(text);
+      if (type === 0) this.component_avatar.startTalk(text);
       this.messages.push(new Message(text, type));
       scrollDown("messages-container");
     },

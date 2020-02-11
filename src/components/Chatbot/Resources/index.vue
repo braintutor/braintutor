@@ -22,7 +22,7 @@
 
 <script>
 import Cartel from "@/components/Cartel";
-import Resource from "./Resource";
+import Resource from "./Resource/index";
 
 export default {
   data: () => ({}),
