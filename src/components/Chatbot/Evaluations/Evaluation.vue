@@ -66,7 +66,7 @@ export default {
       return this.evaluation_selected.preguntas[this.question_idx];
     },
     time_percentage() {
-      return (this.time_remaining / this.time_total) * 100;
+      return ((this.time_total - this.time_remaining) / this.time_total) * 100;
     }
   },
   methods: {
