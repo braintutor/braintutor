@@ -54,10 +54,10 @@ export default {
       this.time_total,
       count => {
         this.time_remaining--;
-        console.log(count);
+        // console.log(count);
       },
       () => {
-        console.log("FIN");
+        // console.log("FIN");
       }
     );
   },
