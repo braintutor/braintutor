@@ -40,12 +40,12 @@ export default {
     text-align: center;
     .cartel-title {
       padding: 3px 0;
-      font-size: calc(11px + .6vw);
+      font-size: calc(10px + 0.5vw);
       font-weight: bold;
     }
     .cartel-description {
       padding: 1px 0;
-      font-size: calc(11px + .4vw);
+      font-size: calc(10px + 0.4vw);
       font-weight: normal;
     }
   }
