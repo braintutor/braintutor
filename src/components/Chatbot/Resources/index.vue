@@ -38,6 +38,7 @@ import Resource from "./Resource/index";
 import { Clamp } from "@/services/Math";
 
 export default {
+  props: ['showServices'],
   data: () => ({
     resource: null,
     items: [],
@@ -63,9 +64,11 @@ export default {
         "faq"
       ];
       this.item_idx = 0;
+      this.showServices(false)
     },
     unselectResource() {
       this.resource = null;
+      this.showServices(true)
     },
     changeItem(direction) {
       this.item_idx = Clamp(

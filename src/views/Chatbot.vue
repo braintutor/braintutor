@@ -3,11 +3,22 @@
     <v-container fluid class="fill-height pa-0">
       <v-row id="prueba" no-gutters class="fill-height">
         <div class="chatbot-content col-12 col-sm-7 col-md-8">
-          <Resources ref="component_resources" v-show="service_selected === 0" />
-          <Evaluations ref="component_evaluations" v-show="service_selected === 1" />
-          <div class="chatbot-navigator">
+          <Resources
+            ref="component_resources"
+            v-show="service_selected === 0"
+            :showServices="bool => showServices(bool)"
+          />
+          <Evaluations
+            ref="component_evaluations"
+            v-show="service_selected === 1"
+            :showServices="bool => showServices(bool)"
+          />
+          <div v-show="show_services" class="chatbot-navigator">
             <div class="chatbot-actions elevation-3">
               <div class="chatbot-action transform-scale-plus" @click="selectService(0)">
+                <img src="@/assets/braintutor/icon-evaluation.png" alt />
+              </div>
+              <div class="chatbot-action transform-scale-plus" @click="selectService(1)">
                 <img src="@/assets/braintutor/icon-evaluation.png" alt />
               </div>
               <div class="chatbot-action transform-scale-plus" @click="selectService(1)">
@@ -39,6 +50,7 @@ import { getResourcesQuestions } from "@/services/resourceService";
 export default {
   data: () => ({
     available_questions: [],
+    show_services: true,
     service_selected: 0
   }),
   mounted() {
@@ -74,6 +86,9 @@ export default {
     });
   },
   methods: {
+    showServices(bool) {
+      this.show_services = bool;
+    },
     selectService(idx) {
       this.service_selected = idx;
     }
@@ -100,31 +115,29 @@ export default {
   }
   .chatbot-content {
     position: relative;
-    border-right: 1px solid #eee;
     height: 100%;
+    border-right: 1px solid #eee;
 
     .chatbot-navigator {
       position: absolute;
+      width: 100%;
       bottom: 0;
-      left: 0;
-      //
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
 
       .chatbot-actions {
-        padding: 0 10px;
+        width: max-content;
+        padding: 10px 8px;
+        margin: 0 auto;
         background: #fff;
-        border-radius: 0 20px 0 0;
-        opacity: 0.4;
+        border-radius: 10px 10px 0 0;
+        opacity: 0.5;
         transition: all 0.5s;
+        display: flex;
         &:hover {
           cursor: pointer;
           opacity: 1;
         }
         .chatbot-action {
-          display: block;
-          margin: 10px 0;
+          margin: 0 8px;
           img {
             width: 42px;
             height: 42px;

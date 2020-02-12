@@ -36,6 +36,7 @@ import { getParam } from "@/services/router.js";
 import { getEvaluations } from "@/services/evaluationService";
 
 export default {
+  props: ["showServices"],
   data: () => ({
     evaluations: [],
     evaluation_selected: null
@@ -46,15 +47,14 @@ export default {
       this.evaluations = res;
     });
   },
-  computed: {
-    
-  },
   methods: {
     selectEvaluation(evaluation) {
       this.evaluation_selected = evaluation;
+      this.showServices(false);
     },
     unselectEvaluation() {
       this.evaluation_selected = null;
+      this.showServices(true);
     }
   },
   components: {
