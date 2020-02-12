@@ -13,6 +13,8 @@ export default new Vuex.Store({
     resource_selected: null,
     items: [],
     item_idx: 0,
+    //Evaluations
+    timer: null,
     //Components
     component_avatar: null
   },
@@ -42,6 +44,13 @@ export default new Vuex.Store({
     },
     setItemIdx(state, item_idx) {
       state.item_idx = item_idx
+    },
+    //Evaluations
+    clearTimer(state) {
+      clearInterval(state.timer);
+    },
+    setTimer(state, timer) {
+      state.timer = timer
     },
     //Components
     setComponentAvatar(state, component_avatar) {

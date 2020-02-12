@@ -24,11 +24,11 @@
         <div class="question-text">{{question.enunciado}}</div>
         <div class="row no-gutters">
           <div
-            class="col-12 col-md-6"
+            class="col-12 col-md-6 pa-2"
             v-for="(alternative, a_idx) in question.alternativas"
             :key="a_idx"
           >
-            <div class="question-aternative transform-scale">{{alternative}}</div>
+            <div class="question-alternative transform-scale m-fullcenter">{{alternative}}</div>
           </div>
         </div>
       </div>
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { timer } from "@/services/timer";
+import { createTimer } from "@/services/timer";
 
 export default {
   props: ["evaluation_selected", "unselectEvaluation"],
@@ -46,20 +46,26 @@ export default {
     time_remaining: 0,
     time_total: 0
   }),
+  // component_avatar() {
+  //     return this.$store.state.component_avatar;
+  //   }
+  // },
+  // mounted() {
+  //   this.chatbot_id = getParam("chatbot_id");
+  //   this.$store.commit("setComponentAvatar", this.$refs.component_avatar);
   mounted() {
     // this.time_total = this.evaluation_selected.tiempo;
     this.time_total = 10;
     this.time_remaining = this.time_total;
-    timer(
+    // Timer
+    this.$store.commit("clearTimer", timer);
+    let timer = createTimer(
       this.time_total,
-      count => {
-        this.time_remaining--;
-        // console.log(count);
-      },
-      () => {
-        // console.log("FIN");
-      }
+      () => this.time_remaining--,
+      // () => this.unselectEvaluation()
+      () => {}
     );
+    this.$store.commit("setTimer", timer);
   },
   computed: {
     question() {
@@ -121,9 +127,9 @@ export default {
     font-size: calc(10px + 1vw);
     text-align: center;
   }
-  .question-aternative {
+  .question-alternative {
+    height: 100%;
     padding: 10px 20px;
-    margin: 5px;
     font-size: calc(10px + 0.65vw);
     border-radius: 10px;
     @include box-shadow;

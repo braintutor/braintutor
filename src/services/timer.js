@@ -1,4 +1,4 @@
-function timer(time, callback, callback_over) {
+function createTimer(time, callback, callback_over) {
   let second = 1000
   let count = 0
   let interval = setInterval(() => {
@@ -10,6 +10,7 @@ function timer(time, callback, callback_over) {
       clearInterval(interval)
     }
   }, second);
+  return interval
 }
 
-export { timer }
+export { createTimer }
