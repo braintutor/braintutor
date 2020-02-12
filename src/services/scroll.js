@@ -1,3 +1,6 @@
+function scrollTopWindow() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 function scrollDown(element_id) {
   var element = document.getElementById(element_id);
   setTimeout(() => {
@@ -5,4 +8,4 @@ function scrollDown(element_id) {
   }, 0);
 }
 
-export { scrollDown }
+export { scrollTopWindow, scrollDown }

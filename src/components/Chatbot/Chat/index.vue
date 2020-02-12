@@ -51,14 +51,14 @@
 import Avatar from "./Avatar";
 import Message from "@/models/Message";
 
-import { scrollDown } from "@/services/tools";
+import { scrollTopWindow, scrollDown } from "@/services/scroll";
 import { sendMessageTeacher } from "@/services/chatService";
 import { getSession } from "@/services/security";
 import { SpeechToText } from "@/services/speech";
 import { getParam } from "@/services/router.js";
 
 export default {
-  props: ["available_questions"],
+  props: ["available_questions", "selectService"],
   data: () => ({
     messages: [new Message("Hola.\n¿En qué puedo ayudarte?", 0)],
     message_text: "",
@@ -72,6 +72,9 @@ export default {
     },
     component_avatar() {
       return this.$store.state.component_avatar;
+    },
+    component_resources() {
+      return this.$store.state.component_resources;
     }
   },
   mounted() {
@@ -96,7 +99,9 @@ export default {
           if (material_id) {
             let resource = this.getResource(material_id);
             let items = res.respuesta_item ? [res.respuesta_item] : null;
-            this.$store.commit("setResource", { resource, items });
+            this.selectService(0);
+            this.component_resources.selectResource(resource, items);
+            scrollTopWindow();
           } else if (response) this.addMessage(response, 0);
           this.loading_message = false;
         });
@@ -137,7 +142,7 @@ export default {
     width: max-content;
     max-width: 70%;
     border-radius: 6px;
-    font-size: calc(12px + .2vw);
+    font-size: calc(12px + 0.2vw);
     white-space: pre-wrap;
     word-wrap: break-word;
 

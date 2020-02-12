@@ -1,7 +1,7 @@
 <template>
   <div class="m-fullscreen">
     <!-- Resource List -->
-    <v-container v-if="!resource_selected" fluid class="resources-container pa-3">
+    <v-container v-if="!resource" fluid class="resources-container pa-3">
       <v-row no-gutters>
         <v-col
           cols="6"
@@ -20,7 +20,14 @@
       </v-row>
     </v-container>
     <!-- Resource Selected -->
-    <Resource v-else :resource_selected="resource_selected" :unselectResource='unselectResource' />
+    <Resource
+      v-else
+      :resource="resource"
+      :items="items"
+      :item_idx="item_idx"
+      :unselectResource="unselectResource"
+      :changeItem="direction => changeItem(direction)"
+    />
   </div>
 </template>
 
@@ -28,22 +35,44 @@
 import Cartel from "@/components/Cartel";
 import Resource from "./Resource/index";
 
+import { Clamp } from "@/services/Math";
+
 export default {
-  data: () => ({}),
+  data: () => ({
+    resource: null,
+    items: [],
+    item_idx: 0
+  }),
   computed: {
     resources() {
       return this.$store.state.resources;
-    },
-    resource_selected() {
-      return this.$store.state.resource_selected;
     }
   },
   methods: {
-    selectResource(resource) {
-      this.$store.commit("setResource", { resource });
+    selectResource(resource, items) {
+      this.resource = resource;
+      this.items = items || [
+        "texto",
+        "video",
+        "documento",
+        "imagen",
+        "quiz",
+        "ejemplos",
+        "importancia",
+        "explicacion",
+        "faq"
+      ];
+      this.item_idx = 0;
     },
     unselectResource() {
-      this.$store.commit("setResource", { resource: null });
+      this.resource = null;
+    },
+    changeItem(direction) {
+      this.item_idx = Clamp(
+        this.item_idx + direction,
+        0,
+        this.items.length - 1
+      );
     }
   },
   components: {

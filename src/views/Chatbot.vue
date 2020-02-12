@@ -1,10 +1,10 @@
 <template>
   <div class="chatbot-container">
     <v-container fluid class="fill-height pa-0">
-      <v-row no-gutters class="fill-height">
+      <v-row id="prueba" no-gutters class="fill-height">
         <div class="chatbot-content col-12 col-sm-7 col-md-8">
-          <Resources v-if="service_selected === 0" />
-          <Evaluations v-else-if="service_selected === 1" />
+          <Resources ref="component_resources" v-show="service_selected === 0" />
+          <Evaluations ref="component_evaluations" v-show="service_selected === 1" />
           <div class="chatbot-navigator">
             <div class="chatbot-actions elevation-3">
               <div class="chatbot-action transform-scale-plus" @click="selectService(0)">
@@ -19,6 +19,7 @@
         <Chat
           class="chat-container col-12 col-sm-5 col-md-4"
           :available_questions="available_questions"
+          :selectService="idx => selectService(idx)"
         />
       </v-row>
     </v-container>
@@ -41,12 +42,17 @@ export default {
     service_selected: 0
   }),
   mounted() {
-    let chatbot_id = getParam("chatbot_id");
+    // Components
+    this.$store.commit("setComponentResources", this.$refs.component_resources);
+    this.$store.commit(
+      "setComponentEvaluations",
+      this.$refs.component_evaluations
+    );
 
+    let chatbot_id = getParam("chatbot_id");
     getResources(chatbot_id).then(res => {
       let resources = JSON.parse(res);
       this.$store.commit("setResources", resources);
-
       getKnowledge(chatbot_id).then(res => {
         this.available_questions = JSON.parse(res).map(
           item => item.preguntas[0]

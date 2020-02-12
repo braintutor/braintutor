@@ -46,13 +46,6 @@ export default {
     time_remaining: 0,
     time_total: 0
   }),
-  // component_avatar() {
-  //     return this.$store.state.component_avatar;
-  //   }
-  // },
-  // mounted() {
-  //   this.chatbot_id = getParam("chatbot_id");
-  //   this.$store.commit("setComponentAvatar", this.$refs.component_avatar);
   mounted() {
     // this.time_total = this.evaluation_selected.tiempo;
     this.time_total = 10;

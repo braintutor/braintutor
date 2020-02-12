@@ -10,13 +10,12 @@ export default new Vuex.Store({
     session_exists: sessionExists(),
     //Resources
     resources: [],
-    resource_selected: null,
-    items: [],
-    item_idx: 0,
     //Evaluations
     timer: null,
     //Components
-    component_avatar: null
+    component_avatar: null,
+    component_resources: null,
+    component_evaluations: null,
   },
   mutations: {
     setSessionExists(state, session_exists) {
@@ -26,24 +25,6 @@ export default new Vuex.Store({
     setResources(state, resources) {
       state.resources = resources
       state.resource_selected = null
-    },
-    setResource(state, { resource, items }) {
-      state.resource_selected = resource
-      state.items = items || [
-        "texto",
-        "video",
-        "documento",
-        "imagen",
-        "quiz",
-        "ejemplos",
-        "importancia",
-        "explicacion",
-        "faq"
-      ]
-      state.item_idx = 0
-    },
-    setItemIdx(state, item_idx) {
-      state.item_idx = item_idx
     },
     //Evaluations
     clearTimer(state) {
@@ -55,6 +36,12 @@ export default new Vuex.Store({
     //Components
     setComponentAvatar(state, component_avatar) {
       state.component_avatar = component_avatar
+    },
+    setComponentResources(state, component_resources) {
+      state.component_resources = component_resources
+    },
+    setComponentEvaluations(state, component_evaluations) {
+      state.component_evaluations = component_evaluations
     }
   },
   actions: {

@@ -2,7 +2,6 @@ function createTimer(time, callback, callback_over) {
   let second = 1000
   let count = 0
   let interval = setInterval(() => {
-    // callback()
     count += second
     callback(count / second)
     if (count >= time * second) {

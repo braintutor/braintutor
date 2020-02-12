@@ -4,40 +4,36 @@
       <v-btn icon @click="unselectResource()">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
-      <span class="resource-title">{{resource_selected.nombre}}</span>
+      <span class="resource-title">{{resource.nombre}}</span>
     </div>
     <div class="m-fullscreen-content">
       <div class="resource-content">
         <!-- Item Text -->
         <div v-if="item_selected == 'texto'" class="item item-text">
           <div class="item-text-menu">
-            <div class="item-text-title">{{resource_selected.nombre}}</div>
-            <v-btn icon @click="startTalk(resource_selected[item_selected])">
+            <div class="item-text-title">{{resource.nombre}}</div>
+            <v-btn icon @click="startTalk(resource[item_selected])">
               <v-icon>mdi-volume-high</v-icon>
             </v-btn>
           </div>
-          <div class="item-text-content">{{resource_selected[item_selected]}}</div>
+          <div class="item-text-content">{{resource[item_selected]}}</div>
         </div>
         <!-- Item Video -->
         <div v-if="item_selected == 'video'" class="item item-video aspect-ratio-video">
-          <iframe
-            class="aspect-ratio-content"
-            :src="resource_selected[item_selected]"
-            allowfullscreen
-          />
+          <iframe class="aspect-ratio-content" :src="resource[item_selected]" allowfullscreen />
         </div>
         <!-- Item Document -->
         <div v-if="item_selected == 'documento'" class="item item-document">
-          <embed :src="resource_selected[item_selected]" alt />
+          <embed :src="resource[item_selected]" alt />
         </div>
         <!-- Item Image -->
         <div v-if="item_selected == 'imagen'" class="item item-image">
-          <img :src="resource_selected[item_selected]" alt />
+          <img :src="resource[item_selected]" alt />
         </div>
         <!-- Item Quiz -->
         <Quiz
           v-if="item_selected == 'quiz'"
-          :quiz="resource_selected[item_selected]"
+          :quiz="resource[item_selected]"
           :talk="text => {startTalk(text)}"
         />
         <!-- Item Example -->
@@ -46,7 +42,7 @@
             <div class="item-text-title">Ejemplos</div>
           </div>
           <div
-            v-for="(example, e_idx) in resource_selected[item_selected]"
+            v-for="(example, e_idx) in resource[item_selected]"
             :key="e_idx"
             class="item-text-content"
           >
@@ -58,11 +54,11 @@
         <div v-if="item_selected == 'importancia'" class="item item-text">
           <div class="item-text-menu">
             <div class="item-text-title">¿Por qué es importante?</div>
-            <v-btn icon @click="startTalk(resource_selected[item_selected])">
+            <v-btn icon @click="startTalk(resource[item_selected])">
               <v-icon>mdi-volume-high</v-icon>
             </v-btn>
           </div>
-          <div class="item-text-content">{{resource_selected[item_selected]}}</div>
+          <div class="item-text-content">{{resource[item_selected]}}</div>
         </div>
         <!-- Item Explication -->
         <div v-if="item_selected == 'explicacion'" class="item item-text">
@@ -70,7 +66,7 @@
             <div class="item-text-title">Más información</div>
           </div>
           <div
-            v-for="(url, f_idx) in resource_selected[item_selected]"
+            v-for="(url, f_idx) in resource[item_selected]"
             :key="f_idx"
             class="item-text-content"
           >
@@ -80,11 +76,7 @@
         </div>
         <!-- Item FAQ -->
         <div v-if="item_selected == 'faq'">
-          <div
-            v-for="(faq, f_idx) in resource_selected[item_selected]"
-            :key="f_idx"
-            class="item item-text"
-          >
+          <div v-for="(faq, f_idx) in resource[item_selected]" :key="f_idx" class="item item-text">
             <div class="item-text-menu">
               <div class="item-text-title">{{faq.pregunta}}</div>
               <v-btn icon @click="startTalk(`${faq.pregunta}. ${faq.respuesta}`)">
@@ -115,32 +107,20 @@
 <script>
 import Quiz from "./Quiz";
 
-import { Clamp } from "@/services/Math";
-
 export default {
-  props: ["resource_selected", "unselectResource"],
-  data: () => ({}),
+  props: ["resource", "items", "item_idx", "unselectResource", "changeItem"],
+  mounted() {
+    this.item_idx = this.item_idx;
+  },
   computed: {
     component_avatar() {
       return this.$store.state.component_avatar;
     },
     item_selected() {
       return this.items[this.item_idx];
-    },
-    items() {
-      return this.$store.state.items;
-    },
-    item_idx() {
-      return this.$store.state.item_idx;
     }
   },
   methods: {
-    changeItem(direction) {
-      this.$store.commit(
-        "setItemIdx",
-        Clamp(this.item_idx + direction, 0, this.items.length - 1)
-      );
-    },
     startTalk(text) {
       this.component_avatar.startTalk(text);
     }

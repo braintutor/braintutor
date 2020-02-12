@@ -47,12 +47,7 @@ export default {
     });
   },
   computed: {
-    resources() {
-      return this.$store.state.resources;
-    },
-    resource_selected() {
-      return this.$store.state.resource_selected;
-    }
+    
   },
   methods: {
     selectEvaluation(evaluation) {
