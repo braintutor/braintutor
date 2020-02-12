@@ -118,7 +118,7 @@ import Quiz from "./Quiz";
 import { Clamp } from "@/services/Math";
 
 export default {
-  props: ["resource_selected"],
+  props: ["resource_selected", "unselectResource"],
   data: () => ({}),
   computed: {
     component_avatar() {
@@ -135,9 +135,6 @@ export default {
     }
   },
   methods: {
-    unselectResource() {
-      this.$store.commit("setResource", { resource: null });
-    },
     changeItem(direction) {
       this.$store.commit(
         "setItemIdx",
@@ -159,7 +156,6 @@ export default {
 
 .resource-container {
   position: relative;
-  height: 100%;
 
   .resource-menu {
     padding: 10px;
@@ -199,7 +195,7 @@ export default {
       .resource-action {
         margin: 0 8px;
         font-weight: bold;
-      font-size: calc(11px + 1vw);
+        font-size: calc(11px + 1vw);
         // font-size: 18px;
       }
     }

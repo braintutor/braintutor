@@ -1,6 +1,6 @@
 <template>
   <div class="cartel-container transform-scale elevation-3" @click="callback()">
-    <img class="cartel-img" src="@/assets/backgrounds/green.jpg" />
+    <img class="cartel-img" :src="image" />
     <div class="cartel-content m-fullcenter">
       <div v-if="title" class="cartel-title">{{title}}</div>
       <div v-if="description" class="cartel-description">{{description}}</div>

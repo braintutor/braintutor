@@ -11,12 +11,16 @@
           v-for="(resource, r_idx) in resources"
           :key="r_idx"
         >
-          <Cartel :description="resource.nombre" :callback="() => selectResource(resource)" />
+          <Cartel
+            :description="resource.nombre"
+            :image="'https://besthqwallpapers.com/img/original/47929/4k-android-green-and-yellow-google-chrome-material-design.jpg'"
+            :callback="() => selectResource(resource)"
+          />
         </v-col>
       </v-row>
     </v-container>
     <!-- Resource Selected -->
-    <Resource v-else :resource_selected="resource_selected"></Resource>
+    <Resource v-else :resource_selected="resource_selected" :unselectResource='unselectResource' />
   </div>
 </template>
 
@@ -37,6 +41,9 @@ export default {
   methods: {
     selectResource(resource) {
       this.$store.commit("setResource", { resource });
+    },
+    unselectResource() {
+      this.$store.commit("setResource", { resource: null });
     }
   },
   components: {
