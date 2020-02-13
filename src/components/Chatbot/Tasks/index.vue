@@ -28,7 +28,7 @@ export default {
   }),
   methods: {
     handleDateClick(arg) {
-      console.log(arg.event);
+      // console.log(arg.event);
       this.events.push({
         title: "event 1",
         date: "2020-02-20"
