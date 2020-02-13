@@ -67,11 +67,6 @@ export default {
     time_percentage() {
       return ((this.time_total - this.time_remaining) / this.time_total) * 100;
     }
-  },
-  methods: {
-    // unselectEvaluation() {
-    //   this.evaluation_selected = null;
-    // }
   }
 };
 </script>

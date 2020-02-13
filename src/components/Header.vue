@@ -25,6 +25,9 @@
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" fixed temporary>
+      <div class="nav-logo">
+        <v-img alt="BrainTutor Logo" src="@/assets/braintutor/icon.png" width="25" />
+      </div>
       <v-list>
         <v-list-item-group active-class="blue--text text--accent-4">
           <v-list-item
@@ -104,6 +107,10 @@ export default {
 }
 .nav-icon {
   display: none;
+}
+.nav-logo {
+  width: max-content;
+  margin: 22px auto 12px;
 }
 
 @media only screen and (max-width: 690px) {

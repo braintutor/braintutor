@@ -20,6 +20,7 @@
         <Cartel
           :title="chatbot.course"
           :description="chatbot.nombre"
+          :image="'https://i.pinimg.com/originals/ff/92/68/ff92685e660a2d347736f44cc7a11d38.jpg'"
           :callback="() => selectChatbot(chatbot)"
         />
       </v-col>
