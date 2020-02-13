@@ -20,7 +20,12 @@
       </v-row>
     </v-container>
     <!-- Evaluation Selected -->
-    <Evaluation v-else :evaluation="evaluation_selected" :unselectEvaluation="unselectEvaluation" />
+    <Evaluation
+      v-else
+      :evaluation="evaluation_selected"
+      :unselectEvaluation="unselectEvaluation"
+      :service_selected="service_selected"
+    />
   </div>
 </template>
 
@@ -33,7 +38,7 @@ import { copy } from "@/services/object.js";
 import { getEvaluations } from "@/services/evaluationService";
 
 export default {
-  props: ["showServices"],
+  props: ["showServices", "service_selected"],
   data: () => ({
     evaluations: [],
     evaluation_selected: null

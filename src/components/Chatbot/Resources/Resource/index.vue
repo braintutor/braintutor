@@ -156,7 +156,7 @@ export default {
     position: absolute;
     width: 100%;
     bottom: 0;
-
+    pointer-events: none;
     .resource-actions {
       width: max-content;
       padding: 8px 6px;
@@ -167,7 +167,7 @@ export default {
       transition: all 0.5s;
       display: flex;
       align-items: center;
-
+      pointer-events: all;
       &:hover {
         cursor: pointer;
         opacity: 1;

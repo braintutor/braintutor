@@ -56,7 +56,7 @@ import { createTimer } from "@/services/timer";
 import { percentage } from "@/services/math";
 
 export default {
-  props: ["evaluation", "unselectEvaluation"],
+  props: ["evaluation", "unselectEvaluation", "service_selected"],
   data: () => ({
     question_idx: 0,
     time_remaining: 0,
@@ -118,12 +118,14 @@ export default {
       }
     },
     showScore() {
-      this.clearTimer();
-      this.show_score = true;
-      setTimeout(() => {
-        this.score = percentage(this.total_questions, this.corrects);
-        this.startTalk(this.score_message);
-      }, 500);
+      if (this.service_selected == 1) {
+        this.clearTimer();
+        this.show_score = true;
+        setTimeout(() => {
+          this.score = percentage(this.total_questions, this.corrects);
+          this.startTalk(this.score_message);
+        }, 500);
+      }
     },
     //
     clearTimer() {

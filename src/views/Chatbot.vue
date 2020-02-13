@@ -11,6 +11,7 @@
           <Evaluations
             ref="component_evaluations"
             v-show="service_selected === 1"
+            :service_selected="service_selected"
             :showServices="bool => showServices(bool)"
           />
           <Tasks
@@ -124,13 +125,11 @@ export default {
     position: relative;
     height: 100%;
     border-right: 1px solid #eee;
-
     .chatbot-navigator {
-      z-index: 1;
       position: absolute;
       width: 100%;
       bottom: 0;
-
+      pointer-events: none;
       .chatbot-actions {
         width: max-content;
         padding: 10px 8px;
@@ -140,6 +139,7 @@ export default {
         opacity: 0.5;
         transition: all 0.5s;
         display: flex;
+        pointer-events: all;
         &:hover {
           cursor: pointer;
           opacity: 1;
