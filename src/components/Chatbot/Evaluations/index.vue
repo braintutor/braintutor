@@ -20,11 +20,7 @@
       </v-row>
     </v-container>
     <!-- Evaluation Selected -->
-    <Evaluation
-      v-else
-      :evaluation_selected="evaluation_selected"
-      :unselectEvaluation="unselectEvaluation"
-    />
+    <Evaluation v-else :evaluation="evaluation_selected" :unselectEvaluation="unselectEvaluation" />
   </div>
 </template>
 
@@ -33,6 +29,7 @@ import Cartel from "@/components/Cartel";
 import Evaluation from "./Evaluation";
 
 import { getParam } from "@/services/router.js";
+import { copy } from "@/services/object.js";
 import { getEvaluations } from "@/services/evaluationService";
 
 export default {
@@ -49,7 +46,7 @@ export default {
   },
   methods: {
     selectEvaluation(evaluation) {
-      this.evaluation_selected = evaluation;
+      this.evaluation_selected = copy(evaluation);
       this.showServices(false);
     },
     unselectEvaluation() {

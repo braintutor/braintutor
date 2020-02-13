@@ -5,14 +5,13 @@
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <div class="evaluation-description">
-        <span class="evaluation-title">{{evaluation_selected.nombre}}</span>
-        <div class="evaluation-level">{{evaluation_selected.nivel}}</div>
+        <span class="evaluation-title">{{evaluation.nombre}}</span>
+        <div class="evaluation-level">{{evaluation.nivel}}</div>
       </div>
     </div>
-    <div class="m-fullscreen-content">
+    <div v-if="!show_score" class="m-fullscreen-content">
       <div class="evaluation-time">
         <v-progress-circular
-          class="question-time"
           :rotate="270"
           :size="42"
           :width="3"
@@ -28,9 +27,25 @@
             v-for="(alternative, a_idx) in question.alternativas"
             :key="a_idx"
           >
-            <div class="question-alternative transform-scale m-fullcenter">{{alternative}}</div>
+            <div
+              class="question-alternative transform-scale m-fullcenter"
+              :class="{'question-alternative-correct': question.show_correct && question.correcta === a_idx,'question-alternative-incorrect': question.incorrect === a_idx}"
+              @click="selectAlternative(question, question.correcta, a_idx)"
+            >{{alternative}}</div>
           </div>
         </div>
+      </div>
+    </div>
+    <div v-else class="score-container m-fullscreen-content">
+      <v-progress-circular
+        :rotate="270"
+        :size="180"
+        :width="10"
+        :value="score"
+        color="primary"
+      >{{`${this.corrects}/${this.total_questions}`}}</v-progress-circular>
+      <div class="score-content">
+        <span>{{score_message}}</span>
       </div>
     </div>
   </div>
@@ -40,32 +55,84 @@
 import { createTimer } from "@/services/timer";
 
 export default {
-  props: ["evaluation_selected", "unselectEvaluation"],
+  props: ["evaluation", "unselectEvaluation"],
   data: () => ({
     question_idx: 0,
     time_remaining: 0,
-    time_total: 0
+    time_total: 0,
+    //
+    total_questions: 0,
+    score: 0,
+    corrects: 0,
+    //
+    time_transition: 1000,
+    show_score: false
   }),
+  computed: {
+    question() {
+      return this.evaluation.preguntas[this.question_idx];
+    },
+    time_percentage() {
+      return 100 - this.getPercentage(this.time_total, this.time_remaining);
+    },
+    component_avatar() {
+      return this.$store.state.component_avatar;
+    },
+    score_message() {
+      return `Has acertado ${this.corrects} de ${this.total_questions} preguntas.`;
+    }
+  },
   mounted() {
-    // this.time_total = this.evaluation_selected.tiempo;
-    this.time_total = 10;
+    this.total_questions = this.evaluation.preguntas.length;
+    this.time_total = this.evaluation.tiempo;
     this.time_remaining = this.time_total;
     // Timer
-    this.$store.commit("clearTimer", timer);
+    this.clearTimer();
     let timer = createTimer(
       this.time_total,
       () => this.time_remaining--,
-      // () => this.unselectEvaluation()
-      () => {}
+      () => this.showScore()
     );
     this.$store.commit("setTimer", timer);
   },
-  computed: {
-    question() {
-      return this.evaluation_selected.preguntas[this.question_idx];
+  methods: {
+    selectAlternative(question, correct_idx, alternative_idx) {
+      if (!question.show_correct) {
+        question.show_correct = true;
+        if (correct_idx === alternative_idx) {
+          this.corrects++;
+          this.startTalk("respuesta correcta");
+        } else {
+          question.incorrect = alternative_idx;
+          this.startTalk("respuesta incorrecta");
+        }
+        setTimeout(() => {
+          if (this.total_questions > this.question_idx + 1) {
+            this.question_idx++;
+          } else {
+            this.showScore();
+          }
+        }, this.time_transition);
+        this.$forceUpdate(); /* Correct Binding Update (:class) */
+      }
     },
-    time_percentage() {
-      return ((this.time_total - this.time_remaining) / this.time_total) * 100;
+    showScore() {
+      this.clearTimer();
+      this.show_score = true;
+      setTimeout(() => {
+        this.score = this.getPercentage(this.total_questions, this.corrects);
+        this.startTalk(this.score_message);
+      }, 500);
+    },
+    //
+    clearTimer() {
+      this.$store.commit("clearTimer");
+    },
+    startTalk(text) {
+      this.component_avatar.startTalk(text);
+    },
+    getPercentage(total, value) {
+      return (value / total) * 100;
     }
   }
 };
@@ -98,11 +165,11 @@ export default {
       }
     }
   }
-}
-.evaluation-time {
-  width: max-content;
-  margin: 0 auto 14px;
-  font-size: 14px;
+  .evaluation-time {
+    width: max-content;
+    margin: 0 auto 14px;
+    font-size: 14px;
+  }
 }
 .question-container {
   padding: 20px;
@@ -124,6 +191,27 @@ export default {
     &:hover {
       cursor: pointer;
     }
+    &.question-alternative-correct {
+      background: #8bc34a;
+      color: #fff;
+      font-weight: bold;
+    }
+    &.question-alternative-incorrect {
+      background: #ff887f;
+      color: #fff;
+      font-weight: bold;
+    }
+  }
+}
+.score-container {
+  padding: 30px;
+  font-size: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .score-content {
+    font-size: calc(10px + 1vw);
+    margin-top: 32px;
   }
 }
 </style>
