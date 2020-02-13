@@ -77,8 +77,7 @@ export default {
       {
         title: "Clases",
         description: "Creación de clases virtuales",
-        image:
-          "https://seeklogo.com/images/E/educational-people-logo-66BC945BD1-seeklogo.com.png"
+        image: require("@/assets/braintutor/icon-resource.png")
       },
       {
         title: "Evaluaciones",
@@ -182,7 +181,7 @@ export default {
     display: flex;
     align-items: center;
     .service-image {
-      padding-right: 14px;
+      padding-right: 15px;
       height: 54px;
       img {
         width: 54px;

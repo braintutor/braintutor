@@ -16,7 +16,7 @@
           <div v-show="show_services" class="chatbot-navigator">
             <div class="chatbot-actions elevation-3">
               <div class="chatbot-action transform-scale-plus" @click="selectService(0)">
-                <img src="@/assets/braintutor/icon-evaluation.png" alt />
+                <img src="@/assets/braintutor/icon-resource.png" alt />
               </div>
               <div class="chatbot-action transform-scale-plus" @click="selectService(1)">
                 <img src="@/assets/braintutor/icon-evaluation.png" alt />
