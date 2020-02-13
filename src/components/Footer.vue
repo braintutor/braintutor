@@ -1,7 +1,7 @@
 <template>
   <div class="footer-container">
     <div class="footer-content container">
-      <span>Designed by</span>
+      <span>Diseñado por</span>
       <span class="footer-author">Mitsuo</span>
     </div>
   </div>
@@ -20,7 +20,7 @@ export default {};
     font-weight: lighter;
     font-size: 14px;
     .footer-author {
-      margin-left: 8px;
+      margin-left: 6px;
       font-weight: bold;
       font-size: 15px;
     }

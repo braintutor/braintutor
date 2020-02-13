@@ -13,6 +13,11 @@
             v-show="service_selected === 1"
             :showServices="bool => showServices(bool)"
           />
+          <Tasks
+            ref="component_tasks"
+            v-if="service_selected === 2"
+            :showServices="bool => showServices(bool)"
+          />
           <div v-show="show_services" class="chatbot-navigator">
             <div class="chatbot-actions elevation-3">
               <div class="chatbot-action transform-scale-plus" @click="selectService(0)">
@@ -20,6 +25,9 @@
               </div>
               <div class="chatbot-action transform-scale-plus" @click="selectService(1)">
                 <img src="@/assets/braintutor/icon-evaluation.png" alt />
+              </div>
+              <div class="chatbot-action transform-scale-plus" @click="selectService(2)">
+                <img src="https://img.icons8.com/cotton/2x/calendar.png" alt />
               </div>
             </div>
           </div>
@@ -38,6 +46,7 @@
 import Chat from "@/components/Chatbot/Chat/index";
 import Resources from "@/components/Chatbot/Resources/index";
 import Evaluations from "@/components/Chatbot/Evaluations/index";
+import Tasks from "@/components/Chatbot/Tasks/index";
 
 import { getParam } from "@/services/router.js";
 import { getResources } from "@/services/resourceService";
@@ -48,7 +57,7 @@ export default {
   data: () => ({
     available_questions: [],
     show_services: true,
-    service_selected: 0
+    service_selected: 2
   }),
   mounted() {
     // Components
@@ -93,7 +102,8 @@ export default {
   components: {
     Chat,
     Resources,
-    Evaluations
+    Evaluations,
+    Tasks
   }
 };
 </script>
@@ -116,6 +126,7 @@ export default {
     border-right: 1px solid #eee;
 
     .chatbot-navigator {
+      z-index: 1;
       position: absolute;
       width: 100%;
       bottom: 0;
