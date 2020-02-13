@@ -2,19 +2,21 @@
   <div class="chatbot-container">
     <v-container fluid class="fill-height pa-0">
       <v-row id="prueba" no-gutters class="fill-height">
-        <div class="chatbot-content col-12 col-sm-7 col-md-8">
+        <div class="chatbot-content col-12 col-sm-7 col-md-8 m-fullscreen">
           <Resources
+            class="m-fullscreen-content"
             ref="component_resources"
             v-show="service_selected === 0"
             :showServices="bool => showServices(bool)"
           />
           <Evaluations
+            class="m-fullscreen-content"
             ref="component_evaluations"
             v-show="service_selected === 1"
-            :service_selected="service_selected"
             :showServices="bool => showServices(bool)"
           />
           <Tasks
+            class="m-fullscreen-content"
             ref="component_tasks"
             v-if="service_selected === 2"
             :showServices="bool => showServices(bool)"
@@ -123,7 +125,6 @@ export default {
   }
   .chatbot-content {
     position: relative;
-    height: 100%;
     border-right: 1px solid #eee;
     .chatbot-navigator {
       position: absolute;

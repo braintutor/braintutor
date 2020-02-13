@@ -1,32 +1,29 @@
 <template>
-  <div class="m-fullscreen">
-    <!-- Evaluation List -->
-    <v-container v-if="!evaluation_selected" fluid class="resources-container pa-3">
-      <v-row no-gutters>
-        <v-col
-          cols="6"
-          md="3"
-          lg="2"
-          class="pa-2"
-          v-for="(evaluation, e_idx) in evaluations"
-          :key="e_idx"
-        >
-          <Cartel
-            :description="evaluation.nombre"
-            :image="'https://i.pinimg.com/originals/ff/92/68/ff92685e660a2d347736f44cc7a11d38.jpg'"
-            :callback="() => selectEvaluation(evaluation)"
-          />
-        </v-col>
-      </v-row>
-    </v-container>
-    <!-- Evaluation Selected -->
-    <Evaluation
-      v-else
-      :evaluation="evaluation_selected"
-      :unselectEvaluation="unselectEvaluation"
-      :service_selected="service_selected"
-    />
-  </div>
+  <!-- Evaluation List -->
+  <v-container v-if="!evaluation_selected" fluid class="pa-3">
+    <v-row no-gutters>
+      <v-col
+        cols="6"
+        md="3"
+        lg="2"
+        class="pa-2"
+        v-for="(evaluation, e_idx) in evaluations"
+        :key="e_idx"
+      >
+        <Cartel
+          :description="evaluation.nombre"
+          :image="'https://i.pinimg.com/originals/ff/92/68/ff92685e660a2d347736f44cc7a11d38.jpg'"
+          :callback="() => selectEvaluation(evaluation)"
+        />
+      </v-col>
+    </v-row>
+  </v-container>
+  <!-- Evaluation Selected -->
+  <Evaluation
+    v-else
+    :evaluation="evaluation_selected"
+    :unselectEvaluation="unselectEvaluation"
+  />
 </template>
 
 <script>
@@ -38,7 +35,7 @@ import { copy } from "@/services/object.js";
 import { getEvaluations } from "@/services/evaluationService";
 
 export default {
-  props: ["showServices", "service_selected"],
+  props: ["showServices"],
   data: () => ({
     evaluations: [],
     evaluation_selected: null

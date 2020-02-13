@@ -1,5 +1,5 @@
 <template>
-  <div class="calendar-container">
+  <div class="tasks-container">
     <div class="calendar-control">
       <p>{{calendar_date}}</p>
       <v-btn @click="today()">today</v-btn>
@@ -14,6 +14,10 @@
       @eventClick="handleDateClick"
       eventTextColor="#fff"
     />
+    <div class="tasks-content">
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum ut maiores distinctio, fuga minus eius id repudiandae tempora ad incidunt totam sunt, quam, facere nihil illum in nemo unde iusto!
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum ut maiores distinctio, fuga minus eius id repudiandae tempora ad incidunt totam sunt, quam, facere nihil illum in nemo unde iusto!
+    </div>
   </div>
 </template>
 
@@ -86,8 +90,8 @@ export default {
 @import "~@fullcalendar/core/main.css";
 @import "~@fullcalendar/daygrid/main.css";
 
-.calendar-container {
-  padding: 20px;
+.tasks-container {
+  padding: 20px 20px 40px 20px;
 }
 .fc-toolbar.fc-header-toolbar {
   display: none;
