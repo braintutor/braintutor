@@ -24,7 +24,9 @@
         <div class="row">
           <div v-for="(service, s_idx) in services" :key="s_idx" class="col-sm-6 col-md-4 pa-2">
             <div class="service-container transform-scale">
-              <img class="service-image" :src="service.image" />
+              <div class="service-image">
+                <img :src="service.image" alt />
+              </div>
               <div class="service-content">
                 <div class="service-title">{{service.title}}</div>
                 <div class="service-descripcion">{{service.description}}</div>
@@ -81,8 +83,7 @@ export default {
       {
         title: "Evaluaciones",
         description: "Creación de evaluaciones constantes",
-        image:
-          "https://store-images.s-microsoft.com/image/apps.11856.811f7e45-09fd-4998-a57a-3f8bcf09f141.68aeb64e-c248-4331-9dc2-7591905fff66.7fd56d71-ad38-43b5-8ce8-b59254d440d2.png"
+        image: require("@/assets/braintutor/icon-evaluation.png")
       },
       {
         title: "Tareas",
@@ -180,13 +181,15 @@ export default {
     border-radius: 10px;
     display: flex;
     align-items: center;
-
     .service-image {
-      width: 60px;
-      height: 60px;
+      padding-right: 14px;
+      height: 54px;
+      img {
+        width: 54px;
+        height: 54px;
+      }
     }
     .service-content {
-      margin-left: 16px;
       .service-title {
         font-size: 17px;
         font-weight: bold;

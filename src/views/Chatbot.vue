@@ -21,9 +21,6 @@
               <div class="chatbot-action transform-scale-plus" @click="selectService(1)">
                 <img src="@/assets/braintutor/icon-evaluation.png" alt />
               </div>
-              <div class="chatbot-action transform-scale-plus" @click="selectService(1)">
-                <img src="@/assets/braintutor/icon-evaluation.png" alt />
-              </div>
             </div>
           </div>
         </div>
