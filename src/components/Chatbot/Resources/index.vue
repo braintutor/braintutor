@@ -35,7 +35,7 @@
 import Cartel from "@/components/Cartel";
 import Resource from "./Resource/index";
 
-import { Clamp } from "@/services/Math";
+import { Clamp } from "@/services/math";
 
 export default {
   props: ['showServices'],

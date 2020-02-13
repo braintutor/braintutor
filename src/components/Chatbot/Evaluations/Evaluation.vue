@@ -53,6 +53,7 @@
 
 <script>
 import { createTimer } from "@/services/timer";
+import { percentage } from "@/services/math";
 
 export default {
   props: ["evaluation", "unselectEvaluation"],
@@ -73,7 +74,7 @@ export default {
       return this.evaluation.preguntas[this.question_idx];
     },
     time_percentage() {
-      return 100 - this.getPercentage(this.time_total, this.time_remaining);
+      return 100 - percentage(this.time_total, this.time_remaining);
     },
     component_avatar() {
       return this.$store.state.component_avatar;
@@ -120,7 +121,7 @@ export default {
       this.clearTimer();
       this.show_score = true;
       setTimeout(() => {
-        this.score = this.getPercentage(this.total_questions, this.corrects);
+        this.score = percentage(this.total_questions, this.corrects);
         this.startTalk(this.score_message);
       }, 500);
     },
@@ -130,9 +131,6 @@ export default {
     },
     startTalk(text) {
       this.component_avatar.startTalk(text);
-    },
-    getPercentage(total, value) {
-      return (value / total) * 100;
     }
   }
 };
@@ -150,6 +148,7 @@ export default {
     .evaluation-description {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       width: 100%;
       .evaluation-title {
         margin: 0 12px;
