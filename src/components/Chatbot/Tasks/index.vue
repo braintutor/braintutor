@@ -1,23 +1,27 @@
 <template>
-  <div class="tasks-container">
+  <div class="calendar-container">
     <div class="calendar-control">
-      <p>{{calendar_date}}</p>
-      <v-btn @click="today()">today</v-btn>
-      <v-btn @click="prev()">prev</v-btn>
-      <v-btn @click="next()">next</v-btn>
+      <span class="calendar-date">{{calendar_date}}</span>
+      <div class="calendar-actions">
+        <v-btn class="calendar-action" icon @click="today()">
+          <v-icon>mdi-calendar-today</v-icon>
+        </v-btn>
+        <v-btn class="calendar-action" icon @click="prev()">
+          <v-icon>mdi-chevron-left</v-icon>
+        </v-btn>
+        <v-btn class="calendar-action" icon @click="next()">
+          <v-icon>mdi-chevron-right</v-icon>
+        </v-btn>
+      </div>
     </div>
     <FullCalendar
       ref="calendar"
       :locale="locale"
       :plugins="calendarPlugins"
       :events="events"
-      @eventClick="handleDateClick"
+      @eventClick="eventClick"
       eventTextColor="#fff"
     />
-    <div class="tasks-content">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum ut maiores distinctio, fuga minus eius id repudiandae tempora ad incidunt totam sunt, quam, facere nihil illum in nemo unde iusto!
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum ut maiores distinctio, fuga minus eius id repudiandae tempora ad incidunt totam sunt, quam, facere nihil illum in nemo unde iusto!
-    </div>
   </div>
 </template>
 
@@ -34,8 +38,16 @@ export default {
     locale: esLocale,
     calendarPlugins: [dayGridPlugin],
     events: [
-      { title: "event 1", date: "2020-02-14" },
-      { title: "event 2", date: "2020-02-15" }
+      {
+        title: "Matemáticas",
+        date: "2020-02-14",
+        task: "a"
+      },
+      {
+        title: "Biología",
+        date: "2020-02-15",
+        task: "b"
+      }
     ],
     //
     calendar_date: null
@@ -45,12 +57,13 @@ export default {
     this.updateCalendarDate();
   },
   methods: {
-    handleDateClick() {
-      // console.log(arg.event);
-      this.events.push({
-        title: "event 1",
-        date: "2020-02-20"
-      });
+    eventClick({ event }) {
+      console.log(event.title, event.start, event.extendedProps);
+
+      // this.events.push({
+      //   title: "event 1",
+      //   date: "2020-02-20"
+      // });
     },
     // Calendar
     today() {
@@ -73,11 +86,12 @@ export default {
       return this.calendar.getDate();
     },
     updateCalendarDate() {
-      this.calendar_date = formatDate(this.getCalendarDate(), {
+      let date = formatDate(this.getCalendarDate(), {
         month: "long",
         year: "numeric",
         locale: "es"
       });
+      this.calendar_date = date.charAt(0).toUpperCase() + date.slice(1);
     }
   },
   components: {
@@ -90,10 +104,25 @@ export default {
 @import "~@fullcalendar/core/main.css";
 @import "~@fullcalendar/daygrid/main.css";
 
-.tasks-container {
+.calendar-container {
   padding: 20px 20px 40px 20px;
+  .calendar-control {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    .calendar-date {
+      font-weight: bold;
+      font-size: calc(12px + 0.8vw);
+    }
+  }
 }
-.fc-toolbar.fc-header-toolbar {
+
+.fc-toolbar {
   display: none;
+}
+.fc-scroller {
+  overflow: auto !important;
+  height: auto !important;
 }
 </style>

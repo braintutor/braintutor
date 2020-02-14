@@ -127,6 +127,7 @@ export default {
     position: relative;
     border-right: 1px solid #eee;
     .chatbot-navigator {
+      z-index: 1;
       position: absolute;
       width: 100%;
       bottom: 0;
