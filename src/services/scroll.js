@@ -5,6 +5,13 @@ function scrollLeft(element_id) {
   var element = document.getElementById(element_id);
   element.scrollTo({ left: 0, behavior: 'smooth' });
 }
+function scrollRight(element_id) {
+  var element = document.getElementById(element_id);
+  element.scrollTo({
+    left: 1000,
+    behavior: 'smooth'
+  });
+}
 function scrollDown(element_id) {
   var element = document.getElementById(element_id);
   setTimeout(() => {
@@ -12,4 +19,4 @@ function scrollDown(element_id) {
   }, 0);
 }
 
-export { scrollTopWindow, scrollLeft, scrollDown }
+export { scrollTopWindow, scrollLeft, scrollRight, scrollDown }

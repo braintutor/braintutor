@@ -32,6 +32,12 @@
               <div class="chatbot-action transform-scale-plus" @click="selectService(2)">
                 <img src="https://img.icons8.com/cotton/2x/calendar.png" alt />
               </div>
+              <div
+                class="chatbot-action chatbot-action-bot transform-scale-plus"
+                @click="scrollRight('chatbot-scroll')"
+              >
+                <img src="@/assets/avatar/normal.png" alt />
+              </div>
             </div>
           </div>
         </div>
@@ -51,6 +57,7 @@ import Resources from "@/components/Chatbot/Resources/index";
 import Evaluations from "@/components/Chatbot/Evaluations/index";
 import Tasks from "@/components/Chatbot/Tasks/index";
 
+import { scrollRight } from "@/services/scroll";
 import { getParam } from "@/services/router.js";
 import { getResources } from "@/services/resourceService";
 import { getKnowledge } from "@/services/knowledgeService";
@@ -95,6 +102,7 @@ export default {
     });
   },
   methods: {
+    scrollRight,
     showServices(bool) {
       this.show_services = bool;
     },
@@ -130,7 +138,7 @@ export default {
         padding: 10px 8px;
         margin: 0 auto;
         background: #fff;
-        border-radius: 10px 10px 0 0;
+        border-radius: 10px;
         opacity: 0.5;
         transition: all 0.5s;
         display: flex;
@@ -151,10 +159,18 @@ export default {
     }
   }
 }
+.chatbot-action-bot {
+  display: none;
+  img {
+    border-radius: 50%;
+  }
+}
 
 @media only screen and (max-width: 599px) {
+  .chatbot-action-bot {
+    display: block;
+  }
   .chatbot-container {
-    // height: 100%;
     margin: 0;
     .chatbot-scroll {
       flex-wrap: nowrap;
