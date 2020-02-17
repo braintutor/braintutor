@@ -51,7 +51,7 @@
 import Avatar from "./Avatar";
 import Message from "@/models/Message";
 
-import { scrollTopWindow, scrollDown } from "@/services/scroll";
+import { scrollLeft, scrollDown } from "@/services/scroll";
 import { sendMessageTeacher } from "@/services/chatService";
 import { getSession } from "@/services/security";
 import { SpeechToText } from "@/services/speech";
@@ -101,7 +101,7 @@ export default {
             let items = res.respuesta_item ? [res.respuesta_item] : null;
             this.selectService(0);
             this.component_resources.selectResource(resource, items);
-            scrollTopWindow();
+            scrollLeft('chatbot-scroll');
           } else if (response) this.addMessage(response, 0);
           this.loading_message = false;
         });

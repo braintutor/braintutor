@@ -1,7 +1,7 @@
 <template>
   <div class="chatbot-container">
     <v-container fluid class="fill-height pa-0">
-      <v-row id="prueba" no-gutters class="fill-height">
+      <v-row id="chatbot-scroll" class="chatbot-scroll fill-height" no-gutters>
         <div class="chatbot-content col-12 col-sm-7 col-md-8 m-fullscreen">
           <Resources
             class="m-fullscreen-content"
@@ -111,7 +111,7 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang='scss'>
 @import "@/styles/box-shadow.scss";
 
 .chatbot-container {
@@ -160,9 +160,20 @@ export default {
 }
 
 @media only screen and (max-width: 599px) {
-  .chat-container {
-    margin: 14px 0;
-    @include box-shadow;
+  .chatbot-container {
+    height: 100%;
+    margin: 0;
+    .chatbot-scroll {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      .chat-container {
+        scroll-snap-align: start;
+      }
+      .chatbot-content {
+        scroll-snap-align: start;
+      }
+    }
   }
 }
 </style>
