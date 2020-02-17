@@ -115,14 +115,7 @@ export default {
 @import "@/styles/box-shadow.scss";
 
 .chatbot-container {
-  height: calc(100vh - 93px);
-  margin: 20px;
-  margin-top: 8px;
-  @include box-shadow;
-
-  .chat-container {
-    min-height: 500px;
-  }
+  height: calc(100vh - 65px);
   .chatbot-content {
     position: relative;
     border-right: 1px solid #eee;
@@ -161,12 +154,15 @@ export default {
 
 @media only screen and (max-width: 599px) {
   .chatbot-container {
-    height: 100%;
+    // height: 100%;
     margin: 0;
     .chatbot-scroll {
       flex-wrap: nowrap;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
+      &::-webkit-scrollbar {
+        display: none;
+      }
       .chat-container {
         scroll-snap-align: start;
       }

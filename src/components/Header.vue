@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app-bar app elevate-on-scroll color="white">
+    <v-app-bar flat color="white">
       <div class="header-logo" @click="redirect('home')">
         <v-img alt="BrainTutor Logo" src="@/assets/braintutor/logo.png" width="160" />
       </div>
