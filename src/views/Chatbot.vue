@@ -18,7 +18,7 @@
           <Tasks
             class="m-fullscreen-content"
             ref="component_tasks"
-            v-if="service_selected === 2"
+            v-show="service_selected === 2"
             :showServices="bool => showServices(bool)"
           />
           <div v-show="show_services" class="chatbot-navigator">
@@ -60,7 +60,7 @@ export default {
   data: () => ({
     available_questions: [],
     show_services: true,
-    service_selected: 2
+    service_selected: 0
   }),
   mounted() {
     // Components

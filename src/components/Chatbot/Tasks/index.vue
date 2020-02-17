@@ -1,69 +1,93 @@
 <template>
-  <div class="calendar-container">
-    <div class="calendar-control">
-      <span class="calendar-date">{{calendar_date}}</span>
-      <div class="calendar-actions">
-        <v-btn class="calendar-action" icon @click="today()">
-          <v-icon>mdi-calendar-today</v-icon>
-        </v-btn>
-        <v-btn class="calendar-action" icon @click="prev()">
-          <v-icon>mdi-chevron-left</v-icon>
-        </v-btn>
-        <v-btn class="calendar-action" icon @click="next()">
-          <v-icon>mdi-chevron-right</v-icon>
-        </v-btn>
+  <div>
+    <div v-show="!tasks_selected" class="calendar-container">
+      <div class="calendar-control">
+        <span class="calendar-date">{{calendar_date}}</span>
+        <div class="calendar-actions">
+          <v-btn class="calendar-action" icon @click="today()">
+            <v-icon>mdi-calendar-today</v-icon>
+          </v-btn>
+          <v-btn class="calendar-action" icon @click="prev()">
+            <v-icon>mdi-chevron-left</v-icon>
+          </v-btn>
+          <v-btn class="calendar-action" icon @click="next()">
+            <v-icon>mdi-chevron-right</v-icon>
+          </v-btn>
+        </div>
       </div>
+      <FullCalendar
+        ref="calendar"
+        :locale="locale"
+        :plugins="calendarPlugins"
+        :events="events"
+        @dateClick="dateClick"
+        @eventClick="eventClick"
+        eventTextColor="#fff"
+      />
     </div>
-    <FullCalendar
-      ref="calendar"
-      :locale="locale"
-      :plugins="calendarPlugins"
-      :events="events"
-      @eventClick="eventClick"
-      eventTextColor="#fff"
-    />
+    <!-- Task Selected -->
+    <Task v-show="tasks_selected" :tasks="tasks_selected" :unselectTasks="unselectTasks" />
   </div>
 </template>
 
 <script>
+import Task from "./Task";
+
 import FullCalendar from "@fullcalendar/vue";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import esLocale from "@fullcalendar/core/locales/es";
 import { formatDate } from "@fullcalendar/core";
-// import interactionPlugin from '@fullcalendar/interaction';
+import interactionPlugin from "@fullcalendar/interaction";
 
 export default {
   data: () => ({
+    tasks_selected: null,
     calendar: null,
     locale: esLocale,
-    calendarPlugins: [dayGridPlugin],
-    events: [
+    calendarPlugins: [dayGridPlugin, interactionPlugin],
+    tasks: [
       {
-        title: "Matemáticas",
+        course: "Matemática",
         date: "2020-02-14",
-        task: "a"
+        detail: "Cumplir la tarea de fracciones."
       },
       {
-        title: "Biología",
+        course: "Química",
+        date: "2020-02-14",
+        detail: "Cumplir la tarea de química."
+      },
+      {
+        course: "Biología",
         date: "2020-02-15",
-        task: "b"
+        detail: "Investigar sobre las células."
       }
     ],
     //
     calendar_date: null
   }),
+  computed: {
+    events() {
+      return this.tasks.map(task => ({
+        title: task.course,
+        date: task.date
+      }));
+    }
+  },
   mounted() {
     this.calendar = this.$refs.calendar.getApi();
     this.updateCalendarDate();
   },
   methods: {
-    eventClick({ event }) {
-      console.log(event.title, event.start, event.extendedProps);
-
-      // this.events.push({
-      //   title: "event 1",
-      //   date: "2020-02-20"
-      // });
+    dateClick({ dateStr }) {
+      let tasks = this.tasks.filter(task => task.date === dateStr);
+      if (tasks.length > 0) this.selectTasks(tasks);
+    },
+    eventClick() {},
+    selectTasks(tasks) {
+      this.tasks_selected = tasks;
+    },
+    unselectTasks() {
+      this.tasks_selected = null;
     },
     // Calendar
     today() {
@@ -95,6 +119,7 @@ export default {
     }
   },
   components: {
+    Task,
     FullCalendar
   }
 };
@@ -118,11 +143,19 @@ export default {
   }
 }
 
+.fc-widget-content {
+  cursor: pointer;
+}
+.fc-event-container {
+  font-size: 14px;
+  pointer-events: none;
+}
+
 .fc-toolbar {
   display: none;
 }
 .fc-scroller {
-  overflow: auto !important;
+  overflow: hidden !important;
   height: auto !important;
 }
 </style>
