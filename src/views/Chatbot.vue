@@ -138,7 +138,7 @@ export default {
         padding: 10px 8px;
         margin: 0 auto;
         background: #fff;
-        border-radius: 10px;
+        border-radius: 10px 10px 0 0;
         opacity: 0.5;
         transition: all 0.5s;
         display: flex;
