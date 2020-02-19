@@ -8,23 +8,23 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     session_exists: sessionExists(),
-    //Resources
-    resources: [],
+    //Materials
+    materials: [],
     //Evaluations
     timer: null,
     //Components
     component_avatar: null,
-    component_resources: null,
+    component_materials: null,
     component_evaluations: null,
   },
   mutations: {
     setSessionExists(state, session_exists) {
       state.session_exists = session_exists
     },
-    //Resources
-    setResources(state, resources) {
-      state.resources = resources
-      state.resource_selected = null
+    //Materials
+    setMaterials(state, materials) {
+      state.materials = materials
+      state.material_selected = null
     },
     //Evaluations
     clearTimer(state) {
@@ -37,8 +37,8 @@ export default new Vuex.Store({
     setComponentAvatar(state, component_avatar) {
       state.component_avatar = component_avatar
     },
-    setComponentResources(state, component_resources) {
-      state.component_resources = component_resources
+    setComponentMaterials(state, component_materials) {
+      state.component_materials = component_materials
     },
     setComponentEvaluations(state, component_evaluations) {
       state.component_evaluations = component_evaluations

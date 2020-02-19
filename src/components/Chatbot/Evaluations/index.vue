@@ -32,7 +32,7 @@ import Evaluation from "./Evaluation";
 
 import { getParam } from "@/services/router.js";
 import { copy } from "@/services/object.js";
-import { getEvaluations } from "@/services/evaluationService";
+import { getQuizzes } from "@/services/quizService";
 
 export default {
   props: ["showServices"],
@@ -42,7 +42,7 @@ export default {
   }),
   mounted() {
     let chatbot_id = getParam("chatbot_id");
-    getEvaluations(chatbot_id).then(res => {
+    getQuizzes(chatbot_id).then(res => {
       this.evaluations = res;
     });
   },

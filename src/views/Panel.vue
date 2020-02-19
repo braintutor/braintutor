@@ -19,7 +19,7 @@
       >
         <Cartel
           :title="chatbot.course"
-          :description="chatbot.nombre"
+          :description="chatbot.name"
           :image="'https://i.pinimg.com/originals/ff/92/68/ff92685e660a2d347736f44cc7a11d38.jpg'"
           :callback="() => selectChatbot(chatbot)"
         />
@@ -33,7 +33,7 @@ import Cartel from "@/components/Cartel";
 
 import { redirect } from "@/services/router.js";
 import { getCourses } from "@/services/courseService.js";
-import { getChatbot } from "@/services/chatbotService.js";
+import { getChatbots } from "@/services/chatbotService.js";
 
 export default {
   data: () => ({
@@ -41,13 +41,11 @@ export default {
     chatbot_filter: ""
   }),
   mounted() {
-    getCourses().then(res => {
-      let courses = JSON.parse(res);
+    getCourses().then(courses => {
       courses.forEach(course => {
-        getChatbot(course._id.$oid).then(res => {
-          let chatbots = JSON.parse(res);
+        getChatbots(course._id.$oid).then(chatbots => {
           chatbots.forEach(chatbot => {
-            chatbot.course = course.nombre;
+            chatbot.course = course.name;
             this.chatbots.push(chatbot);
           });
         });
@@ -58,7 +56,7 @@ export default {
     chatbots_filtered() {
       return this.chatbots.filter(
         chatbot =>
-          chatbot.nombre
+          chatbot.name
             .toLowerCase()
             .includes(this.chatbot_filter.toLowerCase()) ||
           chatbot.course

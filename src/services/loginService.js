@@ -1,17 +1,10 @@
 import { fetch_post } from "./fetch";
 
 function loginTeacher(user, pass) {
-  return fetch_post('iniciarSesionProfesor', {
-    codigo: user,
-    contrasena: pass
+  return fetch_post('loginTeacher', {
+    user,
+    pass
   })
 }
 
-function loginStudent(user, pass) {
-  return fetch_post('iniciarSesionAlumno', {
-    codigo: user,
-    contrasena: pass
-  })
-}
-
-export { loginTeacher, loginStudent }
+export { loginTeacher }

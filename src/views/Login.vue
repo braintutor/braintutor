@@ -47,7 +47,7 @@ export default {
       if (this.$refs.form_login.validate()) {
         this.loading_login = true;
         loginTeacher(this.user, this.pass).then(res => {
-          let token = res["profesor_id"];
+          let token = res.token;
           if (token) {
             setSession(token, 0);
             redirect("panel");

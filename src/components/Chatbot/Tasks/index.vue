@@ -57,6 +57,16 @@ export default {
         detail: "Cumplir la tarea de química."
       },
       {
+        course: "Geometría",
+        date: "2020-02-14",
+        detail: "Cumplir la tarea de geometría."
+      },
+      {
+        course: "Trigonometría",
+        date: "2020-02-14",
+        detail: "Cumplir la tarea de trigonometría."
+      },
+      {
         course: "Biología",
         date: "2020-02-15",
         detail: "Investigar sobre las células."

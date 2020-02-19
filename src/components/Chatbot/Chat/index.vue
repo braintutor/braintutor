@@ -52,8 +52,7 @@ import Avatar from "./Avatar";
 import Message from "@/models/Message";
 
 import { scrollLeft, scrollDown } from "@/services/scroll";
-import { sendMessageTeacher } from "@/services/chatService";
-import { getSession } from "@/services/security";
+import { getAnswer } from "@/services/chatService";
 import { SpeechToText } from "@/services/speech";
 import { getParam } from "@/services/router.js";
 
@@ -67,14 +66,14 @@ export default {
     loading_message: false
   }),
   computed: {
-    resources() {
-      return this.$store.state.resources;
+    materials() {
+      return this.$store.state.materials;
     },
     component_avatar() {
       return this.$store.state.component_avatar;
     },
-    component_resources() {
-      return this.$store.state.component_resources;
+    component_materials() {
+      return this.$store.state.component_materials;
     }
   },
   mounted() {
@@ -89,20 +88,18 @@ export default {
     },
     sendMessage() {
       if (this.message_text && !this.loading_message) {
-        sendMessageTeacher(
+        getAnswer(
           this.chatbot_id,
-          this.message_text,
-          getSession().token
+          this.message_text
         ).then(res => {
-          let response = res.respuesta;
-          let material_id = res.material_id;
+          let { answer, material_id } = res;
           if (material_id) {
-            let resource = this.getResource(material_id);
+            let material = this.getMaterial(material_id);
             let items = res.respuesta_item ? [res.respuesta_item] : null;
             this.selectService(0);
-            this.component_resources.selectResource(resource, items);
+            this.component_materials.selectMaterial(material, items);
             scrollLeft('chatbot-scroll');
-          } else if (response) this.addMessage(response, 0);
+          } else if (answer) this.addMessage(answer, 0);
           this.loading_message = false;
         });
         this.addMessage(this.message_text, 1);
@@ -120,8 +117,8 @@ export default {
       this.message_text = question;
       if (!question.includes("@")) this.sendMessage();
     },
-    getResource(resource_id) {
-      return this.resources.find(resource => resource._id.$oid === resource_id);
+    getMaterial(material_id) {
+      return this.materials.find(material => material._id.$oid === material_id);
     }
   },
   components: {

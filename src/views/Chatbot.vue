@@ -3,9 +3,9 @@
     <v-container fluid class="fill-height pa-0">
       <v-row id="chatbot-scroll" class="chatbot-scroll fill-height" no-gutters>
         <div class="chatbot-content col-12 col-sm-7 col-md-8 m-fullscreen">
-          <Resources
+          <Materials
             class="m-fullscreen-content"
-            ref="component_resources"
+            ref="component_Materials"
             v-show="service_selected === 0"
             :showServices="bool => showServices(bool)"
           />
@@ -24,7 +24,7 @@
           <div v-show="show_services" class="chatbot-navigator">
             <div class="chatbot-actions elevation-3">
               <div class="chatbot-action transform-scale-plus" @click="selectService(0)">
-                <img src="@/assets/braintutor/icon-resource.png" alt />
+                <img src="@/assets/braintutor/icon-material.png" alt />
               </div>
               <div class="chatbot-action transform-scale-plus" @click="selectService(1)">
                 <img src="@/assets/braintutor/icon-evaluation.png" alt />
@@ -53,51 +53,60 @@
 
 <script>
 import Chat from "@/components/Chatbot/Chat/index";
-import Resources from "@/components/Chatbot/Resources/index";
+import Materials from "@/components/Chatbot/Materials/index";
 import Evaluations from "@/components/Chatbot/Evaluations/index";
 import Tasks from "@/components/Chatbot/Tasks/index";
 
 import { scrollRight } from "@/services/scroll";
 import { getParam } from "@/services/router.js";
-import { getResources } from "@/services/resourceService";
+import { getMaterials } from "@/services/materialService";
 import { getKnowledge } from "@/services/knowledgeService";
-import { getResourcesQuestions } from "@/services/resourceService";
 
 export default {
   data: () => ({
     available_questions: [],
     show_services: true,
-    service_selected: 0
+    service_selected: 0,
+    question_template: {
+      overview: ["¿Qué es @?"],
+      explanation: ["Explícame sobre @.", "Háblame sobre @."],
+      bullets: ["Puntos importantes de @."],
+      hyperlinks: ["¿Dónde encuentro más información sobre @."],
+      examples: ["Muéstrame ejemplos sobre @"],
+      exercises: ["Muéstrame ejercicios de @"],
+      movies: ["Muéstrame videos sobre @"],
+      images: ["Muéstrame imágenes sobre @"]
+    }
   }),
   mounted() {
     // Components
-    this.$store.commit("setComponentResources", this.$refs.component_resources);
+    this.$store.commit("setComponentMaterials", this.$refs.component_materials);
     this.$store.commit(
       "setComponentEvaluations",
       this.$refs.component_evaluations
     );
 
     let chatbot_id = getParam("chatbot_id");
-    getResources(chatbot_id).then(res => {
-      let resources = JSON.parse(res);
-      this.$store.commit("setResources", resources);
-      getKnowledge(chatbot_id).then(res => {
-        this.available_questions = JSON.parse(res).map(
-          item => item.preguntas[0]
+    getMaterials(chatbot_id).then(materials => {
+      this.$store.commit("setMaterials", materials);
+      getKnowledge(chatbot_id).then(knowledge => {
+        this.available_questions = knowledge.map(
+          item => item.questions[0]
         );
-        getResourcesQuestions().then(res => {
-          let questions = Object.values(res);
-          resources.forEach(resource => {
-            questions.forEach(question => {
-              this.available_questions.push(
-                question.replace(/@/, resource.nombre)
-              );
-            });
-            resource.faq.forEach(item => {
-              this.available_questions.push(item.pregunta);
-            });
-          });
-        });
+
+        // getMaterialsQuestions().then(res => {
+        //   let questions = Object.values(res);
+        //   materials.forEach(material => {
+        //     questions.forEach(question => {
+        //       this.available_questions.push(
+        //         question.replace(/@/, material.nombre)
+        //       );
+        //     });
+        //     material.faq.forEach(item => {
+        //       this.available_questions.push(item.pregunta);
+        //     });
+        //   });
+        // });
       });
     });
   },
@@ -112,7 +121,7 @@ export default {
   },
   components: {
     Chat,
-    Resources,
+    Materials,
     Evaluations,
     Tasks
   }

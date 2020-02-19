@@ -46,7 +46,7 @@
           >Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus esse laboriosam minus eveniet rem ullam quis libero, cum aspernatur deleniti totam quam at repellat vero nam repellendus officiis beatae magni.</div>
         </div>
         <div class="secondary-image col-sm-7">
-          <img class="transform-scale elevation-3" src="@/assets/ui/resources.png" alt />
+          <img class="transform-scale elevation-3" src="@/assets/ui/materials.png" alt />
         </div>
       </div>
       <div class="secondary-container row">
@@ -57,7 +57,7 @@
           >Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus esse laboriosam minus eveniet rem ullam quis libero, cum aspernatur deleniti totam quam at repellat vero nam repellendus officiis beatae magni.</div>
         </div>
         <div class="secondary-image col-sm-7">
-          <img class="transform-scale elevation-3" src="@/assets/ui/resources.png" alt />
+          <img class="transform-scale elevation-3" src="@/assets/ui/materials.png" alt />
         </div>
       </div>
     </v-container>
@@ -77,7 +77,7 @@ export default {
       {
         title: "Clases",
         description: "Creación de clases virtuales",
-        image: require("@/assets/braintutor/icon-resource.png")
+        image: require("@/assets/braintutor/icon-material.png")
       },
       {
         title: "Evaluaciones",

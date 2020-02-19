@@ -1,12 +1,8 @@
 
-import { fetch_post } from "./fetch";
-import { getSession } from './security'
+import { fetch_get } from "./fetch";
 
 function getCourses() {
-  let token = getSession().token
-  return fetch_post('obtenerCursoPorProfesor', {
-    profesor_id: token
-  })
+  return fetch_get('getCourses')
 }
 
 export { getCourses }
