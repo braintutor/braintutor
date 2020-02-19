@@ -88,34 +88,24 @@
             <img :src="image" alt />
           </div>
         </div>
-        <!-- Category Document -->
-        <div v-if="category_selected == 'documento'" class="category category-document">
-          <embed :src="material[category_selected]" alt />
-        </div>
-        <!-- Category Importance -->
-        <div v-if="category_selected == 'importancia'" class="category category-text">
-          <div class="category-text-menu">
-            <div class="category-text-title">¿Por qué es importante?</div>
-            <v-btn icon @click="startTalk(material[category_selected])">
-              <v-icon>mdi-volume-high</v-icon>
-            </v-btn>
-          </div>
-          <div class="category-text-content">{{material[category_selected]}}</div>
-        </div>
         <!-- Category FAQ -->
         <div v-if="category_selected == 'faq'">
           <div v-for="(faq, f_idx) in material[category_selected]" :key="f_idx" class="category category-text">
             <div class="category-text-menu">
-              <div class="category-text-title">{{faq.pregunta}}</div>
-              <v-btn icon @click="startTalk(`${faq.pregunta}. ${faq.respuesta}`)">
+              <div class="category-text-title">{{faq.question}}</div>
+              <v-btn icon @click="startTalk(`${faq.question}. ${faq.answer}`)">
                 <v-icon>mdi-volume-high</v-icon>
               </v-btn>
             </div>
             <div class="category-text-content">
-              <div>{{faq.respuesta}}</div>
+              <div>{{faq.answer}}</div>
             </div>
           </div>
         </div>
+        <!-- Category Document
+        <div v-if="category_selected == 'documento'" class="category category-document">
+          <embed :src="material[category_selected]" alt />
+        </div> -->
       </div>
     </div>
     <div class="material-navigator">
