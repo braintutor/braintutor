@@ -59,7 +59,8 @@ import Tasks from "@/components/Chatbot/Tasks/index";
 
 import { scrollRight } from "@/services/scroll";
 import { getParam } from "@/services/router.js";
-import { getMaterials, getQuestionTemplate } from "@/services/materialService";
+import { getMaterials } from "@/services/materialService";
+import { getQuestionTemplate } from "@/services/chatService";
 import { getKnowledge } from "@/services/knowledgeService";
 
 export default {

@@ -16,7 +16,7 @@
     </div>
     <!-- Input -->
     <v-form class="input-container" @submit.prevent="sendMessage">
-      <v-text-field v-model="message_text" class="mr-3 mt-3" dense autocomplete="off"></v-text-field>
+      <v-text-field v-model="message_text" class="mr-3 mt-3" dense hide-details autocomplete="off"></v-text-field>
       <v-btn :loading="loading_message" fab icon small color="primary" @click="talkMessage()">
         <v-icon dark>mdi-microphone</v-icon>
       </v-btn>
@@ -158,10 +158,13 @@ export default {
 }
 
 .input-container {
-  padding: 0 8px 0 16px;
+  padding: 4px 8px 4px 12px;
   display: flex;
   align-items: center;
   border-top: 1px solid #eeeeee;
+  & * {
+    margin: 0 !important
+  }
 }
 
 .available-questions-container {

@@ -1,4 +1,4 @@
-import { fetch_post } from "./fetch";
+import { fetch_get, fetch_post } from "./fetch";
 
 function getAnswer(chatbot_id, question) {
   return fetch_post('getAnswer', {
@@ -7,4 +7,8 @@ function getAnswer(chatbot_id, question) {
   })
 }
 
-export { getAnswer }
+function getQuestionTemplate() {
+  return fetch_get('getQuestionTemplate')
+}
+
+export { getAnswer, getQuestionTemplate }

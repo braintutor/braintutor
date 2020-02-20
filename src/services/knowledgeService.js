@@ -6,4 +6,11 @@ function getKnowledge(chatbot_id) {
   })
 }
 
-export { getKnowledge }
+function updateKnowledge(chatbot_id, knowledge) {
+  return fetch_post('updateKnowledge', {
+    chatbot_id,
+    knowledge
+  })
+}
+
+export { getKnowledge, updateKnowledge }

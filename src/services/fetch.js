@@ -1,7 +1,8 @@
 import { getSession } from './security'
 
-// const service = 'https://braintutor-service.herokuapp.com'
-const service = 'https://braintutor-service-v2.herokuapp.com'
+const service = 'http://localhost:5000'
+// const service = 'https://braintutor-service-v2.herokuapp.com'
+
 const headers = {
   'Content-Type': 'application/json',
   'Authorization': `Bearer ${getSession().token}`
