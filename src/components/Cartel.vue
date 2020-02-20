@@ -24,16 +24,7 @@
 
 <script>
 export default {
-  props: ["title", "description", "image", "callback", "actions"],
-  mounted() {
-    console.log(
-      this.title,
-      this.description,
-      this.image,
-      this.callback,
-      this.actions
-    );
-  }
+  props: ["title", "description", "image", "callback", "actions"]
 };
 </script>
 

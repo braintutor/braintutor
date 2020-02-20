@@ -3,88 +3,66 @@
     <div class="menu">
       <span class="menu-title">Conocimiento</span>
       <div class="menu-action">
+        <v-btn icon @click="addKnowledge()">
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
         <v-btn icon @click="saveKnowledge()" :loading="loading_save">
           <v-icon>mdi-content-save</v-icon>
         </v-btn>
       </div>
     </div>
     <div class="editor-content m-fullscreen-content">
-      <div v-for="(k, k_idx) in knowledge" :key="k_idx">
+      <div class="editor-knowledge" v-for="(k, k_idx) in knowledge" :key="k_idx">
         <div class="editor-knowledge-row row no-gutters">
-          <!-- Questions -->
-          <div class="editor-knowledge col-md-6">
+          <div
+            v-for="(type, t_idx) in ['questions', 'answers']"
+            :key="t_idx"
+            class="editor-knowledge-col col-md-6"
+          >
             <div>
-              <div v-for="(question, q_idx) in k.questions" :key="q_idx">
+              <div v-for="(question, q_idx) in k[type]" :key="q_idx">
                 <div v-if="q_idx == 0" class="editor-knowledge-principal">
                   <v-text-field
                     class="editor-input"
-                    v-model="k.questions[q_idx]"
+                    v-model="k[type][q_idx]"
                     dense
                     hide-details
                     autocomplete="off"
                   ></v-text-field>
-                  <v-badge
-                    :content="k.questions.length - 1"
-                    :color="k.show_questions || (k.questions.length - 1 <= 0) ? 'rgba(255, 0, 0, 0)': 'green'"
-                    overlap
-                    bottom
-                  >
-                    <v-btn icon @click="toggleQuestions(k)">
-                      <v-icon>mdi-chevron-down</v-icon>
-                    </v-btn>
-                  </v-badge>
+                  <v-btn icon @click="add(k, k[type])">
+                    <v-icon>mdi-plus</v-icon>
+                  </v-btn>
                 </div>
-                <div v-else-if="k.show_questions" class="editor-knowledge-more">
-                  <div>
-                    <v-text-field
-                      class="editor-input"
-                      v-model="k.questions[q_idx]"
-                      dense
-                      hide-details
-                      autocomplete="off"
-                    ></v-text-field>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Answers -->
-          <div class="editor-knowledge col-md-6">
-            <div>
-              <div v-for="(answer, a_idx) in k.answers" :key="a_idx">
-                <div v-if="a_idx == 0" class="editor-knowledge-principal">
+                <div v-else-if="k.show" class="editor-knowledge-more">
                   <v-text-field
                     class="editor-input"
-                    v-model="k.answers[a_idx]"
+                    v-model="k[type][q_idx]"
                     dense
                     hide-details
                     autocomplete="off"
                   ></v-text-field>
-                  <v-badge
-                    :content="k.answers.length - 1"
-                    :color="k.show_answers || (k.answers.length - 1 <= 0) ? 'rgba(255, 0, 0, 0)': 'green'"
-                    overlap
-                    bottom
-                  >
-                    <v-btn icon @click="toggleAnswers(k)">
-                      <v-icon>mdi-chevron-down</v-icon>
-                    </v-btn>
-                  </v-badge>
-                </div>
-                <div v-else-if="k.show_answers" class="editor-knowledge-more">
-                  <div>
-                    <v-text-field
-                      class="editor-input"
-                      v-model="k.answers[a_idx]"
-                      dense
-                      hide-details
-                      autocomplete="off"
-                    ></v-text-field>
-                  </div>
+                  <v-btn icon @click="remove(k[type], q_idx)">
+                    <v-icon>mdi-minus</v-icon>
+                  </v-btn>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+        <div class="editor-actions">
+          <v-badge
+            :color="k.show || (k.questions.length + k.answers.length <= 2) ? 'rgba(255, 0, 0, 0)': 'green'"
+            dot
+            overlap
+          >
+            <v-btn icon @click="toggleShow(k)">
+              <v-icon v-if="k.show">mdi-chevron-up</v-icon>
+              <v-icon v-else>mdi-chevron-down</v-icon>
+            </v-btn>
+          </v-badge>
+          <v-btn icon @click="removeKnowledge(k_idx)">
+            <v-icon>mdi-minus</v-icon>
+          </v-btn>
         </div>
       </div>
     </div>
@@ -93,39 +71,59 @@
 
 <script>
 import { getParam } from "@/services/router.js";
-import { getKnowledge, updateKnowledge } from "@/services/knowledgeService";
+import { train } from "@/services/chatService";
+import { getKnowledge, updateKnowledge, removeKnowledge } from "@/services/knowledgeService";
 
 export default {
   data: () => ({
     chatbot_id: "",
     knowledge: [],
+    knowledge_to_eliminate: [],
     //
     loading_save: false
   }),
-  mounted() {
+  async mounted() {
     this.chatbot_id = getParam("chatbot_id");
-    getKnowledge(this.chatbot_id).then(knowledge => {
-      this.knowledge = knowledge;
-    });
+    this.knowledge = await getKnowledge(this.chatbot_id);
   },
   methods: {
-    saveKnowledge() {
-      let knowledge = this.knowledge.map(k => ({
-        ...k,
-        id: k._id.$oid
-      }));
-      this.loading_save = true;
-      updateKnowledge(this.chatbot_id, knowledge).then(() => {
-        this.loading_save = false;
+    addKnowledge() {
+      this.knowledge.push({
+        questions: [""],
+        answers: [""]
       });
     },
-    toggleQuestions(knowledge) {
-      knowledge.show_questions = !knowledge.show_questions;
+    removeKnowledge(knowledge_idx) {
+      let knowledge = this.knowledge[knowledge_idx];
+      if (knowledge._id) {
+        this.knowledge_to_eliminate.push(knowledge._id.$oid);
+      }
+      this.knowledge.splice(knowledge_idx, 1);
+    },
+    add(knowledge, arr) {
+      arr.push("");
+      knowledge.show = true;
+    },
+    remove(arr, idx) {
+      arr.splice(idx, 1);
+    },
+    toggleShow(knowledge) {
+      knowledge.show = !knowledge.show;
       this.$forceUpdate();
     },
-    toggleAnswers(knowledge) {
-      knowledge.show_answers = !knowledge.show_answers;
-      this.$forceUpdate();
+    async saveKnowledge() {
+      let knowledge = this.knowledge.map(k => ({
+        ...k,
+        id: k._id ? k._id.$oid : ""
+      }));
+      this.loading_save = true;
+      await removeKnowledge(this.chatbot_id, this.knowledge_to_eliminate)
+      await updateKnowledge(this.chatbot_id, knowledge);
+      await train(this.chatbot_id);
+
+      this.knowledge = await getKnowledge(this.chatbot_id);
+      this.knowledge_to_eliminate = []
+      this.loading_save = false;
     }
   }
 };
@@ -147,25 +145,27 @@ export default {
     }
   }
   .editor-content {
-    padding: 10px;
-    .editor-knowledge-row {
-      padding: 12px 0;
-      .editor-knowledge {
-        padding: 4px 8px;
-        & > * {
-          padding: 8px 8px 8px 18px;
-          margin: 0;
-          border-radius: 10px;
-          @include box-shadow;
-        }
-        .editor-input {
-          font-size: calc(9px + 0.5vw);
-        }
-        .editor-knowledge-principal {
-          display: flex;
-        }
-        .editor-knowledge-more {
-          margin: 10px 10px 10px 0;
+    padding: 10px 14px;
+    .editor-knowledge {
+      padding: 8px 0;
+      display: flex;
+      .editor-knowledge-row {
+        .editor-knowledge-col {
+          padding: 4px 6px;
+          & > div {
+            padding: 10px 10px 10px 20px;
+            border-radius: 10px;
+            @include box-shadow;
+          }
+          .editor-knowledge-principal {
+            display: flex;
+          }
+          .editor-knowledge-more {
+            display: flex;
+          }
+          .editor-input {
+            font-size: calc(9px + 0.5vw);
+          }
         }
       }
     }
