@@ -1,34 +1,34 @@
 <template>
-  <!-- Evaluation List -->
-  <v-container v-if="!evaluation_selected" fluid class="pa-3">
+  <!-- Quiz List -->
+  <v-container v-if="!quiz_selected" fluid class="pa-3">
     <v-row no-gutters>
       <v-col
         cols="6"
         md="3"
         lg="2"
         class="pa-2"
-        v-for="(evaluation, e_idx) in evaluations"
+        v-for="(quiz, e_idx) in quizzes"
         :key="e_idx"
       >
         <Cartel
-          :description="evaluation.nombre"
+          :description="quiz.name"
           :image="'https://i.pinimg.com/originals/ff/92/68/ff92685e660a2d347736f44cc7a11d38.jpg'"
-          :callback="() => selectEvaluation(evaluation)"
+          :callback="() => selectQuiz(quiz)"
         />
       </v-col>
     </v-row>
   </v-container>
-  <!-- Evaluation Selected -->
-  <Evaluation
+  <!-- Quiz Selected -->
+  <Quiz
     v-else
-    :evaluation="evaluation_selected"
-    :unselectEvaluation="unselectEvaluation"
+    :quiz="quiz_selected"
+    :unselectQuiz="unselectQuiz"
   />
 </template>
 
 <script>
 import Cartel from "@/components/Cartel";
-import Evaluation from "./Evaluation";
+import Quiz from "./Quiz";
 
 import { getParam } from "@/services/router.js";
 import { copy } from "@/services/object.js";
@@ -37,28 +37,28 @@ import { getQuizzes } from "@/services/quizService";
 export default {
   props: ["showServices"],
   data: () => ({
-    evaluations: [],
-    evaluation_selected: null
+    quizzes: [],
+    quiz_selected: null
   }),
   mounted() {
     let chatbot_id = getParam("chatbot_id");
     getQuizzes(chatbot_id).then(res => {
-      this.evaluations = res;
+      this.quizzes = res;
     });
   },
   methods: {
-    selectEvaluation(evaluation) {
-      this.evaluation_selected = copy(evaluation);
+    selectQuiz(quiz) {
+      this.quiz_selected = copy(quiz);
       this.showServices(false);
     },
-    unselectEvaluation() {
-      this.evaluation_selected = null;
+    unselectQuiz() {
+      this.quiz_selected = null;
       this.showServices(true);
     }
   },
   components: {
     Cartel,
-    Evaluation
+    Quiz
   }
 };
 </script>

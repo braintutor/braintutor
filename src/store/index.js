@@ -10,12 +10,12 @@ export default new Vuex.Store({
     session_exists: sessionExists(),
     //Materials
     materials: [],
-    //Evaluations
+    //Quizzes
     timer: null,
     //Components
     component_avatar: null,
     component_materials: null,
-    component_evaluations: null,
+    component_quizzes: null,
   },
   mutations: {
     setSessionExists(state, session_exists) {
@@ -26,7 +26,7 @@ export default new Vuex.Store({
       state.materials = materials
       state.material_selected = null
     },
-    //Evaluations
+    //Quizzes
     clearTimer(state) {
       clearInterval(state.timer);
     },
@@ -40,8 +40,8 @@ export default new Vuex.Store({
     setComponentMaterials(state, component_materials) {
       state.component_materials = component_materials
     },
-    setComponentEvaluations(state, component_evaluations) {
-      state.component_evaluations = component_evaluations
+    setComponentQuizzes(state, component_quizzes) {
+      state.component_quizzes = component_quizzes
     }
   },
   actions: {

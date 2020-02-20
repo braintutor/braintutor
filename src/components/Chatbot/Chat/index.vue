@@ -88,18 +88,15 @@ export default {
     },
     sendMessage() {
       if (this.message_text && !this.loading_message) {
-        getAnswer(
-          this.chatbot_id,
-          this.message_text
-        ).then(res => {
-          let { answer, material_id } = res;
+        getAnswer(this.chatbot_id, this.message_text).then(res => {
+          let { answer, material_id, category } = res;
+          if (answer) this.addMessage(answer, 0);
           if (material_id) {
             let material = this.getMaterial(material_id);
-            let items = res.respuesta_item ? [res.respuesta_item] : null;
             this.selectService(0);
-            this.component_materials.selectMaterial(material, items);
-            scrollLeft('chatbot-scroll');
-          } else if (answer) this.addMessage(answer, 0);
+            this.component_materials.selectMaterial(material, [category]);
+            scrollLeft("chatbot-scroll");
+          }
           this.loading_message = false;
         });
         this.addMessage(this.message_text, 1);

@@ -82,7 +82,7 @@ export default {
       {
         title: "Evaluaciones",
         description: "Creación de evaluaciones constantes",
-        image: require("@/assets/braintutor/icon-evaluation.png")
+        image: require("@/assets/braintutor/icon-quiz.png")
       },
       {
         title: "Tareas",

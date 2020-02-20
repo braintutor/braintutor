@@ -5,13 +5,13 @@
         <div class="chatbot-content col-12 col-sm-7 col-md-8 m-fullscreen">
           <Materials
             class="m-fullscreen-content"
-            ref="component_Materials"
+            ref="component_materials"
             v-show="service_selected === 0"
             :showServices="bool => showServices(bool)"
           />
-          <Evaluations
+          <Quizzes
             class="m-fullscreen-content"
-            ref="component_evaluations"
+            ref="component_quizzes"
             v-show="service_selected === 1"
             :showServices="bool => showServices(bool)"
           />
@@ -27,7 +27,7 @@
                 <img src="@/assets/braintutor/icon-material.png" alt />
               </div>
               <div class="chatbot-action transform-scale-plus" @click="selectService(1)">
-                <img src="@/assets/braintutor/icon-evaluation.png" alt />
+                <img src="@/assets/braintutor/icon-quiz.png" alt />
               </div>
               <div class="chatbot-action transform-scale-plus" @click="selectService(2)">
                 <img src="https://img.icons8.com/cotton/2x/calendar.png" alt />
@@ -54,59 +54,42 @@
 <script>
 import Chat from "@/components/Chatbot/Chat/index";
 import Materials from "@/components/Chatbot/Materials/index";
-import Evaluations from "@/components/Chatbot/Evaluations/index";
+import Quizzes from "@/components/Chatbot/Quizzes/index";
 import Tasks from "@/components/Chatbot/Tasks/index";
 
 import { scrollRight } from "@/services/scroll";
 import { getParam } from "@/services/router.js";
-import { getMaterials } from "@/services/materialService";
+import { getMaterials, getQuestionTemplate } from "@/services/materialService";
 import { getKnowledge } from "@/services/knowledgeService";
 
 export default {
   data: () => ({
     available_questions: [],
     show_services: true,
-    service_selected: 0,
-    question_template: {
-      overview: ["¿Qué es @?"],
-      explanation: ["Explícame sobre @.", "Háblame sobre @."],
-      bullets: ["Puntos importantes de @."],
-      hyperlinks: ["¿Dónde encuentro más información sobre @."],
-      examples: ["Muéstrame ejemplos sobre @"],
-      exercises: ["Muéstrame ejercicios de @"],
-      movies: ["Muéstrame videos sobre @"],
-      images: ["Muéstrame imágenes sobre @"]
-    }
+    service_selected: 0
   }),
   mounted() {
     // Components
     this.$store.commit("setComponentMaterials", this.$refs.component_materials);
-    this.$store.commit(
-      "setComponentEvaluations",
-      this.$refs.component_evaluations
-    );
+    this.$store.commit("setComponentQuizzes", this.$refs.component_quizzes);
 
     let chatbot_id = getParam("chatbot_id");
     getMaterials(chatbot_id).then(materials => {
       this.$store.commit("setMaterials", materials);
       getKnowledge(chatbot_id).then(knowledge => {
-        this.available_questions = knowledge.map(
-          item => item.questions[0]
-        );
-
-        // getMaterialsQuestions().then(res => {
-        //   let questions = Object.values(res);
-        //   materials.forEach(material => {
-        //     questions.forEach(question => {
-        //       this.available_questions.push(
-        //         question.replace(/@/, material.nombre)
-        //       );
-        //     });
-        //     material.faq.forEach(item => {
-        //       this.available_questions.push(item.pregunta);
-        //     });
-        //   });
-        // });
+        this.available_questions = knowledge.map(item => item.questions[0]);
+        getQuestionTemplate().then(question_template => {
+          materials.forEach(material => {
+            Object.values(question_template).forEach(value => {
+              this.available_questions.push(
+                value[0].replace(/@/, material.name)
+              );
+            });
+            material.faq.forEach(item => {
+              this.available_questions.push(item.question);
+            });
+          });
+        });
       });
     });
   },
@@ -122,7 +105,7 @@ export default {
   components: {
     Chat,
     Materials,
-    Evaluations,
+    Quizzes,
     Tasks
   }
 };

@@ -1,16 +1,16 @@
 <template>
-  <div class="evaluation-container m-fullscreen">
-    <div class="evaluation-menu">
-      <v-btn icon @click="unselectEvaluation()">
+  <div class="quiz-container m-fullscreen">
+    <div class="quiz-menu">
+      <v-btn icon @click="unselectQuiz()">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
-      <div class="evaluation-description">
-        <span class="evaluation-title">{{evaluation.nombre}}</span>
-        <div class="evaluation-level">{{evaluation.nivel}}</div>
+      <div class="quiz-description">
+        <span class="quiz-title">{{quiz.name}}</span>
+        <div class="quiz-level">{{quiz.level}}</div>
       </div>
     </div>
     <div v-if="!show_score" class="m-fullscreen-content">
-      <div class="evaluation-time">
+      <div class="quiz-time">
         <v-progress-circular
           :rotate="270"
           :size="42"
@@ -20,17 +20,17 @@
         >{{ time_remaining }}</v-progress-circular>
       </div>
       <div class="question-container">
-        <div class="question-text">{{question.enunciado}}</div>
+        <div class="question-text">{{question_selected.question}}</div>
         <div class="row no-gutters">
           <div
             class="col-12 col-md-6 pa-2"
-            v-for="(alternative, a_idx) in question.alternativas"
+            v-for="(alternative, a_idx) in question_selected.alternatives"
             :key="a_idx"
           >
             <div
               class="question-alternative transform-scale m-fullcenter"
-              :class="{'question-alternative-correct': question.show_correct && question.correcta === a_idx,'question-alternative-incorrect': question.incorrect === a_idx}"
-              @click="selectAlternative(question, question.correcta, a_idx)"
+              :class="{'question-alternative-correct': question_selected.show_correct && question_selected.correct === a_idx,'question-alternative-incorrect': question_selected.incorrect === a_idx}"
+              @click="selectAlternative(question_selected, question_selected.correct, a_idx)"
             >{{alternative}}</div>
           </div>
         </div>
@@ -56,7 +56,7 @@ import { createTimer } from "@/services/timer";
 import { percentage } from "@/services/math";
 
 export default {
-  props: ["evaluation", "unselectEvaluation"],
+  props: ["quiz", "unselectQuiz"],
   data: () => ({
     question_idx: 0,
     time_remaining: 0,
@@ -70,8 +70,8 @@ export default {
     show_score: false
   }),
   computed: {
-    question() {
-      return this.evaluation.preguntas[this.question_idx];
+    question_selected() {
+      return this.quiz.content[this.question_idx];
     },
     time_percentage() {
       return 100 - percentage(this.time_total, this.time_remaining);
@@ -84,8 +84,8 @@ export default {
     }
   },
   mounted() {
-    this.total_questions = this.evaluation.preguntas.length;
-    this.time_total = this.evaluation.tiempo;
+    this.total_questions = this.quiz.content.length;
+    this.time_total = this.quiz.time;
     this.time_remaining = this.time_total;
     // Timer
     this.clearTimer();
@@ -139,23 +139,23 @@ export default {
 <style lang='scss' scoped>
 @import "@/styles/box-shadow.scss";
 
-.evaluation-container {
+.quiz-container {
   position: relative;
-  .evaluation-menu {
+  .quiz-menu {
     padding: 10px;
     display: flex;
     align-items: center;
-    .evaluation-description {
+    .quiz-description {
       display: flex;
       justify-content: space-between;
       align-items: center;
       width: 100%;
-      .evaluation-title {
+      .quiz-title {
         margin: 0 12px;
         font-size: calc(9.5px + 1vw);
         font-weight: bold;
       }
-      .evaluation-level {
+      .quiz-level {
         padding: 2px 10px;
         background: #ebbb6b;
         color: #fff;
@@ -164,7 +164,7 @@ export default {
       }
     }
   }
-  .evaluation-time {
+  .quiz-time {
     width: max-content;
     margin: 0 auto 14px;
     font-size: 14px;

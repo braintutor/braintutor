@@ -22,9 +22,6 @@
         <div v-if="category_selected == 'explanation'" class="category category-text">
           <div class="category-text-menu">
             <div class="category-text-title">{{material.name}}</div>
-            <v-btn icon @click="startTalk(material[category_selected])">
-              <v-icon>mdi-volume-high</v-icon>
-            </v-btn>
           </div>
           <div class="category-text-content">{{material[category_selected]}}</div>
         </div>
@@ -32,6 +29,9 @@
         <div v-if="category_selected == 'bullets'" class="category category-text">
           <div class="category-text-menu">
             <div class="category-text-title">{{material.name}}</div>
+            <v-btn icon @click="startTalk(material[category_selected].join('. '))">
+              <v-icon>mdi-volume-high</v-icon>
+            </v-btn>
           </div>
           <div
             v-for="(bullet, e_idx) in material[category_selected]"
@@ -60,6 +60,9 @@
         <div v-if="category_selected == 'examples'" class="category category-text">
           <div class="category-text-menu">
             <div class="category-text-title">Ejemplos</div>
+            <v-btn icon @click="startTalk(material[category_selected].join('. '))">
+              <v-icon>mdi-volume-high</v-icon>
+            </v-btn>
           </div>
           <div
             v-for="(example, e_idx) in material[category_selected]"
@@ -83,7 +86,7 @@
           </div>
         </div>
         <!-- Category Images -->
-        <div v-if="category_selected == 'images'" class="category category-image">
+        <div v-if="category_selected == 'images'">
           <div v-for="(image, i_idx) in material[category_selected]" :key="i_idx" class="category category-image">
             <img :src="image" alt />
           </div>
