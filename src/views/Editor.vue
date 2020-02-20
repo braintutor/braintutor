@@ -2,13 +2,22 @@
   <div class="editor-container m-fullscreen">
     <div class="menu">
       <span class="menu-title">Conocimiento</span>
-      <div class="menu-action">
+      <div v-if="!loading" class="menu-action">
+        <v-btn icon @click="redirectChatbot()">
+          <v-icon>mdi-robot</v-icon>
+        </v-btn>
         <v-btn icon @click="addKnowledge()">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
-        <v-btn icon @click="saveKnowledge()" :loading="loading_save">
+        <v-btn icon @click="restoreKnowledge()">
+          <v-icon>mdi-restore</v-icon>
+        </v-btn>
+        <v-btn icon @click="saveKnowledge()">
           <v-icon>mdi-content-save</v-icon>
         </v-btn>
+      </div>
+      <div v-else>
+        <v-progress-circular :width="3" :size="20" indeterminate color="green"></v-progress-circular>
       </div>
     </div>
     <div class="editor-content m-fullscreen-content">
@@ -70,9 +79,13 @@
 </template>
 
 <script>
-import { getParam } from "@/services/router.js";
+import { redirect, getParam } from "@/services/router.js";
 import { train } from "@/services/chatService";
-import { getKnowledge, updateKnowledge, removeKnowledge } from "@/services/knowledgeService";
+import {
+  getKnowledge,
+  updateKnowledge,
+  removeKnowledge
+} from "@/services/knowledgeService";
 
 export default {
   data: () => ({
@@ -80,11 +93,11 @@ export default {
     knowledge: [],
     knowledge_to_eliminate: [],
     //
-    loading_save: false
+    loading: false
   }),
   async mounted() {
     this.chatbot_id = getParam("chatbot_id");
-    this.knowledge = await getKnowledge(this.chatbot_id);
+    await this.restoreKnowledge();
   },
   methods: {
     addKnowledge() {
@@ -92,6 +105,26 @@ export default {
         questions: [""],
         answers: [""]
       });
+    },
+    async saveKnowledge() {
+      let knowledge = this.knowledge.map(k => ({
+        ...k,
+        id: k._id ? k._id.$oid : ""
+      }));
+      this.loading = true;
+      await removeKnowledge(this.chatbot_id, this.knowledge_to_eliminate);
+      this.knowledge_to_eliminate = [];
+      await updateKnowledge(this.chatbot_id, knowledge);
+      await train(this.chatbot_id);
+      this.loading = false;
+
+      await this.restoreKnowledge();
+    },
+    async restoreKnowledge() {
+      this.loading = true;
+      this.knowledge = await getKnowledge(this.chatbot_id);
+      this.knowledge_to_eliminate = [];
+      this.loading = false;
     },
     removeKnowledge(knowledge_idx) {
       let knowledge = this.knowledge[knowledge_idx];
@@ -111,19 +144,8 @@ export default {
       knowledge.show = !knowledge.show;
       this.$forceUpdate();
     },
-    async saveKnowledge() {
-      let knowledge = this.knowledge.map(k => ({
-        ...k,
-        id: k._id ? k._id.$oid : ""
-      }));
-      this.loading_save = true;
-      await removeKnowledge(this.chatbot_id, this.knowledge_to_eliminate)
-      await updateKnowledge(this.chatbot_id, knowledge);
-      await train(this.chatbot_id);
-
-      this.knowledge = await getKnowledge(this.chatbot_id);
-      this.knowledge_to_eliminate = []
-      this.loading_save = false;
+    redirectChatbot() {
+      redirect("chatbot", { chatbot_id: this.chatbot_id });
     }
   }
 };
