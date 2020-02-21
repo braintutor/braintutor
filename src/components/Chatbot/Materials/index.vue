@@ -1,12 +1,11 @@
 <template>
   <!-- Material List -->
-  <v-container v-if="!material" fluid class="pa-3">
+  <v-container v-if="!material" fluid>
     <v-row no-gutters>
       <v-col
         cols="6"
         md="3"
         lg="2"
-        class="pa-2"
         v-for="(material, r_idx) in materials"
         :key="r_idx"
       >

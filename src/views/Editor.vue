@@ -1,77 +1,28 @@
 <template>
   <div class="editor-container m-fullscreen">
-    <div class="menu">
-      <span class="menu-title">Conocimiento</span>
-      <div v-if="!loading" class="menu-action">
-        <v-btn icon @click="redirectChatbot()">
-          <v-icon>mdi-robot</v-icon>
-        </v-btn>
-        <v-btn icon @click="addKnowledge()">
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
-        <v-btn icon @click="restoreKnowledge()">
-          <v-icon>mdi-restore</v-icon>
-        </v-btn>
-        <v-btn icon @click="saveKnowledge()">
-          <v-icon>mdi-content-save</v-icon>
-        </v-btn>
-      </div>
-      <div v-else>
-        <v-progress-circular :width="3" :size="20" indeterminate color="green"></v-progress-circular>
-      </div>
-    </div>
-    <div class="editor-content m-fullscreen-content">
-      <div class="editor-knowledge" v-for="(k, k_idx) in knowledge" :key="k_idx">
-        <div class="editor-knowledge-row row no-gutters">
-          <div
-            v-for="(type, t_idx) in ['questions', 'answers']"
-            :key="t_idx"
-            class="editor-knowledge-col col-md-6"
-          >
-            <div>
-              <div v-for="(question, q_idx) in k[type]" :key="q_idx">
-                <div v-if="q_idx == 0" class="editor-knowledge-principal">
-                  <v-text-field
-                    class="editor-input"
-                    v-model="k[type][q_idx]"
-                    dense
-                    hide-details
-                    autocomplete="off"
-                  ></v-text-field>
-                  <v-btn icon @click="add(k, k[type])">
-                    <v-icon>mdi-plus</v-icon>
-                  </v-btn>
-                </div>
-                <div v-else-if="k.show" class="editor-knowledge-more">
-                  <v-text-field
-                    class="editor-input"
-                    v-model="k[type][q_idx]"
-                    dense
-                    hide-details
-                    autocomplete="off"
-                  ></v-text-field>
-                  <v-btn icon @click="remove(k[type], q_idx)">
-                    <v-icon>mdi-minus</v-icon>
-                  </v-btn>
-                </div>
-              </div>
-            </div>
-          </div>
+    <MaterialsEditor class="m-fullscreen-content" v-show="service_idx == 0" />
+    <QuizzesEditor class="m-fullscreen-content" v-show="service_idx == 1" />
+    <TasksEditor class="m-fullscreen-content" v-show="service_idx == 2" />
+    <KnowledgeEditor class="m-fullscreen-content" v-show="service_idx == 3" />
+    <div class="services-navigator">
+      <div class="services-actions elevation-3">
+        <div class="services-action transform-scale-plus" @click="selectService(0)">
+          <img src="@/assets/braintutor/icon-material.png" alt />
         </div>
-        <div class="editor-actions">
-          <v-badge
-            :color="k.show || (k.questions.length + k.answers.length <= 2) ? 'rgba(255, 0, 0, 0)': 'green'"
-            dot
-            overlap
-          >
-            <v-btn icon @click="toggleShow(k)">
-              <v-icon v-if="k.show">mdi-chevron-up</v-icon>
-              <v-icon v-else>mdi-chevron-down</v-icon>
-            </v-btn>
-          </v-badge>
-          <v-btn icon @click="removeKnowledge(k_idx)">
-            <v-icon>mdi-minus</v-icon>
-          </v-btn>
+        <div class="services-action transform-scale-plus" @click="selectService(1)">
+          <img src="@/assets/braintutor/icon-quiz.png" alt />
+        </div>
+        <div class="services-action transform-scale-plus" @click="selectService(2)">
+          <img src="https://img.icons8.com/cotton/2x/calendar.png" alt />
+        </div>
+        <div class="services-action transform-scale-plus" @click="selectService(3)">
+          <img src="https://pngimage.net/wp-content/uploads/2018/06/messaging-png-1.png" alt />
+        </div>
+        <div
+          class="services-action services-action-bot transform-scale-plus"
+          @click="redirectChatbot()"
+        >
+          <img src="@/assets/avatar/normal.png" alt />
         </div>
       </div>
     </div>
@@ -79,118 +30,76 @@
 </template>
 
 <script>
+import MaterialsEditor from "@/components/Editor/MaterialsEditor/index";
+import QuizzesEditor from "@/components/Editor/QuizzesEditor";
+import TasksEditor from "@/components/Editor/TasksEditor";
+import KnowledgeEditor from "@/components/Editor/KnowledgeEditor";
+
 import { redirect, getParam } from "@/services/router.js";
-import { train } from "@/services/chatService";
-import {
-  getKnowledge,
-  updateKnowledge,
-  removeKnowledge
-} from "@/services/knowledgeService";
 
 export default {
   data: () => ({
-    chatbot_id: "",
-    knowledge: [],
-    knowledge_to_eliminate: [],
-    //
-    loading: false
+    service_idx: 0,
+    chatbot_id: ""
   }),
-  async mounted() {
+  mounted() {
     this.chatbot_id = getParam("chatbot_id");
-    await this.restoreKnowledge();
   },
   methods: {
-    addKnowledge() {
-      this.knowledge.push({
-        questions: [""],
-        answers: [""]
-      });
-    },
-    async saveKnowledge() {
-      let knowledge = this.knowledge.map(k => ({
-        ...k,
-        id: k._id ? k._id.$oid : ""
-      }));
-      this.loading = true;
-      await removeKnowledge(this.chatbot_id, this.knowledge_to_eliminate);
-      this.knowledge_to_eliminate = [];
-      await updateKnowledge(this.chatbot_id, knowledge);
-      await train(this.chatbot_id);
-      this.loading = false;
-
-      await this.restoreKnowledge();
-    },
-    async restoreKnowledge() {
-      this.loading = true;
-      this.knowledge = await getKnowledge(this.chatbot_id);
-      this.knowledge_to_eliminate = [];
-      this.loading = false;
-    },
-    removeKnowledge(knowledge_idx) {
-      let knowledge = this.knowledge[knowledge_idx];
-      if (knowledge._id) {
-        this.knowledge_to_eliminate.push(knowledge._id.$oid);
-      }
-      this.knowledge.splice(knowledge_idx, 1);
-    },
-    add(knowledge, arr) {
-      arr.push("");
-      knowledge.show = true;
-    },
-    remove(arr, idx) {
-      arr.splice(idx, 1);
-    },
-    toggleShow(knowledge) {
-      knowledge.show = !knowledge.show;
-      this.$forceUpdate();
+    selectService(idx) {
+      this.service_idx = idx;
     },
     redirectChatbot() {
       redirect("chatbot", { chatbot_id: this.chatbot_id });
     }
+  },
+  components: {
+    MaterialsEditor,
+    QuizzesEditor,
+    TasksEditor,
+    KnowledgeEditor
   }
 };
 </script>
 
 <style lang='scss' scoped>
-@import "@/styles/box-shadow.scss";
-
 .editor-container {
   height: calc(100vh - 65px);
-  .menu {
-    padding: 10px 20px 0 20px;
+}
+.services-navigator {
+  z-index: 1;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  pointer-events: none;
+  .services-actions {
+    width: max-content;
+    padding: 10px 8px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 10px 10px 0 0;
+    opacity: 0.5;
+    transition: all 0.5s;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .menu-title {
-      font-size: calc(9.5px + 1vw);
-      font-weight: bold;
+    pointer-events: all;
+    &:hover {
+      cursor: pointer;
+      opacity: 1;
     }
-  }
-  .editor-content {
-    padding: 10px 14px;
-    .editor-knowledge {
-      padding: 8px 0;
-      display: flex;
-      .editor-knowledge-row {
-        .editor-knowledge-col {
-          padding: 4px 6px;
-          & > div {
-            padding: 10px 10px 10px 20px;
-            border-radius: 10px;
-            @include box-shadow;
-          }
-          .editor-knowledge-principal {
-            display: flex;
-          }
-          .editor-knowledge-more {
-            display: flex;
-          }
-          .editor-input {
-            font-size: calc(9px + 0.5vw);
-          }
-        }
+    .services-action {
+      margin: 0 8px;
+      img {
+        width: 42px;
+        height: 42px;
+        vertical-align: bottom;
       }
     }
+  }
+}
+.services-action-bot {
+  display: block;
+  img {
+    border-radius: 50%;
   }
 }
 </style>

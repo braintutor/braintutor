@@ -31,7 +31,7 @@
             class="available-questions-title"
           >Preguntas disponibles ({{available_questions.length}})</p>
           <div class="available-questions-content">
-            <v-list class="pa-0">
+            <v-list>
               <v-list-item
                 v-for="(available_question, c_idx) in available_questions"
                 :key="c_idx"

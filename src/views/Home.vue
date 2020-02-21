@@ -22,7 +22,7 @@
       <div class="services-container">
         <span class="services-title">Servicios</span>
         <div class="row">
-          <div v-for="(service, s_idx) in services" :key="s_idx" class="col-sm-6 col-md-4 pa-2">
+          <div v-for="(service, s_idx) in services" :key="s_idx" class="col-sm-6 col-md-4">
             <div class="service-container transform-scale">
               <div class="service-image">
                 <img :src="service.image" alt />

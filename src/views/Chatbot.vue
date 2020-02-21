@@ -1,6 +1,6 @@
 <template>
   <div class="chatbot-container">
-    <v-container fluid class="fill-height pa-0">
+    <v-container fluid class="fill-height">
       <v-row id="chatbot-scroll" class="chatbot-scroll fill-height" no-gutters>
         <div class="chatbot-content col-12 col-sm-7 col-md-8 m-fullscreen">
           <Materials
@@ -21,19 +21,19 @@
             v-show="service_selected === 2"
             :showServices="bool => showServices(bool)"
           />
-          <div v-show="show_services" class="chatbot-navigator">
-            <div class="chatbot-actions elevation-3">
-              <div class="chatbot-action transform-scale-plus" @click="selectService(0)">
+          <div v-show="show_services" class="services-navigator">
+            <div class="services-actions elevation-3">
+              <div class="services-action transform-scale-plus" @click="selectService(0)">
                 <img src="@/assets/braintutor/icon-material.png" alt />
               </div>
-              <div class="chatbot-action transform-scale-plus" @click="selectService(1)">
+              <div class="services-action transform-scale-plus" @click="selectService(1)">
                 <img src="@/assets/braintutor/icon-quiz.png" alt />
               </div>
-              <div class="chatbot-action transform-scale-plus" @click="selectService(2)">
+              <div class="services-action transform-scale-plus" @click="selectService(2)">
                 <img src="https://img.icons8.com/cotton/2x/calendar.png" alt />
               </div>
               <div
-                class="chatbot-action chatbot-action-bot transform-scale-plus"
+                class="services-action services-action-bot transform-scale-plus"
                 @click="scrollRight('chatbot-scroll')"
               >
                 <img src="@/assets/avatar/normal.png" alt />
@@ -120,13 +120,13 @@ export default {
   .chatbot-content {
     position: relative;
     border-right: 1px solid #eee;
-    .chatbot-navigator {
+    .services-navigator {
       z-index: 1;
       position: absolute;
       width: 100%;
       bottom: 0;
       pointer-events: none;
-      .chatbot-actions {
+      .services-actions {
         width: max-content;
         padding: 10px 8px;
         margin: 0 auto;
@@ -140,7 +140,7 @@ export default {
           cursor: pointer;
           opacity: 1;
         }
-        .chatbot-action {
+        .services-action {
           margin: 0 8px;
           img {
             width: 42px;
@@ -152,7 +152,7 @@ export default {
     }
   }
 }
-.chatbot-action-bot {
+.services-action-bot {
   display: none;
   img {
     border-radius: 50%;
@@ -160,7 +160,7 @@ export default {
 }
 
 @media only screen and (max-width: 599px) {
-  .chatbot-action-bot {
+  .services-action-bot {
     display: block;
   }
   .chatbot-container {

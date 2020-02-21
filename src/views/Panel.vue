@@ -13,7 +13,6 @@
         sm="4"
         md="3"
         lg="2"
-        class="pa-2"
         v-for="(chatbot, c_idx) in chatbots_filtered"
         :key="c_idx"
       >

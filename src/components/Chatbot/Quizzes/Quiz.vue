@@ -23,7 +23,7 @@
         <div class="question-text">{{question_selected.question}}</div>
         <div class="row no-gutters">
           <div
-            class="col-12 col-md-6 pa-2"
+            class="col-12 col-md-6"
             v-for="(alternative, a_idx) in question_selected.alternatives"
             :key="a_idx"
           >

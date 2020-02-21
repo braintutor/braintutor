@@ -1,12 +1,11 @@
 <template>
   <!-- Quiz List -->
-  <v-container v-if="!quiz_selected" fluid class="pa-3">
+  <v-container v-if="!quiz_selected" fluid>
     <v-row no-gutters>
       <v-col
         cols="6"
         md="3"
         lg="2"
-        class="pa-2"
         v-for="(quiz, e_idx) in quizzes"
         :key="e_idx"
       >
