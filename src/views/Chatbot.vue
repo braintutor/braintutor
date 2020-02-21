@@ -1,53 +1,51 @@
 <template>
   <div class="chatbot-container">
-    <v-container fluid class="fill-height">
-      <v-row id="chatbot-scroll" class="chatbot-scroll fill-height" no-gutters>
-        <div class="chatbot-content col-12 col-sm-7 col-md-8 m-fullscreen">
-          <Materials
-            class="m-fullscreen-content"
-            ref="component_materials"
-            v-show="service_selected === 0"
-            :showServices="bool => showServices(bool)"
-          />
-          <Quizzes
-            class="m-fullscreen-content"
-            ref="component_quizzes"
-            v-show="service_selected === 1"
-            :showServices="bool => showServices(bool)"
-          />
-          <Tasks
-            class="m-fullscreen-content"
-            ref="component_tasks"
-            v-show="service_selected === 2"
-            :showServices="bool => showServices(bool)"
-          />
-          <div v-show="show_services" class="services-navigator">
-            <div class="services-actions elevation-3">
-              <div class="services-action transform-scale-plus" @click="selectService(0)">
-                <img src="@/assets/braintutor/icon-material.png" alt />
-              </div>
-              <div class="services-action transform-scale-plus" @click="selectService(1)">
-                <img src="@/assets/braintutor/icon-quiz.png" alt />
-              </div>
-              <div class="services-action transform-scale-plus" @click="selectService(2)">
-                <img src="https://img.icons8.com/cotton/2x/calendar.png" alt />
-              </div>
-              <div
-                class="services-action services-action-bot transform-scale-plus"
-                @click="scrollRight('chatbot-scroll')"
-              >
-                <img src="@/assets/avatar/normal.png" alt />
-              </div>
+    <v-row id="chatbot-scroll" class="chatbot-scroll fill-height" no-gutters>
+      <div class="chatbot-content col-12 col-sm-7 col-md-8 m-fullscreen">
+        <Materials
+          class="m-fullscreen-content"
+          ref="component_materials"
+          v-show="service_selected === 0"
+          :showServices="bool => showServices(bool)"
+        />
+        <Quizzes
+          class="m-fullscreen-content"
+          ref="component_quizzes"
+          v-show="service_selected === 1"
+          :showServices="bool => showServices(bool)"
+        />
+        <Tasks
+          class="m-fullscreen-content"
+          ref="component_tasks"
+          v-show="service_selected === 2"
+          :showServices="bool => showServices(bool)"
+        />
+        <div v-show="show_services" class="services-navigator">
+          <div class="services-actions elevation-3">
+            <div class="services-action transform-scale-plus" @click="selectService(0)">
+              <img src="@/assets/braintutor/icon-material.png" alt />
+            </div>
+            <div class="services-action transform-scale-plus" @click="selectService(1)">
+              <img src="@/assets/braintutor/icon-quiz.png" alt />
+            </div>
+            <div class="services-action transform-scale-plus" @click="selectService(2)">
+              <img src="https://img.icons8.com/cotton/2x/calendar.png" alt />
+            </div>
+            <div
+              class="services-action services-action-bot transform-scale-plus"
+              @click="scrollRight('chatbot-scroll')"
+            >
+              <img src="@/assets/avatar/normal.png" alt />
             </div>
           </div>
         </div>
-        <Chat
-          class="chat-container col-12 col-sm-5 col-md-4"
-          :available_questions="available_questions"
-          :selectService="idx => selectService(idx)"
-        />
-      </v-row>
-    </v-container>
+      </div>
+      <Chat
+        class="chat-container col-12 col-sm-5 col-md-4"
+        :available_questions="available_questions"
+        :selectService="idx => selectService(idx)"
+      />
+    </v-row>
   </div>
 </template>
 

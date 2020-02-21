@@ -8,6 +8,7 @@
         lg="2"
         v-for="(quiz, e_idx) in quizzes"
         :key="e_idx"
+        class="pa-2"
       >
         <Cartel
           :description="quiz.name"

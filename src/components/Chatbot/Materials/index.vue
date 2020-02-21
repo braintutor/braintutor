@@ -8,6 +8,7 @@
         lg="2"
         v-for="(material, r_idx) in materials"
         :key="r_idx"
+        class="pa-2"
       >
         <Cartel
           :description="material.name"
