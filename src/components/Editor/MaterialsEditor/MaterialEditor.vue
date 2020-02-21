@@ -28,6 +28,7 @@
 
     <!-- Material Content -->
     <div class="material-editor-content m-fullscreen-content">
+      <!-- Overview -->
       <div class="category">
         <div class="category-menu">
           <span>Resumen</span>
@@ -38,6 +39,7 @@
           </div>
         </div>
       </div>
+      <!-- Explanation -->
       <div class="category">
         <div class="category-menu">
           <span>Explicación</span>
@@ -48,6 +50,7 @@
           </div>
         </div>
       </div>
+      <!-- Bullets -->
       <div class="category">
         <div class="category-menu">
           <span>Puntos Importantes</span>
@@ -66,6 +69,7 @@
           </div>
         </div>
       </div>
+      <!-- Hyperlinks -->
       <div class="category">
         <div class="category-menu">
           <span>Enlaces</span>
@@ -90,6 +94,25 @@
               </div>
             </div>
             <v-btn icon @click="removeHyperlink(material.hyperlinks, h_idx)">
+              <v-icon>mdi-minus</v-icon>
+            </v-btn>
+          </div>
+        </div>
+      </div>
+      <!-- Examples -->
+      <div class="category">
+        <div class="category-menu">
+          <span>Ejemplos</span>
+          <v-btn icon @click="addExample(material.examples)">
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </div>
+        <div class="category-content">
+          <div class="category-bullet" v-for="(example, e_idx) in material.examples" :key="e_idx">
+            <div class="category-text">
+              <v-textarea v-model="material.examples[e_idx]" :rows="1" autoGrow dense hide-details></v-textarea>
+            </div>
+            <v-btn icon @click="removeExample(material.examples, e_idx)">
               <v-icon>mdi-minus</v-icon>
             </v-btn>
           </div>
@@ -142,6 +165,12 @@ export default {
     },
     removeHyperlink(hyperlinks, hyperlink_idx) {
       hyperlinks.splice(hyperlink_idx, 1);
+    },
+    addExample(examples) {
+      examples.push("");
+    },
+    removeExample(examples, example_idx) {
+      examples.splice(example_idx, 1);
     }
   }
 };
