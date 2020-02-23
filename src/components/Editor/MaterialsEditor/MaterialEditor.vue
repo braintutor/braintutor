@@ -118,6 +118,53 @@
           </div>
         </div>
       </div>
+      <!-- Exercises -->
+      <div class="category">
+        <div class="category-menu">
+          <span>Ejercicios</span>
+          <v-btn icon @click="addExercise(material.exercises)">
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </div>
+        <div class="category-content">
+          <div class="category-bullet" v-for="(exercise, e_idx) in material.exercises" :key="e_idx">
+            <div class="category-bullet-content">
+              <div class="category-bullet-item category-text">
+                <v-textarea v-model="exercise.question" :rows="1" autoGrow dense hide-details></v-textarea>
+                <v-radio-group v-model="exercise.correct">
+                  <div
+                    class="category-bullet"
+                    v-for="(alternative, a_idx) in exercise.alternatives"
+                    :key="a_idx"
+                  >
+                    <v-textarea
+                      v-model="exercise.alternatives[a_idx]"
+                      :rows="1"
+                      autoGrow
+                      dense
+                      hide-details
+                    ></v-textarea>
+                    <v-radio :value="a_idx"></v-radio>
+                    <v-btn
+                      v-show="exercise.alternatives.length > 2"
+                      icon
+                      @click="removeAlternative(exercise.alternatives, a_idx)"
+                    >
+                      <v-icon>mdi-minus</v-icon>
+                    </v-btn>
+                  </div>
+                </v-radio-group>
+              </div>
+            </div>
+            <v-btn icon @click="addAlternative(material.exercises, e_idx)">
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
+            <v-btn icon @click="removeExercise(material.exercises, e_idx)">
+              <v-icon>mdi-minus</v-icon>
+            </v-btn>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Dialog -->
@@ -171,6 +218,22 @@ export default {
     },
     removeExample(examples, example_idx) {
       examples.splice(example_idx, 1);
+    },
+    addExercise(exercises) {
+      exercises.push({
+        question: "",
+        alternatives: ["", ""],
+        correct: 0
+      });
+    },
+    removeExercise(exercises, e_idx) {
+      exercises.splice(e_idx, 1);
+    },
+    addAlternative(exercises, exercise_idx) {
+      exercises[exercise_idx].alternatives.push("");
+    },
+    removeAlternative(alternatives, a_idx) {
+      alternatives.splice(a_idx, 1);
     }
   }
 };
@@ -189,7 +252,7 @@ export default {
       border-radius: 10px;
       @include box-shadow;
       .category-menu {
-        font-size: .9rem;
+        font-size: 0.9rem;
         color: #afafaf;
         display: flex;
         justify-content: space-between;

@@ -22,6 +22,9 @@
         <div v-if="category_selected == 'explanation'" class="category category-text">
           <div class="category-text-menu">
             <div class="category-text-title">{{material.name}}</div>
+            <v-btn icon @click="startTalk(material[category_selected])">
+              <v-icon>mdi-volume-high</v-icon>
+            </v-btn>
           </div>
           <div class="category-text-content">{{material[category_selected]}}</div>
         </div>
@@ -212,7 +215,7 @@ export default {
     padding: 28px;
     padding-bottom: 10px;
     .category-text-menu {
-      padding-bottom: 18px; // padding - padding-bottom
+      padding-bottom: 16px; // padding - padding-bottom
       display: flex;
       justify-content: space-between;
       .category-text-title {
@@ -222,11 +225,11 @@ export default {
       }
     }
     .category-text-content {
-      padding-bottom: 18px; // padding - padding-bottom
+      padding-bottom: 16px; // padding - padding-bottom
       font-size: 1.2rem;
       white-space: pre-wrap;
       display: flex;
-      align-items: flex-start;
+      align-items: center;
     }
   }
   &.category-image img {

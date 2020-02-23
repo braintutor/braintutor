@@ -1,5 +1,5 @@
 <template>
-  <div class="editor-container">
+  <div class="editor-container m-fullscreen">
     <div class="menu">
       <span class="menu-title">Conocimiento</span>
       <div v-if="!loading" class="menu-action">
@@ -17,7 +17,7 @@
         <v-progress-circular :width="3" :size="20" indeterminate color="green"></v-progress-circular>
       </div>
     </div>
-    <div class="editor-content">
+    <div class="editor-content m-fullscreen-content">
       <div class="editor-knowledge" v-for="(k, k_idx) in knowledge" :key="k_idx">
         <div class="editor-knowledge-row row no-gutters">
           <div
@@ -89,7 +89,7 @@ export default {
   data: () => ({
     knowledge: [],
     knowledge_to_eliminate: [],
-    chatbot_id: '',
+    chatbot_id: "",
     //
     loading: false
   }),
@@ -150,7 +150,6 @@ export default {
 @import "@/styles/box-shadow.scss";
 
 .editor-container {
-  height: calc(100vh - 65px);
   .menu {
     padding: 10px 20px 0 20px;
     display: flex;
