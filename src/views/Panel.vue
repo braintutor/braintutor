@@ -7,6 +7,7 @@
         <v-icon slot="append-outer">mdi-magnify</v-icon>
       </v-text-field>
     </div>
+    <loading :active="loading_courses" />
     <v-row no-gutters>
       <v-col
         cols="6"
@@ -35,6 +36,7 @@
 </template>
 
 <script>
+import loading from "@/components/loading";
 import Cartel from "@/components/Cartel";
 
 import { redirect } from "@/services/router.js";
@@ -44,19 +46,19 @@ import { getChatbots } from "@/services/chatbotService.js";
 export default {
   data: () => ({
     chatbots: [],
-    chatbot_filter: ""
+    chatbot_filter: "",
+    loading_courses: true
   }),
-  mounted() {
-    getCourses().then(courses => {
-      courses.forEach(course => {
-        getChatbots(course._id.$oid).then(chatbots => {
-          chatbots.forEach(chatbot => {
-            chatbot.course = course.name;
-            this.chatbots.push(chatbot);
-          });
-        });
+  async mounted() {
+    let courses = await getCourses();
+    courses.forEach(async course => {
+      let chatbots = await getChatbots(course._id.$oid);
+      chatbots.forEach(chatbot => {
+        chatbot.course = course.name;
+        this.chatbots.push(chatbot);
       });
     });
+    this.loading_courses = false;
   },
   computed: {
     chatbots_filtered() {
@@ -84,6 +86,7 @@ export default {
     }
   },
   components: {
+    loading,
     Cartel
   }
 };
@@ -98,7 +101,7 @@ export default {
     margin: 20px 0;
     color: #444444;
     text-align: center;
-    font-size: calc(18px + 1.4vw);
+    font-size: 2.5em;
     font-weight: bold;
   }
   .courses-search {

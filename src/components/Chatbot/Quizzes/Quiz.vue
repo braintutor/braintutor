@@ -23,12 +23,12 @@
         <div class="question-text">{{question_selected.question}}</div>
         <div class="row no-gutters">
           <div
-            class="col-12 col-md-6"
+            class="question-alternative-container col-12 col-md-6"
             v-for="(alternative, a_idx) in question_selected.alternatives"
             :key="a_idx"
           >
             <div
-              class="question-alternative transform-scale m-fullcenter"
+              class="question-alternative-content transform-scale m-fullcenter"
               :class="{'question-alternative-correct': question_selected.show_correct && question_selected.correct === a_idx,'question-alternative-incorrect': question_selected.incorrect === a_idx}"
               @click="selectAlternative(question_selected, question_selected.correct, a_idx)"
             >{{alternative}}</div>
@@ -152,7 +152,7 @@ export default {
       width: 100%;
       .quiz-title {
         margin: 0 12px;
-        font-size: calc(9.5px + 1vw);
+        font-size: 1.5rem;
         font-weight: bold;
       }
       .quiz-level {
@@ -160,7 +160,7 @@ export default {
         background: #ebbb6b;
         color: #fff;
         border-radius: 10px;
-        font-size: calc(8px + 0.8vw);
+        font-size: 1rem;
       }
     }
   }
@@ -171,45 +171,49 @@ export default {
   }
 }
 .question-container {
-  padding: 20px;
+  padding: 16px 10px;
   margin: 20px;
   margin-top: 5px;
   border-radius: 10px;
   @include box-shadow;
   .question-text {
     margin: 5px 0 18px 0;
-    font-size: calc(10px + 1vw);
+    font-size: 1.2rem;
     text-align: center;
   }
-  .question-alternative {
-    height: 100%;
-    padding: 10px 20px;
-    font-size: calc(10px + 0.65vw);
-    border-radius: 10px;
-    @include box-shadow;
-    &:hover {
-      cursor: pointer;
-    }
-    &.question-alternative-correct {
-      background: #8bc34a;
-      color: #fff;
-      font-weight: bold;
-    }
-    &.question-alternative-incorrect {
-      background: #ff887f;
-      color: #fff;
-      font-weight: bold;
+  .question-alternative-container {
+    padding: 5px 10px;
+    .question-alternative-content {
+      height: 100%;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 10px;
+      @include box-shadow;
+      &:hover {
+        cursor: pointer;
+      }
+      &.question-alternative-correct {
+        background: #8bc34a;
+        color: #fff;
+        font-weight: bold;
+      }
+      &.question-alternative-incorrect {
+        background: #ff887f;
+        color: #fff;
+        font-weight: bold;
+      }
     }
   }
 }
 .score-container {
   padding: 30px;
   font-size: 32px;
+  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   .score-content {
-    font-size: calc(10px + 1vw);
+    font-size: 1.8rem;
     margin-top: 32px;
   }
 }

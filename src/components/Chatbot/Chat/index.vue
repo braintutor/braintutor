@@ -136,7 +136,7 @@ export default {
     width: max-content;
     max-width: 70%;
     border-radius: 6px;
-    font-size: calc(12px + 0.2vw);
+    font-size: .95rem;
     white-space: pre-wrap;
     word-wrap: break-word;
 

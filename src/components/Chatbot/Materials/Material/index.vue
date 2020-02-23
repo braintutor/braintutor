@@ -164,7 +164,7 @@ export default {
     align-items: center;
     .material-title {
       margin: 0 12px;
-      font-size: calc(9.5px + 1vw);
+      font-size: 1.5rem;
       font-weight: bold;
     }
   }
@@ -196,7 +196,7 @@ export default {
       .material-action {
         margin: 0 8px;
         font-weight: bold;
-        font-size: calc(11px + 1vw);
+        font-size: 1.5rem;
         // font-size: 18px;
       }
     }
@@ -216,14 +216,14 @@ export default {
       display: flex;
       justify-content: space-between;
       .category-text-title {
-        font-size: calc(10px + 1.4vw);
+        font-size: 1.5rem;
         font-weight: bold;
         margin-right: 10px;
       }
     }
     .category-text-content {
       padding-bottom: 18px; // padding - padding-bottom
-      font-size: calc(10px + 0.7vw);
+      font-size: 1.2rem;
       white-space: pre-wrap;
       display: flex;
       align-items: flex-start;

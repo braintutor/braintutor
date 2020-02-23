@@ -157,7 +157,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     .menu-title {
-      font-size: calc(9.5px + 1vw);
+      font-size: 1.5rem;
       font-weight: bold;
     }
   }
@@ -182,7 +182,7 @@ export default {
             display: flex;
           }
           .editor-input {
-            font-size: calc(9px + 0.5vw);
+            font-size: 1rem;
           }
         }
       }

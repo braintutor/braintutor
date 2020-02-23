@@ -189,7 +189,7 @@ export default {
       border-radius: 10px;
       @include box-shadow;
       .category-menu {
-        font-size: calc(9px + 0.5vw);
+        font-size: .9rem;
         color: #afafaf;
         display: flex;
         justify-content: space-between;
@@ -202,7 +202,7 @@ export default {
           width: 100%;
           & * {
             margin: 0;
-            font-size: calc(9px + 0.7vw) !important;
+            font-size: 1rem !important;
           }
         }
         .category-title {
@@ -230,7 +230,7 @@ export default {
   align-items: center;
   .menu-title {
     margin: 0 12px;
-    font-size: calc(9.5px + 1vw);
+    font-size: 1.5rem;
     font-weight: bold;
   }
   .menu-left {

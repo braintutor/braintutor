@@ -20,3 +20,28 @@ body, body * {
 ::-webkit-scrollbar-thumb:hover {
   background: rgb(206, 206, 206);
 }
+
+// Medium devices (tablets, 768px and up)
+@media (max-width: 1200px) { 
+  html {
+    font-size: 100%
+  }
+}
+// Medium devices (tablets, 768px and up)
+@media (max-width: 992px) { 
+  html {
+    font-size: 91%
+  }
+}
+// Medium devices (tablets, 768px and up)
+@media (max-width: 768px) { 
+  html {
+    font-size: 83%
+  }
+}
+// Small devices (landscape phones, 576px and up)
+@media (max-width: 576px) {
+  html {
+    font-size: 75%
+  }
+}

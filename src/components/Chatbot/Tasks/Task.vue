@@ -47,7 +47,7 @@ export default {
   align-items: center;
   .menu-title {
     margin: 0 12px;
-    font-size: calc(9.5px + 1vw);
+    font-size: 1.5rem;
     font-weight: bold;
   }
 }
@@ -61,7 +61,7 @@ export default {
 
   .task-course {
     padding-bottom: 20px;
-    font-size: calc(10px + 1.4vw);
+    font-size: 1.5rem;
     font-weight: bold;
   }
   .task-content {
@@ -70,7 +70,7 @@ export default {
     grid-template-columns: auto 1fr;
     grid-row-gap: 2vw;
     grid-column-gap: 4vw;
-    font-size: calc(10px + 0.7vw);
+    font-size: 1rem;
     .task-item {
       font-weight: bold;
       text-decoration: underline

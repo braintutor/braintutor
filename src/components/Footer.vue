@@ -18,11 +18,11 @@ export default {};
   .footer-content {
     padding: 16px 20px;
     font-weight: lighter;
-    font-size: 14px;
+    font-size: 1rem;
     .footer-author {
       margin-left: 6px;
       font-weight: bold;
-      font-size: 15px;
+      font-size: 1rem;
     }
   }
 }

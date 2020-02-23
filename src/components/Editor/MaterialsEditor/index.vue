@@ -1,9 +1,7 @@
 <template>
   <!-- Material List -->
   <v-container v-if="!material" fluid class="materials-container">
-    <div class="loading-container" :class="{active: loading_materials}">
-      <v-progress-circular :width="5" :size="120" indeterminate color="green"></v-progress-circular>
-    </div>
+    <loading :class="{active: loading_materials}" />
     <v-row no-gutters>
       <v-col
         cols="6"
@@ -38,6 +36,7 @@
 <script>
 import Cartel from "@/components/Cartel";
 import MaterialEditor from "./MaterialEditor";
+import loading from "@/components/loading";
 
 import {
   getMaterials,
@@ -108,7 +107,8 @@ export default {
   },
   components: {
     Cartel,
-    MaterialEditor
+    MaterialEditor,
+    loading
   }
 };
 </script>

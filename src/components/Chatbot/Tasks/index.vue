@@ -148,7 +148,7 @@ export default {
     margin-bottom: 10px;
     .calendar-date {
       font-weight: bold;
-      font-size: calc(12px + 0.8vw);
+      font-size: 1.5rem;
     }
   }
 }
@@ -157,7 +157,7 @@ export default {
   cursor: pointer;
 }
 .fc-event-container {
-  font-size: 14px;
+  font-size: 1rem;
   pointer-events: none;
 }
 

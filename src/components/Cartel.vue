@@ -31,7 +31,6 @@ export default {
 <style lang='scss' scoped>
 .cartel-container {
   height: 100%;
-  font-size: 16px;
   border-radius: 10px;
   background: #fff;
   //
@@ -75,12 +74,12 @@ export default {
     text-align: center;
     .cartel-title {
       padding: 3px 0;
-      font-size: calc(10px + 0.5vw);
+      font-size: 1rem;
       font-weight: bold;
     }
     .cartel-description {
       padding: 1px 0;
-      font-size: calc(10px + 0.4vw);
+      font-size: 1rem;
       font-weight: normal;
     }
   }

@@ -138,11 +138,11 @@ export default {
     margin-bottom: 20px;
     color: #fff;
     .principal-title {
-      font-size: calc(14px + 5vw);
+      font-size: 4.5rem;
     }
     .principal-description {
       margin-top: 16px;
-      font-size: calc(14px + 0.5vw);
+      font-size: 1.4rem;
       font-weight: lighter;
     }
     .principal-action {
@@ -169,7 +169,7 @@ export default {
   .services-title {
     display: block;
     margin-bottom: calc(2px + 2vw);
-    font-size: calc(28px + 1.5vw);
+    font-size: 3rem;
     font-weight: bold;
     text-align: center;
   }
@@ -190,11 +190,11 @@ export default {
     }
     .service-content {
       .service-title {
-        font-size: 17px;
+        font-size: 1.4rem;
         font-weight: bold;
       }
       .service-descripcion {
-        font-size: 13px;
+        font-size: 1rem;
         font-weight: lighter;
       }
     }
@@ -209,11 +209,11 @@ export default {
   .secondary-content {
     margin-bottom: 20px;
     .secondary-title {
-      font-size: calc(14px + 2.2vw);
+      font-size: 2rem;
     }
     .secondary-description {
       margin-top: 16px;
-      font-size: calc(14px + 0.5vw);
+      font-size: 1.4rem;
       font-weight: lighter;
     }
     .secondary-action {

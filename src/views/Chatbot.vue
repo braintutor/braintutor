@@ -1,5 +1,6 @@
 <template>
   <div class="chatbot-container">
+    <loading :active="loading_chatbot" />
     <v-row id="chatbot-scroll" class="chatbot-scroll fill-height" no-gutters>
       <div class="chatbot-content col-12 col-sm-7 col-md-8 m-fullscreen">
         <Materials
@@ -54,6 +55,7 @@ import Chat from "@/components/Chatbot/Chat/index";
 import Materials from "@/components/Chatbot/Materials/index";
 import Quizzes from "@/components/Chatbot/Quizzes/index";
 import Tasks from "@/components/Chatbot/Tasks/index";
+import loading from "@/components/loading";
 
 import { scrollRight } from "@/services/scroll";
 import { getParam } from "@/services/router.js";
@@ -65,32 +67,30 @@ export default {
   data: () => ({
     available_questions: [],
     show_services: true,
-    service_selected: 0
+    service_selected: 0,
+    loading_chatbot: true
   }),
-  mounted() {
+  async mounted() {
     // Components
     this.$store.commit("setComponentMaterials", this.$refs.component_materials);
     this.$store.commit("setComponentQuizzes", this.$refs.component_quizzes);
 
     let chatbot_id = getParam("chatbot_id");
-    getMaterials(chatbot_id).then(materials => {
-      this.$store.commit("setMaterials", materials);
-      getKnowledge(chatbot_id).then(knowledge => {
-        this.available_questions = knowledge.map(item => item.questions[0]);
-        getQuestionTemplate().then(question_template => {
-          materials.forEach(material => {
-            Object.values(question_template).forEach(value => {
-              this.available_questions.push(
-                value[0].replace(/@/, material.name)
-              );
-            });
-            material.faq.forEach(item => {
-              this.available_questions.push(item.question);
-            });
-          });
-        });
+    let materials = await getMaterials(chatbot_id);
+    this.$store.commit("setMaterials", materials);
+    let knowledge = await getKnowledge(chatbot_id);
+    this.available_questions = knowledge.map(item => item.questions[0]);
+    let question_template = await getQuestionTemplate();
+
+    materials.forEach(material => {
+      Object.values(question_template).forEach(value => {
+        this.available_questions.push(value[0].replace(/@/, material.name));
+      });
+      material.faq.forEach(item => {
+        this.available_questions.push(item.question);
       });
     });
+    this.loading_chatbot = false;
   },
   methods: {
     scrollRight,
@@ -105,7 +105,8 @@ export default {
     Chat,
     Materials,
     Quizzes,
-    Tasks
+    Tasks,
+    loading
   }
 };
 </script>
