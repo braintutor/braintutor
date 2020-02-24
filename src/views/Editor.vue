@@ -31,7 +31,7 @@
 
 <script>
 import MaterialsEditor from "@/components/Editor/MaterialsEditor/index";
-import QuizzesEditor from "@/components/Editor/QuizzesEditor";
+import QuizzesEditor from "@/components/Editor/QuizzesEditor/index";
 import TasksEditor from "@/components/Editor/TasksEditor";
 import KnowledgeEditor from "@/components/Editor/KnowledgeEditor";
 

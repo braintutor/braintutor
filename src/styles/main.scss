@@ -9,6 +9,16 @@ body, body * {
   font-family: Comfortaa, Arial, Helvetica, sans-serif;
 }
 
+.v-input {
+  margin: 0 !important;
+}
+.v-input__slot {
+  margin: 0 !important;
+}
+.v-input--selection-controls__input {
+  margin: 0 !important;
+}
+
 /*Scrollbar*/
 ::-webkit-scrollbar {
   width: 8px;

@@ -259,7 +259,7 @@ export default {
   methods: {
     loadMaterials() {
       this.unselectMaterial()
-      this.restoreMaterial()
+      this.restoreMaterials()
     },
     async saveMaterial() {
       this.loading = true;
@@ -386,14 +386,16 @@ export default {
   justify-content: space-between;
   align-items: center;
   .menu-title {
-    margin: 0 12px;
-    font-size: 1.5rem;
+    margin: 0 10px !important;
+    font-size: 1.1rem;
     font-weight: bold;
   }
   .menu-left {
+    flex-grow: 1;
     display: flex;
   }
   .menu-right {
+    display: flex;
   }
 }
 </style>

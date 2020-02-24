@@ -111,7 +111,7 @@ export default {
       this.material = material;
     },
     async restoreMaterial(material_id) {
-      this.restoreMaterials();
+      await this.restoreMaterials();
       this.material = this.materials.find(
         material => material._id.$oid == material_id
       );
