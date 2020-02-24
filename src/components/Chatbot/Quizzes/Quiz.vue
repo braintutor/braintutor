@@ -183,6 +183,7 @@ export default {
   }
   .question-alternative-container {
     padding: 5px 10px;
+    text-align: center;
     .question-alternative-content {
       height: 100%;
       padding: 10px 20px;

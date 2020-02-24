@@ -28,6 +28,10 @@
 
     <!-- Quiz Content -->
     <div class="quiz-editor-content m-fullscreen-content">
+      <div class="question-editor-text">
+        <v-select v-model="quiz.level" :items="levels" label="Nivel"></v-select>
+        <v-slider v-model="quiz.time" :label="`Tiempo: ${quiz.time}s`" min="10" max="600" step="10"></v-slider>
+      </div>
       <div v-for="(c, c_idx) in quiz.content" :key="c_idx" class="question-editor-container">
         <div class="question-editor-question question-editor-text">
           <v-textarea v-model="c.question" :rows="1" autoGrow dense hide-details></v-textarea>
@@ -42,7 +46,7 @@
               v-for="(alternative, a_idx) in c.alternatives"
               :key="a_idx"
             >
-              <div class="question-editor-alternative-content question-editor-text transform-scale">
+              <div class="question-editor-alternative-content question-editor-text">
                 <v-textarea v-model="c.alternatives[a_idx]" :rows="1" autoGrow dense hide-details></v-textarea>
                 <v-btn icon @click="removeAlternative(c.alternatives, a_idx)">
                   <v-icon>mdi-minus</v-icon>
@@ -90,6 +94,7 @@ export default {
     "restoreQuiz"
   ],
   data: () => ({
+    levels: ["Básico", "Intermedio", "Avanzado"],
     loading: false,
     dialog_delete: false
   }),
@@ -126,29 +131,28 @@ export default {
 
 <style lang='scss' scoped>
 @import "@/styles/box-shadow.scss";
-
 .quiz-editor-container {
   .quiz-editor-content {
     padding: 8px 20px 50px 20px;
+    .question-editor-text {
+      & * {
+        margin: 0;
+        font-size: 1rem !important;
+      }
+    }
     .question-editor-container {
       padding: 10px;
       padding-bottom: 0;
       margin-bottom: 20px;
       border-radius: 10px;
       @include box-shadow;
-      .question-editor-text {
-        & * {
-          margin: 0;
-          font-size: 1rem !important;
-        }
-      }
       .question-editor-question {
         padding: 10px 5px 5px 15px;
         display: flex;
       }
       .question-editor-alternative-container {
         display: flex;
-        padding: 5px 10px;
+        padding: 6px 10px;
         .question-editor-alternative-content {
           flex-grow: 1;
           margin-right: 10px;
