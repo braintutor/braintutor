@@ -9,17 +9,17 @@
       </div>
       <div class="menu-right">
         <v-btn icon @click="createTask()">
-          <v-icon>mdi-plus</v-icon>
+          <v-icon>mdi-calendar-plus</v-icon>
         </v-btn>
-        <!-- <v-btn icon @click="restoreQuiz(quiz._id.$oid)">
+        <v-btn icon @click="restoreTasks()">
           <v-icon>mdi-restore</v-icon>
-        </v-btn>-->
+        </v-btn>
         <v-btn icon @click="saveTasks()">
           <v-icon>mdi-content-save</v-icon>
         </v-btn>
       </div>
     </div>
-    <div class="pb-12 m-fullscreen-content">
+    <div id="tasks-scroll" class="pb-12 m-fullscreen-content">
       <div class="task-container" v-for="(task, t_idx) in tasks" :key="t_idx">
         <div class="task-menu">
           <v-text-field class="task-name" v-model="task.name" dense hide-details autocomplete="off"></v-text-field>
@@ -53,7 +53,8 @@ export default {
     "unselectTasks",
     "createTask",
     "saveTasks",
-    "deleteTask"
+    "deleteTask",
+    "restoreTasks"
   ],
   methods: {
     format(date) {

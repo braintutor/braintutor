@@ -4,22 +4,22 @@
     <QuizzesEditor class="m-fullscreen-content" v-show="service_idx == 1" />
     <TasksEditor class="m-fullscreen-content" v-show="service_idx == 2" />
     <KnowledgeEditor class="m-fullscreen-content" v-show="service_idx == 3" />
-    <div class="services-navigator">
-      <div class="services-actions elevation-3">
-        <div class="services-action transform-scale-plus" @click="selectService(0)">
+    <div class="services-editor-navigator">
+      <div class="services-editor-actions elevation-3">
+        <div class="services-editor-action transform-scale-plus" @click="selectService(0)">
           <img src="@/assets/braintutor/icon-material.png" alt />
         </div>
-        <div class="services-action transform-scale-plus" @click="selectService(1)">
+        <div class="services-editor-action transform-scale-plus" @click="selectService(1)">
           <img src="@/assets/braintutor/icon-quiz.png" alt />
         </div>
-        <div class="services-action transform-scale-plus" @click="selectService(2)">
+        <div class="services-editor-action transform-scale-plus" @click="selectService(2)">
           <img src="https://img.icons8.com/cotton/2x/calendar.png" alt />
         </div>
-        <div class="services-action transform-scale-plus" @click="selectService(3)">
+        <div class="services-editor-action transform-scale-plus" @click="selectService(3)">
           <img src="https://pngimage.net/wp-content/uploads/2018/06/messaging-png-1.png" alt />
         </div>
         <div
-          class="services-action services-action-bot transform-scale-plus"
+          class="services-editor-action services-editor-action-bot transform-scale-plus"
           @click="redirectChatbot()"
         >
           <img src="@/assets/avatar/normal.png" alt />
@@ -66,13 +66,13 @@ export default {
 .editor-container {
   height: calc(100vh - 65px);
 }
-.services-navigator {
+.services-editor-navigator {
   z-index: 1;
   position: absolute;
   width: 100%;
   bottom: 0;
   pointer-events: none;
-  .services-actions {
+  .services-editor-actions {
     width: max-content;
     padding: 10px 8px;
     margin: 0 auto;
@@ -86,7 +86,7 @@ export default {
       cursor: pointer;
       opacity: 1;
     }
-    .services-action {
+    .services-editor-action {
       margin: 0 8px;
       img {
         width: 42px;
@@ -96,7 +96,7 @@ export default {
     }
   }
 }
-.services-action-bot {
+.services-editor-action-bot {
   display: block;
   img {
     border-radius: 50%;

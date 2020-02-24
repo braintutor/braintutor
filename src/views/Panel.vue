@@ -40,7 +40,7 @@ import loading from "@/components/loading";
 import Cartel from "@/components/Cartel";
 
 import { redirect } from "@/services/router.js";
-import { getCourses } from "@/services/courseService.js";
+import { getAllCourses } from "@/services/courseService.js";
 import { getChatbots } from "@/services/chatbotService.js";
 
 export default {
@@ -50,14 +50,16 @@ export default {
     loading_courses: true
   }),
   async mounted() {
-    let courses = await getCourses();
-    courses.forEach(async course => {
-      let chatbots = await getChatbots(course._id.$oid);
-      chatbots.forEach(chatbot => {
-        chatbot.course = course.name;
-        this.chatbots.push(chatbot);
-      });
-    });
+    let courses = await getAllCourses();
+    await Promise.all(
+      courses.map(async course => {
+        let chatbots = await getChatbots(course._id.$oid);
+        chatbots.forEach(chatbot => {
+          chatbot.course = course.name;
+          this.chatbots.push(chatbot);
+        });
+      })
+    );
     this.loading_courses = false;
   },
   computed: {

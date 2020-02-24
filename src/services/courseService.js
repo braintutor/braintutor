@@ -5,4 +5,8 @@ function getCourses() {
   return fetch_get('getCourses')
 }
 
-export { getCourses }
+function getAllCourses() {
+  return fetch_get('getAllCourses')
+}
+
+export { getCourses, getAllCourses }

@@ -36,6 +36,7 @@
       :createTask="createTask"
       :saveTasks="saveTasks"
       :deleteTask="deleteTask"
+      :restoreTasks="restoreTasks"
     />
     <!-- Dialog -->
     <v-dialog v-model="dialog_delete" max-width="300">
@@ -61,6 +62,7 @@ import {
 } from "@/services/taskService";
 import { getParam } from "@/services/router.js";
 import { copy } from "@/services/object";
+import { scrollDown } from "@/services/scroll";
 
 import TaskEditor from "./TaskEditor";
 import loading from "@/components/loading";
@@ -87,14 +89,6 @@ export default {
     locale: esLocale,
     calendarPlugins: [dayGridPlugin, interactionPlugin]
   }),
-  async mounted() {
-    this.chatbot_id = getParam("chatbot_id");
-    this.calendar = this.$refs.calendar.getApi();
-    this.updateCalendarDate();
-
-    this.tasks = await getTasks(this.chatbot_id);
-    this.loading_tasks = false;
-  },
   computed: {
     events() {
       return this.tasks.map(task => ({
@@ -106,6 +100,12 @@ export default {
       return this.tasks.filter(task => task.date === this.task_date);
     }
   },
+  async mounted() {
+    this.chatbot_id = getParam("chatbot_id");
+    this.calendar = this.$refs.calendar.getApi();
+    this.updateCalendarDate();
+    await this.restoreTasks()
+  },
   methods: {
     dateClick({ dateStr }) {
       this.task_date = dateStr;
@@ -114,9 +114,9 @@ export default {
     eventClick() {},
     async unselectTasks() {
       this.show_tasks_selected = false;
-      // this.loading_tasks = true;
-      // this.tasks = await getTasks(this.chatbot_id);
-      // this.loading_tasks = false;
+      this.loading_tasks = true;
+      this.tasks = await getTasks(this.chatbot_id);
+      this.loading_tasks = false;
     },
     async createTask() {
       let new_task = {
@@ -129,6 +129,9 @@ export default {
       new_task._id = task_id;
       this.tasks.push(new_task);
       this.loading_tasks = false;
+      setTimeout(() => {
+        scrollDown("tasks-scroll");
+      }, 100);
     },
     async saveTasks() {
       this.loading_tasks = true;
@@ -150,6 +153,11 @@ export default {
       this.tasks = this.tasks.filter(
         task => task._id.$oid != this.task_delete_id
       );
+      this.loading_tasks = false;
+    },
+    async restoreTasks() {
+      this.loading_tasks = true;
+      this.tasks = await getTasks(this.chatbot_id);
       this.loading_tasks = false;
     },
     // Calendar

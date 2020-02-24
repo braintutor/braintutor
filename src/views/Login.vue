@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { loginTeacher } from "@/services/loginService";
+import { loginTeacher, loginStudent } from "@/services/loginService";
 import { setSession } from "@/services/security";
 import { redirect } from "@/services/router.js";
 
@@ -43,19 +43,23 @@ export default {
     loading_login: false
   }),
   methods: {
-    login() {
+    async login() {
       if (this.$refs.form_login.validate()) {
         this.loading_login = true;
-        loginTeacher(this.user, this.pass).then(res => {
-          let token = res.token;
-          if (token) {
-            setSession(token, 0);
-            redirect("panel");
-          } else {
-            this.alert_error = true;
-          }
-          this.loading_login = false;
-        });
+        let token = (await loginTeacher(this.user, this.pass)).token;
+        if (token) {
+          setSession(token, 0);
+          redirect("panel");
+          return;
+        }
+        token = (await loginStudent(this.user, this.pass)).token;
+        if (token) {
+          setSession(token, 1);
+          redirect("panel");
+          return;
+        }
+        this.alert_error = true;
+        this.loading_login = false;
       }
     }
   }

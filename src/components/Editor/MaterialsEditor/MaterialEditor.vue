@@ -68,7 +68,7 @@
         <div class="category-menu">
           <span>Puntos Importantes</span>
           <v-btn icon @click="addBullet(material.bullets)">
-            <v-icon>mdi-plus</v-icon>
+            <v-icon>mdi-plus-circle</v-icon>
           </v-btn>
         </div>
         <div class="category-bullet" v-for="(bullet, b_idx) in material.bullets" :key="b_idx">
@@ -80,8 +80,12 @@
             dense
             hide-details
           ></v-textarea>
-          <v-btn icon @click="removeBullet(material.bullets, b_idx)">
-            <v-icon>mdi-minus</v-icon>
+          <v-btn
+            v-if="material.bullets.length > 1"
+            icon
+            @click="removeBullet(material.bullets, b_idx)"
+          >
+            <v-icon>mdi-close-circle-outline</v-icon>
           </v-btn>
         </div>
       </div>
@@ -90,7 +94,7 @@
         <div class="category-menu">
           <span>Enlaces</span>
           <v-btn icon @click="addHyperlink(material.hyperlinks)">
-            <v-icon>mdi-plus</v-icon>
+            <v-icon>mdi-plus-circle</v-icon>
           </v-btn>
         </div>
         <div class="category-bullet" v-for="(hyperlink, h_idx) in material.hyperlinks" :key="h_idx">
@@ -114,8 +118,12 @@
               ></v-text-field>
             </div>
           </div>
-          <v-btn icon @click="removeHyperlink(material.hyperlinks, h_idx)">
-            <v-icon>mdi-minus</v-icon>
+          <v-btn
+            v-if="material.hyperlinks.length > 1"
+            icon
+            @click="removeHyperlink(material.hyperlinks, h_idx)"
+          >
+            <v-icon>mdi-close-circle-outline</v-icon>
           </v-btn>
         </div>
       </div>
@@ -124,7 +132,7 @@
         <div class="category-menu">
           <span>Ejemplos</span>
           <v-btn icon @click="addExample(material.examples)">
-            <v-icon>mdi-plus</v-icon>
+            <v-icon>mdi-plus-circle</v-icon>
           </v-btn>
         </div>
         <div class="category-bullet" v-for="(example, e_idx) in material.examples" :key="e_idx">
@@ -136,8 +144,12 @@
             dense
             hide-details
           ></v-textarea>
-          <v-btn icon @click="removeExample(material.examples, e_idx)">
-            <v-icon>mdi-minus</v-icon>
+          <v-btn
+            v-if="material.examples.length > 1"
+            icon
+            @click="removeExample(material.examples, e_idx)"
+          >
+            <v-icon>mdi-close-circle-outline</v-icon>
           </v-btn>
         </div>
       </div>
@@ -146,19 +158,24 @@
         <div class="category-menu">
           <span>Ejercicios</span>
           <v-btn icon @click="addExercise(material.exercises)">
-            <v-icon>mdi-plus</v-icon>
+            <v-icon>mdi-plus-circle</v-icon>
           </v-btn>
         </div>
         <div class="category-bullet" v-for="(exercise, e_idx) in material.exercises" :key="e_idx">
           <div class="category-bullet-content">
-            <v-textarea
-              class="category-text mt-1 mb-2"
-              v-model="exercise.question"
-              :rows="1"
-              autoGrow
-              dense
-              hide-details
-            ></v-textarea>
+            <div class="category-bullet">
+              <v-textarea
+                class="category-text"
+                v-model="exercise.question"
+                :rows="1"
+                autoGrow
+                dense
+                hide-details
+              ></v-textarea>
+              <v-btn icon @click="addAlternative(material.exercises, e_idx)">
+                <v-icon>mdi-plus</v-icon>
+              </v-btn>
+            </div>
             <v-radio-group v-model="exercise.correct">
               <div
                 class="category-bullet"
@@ -166,6 +183,7 @@
                 :key="a_idx"
               >
                 <v-textarea
+                  class="category-text"
                   v-model="exercise.alternatives[a_idx]"
                   :rows="1"
                   autoGrow
@@ -184,11 +202,12 @@
             </v-radio-group>
           </div>
           <div style="width: min-content">
-            <v-btn icon @click="addAlternative(material.exercises, e_idx)">
-              <v-icon>mdi-plus</v-icon>
-            </v-btn>
-            <v-btn icon @click="removeExercise(material.exercises, e_idx)">
-              <v-icon>mdi-minus</v-icon>
+            <v-btn
+              v-if="material.exercises.length > 1"
+              icon
+              @click="removeExercise(material.exercises, e_idx)"
+            >
+              <v-icon>mdi-close-circle-outline</v-icon>
             </v-btn>
           </div>
         </div>
@@ -198,7 +217,7 @@
         <div class="category-menu">
           <span>Videos</span>
           <v-btn icon @click="addMovie(material.movies)">
-            <v-icon>mdi-plus</v-icon>
+            <v-icon>mdi-plus-circle</v-icon>
           </v-btn>
         </div>
         <div class="category-bullet" v-for="(movie, m_idx) in material.movies" :key="m_idx">
@@ -217,8 +236,12 @@
               </div>
             </div>
           </div>
-          <v-btn icon @click="removeMovie(material.movies, m_idx)">
-            <v-icon>mdi-minus</v-icon>
+          <v-btn
+            v-if="material.movies.length > 1"
+            icon
+            @click="removeMovie(material.movies, m_idx)"
+          >
+            <v-icon>mdi-close-circle-outline</v-icon>
           </v-btn>
         </div>
       </div>
@@ -227,7 +250,7 @@
         <div class="category-menu">
           <span>Imágenes</span>
           <v-btn icon @click="addImage(material.images)">
-            <v-icon>mdi-plus</v-icon>
+            <v-icon>mdi-plus-circle</v-icon>
           </v-btn>
         </div>
         <div class="category-bullet" v-for="(image, i_idx) in material.images" :key="i_idx">
@@ -244,8 +267,12 @@
               <img :src="image" />
             </div>
           </div>
-          <v-btn icon @click="removeImage(material.images, i_idx)">
-            <v-icon>mdi-minus</v-icon>
+          <v-btn
+            v-if="material.images.length > 1"
+            icon
+            @click="removeImage(material.images, i_idx)"
+          >
+            <v-icon>mdi-close-circle-outline</v-icon>
           </v-btn>
         </div>
       </div>
@@ -353,7 +380,7 @@ export default {
     padding: 8px 16px 60px 16px;
 
     .category {
-      padding: 0 5px 0 12px;
+      padding: 0 12px;
       margin-bottom: 12px;
       border-radius: 10px;
       @include box-shadow;
@@ -373,6 +400,7 @@ export default {
       }
       .category-bullet {
         display: flex;
+        align-items: center;
         padding-bottom: 12px;
         .category-bullet-content {
           width: 100%;

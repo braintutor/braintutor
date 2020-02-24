@@ -88,11 +88,19 @@ export default {
               question: "Pregunta 1",
               alternatives: ["Alternativa 1", "Alternativa 2"],
               correct: 0
+            },
+            {
+              question: "Pregunta 2",
+              alternatives: ["Alternativa 1", "Alternativa 2"],
+              correct: 0
             }
           ],
-          movies: [],
-          images: [],
-          faq: [{ question: "Pregunta Frecuente 1", answer: "Respuesta" }]
+          movies: ["", ""],
+          images: ["", ""],
+          faq: [
+            { question: "Pregunta Frecuente 1", answer: "Respuesta" },
+            { question: "Pregunta Frecuente 2", answer: "Respuesta" }
+          ]
         };
         let material_id = await addMaterial(this.chatbot_id, new_material);
         new_material._id = material_id;

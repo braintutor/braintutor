@@ -84,7 +84,9 @@ export default {
     addMessage(text, type) {
       if (type === 0) this.component_avatar.startTalk(text);
       this.messages.push(new Message(text, type));
-      scrollDown("messages-container");
+      setTimeout(() => {
+        scrollDown("messages-container");
+      }, 100);
     },
     sendMessage() {
       if (this.message_text && !this.loading_message) {

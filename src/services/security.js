@@ -24,9 +24,4 @@ function sessionExists() {
   return token && type
 }
 
-function verifySession(onSuccess, onError) {
-  if (sessionExists()) onSuccess()
-  else onError()
-}
-
-export { setSession, getSession, removeSession, sessionExists, verifySession }
+export { setSession, getSession, removeSession, sessionExists }

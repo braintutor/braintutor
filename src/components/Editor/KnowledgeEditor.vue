@@ -4,7 +4,7 @@
       <span class="menu-title">Conocimiento</span>
       <div v-if="!loading" class="menu-action">
         <v-btn icon @click="addKnowledge()">
-          <v-icon>mdi-plus</v-icon>
+          <v-icon>mdi-comment-plus-outline</v-icon>
         </v-btn>
         <v-btn icon @click="restoreKnowledge()">
           <v-icon>mdi-restore</v-icon>
@@ -17,7 +17,7 @@
         <v-progress-circular :width="3" :size="20" indeterminate color="green"></v-progress-circular>
       </div>
     </div>
-    <div class="editor-content m-fullscreen-content">
+    <div id="knowledge-scroll" class="editor-content m-fullscreen-content">
       <div class="editor-knowledge" v-for="(k, k_idx) in knowledge" :key="k_idx">
         <div class="editor-knowledge-row row no-gutters">
           <div
@@ -62,12 +62,12 @@
             overlap
           >
             <v-btn icon @click="toggleShow(k)">
-              <v-icon v-if="k.show">mdi-chevron-up</v-icon>
-              <v-icon v-else>mdi-chevron-down</v-icon>
+              <v-icon v-if="k.show">mdi-chevron-up-circle-outline</v-icon>
+              <v-icon v-else>mdi-chevron-down-circle-outline</v-icon>
             </v-btn>
           </v-badge>
           <v-btn icon @click="removeKnowledge(k_idx)">
-            <v-icon>mdi-minus</v-icon>
+            <v-icon>mdi-close-circle-outline</v-icon>
           </v-btn>
         </div>
       </div>
@@ -82,6 +82,7 @@ import {
   updateKnowledge,
   removeKnowledge
 } from "@/services/knowledgeService";
+import { scrollDown } from "@/services/scroll";
 
 import { getParam } from "@/services/router.js";
 
@@ -103,6 +104,9 @@ export default {
         questions: [""],
         answers: [""]
       });
+      setTimeout(() => {
+        scrollDown("knowledge-scroll");
+      }, 100);
     },
     async saveKnowledge() {
       let knowledge = this.knowledge.map(k => ({

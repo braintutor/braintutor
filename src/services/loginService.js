@@ -7,4 +7,11 @@ function loginTeacher(user, pass) {
   })
 }
 
-export { loginTeacher }
+function loginStudent(user, pass) {
+  return fetch_post('loginStudent', {
+    user,
+    pass
+  })
+}
+
+export { loginTeacher, loginStudent }

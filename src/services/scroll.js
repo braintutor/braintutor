@@ -14,9 +14,13 @@ function scrollRight(element_id) {
 }
 function scrollDown(element_id) {
   var element = document.getElementById(element_id);
-  setTimeout(() => {
-    element.scrollTop = element.scrollHeight;
-  }, 0);
+  element.scrollTo({
+    top: 20000,
+    behavior: 'smooth'
+  });
+  // setTimeout(() => {
+  //   element.scrollTop = element.scrollHeight;
+  // }, 0);
 }
 
 export { scrollTopWindow, scrollLeft, scrollRight, scrollDown }

@@ -1,6 +1,6 @@
 <template>
   <div class="loading" :class="{active: active}">
-    <v-progress-circular :width="5" :size="80" indeterminate color="green"></v-progress-circular>
+    <v-progress-circular :width="3" :size="60" indeterminate color="green"></v-progress-circular>
   </div>
 </template>
 
@@ -22,14 +22,14 @@ export default {
   pointer-events: none;
   opacity: 0;
   z-index: 2;
-  transition: opacity .5s;
+  transition: opacity .4s;
   //
   display: flex;
   justify-content: center;
   align-items: center;
   &.active {
     pointer-events: initial;
-    opacity: 0.75;
+    opacity: 0.5;
   }
 }
 </style>
