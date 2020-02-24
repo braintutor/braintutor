@@ -28,7 +28,7 @@
 
     <!-- Quiz Content -->
     <div class="quiz-editor-content m-fullscreen-content">
-      <div class="question-editor-text">
+      <div class="question-editor-text mb-3">
         <v-select v-model="quiz.level" :items="levels" label="Nivel"></v-select>
         <v-slider v-model="quiz.time" :label="`Tiempo: ${quiz.time}s`" min="10" max="600" step="10"></v-slider>
       </div>
@@ -133,7 +133,7 @@ export default {
 @import "@/styles/box-shadow.scss";
 .quiz-editor-container {
   .quiz-editor-content {
-    padding: 8px 20px 50px 20px;
+    padding: 8px 20px 60px 20px;
     .question-editor-text {
       & * {
         margin: 0;
@@ -141,13 +141,12 @@ export default {
       }
     }
     .question-editor-container {
-      padding: 10px;
-      padding-bottom: 0;
-      margin-bottom: 20px;
+      padding: 10px 5px 10px 5px;
+      margin-bottom: 16px;
       border-radius: 10px;
       @include box-shadow;
       .question-editor-question {
-        padding: 10px 5px 5px 15px;
+        padding: 10px 0px 5px 10px;
         display: flex;
       }
       .question-editor-alternative-container {
@@ -157,8 +156,7 @@ export default {
           flex-grow: 1;
           margin-right: 10px;
           height: 100%;
-          padding: 10px;
-          padding-left: 20px;
+          padding: 10px 5px 6px 15px;
           border-radius: 10px;
           @include box-shadow;
           display: flex;
@@ -181,25 +179,6 @@ export default {
         }
       }
     }
-  }
-}
-
-.menu {
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  .menu-title {
-    margin: 0 10px !important;
-    font-size: 1.1rem;
-    font-weight: bold;
-  }
-  .menu-left {
-    flex-grow: 1;
-    display: flex;
-  }
-  .menu-right {
-    display: flex;
   }
 }
 </style>

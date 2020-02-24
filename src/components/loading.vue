@@ -21,15 +21,15 @@ export default {
   background: #fff;
   pointer-events: none;
   opacity: 0;
-  z-index: 1;
-  transition: opacity 1.5s;
+  z-index: 2;
+  transition: opacity .5s;
   //
   display: flex;
   justify-content: center;
   align-items: center;
   &.active {
     pointer-events: initial;
-    opacity: 0.85;
+    opacity: 0.75;
   }
 }
 </style>

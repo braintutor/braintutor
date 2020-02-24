@@ -36,10 +36,15 @@
         <div class="category-menu">
           <span>Resumen</span>
         </div>
-        <div class="category-content">
-          <div class="category-bullet category-text">
-            <v-textarea v-model="material.overview" :rows="1" autoGrow dense hide-details></v-textarea>
-          </div>
+        <div class="category-bullet">
+          <v-textarea
+            class="category-text"
+            v-model="material.overview"
+            :rows="1"
+            autoGrow
+            dense
+            hide-details
+          ></v-textarea>
         </div>
       </div>
       <!-- Explanation -->
@@ -47,10 +52,15 @@
         <div class="category-menu">
           <span>Explicación</span>
         </div>
-        <div class="category-content">
-          <div class="category-bullet category-text">
-            <v-textarea v-model="material.explanation" :rows="1" autoGrow dense hide-details></v-textarea>
-          </div>
+        <div class="category-bullet">
+          <v-textarea
+            class="category-text"
+            v-model="material.explanation"
+            :rows="1"
+            autoGrow
+            dense
+            hide-details
+          ></v-textarea>
         </div>
       </div>
       <!-- Bullets -->
@@ -61,15 +71,18 @@
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </div>
-        <div class="category-content">
-          <div class="category-bullet" v-for="(bullet, b_idx) in material.bullets" :key="b_idx">
-            <div class="category-text">
-              <v-textarea v-model="material.bullets[b_idx]" :rows="1" autoGrow dense hide-details></v-textarea>
-            </div>
-            <v-btn icon @click="removeBullet(material.bullets, b_idx)">
-              <v-icon>mdi-minus</v-icon>
-            </v-btn>
-          </div>
+        <div class="category-bullet" v-for="(bullet, b_idx) in material.bullets" :key="b_idx">
+          <v-textarea
+            class="category-text"
+            v-model="material.bullets[b_idx]"
+            :rows="1"
+            autoGrow
+            dense
+            hide-details
+          ></v-textarea>
+          <v-btn icon @click="removeBullet(material.bullets, b_idx)">
+            <v-icon>mdi-minus</v-icon>
+          </v-btn>
         </div>
       </div>
       <!-- Hyperlinks -->
@@ -80,26 +93,30 @@
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </div>
-        <div class="category-content">
-          <div
-            class="category-bullet"
-            v-for="(hyperlink, h_idx) in material.hyperlinks"
-            :key="h_idx"
-          >
-            <div class="category-bullet-content">
-              <div class="category-bullet-item category-text">
-                <span class="category-title">Nombre:</span>
-                <v-text-field v-model="material.hyperlinks[h_idx].name" dense hide-details></v-text-field>
-              </div>
-              <div class="category-bullet-item category-text">
-                <span class="category-title">Enlace:</span>
-                <v-text-field v-model="material.hyperlinks[h_idx].link" dense hide-details></v-text-field>
-              </div>
+        <div class="category-bullet" v-for="(hyperlink, h_idx) in material.hyperlinks" :key="h_idx">
+          <div class="category-bullet-content">
+            <div class="category-bullet-item">
+              <span class="category-title">Nombre:</span>
+              <v-text-field
+                class="category-text"
+                v-model="material.hyperlinks[h_idx].name"
+                dense
+                hide-details
+              ></v-text-field>
             </div>
-            <v-btn icon @click="removeHyperlink(material.hyperlinks, h_idx)">
-              <v-icon>mdi-minus</v-icon>
-            </v-btn>
+            <div class="category-bullet-item">
+              <span class="category-title">Enlace:</span>
+              <v-text-field
+                class="category-text"
+                v-model="material.hyperlinks[h_idx].link"
+                dense
+                hide-details
+              ></v-text-field>
+            </div>
           </div>
+          <v-btn icon @click="removeHyperlink(material.hyperlinks, h_idx)">
+            <v-icon>mdi-minus</v-icon>
+          </v-btn>
         </div>
       </div>
       <!-- Examples -->
@@ -110,15 +127,18 @@
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </div>
-        <div class="category-content">
-          <div class="category-bullet" v-for="(example, e_idx) in material.examples" :key="e_idx">
-            <div class="category-text">
-              <v-textarea v-model="material.examples[e_idx]" :rows="1" autoGrow dense hide-details></v-textarea>
-            </div>
-            <v-btn icon @click="removeExample(material.examples, e_idx)">
-              <v-icon>mdi-minus</v-icon>
-            </v-btn>
-          </div>
+        <div class="category-bullet" v-for="(example, e_idx) in material.examples" :key="e_idx">
+          <v-textarea
+            class="category-text"
+            v-model="material.examples[e_idx]"
+            :rows="1"
+            autoGrow
+            dense
+            hide-details
+          ></v-textarea>
+          <v-btn icon @click="removeExample(material.examples, e_idx)">
+            <v-icon>mdi-minus</v-icon>
+          </v-btn>
         </div>
       </div>
       <!-- Exercises -->
@@ -129,36 +149,41 @@
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </div>
-        <div class="category-content">
-          <div class="category-bullet" v-for="(exercise, e_idx) in material.exercises" :key="e_idx">
-            <div class="category-bullet-content">
-              <div class="category-text">
-                <v-textarea v-model="exercise.question" :rows="1" autoGrow dense hide-details></v-textarea>
-                <v-radio-group v-model="exercise.correct">
-                  <div
-                    class="category-bullet"
-                    v-for="(alternative, a_idx) in exercise.alternatives"
-                    :key="a_idx"
-                  >
-                    <v-textarea
-                      v-model="exercise.alternatives[a_idx]"
-                      :rows="1"
-                      autoGrow
-                      dense
-                      hide-details
-                    ></v-textarea>
-                    <v-radio :value="a_idx"></v-radio>
-                    <v-btn
-                      v-show="exercise.alternatives.length > 2"
-                      icon
-                      @click="removeAlternative(exercise.alternatives, a_idx)"
-                    >
-                      <v-icon>mdi-minus</v-icon>
-                    </v-btn>
-                  </div>
-                </v-radio-group>
+        <div class="category-bullet" v-for="(exercise, e_idx) in material.exercises" :key="e_idx">
+          <div class="category-bullet-content">
+            <v-textarea
+              class="category-text mt-1 mb-2"
+              v-model="exercise.question"
+              :rows="1"
+              autoGrow
+              dense
+              hide-details
+            ></v-textarea>
+            <v-radio-group v-model="exercise.correct">
+              <div
+                class="category-bullet"
+                v-for="(alternative, a_idx) in exercise.alternatives"
+                :key="a_idx"
+              >
+                <v-textarea
+                  v-model="exercise.alternatives[a_idx]"
+                  :rows="1"
+                  autoGrow
+                  dense
+                  hide-details
+                ></v-textarea>
+                <v-radio :value="a_idx"></v-radio>
+                <v-btn
+                  v-show="exercise.alternatives.length > 2"
+                  icon
+                  @click="removeAlternative(exercise.alternatives, a_idx)"
+                >
+                  <v-icon>mdi-minus</v-icon>
+                </v-btn>
               </div>
-            </div>
+            </v-radio-group>
+          </div>
+          <div style="width: min-content">
             <v-btn icon @click="addAlternative(material.exercises, e_idx)">
               <v-icon>mdi-plus</v-icon>
             </v-btn>
@@ -176,28 +201,25 @@
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </div>
-        <div class="category-content">
-          <div class="category-bullet" v-for="(movie, m_idx) in material.movies" :key="m_idx">
-            <div class="category-bullet-content">
-              <div class="category-text">
-                <v-text-field
-                  v-model="material.movies[m_idx]"
-                  :rows="1"
-                  autoGrow
-                  dense
-                  hide-details
-                ></v-text-field>
-              </div>
-              <div v-if="movie" class="category-center">
-                <div class="aspect-ratio-video">
-                  <iframe class="aspect-ratio-content" :src="movie" allowfullscreen />
-                </div>
+        <div class="category-bullet" v-for="(movie, m_idx) in material.movies" :key="m_idx">
+          <div class="category-bullet-content">
+            <v-text-field
+              class="category-text mb-2"
+              v-model="material.movies[m_idx]"
+              :rows="1"
+              autoGrow
+              dense
+              hide-details
+            ></v-text-field>
+            <div v-if="movie" class="category-center">
+              <div class="aspect-ratio-video">
+                <iframe class="aspect-ratio-content" :src="movie" allowfullscreen />
               </div>
             </div>
-            <v-btn icon @click="removeMovie(material.movies, m_idx)">
-              <v-icon>mdi-minus</v-icon>
-            </v-btn>
           </div>
+          <v-btn icon @click="removeMovie(material.movies, m_idx)">
+            <v-icon>mdi-minus</v-icon>
+          </v-btn>
         </div>
       </div>
       <!-- Images -->
@@ -208,26 +230,23 @@
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </div>
-        <div class="category-content">
-          <div class="category-bullet" v-for="(image, i_idx) in material.images" :key="i_idx">
-            <div class="category-bullet-content">
-              <div class="category-text">
-                <v-text-field
-                  v-model="material.images[i_idx]"
-                  :rows="1"
-                  autoGrow
-                  dense
-                  hide-details
-                ></v-text-field>
-              </div>
-              <div v-if="image" class="category-center">
-                <img :src="image" />
-              </div>
+        <div class="category-bullet" v-for="(image, i_idx) in material.images" :key="i_idx">
+          <div class="category-bullet-content">
+            <v-text-field
+              class="category-text mb-2"
+              v-model="material.images[i_idx]"
+              :rows="1"
+              autoGrow
+              dense
+              hide-details
+            ></v-text-field>
+            <div v-if="image" class="category-center">
+              <img :src="image" />
             </div>
-            <v-btn icon @click="removeImage(material.images, i_idx)">
-              <v-icon>mdi-minus</v-icon>
-            </v-btn>
           </div>
+          <v-btn icon @click="removeImage(material.images, i_idx)">
+            <v-icon>mdi-minus</v-icon>
+          </v-btn>
         </div>
       </div>
     </div>
@@ -251,15 +270,21 @@
 import { updateMaterial } from "@/services/materialService";
 
 export default {
-  props: ["material", "unselectMaterial", "restoreMaterials", "deleteMaterial", "restoreMaterial"],
+  props: [
+    "material",
+    "unselectMaterial",
+    "restoreMaterials",
+    "deleteMaterial",
+    "restoreMaterial"
+  ],
   data: () => ({
     loading: false,
-    dialog_delete: false,
+    dialog_delete: false
   }),
   methods: {
     loadMaterials() {
-      this.unselectMaterial()
-      this.restoreMaterials()
+      this.unselectMaterial();
+      this.restoreMaterials();
     },
     async saveMaterial() {
       this.loading = true;
@@ -325,11 +350,11 @@ export default {
 
 .material-editor-container {
   .material-editor-content {
-    padding: 8px 20px 50px 20px;
+    padding: 8px 16px 60px 16px;
 
     .category {
-      padding: 12px 20px 10px 20px;
-      margin-bottom: 20px;
+      padding: 0 5px 0 12px;
+      margin-bottom: 12px;
       border-radius: 10px;
       @include box-shadow;
       .category-menu {
@@ -338,64 +363,45 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        span {
+          padding: 10px 0;
+        }
       }
-      .category-content {
-        margin-top: -14px;
-        padding-bottom: 10px;
-        .category-text {
+      .category-text {
+        margin: 0;
+        font-size: 1rem !important;
+      }
+      .category-bullet {
+        display: flex;
+        padding-bottom: 12px;
+        .category-bullet-content {
           width: 100%;
-          & * {
-            margin: 0;
-            font-size: 1rem !important;
+          padding: 10px 14px 0 14px;
+          border-radius: 10px;
+          @include box-shadow;
+          .category-bullet-item {
+            padding-bottom: 12px;
           }
         }
-        .category-center {
-          margin: 20px auto;
-          max-width: 600px;
-          iframe {
-            border: none;
-            border-radius: 10px;
-          }
-          img {
-            max-width: 100%;
-            display: block;
-            margin: 0 auto;
-          }
+      }
+      .category-center {
+        margin: 20px auto;
+        max-width: 800px;
+        iframe {
+          border: none;
+          border-radius: 10px;
         }
-        .category-title {
-          font-weight: bold;
+        img {
+          max-width: 100%;
+          display: block;
+          margin: 0 auto;
+          border-radius: 10px;
         }
-        .category-bullet {
-          display: flex;
-          padding-top: 22px;
-          .category-bullet-content {
-            width: 100%;
-            .category-bullet-item {
-              padding-bottom: 14px;
-            }
-          }
-        }
+      }
+      .category-title {
+        font-weight: bold;
       }
     }
-  }
-}
-
-.menu {
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  .menu-title {
-    margin: 0 10px !important;
-    font-size: 1.1rem;
-    font-weight: bold;
-  }
-  .menu-left {
-    flex-grow: 1;
-    display: flex;
-  }
-  .menu-right {
-    display: flex;
   }
 }
 </style>

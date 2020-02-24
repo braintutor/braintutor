@@ -67,26 +67,24 @@ export default {
       this.loading_quizzes = false;
     },
     async createQuiz() {
-      if (!this.loading_create) {
-        this.loading_quizzes = true;
-        let new_quiz = {
-          name: "Nombre",
-          level: "Básico",
-          time: 60,
-          content: [
-            {
-              question: "Pregunta",
-              alternatives: ["Alternativa 1", "Alternativa 2"],
-              correct: 0
-            }
-          ]
-        };
-        let quiz_id = await addQuiz(this.chatbot_id, new_quiz);
-        new_quiz._id = quiz_id;
-        this.quizzes.push(new_quiz);
-        this.selectQuiz(new_quiz);
-        this.loading_quizzes = false;
-      }
+      this.loading_quizzes = true;
+      let new_quiz = {
+        name: "Nombre",
+        level: "Básico",
+        time: 60,
+        content: [
+          {
+            question: "Pregunta",
+            alternatives: ["Alternativa 1", "Alternativa 2"],
+            correct: 0
+          }
+        ]
+      };
+      let quiz_id = await addQuiz(this.chatbot_id, new_quiz);
+      new_quiz._id = quiz_id;
+      this.quizzes.push(new_quiz);
+      this.selectQuiz(new_quiz);
+      this.loading_quizzes = false;
     },
     async deleteQuiz(quiz_id) {
       this.quiz = null;

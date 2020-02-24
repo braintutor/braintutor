@@ -26,11 +26,13 @@
       />
     </div>
     <!-- Task Selected -->
-    <Task v-show="tasks_selected" :tasks="tasks_selected" :unselectTasks="unselectTasks" />
+    <Task v-show="tasks_selected" :task_date="task_date" :tasks="tasks_selected" :unselectTasks="unselectTasks" />
   </div>
 </template>
 
 <script>
+import { getTasks } from "@/services/taskService";
+import { getParam } from "@/services/router.js";
 import Task from "./Task";
 
 import FullCalendar from "@fullcalendar/vue";
@@ -41,54 +43,35 @@ import interactionPlugin from "@fullcalendar/interaction";
 
 export default {
   data: () => ({
+    tasks: [],
+    task_date: '',
     tasks_selected: null,
+    //
     calendar: null,
     locale: esLocale,
     calendarPlugins: [dayGridPlugin, interactionPlugin],
-    tasks: [
-      {
-        course: "Matemática",
-        date: "2020-02-14",
-        detail: "Cumplir la tarea de fracciones."
-      },
-      {
-        course: "Química",
-        date: "2020-02-14",
-        detail: "Cumplir la tarea de química."
-      },
-      {
-        course: "Geometría",
-        date: "2020-02-14",
-        detail: "Cumplir la tarea de geometría."
-      },
-      {
-        course: "Trigonometría",
-        date: "2020-02-14",
-        detail: "Cumplir la tarea de trigonometría."
-      },
-      {
-        course: "Biología",
-        date: "2020-02-15",
-        detail: "Investigar sobre las células."
-      }
-    ],
     //
     calendar_date: null
   }),
   computed: {
     events() {
       return this.tasks.map(task => ({
-        title: task.course,
+        title: task.name,
         date: task.date
       }));
     }
   },
-  mounted() {
+  async mounted() {
+    this.chatbot_id = getParam("chatbot_id");
     this.calendar = this.$refs.calendar.getApi();
+
     this.updateCalendarDate();
+    this.tasks = await getTasks(this.chatbot_id);
+    this.loading_tasks = false;
   },
   methods: {
     dateClick({ dateStr }) {
+      this.task_date = dateStr
       let tasks = this.tasks.filter(task => task.date === dateStr);
       if (tasks.length > 0) this.selectTasks(tasks);
     },

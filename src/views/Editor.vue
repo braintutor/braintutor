@@ -32,7 +32,7 @@
 <script>
 import MaterialsEditor from "@/components/Editor/MaterialsEditor/index";
 import QuizzesEditor from "@/components/Editor/QuizzesEditor/index";
-import TasksEditor from "@/components/Editor/TasksEditor";
+import TasksEditor from "@/components/Editor/TasksEditor/index";
 import KnowledgeEditor from "@/components/Editor/KnowledgeEditor";
 
 import { redirect, getParam } from "@/services/router.js";
@@ -62,7 +62,7 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang='scss'>
 .editor-container {
   height: calc(100vh - 65px);
 }

@@ -18,6 +18,9 @@ body, body * {
 .v-input--selection-controls__input {
   margin: 0 !important;
 }
+.v-messages {
+  display: none !important;
+}
 
 /*Scrollbar*/
 ::-webkit-scrollbar {

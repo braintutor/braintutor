@@ -1,19 +1,19 @@
 <template>
   <div class="m-fullscreen">
     <div class="menu">
-      <v-btn icon @click="unselectTasks()">
-        <v-icon>mdi-arrow-left</v-icon>
-      </v-btn>
-      <!-- <span class="menu-title">{{task.name}}</span> -->
+      <div class="menu-left">
+        <v-btn icon @click="unselectTasks()">
+          <v-icon>mdi-arrow-left</v-icon>
+        </v-btn>
+        <span class="menu-title">{{format(task_date)}}</span>
+      </div>
     </div>
     <div class="m-fullscreen-content">
       <div class="task-container" v-for="(task, t_idx) in tasks" :key="t_idx">
-        <div class="task-course">{{task.course}}</div>
+        <div class="task-name">{{task.name}}</div>
         <div class="task-content">
-          <div class="task-item">Fecha:</div>
-          <div>{{format(task.date)}}</div>
           <div class="task-item">Detalle:</div>
-          <div>{{task.detail}}</div>
+          <div>{{task.description}}</div>
         </div>
       </div>
     </div>
@@ -24,7 +24,7 @@
 import { formatDate } from "@fullcalendar/core";
 
 export default {
-  props: ["tasks", "unselectTasks"],
+  props: ["task_date", "tasks", "unselectTasks"],
   methods: {
     format(date) {
       return formatDate(date, {
@@ -41,16 +41,6 @@ export default {
 <style lang='scss' scoped>
 @import "@/styles/box-shadow.scss";
 
-.menu {
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  .menu-title {
-    margin: 0 12px;
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-}
 .task-container {
   padding: 28px;
   padding-bottom: 10px;
@@ -59,9 +49,9 @@ export default {
   border-radius: 10px;
   @include box-shadow;
 
-  .task-course {
+  .task-name {
     padding-bottom: 20px;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: bold;
   }
   .task-content {
@@ -73,7 +63,7 @@ export default {
     font-size: 1rem;
     .task-item {
       font-weight: bold;
-      text-decoration: underline
+      text-decoration: underline;
     }
   }
 }
