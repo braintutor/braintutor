@@ -35,7 +35,7 @@
       <div v-for="(c, c_idx) in quiz.content" :key="c_idx" class="question-editor-container">
         <div class="question-editor-question question-editor-text">
           <v-textarea v-model="c.question" :rows="1" autoGrow dense hide-details></v-textarea>
-          <v-btn icon @click="removeQuestion(quiz.content, c_idx)">
+          <v-btn v-if="quiz.content.length > 1" icon @click="removeQuestion(quiz.content, c_idx)">
             <v-icon>mdi-minus</v-icon>
           </v-btn>
         </div>
@@ -48,7 +48,7 @@
             >
               <div class="question-editor-alternative-content question-editor-text">
                 <v-textarea v-model="c.alternatives[a_idx]" :rows="1" autoGrow dense hide-details></v-textarea>
-                <v-btn icon @click="removeAlternative(c.alternatives, a_idx)">
+                <v-btn v-if="c.alternatives.length > 2" icon @click="removeAlternative(c.alternatives, a_idx)">
                   <v-icon>mdi-minus</v-icon>
                 </v-btn>
               </div>
@@ -146,7 +146,7 @@ export default {
       border-radius: 10px;
       @include box-shadow;
       .question-editor-question {
-        padding: 10px 0px 5px 10px;
+        padding: 10px 10px 5px 10px;
         display: flex;
       }
       .question-editor-alternative-container {
@@ -156,7 +156,7 @@ export default {
           flex-grow: 1;
           margin-right: 10px;
           height: 100%;
-          padding: 10px 5px 6px 15px;
+          padding: 10px 10px 8px 10px;
           border-radius: 10px;
           @include box-shadow;
           display: flex;
