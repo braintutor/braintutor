@@ -22,14 +22,14 @@ export default {
   pointer-events: none;
   opacity: 0;
   z-index: 1;
-  transition: opacity 1s;
+  transition: opacity 1.5s;
   //
   display: flex;
   justify-content: center;
   align-items: center;
   &.active {
     pointer-events: initial;
-    opacity: 0.7;
+    opacity: 0.85;
   }
 }
 </style>

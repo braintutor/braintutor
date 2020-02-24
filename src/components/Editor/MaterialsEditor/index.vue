@@ -1,36 +1,40 @@
 <template>
-  <!-- Material List -->
-  <v-container v-if="!material" fluid class="materials-container">
+  <div>
     <loading :class="{active: loading_materials}" />
-    <v-row no-gutters>
-      <v-col
-        cols="6"
-        sm="4"
-        md="2"
-        v-for="(material, r_idx) in materials"
-        :key="r_idx"
-        class="material-container"
-      >
-        <Cartel
-          :description="material.name"
-          :image="'https://besthqwallpapers.com/img/original/47929/4k-android-green-and-yellow-google-chrome-material-design.jpg'"
-          :callback="() => selectMaterial(material)"
-        />
-      </v-col>
-      <v-col cols="6" sm="4" md="2" class="material-container">
-        <div class="create-container" @click="createMaterial()">
-          <v-icon>mdi-plus</v-icon>
-        </div>
-      </v-col>
-    </v-row>
-  </v-container>
-  <!-- Material Selected -->
-  <MaterialEditor
-    v-else
-    :material="material"
-    :restoreMaterials="restoreMaterials"
-    :deleteMaterial="deleteMaterial"
-  />
+    <!-- Material List -->
+    <v-container v-if="!material" fluid class="materials-container">
+      <v-row no-gutters>
+        <v-col
+          cols="6"
+          sm="4"
+          md="2"
+          v-for="(material, r_idx) in materials"
+          :key="r_idx"
+          class="material-container"
+        >
+          <Cartel
+            :description="material.name"
+            :image="'https://besthqwallpapers.com/img/original/47929/4k-android-green-and-yellow-google-chrome-material-design.jpg'"
+            :callback="() => selectMaterial(material)"
+          />
+        </v-col>
+        <v-col cols="6" sm="4" md="2" class="material-container">
+          <div class="create-container" @click="createMaterial()">
+            <v-icon>mdi-plus</v-icon>
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
+    <!-- Material Selected -->
+    <MaterialEditor
+      v-else
+      :material="material"
+      :unselectMaterial="unselectMaterial"
+      :deleteMaterial="deleteMaterial"
+      :restoreMaterial="restoreMaterial"
+      :restoreMaterials="restoreMaterials"
+    />
+  </div>
 </template>
 
 <script>
@@ -58,8 +62,10 @@ export default {
     this.restoreMaterials();
   },
   methods: {
-    async restoreMaterials() {
+    unselectMaterial() {
       this.material = null;
+    },
+    async restoreMaterials() {
       this.loading_materials = true;
       this.materials = await getMaterials(this.chatbot_id);
       this.loading_materials = false;
@@ -103,6 +109,12 @@ export default {
     },
     selectMaterial(material) {
       this.material = material;
+    },
+    async restoreMaterial(material_id) {
+      this.restoreMaterials();
+      this.material = this.materials.find(
+        material => material._id.$oid == material_id
+      );
     }
   },
   components: {
@@ -145,7 +157,7 @@ export default {
     border: 2px solid #c2c2c2;
     border-style: dashed;
     border-radius: 10px;
-    transition: all .3s;
+    transition: all 0.3s;
     //
     display: flex;
     justify-content: center;

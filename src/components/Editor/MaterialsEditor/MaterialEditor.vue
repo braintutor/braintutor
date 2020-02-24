@@ -2,7 +2,7 @@
   <div class="material-editor-container m-fullscreen">
     <div class="menu">
       <div class="menu-left">
-        <v-btn icon @click="restoreMaterials()">
+        <v-btn icon @click="loadMaterials()">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
         <v-text-field
@@ -14,6 +14,9 @@
         ></v-text-field>
       </div>
       <div v-if="!loading" class="menu-right">
+        <v-btn icon @click="restoreMaterial(material._id.$oid)">
+          <v-icon>mdi-restore</v-icon>
+        </v-btn>
         <v-btn icon @click="saveMaterial()">
           <v-icon>mdi-content-save</v-icon>
         </v-btn>
@@ -129,7 +132,7 @@
         <div class="category-content">
           <div class="category-bullet" v-for="(exercise, e_idx) in material.exercises" :key="e_idx">
             <div class="category-bullet-content">
-              <div class="category-bullet-item category-text">
+              <div class="category-text">
                 <v-textarea v-model="exercise.question" :rows="1" autoGrow dense hide-details></v-textarea>
                 <v-radio-group v-model="exercise.correct">
                   <div
@@ -165,6 +168,68 @@
           </div>
         </div>
       </div>
+      <!-- Movies -->
+      <div class="category">
+        <div class="category-menu">
+          <span>Videos</span>
+          <v-btn icon @click="addMovie(material.movies)">
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </div>
+        <div class="category-content">
+          <div class="category-bullet" v-for="(movie, m_idx) in material.movies" :key="m_idx">
+            <div class="category-bullet-content">
+              <div class="category-text">
+                <v-text-field
+                  v-model="material.movies[m_idx]"
+                  :rows="1"
+                  autoGrow
+                  dense
+                  hide-details
+                ></v-text-field>
+              </div>
+              <div v-if="movie" class="category-center">
+                <div class="aspect-ratio-video">
+                  <iframe class="aspect-ratio-content" :src="movie" allowfullscreen />
+                </div>
+              </div>
+            </div>
+            <v-btn icon @click="removeMovie(material.movies, m_idx)">
+              <v-icon>mdi-minus</v-icon>
+            </v-btn>
+          </div>
+        </div>
+      </div>
+      <!-- Images -->
+      <div class="category">
+        <div class="category-menu">
+          <span>Imágenes</span>
+          <v-btn icon @click="addImage(material.images)">
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </div>
+        <div class="category-content">
+          <div class="category-bullet" v-for="(image, i_idx) in material.images" :key="i_idx">
+            <div class="category-bullet-content">
+              <div class="category-text">
+                <v-text-field
+                  v-model="material.images[i_idx]"
+                  :rows="1"
+                  autoGrow
+                  dense
+                  hide-details
+                ></v-text-field>
+              </div>
+              <div v-if="image" class="category-center">
+                <img :src="image" />
+              </div>
+            </div>
+            <v-btn icon @click="removeImage(material.images, i_idx)">
+              <v-icon>mdi-minus</v-icon>
+            </v-btn>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Dialog -->
@@ -186,12 +251,16 @@
 import { updateMaterial } from "@/services/materialService";
 
 export default {
-  props: ["material", "restoreMaterials", "deleteMaterial"],
+  props: ["material", "unselectMaterial", "restoreMaterials", "deleteMaterial", "restoreMaterial"],
   data: () => ({
     loading: false,
-    dialog_delete: false
+    dialog_delete: false,
   }),
   methods: {
+    loadMaterials() {
+      this.unselectMaterial()
+      this.restoreMaterial()
+    },
     async saveMaterial() {
       this.loading = true;
       this.material.id = this.material._id.$oid;
@@ -234,6 +303,18 @@ export default {
     },
     removeAlternative(alternatives, a_idx) {
       alternatives.splice(a_idx, 1);
+    },
+    addMovie(movies) {
+      movies.push("");
+    },
+    removeMovie(movies, movie_idx) {
+      movies.splice(movie_idx, 1);
+    },
+    addImage(images) {
+      images.push("");
+    },
+    removeImage(images, image_idx) {
+      images.splice(image_idx, 1);
     }
   }
 };
@@ -266,6 +347,19 @@ export default {
           & * {
             margin: 0;
             font-size: 1rem !important;
+          }
+        }
+        .category-center {
+          margin: 20px auto;
+          max-width: 600px;
+          iframe {
+            border: none;
+            border-radius: 10px;
+          }
+          img {
+            max-width: 100%;
+            display: block;
+            margin: 0 auto;
           }
         }
         .category-title {

@@ -91,7 +91,7 @@
         <!-- Category Images -->
         <div v-if="category_selected == 'images'">
           <div v-for="(image, i_idx) in material[category_selected]" :key="i_idx" class="category category-image">
-            <img :src="image" alt />
+            <img :src="image" />
           </div>
         </div>
         <!-- Category FAQ -->
