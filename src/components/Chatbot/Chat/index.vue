@@ -9,9 +9,14 @@
         :key="m_idx"
         class="message elevation-3"
         :class="{ 'message-0': message.type===0, 'message-1 message-to-right': message.type===1 }"
-        v-ripple
       >
         <span>{{message.text}}</span>
+        <div class="message-action" v-if="message.action">
+          <v-btn @click="message.action" color="primary" small outlined block>
+            {{message.icon.text}}
+            <v-icon small v-if="message.icon.icon" right>mdi-{{message.icon.icon}}</v-icon>
+          </v-btn>
+        </div>
       </div>
     </div>
     <!-- Input -->
@@ -62,6 +67,53 @@ export default {
     messages: [new Message("Hola.\n¿En qué puedo ayudarte?", 0)],
     message_text: "",
     chatbot_id: "",
+    icons: [
+      {
+        category: "overview",
+        icon: "",
+        text: "Ver información"
+      },
+      {
+        category: "explanation",
+        icon: "",
+        text: "Ver información"
+      },
+      {
+        category: "bullets",
+        icon: "",
+        text: "Ver información"
+      },
+      {
+        category: "hyperlinks",
+        icon: "",
+        text: "Ver enlaces"
+      },
+      {
+        category: "examples",
+        icon: "",
+        text: "Ver ejemplos"
+      },
+      {
+        category: "exercises",
+        icon: "",
+        text: "Ver ejercicios"
+      },
+      {
+        category: "movies",
+        icon: "video",
+        text: "Ver videos"
+      },
+      {
+        category: "images",
+        icon: "image",
+        text: "Ver imágenes"
+      },
+      {
+        category: "faq",
+        icon: "help",
+        text: "Más preguntas"
+      }
+    ],
     //
     loading_message: false
   }),
@@ -81,29 +133,39 @@ export default {
     this.$store.commit("setComponentAvatar", this.$refs.component_avatar);
   },
   methods: {
-    addMessage(text, type) {
-      if (type === 0) this.component_avatar.startTalk(text);
-      this.messages.push(new Message(text, type));
+    addMessage(text, type, action, icon) {
+      if (text && type === 0) this.component_avatar.startTalk(text);
+      this.messages.push(new Message(text, type, action, icon));
       setTimeout(() => {
         scrollDown("messages-container");
       }, 100);
     },
-    sendMessage() {
+    async sendMessage() {
       if (this.message_text && !this.loading_message) {
-        getAnswer(this.chatbot_id, this.message_text).then(res => {
-          let { answer, material_id, category } = res;
-          if (answer) this.addMessage(answer, 0);
-          if (material_id) {
+        let message_text = this.message_text;
+        let action = null;
+        let icon = null;
+        this.loading_message = true;
+
+        this.addMessage(this.message_text, 1);
+        this.message_text = "";
+        let { answer, material_id, category } = await getAnswer(
+          this.chatbot_id,
+          message_text
+        );
+
+        if (material_id) {
+          action = () => {
             let material = this.getMaterial(material_id);
             this.selectService(0);
             this.component_materials.selectMaterial(material, [category]);
             scrollLeft("chatbot-scroll");
-          }
-          this.loading_message = false;
-        });
-        this.addMessage(this.message_text, 1);
-        this.message_text = "";
-        this.loading_message = true;
+          };
+          icon = this.icons.find(i => i.category === category);
+        }
+        this.addMessage(answer, 0, action, icon);
+
+        this.loading_message = false;
       }
     },
     talkMessage() {
@@ -138,13 +200,10 @@ export default {
     width: max-content;
     max-width: 70%;
     border-radius: 6px;
-    font-size: .95rem;
+    font-size: 0.95rem;
     white-space: pre-wrap;
     word-wrap: break-word;
 
-    &:hover {
-      cursor: pointer;
-    }
     &.message-0 {
       background: #fff;
       color: #000;
@@ -152,6 +211,11 @@ export default {
     &.message-1 {
       background: #1976d2;
       color: #fff;
+    }
+    .message-action {
+      padding-top: 5px;
+      display: flex;
+      justify-content: center;
     }
   }
   .message-to-right {
@@ -165,7 +229,7 @@ export default {
   align-items: center;
   border-top: 1px solid #eeeeee;
   & * {
-    margin: 0 !important
+    margin: 0 !important;
   }
 }
 

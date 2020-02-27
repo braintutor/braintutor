@@ -100,7 +100,7 @@ export default {
   .avatar-image {
     display: block;
     margin: 0 auto;
-    height: 12vw;
+    height: 28vh;
   }
 }
 </style>
