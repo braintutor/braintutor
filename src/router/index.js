@@ -45,8 +45,6 @@ router.beforeEach((to, from, next) => {
   const paths_1 = ['panel', 'chatbot', 'editor'] // Require Session Exists
   const paths_2 = ['editor'] // Require Admin
   let to_name = to.name
-  console.log(to_name);
-
 
   if (paths_1.includes(to_name)) {
     if (paths_2.includes(to_name)) {
