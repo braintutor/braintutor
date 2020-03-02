@@ -71,12 +71,25 @@ export default {
       this.loading_materials = false;
     },
     async createMaterial() {
+      let overview = JSON.stringify({
+        blocks: [
+          { type: "header", data: { text: "Título", level: 2 } },
+          { type: "paragraph", data: { text: "Descripción" } }
+        ]
+      });
+      let explanation = JSON.stringify({
+        blocks: [
+          { type: "header", data: { text: "Título", level: 2 } },
+          { type: "paragraph", data: { text: "Descripción" } }
+        ]
+      });
+
       if (!this.loading_create) {
         this.loading_materials = true;
         let new_material = {
           name: "Nombre",
-          overview: "Resumen",
-          explanation: "Explicación",
+          overview,
+          explanation,
           bullets: ["Punto 1", "Punto 2"],
           hyperlinks: [
             { name: "Enlace 1", link: "" },

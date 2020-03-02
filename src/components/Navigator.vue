@@ -7,24 +7,13 @@
           <v-icon>{{action.value}}</v-icon>
         </v-btn>
       </div>
-      <!-- <v-btn class="navigator-action" icon @click="changeCategory(-1)">
-        <v-icon>mdi-chevron-left</v-icon>
-      </v-btn>
-      <span class="navigator-action">{{`${category_idx + 1}/${categories.length}`}}</span>
-      <v-btn class="navigator-action" icon @click="changeCategory(1)">
-        <v-icon>mdi-chevron-right</v-icon>
-      </v-btn>-->
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ["actions"],
-  mounted() {
-    console.log(this.actions);
-    
-  }
+  props: ["actions"]
 };
 </script>
 

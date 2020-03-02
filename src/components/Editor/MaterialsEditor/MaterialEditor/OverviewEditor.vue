@@ -1,12 +1,10 @@
 <template>
-  <div class="editor container">
-    <div class="editor-actions">
+  <!-- <div class="editor-actions">
       <v-btn @click="save()" icon>
         <v-icon>mdi-content-save</v-icon>
       </v-btn>
-    </div>
-    <div id="editor-overview"></div>
-  </div>
+  </div>-->
+  <div id="editor-overview"></div>
 </template>
 
 <script>
@@ -14,7 +12,7 @@ import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
 
 export default {
-  props: ["data", "saveMaterial"],
+  props: ["data", "setCategoryValue"],
   data: () => ({
     editor: null
   }),
@@ -28,16 +26,10 @@ export default {
     });
   },
   methods: {
-    save() {
-      this.editor
-        .save()
-        .then(outputData => {
-          let data = JSON.stringify(outputData);
-          this.saveMaterial("overview", data);
-        })
-        .catch(error => {
-          console.log("Saving failed: ", error);
-        });
+    async save() {
+      let outputData = await this.editor.save();
+      let data = JSON.stringify(outputData);
+      this.setCategoryValue("overview", data);
     }
   }
   // mounted() {

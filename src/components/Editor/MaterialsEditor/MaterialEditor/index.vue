@@ -32,255 +32,263 @@
     <!-- Material Content -->
     <Navigator class="py-2" :actions="actions" />
     <div class="material-editor-content m-fullscreen-content">
-      <!-- Overview -->
-      <OverviewEditor
-        v-show="category_selected === 'overview'"
-        class="category"
-        :data="material.overview"
-        :saveMaterial="saveMaterial"
-      />
-      <!-- Explanation -->
-      <ExplanationEditor
-        v-show="category_selected === 'explanation'"
-        class="category"
-        :data="material.explanation"
-        :saveMaterial="saveMaterial"
-      />
-      <!-- Bullets -->
-      <div v-if="category_selected === 'bullets'" class="category">
-        <div class="category-menu">
-          <span>Puntos Importantes</span>
-          <v-btn icon @click="addBullet(material.bullets)">
-            <v-icon>mdi-plus-circle</v-icon>
-          </v-btn>
-        </div>
-        <div class="category-bullet" v-for="(bullet, b_idx) in material.bullets" :key="b_idx">
-          <v-textarea
-            class="category-text"
-            v-model="material.bullets[b_idx]"
-            :rows="1"
-            autoGrow
-            dense
-            hide-details
-          ></v-textarea>
-          <v-btn
-            v-if="material.bullets.length > 1"
-            icon
-            @click="removeBullet(material.bullets, b_idx)"
-          >
-            <v-icon>mdi-close-circle-outline</v-icon>
-          </v-btn>
-        </div>
-      </div>
-      <!-- Examples -->
-      <div v-if="category_selected === 'examples'" class="category">
-        <div class="category-menu">
-          <span>Ejemplos</span>
-          <v-btn icon @click="addExample(material.examples)">
-            <v-icon>mdi-plus-circle</v-icon>
-          </v-btn>
-        </div>
-        <div class="category-bullet" v-for="(example, e_idx) in material.examples" :key="e_idx">
-          <v-textarea
-            class="category-text"
-            v-model="material.examples[e_idx]"
-            :rows="1"
-            autoGrow
-            dense
-            hide-details
-          ></v-textarea>
-          <v-btn
-            v-if="material.examples.length > 1"
-            icon
-            @click="removeExample(material.examples, e_idx)"
-          >
-            <v-icon>mdi-close-circle-outline</v-icon>
-          </v-btn>
-        </div>
-      </div>
-      <!-- Images -->
-      <div v-if="category_selected === 'images'" class="category">
-        <div class="category-menu">
-          <span>Imágenes</span>
-          <v-btn icon @click="addImage(material.images)">
-            <v-icon>mdi-plus-circle</v-icon>
-          </v-btn>
-        </div>
-        <div class="category-bullet" v-for="(image, i_idx) in material.images" :key="i_idx">
-          <div class="category-bullet-content">
-            <v-text-field
-              class="category-text mb-2"
-              v-model="material.images[i_idx]"
+      <div class="container">
+        <!-- Overview -->
+        <OverviewEditor
+          v-show="category_selected === 'overview'"
+          ref="overview"
+          class="category"
+          :data="material.overview"
+          :setCategoryValue="setCategoryValue"
+        />
+        <!-- Explanation -->
+        <ExplanationEditor
+          v-show="category_selected === 'explanation'"
+          ref="explanation"
+          class="category"
+          :data="material.explanation"
+          :setCategoryValue="setCategoryValue"
+        />
+        <!-- Bullets -->
+        <div v-if="category_selected === 'bullets'" class="category">
+          <div class="category-menu">
+            <span>Puntos Importantes</span>
+            <v-btn icon @click="addBullet(material.bullets)">
+              <v-icon>mdi-plus-circle</v-icon>
+            </v-btn>
+          </div>
+          <div class="category-bullet" v-for="(bullet, b_idx) in material.bullets" :key="b_idx">
+            <v-textarea
+              class="category-text"
+              v-model="material.bullets[b_idx]"
               :rows="1"
               autoGrow
               dense
               hide-details
-            ></v-text-field>
-            <div v-if="image" class="category-center">
-              <img :src="image" />
-            </div>
-          </div>
-          <v-btn
-            v-if="material.images.length > 1"
-            icon
-            @click="removeImage(material.images, i_idx)"
-          >
-            <v-icon>mdi-close-circle-outline</v-icon>
-          </v-btn>
-        </div>
-      </div>
-      <!-- Movies -->
-      <div v-if="category_selected === 'movies'" class="category">
-        <div class="category-menu">
-          <span>Videos</span>
-          <v-btn icon @click="addMovie(material.movies)">
-            <v-icon>mdi-plus-circle</v-icon>
-          </v-btn>
-        </div>
-        <div class="category-bullet" v-for="(movie, m_idx) in material.movies" :key="m_idx">
-          <div class="category-bullet-content">
-            <v-text-field
-              class="category-text mb-2"
-              v-model="material.movies[m_idx]"
-              :rows="1"
-              autoGrow
-              dense
-              hide-details
-            ></v-text-field>
-            <div v-if="movie" class="category-center">
-              <div class="aspect-ratio-video">
-                <iframe class="aspect-ratio-content" :src="movie" allowfullscreen />
-              </div>
-            </div>
-          </div>
-          <v-btn
-            v-if="material.movies.length > 1"
-            icon
-            @click="removeMovie(material.movies, m_idx)"
-          >
-            <v-icon>mdi-close-circle-outline</v-icon>
-          </v-btn>
-        </div>
-      </div>
-      <!-- Exercises -->
-      <div v-if="category_selected === 'exercises'" class="category">
-        <div class="category-menu">
-          <span>Ejercicios</span>
-          <v-btn icon @click="addExercise(material.exercises)">
-            <v-icon>mdi-plus-circle</v-icon>
-          </v-btn>
-        </div>
-        <div class="category-bullet" v-for="(exercise, e_idx) in material.exercises" :key="e_idx">
-          <div class="category-bullet-content">
-            <div class="category-bullet">
-              <v-textarea
-                class="category-text"
-                v-model="exercise.question"
-                :rows="1"
-                autoGrow
-                dense
-                hide-details
-              ></v-textarea>
-              <v-btn icon @click="addAlternative(material.exercises, e_idx)">
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-            </div>
-            <v-radio-group v-model="exercise.correct">
-              <div
-                class="category-bullet"
-                v-for="(alternative, a_idx) in exercise.alternatives"
-                :key="a_idx"
-              >
-                <v-textarea
-                  class="category-text"
-                  v-model="exercise.alternatives[a_idx]"
-                  :rows="1"
-                  autoGrow
-                  dense
-                  hide-details
-                ></v-textarea>
-                <v-radio :value="a_idx"></v-radio>
-                <v-btn
-                  v-show="exercise.alternatives.length > 2"
-                  icon
-                  @click="removeAlternative(exercise.alternatives, a_idx)"
-                >
-                  <v-icon>mdi-minus</v-icon>
-                </v-btn>
-              </div>
-            </v-radio-group>
-          </div>
-          <div style="width: min-content">
+            ></v-textarea>
             <v-btn
-              v-if="material.exercises.length > 1"
+              v-if="material.bullets.length > 1"
               icon
-              @click="removeExercise(material.exercises, e_idx)"
+              @click="removeBullet(material.bullets, b_idx)"
             >
               <v-icon>mdi-close-circle-outline</v-icon>
             </v-btn>
           </div>
         </div>
-      </div>
-      <!-- FAQ -->
-      <div v-if="category_selected === 'faq'" class="category">
-        <div class="category-menu">
-          <span>Preguntas Frecuentes</span>
-          <v-btn icon @click="addFAQ(material.faq)">
-            <v-icon>mdi-plus-circle</v-icon>
-          </v-btn>
-        </div>
-        <div class="category-bullet" v-for="(content, c_idx) in material.faq" :key="c_idx">
-          <div class="category-bullet-content">
-            <div class="category-bullet-item">
-              <span class="category-title">Pregunta:</span>
-              <v-text-field class="category-text" v-model="content.question" dense hide-details></v-text-field>
-            </div>
-            <div class="category-bullet-item">
-              <span class="category-title">Respuesta:</span>
-              <v-text-field class="category-text" v-model="content.answer" dense hide-details></v-text-field>
-            </div>
+        <!-- Examples -->
+        <div v-if="category_selected === 'examples'" class="category">
+          <div class="category-menu">
+            <span>Ejemplos</span>
+            <v-btn icon @click="addExample(material.examples)">
+              <v-icon>mdi-plus-circle</v-icon>
+            </v-btn>
           </div>
-          <v-btn v-if="material.faq.length > 1" icon @click="removeFAQ(material.faq, c_idx)">
-            <v-icon>mdi-close-circle-outline</v-icon>
-          </v-btn>
+          <div class="category-bullet" v-for="(example, e_idx) in material.examples" :key="e_idx">
+            <v-textarea
+              class="category-text"
+              v-model="material.examples[e_idx]"
+              :rows="1"
+              autoGrow
+              dense
+              hide-details
+            ></v-textarea>
+            <v-btn
+              v-if="material.examples.length > 1"
+              icon
+              @click="removeExample(material.examples, e_idx)"
+            >
+              <v-icon>mdi-close-circle-outline</v-icon>
+            </v-btn>
+          </div>
         </div>
-      </div>
-      <!-- Hyperlinks -->
-      <div v-if="category_selected === 'hyperlinks'" class="category">
-        <div class="category-menu">
-          <span>Enlaces</span>
-          <v-btn icon @click="addHyperlink(material.hyperlinks)">
-            <v-icon>mdi-plus-circle</v-icon>
-          </v-btn>
-        </div>
-        <div class="category-bullet" v-for="(hyperlink, h_idx) in material.hyperlinks" :key="h_idx">
-          <div class="category-bullet-content">
-            <div class="category-bullet-item">
-              <span class="category-title">Nombre:</span>
+        <!-- Images -->
+        <div v-if="category_selected === 'images'" class="category">
+          <div class="category-menu">
+            <span>Imágenes</span>
+            <v-btn icon @click="addImage(material.images)">
+              <v-icon>mdi-plus-circle</v-icon>
+            </v-btn>
+          </div>
+          <div class="category-bullet" v-for="(image, i_idx) in material.images" :key="i_idx">
+            <div class="category-bullet-content">
               <v-text-field
-                class="category-text"
-                v-model="material.hyperlinks[h_idx].name"
+                class="category-text mb-2"
+                v-model="material.images[i_idx]"
+                :rows="1"
+                autoGrow
                 dense
                 hide-details
               ></v-text-field>
+              <div v-if="image" class="category-center">
+                <img :src="image" />
+              </div>
             </div>
-            <div class="category-bullet-item">
-              <span class="category-title">Enlace:</span>
+            <v-btn
+              v-if="material.images.length > 1"
+              icon
+              @click="removeImage(material.images, i_idx)"
+            >
+              <v-icon>mdi-close-circle-outline</v-icon>
+            </v-btn>
+          </div>
+        </div>
+        <!-- Movies -->
+        <div v-if="category_selected === 'movies'" class="category">
+          <div class="category-menu">
+            <span>Videos</span>
+            <v-btn icon @click="addMovie(material.movies)">
+              <v-icon>mdi-plus-circle</v-icon>
+            </v-btn>
+          </div>
+          <div class="category-bullet" v-for="(movie, m_idx) in material.movies" :key="m_idx">
+            <div class="category-bullet-content">
               <v-text-field
-                class="category-text"
-                v-model="material.hyperlinks[h_idx].link"
+                class="category-text mb-2"
+                v-model="material.movies[m_idx]"
+                :rows="1"
+                autoGrow
                 dense
                 hide-details
               ></v-text-field>
+              <div v-if="movie" class="category-center">
+                <div class="aspect-ratio-video">
+                  <iframe class="aspect-ratio-content" :src="movie" allowfullscreen />
+                </div>
+              </div>
+            </div>
+            <v-btn
+              v-if="material.movies.length > 1"
+              icon
+              @click="removeMovie(material.movies, m_idx)"
+            >
+              <v-icon>mdi-close-circle-outline</v-icon>
+            </v-btn>
+          </div>
+        </div>
+        <!-- Exercises -->
+        <div v-if="category_selected === 'exercises'" class="category">
+          <div class="category-menu">
+            <span>Ejercicios</span>
+            <v-btn icon @click="addExercise(material.exercises)">
+              <v-icon>mdi-plus-circle</v-icon>
+            </v-btn>
+          </div>
+          <div class="category-bullet" v-for="(exercise, e_idx) in material.exercises" :key="e_idx">
+            <div class="category-bullet-content">
+              <div class="category-bullet">
+                <v-textarea
+                  class="category-text"
+                  v-model="exercise.question"
+                  :rows="1"
+                  autoGrow
+                  dense
+                  hide-details
+                ></v-textarea>
+                <v-btn icon @click="addAlternative(material.exercises, e_idx)">
+                  <v-icon>mdi-plus</v-icon>
+                </v-btn>
+              </div>
+              <v-radio-group v-model="exercise.correct">
+                <div
+                  class="category-bullet"
+                  v-for="(alternative, a_idx) in exercise.alternatives"
+                  :key="a_idx"
+                >
+                  <v-textarea
+                    class="category-text"
+                    v-model="exercise.alternatives[a_idx]"
+                    :rows="1"
+                    autoGrow
+                    dense
+                    hide-details
+                  ></v-textarea>
+                  <v-radio :value="a_idx"></v-radio>
+                  <v-btn
+                    v-show="exercise.alternatives.length > 2"
+                    icon
+                    @click="removeAlternative(exercise.alternatives, a_idx)"
+                  >
+                    <v-icon>mdi-minus</v-icon>
+                  </v-btn>
+                </div>
+              </v-radio-group>
+            </div>
+            <div style="width: min-content">
+              <v-btn
+                v-if="material.exercises.length > 1"
+                icon
+                @click="removeExercise(material.exercises, e_idx)"
+              >
+                <v-icon>mdi-close-circle-outline</v-icon>
+              </v-btn>
             </div>
           </div>
-          <v-btn
-            v-if="material.hyperlinks.length > 1"
-            icon
-            @click="removeHyperlink(material.hyperlinks, h_idx)"
+        </div>
+        <!-- FAQ -->
+        <div v-if="category_selected === 'faq'" class="category">
+          <div class="category-menu">
+            <span>Preguntas Frecuentes</span>
+            <v-btn icon @click="addFAQ(material.faq)">
+              <v-icon>mdi-plus-circle</v-icon>
+            </v-btn>
+          </div>
+          <div class="category-bullet" v-for="(content, c_idx) in material.faq" :key="c_idx">
+            <div class="category-bullet-content">
+              <div class="category-bullet-item">
+                <span class="category-title">Pregunta:</span>
+                <v-text-field class="category-text" v-model="content.question" dense hide-details></v-text-field>
+              </div>
+              <div class="category-bullet-item">
+                <span class="category-title">Respuesta:</span>
+                <v-text-field class="category-text" v-model="content.answer" dense hide-details></v-text-field>
+              </div>
+            </div>
+            <v-btn v-if="material.faq.length > 1" icon @click="removeFAQ(material.faq, c_idx)">
+              <v-icon>mdi-close-circle-outline</v-icon>
+            </v-btn>
+          </div>
+        </div>
+        <!-- Hyperlinks -->
+        <div v-if="category_selected === 'hyperlinks'" class="category">
+          <div class="category-menu">
+            <span>Enlaces</span>
+            <v-btn icon @click="addHyperlink(material.hyperlinks)">
+              <v-icon>mdi-plus-circle</v-icon>
+            </v-btn>
+          </div>
+          <div
+            class="category-bullet"
+            v-for="(hyperlink, h_idx) in material.hyperlinks"
+            :key="h_idx"
           >
-            <v-icon>mdi-close-circle-outline</v-icon>
-          </v-btn>
+            <div class="category-bullet-content">
+              <div class="category-bullet-item">
+                <span class="category-title">Nombre:</span>
+                <v-text-field
+                  class="category-text"
+                  v-model="material.hyperlinks[h_idx].name"
+                  dense
+                  hide-details
+                ></v-text-field>
+              </div>
+              <div class="category-bullet-item">
+                <span class="category-title">Enlace:</span>
+                <v-text-field
+                  class="category-text"
+                  v-model="material.hyperlinks[h_idx].link"
+                  dense
+                  hide-details
+                ></v-text-field>
+              </div>
+            </div>
+            <v-btn
+              v-if="material.hyperlinks.length > 1"
+              icon
+              @click="removeHyperlink(material.hyperlinks, h_idx)"
+            >
+              <v-icon>mdi-close-circle-outline</v-icon>
+            </v-btn>
+          </div>
         </div>
       </div>
     </div>
@@ -371,11 +379,20 @@ export default {
       this.unselectMaterial();
       this.restoreMaterials();
     },
-    async saveMaterial(attribute, value) {
-      this.loading = true;
-      this.material.id = this.material._id.$oid;
+    setCategoryValue(attribute, value) {
       this.material[attribute] = value;
+    },
+    async saveMaterial() {
+      this.loading = true;
+
+      this.material.id = this.material._id.$oid;
+      await Promise.all(
+        ["overview", "explanation"].map(async category => {
+          await this.$refs[category].save(); // Save all child components
+        })
+      );
       await updateMaterial(this.material);
+
       this.loading = false;
     },
     addBullet(bullets) {
@@ -450,11 +467,11 @@ export default {
 
 .material-editor-container {
   .material-editor-content {
-    padding: 8px 16px 60px 16px;
+    padding-bottom: 56px;
 
     .category {
-      padding: 0 12px;
-      margin-bottom: 12px;
+      padding: 12px;
+      padding-bottom: 0;
       border-radius: 10px;
       @include box-shadow;
       .category-menu {
