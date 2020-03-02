@@ -8,18 +8,13 @@
       <v-app-bar-nav-icon class="nav-icon" @click="drawer = true"></v-app-bar-nav-icon>
       <div class="header-actions">
         <v-btn
-          v-for="(link, l_idx) in links"
+          v-for="(link, l_idx) in links_filtered"
           :key="l_idx"
           class="header-action"
           text
           @click="redirect(link.name)"
         >{{link.title}}</v-btn>
-        <v-btn
-          class="header-action"
-          v-if="!session_exists"
-          text
-          @click="redirect('login')"
-        >Iniciar Sesión</v-btn>
+        <v-btn class="header-action" v-if="!session" text @click="redirect('login')">Iniciar Sesión</v-btn>
         <v-btn class="header-action" v-else text @click="closeSession()">Cerrar Sesión</v-btn>
       </div>
     </v-app-bar>
@@ -31,7 +26,7 @@
       <v-list>
         <v-list-item-group active-class="blue--text text--accent-4">
           <v-list-item
-            v-for="(link, l_idx) in links"
+            v-for="(link, l_idx) in links_filtered"
             :key="l_idx"
             @click="redirect(link.name); drawer=false"
           >
@@ -40,7 +35,7 @@
             </v-list-item-icon>
             <v-list-item-title>{{link.title}}</v-list-item-title>
           </v-list-item>
-          <v-list-item v-if="!session_exists" @click="redirect('login'); drawer=false">
+          <v-list-item v-if="!session" @click="redirect('login'); drawer=false">
             <v-list-item-icon>
               <v-icon>mdi-account</v-icon>
             </v-list-item-icon>
@@ -68,19 +63,32 @@ export default {
       {
         title: "Inicio",
         name: "home",
-        icon: "home"
+        icon: "home",
+        require_admin: false
       },
       {
         title: "Cursos",
         name: "panel",
-        icon: "book"
+        icon: "book",
+        require_admin: false
+      },
+      {
+        title: "Mis Cursos",
+        name: "courses",
+        icon: "book-plus-multiple",
+        require_admin: true
       }
     ],
     drawer: false
   }),
   computed: {
-    session_exists() {
-      return this.$store.state.session_exists;
+    links_filtered() {
+      return this.links.filter(
+        l => (this.session && this.session.type == 0) || !l.require_admin
+      );
+    },
+    session() {
+      return this.$store.state.session;
     }
   },
   methods: {

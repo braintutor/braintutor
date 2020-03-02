@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import { sessionExists } from '@/services/security'
+import { getSession } from '@/services/security'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    session_exists: sessionExists(),
+    session: getSession(),
     //Materials
     materials: [],
     //Quizzes
@@ -18,8 +18,8 @@ export default new Vuex.Store({
     component_quizzes: null,
   },
   mutations: {
-    setSessionExists(state, session_exists) {
-      state.session_exists = session_exists
+    setSession(state, session) {
+      state.session = session
     },
     //Materials
     setMaterials(state, materials) {

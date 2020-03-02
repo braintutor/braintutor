@@ -14,9 +14,9 @@
         ></v-text-field>
       </div>
       <div v-if="!loading" class="menu-right">
-        <v-btn icon @click="restoreMaterial(material._id.$oid)">
+        <!-- <v-btn icon @click="restoreMaterial(material._id.$oid)">
           <v-icon>mdi-restore</v-icon>
-        </v-btn>
+        </v-btn>-->
         <v-btn icon @click="saveMaterial()">
           <v-icon>mdi-content-save</v-icon>
         </v-btn>
@@ -30,41 +30,24 @@
     </div>
 
     <!-- Material Content -->
+    <Navigator class="py-2" :actions="actions" />
     <div class="material-editor-content m-fullscreen-content">
       <!-- Overview -->
-      <div class="category">
-        <div class="category-menu">
-          <span>Resumen</span>
-        </div>
-        <div class="category-bullet">
-          <v-textarea
-            class="category-text"
-            v-model="material.overview"
-            :rows="1"
-            autoGrow
-            dense
-            hide-details
-          ></v-textarea>
-        </div>
-      </div>
+      <OverviewEditor
+        v-show="category_selected === 'overview'"
+        class="category"
+        :data="material.overview"
+        :saveMaterial="saveMaterial"
+      />
       <!-- Explanation -->
-      <div class="category">
-        <div class="category-menu">
-          <span>Explicación</span>
-        </div>
-        <div class="category-bullet">
-          <v-textarea
-            class="category-text"
-            v-model="material.explanation"
-            :rows="1"
-            autoGrow
-            dense
-            hide-details
-          ></v-textarea>
-        </div>
-      </div>
+      <ExplanationEditor
+        v-show="category_selected === 'explanation'"
+        class="category"
+        :data="material.explanation"
+        :saveMaterial="saveMaterial"
+      />
       <!-- Bullets -->
-      <div class="category">
+      <div v-if="category_selected === 'bullets'" class="category">
         <div class="category-menu">
           <span>Puntos Importantes</span>
           <v-btn icon @click="addBullet(material.bullets)">
@@ -89,46 +72,8 @@
           </v-btn>
         </div>
       </div>
-      <!-- Hyperlinks -->
-      <div class="category">
-        <div class="category-menu">
-          <span>Enlaces</span>
-          <v-btn icon @click="addHyperlink(material.hyperlinks)">
-            <v-icon>mdi-plus-circle</v-icon>
-          </v-btn>
-        </div>
-        <div class="category-bullet" v-for="(hyperlink, h_idx) in material.hyperlinks" :key="h_idx">
-          <div class="category-bullet-content">
-            <div class="category-bullet-item">
-              <span class="category-title">Nombre:</span>
-              <v-text-field
-                class="category-text"
-                v-model="material.hyperlinks[h_idx].name"
-                dense
-                hide-details
-              ></v-text-field>
-            </div>
-            <div class="category-bullet-item">
-              <span class="category-title">Enlace:</span>
-              <v-text-field
-                class="category-text"
-                v-model="material.hyperlinks[h_idx].link"
-                dense
-                hide-details
-              ></v-text-field>
-            </div>
-          </div>
-          <v-btn
-            v-if="material.hyperlinks.length > 1"
-            icon
-            @click="removeHyperlink(material.hyperlinks, h_idx)"
-          >
-            <v-icon>mdi-close-circle-outline</v-icon>
-          </v-btn>
-        </div>
-      </div>
       <!-- Examples -->
-      <div class="category">
+      <div v-if="category_selected === 'examples'" class="category">
         <div class="category-menu">
           <span>Ejemplos</span>
           <v-btn icon @click="addExample(material.examples)">
@@ -153,8 +98,72 @@
           </v-btn>
         </div>
       </div>
+      <!-- Images -->
+      <div v-if="category_selected === 'images'" class="category">
+        <div class="category-menu">
+          <span>Imágenes</span>
+          <v-btn icon @click="addImage(material.images)">
+            <v-icon>mdi-plus-circle</v-icon>
+          </v-btn>
+        </div>
+        <div class="category-bullet" v-for="(image, i_idx) in material.images" :key="i_idx">
+          <div class="category-bullet-content">
+            <v-text-field
+              class="category-text mb-2"
+              v-model="material.images[i_idx]"
+              :rows="1"
+              autoGrow
+              dense
+              hide-details
+            ></v-text-field>
+            <div v-if="image" class="category-center">
+              <img :src="image" />
+            </div>
+          </div>
+          <v-btn
+            v-if="material.images.length > 1"
+            icon
+            @click="removeImage(material.images, i_idx)"
+          >
+            <v-icon>mdi-close-circle-outline</v-icon>
+          </v-btn>
+        </div>
+      </div>
+      <!-- Movies -->
+      <div v-if="category_selected === 'movies'" class="category">
+        <div class="category-menu">
+          <span>Videos</span>
+          <v-btn icon @click="addMovie(material.movies)">
+            <v-icon>mdi-plus-circle</v-icon>
+          </v-btn>
+        </div>
+        <div class="category-bullet" v-for="(movie, m_idx) in material.movies" :key="m_idx">
+          <div class="category-bullet-content">
+            <v-text-field
+              class="category-text mb-2"
+              v-model="material.movies[m_idx]"
+              :rows="1"
+              autoGrow
+              dense
+              hide-details
+            ></v-text-field>
+            <div v-if="movie" class="category-center">
+              <div class="aspect-ratio-video">
+                <iframe class="aspect-ratio-content" :src="movie" allowfullscreen />
+              </div>
+            </div>
+          </div>
+          <v-btn
+            v-if="material.movies.length > 1"
+            icon
+            @click="removeMovie(material.movies, m_idx)"
+          >
+            <v-icon>mdi-close-circle-outline</v-icon>
+          </v-btn>
+        </div>
+      </div>
       <!-- Exercises -->
-      <div class="category">
+      <div v-if="category_selected === 'exercises'" class="category">
         <div class="category-menu">
           <span>Ejercicios</span>
           <v-btn icon @click="addExercise(material.exercises)">
@@ -212,65 +221,63 @@
           </div>
         </div>
       </div>
-      <!-- Movies -->
-      <div class="category">
+      <!-- FAQ -->
+      <div v-if="category_selected === 'faq'" class="category">
         <div class="category-menu">
-          <span>Videos</span>
-          <v-btn icon @click="addMovie(material.movies)">
+          <span>Preguntas Frecuentes</span>
+          <v-btn icon @click="addFAQ(material.faq)">
             <v-icon>mdi-plus-circle</v-icon>
           </v-btn>
         </div>
-        <div class="category-bullet" v-for="(movie, m_idx) in material.movies" :key="m_idx">
+        <div class="category-bullet" v-for="(content, c_idx) in material.faq" :key="c_idx">
           <div class="category-bullet-content">
-            <v-text-field
-              class="category-text mb-2"
-              v-model="material.movies[m_idx]"
-              :rows="1"
-              autoGrow
-              dense
-              hide-details
-            ></v-text-field>
-            <div v-if="movie" class="category-center">
-              <div class="aspect-ratio-video">
-                <iframe class="aspect-ratio-content" :src="movie" allowfullscreen />
-              </div>
+            <div class="category-bullet-item">
+              <span class="category-title">Pregunta:</span>
+              <v-text-field class="category-text" v-model="content.question" dense hide-details></v-text-field>
+            </div>
+            <div class="category-bullet-item">
+              <span class="category-title">Respuesta:</span>
+              <v-text-field class="category-text" v-model="content.answer" dense hide-details></v-text-field>
             </div>
           </div>
-          <v-btn
-            v-if="material.movies.length > 1"
-            icon
-            @click="removeMovie(material.movies, m_idx)"
-          >
+          <v-btn v-if="material.faq.length > 1" icon @click="removeFAQ(material.faq, c_idx)">
             <v-icon>mdi-close-circle-outline</v-icon>
           </v-btn>
         </div>
       </div>
-      <!-- Images -->
-      <div class="category">
+      <!-- Hyperlinks -->
+      <div v-if="category_selected === 'hyperlinks'" class="category">
         <div class="category-menu">
-          <span>Imágenes</span>
-          <v-btn icon @click="addImage(material.images)">
+          <span>Enlaces</span>
+          <v-btn icon @click="addHyperlink(material.hyperlinks)">
             <v-icon>mdi-plus-circle</v-icon>
           </v-btn>
         </div>
-        <div class="category-bullet" v-for="(image, i_idx) in material.images" :key="i_idx">
+        <div class="category-bullet" v-for="(hyperlink, h_idx) in material.hyperlinks" :key="h_idx">
           <div class="category-bullet-content">
-            <v-text-field
-              class="category-text mb-2"
-              v-model="material.images[i_idx]"
-              :rows="1"
-              autoGrow
-              dense
-              hide-details
-            ></v-text-field>
-            <div v-if="image" class="category-center">
-              <img :src="image" />
+            <div class="category-bullet-item">
+              <span class="category-title">Nombre:</span>
+              <v-text-field
+                class="category-text"
+                v-model="material.hyperlinks[h_idx].name"
+                dense
+                hide-details
+              ></v-text-field>
+            </div>
+            <div class="category-bullet-item">
+              <span class="category-title">Enlace:</span>
+              <v-text-field
+                class="category-text"
+                v-model="material.hyperlinks[h_idx].link"
+                dense
+                hide-details
+              ></v-text-field>
             </div>
           </div>
           <v-btn
-            v-if="material.images.length > 1"
+            v-if="material.hyperlinks.length > 1"
             icon
-            @click="removeImage(material.images, i_idx)"
+            @click="removeHyperlink(material.hyperlinks, h_idx)"
           >
             <v-icon>mdi-close-circle-outline</v-icon>
           </v-btn>
@@ -294,7 +301,12 @@
 </template>
 
 <script>
+import OverviewEditor from "./OverviewEditor";
+import ExplanationEditor from "./ExplanationEditor";
+import Navigator from "@/components/Navigator";
+
 import { updateMaterial } from "@/services/materialService";
+import { Clamp } from "@/services/math";
 
 export default {
   props: [
@@ -306,16 +318,63 @@ export default {
   ],
   data: () => ({
     loading: false,
-    dialog_delete: false
+    dialog_delete: false,
+    categories: [
+      "overview",
+      "explanation",
+      "bullets",
+      "examples",
+      "images",
+      "movies",
+      "exercises",
+      "faq",
+      "hyperlinks"
+    ],
+    category_idx: 0
   }),
+  computed: {
+    category_selected() {
+      return this.categories[this.category_idx];
+    },
+    actions() {
+      return [
+        {
+          type: "icon",
+          value: "mdi-chevron-left",
+          callback: () => {
+            this.changeCategory(-1);
+          }
+        },
+        {
+          type: "text",
+          value: `${this.category_idx + 1}/${this.categories.length}`
+        },
+        {
+          type: "icon",
+          value: "mdi-chevron-right",
+          callback: () => {
+            this.changeCategory(1);
+          }
+        }
+      ];
+    }
+  },
   methods: {
+    changeCategory(direction) {
+      this.category_idx = Clamp(
+        this.category_idx + direction,
+        0,
+        this.categories.length - 1
+      );
+    },
     loadMaterials() {
       this.unselectMaterial();
       this.restoreMaterials();
     },
-    async saveMaterial() {
+    async saveMaterial(attribute, value) {
       this.loading = true;
       this.material.id = this.material._id.$oid;
+      this.material[attribute] = value;
       await updateMaterial(this.material);
       this.loading = false;
     },
@@ -367,7 +426,21 @@ export default {
     },
     removeImage(images, image_idx) {
       images.splice(image_idx, 1);
+    },
+    addFAQ(faq) {
+      faq.push({
+        question: "",
+        answer: ""
+      });
+    },
+    removeFAQ(faq, c_idx) {
+      faq.splice(c_idx, 1);
     }
+  },
+  components: {
+    OverviewEditor,
+    ExplanationEditor,
+    Navigator
   }
 };
 </script>

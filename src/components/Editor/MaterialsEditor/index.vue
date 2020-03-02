@@ -39,7 +39,7 @@
 
 <script>
 import Cartel from "@/components/Cartel";
-import MaterialEditor from "./MaterialEditor";
+import MaterialEditor from "./MaterialEditor/index";
 import loading from "@/components/loading";
 
 import {

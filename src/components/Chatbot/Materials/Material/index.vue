@@ -9,25 +9,9 @@
     <div class="m-fullscreen-content">
       <div class="material-content">
         <!-- Category Overview -->
-        <div v-if="category_selected == 'overview'" class="category category-text">
-          <div class="category-text-menu">
-            <div class="category-text-title">{{material.name}}</div>
-            <v-btn icon @click="startTalk(material[category_selected])">
-              <v-icon>mdi-volume-high</v-icon>
-            </v-btn>
-          </div>
-          <div class="category-text-content">{{material[category_selected]}}</div>
-        </div>
+        <div v-show="category_selected == 'overview'" id="overview-editor"></div>
         <!-- Category Explanation -->
-        <div v-if="category_selected == 'explanation'" class="category category-text">
-          <div class="category-text-menu">
-            <div class="category-text-title">{{material.name}}</div>
-            <v-btn icon @click="startTalk(material[category_selected])">
-              <v-icon>mdi-volume-high</v-icon>
-            </v-btn>
-          </div>
-          <div class="category-text-content">{{material[category_selected]}}</div>
-        </div>
+        <div v-show="category_selected == 'explanation'" id="explanation-editor"></div>
         <!-- Category Bullets -->
         <div v-if="category_selected == 'bullets'" class="category category-text">
           <div class="category-text-menu">
@@ -83,20 +67,32 @@
           :talk="text => {startTalk(text)}"
         />
         <!-- Category Movies -->
-        <div v-if="category_selected == 'movies'"> 
-          <div v-for="(movie, m_idx) in material[category_selected]" :key="m_idx" class="category category-video aspect-ratio-video">
+        <div v-if="category_selected == 'movies'">
+          <div
+            v-for="(movie, m_idx) in material[category_selected]"
+            :key="m_idx"
+            class="category category-video aspect-ratio-video"
+          >
             <iframe class="aspect-ratio-content" :src="movie" allowfullscreen />
           </div>
         </div>
         <!-- Category Images -->
         <div v-if="category_selected == 'images'">
-          <div v-for="(image, i_idx) in material[category_selected]" :key="i_idx" class="category category-image">
+          <div
+            v-for="(image, i_idx) in material[category_selected]"
+            :key="i_idx"
+            class="category category-image"
+          >
             <img :src="image" />
           </div>
         </div>
         <!-- Category FAQ -->
         <div v-if="category_selected == 'faq'">
-          <div v-for="(faq, f_idx) in material[category_selected]" :key="f_idx" class="category category-text">
+          <div
+            v-for="(faq, f_idx) in material[category_selected]"
+            :key="f_idx"
+            class="category category-text"
+          >
             <div class="category-text-menu">
               <div class="category-text-title">{{faq.question}}</div>
               <v-btn icon @click="startTalk(`${faq.question}. ${faq.answer}`)">
@@ -111,7 +107,7 @@
         <!-- Category Document
         <div v-if="category_selected == 'documento'" class="category category-document">
           <embed :src="material[category_selected]" alt />
-        </div> -->
+        </div>-->
       </div>
     </div>
     <div class="material-navigator">
@@ -129,12 +125,32 @@
 </template>
 
 <script>
+import EditorJS from "@editorjs/editorjs";
+import Header from "@editorjs/header";
+
 import Exercises from "./Exercises";
 
 export default {
-  props: ["material", "categories", "category_idx", "unselectMaterial", "changeCategory"],
+  props: [
+    "material",
+    "categories",
+    "category_idx",
+    "unselectMaterial",
+    "changeCategory"
+  ],
+  data: () => ({
+    editors: {}
+  }),
   mounted() {
-    this.category_idx = this.category_idx;
+    ["overview", "explanation"].forEach(category => {
+      this.editors[category] = new EditorJS({
+        holderId: `${category}-editor`,
+        tools: {
+          header: Header
+        },
+        data: JSON.parse(this.material[category])
+      });
+    });
   },
   computed: {
     component_avatar() {
@@ -155,7 +171,7 @@ export default {
 };
 </script>
 
-<style lang='scss'>
+<style lang='scss' scoped>
 @import "@/styles/box-shadow.scss";
 
 .material-container {
@@ -206,7 +222,7 @@ export default {
   }
 }
 
-.category {
+ .category {
   margin-bottom: 20px;
   border-radius: 10px;
   @include box-shadow;
@@ -252,5 +268,12 @@ export default {
       width: 100%;
     }
   }
+}
+
+[id$="-editor"] {
+  padding: 20px;
+  pointer-events: none;
+  border-radius: 10px;
+  @include box-shadow;
 }
 </style>

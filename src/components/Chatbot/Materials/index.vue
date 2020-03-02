@@ -54,12 +54,12 @@ export default {
         "overview",
         "explanation",
         "bullets",
-        "hyperlinks",
         "examples",
-        "exercises",
-        "movies",
         "images",
-        "faq"
+        "movies",
+        "exercises",
+        "faq",
+        "hyperlinks"
       ];
       this.category_idx = 0;
       this.showServices(false);

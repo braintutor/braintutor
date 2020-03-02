@@ -1,7 +1,7 @@
 <template>
   <!-- Course List -->
   <v-container class="courses-container">
-    <span class="courses-title">Cursos Disponibles</span>
+    <span class="courses-title">Mis Cursos</span>
     <div class="courses-search">
       <v-text-field v-model="chatbot_filter" dense hide-details>
         <v-icon slot="append-outer">mdi-magnify</v-icon>
@@ -22,7 +22,14 @@
           :title="chatbot.course"
           :description="chatbot.name"
           :image="'https://i.pinimg.com/originals/ff/92/68/ff92685e660a2d347736f44cc7a11d38.jpg'"
-          :callback="() => selectChatbot(chatbot)"
+          :callback="() => {}"
+          :actions="[{
+           icon: 'mdi-robot',
+           callback: () => selectChatbot(chatbot)
+          },{
+           icon: 'mdi-square-edit-outline',
+           callback: () => editChatbot(chatbot)
+          }]"
         />
       </v-col>
     </v-row>
@@ -34,7 +41,7 @@ import loading from "@/components/loading";
 import Cartel from "@/components/Cartel";
 
 import { redirect } from "@/services/router.js";
-import { getAllCourses } from "@/services/courseService.js";
+import { getCourses } from "@/services/courseService.js";
 import { getChatbots } from "@/services/chatbotService.js";
 
 export default {
@@ -44,7 +51,7 @@ export default {
     loading_courses: true
   }),
   async mounted() {
-    let courses = await getAllCourses();
+    let courses = await getCourses();
     await Promise.all(
       courses.map(async course => {
         let chatbots = await getChatbots(course._id.$oid);
@@ -76,6 +83,9 @@ export default {
     redirect,
     selectChatbot(chatbot) {
       redirect("chatbot", { chatbot_id: chatbot._id.$oid });
+    },
+    editChatbot(chatbot) {
+      redirect("editor", { chatbot_id: chatbot._id.$oid });
     }
   },
   components: {

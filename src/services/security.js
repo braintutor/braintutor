@@ -3,7 +3,7 @@ import store from '../store'
 function setSession(token, type) { // type 0:teacher 1:student
   localStorage.setItem('token', token);
   localStorage.setItem('type', type);
-  store.commit("setSessionExists", true);
+  store.commit("setSession", getSession());
 }
 
 function getSession() {
@@ -16,7 +16,7 @@ function getSession() {
 function removeSession() {
   localStorage.removeItem('token')
   localStorage.removeItem('type')
-  store.commit("setSessionExists", false);
+  store.commit("setSession", null);
 }
 
 function sessionExists() {

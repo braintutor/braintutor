@@ -42,4 +42,23 @@ export default {
     display: flex;
   }
 }
+
+//Vuetify
+.v-input {
+  margin: 0 !important;
+}
+.v-input__slot {
+  margin: 0 !important;
+}
+.v-input--selection-controls__input {
+  margin: 0 !important;
+}
+.v-messages {
+  display: none !important;
+}
+
+// Editorjs
+.codex-editor__redactor {
+  padding-bottom: 64px !important;
+}
 </style>

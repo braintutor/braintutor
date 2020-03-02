@@ -1,6 +1,6 @@
 <template>
   <div class="cartel-container transform-scale elevation-3" @click="callback()">
-    <div v-if="actions" class="cartel-img">
+    <div class="cartel-img">
       <img :src="image" />
       <div class="cartel-actions">
         <v-btn

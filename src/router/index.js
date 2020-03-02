@@ -25,6 +25,11 @@ const routes = [
     component: () => import('../views/Panel.vue')
   },
   {
+    path: '/courses',
+    name: 'courses',
+    component: () => import('../views/Courses.vue')
+  },
+  {
     path: '/chatbot/:chatbot_id',
     name: 'chatbot',
     component: () => import('../views/Chatbot.vue')
@@ -42,8 +47,8 @@ const router = new VueRouter({
   routes
 })
 router.beforeEach((to, from, next) => {
-  const paths_1 = ['panel', 'chatbot', 'editor'] // Require Session Exists
-  const paths_2 = ['editor'] // Require Admin
+  const paths_1 = ['panel', 'courses', 'chatbot', 'editor'] // Require Session Exists
+  const paths_2 = ['editor', 'courses'] // Require Admin
   let to_name = to.name
 
   if (paths_1.includes(to_name)) {
