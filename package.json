@@ -23,6 +23,7 @@
     "@editorjs/header": "^2.4.0",
     "@editorjs/image": "^2.3.3",
     "@editorjs/list": "^1.4.0",
+    "@editorjs/marker": "^1.2.2",
     "@editorjs/simple-image": "^1.3.3",
     "@vue/cli-plugin-babel": "^4.1.0",
     "@vue/cli-plugin-eslint": "^4.1.0",

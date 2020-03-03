@@ -7,6 +7,7 @@ import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
 import List from "@editorjs/list";
 import SimpleImage from "@editorjs/simple-image";
+import Marker from "@editorjs/marker";
 
 export default {
   props: ["data", "setCategoryValue"],
@@ -19,7 +20,8 @@ export default {
       tools: {
         header: Header,
         list: List,
-        image: SimpleImage
+        image: SimpleImage,
+        marker: Marker
       },
       data: JSON.parse(this.data)
     });

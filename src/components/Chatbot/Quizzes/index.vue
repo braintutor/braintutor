@@ -12,7 +12,7 @@
       >
         <Cartel
           :description="quiz.name"
-          :image="'https://i.pinimg.com/originals/ff/92/68/ff92685e660a2d347736f44cc7a11d38.jpg'"
+          :image="'https://www.nxdirectatl.com/wp-content/uploads/2017/01/47380846-orange-wallpaper.png'"
           :callback="() => selectQuiz(quiz)"
         />
       </v-col>

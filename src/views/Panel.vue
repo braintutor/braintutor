@@ -21,7 +21,7 @@
         <Cartel
           :title="chatbot.course"
           :description="chatbot.name"
-          :image="'https://i.pinimg.com/originals/ff/92/68/ff92685e660a2d347736f44cc7a11d38.jpg'"
+          :image="'https://dekids.com.mx/wp-content/uploads/2016/01/descarga.png'"
           :callback="() => selectChatbot(chatbot)"
         />
       </v-col>

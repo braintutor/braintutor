@@ -129,7 +129,8 @@
 import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
 import List from "@editorjs/list";
-import ImageTool from "@editorjs/image";
+import SimpleImage from "@editorjs/simple-image";
+import Marker from "@editorjs/marker";
 
 import Exercises from "./Exercises";
 
@@ -151,7 +152,8 @@ export default {
         tools: {
           header: Header,
           list: List,
-          image: ImageTool
+          image: SimpleImage,
+          marker: Marker
         },
         data: JSON.parse(this.material[category])
       });

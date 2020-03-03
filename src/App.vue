@@ -61,4 +61,10 @@ export default {
 .codex-editor__redactor {
   padding-bottom: 64px !important;
 }
+.cdx-simple-image__caption {
+  display: none !important;
+}
+.cdx-simple-image__picture--with-background {
+  background: #fff !important;
+}
 </style>

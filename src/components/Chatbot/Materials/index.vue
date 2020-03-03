@@ -12,7 +12,7 @@
       >
         <Cartel
           :description="material.name"
-          :image="'https://besthqwallpapers.com/img/original/47929/4k-android-green-and-yellow-google-chrome-material-design.jpg'"
+          :image="'https://cdn.dribbble.com/users/1742866/screenshots/3966741/38-material-design.jpg'"
           :callback="() => selectMaterial(material)"
         />
       </v-col>
