@@ -1,5 +1,5 @@
 <template>
-  <div class="category category-text">
+  <div>
     <div class="category-text-menu">
       <div class="category-text-title">Ejercicios</div>
       <v-btn icon @click="resetExercises()">
@@ -52,6 +52,23 @@ export default {
 <style lang='scss' scoped>
 @import "@/styles/box-shadow.scss";
 
+.category-text-menu {
+  padding-bottom: 16px; // padding - padding-bottom
+  display: flex;
+  justify-content: space-between;
+  .category-text-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-right: 10px;
+  }
+}
+.category-text-content {
+  padding-bottom: 16px; // padding - padding-bottom
+  font-size: 1.2rem;
+  white-space: pre-wrap;
+  display: flex;
+  align-items: flex-start;
+}
 .category-text-alternative {
   padding: 10px 18px; // padding - padding-bottom
   margin-bottom: 10px;

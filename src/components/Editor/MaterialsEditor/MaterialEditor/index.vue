@@ -1,5 +1,6 @@
 <template>
   <div class="material-editor-container m-fullscreen">
+    <loading :class="{active: loading}" />
     <div class="menu">
       <div class="menu-left">
         <v-btn icon @click="loadMaterials()">
@@ -13,7 +14,7 @@
           autocomplete="off"
         ></v-text-field>
       </div>
-      <div v-if="!loading" class="menu-right">
+      <div class="menu-right">
         <!-- <v-btn icon @click="restoreMaterial(material._id.$oid)">
           <v-icon>mdi-restore</v-icon>
         </v-btn>-->
@@ -23,9 +24,6 @@
         <v-btn icon @click="dialog_delete = true">
           <v-icon>mdi-delete</v-icon>
         </v-btn>
-      </div>
-      <div v-else>
-        <v-progress-circular :width="3" :size="20" indeterminate color="green"></v-progress-circular>
       </div>
     </div>
 
@@ -236,11 +234,25 @@
             <div class="category-bullet-content">
               <div class="category-bullet-item">
                 <span class="category-title">Pregunta:</span>
-                <v-text-field class="category-text" v-model="content.question" dense hide-details></v-text-field>
+                <v-text-field
+                  class="category-text"
+                  v-model="content.question"
+                  :rows="1"
+                  autoGrow
+                  dense
+                  hide-details
+                ></v-text-field>
               </div>
               <div class="category-bullet-item">
                 <span class="category-title">Respuesta:</span>
-                <v-text-field class="category-text" v-model="content.answer" dense hide-details></v-text-field>
+                <v-textarea
+                  class="category-text"
+                  v-model="content.answer"
+                  :rows="1"
+                  autoGrow
+                  dense
+                  hide-details
+                ></v-textarea>
               </div>
             </div>
             <v-btn v-if="material.faq.length > 1" icon @click="removeFAQ(material.faq, c_idx)">
@@ -312,6 +324,7 @@
 import OverviewEditor from "./OverviewEditor";
 import ExplanationEditor from "./ExplanationEditor";
 import Navigator from "@/components/Navigator";
+import loading from "@/components/loading";
 
 import { updateMaterial } from "@/services/materialService";
 import { Clamp } from "@/services/math";
@@ -457,7 +470,8 @@ export default {
   components: {
     OverviewEditor,
     ExplanationEditor,
-    Navigator
+    Navigator,
+    loading
   }
 };
 </script>

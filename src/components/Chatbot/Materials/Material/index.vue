@@ -62,6 +62,7 @@
         </div>
         <!-- Category Exercises -->
         <Exercises
+          class="category category-text"
           v-if="category_selected == 'exercises'"
           :exercises="material[category_selected]"
           :talk="text => {startTalk(text)}"
@@ -127,6 +128,8 @@
 <script>
 import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
+import List from "@editorjs/list";
+import ImageTool from "@editorjs/image";
 
 import Exercises from "./Exercises";
 
@@ -146,7 +149,9 @@ export default {
       this.editors[category] = new EditorJS({
         holderId: `${category}-editor`,
         tools: {
-          header: Header
+          header: Header,
+          list: List,
+          image: ImageTool
         },
         data: JSON.parse(this.material[category])
       });
@@ -222,7 +227,7 @@ export default {
   }
 }
 
- .category {
+.category {
   margin-bottom: 20px;
   border-radius: 10px;
   @include box-shadow;
@@ -245,7 +250,7 @@ export default {
       font-size: 1.2rem;
       white-space: pre-wrap;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
     }
   }
   &.category-image img {

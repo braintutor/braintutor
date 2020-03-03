@@ -22,7 +22,7 @@ export default {
   pointer-events: none;
   opacity: 0;
   z-index: 2;
-  transition: opacity .4s;
+  transition: opacity .3s;
   //
   display: flex;
   justify-content: center;

@@ -5,6 +5,8 @@
 <script>
 import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
+import List from "@editorjs/list";
+import SimpleImage from "@editorjs/simple-image";
 
 export default {
   props: ["data", "setCategoryValue"],
@@ -15,7 +17,9 @@ export default {
     this.editor = new EditorJS({
       holderId: "editor-explanation",
       tools: {
-        header: Header
+        header: Header,
+        list: List,
+        image: SimpleImage
       },
       data: JSON.parse(this.data)
     });
