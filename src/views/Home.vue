@@ -8,7 +8,10 @@
             <h1 class="principal-title">BrainTutor</h1>
             <div
               class="principal-description"
-            >Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus esse laboriosam minus eveniet rem ullam quis libero, cum aspernatur deleniti totam quam at repellat vero nam repellendus officiis beatae magni.</div>
+            >Braintutor es una plataforma para crear clases virtuales y chatbots educativos.</div>
+            <div
+              class="principal-description"
+            >Monitorear el aprendizaje de los alumnos y brindarles una enseñanza personalizada.</div>
             <v-btn class="principal-action" color="grey darken-3" @click="redirect('login')">Empezar</v-btn>
           </div>
           <div class="principal-image col-sm-6">
