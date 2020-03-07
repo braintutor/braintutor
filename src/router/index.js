@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 
+import store from '../store'
 import { sessionExists, getSession } from '@/services/security'
 import { redirect } from '@/services/router'
 
@@ -47,6 +48,8 @@ const router = new VueRouter({
   routes
 })
 router.beforeEach((to, from, next) => {
+  reset()
+
   const paths_1 = ['panel', 'courses', 'chatbot', 'editor'] // Require Session Exists
   const paths_2 = ['editor', 'courses'] // Require Admin
   let to_name = to.name
@@ -72,5 +75,11 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
+
+function reset() {
+  let component_avatar = store.state.component_avatar;
+  if (component_avatar) component_avatar.startTalk('')
+  
+}
 
 export default router

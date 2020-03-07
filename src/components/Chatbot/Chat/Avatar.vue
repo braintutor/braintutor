@@ -1,6 +1,12 @@
 <template>
   <v-card tile elevation="0" class="avatar-container">
-    <img class="avatar-image" :src="src_avatar" />
+    <div v-for="(emotion, e_idx) in emotions" :key="e_idx">
+      <img
+        v-show="emotion === emotion_selected"
+        class="avatar-image"
+        :src="require(`@/assets/avatar/${emotion}.png`)"
+      />
+    </div>
     <v-speed-dial v-model="fab_emotions" absolute bottom right direction="left">
       <template v-slot:activator>
         <v-btn v-model="fab_emotions" color="blue darken-2" small dark fab>
@@ -26,7 +32,17 @@ import { TextToSpeech } from "@/services/speech";
 
 export default {
   data: () => ({
-    src_avatar: "",
+    emotion_selected: "normal",
+    emotions: [
+      "angry",
+      "blink",
+      "happy",
+      "love",
+      "normal",
+      "sad",
+      "talk",
+      "wink"
+    ],
     time_emotion: 1000,
     time_maximum: 2147483647,
     //
@@ -38,9 +54,9 @@ export default {
   },
   methods: {
     startAnimation(first_img, second_img, first_rate, second_rate) {
-      this.src_avatar = require(`@/assets/avatar/${first_img}.png`);
+      this.setImage(first_img);
       this.timeout_animation = setTimeout(() => {
-        this.src_avatar = require(`@/assets/avatar/${second_img}.png`);
+        this.setImage(second_img);
         this.startAnimation(second_img, first_img, second_rate, first_rate);
       }, first_rate);
     },
@@ -83,10 +99,10 @@ export default {
       }, time);
     },
     setImage(img) {
-      this.src_avatar = require(`@/assets/avatar/${img}.png`);
+      this.emotion_selected = img;
     },
     startTalk(text) {
-      setTimeout(() => this.startAnimationTalk(), 100); // Fixed animation error
+      this.startAnimationTalk();
       TextToSpeech(text, () => this.startAnimationNormal());
     }
   }
