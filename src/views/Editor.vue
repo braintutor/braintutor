@@ -20,6 +20,7 @@
         <div class="services-editor-action transform-scale-plus" @click="selectService(4)">
           <img src="https://pngimage.net/wp-content/uploads/2018/06/messaging-png-1.png" alt />
         </div>
+        <v-divider class="mx-1" vertical></v-divider>
         <div
           class="services-editor-action services-editor-action-bot transform-scale-plus"
           @click="redirectChatbot()"
@@ -115,10 +116,10 @@ export default {
       display: flex;
       justify-content: center;
       .services-editor-action {
-        margin: 0 6px;
+        margin: 0 4px;
         img {
-          width: 32px;
-          height: 32px;
+          width: 36px;
+          height: 36px;
         }
       }
     }
