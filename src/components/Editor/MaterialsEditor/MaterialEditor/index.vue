@@ -28,8 +28,8 @@
     </div>
 
     <!-- Material Content -->
-    <Navigator class="py-2" :actions="actions" />
     <div class="material-editor-content m-fullscreen-content">
+      <Navigator class="py-2" :actions="actions" />
       <div class="container">
         <!-- Overview -->
         <OverviewEditor
