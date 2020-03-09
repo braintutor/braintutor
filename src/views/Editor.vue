@@ -20,7 +20,8 @@
         <div class="services-editor-action transform-scale-plus" @click="selectService(4)">
           <img src="https://pngimage.net/wp-content/uploads/2018/06/messaging-png-1.png" alt />
         </div>
-        <v-divider class="mx-1" vertical></v-divider>
+        <v-divider class="divider-horizontal my-2"></v-divider>
+        <v-divider class="divider-vertical mx-1" vertical></v-divider>
         <div
           class="services-editor-action services-editor-action-bot transform-scale-plus"
           @click="redirectChatbot()"
@@ -102,6 +103,11 @@ export default {
     border-radius: 50%;
   }
 }
+
+.divider-vertical {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .editor-container {
     flex-direction: column;
@@ -123,6 +129,12 @@ export default {
         }
       }
     }
+  }
+  .divider-horizontal {
+    display: none;
+  }
+  .divider-vertical {
+    display: initial;
   }
 }
 </style>
