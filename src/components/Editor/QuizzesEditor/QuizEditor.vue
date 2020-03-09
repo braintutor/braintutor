@@ -133,7 +133,7 @@ export default {
 @import "@/styles/box-shadow.scss";
 .quiz-editor-container {
   .quiz-editor-content {
-    padding: 8px 20px 60px 20px;
+    padding: 8px 20px;
     .question-editor-text {
       & * {
         margin: 0;

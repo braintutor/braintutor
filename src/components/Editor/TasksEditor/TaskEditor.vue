@@ -19,7 +19,7 @@
         </v-btn>
       </div>
     </div>
-    <div id="tasks-scroll" class="pb-12 m-fullscreen-content">
+    <div id="tasks-scroll" class="m-fullscreen-content">
       <div class="task-container" v-for="(task, t_idx) in tasks" :key="t_idx">
         <div class="task-menu">
           <v-text-field class="task-name" v-model="task.name" dense hide-details autocomplete="off"></v-text-field>

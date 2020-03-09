@@ -202,7 +202,7 @@ export default {
 @import "~@fullcalendar/daygrid/main.css";
 
 .calendar-container {
-  padding: 20px 20px 40px 20px;
+  padding: 20px;
   .calendar-control {
     display: flex;
     justify-content: space-between;

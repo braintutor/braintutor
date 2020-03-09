@@ -154,6 +154,7 @@ export default {
 @import "@/styles/box-shadow.scss";
 
 .editor-container {
+  flex-direction: column;
   .menu {
     padding: 10px 20px 0 20px;
     display: flex;
@@ -166,7 +167,6 @@ export default {
   }
   .editor-content {
     padding: 10px 14px;
-    padding-bottom: 60px;
     .editor-knowledge {
       padding: 8px 0;
       display: flex;

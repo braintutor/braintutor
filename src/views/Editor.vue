@@ -1,11 +1,7 @@
 <template>
   <div class="editor-container m-fullscreen">
-    <MaterialsEditor class="m-fullscreen-content" v-show="service_idx == 0" />
-    <QuizzesEditor class="m-fullscreen-content" v-show="service_idx == 1" />
-    <TasksEditor class="m-fullscreen-content" v-show="service_idx == 2" />
-    <KnowledgeEditor class="m-fullscreen-content" v-show="service_idx == 3" />
-    <div class="services-editor-navigator">
-      <div class="services-editor-actions elevation-3">
+    <div class="services-editor-navigator elevation-3">
+      <div class="services-editor-actions">
         <div class="services-editor-action transform-scale-plus" @click="selectService(0)">
           <img src="@/assets/braintutor/icon-material.png" alt />
         </div>
@@ -26,6 +22,10 @@
         </div>
       </div>
     </div>
+    <MaterialsEditor class="m-fullscreen-content" v-show="service_idx == 0" />
+    <QuizzesEditor class="m-fullscreen-content" v-show="service_idx == 1" />
+    <TasksEditor class="m-fullscreen-content" v-show="service_idx == 2" />
+    <KnowledgeEditor class="m-fullscreen-content" v-show="service_idx == 3" />
   </div>
 </template>
 
@@ -65,32 +65,22 @@ export default {
 <style lang='scss'>
 .editor-container {
   height: calc(100vh - 65px);
+  display: flex;
+  flex-direction: row;
 }
 .services-editor-navigator {
-  z-index: 1;
-  position: absolute;
-  width: 100%;
-  bottom: 0;
-  pointer-events: none;
+  height: 100%;
+  border-radius: 0 10px 10px 0;
   .services-editor-actions {
-    width: max-content;
     padding: 10px 8px;
-    margin: 0 auto;
-    background: #fff;
-    border-radius: 10px 10px 0 0;
-    opacity: 0.5;
-    transition: all 0.5s;
-    display: flex;
-    pointer-events: all;
     &:hover {
       cursor: pointer;
-      opacity: 1;
     }
     .services-editor-action {
-      margin: 0 8px;
+      margin: 16px 0;
       img {
-        width: 42px;
-        height: 42px;
+        width: 40px;
+        height: 40px;
         vertical-align: bottom;
       }
     }
@@ -100,6 +90,25 @@ export default {
   display: block;
   img {
     border-radius: 50%;
+  }
+}
+@media (max-width: 768px) {
+  .editor-container {
+    flex-direction: column;
+  }
+  .services-editor-navigator {
+    height: min-content;
+    width: min-content;
+    margin: 0 auto;
+    border-radius: 10px;
+    .services-editor-actions {
+      padding: 6px;
+      display: flex;
+      justify-content: center;
+      .services-editor-action {
+        margin: 0 8px;
+      }
+    }
   }
 }
 </style>

@@ -481,8 +481,6 @@ export default {
 
 .material-editor-container {
   .material-editor-content {
-    padding-bottom: 56px;
-
     .category {
       padding: 12px;
       padding-bottom: 0;

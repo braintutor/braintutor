@@ -168,7 +168,6 @@ export default {
   }
 }
 .materials-container {
-  padding-bottom: 64px;
   .material-container {
     padding: 8px;
   }
