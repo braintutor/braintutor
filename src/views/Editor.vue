@@ -115,7 +115,11 @@ export default {
       display: flex;
       justify-content: center;
       .services-editor-action {
-        margin: 0 8px;
+        margin: 0 6px;
+        img {
+          width: 32px;
+          height: 32px;
+        }
       }
     }
   }
