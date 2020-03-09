@@ -90,10 +90,13 @@ export default {
     padding: 30px;
   }
   &__actions {
-    margin: 16px auto;
+    width: 100%;
+    margin: 20px auto;
     float: right;
+    display: flex;
+    justify-content: center;
     #{$self}__action {
-      margin-left: 8px;
+      margin: 0 4px;
     }
   }
 }
