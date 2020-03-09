@@ -39,7 +39,17 @@ export default {
   props: ["showServices"],
   data: () => ({
     material: null,
-    categories: [],
+    categories: [
+      "overview",
+      "explanation",
+      "bullets",
+      "examples",
+      "images",
+      "movies",
+      "exercises",
+      "faq",
+      "hyperlinks"
+    ],
     category_idx: 0
   }),
   computed: {
@@ -48,20 +58,10 @@ export default {
     }
   },
   methods: {
-    selectMaterial(material, categories) {
+    selectMaterial(material, category) {
       this.material = material;
-      this.categories = categories || [
-        "overview",
-        "explanation",
-        "bullets",
-        "examples",
-        "images",
-        "movies",
-        "exercises",
-        "faq",
-        "hyperlinks"
-      ];
-      this.category_idx = 0;
+      if (category) this.category_idx = this.categories.indexOf(category);
+      else this.category_idx = 0;
       this.showServices(false);
     },
     unselectMaterial() {

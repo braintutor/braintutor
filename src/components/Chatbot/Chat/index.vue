@@ -159,7 +159,7 @@ export default {
             action = () => {
               let material = this.getMaterial(material_id);
               this.selectService(0);
-              this.component_materials.selectMaterial(material, [category]);
+              this.component_materials.selectMaterial(material, category);
               scrollLeft("chatbot-scroll");
             };
             icon = this.icons.find(i => i.category === category);
