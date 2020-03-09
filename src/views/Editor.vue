@@ -29,6 +29,7 @@
     <QuizzesEditor class="m-fullscreen-content" v-show="service_idx == 1" />
     <TasksEditor class="m-fullscreen-content" v-show="service_idx == 2" />
     <KnowledgeEditor class="m-fullscreen-content" v-show="service_idx == 3" />
+    <ChatbotEditor class="m-fullscreen-content" v-show="service_idx == 4" />
   </div>
 </template>
 
@@ -37,12 +38,13 @@ import MaterialsEditor from "@/components/Editor/MaterialsEditor/index";
 import QuizzesEditor from "@/components/Editor/QuizzesEditor/index";
 import TasksEditor from "@/components/Editor/TasksEditor/index";
 import KnowledgeEditor from "@/components/Editor/KnowledgeEditor";
+import ChatbotEditor from "@/components/Editor/ChatbotEditor";
 
 import { redirect, getParam } from "@/services/router.js";
 
 export default {
   data: () => ({
-    service_idx: 0,
+    service_idx: 4,
     chatbot_id: ""
   }),
   mounted() {
@@ -60,7 +62,8 @@ export default {
     MaterialsEditor,
     QuizzesEditor,
     TasksEditor,
-    KnowledgeEditor
+    KnowledgeEditor,
+    ChatbotEditor
   }
 };
 </script>
