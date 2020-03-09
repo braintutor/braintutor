@@ -6,4 +6,11 @@ function getChatbots(course_id) {
   })
 }
 
-export { getChatbots }
+function addChatbot(course_id, chatbot) {
+  return fetch_post('addChatbot', {
+    course_id,
+    chatbot
+  })
+}
+
+export { getChatbots, addChatbot }

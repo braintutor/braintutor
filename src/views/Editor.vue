@@ -14,6 +14,9 @@
         <div class="services-editor-action transform-scale-plus" @click="selectService(3)">
           <img src="https://pngimage.net/wp-content/uploads/2018/06/messaging-png-1.png" alt />
         </div>
+        <div class="services-editor-action transform-scale-plus" @click="selectService(4)">
+          <img src="https://icons.iconarchive.com/icons/grafikartes/flat-retro-modern/512/settings-icon.png" alt />
+        </div>
         <div
           class="services-editor-action services-editor-action-bot transform-scale-plus"
           @click="redirectChatbot()"

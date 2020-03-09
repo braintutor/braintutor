@@ -242,7 +242,7 @@ export default {
         margin-right: 10px;
       }
     }
-    .category-text-content {
+    .category-text-content {  
       padding-bottom: 16px; // padding - padding-bottom
       font-size: 1.2rem;
       white-space: pre-wrap;
