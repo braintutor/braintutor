@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="list">
     <div v-show="!tasks_selected" class="calendar-container">
       <div class="calendar-control">
         <span class="calendar-date">{{calendar_date}}</span>
@@ -121,6 +121,10 @@ export default {
 <style lang="scss">
 @import "~@fullcalendar/core/main.css";
 @import "~@fullcalendar/daygrid/main.css";
+
+.list {
+  padding-bottom: 34px;
+}
 
 .calendar-container {
   padding: 20px 20px 40px 20px;

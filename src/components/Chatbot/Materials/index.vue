@@ -1,6 +1,6 @@
 <template>
   <!-- Material List -->
-  <v-container v-if="!material" fluid>
+  <v-container class="list" v-if="!material" fluid>
     <v-row no-gutters>
       <v-col
         cols="6"
@@ -84,4 +84,7 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+.list {
+  padding-bottom: 70px;
+}
 </style>

@@ -9,9 +9,9 @@
     <div class="m-fullscreen-content">
       <div class="material-content">
         <!-- Category Overview -->
-        <div v-show="category_selected == 'overview'" id="overview-editor"></div>
+        <div v-show="category_selected == 'overview'" id="overview-editor" class="category"></div>
         <!-- Category Explanation -->
-        <div v-show="category_selected == 'explanation'" id="explanation-editor"></div>
+        <div v-show="category_selected == 'explanation'" id="explanation-editor" class="category"></div>
         <!-- Category Bullets -->
         <div v-if="category_selected == 'bullets'" class="category category-text">
           <div class="category-text-menu">
@@ -195,35 +195,30 @@ export default {
     }
   }
   .material-content {
-    height: 100%;
-    padding: 20px;
-    padding-top: 5px;
+    padding: 5px 20px 56px 20px;
   }
   .material-navigator {
     position: absolute;
     width: 100%;
     bottom: 0;
     pointer-events: none;
+    z-index: 1;
     .material-actions {
       width: max-content;
       padding: 8px 6px;
-      margin: 0 auto;
+      margin: 0 auto 8px auto;
       background: #fff;
-      border-radius: 10px 10px 0 0;
-      opacity: 0.5;
-      transition: all 0.5s;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       pointer-events: all;
       &:hover {
         cursor: pointer;
-        opacity: 1;
       }
       .material-action {
         margin: 0 8px;
         font-weight: bold;
         font-size: 1.5rem;
-        // font-size: 18px;
       }
     }
   }
@@ -280,7 +275,5 @@ export default {
 [id$="-editor"] {
   padding: 20px;
   pointer-events: none;
-  border-radius: 10px;
-  @include box-shadow;
 }
 </style>

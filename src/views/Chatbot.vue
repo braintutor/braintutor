@@ -123,27 +123,24 @@ export default {
       z-index: 1;
       position: absolute;
       width: 100%;
-      bottom: 0;
+      bottom: 8px;
       pointer-events: none;
       .services-actions {
         width: max-content;
-        padding: 10px 8px;
+        padding: 8px;
         margin: 0 auto;
         background: #fff;
-        border-radius: 10px 10px 0 0;
-        opacity: 0.5;
-        transition: all 0.5s;
+        border-radius: 10px;
         display: flex;
         pointer-events: all;
         &:hover {
           cursor: pointer;
-          opacity: 1;
         }
         .services-action {
           margin: 0 8px;
           img {
-            width: 42px;
-            height: 42px;
+            width: 40px;
+            height: 40px;
             vertical-align: bottom;
           }
         }
