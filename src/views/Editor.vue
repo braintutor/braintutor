@@ -3,19 +3,22 @@
     <div class="services-editor-navigator elevation-3">
       <div class="services-editor-actions">
         <div class="services-editor-action transform-scale-plus" @click="selectService(0)">
-          <img src="@/assets/braintutor/icon-material.png" alt />
+          <img
+            src="https://icons.iconarchive.com/icons/grafikartes/flat-retro-modern/512/settings-icon.png"
+            alt
+          />
         </div>
         <div class="services-editor-action transform-scale-plus" @click="selectService(1)">
-          <img src="@/assets/braintutor/icon-quiz.png" alt />
+          <img src="@/assets/braintutor/icon-material.png" alt />
         </div>
         <div class="services-editor-action transform-scale-plus" @click="selectService(2)">
-          <img src="https://img.icons8.com/cotton/2x/calendar.png" alt />
+          <img src="@/assets/braintutor/icon-quiz.png" alt />
         </div>
         <div class="services-editor-action transform-scale-plus" @click="selectService(3)">
-          <img src="https://pngimage.net/wp-content/uploads/2018/06/messaging-png-1.png" alt />
+          <img src="https://img.icons8.com/cotton/2x/calendar.png" alt />
         </div>
         <div class="services-editor-action transform-scale-plus" @click="selectService(4)">
-          <img src="https://icons.iconarchive.com/icons/grafikartes/flat-retro-modern/512/settings-icon.png" alt />
+          <img src="https://pngimage.net/wp-content/uploads/2018/06/messaging-png-1.png" alt />
         </div>
         <div
           class="services-editor-action services-editor-action-bot transform-scale-plus"
@@ -25,11 +28,11 @@
         </div>
       </div>
     </div>
-    <MaterialsEditor class="m-fullscreen-content" v-show="service_idx == 0" />
-    <QuizzesEditor class="m-fullscreen-content" v-show="service_idx == 1" />
-    <TasksEditor class="m-fullscreen-content" v-show="service_idx == 2" />
-    <KnowledgeEditor class="m-fullscreen-content" v-show="service_idx == 3" />
-    <ChatbotEditor class="m-fullscreen-content" v-show="service_idx == 4" />
+    <ChatbotEditor class="m-fullscreen-content" v-show="service_idx == 0" />
+    <MaterialsEditor class="m-fullscreen-content" v-show="service_idx == 1" />
+    <QuizzesEditor class="m-fullscreen-content" v-show="service_idx == 2" />
+    <TasksEditor class="m-fullscreen-content" v-show="service_idx == 3" />
+    <KnowledgeEditor class="m-fullscreen-content" v-show="service_idx == 4" />
   </div>
 </template>
 
@@ -44,7 +47,7 @@ import { redirect, getParam } from "@/services/router.js";
 
 export default {
   data: () => ({
-    service_idx: 4,
+    service_idx: 0,
     chatbot_id: ""
   }),
   mounted() {

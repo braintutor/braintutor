@@ -7,14 +7,34 @@
         <v-btn icon @click="restore()">
           <v-icon>mdi-restore</v-icon>
         </v-btn>
-        <v-btn icon @click="save()">
-          <v-icon>mdi-content-save</v-icon>
-        </v-btn>
       </div>
     </div>
     <div v-if="chatbot" class="editor__content">
       <v-text-field label="Nombre" v-model="chatbot.name" dense hide-details autocomplete="off"></v-text-field>
+      <div class="editor__actions">
+        <v-btn class="editor__action" small color="primary" @click="save()">Guardar Cambios</v-btn>
+        <v-btn
+          class="editor__action"
+          small
+          color="error"
+          @click="dialog_delete = true"
+          disabled
+        >Eliminar Curso</v-btn>
+      </div>
     </div>
+
+    <!-- Dialog -->
+    <v-dialog v-model="dialog_delete" max-width="300">
+      <v-card>
+        <v-card-title>Confirmar eliminación</v-card-title>
+        <v-card-text>Si elimina este contenido, no podrá revertir los cambios.</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn small text @click="dialog_delete = false">Cancelar</v-btn>
+          <v-btn small depressed color="error" @click="deleteMaterial(material._id.$oid)">Eliminar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -27,7 +47,8 @@ import { getChatbot, updateChatbot } from "@/services/chatbotService";
 export default {
   data: () => ({
     chatbot: null,
-    loading: true
+    loading: true,
+    dialog_delete: false
   }),
   async mounted() {
     this.restore();
@@ -54,6 +75,7 @@ export default {
 
 <style lang='scss' scoped>
 .editor {
+  $self: &;
   .menu {
     padding: 10px 20px 0 20px;
     display: flex;
@@ -65,7 +87,14 @@ export default {
     }
   }
   &__content {
-    padding: 20px 30px;
+    padding: 30px;
+  }
+  &__actions {
+    margin: 16px auto;
+    float: right;
+    #{$self}__action {
+      margin-left: 8px;
+    }
   }
 }
 </style>

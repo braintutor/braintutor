@@ -18,7 +18,7 @@
             sm="4"
             md="3"
             lg="2"
-            v-for="(chatbot, c_idx) in chatbots_filtered"
+            v-for="(chatbot, c_idx) in course.chatbots"
             :key="c_idx"
           >
             <Cartel
@@ -35,7 +35,7 @@
                 }]"
             />
           </v-col>
-          <v-col class="create pa-3" cols="6" sm="4" md="3" lg="2">
+          <v-col v-if="course.chatbots.length < 4" class="create pa-3" cols="6" sm="4" md="3" lg="2">
             <div class="create__content" @click="createChatbot(course)">
               <v-icon>mdi-plus</v-icon>
             </div>
@@ -104,8 +104,10 @@ export default {
       };
 
       let chatbot_id = await addChatbot(course_id, chatbot);
-      chatbot._id = chatbot_id;
-      this.editChatbot(chatbot);
+      if (chatbot_id.$oid) {
+        chatbot._id = chatbot_id;
+        this.editChatbot(chatbot);
+      }
       this.loading_courses = false;
     }
   },
