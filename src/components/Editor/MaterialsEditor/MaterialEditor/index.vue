@@ -150,7 +150,7 @@
               ></v-text-field>
               <div v-if="movie" class="category-center">
                 <div class="aspect-ratio-video">
-                  <iframe class="aspect-ratio-content" :src="movie" allowfullscreen />
+                  <iframe class="aspect-ratio-content" :src="embeds[m_idx]" allowfullscreen />
                 </div>
               </div>
             </div>
@@ -327,6 +327,7 @@ import Navigator from "@/components/Navigator";
 import loading from "@/components/loading";
 
 import { updateMaterial } from "@/services/materialService";
+import { getEmbed } from "@/services/embed";
 import { Clamp } from "@/services/math";
 
 export default {
@@ -378,6 +379,9 @@ export default {
           }
         }
       ];
+    },
+    embeds() {
+      return this.material.movies.map(movie => getEmbed(movie))
     }
   },
   methods: {
