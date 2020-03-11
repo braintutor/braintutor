@@ -53,12 +53,26 @@ export default {
     this.startAnimationNormal();
   },
   methods: {
-    startAnimation(first_img, second_img, first_rate, second_rate) {
+    startAnimation(
+      first_img,
+      second_img,
+      first_rate,
+      second_rate,
+      first_rate_range,
+      second_rate_range
+    ) {
       this.setImage(first_img);
       this.timeout_animation = setTimeout(() => {
         this.setImage(second_img);
-        this.startAnimation(second_img, first_img, second_rate, first_rate);
-      }, first_rate);
+        this.startAnimation(
+          second_img,
+          first_img,
+          second_rate,
+          first_rate,
+          second_rate_range,
+          first_rate_range
+        );
+      }, first_rate + Math.random() * first_rate_range);
     },
     stopAnimation() {
       clearTimeout(this.timeout_animation);
@@ -88,15 +102,11 @@ export default {
     },
     startAnimationNormal() {
       this.stopAnimation();
-      this.startAnimation("normal", "blink", 3000, 250);
+      this.startAnimation("normal", "blink", 500, 200, 5000, 0);
     },
-    startAnimationTalk(time = 2147483647) {
+    startAnimationTalk() {
       this.stopAnimation();
-      this.startAnimation("talk", "normal", 200, 200);
-      setTimeout(() => {
-        this.stopAnimation();
-        this.setAnimationNormal();
-      }, time);
+      this.startAnimation("talk", "normal", 200, 200, 0, 0);
     },
     setImage(img) {
       this.emotion_selected = img;
@@ -111,7 +121,7 @@ export default {
 
 <style lang='scss' scoped>
 .avatar-container {
-  background: #f9ceff !important;
+  background: #94bfea !important;
 
   .avatar-image {
     display: block;
