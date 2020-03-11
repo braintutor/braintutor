@@ -100,7 +100,7 @@ export default {
 .services-editor-action-bot {
   display: block;
   img {
-    border-radius: 50%;
+    border-radius: 10px;
   }
 }
 

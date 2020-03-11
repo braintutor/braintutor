@@ -151,7 +151,7 @@ export default {
 .services-action-bot {
   display: none;
   img {
-    border-radius: 50%;
+    border-radius: 10px;
   }
 }
 
