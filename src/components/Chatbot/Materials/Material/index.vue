@@ -133,6 +133,7 @@ import SimpleImage from "@editorjs/simple-image";
 import Marker from "@editorjs/marker";
 
 import Exercises from "./Exercises";
+import { getEmbed } from "@/services/embed";
 
 export default {
   props: [
@@ -158,6 +159,7 @@ export default {
         data: JSON.parse(this.material[category])
       });
     });
+    this.material.movies = this.material.movies.map(movie => getEmbed(movie));
   },
   computed: {
     component_avatar() {
@@ -242,7 +244,7 @@ export default {
         margin-right: 10px;
       }
     }
-    .category-text-content {  
+    .category-text-content {
       padding-bottom: 16px; // padding - padding-bottom
       font-size: 1.2rem;
       white-space: pre-wrap;
