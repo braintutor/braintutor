@@ -30,7 +30,7 @@
               <img src="@/assets/braintutor/icon-quiz.png" alt />
             </div>
             <div class="services-action transform-scale-plus" @click="selectService(2)">
-              <img src="https://img.icons8.com/cotton/2x/calendar.png" alt />
+              <img src="@/assets/braintutor/icon-task.png" alt />
             </div>
             <div
               class="services-action services-action-bot transform-scale-plus"

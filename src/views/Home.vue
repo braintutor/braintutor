@@ -90,7 +90,7 @@ export default {
       {
         title: "Tareas",
         description: "Creación de tareas programadas",
-        image: "https://img.icons8.com/cotton/2x/calendar.png"
+        image: require("@/assets/braintutor/icon-task.png")
       },
       {
         title: "Chatbot",
@@ -172,32 +172,33 @@ export default {
   .services-title {
     display: block;
     margin-bottom: calc(2px + 2vw);
-    font-size: 3rem;
+    font-size: 2.5rem;
     font-weight: bold;
     text-align: center;
   }
   .service-container {
     height: 100%;
-    padding: 10px 16px;
+    padding: 10px;
     @include box-shadow;
     border-radius: 10px;
     display: flex;
     align-items: center;
     .service-image {
       padding-right: 15px;
-      height: 54px;
+      height: 50px;
       img {
-        width: 54px;
-        height: 54px;
+        width: 50px;
+        height: 50px;
       }
     }
     .service-content {
       .service-title {
-        font-size: 1.4rem;
+        padding-bottom: 3px;
+        font-size: 1.2rem;
         font-weight: bold;
       }
       .service-descripcion {
-        font-size: 1rem;
+        font-size: .9rem;
         font-weight: lighter;
       }
     }

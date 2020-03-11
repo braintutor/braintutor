@@ -88,10 +88,10 @@ export default {
       cursor: pointer;
     }
     .services-editor-action {
-      margin: 16px 0;
+      margin: 18px 2px;
       img {
-        width: 40px;
-        height: 40px;
+        width: 36px;
+        height: 36px;
         vertical-align: bottom;
       }
     }
@@ -122,10 +122,10 @@ export default {
       display: flex;
       justify-content: center;
       .services-editor-action {
-        margin: 0 4px;
+        margin: 2px 6px;
         img {
-          width: 36px;
-          height: 36px;
+          width: 32px;
+          height: 32px;
         }
       }
     }
