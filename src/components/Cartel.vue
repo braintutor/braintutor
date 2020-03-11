@@ -70,7 +70,7 @@ export default {
     }
   }
   .cartel-content {
-    padding: 12px 16px;
+    padding: 8px 12px;
     text-align: center;
     .cartel-title {
       padding: 3px 0;
@@ -79,7 +79,7 @@ export default {
     }
     .cartel-description {
       padding: 1px 0;
-      font-size: 1rem;
+      font-size: .9rem;
       font-weight: normal;
     }
   }

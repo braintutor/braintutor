@@ -15,10 +15,10 @@
           <img src="@/assets/braintutor/icon-quiz.png" alt />
         </div>
         <div class="services-editor-action transform-scale-plus" @click="selectService(3)">
-          <img src="https://img.icons8.com/cotton/2x/calendar.png" alt />
+          <img src="@/assets/braintutor/icon-task.png" alt />
         </div>
         <div class="services-editor-action transform-scale-plus" @click="selectService(4)">
-          <img src="https://pngimage.net/wp-content/uploads/2018/06/messaging-png-1.png" alt />
+          <img src="@/assets/braintutor/icon-knowledge.png" alt />
         </div>
         <v-divider class="divider-horizontal my-2"></v-divider>
         <v-divider class="divider-vertical mx-1" vertical></v-divider>
