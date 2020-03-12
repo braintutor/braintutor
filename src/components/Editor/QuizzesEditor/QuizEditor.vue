@@ -1,5 +1,6 @@
 <template>
   <div class="quiz-editor-container m-fullscreen">
+    <loading :active="loading" />
     <div class="menu">
       <div class="menu-left">
         <v-btn icon @click="loadQuizzes()">
@@ -7,7 +8,7 @@
         </v-btn>
         <v-text-field class="menu-title" v-model="quiz.name" dense hide-details autocomplete="off"></v-text-field>
       </div>
-      <div v-if="!loading" class="menu-right">
+      <div class="menu-right">
         <v-btn icon @click="addQuestion(quiz.content)">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
@@ -21,13 +22,10 @@
           <v-icon>mdi-delete</v-icon>
         </v-btn>
       </div>
-      <div v-else>
-        <v-progress-circular :width="3" :size="20" indeterminate color="green"></v-progress-circular>
-      </div>
     </div>
 
     <!-- Quiz Content -->
-    <div class="quiz-editor-content m-fullscreen-content">
+    <div id="quiz-scroll" class="quiz-editor-content m-fullscreen-content">
       <div class="question-editor-text mb-3">
         <v-select v-model="quiz.level" :items="levels" label="Nivel"></v-select>
         <v-slider v-model="quiz.time" :label="`Tiempo: ${quiz.time}s`" min="10" max="600" step="10"></v-slider>
@@ -48,7 +46,11 @@
             >
               <div class="question-editor-alternative-content question-editor-text">
                 <v-textarea v-model="c.alternatives[a_idx]" :rows="1" autoGrow dense hide-details></v-textarea>
-                <v-btn v-if="c.alternatives.length > 2" icon @click="removeAlternative(c.alternatives, a_idx)">
+                <v-btn
+                  v-if="c.alternatives.length > 2"
+                  icon
+                  @click="removeAlternative(c.alternatives, a_idx)"
+                >
                   <v-icon>mdi-minus</v-icon>
                 </v-btn>
               </div>
@@ -83,6 +85,9 @@
 </template>
 
 <script>
+import loading from "@/components/loading";
+
+import { scrollDown } from "@/services/scroll";
 import { updateQuiz } from "@/services/quizService";
 
 export default {
@@ -115,6 +120,9 @@ export default {
         alternatives: ["Alternativa 1", "Alternativa 2"],
         correct: 0
       });
+      setTimeout(() => {
+        scrollDown("quiz-scroll");
+      }, 100);
     },
     removeQuestion(questions, question_idx) {
       questions.splice(question_idx, 1);
@@ -125,6 +133,9 @@ export default {
     removeAlternative(alternatives, alternative_idx) {
       alternatives.splice(alternative_idx, 1);
     }
+  },
+  components: {
+    loading
   }
 };
 </script>

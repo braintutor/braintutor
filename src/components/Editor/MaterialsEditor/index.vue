@@ -1,6 +1,6 @@
 <template>
   <div>
-    <loading :class="{active: loading_materials}" />
+    <loading :active="loading_materials" />
     <!-- Material List -->
     <v-container v-if="!material" fluid class="materials-container">
       <v-row no-gutters>

@@ -1,6 +1,6 @@
 <template>
   <div class="material-editor-container m-fullscreen">
-    <loading :class="{active: loading}" />
+    <loading :active="loading" />
     <div class="menu">
       <div class="menu-left">
         <v-btn icon @click="loadMaterials()">
@@ -32,21 +32,27 @@
       <Navigator class="py-2" :actions="actions" />
       <div class="container">
         <!-- Overview -->
-        <OverviewEditor
-          v-show="category_selected === 'overview'"
-          ref="overview"
-          class="category"
-          :data="material.overview"
-          :setCategoryValue="setCategoryValue"
-        />
+        <div v-show="category_selected === 'overview'" class="category">
+          <div class="category-menu">
+            <span>Resumen</span>
+          </div>
+          <OverviewEditor
+            ref="overview"
+            :data="material.overview"
+            :setCategoryValue="setCategoryValue"
+          />
+        </div>
         <!-- Explanation -->
-        <ExplanationEditor
-          v-show="category_selected === 'explanation'"
-          ref="explanation"
-          class="category"
-          :data="material.explanation"
-          :setCategoryValue="setCategoryValue"
-        />
+        <div v-show="category_selected === 'explanation'" class="category">
+          <div class="category-menu">
+            <span>Explicación</span>
+          </div>
+          <ExplanationEditor
+            ref="explanation"
+            :data="material.explanation"
+            :setCategoryValue="setCategoryValue"
+          />
+        </div>
         <!-- Bullets -->
         <div v-if="category_selected === 'bullets'" class="category">
           <div class="category-menu">
@@ -381,7 +387,7 @@ export default {
       ];
     },
     embeds() {
-      return this.material.movies.map(movie => getEmbed(movie))
+      return this.material.movies.map(movie => getEmbed(movie));
     }
   },
   methods: {
@@ -497,7 +503,7 @@ export default {
         justify-content: space-between;
         align-items: center;
         span {
-          padding: 10px 0;
+          padding-bottom: 10px;
         }
       }
       .category-text {

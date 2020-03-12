@@ -1,6 +1,6 @@
 <template>
   <div>
-    <loading :class="{active: loading_quizzes}" />
+    <loading :active="loading_quizzes" />
     <!-- Quiz List -->
     <v-container v-if="!quiz" fluid class="quizzes-container">
       <v-row no-gutters>

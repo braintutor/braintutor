@@ -18,6 +18,9 @@
           </v-btn>
         </div>
       </div>
+      <div v-if="loading_message" class="message message-0 message-loading elevation-3">
+        <v-progress-linear color="primary" buffer-value="0" stream></v-progress-linear>
+      </div>
     </div>
     <!-- Input -->
     <v-form class="input-container" @submit.prevent="sendMessage">
@@ -229,6 +232,12 @@ export default {
   }
   .message-to-right {
     margin-left: auto;
+  }
+  .message-loading {
+    width: 43px;
+    padding: 20px 8px 8px 8px;
+    display: flex;
+    align-items: flex-end;
   }
 }
 

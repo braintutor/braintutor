@@ -12,19 +12,20 @@
     <div v-if="chatbot" class="editor__content">
       <v-text-field label="Nombre" v-model="chatbot.name" dense hide-details autocomplete="off"></v-text-field>
       <div class="editor__actions">
+        <v-btn class="editor__action" small color="success" @click="train()">Entrenar Bot</v-btn>
         <v-btn class="editor__action" small color="primary" @click="save()">Guardar Cambios</v-btn>
-        <v-btn
+        <!-- <v-btn
           class="editor__action"
           small
           color="error"
           @click="dialog_delete = true"
           disabled
-        >Eliminar Curso</v-btn>
+        >Eliminar Curso</v-btn>-->
       </div>
     </div>
 
     <!-- Dialog -->
-    <v-dialog v-model="dialog_delete" max-width="300">
+    <!-- <v-dialog v-model="dialog_delete" max-width="300">
       <v-card>
         <v-card-title>Confirmar eliminación</v-card-title>
         <v-card-text>Si elimina este contenido, no podrá revertir los cambios.</v-card-text>
@@ -34,13 +35,14 @@
           <v-btn small depressed color="error" @click="deleteMaterial(material._id.$oid)">Eliminar</v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>
+    </v-dialog>-->
   </div>
 </template>
 
 <script>
 import loading from "@/components/loading";
 
+import { train } from "@/services/chatService";
 import { getParam } from "@/services/router.js";
 import { getChatbot, updateChatbot } from "@/services/chatbotService";
 
@@ -64,6 +66,11 @@ export default {
       this.loading = true;
       this.chatbot.id = this.chatbot._id.$oid;
       await updateChatbot(this.chatbot);
+      this.loading = false;
+    },
+    async train() {
+      this.loading = true;
+      await train(this.chatbot._id.$oid);
       this.loading = false;
     }
   },
