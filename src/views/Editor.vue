@@ -1,6 +1,6 @@
 <template>
   <div class="editor-container m-fullscreen">
-    <div class="services-editor-navigator elevation-3">
+    <div class="services-editor-navigator">
       <div class="services-editor-actions">
         <div class="services-editor-action transform-scale-plus" @click="selectService(0)">
           <img
@@ -74,16 +74,18 @@ export default {
 </script>
 
 <style lang='scss'>
+@import "@/styles/box-shadow.scss";
+
 .editor-container {
   height: calc(100vh - 65px);
   display: flex;
   flex-direction: row;
 }
 .services-editor-navigator {
-  height: 100%;
-  border-radius: 0 10px 10px 0;
   .services-editor-actions {
     padding: 10px 8px;
+    border-radius: 0 10px 10px 0;
+    @include box-shadow;
     &:hover {
       cursor: pointer;
     }
@@ -116,9 +118,9 @@ export default {
     height: min-content;
     width: min-content;
     margin: 0 auto;
-    border-radius: 10px;
     .services-editor-actions {
       padding: 6px;
+      border-radius: 10px;
       display: flex;
       justify-content: center;
       .services-editor-action {

@@ -41,26 +41,13 @@
     </v-container>
     <!-- Secondary -->
     <v-container>
-      <div class="secondary-container row">
-        <div class="secondary-content col-sm-5">
-          <h1 class="secondary-title">BrainTutor</h1>
-          <div
-            class="secondary-description"
-          >Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus esse laboriosam minus eveniet rem ullam quis libero, cum aspernatur deleniti totam quam at repellat vero nam repellendus officiis beatae magni.</div>
+      <div class="secondary-container row" v-for="(post, p_idx) in posts" :key="p_idx">
+        <div class="secondary-content col-sm-4">
+          <h1 class="secondary-title">{{post.title}}</h1>
+          <div class="secondary-description">{{post.description}}</div>
         </div>
-        <div class="secondary-image col-sm-7">
-          <img class="transform-scale elevation-3" src="@/assets/ui/materials.png" alt />
-        </div>
-      </div>
-      <div class="secondary-container row">
-        <div class="secondary-content col-sm-5">
-          <h1 class="secondary-title">BrainTutor</h1>
-          <div
-            class="secondary-description"
-          >Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus esse laboriosam minus eveniet rem ullam quis libero, cum aspernatur deleniti totam quam at repellat vero nam repellendus officiis beatae magni.</div>
-        </div>
-        <div class="secondary-image col-sm-7">
-          <img class="transform-scale elevation-3" src="@/assets/ui/materials.png" alt />
+        <div class="secondary-image col-sm-8">
+          <img class="transform-scale elevation-3" :src="post.image" alt />
         </div>
       </div>
     </v-container>
@@ -109,6 +96,32 @@ export default {
         description: "Accesible desde cualquier dispositivo",
         image:
           "https://images.vexels.com/media/users/3/136857/isolated/preview/a9e86748f463c75ad1a6a58e06abf25d-icono-plana-smartphone-by-vexels.png"
+      }
+    ],
+    posts: [
+      {
+        title: "Material",
+        description:
+          "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus esse laboriosam minus eveniet rem ullam quis libero, cum aspernatur deleniti totam quam at repellat vero nam repellendus officiis beatae magni.",
+        image: require("@/assets/ui/material-2.png")
+      },
+      {
+        title: "Material Editor",
+        description:
+          "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus esse laboriosam minus eveniet rem ullam quis libero, cum aspernatur deleniti totam quam at repellat vero nam repellendus officiis beatae magni.",
+        image: require("@/assets/ui/material-editor-2.png")
+      },
+      {
+        title: "Quiz",
+        description:
+          "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus esse laboriosam minus eveniet rem ullam quis libero, cum aspernatur deleniti totam quam at repellat vero nam repellendus officiis beatae magni.",
+        image: require("@/assets/ui/quiz.png")
+      },
+      {
+        title: "Task",
+        description:
+          "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus esse laboriosam minus eveniet rem ullam quis libero, cum aspernatur deleniti totam quam at repellat vero nam repellendus officiis beatae magni.",
+        image: require("@/assets/ui/task.png")
       }
     ]
   }),
@@ -198,7 +211,7 @@ export default {
         font-weight: bold;
       }
       .service-descripcion {
-        font-size: .9rem;
+        font-size: 0.9rem;
         font-weight: lighter;
       }
     }
@@ -213,11 +226,11 @@ export default {
   .secondary-content {
     margin-bottom: 20px;
     .secondary-title {
-      font-size: 2rem;
+      font-size: 1.4rem;
     }
     .secondary-description {
       margin-top: 16px;
-      font-size: 1.4rem;
+      font-size: 1.1rem;
       font-weight: lighter;
     }
     .secondary-action {
@@ -227,12 +240,13 @@ export default {
     }
   }
   .secondary-image {
-    padding: 0 30px;
+    padding: 0 18px;
     display: flex;
     align-items: center;
     justify-content: center;
     img {
-      width: 100%;
+      max-height: 420px;
+      max-width: 100%;
       border-radius: 10px;
     }
   }
