@@ -99,34 +99,34 @@ export default {
       }
     ],
     posts: [
+      // {
+      //   title: "Material",
+      //   description:
+      //     "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus esse laboriosam minus eveniet rem ullam quis libero, cum aspernatur deleniti totam quam at repellat vero nam repellendus officiis beatae magni.",
+      //   image: require("@/assets/ui/material.png")
+      // },
       {
-        title: "Material",
+        title: "Clases Virtuales",
         description:
-          "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus esse laboriosam minus eveniet rem ullam quis libero, cum aspernatur deleniti totam quam at repellat vero nam repellendus officiis beatae magni.",
-        image: require("@/assets/ui/material.png")
-      },
-      {
-        title: "Material Editor",
-        description:
-          "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus esse laboriosam minus eveniet rem ullam quis libero, cum aspernatur deleniti totam quam at repellat vero nam repellendus officiis beatae magni.",
+          "Con BrainTutor podrás crear tus clases de manera rápida y sencilla.",
         image: require("@/assets/ui/material-editor.png")
       },
       {
-        title: "Quiz",
+        title: "Evaluaciones",
         description:
-          "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus esse laboriosam minus eveniet rem ullam quis libero, cum aspernatur deleniti totam quam at repellat vero nam repellendus officiis beatae magni.",
+          "Con BrainTutor podrás crear evaluaciones, para poner a prueba a tus estudiantes.",
         image: require("@/assets/ui/quiz.jpg")
       },
       {
-        title: "Chat",
+        title: "Docente Virtual",
         description:
-          "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus esse laboriosam minus eveniet rem ullam quis libero, cum aspernatur deleniti totam quam at repellat vero nam repellendus officiis beatae magni.",
+          "Tendrás tu propio bot virtual, el cual responderá las dudas de los estudiantes en base al contenido ingresado por el docente.",
         image: require("@/assets/ui/chat.jpg")
       },
       {
-        title: "Task",
+        title: "Tareas",
         description:
-          "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus esse laboriosam minus eveniet rem ullam quis libero, cum aspernatur deleniti totam quam at repellat vero nam repellendus officiis beatae magni.",
+          "Puedes crear y revisar tareas, las cuales serán notificadas a los estudiantes.",
         image: require("@/assets/ui/task.png")
       }
     ]
