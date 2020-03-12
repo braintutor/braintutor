@@ -67,6 +67,7 @@ export default {
     messages: [new Message("Hola.\n¿En qué puedo ayudarte?", 0)],
     message_text: "",
     chatbot_id: "",
+    response_delay: 300,
     icons: [
       {
         category: "overview",
@@ -173,7 +174,7 @@ export default {
           } finally {
             this.loading_message = false;
           }
-        }, 500);
+        }, this.response_delay);
       }
     },
     talkMessage() {
