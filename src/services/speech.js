@@ -22,4 +22,11 @@ function TextToSpeech(text, callback) {
   }
 }
 
-export { SpeechToText, TextToSpeech }
+function stopSpeech() {
+  if ("speechSynthesis" in window) {
+    var synth = window.speechSynthesis;
+    synth.cancel();
+  }
+}
+
+export { SpeechToText, TextToSpeech, stopSpeech }

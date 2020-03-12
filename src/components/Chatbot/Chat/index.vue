@@ -146,30 +146,33 @@ export default {
         let action = null;
         let icon = null;
         this.loading_message = true;
+        this.component_avatar.stopTalk();
 
         this.addMessage(message_text, 1);
         this.message_text = "";
 
-        try {
-          let { answer, material_id, category } = await getAnswer(
-            this.chatbot_id,
-            message_text
-          );
-          if (material_id) {
-            action = () => {
-              let material = this.getMaterial(material_id);
-              this.selectService(0);
-              this.component_materials.selectMaterial(material, category);
-              scrollLeft("chatbot-scroll");
-            };
-            icon = this.icons.find(i => i.category === category);
+        setTimeout(() => {
+          try {
+            let { answer, material_id, category } = await getAnswer(
+              this.chatbot_id,
+              message_text
+            );
+            if (material_id) {
+              action = () => {
+                let material = this.getMaterial(material_id);
+                this.selectService(0);
+                this.component_materials.selectMaterial(material, category);
+                scrollLeft("chatbot-scroll");
+              };
+              icon = this.icons.find(i => i.category === category);
+            }
+            this.addMessage(answer, 0, action, icon);
+          } catch (error) {
+            // I want application to not crush, but don't care about the message
+          } finally {
+            this.loading_message = false;
           }
-          this.addMessage(answer, 0, action, icon);
-        } catch (error) {
-          // I want application to not crush, but don't care about the message
-        } finally {
-          this.loading_message = false;
-        }
+        }, 500);
       }
     },
     talkMessage() {

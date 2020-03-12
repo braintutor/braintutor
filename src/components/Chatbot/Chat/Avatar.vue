@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { TextToSpeech } from "@/services/speech";
+import { TextToSpeech, stopSpeech } from "@/services/speech";
 
 export default {
   data: () => ({
@@ -114,6 +114,10 @@ export default {
     startTalk(text) {
       this.startAnimationTalk();
       TextToSpeech(text, () => this.startAnimationNormal());
+    },
+    stopTalk() {
+      stopSpeech();
+      this.startAnimationNormal();
     }
   }
 };
