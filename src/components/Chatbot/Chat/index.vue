@@ -151,7 +151,7 @@ export default {
         this.addMessage(message_text, 1);
         this.message_text = "";
 
-        setTimeout(() => {
+        setTimeout(() => { // delay response for more realism
           try {
             let { answer, material_id, category } = await getAnswer(
               this.chatbot_id,
