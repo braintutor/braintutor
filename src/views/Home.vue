@@ -103,13 +103,13 @@ export default {
         title: "Material",
         description:
           "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus esse laboriosam minus eveniet rem ullam quis libero, cum aspernatur deleniti totam quam at repellat vero nam repellendus officiis beatae magni.",
-        image: require("@/assets/ui/material-2.png")
+        image: require("@/assets/ui/material.png")
       },
       {
         title: "Material Editor",
         description:
           "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus esse laboriosam minus eveniet rem ullam quis libero, cum aspernatur deleniti totam quam at repellat vero nam repellendus officiis beatae magni.",
-        image: require("@/assets/ui/material-editor-2.png")
+        image: require("@/assets/ui/material-editor.png")
       },
       {
         title: "Quiz",
