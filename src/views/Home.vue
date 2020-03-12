@@ -115,7 +115,13 @@ export default {
         title: "Quiz",
         description:
           "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus esse laboriosam minus eveniet rem ullam quis libero, cum aspernatur deleniti totam quam at repellat vero nam repellendus officiis beatae magni.",
-        image: require("@/assets/ui/quiz.png")
+        image: require("@/assets/ui/quiz.jpg")
+      },
+      {
+        title: "Chat",
+        description:
+          "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus esse laboriosam minus eveniet rem ullam quis libero, cum aspernatur deleniti totam quam at repellat vero nam repellendus officiis beatae magni.",
+        image: require("@/assets/ui/chat.jpg")
       },
       {
         title: "Task",
