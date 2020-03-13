@@ -9,7 +9,13 @@
     </div>
     <loading :active="loading_courses" />
     <div class="course" v-for="(course, co_idx) in courses" :key="co_idx">
-      <h1 class="course__title">{{course.name}}</h1>
+      <div class="course__menu">
+        <h1 class="course__title">{{course.name}}</h1>
+        <v-btn icon @click="editCourse(course)">
+          <v-icon>mdi-cog-outline</v-icon>
+        </v-btn>
+      </div>
+
       <v-container fluid class="pa-0">
         <v-row no-gutters>
           <v-col
@@ -35,7 +41,14 @@
                 }]"
             />
           </v-col>
-          <v-col v-if="course.chatbots.length < 4" class="create pa-3" cols="6" sm="4" md="3" lg="2">
+          <v-col
+            v-if="course.chatbots.length < 4"
+            class="create pa-3"
+            cols="6"
+            sm="4"
+            md="3"
+            lg="2"
+          >
             <div class="create__content" @click="createChatbot(course)">
               <v-icon>mdi-plus</v-icon>
             </div>
@@ -89,6 +102,9 @@ export default {
   },
   methods: {
     redirect,
+    editCourse(course) {
+      redirect("course-editor", { course_id: course._id.$oid });
+    },
     selectChatbot(chatbot) {
       redirect("chatbot", { chatbot_id: chatbot._id.$oid });
     },
@@ -141,8 +157,12 @@ export default {
     padding: 10px;
     border-radius: 10px;
     // @include box-shadow;
-    &__title {
+    &__menu {
       padding: 8px 16px 4px 16px;
+      display: flex;
+      justify-content: space-between;
+    }
+    &__title {
       font-size: 1.5rem;
     }
   }
