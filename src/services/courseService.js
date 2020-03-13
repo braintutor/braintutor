@@ -21,4 +21,11 @@ function updateCourse(course) {
   })
 }
 
-export { getCourses, getCourse, getAllCourses, updateCourse }
+function removeStudent(course_id, student_id) {
+  return fetch_post('removeStudent', {
+    course_id,
+    student_id
+  })
+}
+
+export { getCourses, getCourse, getAllCourses, updateCourse, removeStudent }
