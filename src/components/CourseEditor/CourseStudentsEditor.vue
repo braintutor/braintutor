@@ -32,12 +32,16 @@
     <v-dialog v-model="dialog" max-width="1000">
       <v-card class="students">
         <form @submit.prevent="searchStudent()" class="students__search">
+          <strong class="mt-1 mr-3">Buscar:</strong>
           <v-text-field v-model="new_student_search" hide-details dense autocomplete="off"></v-text-field>
           <v-btn class="ml-3" icon type="submit">
             <v-icon>mdi-magnify</v-icon>
           </v-btn>
         </form>
-        <div class="students__list row no-gutters">
+        <div class="students__loading" v-if="loading_search">
+          <v-progress-circular :size="100" :width="4" color="success" indeterminate></v-progress-circular>
+        </div>
+        <div v-else class="students__list row no-gutters">
           <div
             class="col-6 col-sm-4 col-md-3 pa-2"
             v-for="(student, s_idx) in new_students"
@@ -102,7 +106,8 @@ export default {
     new_students: [],
     //
     dialog: false,
-    loading: true
+    loading: true,
+    loading_search: false
   }),
   async mounted() {
     this.course_id = getParam("course_id");
@@ -123,7 +128,7 @@ export default {
       this.loading = false;
     },
     async searchStudent() {
-      this.loading = true;
+      this.loading_search = true;
 
       let students_idx = this.students.map(student => student._id.$oid); // get enrolled students idx
       let new_students = await getStudents(this.new_student_search); // search students in bd
@@ -132,7 +137,7 @@ export default {
       });
       this.new_students = new_students;
 
-      this.loading = false;
+      this.loading_search = false;
     },
     async addStudent(student) {
       let student_id = student._id.$oid;
@@ -156,7 +161,17 @@ export default {
   $self: &;
   padding: 20px;
   &__search {
+    font-size: 1rem;
     display: flex;
+    align-items: center;
+    * {
+      font-size: 1rem;
+    }
+  }
+  &__loading {
+    padding: 30px;
+    display: flex;
+    justify-content: center;
   }
   &__list {
     padding-top: 10px;
