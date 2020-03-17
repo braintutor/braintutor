@@ -6,4 +6,10 @@ function getStudent(student_id) {
   })
 }
 
-export { getStudent }
+function getStudents(text) {
+  return fetch_post('getStudents', {
+    text
+  })
+}
+
+export { getStudent, getStudents }

@@ -1,98 +1,55 @@
 <template>
   <div class="course-editor container">
-    <loading :active="loading" />
-    <h1 class="course-editor__title">Configuración</h1>
+    <aside class="course-editor__nav">
+      <div class="course-editor__nav-link transform-scale-plus" @click="editor_idx = 0">
+        <img
+          src="https://icons.iconarchive.com/icons/grafikartes/flat-retro-modern/512/settings-icon.png"
+          alt
+        />
+      </div>
+      <div class="course-editor__nav-link transform-scale-plus" @click="editor_idx = 1">
+        <img src="https://cdn0.iconfinder.com/data/icons/user-collection-4/512/users-512.png" alt />
+      </div>
+    </aside>
     <div class="course-editor__content">
-      <div class="course-editor__block">
-        <span class="course-editor__subtitle">Nombre:</span>
-        <v-text-field
-          class="course-editor__input"
-          v-model="course.name"
-          dense
-          hide-details
-          autocomplete="off"
-        ></v-text-field>
+      <div v-show="editor_idx === 0">
+        <h5 v-if="loading">Cargando ...</h5>
+        <h2 class="course-editor__title">Configuración</h2>
+        <div class="course-editor__block py-5">
+          <span class="course-editor__subtitle">Nombre:</span>
+          <v-text-field
+            class="course-editor__input"
+            v-model="course.name"
+            dense
+            hide-details
+            autocomplete="off"
+          ></v-text-field>
+        </div>
+        <div class="course-editor__actions">
+          <v-btn color="primary" @click="save()">Guardar</v-btn>
+        </div>
       </div>
-      <div class="course-editor__block">
-        <span class="course-editor__subtitle">Alumnos</span>
-        <v-btn rounded small color="success" @click="addStudent()">
-          Añadir
-          <v-icon right>mdi-plus</v-icon>
-        </v-btn>
-      </div>
-      <!-- <div class="course-editor__block"> -->
-      <!-- <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          hide-details
-      ></v-text-field>-->
-      <v-data-table
-        :headers="headers"
-        :items="students"
-        :search="search"
-        :loading="loading"
-        loading-text="Cargando"
-        hide-default-footer
-      >
-        <template v-slot:item._id="{ item }">
-          <v-icon @click="removeStudent(item)">mdi-delete</v-icon>
-        </template>
-      </v-data-table>
-      <!-- </div> -->
-    </div>
-    <div class="course-editor__actions">
-      <v-btn color="primary" @click="save()">Guardar</v-btn>
+      <CourseStudentsEditor v-show="editor_idx === 1" />
     </div>
   </div>
 </template>
 
 <script>
-import loading from "@/components/loading";
+import CourseStudentsEditor from "@/components/CourseEditor/CourseStudentsEditor";
 
 import { getParam } from "@/services/router.js";
-import {
-  getCourse,
-  updateCourse,
-  removeStudent
-} from "@/services/courseService.js";
-import { getStudent } from "@/services/studentService.js";
+import { getCourse, updateCourse } from "@/services/courseService.js";
 
 export default {
   data: () => ({
     course: {},
-    //table
-    search: "",
-    headers: [
-      {
-        text: "Nombre",
-        value: "name",
-        align: "start"
-      },
-      {
-        text: "Usuario",
-        value: "user",
-        align: "start"
-      },
-      {
-        text: "Acción",
-        value: "_id",
-        align: "end"
-      }
-    ],
-    students: [],
-    //
+    editor_idx: 1,
     loading: true
   }),
   async mounted() {
     let course_id = getParam("course_id");
     this.course = await getCourse(course_id);
-
     this.course.id = course_id;
-    this.students = await Promise.all(
-      this.course.students.map(student => getStudent(student.$oid))
-    );
     this.loading = false;
   },
   methods: {
@@ -102,31 +59,57 @@ export default {
         await updateCourse(this.course);
         this.loading = false;
       }
-    },
-    async removeStudent(student) {
-      this.loading = true;
-
-      let student_id = student._id.$oid;
-      await removeStudent(this.course.id, student_id);
-      this.students = this.students.filter(s => s._id.$oid !== student_id);
-
-      this.loading = false;
     }
   },
   components: {
-    loading
+    CourseStudentsEditor
   }
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang='scss'>
 @import "@/styles/box-shadow.scss";
 
 .course-editor {
   $self: &;
-  padding: 20px 30px;
+  padding: 0 12px;
   border-radius: 10px;
-  @include box-shadow;
+  display: flex;
+
+  &__nav {
+    height: min-content;
+    padding: 10px 8px;
+    margin-right: 20px;
+    border-radius: 10px;
+    @include box-shadow;
+    display: flex;
+    flex-direction: column;
+
+    #{$self}__nav-link {
+      padding: 10px 4px;
+      img {
+        vertical-align: bottom;
+        width: 36px;
+        height: 36px;
+      }
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  &__content {
+    flex-grow: 1;
+    padding: 20px 30px;
+    border-radius: 10px;
+    @include box-shadow;
+
+    #{$self}__block {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+  }
 
   &__title {
     font-size: 1.5rem;
@@ -136,21 +119,34 @@ export default {
     font-weight: bold;
     margin-right: 16px;
   }
-  &__content {
-    padding: 16px 0;
-    #{$self}__block {
-      padding: 16px 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-    }
-  }
   &__input {
     font-size: 1.1rem;
   }
   &__actions {
     width: min-content;
     margin: 0 auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .course-editor {
+    $self: &;
+    flex-direction: column;
+
+    &__nav {
+      width: min-content;
+      padding: 8px;
+      margin: 0 auto 10px auto;
+      flex-direction: row;
+
+      #{$self}__nav-link {
+        padding: 0 8px;
+        img {
+          width: 32px;
+          height: 32px;
+        }
+      }
+    }
   }
 }
 </style>
