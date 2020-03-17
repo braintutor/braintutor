@@ -1,5 +1,6 @@
 <template>
   <div class="course-editor container">
+    <loading :active="loading" />
     <aside class="course-editor__nav">
       <div class="course-editor__nav-link transform-scale-plus" @click="editor_idx = 0">
         <img
@@ -13,7 +14,6 @@
     </aside>
     <div class="course-editor__content">
       <div v-show="editor_idx === 0">
-        <h5 v-if="loading">Cargando ...</h5>
         <h2 class="course-editor__title">Configuración</h2>
         <div class="course-editor__block py-5">
           <span class="course-editor__subtitle">Nombre:</span>
@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import loading from "@/components/loading";
 import CourseStudentsEditor from "@/components/CourseEditor/CourseStudentsEditor";
 
 import { getParam } from "@/services/router.js";
@@ -62,7 +63,8 @@ export default {
     }
   },
   components: {
-    CourseStudentsEditor
+    CourseStudentsEditor,
+    loading
   }
 };
 </script>
