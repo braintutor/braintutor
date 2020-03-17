@@ -78,8 +78,7 @@ import loading from "@/components/loading";
 
 import {
   getKnowledge,
-  updateKnowledge,
-  removeKnowledge
+  updateKnowledge
 } from "@/services/knowledgeService";
 import { scrollDown } from "@/services/scroll";
 import { getParam } from "@/services/router.js";
@@ -87,7 +86,6 @@ import { getParam } from "@/services/router.js";
 export default {
   data: () => ({
     knowledge: [],
-    knowledge_to_eliminate: [],
     chatbot_id: "",
     //
     loading: false
@@ -107,14 +105,8 @@ export default {
       }, 100);
     },
     async saveKnowledge() {
-      let knowledge = this.knowledge.map(k => ({
-        ...k,
-        id: k._id ? k._id.$oid : ""
-      }));
       this.loading = true;
-      await removeKnowledge(this.chatbot_id, this.knowledge_to_eliminate);
-      this.knowledge_to_eliminate = [];
-      await updateKnowledge(this.chatbot_id, knowledge);
+      await updateKnowledge(this.chatbot_id, this.knowledge);
       this.loading = false;
 
       await this.restoreKnowledge();
@@ -122,14 +114,9 @@ export default {
     async restoreKnowledge() {
       this.loading = true;
       this.knowledge = await getKnowledge(this.chatbot_id);
-      this.knowledge_to_eliminate = [];
       this.loading = false;
     },
     removeKnowledge(knowledge_idx) {
-      let knowledge = this.knowledge[knowledge_idx];
-      if (knowledge._id) {
-        this.knowledge_to_eliminate.push(knowledge._id.$oid);
-      }
       this.knowledge.splice(knowledge_idx, 1);
     },
     add(knowledge, arr) {

@@ -13,11 +13,4 @@ function updateKnowledge(chatbot_id, knowledge) {
   })
 }
 
-function removeKnowledge(chatbot_id, knowledge_ids) {
-  return fetch_post('removeKnowledge', {
-    chatbot_id,
-    knowledge_ids
-  })
-}
-
-export { getKnowledge, updateKnowledge, removeKnowledge }
+export { getKnowledge, updateKnowledge }

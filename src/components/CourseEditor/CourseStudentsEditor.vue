@@ -159,8 +159,8 @@ export default {
 
 .students {
   $self: &;
-  padding: 20px;
   &__search {
+    padding: 10px 20px;
     font-size: 1rem;
     display: flex;
     align-items: center;
@@ -174,7 +174,9 @@ export default {
     justify-content: center;
   }
   &__list {
-    padding-top: 10px;
+    overflow-y: auto;
+    max-height: 400px;
+    padding: 10px;
   }
 }
 .student {
