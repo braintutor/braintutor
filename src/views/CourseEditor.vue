@@ -16,7 +16,7 @@
       <div v-show="editor_idx === 0">
         <h2 class="course-editor__title">Configuración</h2>
         <div class="course-editor__block py-5">
-          <span class="course-editor__subtitle">Nombre:</span>
+          <span class="course-editor__subtitle mt-1">Nombre:</span>
           <v-text-field
             class="course-editor__input"
             v-model="course.name"
@@ -109,7 +109,7 @@ export default {
     #{$self}__block {
       display: flex;
       justify-content: space-between;
-      align-items: flex-end;
+      align-items: center;
     }
   }
 
