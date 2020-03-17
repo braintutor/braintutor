@@ -169,7 +169,7 @@ export default {
     }
   }
   &__loading {
-    padding: 30px;
+    padding: 48px;
     display: flex;
     justify-content: center;
   }

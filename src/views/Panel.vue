@@ -8,7 +8,7 @@
       </v-text-field>
     </div>
     <loading :active="loading_courses" />
-    <div class="course" v-for="(course, co_idx) in courses" :key="co_idx">
+    <div class="course" v-for="(course, co_idx) in courses_filtered" :key="co_idx">
       <h1 class="course__title">{{course.name}}</h1>
       <v-container fluid class="pa-0">
         <v-row no-gutters>
@@ -59,16 +59,19 @@ export default {
     this.loading_courses = false;
   },
   computed: {
-    chatbots_filtered() {
-      return this.chatbots.filter(
-        chatbot =>
-          chatbot.name
-            .toLowerCase()
-            .includes(this.chatbot_filter.toLowerCase()) ||
-          chatbot.course
-            .toLowerCase()
-            .includes(this.chatbot_filter.toLowerCase())
-      );
+    courses_filtered() {
+      let courses = this.courses.reduce((arr, course) => {
+        course = Object.assign({}, course);
+        let chatbots = course.chatbots.filter(chatbot =>
+          chatbot.name.toLowerCase().includes(this.chatbot_filter.toLowerCase())
+        );
+        if (chatbots.length > 0) {
+          course.chatbots = chatbots;
+          arr.push(course);
+        }
+        return arr;
+      }, []);
+      return courses;
     },
     includes(text, filter) {
       return text.toLowerCase().includes(filter.toLowerCase());
@@ -107,7 +110,6 @@ export default {
     @include box-shadow;
   }
   .course {
-    padding: 10px;
     border-radius: 10px;
     // @include box-shadow;
     &__title {

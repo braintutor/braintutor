@@ -8,12 +8,12 @@
       </v-text-field>
     </div>
     <loading :active="loading_courses" />
-    <div class="course" v-for="(course, co_idx) in courses" :key="co_idx">
+    <div class="course" v-for="(course, co_idx) in courses_filtered" :key="co_idx">
       <div class="course__menu">
-        <h1 class="course__title">{{course.name}}</h1>
         <v-btn icon @click="editCourse(course)">
           <v-icon>mdi-cog-outline</v-icon>
         </v-btn>
+        <h1 class="course__title ml-2">{{course.name}}</h1>
       </div>
 
       <v-container fluid class="pa-0">
@@ -42,7 +42,7 @@
             />
           </v-col>
           <v-col
-            v-if="course.chatbots.length < 4"
+            v-if="courses[co_idx].chatbots.length < 4"
             class="create pa-3"
             cols="6"
             sm="4"
@@ -79,22 +79,24 @@ export default {
       courses.map(async course => {
         course.chatbots = await getChatbots(course._id.$oid);
         this.courses.push(course);
-        this.chatbots = course.chatbots;
       })
     );
     this.loading_courses = false;
   },
   computed: {
-    chatbots_filtered() {
-      return this.chatbots.filter(
-        chatbot =>
-          chatbot.name
-            .toLowerCase()
-            .includes(this.chatbot_filter.toLowerCase()) ||
-          chatbot.course
-            .toLowerCase()
-            .includes(this.chatbot_filter.toLowerCase())
-      );
+    courses_filtered() {
+      let courses = this.courses.reduce((arr, course) => {
+        course = Object.assign({}, course);
+        let chatbots = course.chatbots.filter(chatbot =>
+          chatbot.name.toLowerCase().includes(this.chatbot_filter.toLowerCase())
+        );
+        if (chatbots.length > 0) {
+          course.chatbots = chatbots;
+          arr.push(course);
+        }
+        return arr;
+      }, []);
+      return courses;
     },
     includes(text, filter) {
       return text.toLowerCase().includes(filter.toLowerCase());
@@ -154,13 +156,12 @@ export default {
     @include box-shadow;
   }
   .course {
-    padding: 10px;
     border-radius: 10px;
     // @include box-shadow;
     &__menu {
-      padding: 8px 16px 4px 16px;
+      padding: 8px 16px 4px 8px;
       display: flex;
-      justify-content: space-between;
+      align-items: center;
     }
     &__title {
       font-size: 1.5rem;
