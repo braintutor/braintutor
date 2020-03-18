@@ -1,7 +1,7 @@
 <template>
   <div>
     <loading :class="{active: loading_tasks}" />
-    <div v-show="!show_tasks_selected" class="calendar-container">
+    <div v-show="!show_tasks_selected" class="calendar-container pa-5">
       <div class="calendar-control">
         <span class="calendar-date">{{calendar_date}}</span>
         <div class="calendar-actions">
@@ -75,7 +75,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 
 export default {
   data: () => ({
-    chatbot_id: "",
+    course_id: "",
     task_date: "",
     tasks: [],
     task_delete_id: "",
@@ -101,7 +101,7 @@ export default {
     }
   },
   async mounted() {
-    this.chatbot_id = getParam("chatbot_id");
+    this.course_id = getParam("course_id");
     this.calendar = this.$refs.calendar.getApi();
     this.updateCalendarDate();
     await this.restoreTasks()
@@ -115,7 +115,7 @@ export default {
     async unselectTasks() {
       this.show_tasks_selected = false;
       this.loading_tasks = true;
-      this.tasks = await getTasks(this.chatbot_id);
+      this.tasks = await getTasks(this.course_id);
       this.loading_tasks = false;
     },
     async createTask() {
@@ -125,7 +125,7 @@ export default {
         description: "Detalle"
       };
       this.loading_tasks = true;
-      let task_id = await addTask(this.chatbot_id, new_task);
+      let task_id = await addTask(this.course_id, new_task);
       new_task._id = task_id;
       this.tasks.push(new_task);
       this.loading_tasks = false;
@@ -139,7 +139,7 @@ export default {
       tasks.forEach(task => {
         task.id = task._id.$oid;
       });
-      await updateTasks(this.chatbot_id, tasks);
+      await updateTasks(this.course_id, tasks);
       this.loading_tasks = false;
     },
     deleteTask(task_id) {
@@ -157,7 +157,7 @@ export default {
     },
     async restoreTasks() {
       this.loading_tasks = true;
-      this.tasks = await getTasks(this.chatbot_id);
+      this.tasks = await getTasks(this.course_id);
       this.loading_tasks = false;
     },
     // Calendar
@@ -202,7 +202,6 @@ export default {
 @import "~@fullcalendar/daygrid/main.css";
 
 .calendar-container {
-  padding: 20px;
   .calendar-control {
     display: flex;
     justify-content: space-between;

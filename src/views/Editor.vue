@@ -3,10 +3,7 @@
     <div class="services-editor-navigator">
       <div class="services-editor-actions">
         <div class="services-editor-action transform-scale-plus" @click="selectService(0)">
-          <img
-            src="https://icons.iconarchive.com/icons/grafikartes/flat-retro-modern/512/settings-icon.png"
-            alt
-          />
+          <img src="@/assets/braintutor/icon-settings.png" alt />
         </div>
         <div class="services-editor-action transform-scale-plus" @click="selectService(1)">
           <img src="@/assets/braintutor/icon-material.png" alt />
@@ -15,9 +12,6 @@
           <img src="@/assets/braintutor/icon-quiz.png" alt />
         </div>
         <div class="services-editor-action transform-scale-plus" @click="selectService(3)">
-          <img src="@/assets/braintutor/icon-task.png" alt />
-        </div>
-        <div class="services-editor-action transform-scale-plus" @click="selectService(4)">
           <img src="@/assets/braintutor/icon-knowledge.png" alt />
         </div>
         <v-divider class="divider-horizontal my-2"></v-divider>
@@ -33,15 +27,13 @@
     <ChatbotEditor class="m-fullscreen-content" v-show="service_idx == 0" />
     <MaterialsEditor class="m-fullscreen-content" v-show="service_idx == 1" />
     <QuizzesEditor class="m-fullscreen-content" v-show="service_idx == 2" />
-    <TasksEditor class="m-fullscreen-content" v-show="service_idx == 3" />
-    <KnowledgeEditor class="m-fullscreen-content" v-show="service_idx == 4" />
+    <KnowledgeEditor class="m-fullscreen-content" v-show="service_idx == 3" />
   </div>
 </template>
 
 <script>
 import MaterialsEditor from "@/components/Editor/MaterialsEditor/index";
 import QuizzesEditor from "@/components/Editor/QuizzesEditor/index";
-import TasksEditor from "@/components/Editor/TasksEditor/index";
 import KnowledgeEditor from "@/components/Editor/KnowledgeEditor";
 import ChatbotEditor from "@/components/Editor/ChatbotEditor";
 
@@ -66,7 +58,6 @@ export default {
   components: {
     MaterialsEditor,
     QuizzesEditor,
-    TasksEditor,
     KnowledgeEditor,
     ChatbotEditor
   }

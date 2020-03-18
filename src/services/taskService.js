@@ -1,21 +1,21 @@
 import { fetch_post } from "./fetch";
 
-function getTasks(chatbot_id) {
+function getTasks(course_id) {
   return fetch_post('getTasks', {
-    chatbot_id
+    course_id
   })
 }
 
-function addTask(chatbot_id, task) {
+function addTask(course_id, task) {
   return fetch_post('addTask', {
-    chatbot_id,
+    course_id,
     task
   })
 }
 
-function updateTasks(chatbot_id, tasks) {
+function updateTasks(course_id, tasks) {
   return fetch_post('updateTasks', {
-    chatbot_id,
+    course_id,
     tasks
   })
 }

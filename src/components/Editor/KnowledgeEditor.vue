@@ -108,7 +108,6 @@ export default {
       this.loading = true;
       await updateKnowledge(this.chatbot_id, this.knowledge);
       this.loading = false;
-
       await this.restoreKnowledge();
     },
     async restoreKnowledge() {

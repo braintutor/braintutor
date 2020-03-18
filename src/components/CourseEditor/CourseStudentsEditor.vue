@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="pa-5">
     <loading :active="loading" />
     <div class="course-editor__block">
       <h2 class="course-editor__title">Alumnos</h2>
