@@ -1,7 +1,7 @@
 <template>
   <div class="pa-5">
     <loading :active="loading" />
-    <div class="course-editor__block">
+    <div class="course-editor__block d-flex justify-space-between">
       <h2 class="course-editor__title">Alumnos</h2>
       <v-btn rounded small color="success" @click="dialog = true; searchStudent()">
         Añadir

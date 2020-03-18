@@ -11,8 +11,11 @@
       <div class="course-editor__nav-link transform-scale-plus" @click="editor_idx = 2">
         <img src="@/assets/braintutor/icon-task.png" alt />
       </div>
+      <div class="course-editor__nav-link transform-scale-plus" @click="editor_idx = 3">
+        <img src="@/assets/avatar/normal.png" alt />
+      </div>
     </aside>
-    <div class="course-editor__content ">
+    <div class="course-editor__content">
       <div v-show="editor_idx === 0" class="pa-5">
         <h2 class="course-editor__title">Configuración</h2>
         <div class="course-editor__block py-5">
@@ -29,16 +32,18 @@
           <v-btn color="primary" @click="save()">Guardar</v-btn>
         </div>
       </div>
-      <CourseStudentsEditor v-show="editor_idx === 1" />
+      <StudentsEditor v-show="editor_idx === 1" />
       <TasksEditor v-show="editor_idx === 2" />
+      <ChatbotsEditor v-show="editor_idx === 3" />
     </div>
   </div>
 </template>
 
 <script>
 import loading from "@/components/loading";
-import CourseStudentsEditor from "@/components/CourseEditor/CourseStudentsEditor";
+import StudentsEditor from "@/components/CourseEditor/StudentsEditor";
 import TasksEditor from "@/components/CourseEditor/TasksEditor/index";
+import ChatbotsEditor from "@/components/CourseEditor/ChatbotsEditor";
 
 import { getParam } from "@/services/router.js";
 import { getCourse, updateCourse } from "@/services/courseService.js";
@@ -46,7 +51,7 @@ import { getCourse, updateCourse } from "@/services/courseService.js";
 export default {
   data: () => ({
     course: {},
-    editor_idx: 2,
+    editor_idx: 0,
     loading: true
   }),
   async mounted() {
@@ -65,19 +70,20 @@ export default {
     }
   },
   components: {
-    CourseStudentsEditor,
+    StudentsEditor,
     TasksEditor,
+    ChatbotsEditor,
     loading
   }
 };
 </script>
 
-<style lang='scss'>
+<style lang='scss' scoped>
 @import "@/styles/box-shadow.scss";
 
 .course-editor {
   $self: &;
-  padding: 0 12px;
+  padding: 0 12px 12px 12px;
   border-radius: 10px;
   display: flex;
 
@@ -104,6 +110,7 @@ export default {
   }
 
   &__content {
+    height: min-content;
     flex-grow: 1;
     border-radius: 10px;
     @include box-shadow;

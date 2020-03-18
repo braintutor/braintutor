@@ -15,12 +15,6 @@
           v-show="service_selected === 1"
           :showServices="bool => showServices(bool)"
         />
-        <Tasks
-          class="m-fullscreen-content"
-          ref="component_tasks"
-          v-show="service_selected === 2"
-          :showServices="bool => showServices(bool)"
-        />
         <div v-show="show_services" class="services-navigator">
           <div class="services-actions elevation-3">
             <div class="services-action transform-scale-plus" @click="selectService(0)">
@@ -28,9 +22,6 @@
             </div>
             <div class="services-action transform-scale-plus" @click="selectService(1)">
               <img src="@/assets/braintutor/icon-quiz.png" alt />
-            </div>
-            <div class="services-action transform-scale-plus" @click="selectService(2)">
-              <img src="@/assets/braintutor/icon-task.png" alt />
             </div>
             <div
               class="services-action services-action-bot transform-scale-plus"
@@ -54,7 +45,6 @@
 import Chat from "@/components/Chatbot/Chat/index";
 import Materials from "@/components/Chatbot/Materials/index";
 import Quizzes from "@/components/Chatbot/Quizzes/index";
-import Tasks from "@/components/Chatbot/Tasks/index";
 import loading from "@/components/loading";
 
 import { scrollRight } from "@/services/scroll";
@@ -105,7 +95,6 @@ export default {
     Chat,
     Materials,
     Quizzes,
-    Tasks,
     loading
   }
 };

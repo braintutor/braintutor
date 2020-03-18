@@ -1,61 +1,39 @@
 <template>
   <!-- Course List -->
   <v-container class="courses-container">
+    <loading :active="loading_courses" />
+    <!-- Search -->
     <span class="courses-title">Mis Cursos</span>
     <div class="courses-search">
-      <v-text-field v-model="chatbot_filter" dense hide-details>
+      <v-text-field v-model="course_filter" dense hide-details>
         <v-icon slot="append-outer">mdi-magnify</v-icon>
       </v-text-field>
     </div>
-    <loading :active="loading_courses" />
-    <div class="course" v-for="(course, co_idx) in courses_filtered" :key="co_idx">
-      <div class="course__menu">
-        <v-btn icon @click="editCourse(course)">
-          <v-icon>mdi-cog-outline</v-icon>
-        </v-btn>
-        <h1 class="course__title ml-2">{{course.name}}</h1>
-      </div>
-
-      <v-container fluid class="pa-0">
-        <v-row no-gutters>
-          <v-col
-            class="pa-3"
-            cols="6"
-            sm="4"
-            md="3"
-            lg="2"
-            v-for="(chatbot, c_idx) in course.chatbots"
-            :key="c_idx"
-          >
-            <Cartel
-              :title="chatbot.course"
-              :description="chatbot.name"
-              :image="'https://dekids.com.mx/wp-content/uploads/2016/01/descarga.png'"
-              :callback="() => {}"
-              :actions="[{
-                  icon: 'mdi-robot',
-                  callback: () => selectChatbot(chatbot)
+    <!-- Courses -->
+    <v-row no-gutters>
+      <v-col
+        class="pa-3"
+        cols="6"
+        sm="4"
+        md="3"
+        lg="2"
+        v-for="(course, c_idx) in courses_filtered"
+        :key="c_idx"
+      >
+        <Cartel
+          :title="course.name"
+          :image="'https://dekids.com.mx/wp-content/uploads/2016/01/descarga.png'"
+          :callback="() => {}"
+          :actions="[{
+                  icon: 'mdi-eye',
+                  callback: () => selectCourse(course)
                 },{
                   icon: 'mdi-square-edit-outline',
-                  callback: () => editChatbot(chatbot)
+                  callback: () => editCourse(course)
                 }]"
-            />
-          </v-col>
-          <v-col
-            v-if="courses[co_idx].chatbots.length < 4"
-            class="create pa-3"
-            cols="6"
-            sm="4"
-            md="3"
-            lg="2"
-          >
-            <div class="create__content" @click="createChatbot(course)">
-              <v-icon>mdi-plus</v-icon>
-            </div>
-          </v-col>
-        </v-row>
-      </v-container>
-    </div>
+        />
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -65,41 +43,23 @@ import Cartel from "@/components/Cartel";
 
 import { redirect } from "@/services/router.js";
 import { getCourses } from "@/services/courseService.js";
-import { getChatbots, addChatbot } from "@/services/chatbotService.js";
 
 export default {
   data: () => ({
     courses: [],
-    chatbot_filter: "",
+    course_filter: "",
     loading_courses: true
   }),
   async mounted() {
-    let courses = await getCourses();
-    await Promise.all(
-      courses.map(async course => {
-        course.chatbots = await getChatbots(course._id.$oid);
-        this.courses.push(course);
-      })
-    );
+    this.courses = await getCourses();
     this.loading_courses = false;
   },
   computed: {
     courses_filtered() {
-      let courses = this.courses.reduce((arr, course) => {
-        course = Object.assign({}, course);
-        let chatbots = course.chatbots.filter(chatbot =>
-          chatbot.name.toLowerCase().includes(this.chatbot_filter.toLowerCase())
-        );
-        if (chatbots.length > 0) {
-          course.chatbots = chatbots;
-          arr.push(course);
-        }
-        return arr;
-      }, []);
+      let courses = this.courses.filter(course =>
+        course.name.toLowerCase().includes(this.course_filter.toLowerCase())
+      );
       return courses;
-    },
-    includes(text, filter) {
-      return text.toLowerCase().includes(filter.toLowerCase());
     }
   },
   methods: {
@@ -107,26 +67,8 @@ export default {
     editCourse(course) {
       redirect("course-editor", { course_id: course._id.$oid });
     },
-    selectChatbot(chatbot) {
-      redirect("chatbot", { chatbot_id: chatbot._id.$oid });
-    },
-    editChatbot(chatbot) {
-      redirect("editor", { chatbot_id: chatbot._id.$oid });
-    },
-    async createChatbot(course) {
-      this.loading_courses = true;
-      let course_id = course._id.$oid;
-      let chatbot = {
-        name: "Nombre",
-        students: []
-      };
-
-      let chatbot_id = await addChatbot(course_id, chatbot);
-      if (chatbot_id.$oid) {
-        chatbot._id = chatbot_id;
-        this.editChatbot(chatbot);
-      }
-      this.loading_courses = false;
+    selectCourse(course) {
+      redirect("course", { course_id: course._id.$oid });
     }
   },
   components: {
@@ -154,39 +96,6 @@ export default {
     padding: 10px 24px 10px 32px;
     border-radius: 50px;
     @include box-shadow;
-  }
-  .course {
-    border-radius: 10px;
-    // @include box-shadow;
-    &__menu {
-      padding: 8px 16px 4px 8px;
-      display: flex;
-      align-items: center;
-    }
-    &__title {
-      font-size: 1.5rem;
-    }
-  }
-}
-.create {
-  &__content {
-    // height: 100%;
-    min-height: 180px;
-    border: 2px solid #c2c2c2;
-    border-style: dashed;
-    border-radius: 10px;
-    transition: all 0.3s;
-    //
-    display: flex;
-    justify-content: center;
-    & * {
-      color: #c2c2c2;
-      font-size: 40px !important;
-    }
-    &:hover {
-      cursor: pointer;
-      background: #eeeeee;
-    }
   }
 }
 </style>

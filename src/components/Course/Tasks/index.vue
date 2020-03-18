@@ -1,5 +1,5 @@
 <template>
-  <div class="list">
+  <div>
     <div v-show="!tasks_selected" class="calendar-container">
       <div class="calendar-control">
         <span class="calendar-date">{{calendar_date}}</span>
@@ -26,7 +26,12 @@
       />
     </div>
     <!-- Task Selected -->
-    <Task v-show="tasks_selected" :task_date="task_date" :tasks="tasks_selected" :unselectTasks="unselectTasks" />
+    <Task
+      v-show="tasks_selected"
+      :task_date="task_date"
+      :tasks="tasks_selected"
+      :unselectTasks="unselectTasks"
+    />
   </div>
 </template>
 
@@ -44,7 +49,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 export default {
   data: () => ({
     tasks: [],
-    task_date: '',
+    task_date: "",
     tasks_selected: null,
     //
     calendar: null,
@@ -62,16 +67,16 @@ export default {
     }
   },
   async mounted() {
-    this.chatbot_id = getParam("chatbot_id");
+    this.course_id = getParam("course_id");
     this.calendar = this.$refs.calendar.getApi();
 
     this.updateCalendarDate();
-    this.tasks = await getTasks(this.chatbot_id);
+    this.tasks = await getTasks(this.course_id);
     this.loading_tasks = false;
   },
   methods: {
     dateClick({ dateStr }) {
-      this.task_date = dateStr
+      this.task_date = dateStr;
       let tasks = this.tasks.filter(task => task.date === dateStr);
       if (tasks.length > 0) this.selectTasks(tasks);
     },
@@ -127,7 +132,7 @@ export default {
 }
 
 .calendar-container {
-  padding: 20px 20px 40px 20px;
+  padding: 20px;
   .calendar-control {
     display: flex;
     justify-content: space-between;
