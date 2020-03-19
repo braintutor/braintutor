@@ -13,7 +13,7 @@
                 }]"
         />
       </div>
-      <div class="col-6 col-sm-4 col-md-3 pa-2">
+      <div v-if="chatbots.length < 4" class="col-6 col-sm-4 col-md-3 pa-2">
         <div class="create transform-scale" @click="createChatbot()">+</div>
       </div>
     </div>
