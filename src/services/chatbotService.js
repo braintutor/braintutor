@@ -25,4 +25,10 @@ function updateChatbot(chatbot) {
   })
 }
 
-export { getChatbot, getChatbots, addChatbot, updateChatbot }
+function removeChatbot(chatbot_id) {
+  return fetch_post('removeChatbot', {
+    chatbot_id
+  })
+}
+
+export { getChatbot, getChatbots, addChatbot, updateChatbot, removeChatbot }

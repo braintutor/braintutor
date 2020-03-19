@@ -16,6 +16,7 @@
       </div>
     </div>
     <div id="knowledge-scroll" class="editor-content m-fullscreen-content">
+      <p v-if="knowledge.length <= 0" class="editor-empty">No hay conocimientos.</p>
       <div class="editor-knowledge" v-for="(k, k_idx) in knowledge" :key="k_idx">
         <div class="editor-knowledge-row row no-gutters">
           <div
@@ -76,10 +77,7 @@
 <script>
 import loading from "@/components/loading";
 
-import {
-  getKnowledge,
-  updateKnowledge
-} from "@/services/knowledgeService";
+import { getKnowledge, updateKnowledge } from "@/services/knowledgeService";
 import { scrollDown } from "@/services/scroll";
 import { getParam } from "@/services/router.js";
 
@@ -153,6 +151,11 @@ export default {
   }
   .editor-content {
     padding: 10px 14px;
+    .editor-empty {
+      color: rgb(148, 148, 148);
+      font-size: 1rem;
+      text-align: center;
+    }
     .editor-knowledge {
       padding: 8px 0;
       display: flex;
