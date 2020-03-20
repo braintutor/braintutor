@@ -1,7 +1,13 @@
 <template>
   <div class="students-editor">
     <loading :active="loading" />
-    <h2 class="students-editor__title">Alumnos</h2>
+    <div class="students-editor__menu">
+      <h2 class="students-editor__title">Alumnos</h2>
+      <v-btn rounded small color="success" @click="dialog_edit = true; addStudent()">
+        Añadir
+        <v-icon right>mdi-plus</v-icon>
+      </v-btn>
+    </div>
     <div class="students-editor__content">
       <table class="table">
         <thead>
@@ -38,7 +44,8 @@
 
     <v-dialog v-model="dialog_edit" class="container" max-width="500">
       <v-card class="student-edit">
-        <v-card-title class="py-5">Editar Alumno</v-card-title>
+        <v-card-title v-if="action === 'create'" class="py-5">Crear Alumno</v-card-title>
+        <v-card-title v-else-if="action === 'edit'" class="py-5">Editar Alumno</v-card-title>
         <v-card-text class="student-edit__content">
           <span class="mt-1 mr-4">Nombres:</span>
           <v-text-field
@@ -88,13 +95,18 @@
 import loading from "@/components/loading";
 
 import { getSchool } from "@/services/schoolService";
-import { getStudents, updateStudent } from "@/services/studentService";
+import {
+  getStudents,
+  addStudent,
+  updateStudent
+} from "@/services/studentService";
 
 export default {
   data: () => ({
     school_id: "",
     students: [],
     student: {},
+    action: "",
     //
     dialog_edit: false,
     loading: true,
@@ -111,18 +123,34 @@ export default {
       student.showPassword = !student.showPassword;
       this.$forceUpdate();
     },
+    addStudent() {
+      this.action = "create";
+      this.student = {
+        first_name: "",
+        last_name: "",
+        user: "",
+        pass: ""
+      };
+    },
     editStudent(student) {
+      this.action = "edit";
       this.student = Object.assign({}, student);
       this.student.id = this.student._id.$oid;
       this.student.showPassword = false;
     },
     async saveStudent() {
       this.loading_save = true;
-      await updateStudent(this.student);
-      let student_idx = this.students.findIndex(
-        student => student._id.$oid === this.student.id
-      );
-      this.students[student_idx] = Object.assign({}, this.student);
+      if (this.action === "create") {
+        let student_id = await addStudent(this.student);
+        this.student._id = student_id;
+        this.students.push(this.student);
+      } else if (this.action === "edit") {
+        await updateStudent(this.student);
+        let student_idx = this.students.findIndex(
+          student => student._id.$oid === this.student.id
+        );
+        this.students[student_idx] = Object.assign({}, this.student);
+      }
       this.loading_save = false;
     }
   },
@@ -135,6 +163,10 @@ export default {
 <style lang='scss' scoped>
 .students-editor {
   padding: 10px 16px;
+  &__menu {
+    display: flex;
+    justify-content: space-between;
+  }
   &__title {
     margin-bottom: 10px;
   }

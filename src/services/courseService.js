@@ -21,8 +21,8 @@ function updateCourse(course) {
   })
 }
 
-function addStudent(course_id, student_id) {
-  return fetch_post('addStudent', {
+function addStudentToCourse(course_id, student_id) {
+  return fetch_post('addStudentToCourse', {
     course_id,
     student_id
   })
@@ -35,4 +35,4 @@ function removeStudent(course_id, student_id) {
   })
 }
 
-export { getCourses, getCourse, getAllCourses, updateCourse, addStudent, removeStudent }
+export { getCourses, getCourse, getAllCourses, updateCourse, addStudentToCourse, removeStudent }

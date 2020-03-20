@@ -18,10 +18,16 @@ function getStudentsByText(text) {
   })
 }
 
+function addStudent(student) {
+  return fetch_post('addStudent', {
+    student
+  })
+}
+
 function updateStudent(student) {
   return fetch_post('updateStudent', {
     student
   })
 }
 
-export { getStudent, getStudents, getStudentsByText, updateStudent }
+export { getStudent, getStudents, getStudentsByText, addStudent, updateStudent }

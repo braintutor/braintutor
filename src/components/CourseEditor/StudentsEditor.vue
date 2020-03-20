@@ -53,7 +53,7 @@
               <p class="student__user">{{student.user}}</p>
               <v-btn
                 v-if="student.enable"
-                @click="addStudent(student)"
+                @click="addStudentToCourse(student)"
                 :loading="student.loading"
                 color="success"
                 small
@@ -75,7 +75,7 @@ import { getParam } from "@/services/router.js";
 import {
   getCourse,
   removeStudent,
-  addStudent
+  addStudentToCourse
 } from "@/services/courseService.js";
 import { getStudent, getStudentsByText } from "@/services/studentService.js";
 
@@ -139,11 +139,11 @@ export default {
 
       this.loading_search = false;
     },
-    async addStudent(student) {
+    async addStudentToCourse(student) {
       let student_id = student._id.$oid;
       student.loading = true;
       this.$forceUpdate();
-      await addStudent(this.course_id, student_id);
+      await addStudentToCourse(this.course_id, student_id);
       this.students.push(student);
       student.enable = false;
     }
