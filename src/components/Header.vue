@@ -61,22 +61,22 @@ export default {
   data: () => ({
     links: [
       {
-        title: "Inicio",
-        name: "home",
-        icon: "home",
-        require_admin: false
-      },
-      {
         title: "Cursos",
         name: "panel",
         icon: "book",
-        require_admin: false
+        session_types: ["1", "2"]
       },
       {
         title: "Mis Cursos",
         name: "courses",
         icon: "book-plus-multiple",
-        require_admin: true
+        session_types: ["2"]
+      },
+      {
+        title: "Colegio",
+        name: "school-editor",
+        icon: "book-plus-multiple",
+        session_types: ["0"]
       }
     ],
     drawer: false
@@ -84,7 +84,7 @@ export default {
   computed: {
     links_filtered() {
       return this.links.filter(
-        l => (this.session && this.session.type == 0) || !l.require_admin
+        l => this.session && l.session_types.includes(this.session.type)
       );
     },
     session() {

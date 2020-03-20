@@ -1,5 +1,6 @@
 <template>
   <div class="m-fullcenter">
+    <loading :active="loading" />
     <v-card class="login_container" elevation="6">
       <div class="login_icon">
         <img src="@/assets/braintutor/icon.png" width="100%" />
@@ -16,6 +17,16 @@
             text
             dismissible
           >Usuario o contraseña incorrecta</v-alert>
+
+          <v-select
+            v-model="school_id"
+            :items="schools"
+            item-text="name"
+            item-value="id"
+            label="Colegio"
+          ></v-select>
+          <v-select v-model="type" :items="types" label="Tipo"></v-select>
+
           <v-text-field v-model="user" :rules="userRules" label="Usuario"></v-text-field>
           <v-text-field v-model="pass" :rules="passRules" label="Contraseña" type="password"></v-text-field>
         </v-card-text>
@@ -28,40 +39,65 @@
 </template>
 
 <script>
-import { loginTeacher, loginStudent } from "@/services/loginService";
+import loading from "@/components/loading";
+
+import {
+  loginAdmin
+  // loginTeacher,
+  // loginStudent
+} from "@/services/loginService";
+import { getSchools } from "@/services/schoolService";
 import { setSession } from "@/services/security";
 import { redirect } from "@/services/router.js";
 
 export default {
   data: () => ({
+    schools: [],
+    types: ["Estudiante", "Profesor", "Administrador"],
+    //
+    school_id: "",
+    type: "",
     user: "",
     pass: "",
     userRules: [v => !!v || "Usuario es requerido"],
     passRules: [v => !!v || "Contraseña es requerida"],
     //
+    loading: true,
     alert_error: false,
     loading_login: false
   }),
+  async mounted() {
+    let schools = await getSchools();
+    this.schools = schools.map(school => ({
+      ...school,
+      id: school._id.$oid
+    }));
+    this.loading = false;
+  },
   methods: {
     async login() {
       if (this.$refs.form_login.validate()) {
         this.loading_login = true;
-        let token = (await loginTeacher(this.user, this.pass)).token;
-        if (token) {
-          setSession(token, 0);
-          redirect("panel");
-          return;
+        let token = "";
+        let type = -1;
+
+        if (this.type === "Administrador") {
+          token = (await loginAdmin(this.school_id, this.user, this.pass))
+            .token;
+          type = 0;
         }
-        token = (await loginStudent(this.user, this.pass)).token;
         if (token) {
-          setSession(token, 1);
-          redirect("panel");
-          return;
+          setSession(token, type);
+          redirect("school-editor", { school_id: this.school_id });
+        } else {
+          this.alert_error = true;
+          this.loading_login = false;
         }
-        this.alert_error = true;
-        this.loading_login = false;
       }
     }
+  },
+  components: {
+    loading
   }
 };
 </script>

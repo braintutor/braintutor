@@ -77,7 +77,7 @@ import {
   removeStudent,
   addStudent
 } from "@/services/courseService.js";
-import { getStudent, getStudents } from "@/services/studentService.js";
+import { getStudent, getStudentsByText } from "@/services/studentService.js";
 
 export default {
   data: () => ({
@@ -131,7 +131,7 @@ export default {
       this.loading_search = true;
 
       let students_idx = this.students.map(student => student._id.$oid); // get enrolled students idx
-      let new_students = await getStudents(this.new_student_search); // search students in bd
+      let new_students = await getStudentsByText(this.new_student_search); // search students in bd
       new_students.forEach(student => {
         student.enable = !students_idx.includes(student._id.$oid); // enable enrollment button
       });

@@ -16,6 +16,11 @@ const routes = [
   },
   { path: '*', redirect: { name: 'home' } },
   {
+    path: '/school-editor',
+    name: 'school-editor',
+    component: () => import('../views/SchoolEditor.vue')
+  },
+  {
     path: '/login',
     name: 'login',
     component: () => import('../views/Login.vue')
@@ -60,30 +65,33 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   reset()
 
-  const paths_1 = ['panel', 'chatbot', 'course', 'courses', 'editor', 'course-editor'] // Require Session Exists
-  const paths_2 = ['courses', 'editor', 'course-editor'] // Require Admin
+  const require_session = ['panel', 'chatbot', 'course', 'courses', 'school-editor', 'editor', 'course-editor'] // Require Session Exists
+  const require_admin = ['school-editor'] // Require Admin
+  const require_teacher = ['courses', 'editor', 'course-editor'] // Require Teacher
   let to_name = to.name
 
-  if (paths_1.includes(to_name)) {
-    if (paths_2.includes(to_name)) {
-      if (getSession().type == 0)
-        next()
-      else
-        redirect('panel')
-    }
-    else
-      if (sessionExists())
-        next()
-      else
-        redirect('login')
-  } else if (to_name === 'login') {
-    if (sessionExists())
-      redirect('panel')
-    else
+  if (require_session.includes(to_name)) {
+    if (sessionExists()) {
+      // Admin
+      if (require_admin.includes(to_name)) {
+        if (getSession().type == 0)
+          next()
+        else
+          redirect('home')
+      }
+      // Teacher
+      if (require_teacher.includes(to_name)) {
+        if (getSession().type == 1)
+          next()
+        else
+          redirect('home')
+      }
       next()
-  } else {
-    next()
+    } else {
+      redirect('login')
+    }
   }
+  next()
 })
 
 function reset() {
