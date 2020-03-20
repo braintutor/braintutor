@@ -2,35 +2,39 @@
   <div class="students-editor">
     <loading :active="loading" />
     <h2 class="students-editor__title">Alumnos</h2>
-    <table class="table">
-      <thead>
-        <tr>
-          <th class="text-left">Nombre</th>
-          <th class="text-left">Usuario</th>
-          <th class="text-left">Contraseña</th>
-          <th class="text-left">Acción</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(student, s_idx) in students" :key="s_idx">
-          <td>{{ student.name }}</td>
-          <td>{{ student.user }}</td>
-          <td>
-            <v-btn class="mr-2" x-small icon @click="toogleShowPassword(student)">
-              <v-icon v-if="student.showPassword">mdi-eye</v-icon>
-              <v-icon v-else>mdi-eye-off</v-icon>
-            </v-btn>
-            <span v-if="student.showPassword">{{ student.pass }}</span>
-            <span v-else>*****</span>
-          </td>
-          <td>
-            <v-btn small icon>
-              <v-icon>mdi-plus</v-icon>
-            </v-btn>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="students-editor__content">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="text-left">Nombres</th>
+            <th class="text-left">Apellidos</th>
+            <th class="text-left">Usuario</th>
+            <th class="text-left">Contraseña</th>
+            <th class="text-left">Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(student, s_idx) in students" :key="s_idx">
+            <td>{{ student.first_name }}</td>
+            <td>{{ student.last_name }}</td>
+            <td>{{ student.user }}</td>
+            <td>
+              <v-btn class="mr-2" x-small icon @click="toogleShowPassword(student)">
+                <v-icon v-if="student.showPassword">mdi-eye</v-icon>
+                <v-icon v-else>mdi-eye-off</v-icon>
+              </v-btn>
+              <span v-if="student.showPassword">{{ student.pass }}</span>
+              <span v-else>*****</span>
+            </td>
+            <td>
+              <v-btn small icon>
+                <v-icon>mdi-plus</v-icon>
+              </v-btn>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -71,6 +75,9 @@ export default {
   &__title {
     margin-bottom: 10px;
   }
+  &__content {
+    overflow-x: auto;
+  }
 }
 
 .table {
@@ -78,7 +85,7 @@ export default {
   thead {
     tr {
       th {
-        padding: 8px 0;
+        padding: 8px 10px 8px 0;
         font-size: 1.1rem;
       }
     }
