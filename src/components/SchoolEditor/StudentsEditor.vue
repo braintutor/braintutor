@@ -36,7 +36,7 @@
       </table>
     </div>
 
-    <v-dialog v-model="dialog_edit" class="container" max-width="600">
+    <v-dialog v-model="dialog_edit" class="container" max-width="500">
       <v-card class="student-edit">
         <v-card-title class="py-5">Editar Alumno</v-card-title>
         <v-card-text class="student-edit__content">
@@ -114,6 +114,7 @@ export default {
     editStudent(student) {
       this.student = Object.assign({}, student);
       this.student.id = this.student._id.$oid;
+      this.student.showPassword = false;
     },
     async saveStudent() {
       this.loading_save = true;
