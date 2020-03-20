@@ -42,9 +42,9 @@
 import loading from "@/components/loading";
 
 import {
-  loginAdmin
-  // loginTeacher,
-  // loginStudent
+  loginAdmin,
+  loginTeacher,
+  loginStudent
 } from "@/services/loginService";
 import { getSchools } from "@/services/schoolService";
 import { setSession } from "@/services/security";
@@ -86,6 +86,17 @@ export default {
             .token;
           type = 0;
         }
+        if (this.type === "Profesor") {
+          token = (await loginTeacher(this.school_id, this.user, this.pass))
+            .token;
+          type = 1;
+        }
+        if (this.type === "Estudiante") {
+          token = (await loginStudent(this.school_id, this.user, this.pass))
+            .token;
+          type = 2;
+        }
+
         if (token) {
           setSession(token, type);
           redirect("school-editor", { school_id: this.school_id });

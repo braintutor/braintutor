@@ -41,6 +41,9 @@
         <div class="students__loading" v-if="loading_search">
           <v-progress-circular :size="100" :width="4" color="success" indeterminate></v-progress-circular>
         </div>
+        <div class="students__empty" v-else-if="new_students <= 0">
+          No hay resultados.
+        </div>
         <div v-else class="students__list row no-gutters">
           <div
             class="col-6 col-sm-4 col-md-3 pa-2"
@@ -49,7 +52,8 @@
           >
             <div class="student">
               <p class="student__id">{{student._id.$oid}}</p>
-              <p class="student__name">{{student.name}}</p>
+              <p class="student__name">{{student.first_name}}</p>
+              <p class="student__name">{{student.last_name}}</p>
               <p class="student__user">{{student.user}}</p>
               <v-btn
                 v-if="student.enable"
@@ -85,8 +89,13 @@ export default {
     search: "",
     headers: [
       {
-        text: "Nombre",
-        value: "name",
+        text: "Nombres",
+        value: "first_name",
+        align: "start"
+      },
+      {
+        text: "Apellidos",
+        value: "last_name",
         align: "start"
       },
       {
@@ -112,9 +121,14 @@ export default {
   async mounted() {
     this.course_id = getParam("course_id");
     let course = await getCourse(this.course_id);
-    this.students = await Promise.all(
-      course.students.map(student => getStudent(student.$oid))
-    );
+
+    if (course.students) {
+      this.students = await Promise.all(
+        course.students.map(student => getStudent(student.$oid))
+      );
+    }
+    console.log(this.students);
+
     this.loading = false;
   },
   methods: {
@@ -172,6 +186,12 @@ export default {
     padding: 48px;
     display: flex;
     justify-content: center;
+  }
+  &__empty {
+    padding: 8px 0 20px 0;
+    font-size: 1rem;
+    color: #7c7c7c;
+    text-align: center;
   }
   &__list {
     overflow-y: auto;

@@ -51,7 +51,7 @@ import { getCourse, updateCourse } from "@/services/courseService.js";
 export default {
   data: () => ({
     course: {},
-    editor_idx: 0,
+    editor_idx: 1,
     loading: true
   }),
   async mounted() {

@@ -70,7 +70,7 @@ export default {
         title: "Mis Cursos",
         name: "courses",
         icon: "book-plus-multiple",
-        session_types: ["2"]
+        session_types: ["1"]
       },
       {
         title: "Colegio",
