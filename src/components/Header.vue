@@ -14,8 +14,13 @@
           text
           @click="redirect(link.name)"
         >{{link.title}}</v-btn>
-        <v-btn class="header-action" v-if="!session" text @click="redirect('login')">Iniciar Sesión</v-btn>
-        <v-btn class="header-action" v-else text @click="closeSession()">Cerrar Sesión</v-btn>
+        <v-btn
+          class="header-action"
+          v-if="session && session.token"
+          text
+          @click="closeSession()"
+        >Cerrar Sesión</v-btn>
+        <v-btn class="header-action" v-else text @click="redirect('login')">Iniciar Sesión</v-btn>
       </div>
     </v-app-bar>
 
@@ -35,17 +40,17 @@
             </v-list-item-icon>
             <v-list-item-title>{{link.title}}</v-list-item-title>
           </v-list-item>
-          <v-list-item v-if="!session" @click="redirect('login'); drawer=false">
-            <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Iniciar Sesión</v-list-item-title>
-          </v-list-item>
-          <v-list-item v-else @click="closeSession(); drawer=false">
+          <v-list-item v-if="session && session.token" @click="closeSession(); drawer=false">
             <v-list-item-icon>
               <v-icon>mdi-account</v-icon>
             </v-list-item-icon>
             <v-list-item-title>Cerrar Sesión</v-list-item-title>
+          </v-list-item>
+          <v-list-item v-else @click="redirect('login'); drawer=false">
+            <v-list-item-icon>
+              <v-icon>mdi-account</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Iniciar Sesión</v-list-item-title>
           </v-list-item>
         </v-list-item-group>
       </v-list>
