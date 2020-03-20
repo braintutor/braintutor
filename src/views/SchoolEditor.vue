@@ -55,8 +55,6 @@ export default {
   methods: {
     async save() {
       this.loading = true;
-      console.log(this.school);
-
       await updateSchool(this.school);
       this.loading = false;
     }

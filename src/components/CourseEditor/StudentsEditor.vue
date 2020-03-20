@@ -127,8 +127,7 @@ export default {
         course.students.map(student => getStudent(student.$oid))
       );
     }
-    console.log(this.students);
-
+    
     this.loading = false;
   },
   methods: {
