@@ -18,4 +18,10 @@ function getStudentsByText(text) {
   })
 }
 
-export { getStudent, getStudents, getStudentsByText }
+function updateStudent(student) {
+  return fetch_post('updateStudent', {
+    student
+  })
+}
+
+export { getStudent, getStudents, getStudentsByText, updateStudent }
