@@ -188,7 +188,7 @@ export default {
 
   .material-menu {
     padding: 10px;
-    padding-top: 5px;
+    padding-top: 3px;
     display: flex;
     align-items: center;
     .material-title {

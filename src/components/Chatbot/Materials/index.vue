@@ -73,6 +73,10 @@ export default {
         },
         []
       );
+      categories.sort();
+      categories.sort((a, b) => {
+        return this.categories_ls[a].priority - this.categories_ls[b].priority;
+      });
       return categories;
     }
   },
@@ -119,7 +123,9 @@ export default {
 }
 .options {
   padding: 0 20px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  color: rgb(92, 92, 92);
+  //
   display: flex;
   align-items: center;
   justify-content: flex-end;
