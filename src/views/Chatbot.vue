@@ -7,6 +7,7 @@
           class="m-fullscreen-content"
           ref="component_materials"
           v-show="service_selected === 0"
+          :categories_ls="categories_ls"
           :showServices="bool => showServices(bool)"
         />
         <Quizzes
@@ -49,6 +50,8 @@ import loading from "@/components/loading";
 
 import { scrollRight } from "@/services/scroll";
 import { getParam } from "@/services/router.js";
+
+import { getCategoriesByLearningStyle } from "@/services/studentService.js";
 import { getMaterials } from "@/services/materialService";
 import { getQuestionTemplate } from "@/services/chatService";
 import { getKnowledge } from "@/services/knowledgeService";
@@ -58,20 +61,24 @@ export default {
     available_questions: [],
     show_services: true,
     service_selected: 0,
-    loading_chatbot: true
+    loading_chatbot: true,
+    categories_ls: {}
   }),
   async mounted() {
     // Components
     this.$store.commit("setComponentMaterials", this.$refs.component_materials);
     this.$store.commit("setComponentQuizzes", this.$refs.component_quizzes);
-
     let chatbot_id = getParam("chatbot_id");
+
+    this.categories_ls = await getCategoriesByLearningStyle();
+
     let materials = await getMaterials(chatbot_id);
     this.$store.commit("setMaterials", materials);
+
     let knowledge = await getKnowledge(chatbot_id);
     this.available_questions = knowledge.map(item => item.questions[0]);
-    let question_template = await getQuestionTemplate();
 
+    let question_template = await getQuestionTemplate();
     materials.forEach(material => {
       Object.values(question_template).forEach(value => {
         this.available_questions.push(value[0].replace(/@/, material.name));

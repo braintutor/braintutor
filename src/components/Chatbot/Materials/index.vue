@@ -36,25 +36,26 @@ import Material from "./Material/index";
 import { Clamp } from "@/services/math";
 
 export default {
-  props: ["showServices"],
+  props: ["showServices", "categories_ls"],
   data: () => ({
     material: null,
-    categories: [
-      "overview",
-      "explanation",
-      "bullets",
-      "examples",
-      "images",
-      "movies",
-      "exercises",
-      "faq",
-      "hyperlinks"
-    ],
     category_idx: 0
   }),
   computed: {
     materials() {
       return this.$store.state.materials;
+    },
+    categories() {
+      let categories = Object.entries(this.categories_ls).reduce(
+        (arr, [key, value]) => {
+          if (value) {
+            arr.push(key);
+          }
+          return arr;
+        },
+        []
+      );
+      return categories;
     }
   },
   methods: {

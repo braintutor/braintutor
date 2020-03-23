@@ -77,7 +77,8 @@ class PreguntaTest {
     this.enunciado = enunciado;
     this.alternatives = alternatives;
     // this.answer = null;
-    this.answer = Math.round(Math.random());
+    // this.answer = Math.round(Math.random());
+    this.answer = 1;
   }
 }
 

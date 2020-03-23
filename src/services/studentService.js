@@ -38,4 +38,8 @@ function updateLearningStyle(learning_style) {
   })
 }
 
-export { getStudent, getStudents, getStudentsByText, addStudent, updateStudent, getProfile, updateLearningStyle }
+function getCategoriesByLearningStyle() {
+  return fetch_get('getCategoriesByLearningStyle')
+}
+
+export { getStudent, getStudents, getStudentsByText, addStudent, updateStudent, getProfile, updateLearningStyle, getCategoriesByLearningStyle }
