@@ -1,4 +1,4 @@
-import { fetch_post } from "./fetch";
+import { fetch_get, fetch_post } from "./fetch";
 
 function getStudent(student_id) {
   return fetch_post('getStudent', {
@@ -6,10 +6,8 @@ function getStudent(student_id) {
   })
 }
 
-function getStudents(school_id) {
-  return fetch_post('getStudents', {
-    school_id
-  })
+function getStudents() {
+  return fetch_get('getStudents')
 }
 
 function getStudentsByText(text) {
@@ -30,4 +28,14 @@ function updateStudent(student) {
   })
 }
 
-export { getStudent, getStudents, getStudentsByText, addStudent, updateStudent }
+function getProfile() {
+  return fetch_get('getProfile')
+}
+
+function updateLearningStyle(learning_style) {
+  return fetch_post('updateLearningStyle', {
+    learning_style
+  })
+}
+
+export { getStudent, getStudents, getStudentsByText, addStudent, updateStudent, getProfile, updateLearningStyle }

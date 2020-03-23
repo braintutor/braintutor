@@ -12,17 +12,17 @@ export default {
 
 <style lang='scss' scoped>
 .loading {
-  position: absolute;
+  position: fixed;
   top: 0;
-  bottom: 0;
   left: 0;
+  bottom: 0;
   right: 0;
   //
   background: #fff;
   pointer-events: none;
   opacity: 0;
   z-index: 2;
-  transition: opacity .3s;
+  transition: opacity 0.3s;
   //
   display: flex;
   justify-content: center;

@@ -68,20 +68,26 @@ export default {
       {
         title: "Cursos",
         name: "panel",
-        icon: "book",
+        icon: "",
         session_types: ["1", "2"]
       },
       {
         title: "Mis Cursos",
         name: "courses",
-        icon: "book-plus-multiple",
+        icon: "",
         session_types: ["1"]
       },
       {
         title: "Colegio",
         name: "school-editor",
-        icon: "book-plus-multiple",
+        icon: "",
         session_types: ["0"]
+      },
+      {
+        title: "Perfil",
+        name: "profile",
+        icon: "",
+        session_types: ["2"]
       }
     ],
     drawer: false

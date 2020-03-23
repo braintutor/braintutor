@@ -100,12 +100,14 @@ export default {
     selectAlternative(question, correct_idx, alternative_idx) {
       if (!question.show_correct) {
         question.show_correct = true;
+        this.component_avatar.stopTalk();
+        
         if (correct_idx === alternative_idx) {
           this.corrects++;
-          this.startTalk("respuesta correcta");
+          this.component_avatar.startTalk("respuesta correcta");
         } else {
           question.incorrect = alternative_idx;
-          this.startTalk("respuesta incorrecta");
+          this.component_avatar.startTalk("respuesta incorrecta");
         }
         setTimeout(() => {
           if (this.total_questions > this.question_idx + 1) {
@@ -128,9 +130,6 @@ export default {
     //
     clearTimer() {
       this.$store.commit("clearTimer");
-    },
-    startTalk(text) {
-      this.component_avatar.startTalk(text);
     }
   }
 };

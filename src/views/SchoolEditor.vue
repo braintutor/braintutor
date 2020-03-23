@@ -16,7 +16,7 @@
         <StudentsEditor />
       </div>
       <div :slot="2">
-        <h1>3</h1>
+        <TeachersEditor />
       </div>
     </app-sidebar>
   </div>
@@ -26,6 +26,7 @@
 import loading from "@/components/loading";
 import AppSidebar from "@/components/AppSidebar";
 import StudentsEditor from "@/components/SchoolEditor/StudentsEditor";
+import TeachersEditor from "@/components/SchoolEditor/TeachersEditor";
 
 import { getSchool, updateSchool } from "@/services/schoolService";
 
@@ -42,10 +43,12 @@ export default {
         image: require(`@/assets/braintutor/icon-settings.png`)
       },
       {
-        image: require(`@/assets/braintutor/icon-students.png`)
+        image:
+          "https://icons.iconarchive.com/icons/graphicloads/100-flat/256/student-icon.png"
       },
       {
-        image: require(`@/assets/braintutor/icon-students.png`)
+        image:
+          "https://cdn0.iconfinder.com/data/icons/back-to-school/90/school-learn-study-teacher-teaching-512.png"
       }
     ];
     this.school = await getSchool();
@@ -62,6 +65,7 @@ export default {
   components: {
     AppSidebar,
     StudentsEditor,
+    TeachersEditor,
     loading
   }
 };

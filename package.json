@@ -12,6 +12,7 @@
     "@fullcalendar/daygrid": "^4.4.0",
     "@fullcalendar/interaction": "^4.4.0",
     "@fullcalendar/vue": "^4.4.0",
+    "chart.js": "^2.9.3",
     "core-js": "^3.4.4",
     "vue": "^2.6.10",
     "vue-router": "^3.1.3",

@@ -1,14 +1,14 @@
 <template>
-  <div class="students-editor">
+  <div class="teachers-editor">
     <loading :active="loading" />
-    <div class="students-editor__menu">
-      <h2 class="students-editor__title">Alumnos</h2>
-      <v-btn rounded small color="success" @click="dialog_edit = true; addStudent()">
+    <div class="teachers-editor__menu">
+      <h2 class="teachers-editor__title">Docentes</h2>
+      <v-btn rounded small color="success" @click="dialog_edit = true; addTeacher()">
         Añadir
         <v-icon right>mdi-plus</v-icon>
       </v-btn>
     </div>
-    <div class="students-editor__content">
+    <div class="teachers-editor__content">
       <table class="table">
         <thead>
           <tr>
@@ -20,20 +20,20 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(student, s_idx) in students" :key="s_idx">
-            <td>{{ student.first_name }}</td>
-            <td>{{ student.last_name }}</td>
-            <td>{{ student.user }}</td>
+          <tr v-for="(teacher, s_idx) in teachers" :key="s_idx">
+            <td>{{ teacher.first_name }}</td>
+            <td>{{ teacher.last_name }}</td>
+            <td>{{ teacher.user }}</td>
             <td>
-              <v-btn class="mr-2" small icon @click="toogleShowPassword(student)">
-                <v-icon v-if="student.showPassword">mdi-eye</v-icon>
+              <v-btn class="mr-2" small icon @click="toogleShowPassword(teacher)">
+                <v-icon v-if="teacher.showPassword">mdi-eye</v-icon>
                 <v-icon v-else>mdi-eye-off</v-icon>
               </v-btn>
-              <span v-if="student.showPassword">{{ student.pass }}</span>
+              <span v-if="teacher.showPassword">{{ teacher.pass }}</span>
               <span v-else>******</span>
             </td>
             <td class="text-center">
-              <v-btn small icon @click="dialog_edit = true; editStudent(student)">
+              <v-btn small icon @click="dialog_edit = true; editTeacher(teacher)">
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
             </td>
@@ -43,14 +43,14 @@
     </div>
 
     <v-dialog v-model="dialog_edit" class="container" max-width="500">
-      <v-card class="student-edit">
-        <v-card-title v-if="action === 'create'" class="py-5">Crear Alumno</v-card-title>
-        <v-card-title v-else-if="action === 'edit'" class="py-5">Editar Alumno</v-card-title>
-        <v-card-text class="student-edit__content">
+      <v-card class="teacher-edit">
+        <v-card-title v-if="action === 'create'" class="py-5">Crear Docente</v-card-title>
+        <v-card-title v-else-if="action === 'edit'" class="py-5">Editar Docente</v-card-title>
+        <v-card-text class="teacher-edit__content">
           <span class="mt-1 mr-4">Nombres:</span>
           <v-text-field
             class="text-field"
-            v-model="student.first_name"
+            v-model="teacher.first_name"
             dense
             hide-details
             autocomplete="off"
@@ -58,7 +58,7 @@
           <span class="mt-1 mr-4">Apellidos:</span>
           <v-text-field
             class="text-field"
-            v-model="student.last_name"
+            v-model="teacher.last_name"
             dense
             hide-details
             autocomplete="off"
@@ -66,7 +66,7 @@
           <span class="mt-1 mr-4">Usuario:</span>
           <v-text-field
             class="text-field"
-            v-model="student.user"
+            v-model="teacher.user"
             dense
             hide-details
             autocomplete="off"
@@ -74,17 +74,17 @@
           <span class="mt-1 mr-4">Contraseña:</span>
           <v-text-field
             class="text-field"
-            v-model="student.pass"
-            :append-icon="student.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            v-model="teacher.pass"
+            :append-icon="teacher.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             dense
             hide-details
             autocomplete="off"
-            :type="student.showPassword ? 'text' : 'password'"
-            @click:append="toogleShowPassword(student)"
+            :type="teacher.showPassword ? 'text' : 'password'"
+            @click:append="toogleShowPassword(teacher)"
           ></v-text-field>
         </v-card-text>
-        <v-card-actions class="student-edit__actions">
-          <v-btn color="primary" :loading="loading_save" @click="saveStudent()">Guardar</v-btn>
+        <v-card-actions class="teacher-edit__actions">
+          <v-btn color="primary" :loading="loading_save" @click="saveTeacher()">Guardar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -95,15 +95,15 @@
 import loading from "@/components/loading";
 
 import {
-  getStudents,
-  addStudent,
-  updateStudent
-} from "@/services/studentService";
+  getTeachers,
+  addTeacher,
+  updateTeacher
+} from "@/services/teacherService";
 
 export default {
   data: () => ({
-    students: [],
-    student: {},
+    teachers: [],
+    teacher: {},
     action: "",
     //
     dialog_edit: false,
@@ -111,42 +111,42 @@ export default {
     loading_save: false
   }),
   async mounted() {
-    this.students = await getStudents();
+    this.teachers = await getTeachers();
     this.loading = false;
   },
   methods: {
-    toogleShowPassword(student) {
-      student.showPassword = !student.showPassword;
+    toogleShowPassword(teacher) {
+      teacher.showPassword = !teacher.showPassword;
       this.$forceUpdate();
     },
-    addStudent() {
+    addTeacher() {
       this.action = "create";
-      this.student = {
+      this.teacher = {
         first_name: "",
         last_name: "",
         user: "",
         pass: ""
       };
     },
-    editStudent(student) {
+    editTeacher(teacher) {
       this.action = "edit";
-      this.student = Object.assign({}, student);
-      this.student.id = this.student._id.$oid;
-      this.student.showPassword = false;
+      this.teacher = Object.assign({}, teacher);
+      this.teacher.id = this.teacher._id.$oid;
+      this.teacher.showPassword = false;
     },
-    async saveStudent() {
+    async saveTeacher() {
       this.loading_save = true;
       if (this.action === "create") {
-        let student_id = await addStudent(this.student);
-        this.student._id = student_id;
-        this.students.push(this.student);
+        let teacher_id = await addTeacher(this.teacher);
+        this.teacher._id = teacher_id;
+        this.teachers.push(this.teacher);
         this.dialog_edit = false;
       } else if (this.action === "edit") {
-        await updateStudent(this.student);
-        let student_idx = this.students.findIndex(
-          student => student._id.$oid === this.student.id
+        await updateTeacher(this.teacher);
+        let teacher_idx = this.teachers.findIndex(
+          teacher => teacher._id.$oid === this.teacher.id
         );
-        this.students[student_idx] = Object.assign({}, this.student);
+        this.teachers[teacher_idx] = Object.assign({}, this.teacher);
       }
       this.loading_save = false;
     }
@@ -158,7 +158,7 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.students-editor {
+.teachers-editor {
   padding: 10px 16px;
   &__menu {
     display: flex;
@@ -192,7 +192,7 @@ export default {
   }
 }
 
-.student-edit {
+.teacher-edit {
   &__content {
     display: grid;
     grid-template-columns: auto 1fr;

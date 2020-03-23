@@ -76,34 +76,38 @@ export default {
   },
   methods: {
     async login() {
-      if (this.$refs.form_login.validate()) {
-        this.loading_login = true;
-        let token = "";
-        let type = -1;
+      try {
+        if (this.$refs.form_login.validate()) {
+          this.loading_login = true;
+          let token = "";
+          let type = -1;
 
-        if (this.type === "Administrador") {
-          token = (await loginAdmin(this.school_id, this.user, this.pass))
-            .token;
-          type = 0;
-        }
-        if (this.type === "Profesor") {
-          token = (await loginTeacher(this.school_id, this.user, this.pass))
-            .token;
-          type = 1;
-        }
-        if (this.type === "Estudiante") {
-          token = (await loginStudent(this.school_id, this.user, this.pass))
-            .token;
-          type = 2;
-        }
+          if (this.type === "Administrador") {
+            token = (await loginAdmin(this.school_id, this.user, this.pass))
+              .token;
+            type = 0;
+          }
+          if (this.type === "Profesor") {
+            token = (await loginTeacher(this.school_id, this.user, this.pass))
+              .token;
+            type = 1;
+          }
+          if (this.type === "Estudiante") {
+            token = (await loginStudent(this.school_id, this.user, this.pass))
+              .token;
+            type = 2;
+          }
 
-        if (token) {
-          setSession(token, type);
-          redirect("school-editor", { school_id: this.school_id });
-        } else {
-          this.alert_error = true;
-          this.loading_login = false;
+          if (token) {
+            setSession(token, type);
+            redirect("school-editor", { school_id: this.school_id });
+          } else {
+            this.alert_error = true;
+            this.loading_login = false;
+          }
         }
+      } catch (error) {
+        this.alert_error = true;
       }
     }
   },

@@ -21,7 +21,7 @@
 export default {
   props: ["links"],
   data: () => ({
-    idx: 1
+    idx: 0
   })
 };
 </script>

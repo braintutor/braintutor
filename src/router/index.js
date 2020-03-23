@@ -54,6 +54,11 @@ const routes = [
     path: '/course-editor/:course_id',
     name: 'course-editor',
     component: () => import('../views/CourseEditor.vue')
+  },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: () => import('../views/Profile.vue')
   }
 ]
 
