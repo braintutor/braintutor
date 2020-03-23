@@ -1,46 +1,64 @@
 <template>
-  <!-- Material List -->
-  <v-container class="list" v-if="!material" fluid>
-    <v-row no-gutters>
-      <v-col
-        cols="6"
-        md="3"
-        lg="2"
-        v-for="(material, r_idx) in materials"
-        :key="r_idx"
-        class="pa-2"
-      >
-        <Cartel
-          :description="material.name"
-          :image="'https://cdn.dribbble.com/users/1742866/screenshots/3966741/38-material-design.jpg'"
-          :callback="() => selectMaterial(material)"
-        />
-      </v-col>
-    </v-row>
-  </v-container>
-  <!-- Material Selected -->
-  <Material
-    v-else
-    :material="material"
-    :categories="categories"
-    :category_idx="category_idx"
-    :unselectMaterial="unselectMaterial"
-    :changeCategory="direction => changeCategory(direction)"
-  />
+  <div class="m-fullscreen">
+    <div class="options">
+      <span class="mr-2">Contenido Adaptado</span>
+      <v-switch class="options__switch" v-model="adapt_content"></v-switch>
+    </div>
+    <!-- Material List -->
+    <v-container class="list m-fullscreen-content" v-if="!material" fluid>
+      <v-row no-gutters>
+        <v-col
+          cols="6"
+          md="3"
+          lg="2"
+          v-for="(material, r_idx) in materials"
+          :key="r_idx"
+          class="pa-2"
+        >
+          <Cartel
+            :description="material.name"
+            :image="'https://cdn.dribbble.com/users/1742866/screenshots/3966741/38-material-design.jpg'"
+            :callback="() => selectMaterial(material)"
+          />
+        </v-col>
+      </v-row>
+    </v-container>
+    <!-- Material Selected -->
+    <Material
+      v-else
+      class="m-fullscreen-content"
+      :material="material"
+      :categories="categories"
+      :category_idx="category_idx"
+      :unselectMaterial="unselectMaterial"
+      :changeCategory="direction => changeCategory(direction)"
+    />
+  </div>
 </template>
 
 <script>
 import Cartel from "@/components/Cartel";
 import Material from "./Material/index";
 
+import { getCategoriesByLearningStyle } from "@/services/studentService.js";
 import { Clamp } from "@/services/math";
 
 export default {
-  props: ["showServices", "categories_ls"],
+  props: ["showServices"],
   data: () => ({
     material: null,
-    category_idx: 0
+    adapt_content: true,
+    category_idx: 0,
+    //
+    categories_ls_original: {},
+    categories_ls: {}
   }),
+  async mounted() {
+    this.categories_ls_original = await getCategoriesByLearningStyle();
+    this.categories_ls = JSON.parse(
+      JSON.stringify(this.categories_ls_original)
+    );
+  },
   computed: {
     materials() {
       return this.$store.state.materials;
@@ -48,7 +66,7 @@ export default {
     categories() {
       let categories = Object.entries(this.categories_ls).reduce(
         (arr, [key, value]) => {
-          if (value) {
+          if (value.show || !this.adapt_content) {
             arr.push(key);
           }
           return arr;
@@ -58,11 +76,22 @@ export default {
       return categories;
     }
   },
+  watch: {
+    adapt_content() {
+      this.category_idx = 0;
+    }
+  },
   methods: {
     selectMaterial(material, category) {
+      this.categories_ls = JSON.parse(
+        JSON.stringify(this.categories_ls_original)
+      );
       this.material = material;
-      if (category) this.category_idx = this.categories.indexOf(category);
-      else this.category_idx = 0;
+
+      if (category) {
+        this.categories_ls[category].show = true;
+        this.category_idx = this.categories.indexOf(category);
+      } else this.category_idx = 0;
       this.showServices(false);
     },
     unselectMaterial() {
@@ -87,5 +116,16 @@ export default {
 <style lang='scss' scoped>
 .list {
   padding-bottom: 70px;
+}
+.options {
+  padding: 0 20px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  &__switch {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
 }
 </style>

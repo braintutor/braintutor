@@ -188,6 +188,7 @@ export default {
 
   .material-menu {
     padding: 10px;
+    padding-top: 5px;
     display: flex;
     align-items: center;
     .material-title {
@@ -239,14 +240,14 @@ export default {
       display: flex;
       justify-content: space-between;
       .category-text-title {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
         font-weight: bold;
         margin-right: 10px;
       }
     }
     .category-text-content {
       padding-bottom: 16px; // padding - padding-bottom
-      font-size: 1.2rem;
+      font-size: 1rem;
       white-space: pre-wrap;
       display: flex;
       align-items: flex-start;

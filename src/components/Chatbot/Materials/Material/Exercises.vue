@@ -57,20 +57,20 @@ export default {
   display: flex;
   justify-content: space-between;
   .category-text-title {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: bold;
     margin-right: 10px;
   }
 }
 .category-text-content {
   padding-bottom: 16px; // padding - padding-bottom
-  font-size: 1.2rem;
+  font-size: 1rem;
   white-space: pre-wrap;
   display: flex;
   align-items: flex-start;
 }
 .category-text-alternative {
-  padding: 10px 18px; // padding - padding-bottom
+  padding: 8px 16px; // padding - padding-bottom
   margin-bottom: 10px;
   border-radius: 10px;
   font-size: 1rem;

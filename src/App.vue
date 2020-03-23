@@ -65,6 +65,9 @@ export default {
     }
   }
 }
+.v-input--selection-controls__ripple {
+  display: none;
+}
 
 // Editorjs
 .codex-editor__redactor {
