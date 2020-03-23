@@ -57,6 +57,15 @@ export default {
   display: none !important;
 }
 
+.v-input--radio-group__input {
+  .v-radio {
+    .v-label {
+      margin-left: 8px;
+      font-size: 1rem !important;
+    }
+  }
+}
+
 // Editorjs
 .codex-editor__redactor {
   padding-bottom: 64px !important;

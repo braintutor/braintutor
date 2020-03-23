@@ -1,45 +1,65 @@
 <template>
-  <div class="container pa-0">
+  <div class="container px-5">
     <loading :active="loading" />
-    <div v-if="!loading" class="profile m-card">
-      <span class="profile__item">Id:</span>
-      <span>{{profile._id.$oid}}</span>
-      <span class="profile__item">Nombres:</span>
-      <span>{{profile.first_name}}</span>
-      <span class="profile__item">Apellidos:</span>
-      <span>{{profile.last_name}}</span>
-      <span class="profile__item">Usuario:</span>
-      <span>{{profile.user}}</span>
-    </div>
 
-    <div class="test m-card">
-      <div class="text-center ma-4">
-        <h1>Cuestionario de Estilos de Aprendizaje</h1>
+    <div class="row">
+      <div class="col-12 col-sm-5 pa-0">
+        <div class="profile m-card">
+          <h2 class="profile__title">Mis Datos</h2>
+          <div class="profile__content">
+            <!-- <span class="profile__item">Id:</span>
+            <span>{{profile._id.$oid}}</span>-->
+            <span class="profile__item">Nombres:</span>
+            <span>{{profile.first_name}}</span>
+            <span class="profile__item">Apellidos:</span>
+            <span>{{profile.last_name}}</span>
+            <span class="profile__item">Usuario:</span>
+            <span>{{profile.user}}</span>
+          </div>
+        </div>
       </div>
-      <div class="test__question" v-for="(question, q_idx) in questions" :key="q_idx">
-        <h3>{{(q_idx + 1)}}. {{question.enunciado}}</h3>
-        <v-radio-group v-model="question.answer">
-          <v-radio
-            v-for="(alternative, a_idx) in question.alternatives"
-            :key="a_idx"
-            :label="alternative"
-            :value="a_idx"
-          ></v-radio>
-        </v-radio-group>
-      </div>
-      <div class="d-flex justify-center my-4">
-        <v-btn color="primary" @click="saveTest()">Guardar</v-btn>
+
+      <div class="col-12 col-sm-7 pa-0">
+        <div class="diagram m-card">
+          <canvas id="myChart" width="600" height="400"></canvas>
+          <div class="diagram__actions">
+            <v-btn @click="dialog_test = true" color="primary">Nuevo Test</v-btn>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Dialog -->
-    <v-dialog v-model="dialog" max-width="300">
+    <!-- Dialog Test -->
+    <v-dialog v-model="dialog_test" max-width="900">
+      <div class="test m-card">
+        <h2 class="test__title">Cuestionario de Estilos de Aprendizaje</h2>
+        <div class="test__content">
+          <div class="test__question" v-for="(question, q_idx) in questions" :key="q_idx">
+            <h3 class="test__question-title">{{(q_idx + 1)}}. {{question.enunciado}}</h3>
+            <v-radio-group v-model="question.answer">
+              <v-radio
+                v-for="(alternative, a_idx) in question.alternatives"
+                :key="a_idx"
+                :label="alternative"
+                :value="a_idx"
+              ></v-radio>
+            </v-radio-group>
+          </div>
+        </div>
+        <div class="test__actions">
+          <v-btn color="primary" :loading="loading" @click="saveTest()">Guardar</v-btn>
+        </div>
+      </div>
+    </v-dialog>
+
+    <!-- Dialog Error -->
+    <v-dialog v-model="dialog_error" max-width="300">
       <v-card>
         <v-card-title>Error</v-card-title>
         <v-card-text>Por favor no dejes preguntas sin responder.</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn small text @click="dialog = false">Cerrar</v-btn>
+          <v-btn small text @click="dialog_error = false">Cerrar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -48,6 +68,7 @@
 
 <script>
 import loading from "@/components/loading";
+import Chart from "chart.js";
 
 import { getProfile, updateLearningStyle } from "@/services/studentService";
 
@@ -55,14 +76,16 @@ class PreguntaTest {
   constructor(enunciado, alternatives) {
     this.enunciado = enunciado;
     this.alternatives = alternatives;
-    this.answer = null;
-    // this.answer = Math.round(Math.random());
+    // this.answer = null;
+    this.answer = Math.round(Math.random());
   }
 }
 
 export default {
   data: () => ({
-    profile: {},
+    profile: {
+      _id: {}
+    },
     questions: [
       /* 1 - 11 */
       new PreguntaTest("Entiendo mejor algo", [
@@ -245,23 +268,31 @@ export default {
         ]
       )
     ],
+    myChart: null,
     loading: true,
-    dialog: false
+    dialog_test: false,
+    dialog_error: false
   }),
   async mounted() {
     this.profile = await getProfile();
+    this.updateDashboard();
     this.loading = false;
   },
   methods: {
     async saveTest() {
       let answers = this.questions.map(q => q.answer);
       if (!answers.includes(null)) {
+        this.dialog_test = false;
         this.loading = true;
+
         let learning_style = this.calculate(answers);
         await updateLearningStyle(learning_style);
+        this.profile.learning_style = learning_style;
+        this.updateDashboard();
+
         this.loading = false;
       } else {
-        this.dialog = true;
+        this.dialog_error = true;
       }
     },
     calculate(respuestas) {
@@ -367,6 +398,70 @@ export default {
         comprension_valor: comprension_valor
       };
       return perfil;
+    },
+    updateDashboard() {
+      if (this.myChart) this.myChart.destroy();
+      let {
+        procesamiento,
+        procesamiento_valor,
+        percepcion,
+        percepcion_valor,
+        entrada,
+        entrada_valor,
+        comprension,
+        comprension_valor
+      } = this.profile.learning_style;
+      var ctx = document.getElementById("myChart").getContext("2d");
+      this.myChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: [procesamiento, percepcion, entrada, comprension],
+          datasets: [
+            {
+              label: ["Estilo de Aprendizaje"],
+              data: [
+                procesamiento_valor,
+                percepcion_valor,
+                entrada_valor,
+                comprension_valor
+              ],
+              backgroundColor: [
+                "rgba(255, 99, 132, 0.2)",
+                "rgba(54, 162, 235, 0.2)",
+                "rgba(255, 206, 86, 0.2)",
+                "rgba(75, 192, 192, 0.2)",
+                "rgba(153, 102, 255, 0.2)",
+                "rgba(255, 159, 64, 0.2)"
+              ],
+              borderColor: [
+                "rgba(255, 99, 132, 1)",
+                "rgba(54, 162, 235, 1)",
+                "rgba(255, 206, 86, 1)",
+                "rgba(75, 192, 192, 1)",
+                "rgba(153, 102, 255, 1)",
+                "rgba(255, 159, 64, 1)"
+              ],
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          legend: {
+            display: false
+          },
+          scales: {
+            yAxes: [
+              {
+                ticks: {
+                  beginAtZero: true,
+                  max: 11,
+                  stepSize: 1
+                }
+              }
+            ]
+          }
+        }
+      });
     }
   },
   components: {
@@ -377,22 +472,61 @@ export default {
 
 <style lang='scss' scoped>
 .profile {
-  padding: 20px;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-column-gap: 30px;
-  grid-row-gap: 10px;
-
+  padding: 20px 28px 30px 28px;
+  height: min-content;
+  &__title {
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+  }
+  &__content {
+    font-size: 1rem;
+    font-weight: lighter;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-column-gap: 30px;
+    grid-row-gap: 8px;
+    align-items: center;
+  }
   &__item {
+    font-size: 1rem;
     font-weight: bold;
   }
 }
 
+.diagram {
+  padding: 4%;
+  padding-bottom: 0;
+  margin-left: 20px;
+
+  &__actions {
+    padding: 20px 0;
+    display: flex;
+    justify-content: center;
+  }
+}
+
 .test {
-  margin: 20px 0;
-  padding: 20px;
+  padding: 20px 26px;
+  background: #fff;
+  &__title {
+    text-align: center;
+  }
   &__question {
-    padding: 10px 0;
+    padding: 16px 0;
+    &-title {
+      padding-bottom: 5px;
+    }
+  }
+  &__actions {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 598px) {
+  .diagram {
+    margin-top: 10px;
+    margin-left: 0;
   }
 }
 </style>
