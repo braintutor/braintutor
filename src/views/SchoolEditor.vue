@@ -13,13 +13,16 @@
         </div>
       </div>
       <div :slot="1">
-        <StudentsEditor />
-      </div>
-      <div :slot="2">
         <TeachersEditor />
       </div>
-      <div :slot="3">
+      <div :slot="2">
         <CoursesEditor />
+      </div>
+      <div :slot="3">
+        <ClassroomsEditor />
+      </div>
+      <div :slot="4">
+        <StudentsEditor />
       </div>
     </app-sidebar>
   </div>
@@ -28,8 +31,9 @@
 <script>
 import loading from "@/components/loading";
 import AppSidebar from "@/components/AppSidebar";
-import StudentsEditor from "@/components/SchoolEditor/StudentsEditor";
 import TeachersEditor from "@/components/SchoolEditor/TeachersEditor";
+import ClassroomsEditor from "@/components/SchoolEditor/ClassroomsEditor";
+import StudentsEditor from "@/components/SchoolEditor/StudentsEditor";
 import CoursesEditor from "@/components/SchoolEditor/CoursesEditor";
 
 import { getSchool, updateSchool } from "@/services/schoolService";
@@ -48,14 +52,19 @@ export default {
       },
       {
         image:
-          "https://icons.iconarchive.com/icons/graphicloads/100-flat/256/student-icon.png"
-      },
-      {
-        image:
           "https://cdn0.iconfinder.com/data/icons/back-to-school/90/school-learn-study-teacher-teaching-512.png"
       },
       {
-        image: 'https://images.squarespace-cdn.com/content/v1/55d1e076e4b0be96a30dc726/1477412415649-WW90BD77ALIB9U99VTIA/ke17ZwdGBToddI8pDm48kDmvgM2_GYudIur22MWWiLdZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZamWLI2zvYWH8K3-s_4yszcp2ryTI0HqTOaaUohrI8PIvFa2r33EMaMk7hlBJBei4G1FTiqzsF6lpp3EXtW1YCk/image-asset.png'
+        image:
+          "https://images.squarespace-cdn.com/content/v1/55d1e076e4b0be96a30dc726/1477412415649-WW90BD77ALIB9U99VTIA/ke17ZwdGBToddI8pDm48kDmvgM2_GYudIur22MWWiLdZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZamWLI2zvYWH8K3-s_4yszcp2ryTI0HqTOaaUohrI8PIvFa2r33EMaMk7hlBJBei4G1FTiqzsF6lpp3EXtW1YCk/image-asset.png"
+      },
+      {
+        image:
+          "https://iconsetc.com/icons-watermarks/flat-circle-white-on-red/iconathon/iconathon_flipped-classroom/iconathon_flipped-classroom_flat-circle-white-on-red_512x512.png"
+      },
+      {
+        image:
+          "https://icons.iconarchive.com/icons/graphicloads/100-flat/256/student-icon.png"
       }
     ];
     this.school = await getSchool();
@@ -74,6 +83,7 @@ export default {
     StudentsEditor,
     TeachersEditor,
     CoursesEditor,
+    ClassroomsEditor,
     loading
   }
 };

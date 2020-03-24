@@ -36,19 +36,19 @@
             @click="redirect(link.name); drawer=false"
           >
             <v-list-item-icon>
-              <v-icon>{{`mdi-${link.icon}`}}</v-icon>
+              <v-icon>{{link.icon}}</v-icon>
             </v-list-item-icon>
             <v-list-item-title>{{link.title}}</v-list-item-title>
           </v-list-item>
           <v-list-item v-if="session && session.token" @click="closeSession(); drawer=false">
             <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
+              <v-icon>mdi-power</v-icon>
             </v-list-item-icon>
             <v-list-item-title>Cerrar Sesión</v-list-item-title>
           </v-list-item>
           <v-list-item v-else @click="redirect('login'); drawer=false">
             <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
+              <v-icon>mdi-power</v-icon>
             </v-list-item-icon>
             <v-list-item-title>Iniciar Sesión</v-list-item-title>
           </v-list-item>
@@ -66,27 +66,27 @@ export default {
   data: () => ({
     links: [
       {
-        title: "Cursos",
+        title: "Ver Cursos",
         name: "panel",
-        icon: "",
-        session_types: ["1", "2"]
+        icon: "mdi-book",
+        session_types: ["2"]
       },
       {
-        title: "Mis Cursos",
+        title: "Editar Cursos",
         name: "courses",
-        icon: "",
+        icon: "mdi-book-plus-multiple",
         session_types: ["1"]
       },
       {
         title: "Colegio",
         name: "school-editor",
-        icon: "",
+        icon: "mdi-school",
         session_types: ["0"]
       },
       {
         title: "Perfil",
         name: "profile",
-        icon: "",
+        icon: "mdi-account",
         session_types: ["2"]
       }
     ],
