@@ -76,9 +76,9 @@ class PreguntaTest {
   constructor(enunciado, alternatives) {
     this.enunciado = enunciado;
     this.alternatives = alternatives;
-    // this.answer = null;
+    this.answer = null;
     // this.answer = Math.round(Math.random());
-    this.answer = 1;
+    // this.answer = 1;
   }
 }
 

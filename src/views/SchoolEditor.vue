@@ -18,6 +18,9 @@
       <div :slot="2">
         <TeachersEditor />
       </div>
+      <div :slot="3">
+        <CoursesEditor />
+      </div>
     </app-sidebar>
   </div>
 </template>
@@ -27,6 +30,7 @@ import loading from "@/components/loading";
 import AppSidebar from "@/components/AppSidebar";
 import StudentsEditor from "@/components/SchoolEditor/StudentsEditor";
 import TeachersEditor from "@/components/SchoolEditor/TeachersEditor";
+import CoursesEditor from "@/components/SchoolEditor/CoursesEditor";
 
 import { getSchool, updateSchool } from "@/services/schoolService";
 
@@ -49,6 +53,9 @@ export default {
       {
         image:
           "https://cdn0.iconfinder.com/data/icons/back-to-school/90/school-learn-study-teacher-teaching-512.png"
+      },
+      {
+        image: 'https://images.squarespace-cdn.com/content/v1/55d1e076e4b0be96a30dc726/1477412415649-WW90BD77ALIB9U99VTIA/ke17ZwdGBToddI8pDm48kDmvgM2_GYudIur22MWWiLdZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZamWLI2zvYWH8K3-s_4yszcp2ryTI0HqTOaaUohrI8PIvFa2r33EMaMk7hlBJBei4G1FTiqzsF6lpp3EXtW1YCk/image-asset.png'
       }
     ];
     this.school = await getSchool();
@@ -66,6 +73,7 @@ export default {
     AppSidebar,
     StudentsEditor,
     TeachersEditor,
+    CoursesEditor,
     loading
   }
 };

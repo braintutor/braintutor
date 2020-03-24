@@ -9,7 +9,7 @@
     </div>
     <div class="content">
       <template v-for="(link, l_idx) in links">
-        <div v-show="idx === l_idx" :key="l_idx">
+        <div v-if="idx === l_idx" :key="l_idx">
           <slot :name="l_idx"></slot>
         </div>
       </template>
@@ -21,7 +21,7 @@
 export default {
   props: ["links"],
   data: () => ({
-    idx: 0
+    idx: 3
   })
 };
 </script>
