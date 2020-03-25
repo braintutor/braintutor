@@ -192,6 +192,7 @@ export default {
     display: grid;
     grid-template-columns: auto 1fr;
     grid-row-gap: 20px;
+    align-items: center;
     & * {
       font-size: 1rem;
     }

@@ -1,14 +1,26 @@
 <template>
-  <div class="students-editor">
+  <div class="editor">
     <loading :active="loading" />
-    <div class="students-editor__menu">
-      <h2 class="students-editor__title">Alumnos</h2>
+    <div class="editor__menu">
+      <h2 class="editor__title">Alumnos</h2>
       <v-btn rounded small color="success" @click="dialog_edit = true; addStudent()">
         Añadir
         <v-icon right>mdi-plus</v-icon>
       </v-btn>
     </div>
-    <div class="students-editor__content">
+    <div class="editor__filter">
+      <h3 class="mr-5">Aula:</h3>
+      <v-select
+        v-model="classroom_id"
+        :items="classrooms"
+        item-text="name"
+        item-value="_id"
+        dense
+        solo
+      ></v-select>
+    </div>
+    <v-divider class="mt-5 mb-4"></v-divider>
+    <div class="editor__content">
       <table class="table">
         <thead>
           <tr>
@@ -20,20 +32,20 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(student, s_idx) in students" :key="s_idx">
-            <td>{{ student.first_name }}</td>
-            <td>{{ student.last_name }}</td>
-            <td>{{ student.user }}</td>
+          <tr v-for="(entity, e_idx) in entities_filtered" :key="e_idx">
+            <td>{{ entity.first_name }}</td>
+            <td>{{ entity.last_name }}</td>
+            <td>{{ entity.user }}</td>
             <td>
-              <v-btn class="mr-2" small icon @click="toogleShowPassword(student)">
-                <v-icon v-if="student.showPassword">mdi-eye</v-icon>
+              <v-btn class="mr-2" small icon @click="toogleShowPassword(entity)">
+                <v-icon v-if="entity.showPassword">mdi-eye</v-icon>
                 <v-icon v-else>mdi-eye-off</v-icon>
               </v-btn>
-              <span v-if="student.showPassword">{{ student.pass }}</span>
+              <span v-if="entity.showPassword">{{ entity.pass }}</span>
               <span v-else>******</span>
             </td>
             <td class="text-center">
-              <v-btn small icon @click="dialog_edit = true; editStudent(student)">
+              <v-btn small icon @click="dialog_edit = true; editStudent(entity)">
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
             </td>
@@ -43,14 +55,14 @@
     </div>
 
     <v-dialog v-model="dialog_edit" class="container" max-width="500">
-      <v-card class="student-edit">
+      <v-card class="edit">
         <v-card-title v-if="action === 'create'" class="py-5">Crear Alumno</v-card-title>
         <v-card-title v-else-if="action === 'edit'" class="py-5">Editar Alumno</v-card-title>
-        <v-card-text class="student-edit__content">
+        <v-card-text class="edit__content">
           <span class="mt-1 mr-4">Nombres:</span>
           <v-text-field
             class="text-field"
-            v-model="student.first_name"
+            v-model="entity.first_name"
             dense
             hide-details
             autocomplete="off"
@@ -58,15 +70,24 @@
           <span class="mt-1 mr-4">Apellidos:</span>
           <v-text-field
             class="text-field"
-            v-model="student.last_name"
+            v-model="entity.last_name"
             dense
             hide-details
             autocomplete="off"
           ></v-text-field>
+          <span class="mt-1 mr-4">Aula:</span>
+          <v-select
+            v-model="entity.classroom_id"
+            :items="classrooms"
+            item-text="name"
+            item-value="_id"
+            dense
+            solo
+          ></v-select>
           <span class="mt-1 mr-4">Usuario:</span>
           <v-text-field
             class="text-field"
-            v-model="student.user"
+            v-model="entity.user"
             dense
             hide-details
             autocomplete="off"
@@ -74,16 +95,16 @@
           <span class="mt-1 mr-4">Contraseña:</span>
           <v-text-field
             class="text-field"
-            v-model="student.pass"
-            :append-icon="student.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            v-model="entity.pass"
+            :append-icon="entity.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             dense
             hide-details
             autocomplete="off"
-            :type="student.showPassword ? 'text' : 'password'"
-            @click:append="toogleShowPassword(student)"
+            :type="entity.showPassword ? 'text' : 'password'"
+            @click:append="toogleShowPassword(entity)"
           ></v-text-field>
         </v-card-text>
-        <v-card-actions class="student-edit__actions">
+        <v-card-actions class="edit__actions">
           <v-btn color="primary" :loading="loading_save" @click="saveStudent()">Guardar</v-btn>
         </v-card-actions>
       </v-card>
@@ -99,11 +120,14 @@ import {
   addStudent,
   updateStudent
 } from "@/services/studentService";
+import { getClassrooms } from "@/services/classroomService";
 
 export default {
   data: () => ({
-    students: [],
-    student: {},
+    entities: [],
+    entity: {},
+    classrooms: [],
+    classroom_id: "",
     action: "",
     //
     dialog_edit: false,
@@ -111,42 +135,53 @@ export default {
     loading_save: false
   }),
   async mounted() {
-    this.students = await getStudents();
+    this.classrooms = await getClassrooms();
+    this.classroom_id = this.classrooms[0]._id;
+    this.entities = await getStudents();
     this.loading = false;
   },
+  computed: {
+    entities_filtered() {
+      let entities = this.entities.filter(
+        e => e.classroom_id.$oid === this.classroom_id.$oid
+      );
+      return entities;
+    }
+  },
   methods: {
-    toogleShowPassword(student) {
-      student.showPassword = !student.showPassword;
+    toogleShowPassword(entity) {
+      entity.showPassword = !entity.showPassword;
       this.$forceUpdate();
     },
     addStudent() {
       this.action = "create";
-      this.student = {
+      this.entity = {
         first_name: "",
         last_name: "",
         user: "",
         pass: ""
       };
     },
-    editStudent(student) {
+    editStudent(entity) {
       this.action = "edit";
-      this.student = Object.assign({}, student);
-      this.student.id = this.student._id.$oid;
-      this.student.showPassword = false;
+      this.entity = Object.assign({}, entity);
+      this.entity.id = this.entity._id.$oid;
+      this.entity.showPassword = false;
     },
     async saveStudent() {
       this.loading_save = true;
       if (this.action === "create") {
-        let student_id = await addStudent(this.student);
-        this.student._id = student_id;
-        this.students.push(this.student);
+        let entity_id = await addStudent(this.entity);
+        this.entity._id = entity_id;
+        this.entities.push(this.entity);
         this.dialog_edit = false;
       } else if (this.action === "edit") {
-        await updateStudent(this.student);
-        let student_idx = this.students.findIndex(
-          student => student._id.$oid === this.student.id
+        await updateStudent(this.entity);
+        let entity_idx = this.entities.findIndex(
+          entity => entity._id.$oid === this.entity.id
         );
-        this.students[student_idx] = Object.assign({}, this.student);
+        this.entities[entity_idx] = Object.assign({}, this.entity);
+        this.entities.splice();
       }
       this.loading_save = false;
     }
@@ -158,11 +193,15 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.students-editor {
+.editor {
   padding: 10px 16px;
   &__menu {
     display: flex;
     justify-content: space-between;
+  }
+  &__filter {
+    display: flex;
+    align-items: center;
   }
   &__title {
     margin-bottom: 10px;
@@ -192,11 +231,12 @@ export default {
   }
 }
 
-.student-edit {
+.edit {
   &__content {
     display: grid;
     grid-template-columns: auto 1fr;
     grid-row-gap: 20px;
+    align-items: center;
     & * {
       font-size: 1rem;
     }

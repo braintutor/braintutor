@@ -16,6 +16,12 @@ function getStudentsByText(text) {
   })
 }
 
+function getStudentsByClassroom(classroom_id) {
+  return fetch_post('getStudentsByClassroom', {
+    classroom_id
+  })
+}
+
 function addStudent(student) {
   return fetch_post('addStudent', {
     student
@@ -42,4 +48,14 @@ function getCategoriesByLearningStyle() {
   return fetch_get('getCategoriesByLearningStyle')
 }
 
-export { getStudent, getStudents, getStudentsByText, addStudent, updateStudent, getProfile, updateLearningStyle, getCategoriesByLearningStyle }
+export {
+  getStudent,
+  getStudents,
+  getStudentsByText,
+  getStudentsByClassroom,
+  addStudent,
+  updateStudent,
+  getProfile,
+  updateLearningStyle,
+  getCategoriesByLearningStyle
+}

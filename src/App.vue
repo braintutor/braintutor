@@ -69,6 +69,10 @@ export default {
   display: none;
 }
 
+.v-select .v-text-field__details {
+  display: none;
+}
+
 // Editorjs
 .codex-editor__redactor {
   padding-bottom: 64px !important;
