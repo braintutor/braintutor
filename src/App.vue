@@ -69,8 +69,13 @@ export default {
   display: none;
 }
 
-.v-select .v-text-field__details {
-  display: none;
+.v-select {
+  & * {
+    font-size: 1rem;
+  }
+  .v-text-field__details {
+    display: none;
+  }
 }
 
 // Editorjs

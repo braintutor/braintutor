@@ -52,7 +52,7 @@
           </tr>
         </tbody>
       </table>
-      <p class="editor__message" v-if="entities_filtered.length <= 0">Aún no hay alummnos.</p>
+      <p class="editor__message" v-if="entities_filtered.length <= 0">Aún no hay alumnos.</p>
     </div>
 
     <v-dialog v-model="dialog_edit" class="container" max-width="500">
