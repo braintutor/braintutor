@@ -76,6 +76,7 @@ export default {
   }),
   async mounted() {
     this.entities = await getClassrooms();
+    this.entities.sort((a, b) => a.name.localeCompare(b.name));
     for (let entity of this.entities) {
       entity.students = await getStudentsByClassroom(entity._id.$oid);
     }

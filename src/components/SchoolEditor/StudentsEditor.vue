@@ -52,6 +52,7 @@
           </tr>
         </tbody>
       </table>
+      <p class="editor__message" v-if="entities_filtered.length <= 0">Aún no hay alummnos.</p>
     </div>
 
     <v-dialog v-model="dialog_edit" class="container" max-width="500">
@@ -136,6 +137,7 @@ export default {
   }),
   async mounted() {
     this.classrooms = await getClassrooms();
+    this.classrooms.sort((a, b) => a.name.localeCompare(b.name));
     this.classroom_id = this.classrooms[0]._id;
     this.entities = await getStudents();
     this.loading = false;
@@ -208,6 +210,12 @@ export default {
   }
   &__content {
     overflow-x: auto;
+  }
+  &__message {
+    margin: 10px 0;
+    font-weight: lighter;
+    font-size: 1.1rem;
+    text-align: center;
   }
 }
 
