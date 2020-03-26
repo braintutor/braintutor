@@ -59,7 +59,7 @@ import loading from "@/components/loading";
 
 import {
   addClassroom,
-  getClassrooms,
+  getClassroomsBySchool,
   updateClassroom
 } from "@/services/classroomService";
 import { getStudentsByClassroom } from "@/services/studentService";
@@ -75,7 +75,7 @@ export default {
     loading_save: false
   }),
   async mounted() {
-    this.entities = await getClassrooms();
+    this.entities = await getClassroomsBySchool();
     this.entities.sort((a, b) => a.name.localeCompare(b.name));
     for (let entity of this.entities) {
       entity.students = await getStudentsByClassroom(entity._id.$oid);

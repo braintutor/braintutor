@@ -2,7 +2,7 @@
   <div class="editor">
     <loading :active="loading" />
     <div class="editor__menu">
-      <h2 class="editor__title">Cursos</h2>
+      <h2 class="editor__title">Sesión</h2>
       <v-btn rounded small color="success" @click="dialog_edit = true; add()">
         Añadir
         <v-icon right>mdi-plus</v-icon>
@@ -12,15 +12,17 @@
       <table class="table">
         <thead>
           <tr>
-            <th class="text-left">Nombre</th>
-            <th class="text-left">Encargado</th>
+            <th class="text-left">Curso</th>
+            <th class="text-left">Aula</th>
+            <th class="text-left">Profesor</th>
             <th class="text-center">Acción</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(entity, e_idx) in entities_aux" :key="e_idx">
-            <td>{{ entity.name }}</td>
-            <td>{{ entity.teacher }}</td>
+            <td>{{entity.course}}</td>
+            <td>{{entity.classroom}}</td>
+            <td>{{entity.teacher}}</td>
             <td class="text-center">
               <v-btn small icon @click="dialog_edit = true; edit(entity)">
                 <v-icon>mdi-pencil</v-icon>
@@ -29,25 +31,36 @@
           </tr>
         </tbody>
       </table>
+      <p class="editor__message" v-if="entities.length <= 0">Aún no hay sesiones.</p>
     </div>
 
     <v-dialog v-model="dialog_edit" class="container" max-width="500">
       <v-card class="edit">
-        <v-card-title v-if="action === 'create'" class="py-5">Crear Curso</v-card-title>
-        <v-card-title v-else-if="action === 'edit'" class="py-5">Editar Curso</v-card-title>
+        <v-card-title v-if="action === 'create'" class="py-5">Crear Sesión</v-card-title>
+        <v-card-title v-else-if="action === 'edit'" class="py-5">Editar Sesión</v-card-title>
         <v-card-text class="edit__content">
-          <span class="mt-1 mr-4">Nombre:</span>
-          <v-text-field
-            class="text-field"
-            v-model="entity.name"
+          <span class="mt-1 mr-4">Curso:</span>
+          <v-select
+            v-model="entity.course_id"
+            :items="courses"
+            item-text="name"
+            item-value="_id"
             dense
-            hide-details
-            autocomplete="off"
-          ></v-text-field>
-          <span class="mt-1 mr-4">Encargado:</span>
+            solo
+          ></v-select>
+          <span class="mt-1 mr-4">Aula:</span>
+          <v-select
+            v-model="entity.classroom_id"
+            :items="classrooms"
+            item-text="name"
+            item-value="_id"
+            dense
+            solo
+          ></v-select>
+          <span class="mt-1 mr-4">Profesor:</span>
           <v-select
             v-model="entity.teacher_id"
-            :items="teachers_aux"
+            :items="teachers"
             item-text="name"
             item-value="_id"
             dense
@@ -65,17 +78,21 @@
 <script>
 import loading from "@/components/loading";
 
-import {
-  getCoursesBySchool,
-  addCourse,
-  updateCourse
-} from "@/services/courseService";
+import { getCoursesBySchool } from "@/services/courseService";
+import { getClassroomsBySchool } from "@/services/classroomService";
 import { getTeachersBySchool } from "@/services/teacherService";
+import {
+  getSessionsBySchool,
+  addSession,
+  updateSession
+} from "@/services/sessionService";
 
 export default {
   data: () => ({
     entities: [],
     entity: {},
+    courses: [],
+    classrooms: [],
     teachers: [],
     //
     action: "",
@@ -84,27 +101,25 @@ export default {
     loading_save: false
   }),
   async mounted() {
+    this.courses = await getCoursesBySchool();
+    this.classrooms = await getClassroomsBySchool();
+    this.classrooms.sort((a, b) => a.name.localeCompare(b.name));
     this.teachers = await getTeachersBySchool();
-    this.entities = await getCoursesBySchool();
+    this.teachers.forEach(t => {
+      t.name = `${t.first_name} ${t.last_name}`;
+    });
+    this.entities = await getSessionsBySchool();
     this.loading = false;
   },
   computed: {
-    teachers_aux() {
-      let teachers = this.teachers.map(t => ({
-        ...t,
-        name: `${t.first_name} ${t.last_name}`
-      }));
-      return teachers;
-    },
     entities_aux() {
       let entities = this.entities.map(e => {
-        let teacher_id = e.teacher_id;
-        if (teacher_id) {
-          let { name } = this.teachers_aux.find(
-            t => t._id.$oid === teacher_id.$oid
-          );
-          e.teacher = name;
-        }
+        e.course = this.courses.find(c => c._id.$oid === e.course_id.$oid).name;
+        e.classroom = this.classrooms.find(
+          c => c._id.$oid === e.classroom_id.$oid
+        ).name;
+        let teacher = this.teachers.find(c => c._id.$oid === e.teacher_id.$oid);
+        e.teacher = `${teacher.first_name} ${teacher.last_name}`;
         return e;
       });
       return entities;
@@ -113,9 +128,7 @@ export default {
   methods: {
     add() {
       this.action = "create";
-      this.entity = {
-        name: ""
-      };
+      this.entity = {};
     },
     edit(entity) {
       this.action = "edit";
@@ -126,14 +139,18 @@ export default {
       this.loading_save = true;
       if (this.action === "create") {
         // Create
-        let entity_id = await addCourse(this.entity);
-        this.entity._id = entity_id;
-        this.entities.push(this.entity);
-        this.dialog_edit = false;
+        try {
+          let entity_id = await addSession(this.entity);
+          this.entity._id = entity_id;
+          this.entities.push(this.entity);
+          this.dialog_edit = false;
+        } catch {
+          //
+        }
       } else if (this.action === "edit") {
         // Update
         try {
-          await updateCourse(this.entity);
+          await updateSession(this.entity);
           let entity_idx = this.entities.findIndex(
             entity => entity._id.$oid === this.entity.id
           );
@@ -164,6 +181,12 @@ export default {
   }
   &__content {
     overflow-x: auto;
+  }
+  &__message {
+    margin: 18px 0 10px;
+    font-weight: lighter;
+    font-size: 1.1rem;
+    text-align: center;
   }
 }
 

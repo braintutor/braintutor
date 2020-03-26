@@ -121,7 +121,7 @@ import {
   addStudent,
   updateStudent
 } from "@/services/studentService";
-import { getClassrooms } from "@/services/classroomService";
+import { getClassroomsBySchool } from "@/services/classroomService";
 
 export default {
   data: () => ({
@@ -136,7 +136,7 @@ export default {
     loading_save: false
   }),
   async mounted() {
-    this.classrooms = await getClassrooms();
+    this.classrooms = await getClassroomsBySchool();
     this.classrooms.sort((a, b) => a.name.localeCompare(b.name));
     this.classroom_id = this.classrooms[0]._id;
     this.entities = await getStudents();

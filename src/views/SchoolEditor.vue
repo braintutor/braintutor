@@ -12,18 +12,11 @@
           <v-btn color="primary" class="editor__action" @click="save()">Guardar</v-btn>
         </div>
       </div>
-      <div :slot="1">
-        <TeachersEditor />
-      </div>
-      <div :slot="2">
-        <CoursesEditor />
-      </div>
-      <div :slot="3">
-        <ClassroomsEditor />
-      </div>
-      <div :slot="4">
-        <StudentsEditor />
-      </div>
+      <TeachersEditor :slot="1" />
+      <CoursesEditor :slot="2" />
+      <ClassroomsEditor :slot="3" />
+      <StudentsEditor :slot="4" />
+      <SessionsEditor :slot="5" />
     </app-sidebar>
   </div>
 </template>
@@ -35,6 +28,7 @@ import TeachersEditor from "@/components/SchoolEditor/TeachersEditor";
 import ClassroomsEditor from "@/components/SchoolEditor/ClassroomsEditor";
 import StudentsEditor from "@/components/SchoolEditor/StudentsEditor";
 import CoursesEditor from "@/components/SchoolEditor/CoursesEditor";
+import SessionsEditor from "@/components/SchoolEditor/SessionsEditor";
 
 import { getSchool, updateSchool } from "@/services/schoolService";
 
@@ -65,6 +59,9 @@ export default {
       {
         image:
           "https://icons.iconarchive.com/icons/graphicloads/100-flat/256/student-icon.png"
+      },
+      {
+        image: require("@/assets/avatar/normal.png")
       }
     ];
     this.school = await getSchool();
@@ -84,6 +81,7 @@ export default {
     TeachersEditor,
     CoursesEditor,
     ClassroomsEditor,
+    SessionsEditor,
     loading
   }
 };

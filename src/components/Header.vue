@@ -66,6 +66,12 @@ export default {
   data: () => ({
     links: [
       {
+        title: "Cursos",
+        name: "teacher",
+        icon: "mdi-book",
+        session_types: ["1"]
+      },
+      {
         title: "Ver Cursos",
         name: "panel",
         icon: "mdi-book",

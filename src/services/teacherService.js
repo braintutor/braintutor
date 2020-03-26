@@ -1,7 +1,7 @@
 import { fetch_get, fetch_post } from "./fetch";
 
-function getTeachers() {
-  return fetch_get('getTeachers')
+function getTeachersBySchool() {
+  return fetch_get('getTeachersBySchool')
 }
 
 function addTeacher(teacher) {
@@ -16,4 +16,4 @@ function updateTeacher(teacher) {
   })
 }
 
-export { getTeachers, addTeacher, updateTeacher }
+export { getTeachersBySchool, addTeacher, updateTeacher }

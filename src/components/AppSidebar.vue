@@ -1,9 +1,10 @@
 <template>
-  <div class="app-sidebar container">
+  <div class="app-sidebar">
     <div class="sidebar">
       <div v-for="(link, l_idx) in links" :key="l_idx">
         <div class="sidebar__link transform-scale-plus" @click="idx = l_idx">
           <img :src="link.image" />
+          <span class="sidebar__link-name">{{link.text}}</span>
         </div>
       </div>
     </div>
@@ -21,7 +22,7 @@
 export default {
   props: ["links"],
   data: () => ({
-    idx: 4
+    idx: 0
   })
 };
 </script>
@@ -31,6 +32,7 @@ export default {
 
 .app-sidebar {
   padding-top: 0;
+  margin: 0 20px;
   display: flex;
 }
 
@@ -42,11 +44,19 @@ export default {
   @include box-shadow;
 
   &__link {
-    margin: 16px 0;
+    display: flex;
+    align-items: center;
+    margin: 16px 6px;
     img {
       width: 40px;
       height: 40px;
       vertical-align: bottom;
+    }
+    &-name {
+      margin:  0 6px 0 12px;
+      color: #a0a0a0;
+      font-size: 1.1rem;
+      font-weight: bold;
     }
     &:hover {
       cursor: pointer;
@@ -76,6 +86,9 @@ export default {
       img {
         width: 36px;
         height: 36px;
+      }
+      &-name {
+        display: none;
       }
     }
   }

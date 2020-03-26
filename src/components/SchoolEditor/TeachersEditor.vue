@@ -95,7 +95,7 @@
 import loading from "@/components/loading";
 
 import {
-  getTeachers,
+  getTeachersBySchool,
   addTeacher,
   updateTeacher
 } from "@/services/teacherService";
@@ -111,7 +111,7 @@ export default {
     loading_save: false
   }),
   async mounted() {
-    this.teachers = await getTeachers();
+    this.teachers = await getTeachersBySchool();
     this.loading = false;
   },
   methods: {

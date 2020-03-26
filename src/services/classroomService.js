@@ -1,7 +1,7 @@
 import { fetch_get, fetch_post } from "./fetch";
 
-function getClassrooms() {
-  return fetch_get('getClassrooms')
+function getClassroomsBySchool() {
+  return fetch_get('getClassroomsBySchool')
 }
 
 function addClassroom(classroom) {
@@ -16,4 +16,4 @@ function updateClassroom(classroom) {
   })
 }
 
-export { getClassrooms, addClassroom, updateClassroom }
+export { getClassroomsBySchool, addClassroom, updateClassroom }
