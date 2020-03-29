@@ -2,15 +2,16 @@
   <div class="app-sidebar">
     <div class="sidebar">
       <div v-for="(link, l_idx) in links" :key="l_idx">
-        <div class="sidebar__link transform-scale-plus" @click="idx = l_idx">
+        <input type="radio" :id="l_idx" :value="l_idx" v-model="idx" />
+        <label :for="l_idx" class="sidebar__link">
           <img :src="link.image" />
-          <span class="sidebar__link-name">{{link.text}}</span>
-        </div>
+          <span v-if="link.text" class="sidebar__link-name">{{link.text}}</span>
+        </label>
       </div>
     </div>
     <div class="content">
       <template v-for="(link, l_idx) in links">
-        <div v-if="idx === l_idx" :key="l_idx">
+        <div v-show="idx === l_idx" :key="l_idx">
           <slot :name="l_idx"></slot>
         </div>
       </template>
@@ -38,37 +39,48 @@ export default {
 
 .sidebar {
   height: min-content;
-  padding: 0 8px;
+  // padding: 0 8px;
   margin-right: 20px;
   border-radius: 10px;
   @include box-shadow;
 
   &__link {
+    $self: &;
     display: flex;
     align-items: center;
-    margin: 16px 6px;
+    padding: 12px;
+    transition: opacity 0.3s;
+    opacity: 0.4;
     img {
       width: 40px;
       height: 40px;
       vertical-align: bottom;
     }
     &-name {
-      margin:  0 6px 0 12px;
-      color: #a0a0a0;
-      font-size: 1.1rem;
+      width: max-content;
+      margin: 0 5px 0 12px;
+      color: #3b3b3b;
+      font-size: 1.2rem;
       font-weight: bold;
+      transition: all 0.1s;
     }
     &:hover {
       cursor: pointer;
+      opacity: 1;
     }
   }
 }
+input[type="radio"] {
+  display: none;
+  &:checked + .sidebar__link {
+    opacity: 1;
+  }
+}
+
 .content {
   height: min-content;
-  padding: 10px;
+  margin-bottom: 20px;
   flex-grow: 1;
-  border-radius: 10px;
-  @include box-shadow;
 }
 
 @media only screen and (max-width: 768px) {
@@ -78,14 +90,13 @@ export default {
 
   .sidebar {
     width: min-content;
-    padding: 8px 6px;
     margin: 0 auto 12px auto;
     display: flex;
     &__link {
-      margin: 0 6px;
+    padding: 6px;
       img {
-        width: 36px;
-        height: 36px;
+        width: 32px;
+        height: 32px;
       }
       &-name {
         display: none;

@@ -16,29 +16,29 @@ const routes = [
   },
   { path: '*', redirect: { name: 'home' } },
   {
-    path: '/school-editor',
-    name: 'school-editor',
-    component: () => import('../views/SchoolEditor.vue')
-  },
-  {
     path: '/login',
     name: 'login',
     component: () => import('../views/Login.vue')
   },
   {
-    path: '/panel',
-    name: 'panel',
-    component: () => import('../views/Panel.vue')
+    path: '/school-editor',
+    name: 'school-editor',
+    component: () => import('../views/SchoolEditor.vue')
   },
   {
-    path: '/courses',
-    name: 'courses',
-    component: () => import('../views/Courses.vue')
+    path: '/teacher',
+    name: 'teacher',
+    component: () => import('../views/Teacher.vue')
   },
   {
-    path: '/course/:course_id',
-    name: 'course',
-    component: () => import('../views/Course.vue')
+    path: '/session-editor/:session_id',
+    name: 'session-editor',
+    component: () => import('../views/SessionEditor.vue')
+  },
+  {
+    path: '/chatbot-editor/:chatbot_id',
+    name: 'chatbot-editor',
+    component: () => import('../views/ChatbotEditor.vue')
   },
   {
     path: '/chatbot/:chatbot_id',
@@ -46,24 +46,9 @@ const routes = [
     component: () => import('../views/Chatbot.vue')
   },
   {
-    path: '/editor/:chatbot_id',
-    name: 'editor',
-    component: () => import('../views/Editor.vue')
-  },
-  {
-    path: '/course-editor/:course_id',
-    name: 'course-editor',
-    component: () => import('../views/CourseEditor.vue')
-  },
-  {
     path: '/profile',
     name: 'profile',
     component: () => import('../views/Profile.vue')
-  },
-  {
-    path: '/teacher',
-    name: 'teacher',
-    component: () => import('../views/Teacher.vue')
   }
 ]
 
@@ -75,9 +60,9 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   reset()
 
-  const require_session = ['panel', 'chatbot', 'course', 'courses', 'school-editor', 'editor', 'course-editor', 'teacher'] // Require Session Exists
+  const require_session = ['chatbot', 'school-editor', 'teacher', 'session-editor', 'chatbot-editor'] // Require Session Exists
   const require_admin = ['school-editor'] // Require Admin
-  const require_teacher = ['courses', 'editor', 'course-editor', 'teacher'] // Require Teacher
+  const require_teacher = ['teacher', 'session-editor', 'chatbot-editor'] // Require Teacher
   let to_name = to.name
 
   if (require_session.includes(to_name)) {

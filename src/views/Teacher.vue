@@ -1,18 +1,19 @@
 <template>
-  <div>
-    <AppSidebar :links="links">
-      <div :slot="0">
-        <h1>1</h1>
-      </div>
-      <div :slot="1">
-        <h1>2</h1>
-      </div>
-    </AppSidebar>
-  </div>
+  <AppSidebar :links="links">
+    <div :slot="0">
+      <Sessions />
+    </div>
+    <div :slot="1">
+      <Courses />
+    </div>
+  </AppSidebar>
 </template>
 
 <script>
 import AppSidebar from "@/components/AppSidebar";
+import Sessions from "@/components/Teacher/Sessions";
+import Courses from "@/components/Teacher/Courses";
+
 export default {
   data: () => ({
     links: [
@@ -29,10 +30,12 @@ export default {
     ]
   }),
   components: {
-    AppSidebar
+    AppSidebar,
+    Sessions,
+    Courses
   }
 };
 </script>
 
-<style>
+<style lang='scss' scoped>
 </style>

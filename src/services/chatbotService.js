@@ -1,7 +1,7 @@
 import { fetch_post } from "./fetch";
 
-function getChatbots(course_id) {
-  return fetch_post('getChatbots', {
+function getChatbotsByCourse(course_id) {
+  return fetch_post('getChatbotsByCourse', {
     course_id
   })
 }
@@ -31,4 +31,4 @@ function removeChatbot(chatbot_id) {
   })
 }
 
-export { getChatbot, getChatbots, addChatbot, updateChatbot, removeChatbot }
+export { getChatbot, getChatbotsByCourse, addChatbot, updateChatbot, removeChatbot }

@@ -32,10 +32,10 @@
 </template>
 
 <script>
-import MaterialsEditor from "@/components/Editor/MaterialsEditor/index";
-import QuizzesEditor from "@/components/Editor/QuizzesEditor/index";
-import KnowledgeEditor from "@/components/Editor/KnowledgeEditor";
-import ChatbotEditor from "@/components/Editor/ChatbotEditor";
+import MaterialsEditor from "@/components/ChatbotEditor/MaterialsEditor/index";
+import QuizzesEditor from "@/components/ChatbotEditor/QuizzesEditor/index";
+import KnowledgeEditor from "@/components/ChatbotEditor/KnowledgeEditor";
+import ChatbotEditor from "@/components/ChatbotEditor/ChatbotEditor";
 
 import { redirect, getParam } from "@/services/router.js";
 

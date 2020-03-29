@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="m-card">
     <loading :class="{active: loading_tasks}" />
     <div v-show="!show_tasks_selected" class="calendar-container pa-5">
       <div class="calendar-control">
@@ -55,7 +55,7 @@
 
 <script>
 import {
-  getTasks,
+  getTasksBySession,
   addTask,
   updateTasks,
   removeTask
@@ -75,7 +75,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 
 export default {
   data: () => ({
-    course_id: "",
+    session_id: "",
     task_date: "",
     tasks: [],
     task_delete_id: "",
@@ -101,10 +101,10 @@ export default {
     }
   },
   async mounted() {
-    this.course_id = getParam("course_id");
+    this.session_id = getParam("session_id");
     this.calendar = this.$refs.calendar.getApi();
     this.updateCalendarDate();
-    await this.restoreTasks()
+    await this.restoreTasks();
   },
   methods: {
     dateClick({ dateStr }) {
@@ -115,7 +115,7 @@ export default {
     async unselectTasks() {
       this.show_tasks_selected = false;
       this.loading_tasks = true;
-      this.tasks = await getTasks(this.course_id);
+      this.tasks = await getTasksBySession(this.session_id);
       this.loading_tasks = false;
     },
     async createTask() {
@@ -125,7 +125,7 @@ export default {
         description: "Detalle"
       };
       this.loading_tasks = true;
-      let task_id = await addTask(this.course_id, new_task);
+      let task_id = await addTask(this.session_id, new_task);
       new_task._id = task_id;
       this.tasks.push(new_task);
       this.loading_tasks = false;
@@ -139,7 +139,7 @@ export default {
       tasks.forEach(task => {
         task.id = task._id.$oid;
       });
-      await updateTasks(this.course_id, tasks);
+      await updateTasks(this.session_id, tasks);
       this.loading_tasks = false;
     },
     deleteTask(task_id) {
@@ -157,7 +157,7 @@ export default {
     },
     async restoreTasks() {
       this.loading_tasks = true;
-      this.tasks = await getTasks(this.course_id);
+      this.tasks = await getTasksBySession(this.session_id);
       this.loading_tasks = false;
     },
     // Calendar
@@ -213,7 +213,7 @@ export default {
     }
   }
   .fullcalendar {
-    max-width: 1200px;
+    max-width: 850px;
     margin: 0 auto;
   }
 }

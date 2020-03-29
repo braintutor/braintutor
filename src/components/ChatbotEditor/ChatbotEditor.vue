@@ -120,7 +120,7 @@ export default {
     async removeChatbot() {
       this.loading = true;
       await removeChatbot(this.chatbot._id.$oid);
-      redirect("course-editor", { course_id: this.chatbot.course_id.$oid });
+      redirect("teacher");
       this.loading = false;
     }
   },

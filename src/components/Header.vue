@@ -78,12 +78,6 @@ export default {
         session_types: ["2"]
       },
       {
-        title: "Editar Cursos",
-        name: "courses",
-        icon: "mdi-book-plus-multiple",
-        session_types: ["1"]
-      },
-      {
         title: "Colegio",
         name: "school-editor",
         icon: "mdi-school",
