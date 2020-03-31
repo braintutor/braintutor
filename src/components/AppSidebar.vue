@@ -11,7 +11,7 @@
     </div>
     <div class="content">
       <template v-for="(link, l_idx) in links">
-        <div v-show="idx === l_idx" :key="l_idx">
+        <div v-if="idx === l_idx" :key="l_idx">
           <slot :name="l_idx"></slot>
         </div>
       </template>
@@ -44,25 +44,35 @@ export default {
   border-radius: 10px;
   @include box-shadow;
 
+  &:hover {
+    .sidebar__link-name {
+      max-width: 180px;
+      margin: 0 4px 0 8px;
+      opacity: 1;
+      pointer-events: all;
+    }
+  }
+
   &__link {
     $self: &;
     display: flex;
     align-items: center;
-    padding: 12px;
+    padding: 8px;
     transition: opacity 0.3s;
     opacity: 0.4;
     img {
-      width: 40px;
-      height: 40px;
+      width: 30px;
+      height: 30px;
       vertical-align: bottom;
     }
     &-name {
-      width: max-content;
-      margin: 0 5px 0 12px;
+      max-width: 0;
       color: #3b3b3b;
-      font-size: 1.2rem;
+      font-size: 0.95rem;
       font-weight: bold;
-      transition: all 0.1s;
+      opacity: 0;
+      transition: all 0.8s, margin 0.5s;
+      pointer-events: none;
     }
     &:hover {
       cursor: pointer;
@@ -93,10 +103,10 @@ input[type="radio"] {
     margin: 0 auto 12px auto;
     display: flex;
     &__link {
-    padding: 6px;
+      padding: 6px;
       img {
-        width: 32px;
-        height: 32px;
+        width: 30px;
+        height: 30px;
       }
       &-name {
         display: none;

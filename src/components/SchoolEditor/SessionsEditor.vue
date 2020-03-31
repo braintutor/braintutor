@@ -8,20 +8,32 @@
         <v-icon right>mdi-plus</v-icon>
       </v-btn>
     </div>
+    <div class="editor__filter">
+      <h3 class="mr-5">Aula:</h3>
+      <v-select
+        v-model="classroom_id"
+        :items="classrooms"
+        item-text="name"
+        item-value="_id"
+        dense
+        solo
+      ></v-select>
+    </div>
+    <v-divider class="mt-5 mb-4"></v-divider>
     <div class="editor__content">
-      <table class="table">
+      <table class="m-table">
         <thead>
           <tr>
-            <th class="text-left">Curso</th>
             <th class="text-left">Aula</th>
+            <th class="text-left">Curso</th>
             <th class="text-left">Profesor</th>
             <th class="text-center">Acción</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(entity, e_idx) in entities_aux" :key="e_idx">
-            <td>{{entity.course}}</td>
+          <tr v-for="(entity, e_idx) in entities_filtered" :key="e_idx">
             <td>{{entity.classroom}}</td>
+            <td>{{entity.course}}</td>
             <td>{{entity.teacher}}</td>
             <td class="text-center">
               <v-btn small icon @click="dialog_edit = true; edit(entity)">
@@ -31,7 +43,7 @@
           </tr>
         </tbody>
       </table>
-      <p class="editor__message" v-if="entities.length <= 0">Aún no hay sesiones.</p>
+      <p class="editor__message" v-if="entities_filtered.length <= 0">Aún no hay sesiones.</p>
     </div>
 
     <v-dialog v-model="dialog_edit" class="container" max-width="500">
@@ -39,19 +51,19 @@
         <v-card-title v-if="action === 'create'" class="py-5">Crear Sesión</v-card-title>
         <v-card-title v-else-if="action === 'edit'" class="py-5">Editar Sesión</v-card-title>
         <v-card-text class="edit__content">
-          <span class="mt-1 mr-4">Curso:</span>
+          <span class="mt-1 mr-4">Aula:</span>
           <v-select
-            v-model="entity.course_id"
-            :items="courses"
+            v-model="entity.classroom_id"
+            :items="classrooms"
             item-text="name"
             item-value="_id"
             dense
             solo
           ></v-select>
-          <span class="mt-1 mr-4">Aula:</span>
+          <span class="mt-1 mr-4">Curso:</span>
           <v-select
-            v-model="entity.classroom_id"
-            :items="classrooms"
+            v-model="entity.course_id"
+            :items="courses"
             item-text="name"
             item-value="_id"
             dense
@@ -93,6 +105,7 @@ export default {
     entity: {},
     courses: [],
     classrooms: [],
+    classroom_id: "",
     teachers: [],
     //
     action: "",
@@ -104,6 +117,7 @@ export default {
     this.courses = await getCoursesBySchool();
     this.classrooms = await getClassroomsBySchool();
     this.classrooms.sort((a, b) => a.name.localeCompare(b.name));
+    this.classroom_id = this.classrooms[0]._id;
     this.teachers = await getTeachersBySchool();
     this.teachers.forEach(t => {
       t.name = `${t.first_name} ${t.last_name}`;
@@ -122,6 +136,12 @@ export default {
         e.teacher = `${teacher.first_name} ${teacher.last_name}`;
         return e;
       });
+      return entities;
+    },
+    entities_filtered() {
+      let entities = this.entities_aux.filter(
+        e => e.classroom_id.$oid === this.classroom_id.$oid
+      );
       return entities;
     }
   },
@@ -176,6 +196,10 @@ export default {
     display: flex;
     justify-content: space-between;
   }
+  &__filter {
+    display: flex;
+    align-items: center;
+  }
   &__title {
     margin-bottom: 10px;
   }
@@ -187,26 +211,6 @@ export default {
     font-weight: lighter;
     font-size: 1.1rem;
     text-align: center;
-  }
-}
-
-.table {
-  width: 100%;
-  thead {
-    tr {
-      th {
-        padding: 8px 10px 8px 0;
-        font-size: 1.1rem;
-      }
-    }
-  }
-  tbody {
-    tr {
-      td {
-        padding: 4px 0;
-        font-size: 1rem;
-      }
-    }
   }
 }
 

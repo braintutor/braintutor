@@ -9,7 +9,7 @@
       </v-btn>
     </div>
     <div class="teachers-editor__content">
-      <table class="table">
+      <table class="m-table">
         <thead>
           <tr>
             <th class="text-left">Nombres</th>
@@ -169,26 +169,6 @@ export default {
   }
   &__content {
     overflow-x: auto;
-  }
-}
-
-.table {
-  width: 100%;
-  thead {
-    tr {
-      th {
-        padding: 8px 10px 8px 0;
-        font-size: 1.1rem;
-      }
-    }
-  }
-  tbody {
-    tr {
-      td {
-        padding: 4px 0;
-        font-size: 1rem;
-      }
-    }
   }
 }
 

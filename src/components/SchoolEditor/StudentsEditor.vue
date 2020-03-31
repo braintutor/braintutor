@@ -21,7 +21,7 @@
     </div>
     <v-divider class="mt-5 mb-4"></v-divider>
     <div class="editor__content">
-      <table class="table">
+      <table class="m-table">
         <thead>
           <tr>
             <th class="text-left">Nombres</th>
@@ -216,26 +216,6 @@ export default {
     font-weight: lighter;
     font-size: 1.1rem;
     text-align: center;
-  }
-}
-
-.table {
-  width: 100%;
-  thead {
-    tr {
-      th {
-        padding: 8px 10px 8px 0;
-        font-size: 1.1rem;
-      }
-    }
-  }
-  tbody {
-    tr {
-      td {
-        padding: 4px 0;
-        font-size: 1rem;
-      }
-    }
   }
 }
 
