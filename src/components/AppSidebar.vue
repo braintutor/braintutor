@@ -31,6 +31,9 @@ export default {
 <style lang='scss' scoped>
 @import "@/styles/box-shadow";
 
+$color-selected: #3968eb;
+$color-hover: #a7b9ec;
+
 .app-sidebar {
   padding-top: 0;
   margin: 0 20px;
@@ -38,16 +41,17 @@ export default {
 }
 
 .sidebar {
+  overflow: hidden;
   height: min-content;
-  // padding: 0 8px;
+  padding: 8px 0;
   margin-right: 20px;
   border-radius: 10px;
   @include box-shadow;
 
   &:hover {
     .sidebar__link-name {
-      max-width: 180px;
-      margin: 0 4px 0 8px;
+      max-width: 170px;
+      margin-right: 8px;
       opacity: 1;
       pointer-events: all;
     }
@@ -57,15 +61,17 @@ export default {
     $self: &;
     display: flex;
     align-items: center;
-    padding: 8px;
-    transition: opacity 0.3s;
-    opacity: 0.4;
+    border-left: 3px solid #ffffff00;
+    border-right: 3px solid #ffffff00;
     img {
+      margin: 8px;
       width: 30px;
       height: 30px;
       vertical-align: bottom;
+      border-radius: 50%;
     }
     &-name {
+      white-space: nowrap;
       max-width: 0;
       color: #3b3b3b;
       font-size: 0.95rem;
@@ -76,13 +82,15 @@ export default {
     }
     &:hover {
       cursor: pointer;
-      opacity: 1;
+      border-left: 3px solid $color-hover;
     }
   }
 }
 input[type="radio"] {
   display: none;
   &:checked + .sidebar__link {
+    background: #f6f6fd;
+    border-left: 3px solid $color-selected;
     opacity: 1;
   }
 }
@@ -100,17 +108,32 @@ input[type="radio"] {
 
   .sidebar {
     width: min-content;
+    padding: 0 8px;
     margin: 0 auto 12px auto;
     display: flex;
     &__link {
-      padding: 6px;
+      border-left: none;
+      border-right: none;
       img {
+        margin: 6px;
         width: 30px;
         height: 30px;
       }
       &-name {
         display: none;
       }
+      &:hover {
+        border-left: none;
+        border-bottom: 3px solid $color-hover;
+        cursor: pointer;
+        opacity: 1;
+      }
+    }
+  }
+  input[type="radio"] {
+    &:checked + .sidebar__link {
+      border-left: none;
+      border-bottom: 3px solid $color-selected;
     }
   }
 }

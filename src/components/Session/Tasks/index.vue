@@ -94,9 +94,6 @@ export default {
     eventClick() {},
     async unselectTasks() {
       this.show_tasks_selected = false;
-      this.loading_tasks = true;
-      this.tasks = await getTasksBySessionStudent(this.session_id);
-      this.loading_tasks = false;
     },
     async restoreTasks() {
       this.loading_tasks = true;
