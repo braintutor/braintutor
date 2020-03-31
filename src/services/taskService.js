@@ -6,6 +6,12 @@ function getTasksBySession(session_id) {
   })
 }
 
+function getTasksBySessionStudent(session_id) {
+  return fetch_post('getTasksBySessionStudent', {
+    session_id
+  })
+}
+
 function addTask(session_id, task) {
   return fetch_post('addTask', {
     session_id,
@@ -26,4 +32,4 @@ function removeTask(task_id) {
   })
 }
 
-export { getTasksBySession, addTask, updateTasks, removeTask }
+export { getTasksBySession, getTasksBySessionStudent, addTask, updateTasks, removeTask }

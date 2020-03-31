@@ -8,6 +8,10 @@ function getSessionsByTeacher() {
   return fetch_get('getSessionsByTeacher')
 }
 
+function getSessionsByStudent() {
+  return fetch_get('getSessionsByStudent')
+}
+
 function addSession(session) {
   return fetch_post('addSession', {
     session
@@ -20,4 +24,4 @@ function updateSession(session) {
   })
 }
 
-export { getSessionsBySchool, getSessionsByTeacher, addSession, updateSession }
+export { getSessionsBySchool, getSessionsByTeacher, getSessionsByStudent, addSession, updateSession }

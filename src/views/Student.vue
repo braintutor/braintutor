@@ -1,18 +1,19 @@
 <template>
-  <div>
+  <div class="px-2">
     <loading :active="loading" />
-    <p class="message" v-if="sessions.length <= 0">No tiene cursos asignados.</p>
     <div class="row no-gutters">
       <div
         class="col-6 col-md-4 col-lg-3 px-2 pb-2"
         v-for="(session, s_idx) in sessions"
         :key="s_idx"
       >
-        <div class="classroom m-card transform-scale" @click="edit(session)">
+        <div class="classroom m-card transform-scale" @click="select(session)">
           <span class="classroom__item">Curso</span>
           <span class="classroom__value">{{session.course.name}}</span>
-          <span class="classroom__item">Aula</span>
-          <span class="classroom__value">{{session.classroom.name}}</span>
+          <span class="classroom__item">Profesor</span>
+          <span
+            class="classroom__value"
+          >{{`${session.teacher.first_name} ${session.teacher.last_name}`}}</span>
         </div>
       </div>
     </div>
@@ -22,7 +23,7 @@
 <script>
 import loading from "@/components/loading";
 
-import { getSessionsByTeacher } from "@/services/sessionService";
+import { getSessionsByStudent } from "@/services/sessionService";
 import { redirect } from "@/services/router.js";
 
 export default {
@@ -31,12 +32,12 @@ export default {
     loading: true
   }),
   async mounted() {
-    this.sessions = await getSessionsByTeacher();
+    this.sessions = await getSessionsByStudent();
     this.loading = false;
   },
   methods: {
-    edit(session) {
-      redirect("session-editor", { session_id: session._id.$oid });
+    select(session) {
+      redirect("session", { session_id: session._id.$oid });
     }
   },
   components: {
@@ -65,12 +66,5 @@ export default {
     font-size: 1.1rem;
     font-weight: lighter;
   }
-}
-.message {
-  margin: 10px;
-  color: #797979;
-  font-size: 1.1rem;
-  font-weight: lighter;
-  text-align: center;
 }
 </style>

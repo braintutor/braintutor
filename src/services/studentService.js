@@ -1,11 +1,5 @@
 import { fetch_get, fetch_post } from "./fetch";
 
-function getStudent(student_id) {
-  return fetch_post('getStudent', {
-    student_id
-  })
-}
-
 function getStudents() {
   return fetch_get('getStudents')
 }
@@ -19,6 +13,11 @@ function getStudentsByText(text) {
 function getStudentsByClassroom(classroom_id) {
   return fetch_post('getStudentsByClassroom', {
     classroom_id
+  })
+}
+function getStudentsBySession(session_id) {
+  return fetch_post('getStudentsBySession', {
+    session_id
   })
 }
 
@@ -49,10 +48,10 @@ function getCategoriesByLearningStyle() {
 }
 
 export {
-  getStudent,
   getStudents,
   getStudentsByText,
   getStudentsByClassroom,
+  getStudentsBySession,
   addStudent,
   updateStudent,
   getProfile,

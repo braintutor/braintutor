@@ -70,7 +70,6 @@ export default {
     messages: [new Message("Hola.\n¿En qué puedo ayudarte?", 0)],
     message_text: "",
     chatbot_id: "",
-    response_delay: 200,
     icons: [
       {
         category: "overview",
@@ -155,29 +154,26 @@ export default {
         this.addMessage(message_text, 1);
         this.message_text = "";
 
-        setTimeout(async () => {
-          // delay response for more realism
-          try {
-            let { answer, material_id, category } = await getAnswer(
-              this.chatbot_id,
-              message_text
-            );
-            if (material_id) {
-              action = () => {
-                let material = this.getMaterial(material_id);
-                this.selectService(0);
-                this.component_materials.selectMaterial(material, category);
-                scrollLeft("chatbot-scroll");
-              };
-              icon = this.icons.find(i => i.category === category);
-            }
-            this.addMessage(answer, 0, action, icon);
-          } catch (error) {
-            // I want application to not crush, but don't care about the message
-          } finally {
-            this.loading_message = false;
+        try {
+          let { answer, material_id, category } = await getAnswer(
+            this.chatbot_id,
+            message_text
+          );
+          if (material_id) {
+            action = () => {
+              let material = this.getMaterial(material_id);
+              this.selectService(0);
+              this.component_materials.selectMaterial(material, category);
+              scrollLeft("chatbot-scroll");
+            };
+            icon = this.icons.find(i => i.category === category);
           }
-        }, this.response_delay);
+          this.addMessage(answer, 0, action, icon);
+        } catch (error) {
+          // I want application to not crush, but don't care about the message
+        } finally {
+          this.loading_message = false;
+        }
       }
     },
     talkMessage() {
@@ -212,7 +208,7 @@ export default {
     width: max-content;
     max-width: 70%;
     border-radius: 6px;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     white-space: pre-wrap;
     word-wrap: break-word;
 

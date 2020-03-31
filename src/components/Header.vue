@@ -72,8 +72,8 @@ export default {
         session_types: ["1"]
       },
       {
-        title: "Ver Cursos",
-        name: "panel",
+        title: "Cursos",
+        name: "student",
         icon: "mdi-book",
         session_types: ["2"]
       },

@@ -6,6 +6,12 @@ function getChatbotsByCourse(course_id) {
   })
 }
 
+function getChatbotsBySession(session_id) {
+  return fetch_post('getChatbotsBySession', {
+    session_id
+  })
+}
+
 function getChatbot(chatbot_id) {
   return fetch_post('getChatbot', {
     chatbot_id
@@ -31,4 +37,4 @@ function removeChatbot(chatbot_id) {
   })
 }
 
-export { getChatbot, getChatbotsByCourse, addChatbot, updateChatbot, removeChatbot }
+export { getChatbot, getChatbotsByCourse, getChatbotsBySession, addChatbot, updateChatbot, removeChatbot }

@@ -26,6 +26,16 @@ const routes = [
     component: () => import('../views/SchoolEditor.vue')
   },
   {
+    path: '/student',
+    name: 'student',
+    component: () => import('../views/Student.vue')
+  },
+  {
+    path: '/session/:session_id',
+    name: 'session',
+    component: () => import('../views/Session.vue')
+  },
+  {
     path: '/teacher',
     name: 'teacher',
     component: () => import('../views/Teacher.vue')
@@ -60,7 +70,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   reset()
 
-  const require_session = ['chatbot', 'school-editor', 'teacher', 'session-editor', 'chatbot-editor'] // Require Session Exists
+  const require_session = ['chatbot', 'school-editor', 'student', 'session', 'teacher', 'session-editor', 'chatbot-editor'] // Require Session Exists
   const require_admin = ['school-editor'] // Require Admin
   const require_teacher = ['teacher', 'session-editor', 'chatbot-editor'] // Require Teacher
   let to_name = to.name

@@ -1,6 +1,7 @@
 <template>
   <div>
     <loading :active="loading" />
+    <p class="message" v-if="courses.length <= 0">No tiene cursos asignados.</p>
     <div class="course m-card" v-for="(course, c_idx) in courses" :key="c_idx">
       <h3 class="course__name">{{course.name}}</h3>
       <div class="course__content">
@@ -110,5 +111,12 @@ export default {
     cursor: pointer;
     background-color: #eee;
   }
+}
+.message {
+  margin: 10px;
+  color: #797979;
+  font-size: 1.1rem;
+  font-weight: lighter;
+  text-align: center;
 }
 </style>
