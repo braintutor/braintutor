@@ -114,7 +114,7 @@ $color-hover-border: #a7b9ec;
     }
     &:hover {
       cursor: pointer;
-      $color-hover: #fbfbff;
+      background: $color-selected;
     }
   }
 }
