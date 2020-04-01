@@ -78,6 +78,7 @@ $color-hover-border: #a7b9ec;
     align-items: center;
     border-left: 3px solid #ffffff00;
     border-right: 3px solid #ffffff00;
+    transition: all 0.5s;
     img {
       margin: 8px;
       width: 30px;
