@@ -17,10 +17,10 @@
       </div>
     </div>
     <div id="tasks-scroll" class="m-fullscreen-content">
-      <div class="task-container m-card" v-for="(task, t_idx) in tasks" :key="t_idx">
-        <div class="task-menu">
+      <div class="task m-card" v-for="(task, t_idx) in tasks" :key="t_idx">
+        <div class="task__menu">
           <v-text-field
-            class="task-name"
+            class="task__name"
             v-model="task.name"
             autoGrow
             dense
@@ -34,9 +34,9 @@
             <v-icon>mdi-content-save</v-icon>
           </v-btn>
         </div>
-        <div class="task-content">
+        <div class="task__content">
           <v-textarea
-            class="task-item-text"
+            class="task__description"
             v-model="task.description"
             :rows="1"
             autoGrow
@@ -77,30 +77,21 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-
-.task-container {
+.task {
   padding: 20px;
-  margin: 4px 5px 16px 5px;
-  border-radius: 8px;
-  border-left: 8px solid #7272e9;
-
-  .task-menu {
+  margin: 4px 10px 16px 10px;
+  border-radius: 0;
+  border-left: 6px solid #7272e9;
+  &__menu {
     display: flex;
-    .task-name {
-      margin-bottom: 16px !important;
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
   }
-  .task-content {
-    .task-item {
-      font-size: 1.2rem;
-      padding-bottom: 8px;
-      font-weight: bold;
-    }
-    .task-item-text {
-      font-size: 1rem;
-    }
+  &__name {
+    margin-bottom: 16px !important;
+    font-size: 1.4rem;
+    font-weight: bold;
+  }
+  &__description {
+    font-size: 1rem;
   }
 }
 </style>
