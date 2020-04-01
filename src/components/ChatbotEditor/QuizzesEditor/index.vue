@@ -130,6 +130,7 @@ export default {
   }
 }
 .quizzes-container {
+  padding: 0;
   .quiz-container {
     padding: 8px;
   }

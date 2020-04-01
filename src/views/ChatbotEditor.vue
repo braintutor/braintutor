@@ -1,5 +1,5 @@
 <template>
-  <AppSidebar :links="links">
+  <AppSidebar :links="links" :action_links="action_links">
     <ChatbotEditor :slot="0" />
     <MaterialsEditor :slot="1" />
     <QuizzesEditor :slot="2" />
@@ -35,15 +35,20 @@ export default {
       {
         image: require("@/assets/braintutor/icon-knowledge.png"),
         text: "Conocimiento"
-      },
-      {
-        image: require("@/assets/avatar/normal.png"),
-        text: "Chatbot"
       }
-    ]
+    ],
+    action_links: []
   }),
   mounted() {
     this.chatbot_id = getParam("chatbot_id");
+    this.action_links = [
+      {
+        image: require("@/assets/avatar/normal.png"),
+        action: () => {
+          this.redirectChatbot();
+        }
+      }
+    ];
   },
   methods: {
     redirectChatbot() {

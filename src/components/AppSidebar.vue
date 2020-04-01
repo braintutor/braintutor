@@ -1,12 +1,23 @@
 <template>
   <div class="app-sidebar">
     <div class="sidebar">
-      <div v-for="(link, l_idx) in links" :key="l_idx">
-        <input type="radio" :id="l_idx" :value="l_idx" v-model="idx" />
-        <label :for="l_idx" class="sidebar__link">
-          <img :src="link.image" />
-          <span v-if="link.text" class="sidebar__link-name">{{link.text}}</span>
-        </label>
+      <div class="sidebar__links">
+        <div v-for="(link, l_idx) in links" :key="l_idx">
+          <input type="radio" :id="l_idx" :value="l_idx" v-model="idx" />
+          <label :for="l_idx" class="sidebar__link">
+            <img :src="link.image" />
+            <span v-if="link.text" class="sidebar__link-name">{{link.text}}</span>
+          </label>
+        </div>
+      </div>
+      <div class="sidebar__actions">
+        <div
+          v-for="(action_link, a_idx) in action_links"
+          :key="a_idx"
+          @click="action_link.action()"
+        >
+          <img :src="action_link.image" />
+        </div>
       </div>
     </div>
     <div class="content">
@@ -21,9 +32,9 @@
 
 <script>
 export default {
-  props: ["links"],
+  props: ["links", "action_links"],
   data: () => ({
-    idx: 2
+    idx: 0
   })
 };
 </script>
@@ -31,8 +42,10 @@ export default {
 <style lang='scss' scoped>
 @import "@/styles/box-shadow";
 
-$color-selected: #3968eb;
-$color-hover: #a7b9ec;
+$color-selected: #f6f6fd;
+$color-hover: #fbfbff;
+$color-selected-border: #3968eb;
+$color-hover-border: #a7b9ec;
 
 .app-sidebar {
   padding-top: 0;
@@ -41,22 +54,24 @@ $color-hover: #a7b9ec;
 }
 
 .sidebar {
-  overflow: hidden;
-  height: min-content;
-  padding: 7px 0;
   margin-right: 16px;
-  border-radius: 10px;
-  @include box-shadow;
+  &__links {
+    overflow: hidden;
+    height: min-content;
+    padding: 7px 0;
+    margin-bottom: 16px;
+    border-radius: 10px;
+    @include box-shadow;
 
-  &:hover {
-    .sidebar__link-name {
-      max-width: 170px;
-      margin-right: 8px;
-      opacity: 1;
-      pointer-events: all;
+    &:hover {
+      .sidebar__link-name {
+        max-width: 170px;
+        margin-right: 8px;
+        opacity: 1;
+        pointer-events: all;
+      }
     }
   }
-
   &__link {
     $self: &;
     display: flex;
@@ -81,15 +96,33 @@ $color-hover: #a7b9ec;
     }
     &:hover {
       cursor: pointer;
-      border-left: 3px solid $color-hover;
+      background: $color-hover;
+      border-left: 3px solid $color-hover-border;
+    }
+  }
+  &__actions {
+    height: min-content;
+    width: min-content;
+    border-radius: 50%;
+    @include box-shadow;
+    img {
+      width: 36px;
+      height: 36px;
+      margin: 8px;
+      border-radius: 50%;
+      vertical-align: bottom;
+    }
+    &:hover {
+      cursor: pointer;
+      $color-hover: #fbfbff;
     }
   }
 }
 input[type="radio"] {
   display: none;
   &:checked + .sidebar__link {
-    background: #f6f6fd;
-    border-left: 3px solid $color-selected;
+    background: $color-selected;
+    border-left: 3px solid $color-selected-border;
     opacity: 1;
   }
 }
@@ -108,10 +141,14 @@ input[type="radio"] {
   }
 
   .sidebar {
-    width: min-content;
-    padding: 0 3px;
-    margin: 0 auto 12px auto;
     display: flex;
+    margin: 0 auto;
+    &__links {
+      margin-bottom: 6px;
+      width: min-content;
+      padding: 0 3px;
+      display: flex;
+    }
     &__link {
       border-left: none;
       border-right: none;
@@ -126,16 +163,24 @@ input[type="radio"] {
       }
       &:hover {
         border-left: none;
-        border-bottom: 3px solid $color-hover;
+        border-bottom: 3px solid $color-hover-border;
         cursor: pointer;
         opacity: 1;
+      }
+    }
+    &__actions {
+      margin-left: 8px;
+      img {
+        width: 36px;
+        height: 36px;
+        margin: 5px;
       }
     }
   }
   input[type="radio"] {
     &:checked + .sidebar__link {
       border-left: none;
-      border-bottom: 3px solid $color-selected;
+      border-bottom: 3px solid $color-selected-border;
     }
   }
 }
