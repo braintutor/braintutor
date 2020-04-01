@@ -77,21 +77,4 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.task {
-  padding: 20px;
-  margin: 4px 10px 16px 10px;
-  border-radius: 0;
-  border-left: 6px solid #7272e9;
-  &__menu {
-    display: flex;
-  }
-  &__name {
-    margin-bottom: 16px !important;
-    font-size: 1.4rem;
-    font-weight: bold;
-  }
-  &__description {
-    font-size: 1rem;
-  }
-}
 </style>

@@ -194,40 +194,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import "~@fullcalendar/core/main.css";
-@import "~@fullcalendar/daygrid/main.css";
-
-.calendar-container {
-  padding: 16px;
-  .calendar-control {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0 4px 10px 8px;
-    .calendar-date {
-      font-weight: bold;
-      font-size: 1.5rem;
-    }
-  }
-  .fullcalendar {
-    max-width: 800px;
-    margin: 0 auto;
-  }
-}
-
-.fc-widget-content {
-  cursor: pointer;
-}
-.fc-event-container {
-  font-size: 1rem;
-  pointer-events: none;
-}
-
-.fc-toolbar {
-  display: none;
-}
-.fc-scroller {
-  overflow: hidden !important;
-  height: auto !important;
-}
+@import "@/styles/tasks";
 </style>

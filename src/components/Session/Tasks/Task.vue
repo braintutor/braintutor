@@ -10,13 +10,12 @@
       <div class="menu-right"></div>
     </div>
     <div id="tasks-scroll" class="m-fullscreen-content">
-      <div class="task-container" v-for="(task, t_idx) in tasks" :key="t_idx">
-        <div class="task-menu">
-          <span class="task-name">{{task.name}}</span>
+      <div class="task m-card" v-for="(task, t_idx) in tasks" :key="t_idx">
+        <div class="task__menu">
+          <span class="task__name">{{task.name}}</span>
         </div>
-        <div class="task-content">
-          <div class="task-item">Detalle:</div>
-          <span class="task-item-text">{{task.description}}</span>
+        <div class="task__content">
+          <span class="task__description">{{task.description}}</span>
         </div>
       </div>
     </div>
@@ -42,34 +41,4 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-@import "@/styles/box-shadow.scss";
-
-.task-container {
-  padding: 28px;
-  padding-bottom: 10px;
-  margin: 20px;
-  margin-top: 5px;
-  border-radius: 10px;
-  @include box-shadow;
-
-  .task-menu {
-    display: flex;
-    .task-name {
-      margin-bottom: 25px !important;
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-  }
-  .task-content {
-    padding-bottom: 20px;
-    .task-item {
-      font-size: 1.2rem;
-      padding-bottom: 8px;
-      font-weight: bold;
-    }
-    .task-item-text {
-      font-size: 1rem;
-    }
-  }
-}
 </style>

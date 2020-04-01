@@ -1,7 +1,7 @@
 <template>
-  <div class="m-card">
+  <div>
     <loading :class="{active: loading_tasks}" />
-    <div v-show="!show_tasks_selected" class="calendar-container pa-5">
+    <div v-show="!show_tasks_selected" class="calendar-container m-card">
       <div class="calendar-control">
         <span class="calendar-date">{{calendar_date}}</span>
         <div class="calendar-actions">
@@ -42,9 +42,7 @@
 import Task from "./Task";
 import loading from "@/components/loading";
 
-import {
-  getTasksBySessionStudent
-} from "@/services/taskService";
+import { getTasksBySessionStudent } from "@/services/taskService";
 import { getParam } from "@/services/router.js";
 
 import FullCalendar from "@fullcalendar/vue";
@@ -138,39 +136,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import "~@fullcalendar/core/main.css";
-@import "~@fullcalendar/daygrid/main.css";
-
-.calendar-container {
-  .calendar-control {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    .calendar-date {
-      font-weight: bold;
-      font-size: 1.5rem;
-    }
-  }
-  .fullcalendar {
-    max-width: 850px;
-    margin: 0 auto;
-  }
-}
-
-.fc-widget-content {
-  cursor: pointer;
-}
-.fc-event-container {
-  font-size: 1rem;
-  pointer-events: none;
-}
-
-.fc-toolbar {
-  display: none;
-}
-.fc-scroller {
-  overflow: hidden !important;
-  height: auto !important;
-}
+@import "@/styles/tasks";
 </style>
