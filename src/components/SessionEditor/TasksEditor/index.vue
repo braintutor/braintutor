@@ -1,7 +1,7 @@
 <template>
-  <div class="m-card">
+  <div>
     <loading :class="{active: loading_tasks}" />
-    <div v-show="!show_tasks_selected" class="calendar-container">
+    <div v-show="!show_tasks_selected" class="calendar-container m-card">
       <div class="calendar-control">
         <span class="calendar-date">{{calendar_date}}</span>
         <div class="calendar-actions">

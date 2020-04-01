@@ -17,9 +17,16 @@
       </div>
     </div>
     <div id="tasks-scroll" class="m-fullscreen-content">
-      <div class="task-container" v-for="(task, t_idx) in tasks" :key="t_idx">
+      <div class="task-container m-card" v-for="(task, t_idx) in tasks" :key="t_idx">
         <div class="task-menu">
-          <v-text-field class="task-name" v-model="task.name" dense hide-details autocomplete="off"></v-text-field>
+          <v-text-field
+            class="task-name"
+            v-model="task.name"
+            autoGrow
+            dense
+            hide-details
+            autocomplete="off"
+          ></v-text-field>
           <v-btn icon @click="deleteTask(task._id.$oid)">
             <v-icon>mdi-delete</v-icon>
           </v-btn>
@@ -28,7 +35,6 @@
           </v-btn>
         </div>
         <div class="task-content">
-          <div class="task-item">Detalle:</div>
           <v-textarea
             class="task-item-text"
             v-model="task.description"
@@ -36,6 +42,7 @@
             autoGrow
             dense
             hide-details
+            autocomplete="off"
           ></v-textarea>
         </div>
       </div>
@@ -70,26 +77,22 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-@import "@/styles/box-shadow.scss";
 
 .task-container {
-  padding: 28px;
-  padding-bottom: 10px;
-  margin: 20px;
-  margin-top: 5px;
-  border-radius: 10px;
-  @include box-shadow;
+  padding: 20px;
+  margin: 4px 5px 16px 5px;
+  border-radius: 8px;
+  border-left: 8px solid #7272e9;
 
   .task-menu {
     display: flex;
     .task-name {
-      margin-bottom: 25px !important;
+      margin-bottom: 16px !important;
       font-size: 1.5rem;
       font-weight: bold;
     }
   }
   .task-content {
-    padding-bottom: 20px;
     .task-item {
       font-size: 1.2rem;
       padding-bottom: 8px;
