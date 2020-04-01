@@ -59,7 +59,7 @@ $color-hover-border: #a7b9ec;
     overflow: hidden;
     height: min-content;
     padding: 7px 0;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
     border-radius: 10px;
     @include box-shadow;
 
