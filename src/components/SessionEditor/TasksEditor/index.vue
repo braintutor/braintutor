@@ -34,7 +34,7 @@
       :tasks="tasks_selected"
       :unselectTasks="unselectTasks"
       :createTask="createTask"
-      :saveTasks="saveTasks"
+      :saveTask="saveTask"
       :deleteTask="deleteTask"
       :restoreTasks="restoreTasks"
     />
@@ -57,11 +57,11 @@
 import {
   getTasksBySession,
   addTask,
-  updateTasks,
+  updateTask,
   removeTask
 } from "@/services/taskService";
 import { getParam } from "@/services/router.js";
-import { copy } from "@/services/object";
+// import { copy } from "@/services/object";
 import { scrollDown } from "@/services/scroll";
 
 import TaskEditor from "./TaskEditor";
@@ -122,7 +122,7 @@ export default {
       let new_task = {
         name: "Nombre",
         date: this.task_date,
-        description: "Detalle"
+        description: "Descripción"
       };
       this.loading_tasks = true;
       let task_id = await addTask(this.session_id, new_task);
@@ -133,13 +133,9 @@ export default {
         scrollDown("tasks-scroll");
       }, 100);
     },
-    async saveTasks() {
+    async saveTask(task) {
       this.loading_tasks = true;
-      let tasks = copy(this.tasks_selected);
-      tasks.forEach(task => {
-        task.id = task._id.$oid;
-      });
-      await updateTasks(this.session_id, tasks);
+      await updateTask(task);
       this.loading_tasks = false;
     },
     deleteTask(task_id) {

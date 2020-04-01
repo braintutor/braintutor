@@ -14,9 +14,6 @@
         <v-btn icon @click="restoreTasks()">
           <v-icon>mdi-restore</v-icon>
         </v-btn>
-        <v-btn icon @click="saveTasks()">
-          <v-icon>mdi-content-save</v-icon>
-        </v-btn>
       </div>
     </div>
     <div id="tasks-scroll" class="m-fullscreen-content">
@@ -25,6 +22,9 @@
           <v-text-field class="task-name" v-model="task.name" dense hide-details autocomplete="off"></v-text-field>
           <v-btn icon @click="deleteTask(task._id.$oid)">
             <v-icon>mdi-delete</v-icon>
+          </v-btn>
+          <v-btn icon @click="saveTask(task)">
+            <v-icon>mdi-content-save</v-icon>
           </v-btn>
         </div>
         <div class="task-content">
@@ -52,7 +52,7 @@ export default {
     "tasks",
     "unselectTasks",
     "createTask",
-    "saveTasks",
+    "saveTask",
     "deleteTask",
     "restoreTasks"
   ],

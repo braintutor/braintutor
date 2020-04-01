@@ -19,10 +19,9 @@ function addTask(session_id, task) {
   })
 }
 
-function updateTasks(session_id, tasks) {
-  return fetch_post('updateTasks', {
-    session_id,
-    tasks
+function updateTask(task) {
+  return fetch_post('updateTask', {
+    task
   })
 }
 
@@ -32,4 +31,4 @@ function removeTask(task_id) {
   })
 }
 
-export { getTasksBySession, getTasksBySessionStudent, addTask, updateTasks, removeTask }
+export { getTasksBySession, getTasksBySessionStudent, addTask, updateTask, removeTask }
