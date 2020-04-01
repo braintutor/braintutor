@@ -45,7 +45,7 @@
               :key="a_idx"
             >
               <div class="question-editor-alternative-content question-editor-text">
-                <v-textarea v-model="c.alternatives[a_idx]" :rows="1" autoGrow dense hide-details></v-textarea>
+                <v-textarea style="width: 0" v-model="c.alternatives[a_idx]" :rows="1" autoGrow dense hide-details></v-textarea>
                 <v-btn
                   v-if="c.alternatives.length > 2"
                   icon
@@ -171,9 +171,6 @@ export default {
           border-radius: 10px;
           @include box-shadow;
           display: flex;
-          &:hover {
-            cursor: pointer;
-          }
         }
         .question-editor-alternative-add {
           flex-grow: 1;

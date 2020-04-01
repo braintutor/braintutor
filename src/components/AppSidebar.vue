@@ -23,7 +23,7 @@
 export default {
   props: ["links"],
   data: () => ({
-    idx: 0
+    idx: 2
   })
 };
 </script>
@@ -36,15 +36,15 @@ $color-hover: #a7b9ec;
 
 .app-sidebar {
   padding-top: 0;
-  margin: 0 20px;
+  margin: 0 16px;
   display: flex;
 }
 
 .sidebar {
   overflow: hidden;
   height: min-content;
-  padding: 8px 0;
-  margin-right: 20px;
+  padding: 7px 0;
+  margin-right: 16px;
   border-radius: 10px;
   @include box-shadow;
 
@@ -68,7 +68,6 @@ $color-hover: #a7b9ec;
       width: 30px;
       height: 30px;
       vertical-align: bottom;
-      border-radius: 50%;
     }
     &-name {
       white-space: nowrap;
@@ -103,17 +102,20 @@ input[type="radio"] {
 
 @media only screen and (max-width: 768px) {
   .app-sidebar {
+    margin: 8px;
+    margin-top: 0;
     flex-direction: column;
   }
 
   .sidebar {
     width: min-content;
-    padding: 0 8px;
+    padding: 0 3px;
     margin: 0 auto 12px auto;
     display: flex;
     &__link {
       border-left: none;
       border-right: none;
+      margin: 0 3px;
       img {
         margin: 6px;
         width: 30px;

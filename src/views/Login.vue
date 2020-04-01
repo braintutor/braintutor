@@ -19,13 +19,14 @@
           >Usuario o contraseña incorrecta</v-alert>
 
           <v-select
+            class="mb-4"
             v-model="school_id"
             :items="schools"
             item-text="name"
             item-value="id"
             label="Colegio"
           ></v-select>
-          <v-select v-model="type" :items="types" label="Tipo"></v-select>
+          <v-select class="mb-4" v-model="type" :items="types" label="Tipo"></v-select>
 
           <v-text-field v-model="user" :rules="userRules" label="Usuario"></v-text-field>
           <v-text-field v-model="pass" :rules="passRules" label="Contraseña" type="password"></v-text-field>
@@ -80,27 +81,31 @@ export default {
         if (this.$refs.form_login.validate()) {
           this.loading_login = true;
           let token = "";
+          let name = "";
           let type = -1;
 
           if (this.type === "Administrador") {
             token = (await loginAdmin(this.school_id, this.user, this.pass))
               .token;
+            name = "school-editor";
             type = 0;
           }
           if (this.type === "Profesor") {
             token = (await loginTeacher(this.school_id, this.user, this.pass))
               .token;
+            name = "teacher";
             type = 1;
           }
           if (this.type === "Estudiante") {
             token = (await loginStudent(this.school_id, this.user, this.pass))
               .token;
+            name = "student";
             type = 2;
           }
 
           if (token) {
             setSession(token, type);
-            redirect("school-editor", { school_id: this.school_id });
+            redirect(name);
           } else {
             this.alert_error = true;
             this.loading_login = false;
