@@ -1,7 +1,7 @@
 <template>
   <div class="m-card">
     <loading :class="{active: loading_tasks}" />
-    <div v-show="!show_tasks_selected" class="calendar-container pa-5">
+    <div v-show="!show_tasks_selected" class="calendar-container">
       <div class="calendar-control">
         <span class="calendar-date">{{calendar_date}}</span>
         <div class="calendar-actions">
@@ -202,18 +202,19 @@ export default {
 @import "~@fullcalendar/daygrid/main.css";
 
 .calendar-container {
+  padding: 16px;
   .calendar-control {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin: 0 4px 10px 8px;
     .calendar-date {
       font-weight: bold;
       font-size: 1.5rem;
     }
   }
   .fullcalendar {
-    max-width: 850px;
+    max-width: 800px;
     margin: 0 auto;
   }
 }
