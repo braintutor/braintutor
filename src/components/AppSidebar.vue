@@ -34,7 +34,7 @@
 export default {
   props: ["links", "action_links"],
   data: () => ({
-    idx: 0
+    idx: 1 
   })
 };
 </script>
@@ -145,7 +145,7 @@ input[type="radio"] {
     display: flex;
     margin: 0 auto;
     &__links {
-      margin-bottom: 6px;
+      margin-bottom: 12px;
       width: min-content;
       padding: 0 3px;
       display: flex;

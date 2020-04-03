@@ -1,6 +1,12 @@
 
 import { fetch_get, fetch_post } from "./fetch";
 
+function getCourseIdByChatbot(chatbot_id) {
+  return fetch_post('getCourseIdByChatbot', {
+    chatbot_id
+  })
+}
+
 function getCoursesByTeacher() {
   return fetch_get('getCoursesByTeacher')
 }
@@ -21,4 +27,4 @@ function updateCourse(course) {
   })
 }
 
-export { getCoursesByTeacher, getCoursesBySchool, addCourse, updateCourse }
+export { getCourseIdByChatbot, getCoursesByTeacher, getCoursesBySchool, addCourse, updateCourse }

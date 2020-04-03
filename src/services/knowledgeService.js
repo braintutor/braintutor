@@ -13,4 +13,17 @@ function updateKnowledge(chatbot_id, knowledge) {
   })
 }
 
-export { getKnowledge, updateKnowledge }
+function getKnowledgeByCourse(course_id) {
+  return fetch_post('getKnowledgeByCourse', {
+    course_id
+  })
+}
+
+function updateKnowledgeByCourse(course_id, knowledge) {
+  return fetch_post('updateKnowledgeByCourse', {
+    course_id,
+    knowledge
+  })
+}
+
+export { getKnowledge, updateKnowledge, getKnowledgeByCourse, updateKnowledgeByCourse }

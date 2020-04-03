@@ -4,7 +4,7 @@
     <p class="message" v-if="sessions.length <= 0">No tiene cursos asignados.</p>
     <div class="row no-gutters">
       <div
-        class="col-6 col-md-4 col-lg-3 px-2 pb-2"
+        class="col-6 col-md-4 col-lg-3 px-2 pb-4"
         v-for="(session, s_idx) in sessions"
         :key="s_idx"
       >

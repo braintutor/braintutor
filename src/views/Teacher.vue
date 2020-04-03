@@ -1,11 +1,7 @@
 <template>
   <AppSidebar :links="links">
-    <div :slot="0">
-      <Sessions />
-    </div>
-    <div :slot="1">
-      <Courses />
-    </div>
+    <Sessions :slot="0" />
+    <Courses :slot="1" />
   </AppSidebar>
 </template>
 
