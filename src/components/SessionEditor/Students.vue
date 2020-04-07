@@ -51,7 +51,7 @@ export default {
 .students {
   padding: 14px 20px;
   &__title {
-    margin-bottom: 10px;
+    margin-bottom: 6px;
     font-size: 1.4rem;
   }
   &__content {

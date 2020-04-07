@@ -107,7 +107,6 @@ router.beforeEach((to, from, next) => {
 function reset() {
   let component_avatar = store.state.component_avatar;
   if (component_avatar) component_avatar.startTalk('')
-
 }
 
 export default router
