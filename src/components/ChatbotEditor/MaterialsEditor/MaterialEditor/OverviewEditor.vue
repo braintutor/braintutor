@@ -10,6 +10,7 @@
 <script>
 import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
+import List from "@editorjs/list";
 
 export default {
   props: ["data", "setCategoryValue"],
@@ -20,7 +21,8 @@ export default {
     this.editor = new EditorJS({
       holderId: "editor-overview",
       tools: {
-        header: Header
+        header: Header,
+        list: List
       },
       data: JSON.parse(this.data)
     });

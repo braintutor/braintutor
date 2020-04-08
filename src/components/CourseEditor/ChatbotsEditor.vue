@@ -2,9 +2,14 @@
   <div>
     <loading :active="loading" />
     <div class="row no-gutters">
-      <div class="col-6 col-sm-4 col-md-3 px-2 pb-4" v-for="(chatbot, ch_idx) in chatbots" :key="ch_idx">
+      <div
+        class="col-6 col-sm-4 col-md-3 px-2 pb-4"
+        v-for="(chatbot, ch_idx) in chatbots"
+        :key="ch_idx"
+      >
         <Cartel
           :title="chatbot.name"
+          :image="chatbot.image"
           :callback="() => {}"
           :actions="[{
                   icon: 'mdi-eye',

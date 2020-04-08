@@ -53,7 +53,10 @@ import { getParam } from "@/services/router.js";
 import { getMaterials } from "@/services/materialService";
 import { getQuestionTemplate } from "@/services/chatService";
 import { getCourseIdByChatbot } from "@/services/courseService";
-import { getKnowledge, getKnowledgeByCourse } from "@/services/knowledgeService";
+import {
+  getKnowledge,
+  getKnowledgeByCourse
+} from "@/services/knowledgeService";
 
 export default {
   data: () => ({
@@ -71,16 +74,17 @@ export default {
     let materials = await getMaterials(chatbot_id);
     this.$store.commit("setMaterials", materials);
 
-    let course_id = await getCourseIdByChatbot(chatbot_id)
+    let course_id = await getCourseIdByChatbot(chatbot_id);
     let knowledge_course = await getKnowledgeByCourse(course_id);
     let knowledge_chatbot = await getKnowledge(chatbot_id);
-    let knowledge = knowledge_course.concat(knowledge_chatbot)
+    let knowledge = knowledge_course.concat(knowledge_chatbot);
     this.available_questions = knowledge.map(item => item.questions[0]);
 
     let question_template = await getQuestionTemplate();
     materials.forEach(material => {
       Object.values(question_template).forEach(value => {
-        this.available_questions.push(value[0].replace(/@/, material.name));
+        if (value[0])
+          this.available_questions.push(value[0].replace(/@/, material.name));
       });
       material.faq.forEach(item => {
         this.available_questions.push(item.question);

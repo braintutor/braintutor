@@ -14,7 +14,7 @@
         >
           <Cartel
             :description="material.name"
-            :image="'https://cdn.dribbble.com/users/1742866/screenshots/3966741/38-material-design.jpg'"
+            :image="material.image"
             :callback="() => selectMaterial(material)"
           />
         </v-col>

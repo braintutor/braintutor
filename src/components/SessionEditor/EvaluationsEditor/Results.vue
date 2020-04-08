@@ -62,7 +62,9 @@ export default {
     this.loading_message = "Cargando Alumnos";
     this.students = await getStudentsBySession(session_id);
     this.students.forEach(student => {
-      student.result = this.evaluation.results[student._id.$oid];
+      student.result = this.evaluation.results
+        ? this.evaluation.results[student._id.$oid]
+        : null;
       student.score =
         student.result && student.result.started
           ? this.calculate(student.result)

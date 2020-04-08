@@ -12,6 +12,12 @@ function getEvaluationsBySessionStudent(session_id) {
   })
 }
 
+function getEvaluationsBySessionDirector(session_id) {
+  return fetch_post('getEvaluationsBySessionDirector', {
+    session_id
+  })
+}
+
 function addEvaluation(session_id, evaluation) {
   return fetch_post('addEvaluation', {
     session_id,
@@ -55,6 +61,7 @@ function setResult(evaluation_id, answers) {
 export {
   getEvaluationsBySession,
   getEvaluationsBySessionStudent,
+  getEvaluationsBySessionDirector,
   addEvaluation,
   updateEvaluation,
   deleteEvaluation,

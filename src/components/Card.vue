@@ -1,6 +1,7 @@
 <template>
   <div
     class="card m-card"
+    :style="{'border-top': '4px solid ' + (color || '#ecdd84')}"
     :class="{'transform-scale cursor-pointer':  callback}"
     @click="action()"
   >
@@ -10,10 +11,10 @@
 
 <script>
 export default {
-  props: ["callback"],
+  props: ["callback", "color"],
   methods: {
     action() {
-      if(this.callback) this.callback()
+      if (this.callback) this.callback();
     }
   }
 };
@@ -25,23 +26,25 @@ export default {
 .card {
   padding: 5%;
   padding-bottom: 2%;
-  border-top: 4px solid #ecdd84;
 }
 .card-item {
   padding: 0 4px;
-  margin-bottom: 4% !important;
+  margin-bottom: 2% !important;
   font-size: 1rem;
   font-weight: bold;
   text-align: center;
 }
 .card-value {
   padding: 6px 12px;
-  margin-bottom: 4% !important;
+  margin-bottom: 2% !important;
   background: #f1f1f1;
   font-size: 0.9rem;
   font-weight: lighter;
   text-align: center;
   border-radius: 10px;
+}
+.card-divider {
+  margin-bottom: 4% !important;
 }
 .card-actions {
   margin-bottom: 4% !important;

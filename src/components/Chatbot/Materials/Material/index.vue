@@ -180,8 +180,11 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang='scss'>
 @import "@/styles/box-shadow.scss";
+.material-content .codex-editor__redactor {
+  margin-right: 0 !important;
+}
 
 .material-container {
   position: relative;

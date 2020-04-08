@@ -10,7 +10,11 @@
       </div>
     </div>
     <div v-if="chatbot" class="editor__content">
-      <v-text-field label="Nombre" v-model="chatbot.name" dense hide-details autocomplete="off"></v-text-field>
+      <v-text-field class="mb-3" label="Nombre" v-model="chatbot.name" dense autocomplete="off"></v-text-field>
+      <v-text-field label="Imagen" v-model="chatbot.image" dense autocomplete="off"></v-text-field>
+      <div class="editor__image">
+        <img :src="chatbot.image" alt />
+      </div>
       <div class="editor__actions">
         <v-btn class="editor__action" small color="success" @click="train()">Entrenar Bot</v-btn>
         <v-btn class="editor__action" small color="primary" @click="save()">Guardar Cambios</v-btn>
@@ -145,6 +149,13 @@ export default {
   }
   &__content {
     padding: 30px;
+  }
+  &__image {
+    margin: 0 auto;
+    max-width: 200px;
+    img {
+      width: 100%;
+    }
   }
   &__actions {
     width: 100%;

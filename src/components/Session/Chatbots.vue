@@ -3,7 +3,7 @@
     <loading :active="loading" />
     <div class="row no-gutters">
       <div class="col-6 col-sm-4 col-md-3 px-2 pb-4" v-for="(chatbot, c_idx) in chatbots" :key="c_idx">
-        <Cartel :title="chatbot.name" :callback="() => select(chatbot)" />
+        <Cartel :title="chatbot.name" :image='chatbot.image' :callback="() => select(chatbot)" />
       </div>
     </div>
   </div>

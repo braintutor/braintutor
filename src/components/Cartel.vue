@@ -1,7 +1,10 @@
 <template>
   <div class="cartel__container transform-scale elevation-3" @click="callback()">
     <div class="cartel__menu">
-      <div class="cartel__background" />
+      <div v-if="image" class="cartel__image">
+        <img :src="image" />
+      </div>
+      <div v-else class="cartel__background" />
       <div class="cartel__actions">
         <v-btn
           v-for="(action, a_idx) in actions"
@@ -36,29 +39,32 @@ export default {
   //
   display: flex;
   flex-direction: column;
-
-  &:hover {
-    cursor: pointer;
-    .cartel__menu {
-      .cartel__background {
-        opacity: 1;
-      }
-    }
-  }
+  cursor: pointer;
   .cartel__menu {
     position: relative;
-    height: 120px;
+    height: 100px;
+    .cartel__image {
+      overflow: hidden;
+      height: 100%;
+      padding: 10px;
+      border-radius: 10px 10px 0 0;
+      //
+      display: flex;
+      justify-content: center;
+      img {
+        height: 100%;
+      }
+    }
     .cartel__background {
       width: 100%;
       height: 100%;
+      border-radius: 10px 10px 0 0;
       background: rgb(18, 20, 139);
       background: linear-gradient(
         90deg,
         rgba(18, 20, 139, 1) 0%,
         rgba(83, 85, 182, 1) 100%
       );
-      border-radius: 10px 10px 0 0;
-      opacity: 0.8;
     }
     .cartel__actions {
       display: none;
@@ -76,7 +82,7 @@ export default {
     }
   }
   .cartel__content {
-    padding: 8px 12px;
+    padding: 6px 8px;
     text-align: center;
     .cartel__title {
       padding: 3px 0;

@@ -17,7 +17,7 @@ export default {
       {
         image:
           "https://rjwgas.com.au/wp-content/uploads/2015/08/gas-is-economical.png",
-        text: "Dashboard"
+        text: "Evaluaciones"
       }
     ];
   },

@@ -8,12 +8,13 @@
         v-for="(session, s_idx) in sessions"
         :key="s_idx"
       >
-        <div class="classroom m-card transform-scale" @click="edit(session)">
-          <span class="classroom__item">Curso</span>
-          <span class="classroom__value">{{session.course.name}}</span>
-          <span class="classroom__item">Aula</span>
-          <span class="classroom__value">{{session.classroom.name}}</span>
-        </div>
+        <Card :callback="() => edit(session)" color="#8492ec">
+          <p class="card-item">Curso</p>
+          <p class="card-value">{{session.course.name}}</p>
+          <div class="card-divider"></div>
+          <p class="card-item">Aula</p>
+          <p class="card-value">{{session.classroom.name}}</p>
+        </Card>
       </div>
     </div>
   </div>
@@ -21,6 +22,7 @@
 
 <script>
 import loading from "@/components/loading";
+import Card from "@/components/Card";
 
 import { getSessionsByTeacher } from "@/services/sessionService";
 import { redirect } from "@/services/router.js";
@@ -40,7 +42,8 @@ export default {
     }
   },
   components: {
-    loading
+    loading,
+    Card
   }
 };
 </script>
