@@ -31,6 +31,8 @@ function deleteEvaluation(evaluation_id) {
   })
 }
 
+/*************************************************/
+
 function startEvaluation(evaluation_id) {
   return fetch_post('startEvaluation', {
     evaluation_id

@@ -9,8 +9,8 @@
       >
         <div class="evaluation m-card transform-scale" @click="select(evaluation)">
           <p class="evaluation__name">{{evaluation.name}}</p>
-          <p class="evaluation__detail">{{evaluation.time}} segundos</p>
           <p class="evaluation__detail">{{evaluation.content.length}} pregunta(s)</p>
+          <p class="evaluation__detail">{{evaluation.time}} segundos</p>
           <p
             class="evaluation__result"
             v-if="evaluation.result && evaluation.result.started"

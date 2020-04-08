@@ -1,0 +1,74 @@
+<template>
+  <div
+    class="card m-card"
+    :class="{'transform-scale cursor-pointer':  callback}"
+    @click="action()"
+  >
+    <slot></slot>
+  </div>
+</template>
+
+<script>
+export default {
+  props: ["callback"],
+  methods: {
+    action() {
+      if(this.callback) this.callback()
+    }
+  }
+};
+</script>
+
+<style lang='scss'>
+@import "@/styles/box-shadow";
+
+.card {
+  padding: 5%;
+  padding-bottom: 2%;
+  border-top: 4px solid #ecdd84;
+}
+.card-item {
+  padding: 0 4px;
+  margin-bottom: 4% !important;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+}
+.card-value {
+  padding: 6px 12px;
+  margin-bottom: 4% !important;
+  background: #f1f1f1;
+  font-size: 0.9rem;
+  font-weight: lighter;
+  text-align: center;
+  border-radius: 10px;
+}
+.card-actions {
+  margin-bottom: 4% !important;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  -webkit-column-gap: 8px;
+}
+.card-action {
+  padding: 6px 12px;
+  background: #ecdd84;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 10px;
+  -webkit-tap-highlight-color: transparent;
+  @include box-shadow;
+  &:hover {
+    background: #e0d177;
+    box-shadow: none !important;
+  }
+  &:focus {
+    outline: none;
+  }
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+</style>

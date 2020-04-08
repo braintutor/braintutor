@@ -4,6 +4,10 @@ function getClassroomsBySchool() {
   return fetch_get('getClassroomsBySchool')
 }
 
+function getClassroomsBySchoolDirector() {
+  return fetch_get('getClassroomsBySchoolDirector')
+}
+
 function addClassroom(classroom) {
   return fetch_post('addClassroom', {
     classroom
@@ -16,4 +20,4 @@ function updateClassroom(classroom) {
   })
 }
 
-export { getClassroomsBySchool, addClassroom, updateClassroom }
+export { getClassroomsBySchool, getClassroomsBySchoolDirector, addClassroom, updateClassroom }

@@ -12,11 +12,12 @@
           :key="r_idx"
           class="quiz-container"
         >
-          <Cartel
-            :description="quiz.name"
-            :image="'https://www.nxdirectatl.com/wp-content/uploads/2017/01/47380846-orange-wallpaper.png'"
-            :callback="() => selectQuiz(quiz)"
-          />
+          <Card :callback="() => selectQuiz(quiz)">
+            <p class="card-item">{{quiz.name}}</p>
+            <p class="card-value">{{quiz.content.length}} pregunta(s)</p>
+            <p class="card-value">{{quiz.time}} segundos</p>
+            <p class="card-value">{{quiz.level}}</p>
+          </Card>
         </v-col>
         <v-col cols="6" sm="4" md="2" class="quiz-container">
           <div class="create-container" @click="createQuiz()">
@@ -38,7 +39,7 @@
 </template>
 
 <script>
-import Cartel from "@/components/Cartel";
+import Card from "@/components/Card";
 import QuizEditor from "./QuizEditor";
 import loading from "@/components/loading";
 
@@ -101,7 +102,7 @@ export default {
     }
   },
   components: {
-    Cartel,
+    Card,
     QuizEditor,
     loading
   }

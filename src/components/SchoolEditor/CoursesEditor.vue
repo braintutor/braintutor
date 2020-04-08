@@ -100,10 +100,10 @@ export default {
       let entities = this.entities.map(e => {
         let teacher_id = e.teacher_id;
         if (teacher_id) {
-          let { name } = this.teachers_aux.find(
+          let teacher = this.teachers_aux.find(
             t => t._id.$oid === teacher_id.$oid
           );
-          e.teacher = name;
+          if(teacher) e.teacher = teacher.name;
         }
         return e;
       });

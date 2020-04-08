@@ -1,6 +1,6 @@
 <template>
   <div>
-    <loading :active="loading" />
+    <loading :active="loading" :message="loading_message" />
     <p class="message" v-if="courses.length <= 0">No tiene cursos asignados.</p>
     <div class="row no-gutters">
       <div
@@ -16,8 +16,7 @@
               class="course__chatbot"
               v-for="(chatbot, ch_idx) in course.chatbots"
               :key="ch_idx"
-            >
-            {{chatbot.name}}</div>
+            >{{chatbot.name}}</div>
           </div>
         </div>
       </div>
@@ -35,10 +34,13 @@ import { redirect } from "@/services/router.js";
 export default {
   data: () => ({
     courses: [],
-    loading: true
+    loading: true,
+    loading_message: ""
   }),
   async mounted() {
+    this.loading_message = "Cargando Cursos";
     this.courses = await getCoursesByTeacher();
+    this.loading_message = "Cargando Unidades";
     for (let course of this.courses) {
       let chatbots = await getChatbotsByCourse(course._id.$oid);
       course.chatbots = chatbots;
@@ -60,18 +62,23 @@ export default {
 @import "@/styles/box-shadow";
 
 .course {
+  padding: 6%;
+  padding-bottom: 2%;
+  border-top: 4px solid #86bd98;
   cursor: pointer;
-  padding: 16px;
   &__name {
-    margin: 2px 8px 6px;
-    font-size: 1.5rem;
+    padding: 0 4px;
+    margin-bottom: 4%;
+    font-size: 1.2rem;
   }
   &__chatbots {
   }
   &__chatbot {
-    padding: 4px 8px;
+    padding: 6px 12px;
+    margin-bottom: 4%;
     border-radius: 10px;
     background: #e7e7e7;
+    font-weight: lighter;
   }
 }
 .message {

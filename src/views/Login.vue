@@ -16,7 +16,7 @@
             icon="mdi-cloud-alert"
             text
             dismissible
-          >Usuario o contraseña incorrecta</v-alert>
+          >Datos incorrectos.</v-alert>
 
           <v-select
             class="mb-4"
@@ -45,7 +45,8 @@ import loading from "@/components/loading";
 import {
   loginAdmin,
   loginTeacher,
-  loginStudent
+  loginStudent,
+  loginDirector
 } from "@/services/loginService";
 import { getSchools } from "@/services/schoolService";
 import { setSession } from "@/services/security";
@@ -54,7 +55,7 @@ import { redirect } from "@/services/router.js";
 export default {
   data: () => ({
     schools: [],
-    types: ["Estudiante", "Profesor", "Administrador"],
+    types: ["Estudiante", "Profesor", "Administrador", "Director"],
     //
     school_id: "",
     type: "",
@@ -102,6 +103,12 @@ export default {
             name = "student";
             type = 2;
           }
+          if (this.type === "Director") {
+            token = (await loginDirector(this.school_id, this.user, this.pass))
+              .token;
+            name = "director";
+            type = 3;
+          }
 
           if (token) {
             setSession(token, type);
@@ -113,6 +120,7 @@ export default {
         }
       } catch (error) {
         this.alert_error = true;
+        this.loading_login = false;
       }
     }
   },

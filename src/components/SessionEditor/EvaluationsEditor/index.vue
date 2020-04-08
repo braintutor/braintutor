@@ -1,60 +1,80 @@
 <template>
   <div v-if="!evaluation">
-    <loading :active="loading" />
+    <loading :active="loading" :message='loading_message'/>
     <div class="row no-gutters">
       <div
         class="col-6 col-sm-4 col-md-3 px-2 pb-4"
         v-for="(evaluation, c_idx) in evaluations"
         :key="c_idx"
       >
-        <div class="evaluation m-card transform-scale" @click="select(evaluation)">
-          <p class="evaluation__name">{{evaluation.name}}</p>
-          <p class="evaluation__detail">{{evaluation.time}} segundos</p>
-          <p class="evaluation__detail">{{evaluation.content.length}} pregunta(s)</p>
-        </div>
+        <Card>
+          <p class="card-item">{{evaluation.name}}</p>
+          <p class="card-value">{{evaluation.content.length}} pregunta(s)</p>
+          <p class="card-value">{{evaluation.time}} segundos</p>
+          <p class="card-actions">
+            <v-icon
+              @click="select(evaluation)"
+              class="card-action"
+              style="color: #fff; font-size: 1.2rem"
+            >mdi-pencil</v-icon>
+            <v-icon
+              @click="results(evaluation)"
+              class="card-action"
+              style="color: #fff; font-size: 1.2rem"
+            >mdi-poll</v-icon>
+          </p>
+        </Card>
       </div>
-      <div
-        class="col-6 col-sm-4 col-md-3 px-2 pb-4"
-      >
+      <div class="col-6 col-sm-4 col-md-3 px-2 pb-4">
         <div class="create" @click="create()">+</div>
       </div>
     </div>
   </div>
   <EvaluationEditor
-    v-else
+    v-else-if="edit"
     :evaluation="evaluation"
     :getEvaluations="getEvaluations"
     :unselect="unselect"
   />
+  <Results v-else :evaluation="evaluation" :getEvaluations="getEvaluations" :unselect="unselect" />
 </template>
 
 <script>
 import loading from "@/components/loading";
+import Card from "@/components/Card";
 import EvaluationEditor from "./EvaluationEditor";
+import Results from "./Results";
 
-import { getEvaluationsBySession, addEvaluation } from "@/services/evaluationService";
+import {
+  getEvaluationsBySession,
+  addEvaluation
+} from "@/services/evaluationService";
 import { getParam } from "@/services/router.js";
 import { copy } from "@/services/object.js";
 
 export default {
   data: () => ({
-    session_id: '',
+    session_id: "",
     evaluation: null,
     evaluations: [],
-    loading: true
+    edit: false,
+    loading: true,
+    loading_message: ""
   }),
   async mounted() {
     this.session_id = getParam("session_id");
-    this.getEvaluations()
+    this.getEvaluations();
   },
   methods: {
     async getEvaluations() {
       this.loading = true;
+      this.loading_message = "Cargando Evaluaciones";
       this.evaluations = await getEvaluationsBySession(this.session_id);
       this.loading = false;
     },
     async create() {
       this.loading = true;
+      this.loading_message = "Creando Evaluación";
       let new_evaluation = {
         name: "Nombre",
         time: 60,
@@ -73,15 +93,22 @@ export default {
       this.loading = false;
     },
     select(evaluation) {
+      this.edit = true;
       this.evaluation = copy(evaluation);
     },
     unselect() {
-      this.evaluation = null
+      this.evaluation = null;
+    },
+    results(evaluation) {
+      this.edit = false;
+      this.evaluation = copy(evaluation);
     }
   },
   components: {
     loading,
-    EvaluationEditor
+    Card,
+    EvaluationEditor,
+    Results
   }
 };
 </script>
@@ -116,7 +143,7 @@ export default {
   font-weight: lighter;
   border: 2px dashed #ccc;
   border-radius: 10px;
-  transition: background-color .3s;
+  transition: background-color 0.3s;
   cursor: pointer;
   //
   display: flex;
