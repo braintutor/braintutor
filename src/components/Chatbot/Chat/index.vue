@@ -166,7 +166,8 @@ export default {
               this.component_materials.selectMaterial(material, category);
               scrollLeft("chatbot-scroll");
             };
-            icon = this.icons.find(i => i.category === category);
+            if (category) icon = this.icons.find(i => i.category === category);
+            else icon = { text: "Ver información" };
           }
           this.addMessage(answer, 0, action, icon);
         } catch (error) {

@@ -16,9 +16,6 @@
         <div v-if="category_selected == 'bullets'" class="category category-text">
           <div class="category-text-menu">
             <div class="category-text-title">{{material.name}}</div>
-            <v-btn icon @click="startTalk(material[category_selected].join('. '))">
-              <v-icon>mdi-volume-high</v-icon>
-            </v-btn>
           </div>
           <div
             v-for="(bullet, e_idx) in material[category_selected]"
@@ -47,9 +44,6 @@
         <div v-if="category_selected == 'examples'" class="category category-text">
           <div class="category-text-menu">
             <div class="category-text-title">Ejemplos</div>
-            <v-btn icon @click="startTalk(material[category_selected].join('. '))">
-              <v-icon>mdi-volume-high</v-icon>
-            </v-btn>
           </div>
           <div
             v-for="(example, e_idx) in material[category_selected]"
@@ -96,9 +90,6 @@
           >
             <div class="category-text-menu">
               <div class="category-text-title">{{faq.question}}</div>
-              <v-btn icon @click="startTalk(`${faq.question}. ${faq.answer}`)">
-                <v-icon>mdi-volume-high</v-icon>
-              </v-btn>
             </div>
             <div class="category-text-content">
               <div>{{faq.answer}}</div>
@@ -190,7 +181,7 @@ export default {
   position: relative;
 
   .material-menu {
-    padding: 10px;
+    padding: 8px;
     padding-top: 3px;
     display: flex;
     align-items: center;

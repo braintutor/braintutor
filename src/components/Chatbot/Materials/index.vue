@@ -75,7 +75,7 @@ export default {
       );
       categories.sort();
       categories.sort((a, b) => {
-        return this.categories_ls[a].priority - this.categories_ls[b].priority;
+        return this.categories_ls[b].priority - this.categories_ls[a].priority;
       });
       return categories;
     }
@@ -90,13 +90,15 @@ export default {
       this.categories_ls = JSON.parse(
         JSON.stringify(this.categories_ls_original)
       );
-      this.material = material;
-
-      if (category) {
-        this.categories_ls[category].show = true;
-        this.category_idx = this.categories.indexOf(category);
-      } else this.category_idx = 0;
-      this.showServices(false);
+      this.material = null;
+      setTimeout(() => {
+        this.material = material;
+        if (category) {
+          this.categories_ls[category].show = true;
+          this.category_idx = this.categories.indexOf(category);
+        } else this.category_idx = 0;
+        this.showServices(false);
+      }, 100);
     },
     unselectMaterial() {
       this.material = null;

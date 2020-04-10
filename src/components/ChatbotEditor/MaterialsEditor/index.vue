@@ -49,6 +49,8 @@ import {
 } from "@/services/materialService";
 import { getParam } from "@/services/router.js";
 
+import firebase from "firebase";
+
 export default {
   data: () => ({
     materials: [],
@@ -125,6 +127,13 @@ export default {
     async deleteMaterial(material_id) {
       this.material = null;
       this.loading_materials = true;
+      // var ref = firebase.storage().refFromURL(url_image);
+      try {
+        var ref = firebase.storage().ref(`/material/${material_id}/image`);
+        await ref.delete();
+      } catch (error) {
+        //
+      }
       await removeMaterial(material_id);
       await this.restoreMaterials();
     },

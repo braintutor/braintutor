@@ -19,10 +19,16 @@ function updateMaterial(material) {
   })
 }
 
+function updateMaterialImage(material) {
+  return fetch_post('updateMaterialImage', {
+    material
+  })
+}
+
 function removeMaterial(material_id) {
   return fetch_post('removeMaterial', {
     material_id
   })
 }
 
-export { getMaterials, addMaterial, updateMaterial, removeMaterial }
+export { getMaterials, addMaterial, updateMaterial, updateMaterialImage, removeMaterial }

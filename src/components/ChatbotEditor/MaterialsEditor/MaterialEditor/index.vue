@@ -18,6 +18,9 @@
         <!-- <v-btn icon @click="restoreMaterial(material._id.$oid)">
           <v-icon>mdi-restore</v-icon>
         </v-btn>-->
+        <v-btn icon @click="dialog_image = true">
+          <v-icon>mdi-image</v-icon>
+        </v-btn>
         <v-btn icon @click="saveMaterial()">
           <v-icon>mdi-content-save</v-icon>
         </v-btn>
@@ -115,6 +118,14 @@
           </div>
           <div class="category-bullet" v-for="(image, i_idx) in material.images" :key="i_idx">
             <div class="category-bullet-content">
+              <!-- <v-progress-linear
+                v-if="image_files[i_idx] && image_files[i_idx].progress != 0"
+                :value="image_files[i_idx]? image_files[i_idx].progress: 0"
+              ></v-progress-linear>
+              <v-file-input
+                @change="onFileSelected(image_files, i_idx)"
+                v-model="image_files[i_idx]"
+              ></v-file-input>-->
               <v-text-field
                 class="category-text mb-2"
                 v-model="material.images[i_idx]"
@@ -311,7 +322,30 @@
       </div>
     </div>
 
-    <!-- Dialog -->
+    <!-- Dialog Image -->
+    <v-dialog v-model="dialog_image" max-width="600">
+      <v-card class="material-editor-image">
+        <v-progress-linear v-if="image_progress != 0" :value="image_progress"></v-progress-linear>
+        <div class="material-editor-image__menu">
+          <v-text-field class="category-text mb-2" v-model="material.image" dense hide-details></v-text-field>
+          <v-btn class="ml-2" @click="updateImage()" text icon>
+            <v-icon>mdi-content-save</v-icon>
+          </v-btn>
+          <v-btn onclick="upload_image.click()" text icon>
+            <v-icon>mdi-upload</v-icon>
+          </v-btn>
+        </div>
+        <v-file-input
+          id="upload_image"
+          @change="onFileSelected()"
+          v-model="image_file"
+          style="display:none"
+        ></v-file-input>
+        <img :src="material.image" alt />
+      </v-card>
+    </v-dialog>
+
+    <!-- Dialog Delete -->
     <v-dialog v-model="dialog_delete" max-width="300">
       <v-card>
         <v-card-title>Confirmar eliminación</v-card-title>
@@ -332,9 +366,14 @@ import ExplanationEditor from "./ExplanationEditor";
 import Navigator from "@/components/Navigator";
 import loading from "@/components/loading";
 
-import { updateMaterial } from "@/services/materialService";
+import {
+  updateMaterial,
+  updateMaterialImage
+} from "@/services/materialService";
 import { getEmbed } from "@/services/embed";
 import { Clamp } from "@/services/math";
+
+import firebase from "firebase";
 
 export default {
   props: [
@@ -345,8 +384,8 @@ export default {
     "restoreMaterial"
   ],
   data: () => ({
-    loading: false,
-    dialog_delete: false,
+    image_file: {},
+    image_progress: 0,
     categories: [
       "overview",
       "explanation",
@@ -358,7 +397,11 @@ export default {
       "faq",
       "hyperlinks"
     ],
-    category_idx: 0
+    category_idx: 0,
+    //
+    loading: false,
+    dialog_image: false,
+    dialog_delete: false
   }),
   computed: {
     category_selected() {
@@ -391,6 +434,37 @@ export default {
     }
   },
   methods: {
+    onFileSelected() {
+      let ref = firebase
+        .storage()
+        .ref(`/material/${this.material._id.$oid}/image`);
+      let task = ref.put(this.image_file);
+      task.on(
+        "state_changed",
+        snapshot => {
+          this.image_progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        },
+        () => {
+          /* error */
+        },
+        () => {
+          this.image_progress = 100;
+          task.snapshot.ref.getDownloadURL().then(async url => {
+            this.image_progress = 0;
+            this.material.image = url;
+            this.updateImage();
+          });
+        }
+      );
+    },
+    async updateImage() {
+      this.dialog_image = false;
+      this.loading = true;
+      this.material.id = this.material._id.$oid;
+      await updateMaterialImage(this.material);
+      this.loading = false;
+    },
     changeCategory(direction) {
       this.category_idx = Clamp(
         this.category_idx + direction,
@@ -488,6 +562,20 @@ export default {
 
 <style lang='scss' scoped>
 @import "@/styles/box-shadow.scss";
+
+.material-editor-image {
+  &__menu {
+    padding: 10px;
+    padding-bottom: 10px;
+    display: flex;
+    align-items: flex-end;
+  }
+  img {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+  }
+}
 
 .material-editor-container {
   .material-editor-content {
