@@ -1,8 +1,8 @@
 <template>
   <div class="chatbot-container">
-    <loading :active="loading_chatbot" />
+    <loading :active="loading_chatbot" :message="loading_message" />
     <v-row id="chatbot-scroll" class="chatbot-scroll fill-height" no-gutters>
-      <div class="chatbot-content col-12 col-sm-7 col-md-8 m-fullscreen">
+      <div class="chatbot-content col-12 col-md-7 col-lg-8 m-fullscreen">
         <Materials
           class="m-fullscreen-content"
           ref="component_materials"
@@ -33,7 +33,7 @@
         </div>
       </div>
       <Chat
-        class="chat-container col-12 col-sm-5 col-md-4"
+        class="chat-container col-12 col-md-5 col-lg-4"
         :available_questions="available_questions"
         :selectService="idx => selectService(idx)"
       />
@@ -60,37 +60,27 @@ import {
 
 export default {
   data: () => ({
+    chatbot_id: '',
+    materials: [],
     available_questions: [],
     show_services: true,
     service_selected: 0,
-    loading_chatbot: true
+    //
+    loading_chatbot: true,
+    loading_message: ""
   }),
   async mounted() {
     // Components
     this.$store.commit("setComponentMaterials", this.$refs.component_materials);
     this.$store.commit("setComponentQuizzes", this.$refs.component_quizzes);
-    let chatbot_id = getParam("chatbot_id");
+    this.chatbot_id = getParam("chatbot_id");
 
-    let materials = await getMaterials(chatbot_id);
-    this.$store.commit("setMaterials", materials);
+    this.loading_message = "Cargando Material";
+    this.materials = await getMaterials(this.chatbot_id);
+    this.$store.commit("setMaterials", this.materials);
 
-    let course_id = await getCourseIdByChatbot(chatbot_id);
-    let knowledge_course = await getKnowledgeByCourse(course_id);
-    let knowledge_chatbot = await getKnowledge(chatbot_id);
-    let knowledge = knowledge_course.concat(knowledge_chatbot);
-    this.available_questions = knowledge.map(item => item.questions[0]);
-
-    let question_template = await getQuestionTemplate();
-    materials.forEach(material => {
-      Object.values(question_template).forEach(value => {
-        if (value[0])
-          this.available_questions.push(value[0].replace(/@/, material.name));
-      });
-      material.faq.forEach(item => {
-        this.available_questions.push(item.question);
-      });
-    });
     this.loading_chatbot = false;
+    this.loadKnowledge()
   },
   methods: {
     scrollRight,
@@ -99,6 +89,28 @@ export default {
     },
     selectService(idx) {
       this.service_selected = idx;
+    },
+    async loadKnowledge() {
+      // this.loading_chatbot = true;
+      // this.loading_message = "Cargando Conocimiento";
+      let course_id = await getCourseIdByChatbot(this.chatbot_id);
+      let knowledge_course = await getKnowledgeByCourse(course_id);
+      let knowledge_chatbot = await getKnowledge(this.chatbot_id);
+      let knowledge = knowledge_course.concat(knowledge_chatbot);
+      this.available_questions = knowledge.map(item => item.questions[0]);
+
+      this.loading_message = "Cargando Preguntas";
+      let question_template = await getQuestionTemplate();
+      this.materials.forEach(material => {
+        Object.values(question_template).forEach(value => {
+          if (value[0])
+            this.available_questions.push(value[0].replace(/@/, material.name));
+        });
+        material.faq.forEach(item => {
+          this.available_questions.push(item.question);
+        });
+      });
+      // this.loading_chatbot = false;
     }
   },
   components: {
@@ -154,11 +166,12 @@ export default {
   }
 }
 
-@media only screen and (max-width: 599px) {
+@media only screen and (max-width: 955px) {
   .services-action-bot {
     display: block;
   }
   .chatbot-container {
+    height: calc(100vh - 57px);
     margin: 0;
     .chatbot-scroll {
       flex-wrap: nowrap;

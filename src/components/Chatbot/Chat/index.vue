@@ -26,12 +26,15 @@
     <v-form class="input-container" @submit.prevent="sendMessage">
       <v-text-field v-model="message_text" class="mr-3 mt-3" dense hide-details autocomplete="off"></v-text-field>
       <v-btn :loading="loading_message" fab icon small color="primary" @click="talkMessage()">
-        <v-icon dark>mdi-microphone</v-icon>
+        <v-icon>mdi-microphone</v-icon>
+      </v-btn>
+      <v-btn class="material-icon" fab icon small color="primary" @click="scrollLeft()">
+        <v-icon>mdi-bookshelf</v-icon>
       </v-btn>
       <v-menu offset-y>
         <template v-slot:activator="{ on }">
-          <v-btn fab icon dark small color="primary" v-on="on">
-            <v-icon dark>mdi-help-circle-outline</v-icon>
+          <v-btn fab icon small color="primary" v-on="on">
+            <v-icon>mdi-help-circle-outline</v-icon>
           </v-btn>
         </template>
         <div class="available-questions-container">
@@ -164,7 +167,7 @@ export default {
               let material = this.getMaterial(material_id);
               this.selectService(0);
               this.component_materials.selectMaterial(material, category);
-              scrollLeft("chatbot-scroll");
+              this.scrollLeft();
             };
             if (category) icon = this.icons.find(i => i.category === category);
             else icon = { text: "Ver información" };
@@ -189,6 +192,9 @@ export default {
     },
     getMaterial(material_id) {
       return this.materials.find(material => material._id.$oid === material_id);
+    },
+    scrollLeft() {
+      scrollLeft("chatbot-scroll");
     }
   },
   components: {
@@ -260,6 +266,14 @@ export default {
   .available-questions-content {
     max-height: 400px;
     overflow: auto;
+  }
+}
+.material-icon {
+  display: none;
+}
+@media only screen and (max-width: 955px) {
+  .material-icon {
+    display: initial;
   }
 }
 </style>
