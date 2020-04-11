@@ -23,7 +23,7 @@ export default {
 
 <style lang="scss">
 .menu {
-  padding: 10px;
+  padding: 5px 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;

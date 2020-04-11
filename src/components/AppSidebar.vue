@@ -21,6 +21,7 @@
       </div>
     </div>
     <div class="content">
+      <slot name="default"></slot>
       <template v-for="(link, l_idx) in links">
         <div v-if="idx === l_idx" :key="l_idx">
           <slot :name="l_idx"></slot>

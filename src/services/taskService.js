@@ -1,4 +1,4 @@
-import { fetch_post } from "./fetch";
+import { fetch_get, fetch_post } from "./fetch";
 
 function getTasksBySession(session_id) {
   return fetch_post('getTasksBySession', {
@@ -10,6 +10,10 @@ function getTasksBySessionStudent(session_id) {
   return fetch_post('getTasksBySessionStudent', {
     session_id
   })
+}
+
+function getTasksByStudent() {
+  return fetch_get('getTasksByStudent')
 }
 
 function addTask(session_id, task) {
@@ -31,4 +35,4 @@ function removeTask(task_id) {
   })
 }
 
-export { getTasksBySession, getTasksBySessionStudent, addTask, updateTask, removeTask }
+export { getTasksBySession, getTasksBySessionStudent, getTasksByStudent, addTask, updateTask, removeTask }

@@ -20,7 +20,7 @@
 }
 
 .task {
-  padding: 20px;
+  padding: 20px 28px;
   margin: 4px 10px 16px 10px;
   border-radius: 0;
   border-left: 6px solid #7272e9;
@@ -28,12 +28,13 @@
     display: flex;
   }
   &__name {
-    margin-bottom: 14px !important;
+    margin-bottom: 10px !important;
     font-size: 1.4rem;
     font-weight: bold;
   }
   &__description {
     font-size: 1rem;
+    white-space: pre-wrap;
   }
 }
 

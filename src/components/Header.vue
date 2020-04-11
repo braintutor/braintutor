@@ -84,6 +84,12 @@ export default {
         session_types: ["0"]
       },
       {
+        title: "Colegio",
+        name: "director",
+        icon: "mdi-school",
+        session_types: ["3"]
+      },
+      {
         title: "Perfil",
         name: "profile",
         icon: "mdi-account",

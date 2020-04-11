@@ -1,9 +1,9 @@
 <template>
   <div v-if="!classroom">
     <loading :active="loading" :message="loading_message" />
-    <div class="row no-gutters">
+    <div class="row no-gutters mt-1">
       <div
-        class="col-6 col-md-4 col-lg-3 px-2 pb-4"
+        class="col-6 col-md-4 col-lg-3 px-2 py-2"
         v-for="(classroom, c_idx) in classrooms"
         :key="c_idx"
       >
