@@ -43,7 +43,7 @@ export default {
       "talk",
       "wink"
     ],
-    time_emotion: 1000,
+    time_emotion: 700,
     time_maximum: 2147483647,
     //
     fab_emotions: false,
@@ -111,8 +111,8 @@ export default {
     setImage(img) {
       this.emotion_selected = img;
     },
-    startTalk(text) {
-      this.startAnimationTalk();
+    startTalk(text, animation = true) {
+      if (animation) this.startAnimationTalk();
       TextToSpeech(text, () => this.startAnimationNormal());
     },
     stopTalk() {

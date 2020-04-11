@@ -1,6 +1,6 @@
 <template>
   <div>
-    <loading :active="loading_quizzes" />
+    <loading :active="loading_quizzes" :message="loading_message" />
     <!-- Quiz List -->
     <v-container v-if="!quiz" fluid class="quizzes-container">
       <v-row no-gutters>
@@ -52,7 +52,8 @@ export default {
     quiz: null,
     chatbot_id: "",
     //
-    loading_quizzes: true
+    loading_quizzes: true,
+    loading_message: ""
   }),
   async mounted() {
     this.chatbot_id = getParam("chatbot_id");
@@ -64,6 +65,7 @@ export default {
     },
     async restoreQuizzes() {
       this.loading_quizzes = true;
+      this.loading_message = "Cargando Pruebas";
       this.quizzes = await getQuizzes(this.chatbot_id);
       this.loading_quizzes = false;
     },

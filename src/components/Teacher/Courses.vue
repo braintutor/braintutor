@@ -7,18 +7,15 @@
         class="col-4 col-6 col-sm-4 col-md-3 px-2 pb-4"
         v-for="(course, c_idx) in courses"
         :key="c_idx"
-        @click="edit(course)"
       >
-        <div class="course m-card transform-scale">
-          <h3 class="course__name">{{course.name}}</h3>
-          <div class="course__chatbots">
-            <div
-              class="course__chatbot"
-              v-for="(chatbot, ch_idx) in course.chatbots"
-              :key="ch_idx"
-            >{{chatbot.name}}</div>
-          </div>
-        </div>
+        <Card :callback="() => edit(course)" color="#86bd98">
+          <p class="card-item">{{course.name}}</p>
+          <div
+            class="card-value"
+            v-for="(chatbot, ch_idx) in course.chatbots"
+            :key="ch_idx"
+          >{{chatbot.name}}</div>
+        </Card>
       </div>
     </div>
   </div>
@@ -26,6 +23,7 @@
 
 <script>
 import loading from "@/components/loading";
+import Card from "@/components/Card";
 
 import { getCoursesByTeacher } from "@/services/courseService";
 import { getChatbotsByCourse } from "@/services/chatbotService";
@@ -53,7 +51,8 @@ export default {
     }
   },
   components: {
-    loading
+    loading,
+    Card
   }
 };
 </script>
@@ -61,26 +60,6 @@ export default {
 <style lang='scss' scoped>
 @import "@/styles/box-shadow";
 
-.course {
-  padding: 6%;
-  padding-bottom: 2%;
-  border-top: 4px solid #86bd98;
-  cursor: pointer;
-  &__name {
-    padding: 0 4px;
-    margin-bottom: 4%;
-    font-size: 1.2rem;
-  }
-  &__chatbots {
-  }
-  &__chatbot {
-    padding: 6px 12px;
-    margin-bottom: 4%;
-    border-radius: 10px;
-    background: #e7e7e7;
-    font-weight: lighter;
-  }
-}
 .message {
   margin: 10px;
   color: #797979;

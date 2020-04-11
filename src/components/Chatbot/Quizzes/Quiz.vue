@@ -35,6 +35,7 @@
           </div>
         </div>
       </div>
+      <v-btn class="next" small @click="nextQuestion()" color="warning">Siguiente</v-btn>
     </div>
     <div v-else class="score-container m-fullscreen-content">
       <v-progress-circular
@@ -85,7 +86,8 @@ export default {
   },
   mounted() {
     this.total_questions = this.quiz.content.length;
-    this.time_total = this.quiz.time;
+    // this.time_total = this.quiz.time;
+    this.time_total = 200;
     this.time_remaining = this.time_total;
     // Timer
     this.clearTimer();
@@ -101,22 +103,24 @@ export default {
       if (!question.show_correct) {
         question.show_correct = true;
         this.component_avatar.stopTalk();
-        
+
         if (correct_idx === alternative_idx) {
           this.corrects++;
-          this.component_avatar.startTalk("respuesta correcta");
+          this.component_avatar.showEmotion("HAP");
+          this.component_avatar.startTalk("respuesta correcta", false);
         } else {
           question.incorrect = alternative_idx;
-          this.component_avatar.startTalk("respuesta incorrecta");
+          this.component_avatar.showEmotion("SAD");
+          this.component_avatar.startTalk("respuesta incorrecta", false);
         }
-        setTimeout(() => {
-          if (this.total_questions > this.question_idx + 1) {
-            this.question_idx++;
-          } else {
-            this.showScore();
-          }
-        }, this.time_transition);
         this.$forceUpdate(); /* Correct Binding Update (:class) */
+      }
+    },
+    nextQuestion() {
+      if (this.total_questions > this.question_idx + 1) {
+        this.question_idx++;
+      } else {
+        this.showScore();
       }
     },
     showScore() {
@@ -169,10 +173,14 @@ export default {
     font-size: 14px;
   }
 }
+
+.next {
+  display: block;
+  margin: 14px auto 20px auto;
+}
 .question-container {
   padding: 16px 10px;
-  margin: 20px;
-  margin-top: 5px;
+  margin: 5px 20px;
   border-radius: 10px;
   @include box-shadow;
   .question-text {

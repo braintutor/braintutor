@@ -1,6 +1,6 @@
 <template>
   <div>
-    <loading :active="loading_materials" />
+    <loading :active="loading_materials" :message='loading_message'/>
     <!-- Material List -->
     <v-container v-if="!material" fluid class="materials-container">
       <v-row no-gutters>
@@ -57,7 +57,8 @@ export default {
     material: null,
     chatbot_id: "",
     //
-    loading_materials: true
+    loading_materials: true,
+    loading_message: ''
   }),
   async mounted() {
     this.chatbot_id = getParam("chatbot_id");
@@ -69,6 +70,7 @@ export default {
     },
     async restoreMaterials() {
       this.loading_materials = true;
+      this.loading_message = 'Cargando Material'
       this.materials = await getMaterials(this.chatbot_id);
       this.loading_materials = false;
     },

@@ -2,7 +2,7 @@
   <div class="chatbot-container">
     <loading :active="loading_chatbot" :message="loading_message" />
     <v-row id="chatbot-scroll" class="chatbot-scroll fill-height" no-gutters>
-      <div class="chatbot-content col-12 col-md-7 col-lg-8 m-fullscreen">
+      <div class="chatbot-content col-12 col-md-8 m-fullscreen">
         <Materials
           class="m-fullscreen-content"
           ref="component_materials"
@@ -33,7 +33,7 @@
         </div>
       </div>
       <Chat
-        class="chat-container col-12 col-md-5 col-lg-4"
+        class="chat-container col-12 col-md-4"
         :available_questions="available_questions"
         :selectService="idx => selectService(idx)"
       />
@@ -60,7 +60,7 @@ import {
 
 export default {
   data: () => ({
-    chatbot_id: '',
+    chatbot_id: "",
     materials: [],
     available_questions: [],
     show_services: true,
@@ -80,7 +80,7 @@ export default {
     this.$store.commit("setMaterials", this.materials);
 
     this.loading_chatbot = false;
-    this.loadKnowledge()
+    this.loadKnowledge();
   },
   methods: {
     scrollRight,

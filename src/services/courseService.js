@@ -7,6 +7,12 @@ function getCourseIdByChatbot(chatbot_id) {
   })
 }
 
+function getCourseNameBySession(session_id) {
+  return fetch_post('getCourseNameBySession', {
+    session_id
+  })
+}
+
 function getCoursesByTeacher() {
   return fetch_get('getCoursesByTeacher')
 }
@@ -27,4 +33,4 @@ function updateCourse(course) {
   })
 }
 
-export { getCourseIdByChatbot, getCoursesByTeacher, getCoursesBySchool, addCourse, updateCourse }
+export { getCourseIdByChatbot, getCourseNameBySession, getCoursesByTeacher, getCoursesBySchool, addCourse, updateCourse }

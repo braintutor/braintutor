@@ -1,6 +1,6 @@
 <template>
   <div class="editor-container m-fullscreen">
-    <loading :active="loading" />
+    <loading :active="loading" :message="loading_message" />
     <div class="menu">
       <span class="menu-title">Conocimiento</span>
       <div class="menu-action">
@@ -86,7 +86,8 @@ export default {
     knowledge: [],
     chatbot_id: "",
     //
-    loading: false
+    loading: false,
+    loading_message: ""
   }),
   async mounted() {
     this.chatbot_id = getParam("chatbot_id");
@@ -110,6 +111,7 @@ export default {
     },
     async restoreKnowledge() {
       this.loading = true;
+      this.loading_message = "Cargando Conocimiento";
       this.knowledge = await getKnowledge(this.chatbot_id);
       this.loading = false;
     },
