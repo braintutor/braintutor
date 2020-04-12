@@ -1,6 +1,10 @@
 <template>
   <div v-if="!classroom">
     <loading :active="loading" :message="loading_message" />
+    <div class="period" slot="default">
+      <span class="period__text">Mostrar resultados por:</span>
+      <v-select class="period__select" v-model="period" :items="periods" label="Periodo" dense solo></v-select>
+    </div>
     <div class="row no-gutters mt-1">
       <div
         class="col-6 col-md-4 col-lg-3 px-2 py-2"
@@ -29,7 +33,9 @@ export default {
     classrooms: [],
     //
     loading: true,
-    loading_message: ""
+    loading_message: "",
+    period: "Día",
+    periods: ["Día", "Mes", "Año"]
   }),
   mounted() {
     this.getClassrooms();
@@ -57,5 +63,16 @@ export default {
 };
 </script>
 
-<style>
+<style lang='scss' scoped>
+.period {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &__text {
+    margin-right: 10px;
+  }
+  &__select {
+    max-width: 100px;
+  }
+}
 </style>

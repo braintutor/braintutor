@@ -1,6 +1,6 @@
 <template>
   <div class="mb-3">
-    <loading :active="loading_tasks" :message='loading_message'/>
+    <loading :active="loading_tasks" :message="loading_message" />
     <div v-show="!show_tasks_selected" class="calendar-container m-card">
       <div class="calendar-control">
         <span class="calendar-date">{{calendar_date}}</span>
@@ -26,6 +26,12 @@
         @eventClick="eventClick"
         eventTextColor="#fff"
       />
+      <div class="legend">
+        <div class="legend__item" v-for="(session, s_idx) in sessions" :key="s_idx">
+          <div class="legend__name">{{session.course.name}}</div>
+          <div class="legend__color" :style="{'background-color': session.color}"></div>
+        </div>
+      </div>
     </div>
     <!-- Tasks Selected -->
     <Task
@@ -42,6 +48,7 @@
 import Task from "@/components/Session/Tasks/Task";
 import loading from "@/components/loading";
 
+import { getSessionsByStudent } from "@/services/sessionService";
 import { getTasksByStudent } from "@/services/taskService";
 
 import FullCalendar from "@fullcalendar/vue";
@@ -52,15 +59,16 @@ import interactionPlugin from "@fullcalendar/interaction";
 
 export default {
   data: () => ({
-    task_date: "",
     tasks: [],
+    sessions: [],
+    task_date: "",
     task_delete_id: "",
     dialog_delete: false,
     //
     show_tasks_selected: false,
     calendar_date: null,
     loading_tasks: true,
-    loading_message: '',
+    loading_message: "",
     //
     calendar: null,
     locale: esLocale,
@@ -79,6 +87,8 @@ export default {
     }
   },
   async mounted() {
+    this.loading_message = "Cargando Cursos";
+    this.sessions = await getSessionsByStudent();
     this.calendar = this.$refs.calendar.getApi();
     this.updateCalendarDate();
     await this.restoreTasks();
@@ -94,19 +104,26 @@ export default {
     },
     async restoreTasks() {
       this.loading_tasks = true;
-      this.loading_message = 'Cargando Tareas'
+      this.loading_message = "Cargando Tareas";
       let tasks = await getTasksByStudent();
-      this.tasks = Object.values(tasks).reduce((arr, task_arr) => {
-        if (task_arr) {
-          // let color = "#" + (((1 << 24) * Math.random()) | 0).toString(16);
-          let color = "hsl(" + 360 * Math.random() + ", 50%, 50%)";
-          task_arr.map(task => {
-            task.color = color;
-          });
-          arr = arr.concat(task_arr);
-        }
-        return arr;
-      }, []);
+      this.tasks = Object.entries(tasks).reduce(
+        (arr, [session_id, task_arr]) => {
+          if (task_arr) {
+            // let color = "#" + (((1 << 24) * Math.random()) | 0).toString(16);
+            let color = "hsl(" + 360 * Math.random() + ", 50%, 50%)";
+            let session = this.sessions.find(
+              session => session._id.$oid == session_id
+            );
+            session.color = color;
+            task_arr.map(task => {
+              task.color = color;
+            });
+            arr = arr.concat(task_arr);
+          }
+          return arr;
+        },
+        []
+      );
       this.loading_tasks = false;
     },
     // Calendar
@@ -148,4 +165,24 @@ export default {
 
 <style lang="scss">
 @import "@/styles/tasks";
+
+.legend {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  &__item {
+    margin: 0 20px 10px 20px;
+    display: flex;
+    align-items: center;
+  }
+  &__name {
+    font-size: 0.9rem;
+  }
+  &__color {
+    height: 10px;
+    width: 40px;
+    margin-left: 12px;
+  }
+}
 </style>
