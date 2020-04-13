@@ -78,6 +78,12 @@ export default {
         session_types: ["2"]
       },
       {
+        title: "Cursos",
+        name: "parent",
+        icon: "mdi-book",
+        session_types: ["4"]
+      },
+      {
         title: "Colegio",
         name: "school-editor",
         icon: "mdi-school",

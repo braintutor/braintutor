@@ -32,4 +32,12 @@ function loginDirector(school_id, user, pass) {
   })
 }
 
-export { loginAdmin, loginTeacher, loginStudent, loginDirector }
+function loginParent(school_id, user, pass) {
+  return fetch_post('loginParent', {
+    school_id,
+    user,
+    pass
+  })
+}
+
+export { loginAdmin, loginTeacher, loginStudent, loginDirector, loginParent }

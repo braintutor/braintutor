@@ -1,35 +1,46 @@
 <template>
-  <div v-if="!classroom">
+  <div>
     <loading :active="loading" :message="loading_message" />
-    <div class="period" slot="default">
-      <span class="period__text">Mostrar resultados por:</span>
-      <v-select class="period__select" v-model="period" :items="periods" label="Periodo" dense solo></v-select>
-    </div>
-    <div class="row no-gutters mt-1">
-      <div
-        class="col-6 col-md-4 col-lg-3 px-2 py-2"
-        v-for="(classroom, c_idx) in classrooms"
-        :key="c_idx"
-      >
-        <Card :callback="() => select(classroom)">
-          <p class="card-item">{{classroom.name}}</p>
-        </Card>
+    <div class="filters">
+      <div class="filter">
+        <span class="filter__name">Aula:</span>
+        <v-select
+          class="filter__input"
+          v-model="classroom_id"
+          :items="classrooms"
+          item-value="_id"
+          item-text="name"
+          label="Aula"
+          dense
+          solo
+        ></v-select>
+      </div>
+      <div class="filter">
+        <span class="filter__name">Periodo:</span>
+        <v-select
+          class="filter__input"
+          v-model="period"
+          :items="periods"
+          label="Periodo"
+          dense
+          solo
+        ></v-select>
       </div>
     </div>
+    <Classroom v-if="classroom_id" :classroom_id="classroom_id.$oid" />
+    <div v-else class="no-classroom">Seleccione un Aula.</div>
   </div>
-  <Classroom v-else :classroom="classroom" :getClassrooms="getClassrooms" :unselect="unselect" />
 </template>
 
 <script>
 import loading from "@/components/loading";
-import Card from "@/components/Card";
 import Classroom from "./Classroom";
 
 import { getClassroomsBySchoolDirector } from "@/services/classroomService";
 
 export default {
   data: () => ({
-    classroom: null,
+    classroom_id: null,
     classrooms: [],
     //
     loading: true,
@@ -47,32 +58,23 @@ export default {
       this.classrooms = await getClassroomsBySchoolDirector();
       this.classrooms.sort((a, b) => a.name.localeCompare(b.name));
       this.loading = false;
-    },
-    select(classroom) {
-      this.classroom = classroom;
-    },
-    unselect() {
-      this.classroom = null;
     }
   },
   components: {
     loading,
-    Card,
     Classroom
   }
 };
 </script>
 
 <style lang='scss' scoped>
-.period {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  &__text {
-    margin-right: 10px;
-  }
-  &__select {
-    max-width: 100px;
-  }
+@import '@/styles/filters';
+
+.no-classroom {
+  margin: 20px 0;
+  color: #646464;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: lighter;
 }
 </style>

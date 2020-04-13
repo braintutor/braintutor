@@ -1,17 +1,23 @@
 <template>
   <div>
     <loading :active="loading" :message="loading_message" />
-    <v-select
-      class = 'mb-4'
-      v-model="classroom_id"
-      :items="classrooms"
-      item-value="_id"
-      item-text="name"
-      label="Aula"
-      dense
-      solo
-    ></v-select>
-    <Students :students="students" />
+    <div class="filters">
+      <div class="filter">
+        <span class="filter__name">Aula:</span>
+        <v-select
+          class="filter__input"
+          v-model="classroom_id"
+          :items="classrooms"
+          item-value="_id"
+          item-text="name"
+          label="Aula"
+          dense
+          solo
+        ></v-select>
+      </div>
+    </div>
+    <Students v-if="classroom_id" :students="students" />
+    <div v-else class="no-classroom">Seleccione un Aula.</div>
   </div>
 </template>
 
@@ -24,7 +30,7 @@ import { getStudentsByClassroomDirector } from "@/services/studentService";
 
 export default {
   data: () => ({
-    classroom_id: {},
+    classroom_id: null,
     classrooms: [],
     students: [],
     //
@@ -63,5 +69,36 @@ export default {
 };
 </script>
 
-<style>
+<style lang='scss' scoped>
+@import '@/styles/filters';
+
+.no-classroom {
+  margin: 20px 0;
+  color: #646464;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: lighter;
+}
+// .styles {
+// position: relative;
+// &::before {
+//   content: "Selecciona un Aula";
+//   position: absolute;
+//   width: 100%;
+//   height: 100%;
+//   background: #ffffffea;
+//   color: #9b9b9b;
+//   font-size: 1.5rem;
+//   font-weight: bold;
+//   border-radius: 10px;
+//   box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2),
+//     0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12) !important;
+//   //
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
+// &--active {
+// }
+// }
 </style>

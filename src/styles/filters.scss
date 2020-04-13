@@ -1,0 +1,18 @@
+.filters {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.filter {
+  margin: 0 20px 12px 0;
+  display: flex;
+  align-items: center;
+  &__name {
+    margin-top: 6px;
+    margin-right: 12px;
+  }
+  &__input {
+    max-width: 180px;
+  }
+}

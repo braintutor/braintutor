@@ -36,6 +36,11 @@ const routes = [
     component: () => import('../views/Student.vue')
   },
   {
+    path: '/parent',
+    name: 'parent',
+    component: () => import('../views/Parent.vue')
+  },
+  {
     path: '/session/:session_id',
     name: 'session',
     component: () => import('../views/Session.vue')
@@ -80,10 +85,11 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   reset()
 
-  const require_session = ['chatbot', 'school-editor', 'director', 'student', 'session', 'teacher', 'session-editor', 'course-editor', 'chatbot-editor'] // Require Session Exists
+  const require_session = ['chatbot', 'school-editor', 'director', 'student', 'parent', 'session', 'teacher', 'session-editor', 'course-editor', 'chatbot-editor'] // Require Session Exists
   const require_admin = ['school-editor'] // Require Admin
   const require_teacher = ['teacher', 'session-editor', 'course-editor', 'chatbot-editor'] // Require Teacher
   const require_director = ['director'] // Require Director
+  const require_parent = ['parent'] // Require Director
   let to_name = to.name
 
   if (require_session.includes(to_name)) {
@@ -105,6 +111,13 @@ router.beforeEach((to, from, next) => {
       // Director
       if (require_director.includes(to_name)) {
         if (getSession().type == 3)
+          next()
+        else
+          redirect('home')
+      }
+      // Parent
+      if (require_parent.includes(to_name)) {
+        if (getSession().type == 4)
           next()
         else
           redirect('home')

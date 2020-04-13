@@ -1,14 +1,6 @@
 <template>
   <div>
     <loading :active="loading" :message="loading_message" />
-    <div class="menu">
-      <div class="menu-left">
-        <v-btn icon @click="unselect(); getClassrooms()">
-          <v-icon>mdi-arrow-left</v-icon>
-        </v-btn>
-        <p class="menu-title">{{classroom.name}}</p>
-      </div>
-    </div>
     <div class="no-session" v-if="sessions.length <= 0">No hay cursos asignados.</div>
     <div class="session m-card" v-for="(session, s_idx) in sessions" :key="s_idx">
       <p class="session__item">Curso</p>
@@ -44,48 +36,55 @@ import { getStudentsByClassroomDirector } from "@/services/studentService";
 import Chart from "chart.js";
 
 export default {
-  props: ["classroom", "getClassrooms", "unselect"],
+  props: ["classroom_id"],
   data: () => ({
     sessions: [],
     students: [],
     loading: true,
     loading_message: ""
   }),
-  async mounted() {
-    Chart.defaults.global.responsive = true;
-    this.loading_message = "Cargando Cursos";
-    this.sessions = await getSessionsByClassroom(this.classroom._id.$oid);
-    this.students = await getStudentsByClassroomDirector(
-      this.classroom._id.$oid
-    );
-    this.loading = false;
-    for (let session of this.sessions) {
-      session.loading = true;
-      session.evaluations = await getEvaluationsBySessionDirector(
-        session._id.$oid
-      );
-      session.loading = false;
-      this.sessions.splice();
-      //
-      session.evaluations.forEach((evaluation, e_idx) => {
-        let scores = [];
-        if (evaluation.results) {
-          this.students.forEach(student => {
-            let result = evaluation.results[student._id.$oid];
-            if (result && result.started) scores.push(this.calculate(result));
-          });
-        }
-        let data = scores.reduce((arr, score) => {
-          arr[score] += 1;
-          return arr;
-        }, Array(21).fill(0));
-        setTimeout(() => {
-          this.showDashboard(evaluation._id.$oid + e_idx, data);
-        }, 1000);
-      });
+  mounted() {
+    this.update();
+  },
+  watch: {
+    async classroom_id() {
+      this.update();
     }
   },
   methods: {
+    async update() {
+      this.loading = true;
+      this.loading_message = "Cargando Cursos";
+      this.sessions = await getSessionsByClassroom(this.classroom_id);
+      this.students = await getStudentsByClassroomDirector(this.classroom_id);
+      this.loading = false;
+      
+      for (let session of this.sessions) {
+        session.loading = true;
+        session.evaluations = await getEvaluationsBySessionDirector(
+          session._id.$oid
+        );
+        session.loading = false;
+        this.sessions.splice();
+        //
+        session.evaluations.forEach((evaluation, e_idx) => {
+          let scores = [];
+          if (evaluation.results) {
+            this.students.forEach(student => {
+              let result = evaluation.results[student._id.$oid];
+              if (result && result.started) scores.push(this.calculate(result));
+            });
+          }
+          let data = scores.reduce((arr, score) => {
+            arr[score] += 1;
+            return arr;
+          }, Array(21).fill(0));
+          setTimeout(() => {
+            this.showDashboard(evaluation._id.$oid + e_idx, data);
+          }, 1000);
+        });
+      }
+    },
     calculate(result) {
       let score = Math.round((20 * result.corrects) / result.total) || 0;
       return score;
@@ -161,6 +160,7 @@ export default {
   }
 }
 .no-session {
+  margin: 20px 0;
   color: #acacac;
   text-align: center;
 }

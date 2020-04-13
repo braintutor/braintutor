@@ -46,7 +46,8 @@ import {
   loginAdmin,
   loginTeacher,
   loginStudent,
-  loginDirector
+  loginDirector,
+  loginParent
 } from "@/services/loginService";
 import { getSchools } from "@/services/schoolService";
 import { setSession } from "@/services/security";
@@ -55,7 +56,7 @@ import { redirect } from "@/services/router.js";
 export default {
   data: () => ({
     schools: [],
-    types: ["Estudiante", "Profesor", "Administrador", "Director"],
+    types: ["Estudiante", "Profesor", "Padre", "Director", "Administrador"],
     //
     school_id: "",
     type: "",
@@ -108,6 +109,12 @@ export default {
               .token;
             name = "director";
             type = 3;
+          }
+          if (this.type === "Padre") {
+            token = (await loginParent(this.school_id, this.user, this.pass))
+              .token;
+            name = "parent";
+            type = 4;
           }
 
           if (token) {

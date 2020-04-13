@@ -13,7 +13,7 @@
               <th class="text-center">Acciones</th>
             </tr>
           </thead>
-          <tbody v-if="students.length > 1">
+          <tbody v-show="students.length > 1">
             <tr v-for="(entity, e_idx) in students" :key="e_idx">
               <td>{{ entity.first_name }}</td>
               <td>{{ entity.last_name }}</td>
@@ -25,8 +25,8 @@
               </td>
             </tr>
           </tbody>
-          <div v-else>No hay alumnos.</div>
         </table>
+        <div v-show="students.length <= 0" class="no-students">No hay alumnos.</div>
       </div>
     </div>
     <div v-show="student" class="students-chart m-card">
@@ -236,9 +236,15 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+.no-students {
+  margin: 20px 0 10px 0;
+  color: #8d8d8d;
+  text-align: center;
+  font-weight: lighter;
+}
 .students {
   padding: 16px 24px;
-  margin-bottom: 1.2rem;
+  margin-bottom: 1rem;
   &__title {
     margin-bottom: 6px;
     font-size: 1.4rem;
@@ -249,7 +255,7 @@ export default {
 }
 .students-chart {
   padding: 2%;
-  margin-bottom: 1.2rem;
+  margin-bottom: 1rem;
   &__title {
     margin-bottom: 6px;
     text-align: center;
