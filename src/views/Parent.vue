@@ -1,8 +1,8 @@
 <template>
   <div class="px-2">
     <div class="student__title">
-      <!-- <span :class="{'disable': !show_courses}" @click="show_courses = true">Mis Cursos</span> -->
-      <!-- <span class="mx-2"></span> -->
+      <span :class="{'disable': !show_courses}" @click="show_courses = true">Cursos</span>
+      <span class="mx-2"></span>
       <span :class="{'disable': show_courses}" @click="show_courses =  false">Tareas</span>
     </div>
     <Sessions v-if="show_courses" />
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import Sessions from "@/components/Student/Sessions";
+import Sessions from "@/components/Parent/Sessions";
 import Tasks from "@/components/Student/Tasks";
 
 export default {

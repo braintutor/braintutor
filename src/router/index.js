@@ -85,47 +85,49 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   reset()
 
-  const require_session = ['chatbot', 'school-editor', 'director', 'student', 'parent', 'session', 'teacher', 'session-editor', 'course-editor', 'chatbot-editor'] // Require Session Exists
+  const require_student = ['chatbot', 'student', 'session'] // Require Student
   const require_admin = ['school-editor'] // Require Admin
   const require_teacher = ['teacher', 'session-editor', 'course-editor', 'chatbot-editor'] // Require Teacher
   const require_director = ['director'] // Require Director
   const require_parent = ['parent'] // Require Director
   let to_name = to.name
 
-  if (require_session.includes(to_name)) {
-    if (sessionExists()) {
-      // Admin
-      if (require_admin.includes(to_name)) {
-        if (getSession().type == 0)
-          next()
-        else
-          redirect('home')
-      }
-      // Teacher
-      if (require_teacher.includes(to_name)) {
-        if (getSession().type == 1)
-          next()
-        else
-          redirect('home')
-      }
-      // Director
-      if (require_director.includes(to_name)) {
-        if (getSession().type == 3)
-          next()
-        else
-          redirect('home')
-      }
-      // Parent
-      if (require_parent.includes(to_name)) {
-        if (getSession().type == 4)
-          next()
-        else
-          redirect('home')
-      }
+  let session_exists = sessionExists()
+
+  // Admin
+  if (require_admin.includes(to_name)) {
+    if (session_exists && getSession().type == 0)
       next()
-    } else {
-      redirect('login')
-    }
+    else
+      redirect('home')
+  }
+  // Teacher
+  if (require_teacher.includes(to_name)) {
+    if (session_exists && getSession().type == 1)
+      next()
+    else
+      redirect('home')
+  }
+  // Student
+  if (require_student.includes(to_name)) {
+    if (session_exists && getSession().type == 2)
+      next()
+    else
+      redirect('home')
+  }
+  // Director
+  if (require_director.includes(to_name)) {
+    if (session_exists && getSession().type == 3)
+      next()
+    else
+      redirect('home')
+  }
+  // Parent
+  if (require_parent.includes(to_name)) {
+    if (session_exists && getSession().type == 4)
+      next()
+    else
+      redirect('home')
   }
   next()
 })
