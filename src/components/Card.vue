@@ -44,7 +44,7 @@ export default {
   border-radius: 10px;
 }
 .card-divider {
-  margin-bottom: 4% !important;
+  padding-bottom: 4% !important;
 }
 .card-actions {
   margin-bottom: 4% !important;

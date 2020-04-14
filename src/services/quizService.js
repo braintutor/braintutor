@@ -32,4 +32,10 @@ function setQuizResult(quiz_id, result) {
   })
 }
 
-export { addQuiz, getQuizzes, updateQuiz, removeQuiz, setQuizResult }
+function getQuizResultByStudent(quiz_id) {
+  return fetch_post('getQuizResultByStudent', {
+    quiz_id
+  })
+}
+
+export { addQuiz, getQuizzes, updateQuiz, removeQuiz, setQuizResult, getQuizResultByStudent }

@@ -1,6 +1,6 @@
 <template>
   <div class="quiz-container m-fullscreen">
-    <loading :active='loading' :message='loading_message' />
+    <loading :active="loading" :message="loading_message" />
     <div class="quiz-menu">
       <v-btn icon @click="unselectQuiz()">
         <v-icon>mdi-arrow-left</v-icon>
@@ -47,7 +47,7 @@
         color="primary"
       >{{`${this.corrects}/${this.total_questions}`}}</v-progress-circular>
       <div class="score-content">
-        <span>{{score_message}}</span>
+        <p v-for="(message, m_idx) in result_messages" :key="m_idx">{{message}}</p>
       </div>
     </div>
   </div>
@@ -61,7 +61,7 @@ import { setQuizResult } from "@/services/quizService";
 import loading from "@/components/loading";
 
 export default {
-  props: ["quiz", "unselectQuiz"],
+  props: ["quiz", "unselectQuiz", "setResult", "calculate"],
   data: () => ({
     question_idx: 0,
     time_remaining: 0,
@@ -70,11 +70,12 @@ export default {
     total_questions: 0,
     score: 0,
     corrects: 0,
+    result_messages: [],
     //
     time_transition: 1000,
     show_score: false,
     loading: false,
-    loading_message: ''
+    loading_message: ""
   }),
   computed: {
     question_selected() {
@@ -85,15 +86,11 @@ export default {
     },
     component_avatar() {
       return this.$store.state.component_avatar;
-    },
-    score_message() {
-      return `Has acertado ${this.corrects} de ${this.total_questions} preguntas.`;
     }
   },
   mounted() {
     this.total_questions = this.quiz.content.length;
-    // this.time_total = this.quiz.time;
-    this.time_total = 200;
+    this.time_total = this.quiz.time;
     this.time_remaining = this.time_total;
     // Timer
     this.clearTimer();
@@ -122,27 +119,32 @@ export default {
         this.$forceUpdate(); /* Correct Binding Update (:class) */
       }
     },
-    async nextQuestion() {
+    nextQuestion() {
       if (this.total_questions > this.question_idx + 1) {
         this.question_idx++;
       } else {
-        let result = {
-          corrects: this.corrects,
-          total: this.total_questions
-        };
-        this.loading = true;
-        this.loading_message = "Cargando Puntaje";
-        await setQuizResult(this.quiz._id.$oid, result);
-        this.loading = false;
         this.showScore();
       }
     },
-    showScore() {
+    async showScore() {
       this.clearTimer();
+      let result = {
+        corrects: this.corrects,
+        total: this.total_questions
+      };
+      this.loading = true;
+      this.loading_message = "Cargando Puntaje";
+      let response = await setQuizResult(this.quiz._id.$oid, result);
+      if (response.success) this.setResult(this.quiz._id.$oid, result);
+      this.loading = false;
+      //
       this.show_score = true;
+      this.result_messages = [
+        `Respondiste correctamente ${result.corrects} de ${result.total} preguntas.`,
+        `Obtuviste un puntaje de ${this.calculate(result)}.`
+      ];
       setTimeout(() => {
-        this.score = percentage(this.total_questions, this.corrects);
-        // this.startTalk(this.score_message);
+        this.score = percentage(result.total, result.corrects);
       }, 500);
     },
     //
@@ -240,7 +242,7 @@ export default {
   flex-direction: column;
   align-items: center;
   .score-content {
-    font-size: 1.8rem;
+    font-size: 1.4rem;
     margin-top: 32px;
   }
 }
