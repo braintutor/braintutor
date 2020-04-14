@@ -17,6 +17,7 @@
             <th class="text-left">Apellidos</th>
             <th class="text-left">Usuario</th>
             <th class="text-left">Puntaje</th>
+            <th class="text-center">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -30,6 +31,16 @@
             <td v-else>
               <span class="no-result">Sin realizar</span>
             </td>
+            <td class="text-center">
+              <v-btn
+                :disabled="!student.score"
+                small
+                icon
+                @click="dialog_delete = true; student_result_delete = student"
+              >
+                <v-icon>mdi-playlist-remove</v-icon>
+              </v-btn>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -37,6 +48,25 @@
     <div class="results-chart m-card">
       <canvas id="myChart"></canvas>
     </div>
+
+    <!-- Dialog Delete -->
+    <v-dialog v-model="dialog_delete" max-width="300">
+      <v-card>
+        <v-card-title>Confirmar eliminación</v-card-title>
+        <v-card-text>Si elimina la nota actual, el alumno podrá realizar el examen otra vez.
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn small text @click="dialog_delete = false">Cancelar</v-btn>
+          <v-btn
+            small
+            depressed
+            color="error"
+            @click="dialog_delete = false; removeResult()"
+          >Eliminar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -46,16 +76,19 @@ import loading from "@/components/loading";
 
 import { getParam } from "@/services/router.js";
 import { getStudentsBySession } from "@/services/studentService";
+import { removeResult } from "@/services/evaluationService";
 
 export default {
   props: ["evaluation", "getEvaluations", "unselect"],
   data: () => ({
     results: {},
     students: [],
+    student_result_delete: null,
     myChart: null,
     //
     loading: true,
-    loading_message: ""
+    loading_message: "",
+    dialog_delete: false
   }),
   async mounted() {
     let session_id = getParam("session_id");
@@ -70,7 +103,39 @@ export default {
           ? this.calculate(student.result)
           : null;
     });
-    this.showDashboard();
+    //
+    var ctx = document.getElementById("myChart").getContext("2d");
+    this.myChart = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: [...Array(21).keys()],
+        datasets: [
+          {
+            label: ["Alumnos"],
+            backgroundColor: "rgba(255, 99, 132, 0.2)",
+            borderColor: "rgba(255, 99, 132, 1)",
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true,
+                max: this.students.length,
+                stepSize: 1
+              }
+            }
+          ]
+        }
+      }
+    });
+    this.updateDashboard();
     this.loading = false;
   },
   methods: {
@@ -79,7 +144,19 @@ export default {
       score = ("0" + score).slice(-2);
       return score;
     },
-    showDashboard() {
+    async removeResult() {
+      this.loading = true;
+      this.loading_message = "Eliminando Resultado";
+      await removeResult(
+        this.evaluation._id.$oid,
+        this.student_result_delete._id.$oid
+      );
+      this.student_result_delete.score = null;
+      this.students.splice();
+      this.updateDashboard();
+      this.loading = false;
+    },
+    updateDashboard() {
       let data = this.students.reduce((arr, student) => {
         if (student.score) {
           let score = parseInt(student.score);
@@ -87,40 +164,8 @@ export default {
         }
         return arr;
       }, Array(21).fill(0));
-
-      if (this.myChart) this.myChart.destroy();
-      var ctx = document.getElementById("myChart").getContext("2d");
-      this.myChart = new Chart(ctx, {
-        type: "bar",
-        data: {
-          labels: [...Array(21).keys()],
-          datasets: [
-            {
-              label: ["Alumnos"],
-              data,
-              backgroundColor: "rgba(255, 99, 132, 0.2)",
-              borderColor: "rgba(255, 99, 132, 1)",
-              borderWidth: 1
-            }
-          ]
-        },
-        options: {
-          legend: {
-            display: false
-          },
-          scales: {
-            yAxes: [
-              {
-                ticks: {
-                  beginAtZero: true,
-                  max: this.students.length,
-                  stepSize: 1
-                }
-              }
-            ]
-          }
-        }
-      });
+      this.myChart.data.datasets[0].data = data;
+      this.myChart.update();
     }
   },
   components: {

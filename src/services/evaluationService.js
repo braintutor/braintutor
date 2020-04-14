@@ -58,6 +58,13 @@ function setResult(evaluation_id, answers) {
   })
 }
 
+function removeResult(evaluation_id, student_id) {
+  return fetch_post('removeResult', {
+    evaluation_id,
+    student_id
+  })
+}
+
 export {
   getEvaluationsBySession,
   getEvaluationsBySessionStudent,
@@ -67,5 +74,6 @@ export {
   deleteEvaluation,
   startEvaluation,
   getResultByStudent,
-  setResult
+  setResult,
+  removeResult
 }
