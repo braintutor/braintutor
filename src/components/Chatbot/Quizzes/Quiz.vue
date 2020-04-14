@@ -1,5 +1,6 @@
 <template>
   <div class="quiz-container m-fullscreen">
+    <loading :active='loading' :message='loading_message' />
     <div class="quiz-menu">
       <v-btn icon @click="unselectQuiz()">
         <v-icon>mdi-arrow-left</v-icon>
@@ -35,7 +36,7 @@
           </div>
         </div>
       </div>
-      <v-btn class="next" small @click="nextQuestion()" color="warning">Siguiente</v-btn>
+      <v-btn class="next" small @click="nextQuestion()">Siguiente</v-btn>
     </div>
     <div v-else class="score-container m-fullscreen-content">
       <v-progress-circular
@@ -55,6 +56,9 @@
 <script>
 import { createTimer } from "@/services/timer";
 import { percentage } from "@/services/math";
+import { setQuizResult } from "@/services/quizService";
+
+import loading from "@/components/loading";
 
 export default {
   props: ["quiz", "unselectQuiz"],
@@ -68,7 +72,9 @@ export default {
     corrects: 0,
     //
     time_transition: 1000,
-    show_score: false
+    show_score: false,
+    loading: false,
+    loading_message: ''
   }),
   computed: {
     question_selected() {
@@ -116,10 +122,18 @@ export default {
         this.$forceUpdate(); /* Correct Binding Update (:class) */
       }
     },
-    nextQuestion() {
+    async nextQuestion() {
       if (this.total_questions > this.question_idx + 1) {
         this.question_idx++;
       } else {
+        let result = {
+          corrects: this.corrects,
+          total: this.total_questions
+        };
+        this.loading = true;
+        this.loading_message = "Cargando Puntaje";
+        await setQuizResult(this.quiz._id.$oid, result);
+        this.loading = false;
         this.showScore();
       }
     },
@@ -135,6 +149,9 @@ export default {
     clearTimer() {
       this.$store.commit("clearTimer");
     }
+  },
+  components: {
+    loading
   }
 };
 </script>
@@ -177,6 +194,8 @@ export default {
 .next {
   display: block;
   margin: 14px auto 20px auto;
+  background: #fab55d !important;
+  color: #fff;
 }
 .question-container {
   padding: 16px 10px;

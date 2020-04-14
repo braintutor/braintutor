@@ -121,7 +121,7 @@ export default {
 
 <style lang='scss' scoped>
 .list {
-  padding-bottom: 70px;
+  padding: 2px 6px 70px 6px;
 }
 .options {
   padding: 0 20px;

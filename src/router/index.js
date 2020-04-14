@@ -84,52 +84,29 @@ const router = new VueRouter({
 })
 router.beforeEach((to, from, next) => {
   reset()
-
-  const require_student = ['chatbot', 'student', 'session'] // Require Student
+  const require_student = ['chatbot', 'student', 'session', 'profile'] // Require Student
   const require_admin = ['school-editor'] // Require Admin
-  const require_teacher = ['teacher', 'session-editor', 'course-editor', 'chatbot-editor'] // Require Teacher
+  const require_teacher = ['chatbot', 'teacher', 'session-editor', 'course-editor', 'chatbot-editor'] // Require Teacher
   const require_director = ['director'] // Require Director
   const require_parent = ['parent'] // Require Director
+
   let to_name = to.name
-
   let session_exists = sessionExists()
-
   // Admin
-  if (require_admin.includes(to_name)) {
-    if (session_exists && getSession().type == 0)
-      next()
+  if (require_student.concat(require_admin, require_teacher, require_director, require_parent).includes(to_name))
+    if (session_exists)
+      if ((require_admin.includes(to_name) && getSession().type == 0) ||
+        (require_teacher.includes(to_name) && getSession().type == 1) ||
+        (require_student.includes(to_name) && getSession().type == 2) ||
+        (require_director.includes(to_name) && getSession().type == 3) ||
+        (require_parent.includes(to_name) && getSession().type == 4))
+        next()
+      else
+        redirect('home')
     else
-      redirect('home')
-  }
-  // Teacher
-  if (require_teacher.includes(to_name)) {
-    if (session_exists && getSession().type == 1)
-      next()
-    else
-      redirect('home')
-  }
-  // Student
-  if (require_student.includes(to_name)) {
-    if (session_exists && getSession().type == 2)
-      next()
-    else
-      redirect('home')
-  }
-  // Director
-  if (require_director.includes(to_name)) {
-    if (session_exists && getSession().type == 3)
-      next()
-    else
-      redirect('home')
-  }
-  // Parent
-  if (require_parent.includes(to_name)) {
-    if (session_exists && getSession().type == 4)
-      next()
-    else
-      redirect('home')
-  }
-  next()
+      redirect('login')
+  else
+    next()
 })
 
 function reset() {

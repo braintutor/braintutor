@@ -25,4 +25,11 @@ function removeQuiz(quiz_id) {
   })
 }
 
-export { addQuiz, getQuizzes, updateQuiz, removeQuiz }
+function setQuizResult(quiz_id, result) {
+  return fetch_post('setQuizResult', {
+    quiz_id, 
+    result
+  })
+}
+
+export { addQuiz, getQuizzes, updateQuiz, removeQuiz, setQuizResult }

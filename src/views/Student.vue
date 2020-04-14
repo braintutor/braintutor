@@ -2,7 +2,7 @@
   <div class="px-2">
     <div class="student__title">
       <span :class="{'disable': !show_courses}" @click="show_courses = true">Mis Cursos</span>
-      <span class="mx-2"></span>
+      <span class="mx-1"></span>
       <span :class="{'disable': show_courses}" @click="show_courses =  false">Mis Tareas</span>
     </div>
     <Sessions v-if="show_courses" />
@@ -30,14 +30,16 @@ export default {
   margin: 10px 0 16px 0;
   color: #000;
   text-align: center;
-  font-size: 2.4rem;
+  font-size: 2.2rem;
   font-weight: lighter;
+  cursor: initial;
   .disable {
     cursor: pointer;
     color: #dadada;
     font-size: 1.2rem;
     transition: all 0.3s;
     &:hover {
+      font-size: 1.4rem;
       color: #8d8d8d;
     }
   }
