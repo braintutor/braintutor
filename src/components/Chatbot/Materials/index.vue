@@ -1,8 +1,12 @@
 <template>
   <div class="m-fullscreen">
-    <div class="options">
-      <span class="mr-2">Contenido Adaptado</span>
-      <v-switch class="options__switch" v-model="adapt_content"></v-switch>
+    <div class="menu">
+      <!-- <div class="name">{{chatbot.name}}</div> -->
+      <div></div>
+      <div class="options">
+        <span class="mr-2">Contenido Adaptado</span>
+        <v-switch class="options__switch" v-model="adapt_content"></v-switch>
+      </div>
     </div>
     <!-- Material List -->
     <v-container class="list m-fullscreen-content" v-if="!material" fluid>
@@ -44,7 +48,7 @@ import { getCategoriesByLearningStyle } from "@/services/studentService.js";
 import { Clamp } from "@/services/math";
 
 export default {
-  props: ["showServices"],
+  props: ["chatbot", "showServices"],
   data: () => ({
     material: null,
     adapt_content: true,
@@ -120,11 +124,20 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+.menu {
+  padding-bottom: 0;
+  .name {
+    margin-left: 8px;
+    color: #8b8b8b;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+}
 .list {
   padding: 2px 6px 70px 6px;
 }
 .options {
-  padding: 0 20px;
+  padding: 0 10px;
   font-size: 0.85rem;
   color: rgb(92, 92, 92);
   //

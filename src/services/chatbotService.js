@@ -18,6 +18,12 @@ function getChatbot(chatbot_id) {
   })
 }
 
+function getChatbotName(chatbot_id) {
+  return fetch_post('getChatbotName', {
+    chatbot_id
+  })
+}
+
 function addChatbot(course_id, chatbot) {
   return fetch_post('addChatbot', {
     course_id,
@@ -37,4 +43,4 @@ function removeChatbot(chatbot_id) {
   })
 }
 
-export { getChatbot, getChatbotsByCourse, getChatbotsBySession, addChatbot, updateChatbot, removeChatbot }
+export { getChatbot, getChatbotsByCourse, getChatbotsBySession, getChatbotName, addChatbot, updateChatbot, removeChatbot }

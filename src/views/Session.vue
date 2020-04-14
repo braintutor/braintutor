@@ -62,22 +62,4 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.history {
-  margin: 0 16px 8px;
-  color: #868686;
-  font-weight: bold;
-  font-size: 0.9rem;
-  //
-  display: flex;
-  align-items: center;
-  &__back {
-    border-radius: 10px;
-    text-decoration: underline;
-    cursor: pointer;
-  }
-  &__divider {
-    color: #c9c9c9;
-    margin: 0 8px;
-  }
-}
 </style>

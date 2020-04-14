@@ -7,6 +7,7 @@
           class="m-fullscreen-content"
           ref="component_materials"
           v-show="service_selected === 0"
+          :chatbot="chatbot"
           :showServices="bool => showServices(bool)"
         />
         <Quizzes
@@ -50,6 +51,7 @@ import loading from "@/components/loading";
 import { scrollRight } from "@/services/scroll";
 import { getParam } from "@/services/router.js";
 
+import { getChatbotName } from "@/services/chatbotService";
 import { getMaterials } from "@/services/materialService";
 import { getQuestionTemplate } from "@/services/chatService";
 import { getCourseIdByChatbot } from "@/services/courseService";
@@ -60,6 +62,7 @@ import {
 
 export default {
   data: () => ({
+    chatbot: {},
     chatbot_id: "",
     materials: [],
     available_questions: [],
@@ -73,9 +76,10 @@ export default {
     // Components
     this.$store.commit("setComponentMaterials", this.$refs.component_materials);
     this.$store.commit("setComponentQuizzes", this.$refs.component_quizzes);
-    this.chatbot_id = getParam("chatbot_id");
 
+    this.chatbot_id = getParam("chatbot_id");
     this.loading_message = "Cargando Material";
+    this.chatbot = await getChatbotName(this.chatbot_id);
     this.materials = await getMaterials(this.chatbot_id);
     this.$store.commit("setMaterials", this.materials);
 
