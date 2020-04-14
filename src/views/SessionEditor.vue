@@ -1,10 +1,18 @@
 <template>
-  <AppSidebar :links="links">
-    <Chatbots :slot="0" />
-    <TasksEditor :slot="1" />
-    <EvaluationsEditor :slot="2" />
-    <Students :slot="3" />
-  </AppSidebar>
+  <div>
+    <div class="history">
+      <span class="history__back" @click="redirect()">Cursos</span>
+      <span class="history__divider">></span>
+      <span v-if="course">{{course.name}}</span>
+      <span v-else>...</span>
+    </div>
+    <AppSidebar :links="links">
+      <Chatbots :slot="0" />
+      <TasksEditor :slot="1" />
+      <EvaluationsEditor :slot="2" />
+      <Students :slot="3" />
+    </AppSidebar>
+  </div>
 </template>
 
 <script>
@@ -14,8 +22,12 @@ import TasksEditor from "@/components/SessionEditor/TasksEditor/index";
 import EvaluationsEditor from "@/components/SessionEditor/EvaluationsEditor/index";
 import Students from "@/components/SessionEditor/Students";
 
+import { redirect, getParam } from "@/services/router";
+import { getCourseNameBySession } from "@/services/courseService";
+
 export default {
   data: () => ({
+    course: null,
     links: [
       {
         image:
@@ -37,8 +49,15 @@ export default {
       }
     ]
   }),
-  async mounted() {},
-  methods: {},
+  async mounted() {
+    let session_id = getParam("session_id");
+    this.course = await getCourseNameBySession(session_id);
+  },
+  methods: {
+    redirect() {
+      redirect("teacher");
+    }
+  },
   components: {
     AppSidebar,
     Chatbots,

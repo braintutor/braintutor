@@ -31,6 +31,12 @@ function updateEvaluation(evaluation) {
   })
 }
 
+function publicEvaluation(evaluation_id) {
+  return fetch_post('publicEvaluation', {
+    evaluation_id
+  })
+}
+
 function deleteEvaluation(evaluation_id) {
   return fetch_post('deleteEvaluation', {
     evaluation_id
@@ -71,7 +77,9 @@ export {
   getEvaluationsBySessionDirector,
   addEvaluation,
   updateEvaluation,
+  publicEvaluation,
   deleteEvaluation,
+  //
   startEvaluation,
   getResultByStudent,
   setResult,

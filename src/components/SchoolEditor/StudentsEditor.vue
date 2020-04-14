@@ -59,6 +59,7 @@
       <v-card class="edit">
         <v-card-title v-if="action === 'create'" class="py-5">Crear Alumno</v-card-title>
         <v-card-title v-else-if="action === 'edit'" class="py-5">Editar Alumno</v-card-title>
+        <v-alert v-if="error" type="error" icon="mdi-cloud-alert" text dismissible>{{error}}</v-alert>
         <v-card-text class="edit__content">
           <span class="mt-1 mr-4">Nombres:</span>
           <v-text-field
@@ -130,6 +131,7 @@ export default {
     classrooms: [],
     classroom_id: "",
     action: "",
+    error: "",
     //
     dialog_edit: false,
     loading: true,
@@ -157,6 +159,7 @@ export default {
     },
     addStudent() {
       this.action = "create";
+      this.error = "";
       this.entity = {
         first_name: "",
         last_name: "",
@@ -166,24 +169,36 @@ export default {
     },
     editStudent(entity) {
       this.action = "edit";
+      this.error = "";
       this.entity = Object.assign({}, entity);
       this.entity.id = this.entity._id.$oid;
       this.entity.showPassword = false;
     },
     async saveStudent() {
       this.loading_save = true;
+      this.error = "";
       if (this.action === "create") {
-        let entity_id = await addStudent(this.entity);
-        this.entity._id = entity_id;
-        this.entities.push(this.entity);
-        this.dialog_edit = false;
+        let response = await addStudent(this.entity);
+        if (response.error) {
+          this.error = response.error;
+        } else {
+          this.entity._id = response._id;
+          this.entity.user = response.user;
+          this.entities.push(this.entity);
+          this.dialog_edit = false;
+        }
       } else if (this.action === "edit") {
-        await updateStudent(this.entity);
-        let entity_idx = this.entities.findIndex(
-          entity => entity._id.$oid === this.entity.id
-        );
-        this.entities[entity_idx] = Object.assign({}, this.entity);
-        this.entities.splice();
+        let response = await updateStudent(this.entity);
+        if (response.error) {
+          this.error = response.error;
+        } else {
+          this.entity.user = response.user;
+          let entity_idx = this.entities.findIndex(
+            entity => entity._id.$oid === this.entity.id
+          );
+          this.entities[entity_idx] = Object.assign({}, this.entity);
+          this.entities.splice();
+        }
       }
       this.loading_save = false;
     }

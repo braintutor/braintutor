@@ -46,6 +46,7 @@
       <v-card class="teacher-edit">
         <v-card-title v-if="action === 'create'" class="py-5">Crear Docente</v-card-title>
         <v-card-title v-else-if="action === 'edit'" class="py-5">Editar Docente</v-card-title>
+        <v-alert v-if="error" type="error" icon="mdi-cloud-alert" text dismissible>{{error}}</v-alert>
         <v-card-text class="teacher-edit__content">
           <span class="mt-1 mr-4">Nombres:</span>
           <v-text-field
@@ -105,6 +106,7 @@ export default {
     teachers: [],
     teacher: {},
     action: "",
+    error: "",
     //
     dialog_edit: false,
     loading: true,
@@ -121,6 +123,7 @@ export default {
     },
     addTeacher() {
       this.action = "create";
+      this.error = "";
       this.teacher = {
         first_name: "",
         last_name: "",
@@ -130,23 +133,35 @@ export default {
     },
     editTeacher(teacher) {
       this.action = "edit";
+      this.error = "";
       this.teacher = Object.assign({}, teacher);
       this.teacher.id = this.teacher._id.$oid;
       this.teacher.showPassword = false;
     },
     async saveTeacher() {
       this.loading_save = true;
+      this.error = "";
       if (this.action === "create") {
-        let teacher_id = await addTeacher(this.teacher);
-        this.teacher._id = teacher_id;
-        this.teachers.push(this.teacher);
-        this.dialog_edit = false;
+        let response = await addTeacher(this.teacher);
+        if (response.error) {
+          this.error = response.error;
+        } else {
+          this.teacher._id = response._id;
+          this.teacher.user = response.user;
+          this.teachers.push(this.teacher);
+          this.dialog_edit = false;
+        }
       } else if (this.action === "edit") {
-        await updateTeacher(this.teacher);
-        let teacher_idx = this.teachers.findIndex(
-          teacher => teacher._id.$oid === this.teacher.id
-        );
-        this.teachers[teacher_idx] = Object.assign({}, this.teacher);
+        let response = await updateTeacher(this.teacher);
+        if (response.error) {
+          this.error = response.error;
+        } else {
+          this.teacher.user = response.user;
+          let teacher_idx = this.teachers.findIndex(
+            teacher => teacher._id.$oid === this.teacher.id
+          );
+          this.teachers[teacher_idx] = Object.assign({}, this.teacher);
+        }
       }
       this.loading_save = false;
     }

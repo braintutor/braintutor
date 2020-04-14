@@ -1,6 +1,6 @@
 <template>
   <div class="quiz-editor-container m-fullscreen">
-    <loading :active="loading" />
+    <loading :active="loading" :message="loading_message" />
     <div class="menu">
       <div class="menu-left">
         <v-btn icon @click="unselect(); getEvaluations()">
@@ -9,12 +9,13 @@
         <v-text-field
           class="menu-title"
           v-model="evaluation.name"
+          :disabled="evaluation.started"
           dense
           hide-details
           autocomplete="off"
         ></v-text-field>
       </div>
-      <div class="menu-right">
+      <div v-if="!evaluation.started" class="menu-right">
         <v-btn icon @click="addQuestion(evaluation.content)">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
@@ -31,6 +32,7 @@
     <div id="quiz-scroll" class="quiz-editor-content m-fullscreen-content">
       <div class="question-editor-text mb-3">
         <v-slider
+          :disabled="evaluation.started"
           v-model="evaluation.time"
           :label="`Tiempo: ${evaluation.time}s`"
           min="10"
@@ -44,9 +46,16 @@
         class="question-editor-container m-card"
       >
         <div class="question-editor-question question-editor-text">
-          <v-textarea v-model="c.question" :rows="1" autoGrow dense hide-details></v-textarea>
+          <v-textarea
+            :disabled="evaluation.started"
+            v-model="c.question"
+            :rows="1"
+            autoGrow
+            dense
+            hide-details
+          ></v-textarea>
           <v-btn
-            v-if="evaluation.content.length > 1"
+            v-if="!evaluation.started && evaluation.content.length > 1"
             icon
             @click="removeQuestion(evaluation.content, c_idx)"
           >
@@ -62,6 +71,7 @@
             >
               <div class="question-editor-alternative-content question-editor-text m-card">
                 <v-textarea
+                  :disabled="evaluation.started"
                   style="width: 0"
                   v-model="c.alternatives[a_idx]"
                   :rows="1"
@@ -70,16 +80,19 @@
                   hide-details
                 ></v-textarea>
                 <v-btn
-                  v-if="c.alternatives.length > 2"
+                  v-if="!evaluation.started && c.alternatives.length > 2"
                   icon
                   @click="removeAlternative(c.alternatives, a_idx)"
                 >
                   <v-icon>mdi-minus</v-icon>
                 </v-btn>
               </div>
-              <v-radio :value="a_idx"></v-radio>
+              <v-radio :disabled="evaluation.started" :value="a_idx"></v-radio>
             </div>
-            <div class="question-editor-alternative-container col-12 col-md-6">
+            <div
+              v-if="!evaluation.started"
+              class="question-editor-alternative-container col-12 col-md-6"
+            >
               <div
                 class="question-editor-alternative-add m-fullcenter"
                 @click="addAlternative(c.alternatives)"
@@ -90,9 +103,30 @@
           </div>
         </v-radio-group>
       </div>
+      <div class="public">
+        <v-btn color="primary" v-if="!evaluation.started" @click="dialog_public = true">Publicar</v-btn>
+      </div>
     </div>
 
-    <!-- Dialog -->
+    <!-- Dialog Public -->
+    <v-dialog v-model="dialog_public" max-width="300">
+      <v-card>
+        <v-card-title>Confirmar publicación</v-card-title>
+        <v-card-text>Una vez publicado, no podrá modificar el contenido.</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn small text @click="dialog_public = false">Cancelar</v-btn>
+          <v-btn
+            small
+            depressed
+            color="primary"
+            @click="dialog_public = false; publicEvaluation()"
+          >Publicar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- Dialog Delete -->
     <v-dialog v-model="dialog_delete" max-width="300">
       <v-card>
         <v-card-title>Confirmar eliminación</v-card-title>
@@ -113,6 +147,7 @@ import loading from "@/components/loading";
 import { scrollDown } from "@/services/scroll";
 import {
   updateEvaluation,
+  publicEvaluation,
   deleteEvaluation
 } from "@/services/evaluationService";
 
@@ -120,17 +155,30 @@ export default {
   props: ["evaluation", "getEvaluations", "unselect"],
   data: () => ({
     loading: false,
-    dialog_delete: false
+    loading_message: "",
+    dialog_delete: false,
+    dialog_public: false
   }),
   methods: {
     async save() {
       this.loading = true;
+      this.loading_message = "Guardando";
       this.evaluation.id = this.evaluation._id.$oid;
       await updateEvaluation(this.evaluation);
       this.loading = false;
     },
+    async publicEvaluation() {
+      await this.save();
+      this.loading = true;
+      this.loading_message = "Publicando";
+      let evaluation_id = this.evaluation._id.$oid;
+      await publicEvaluation(evaluation_id);
+      this.evaluation.started = true;
+      this.loading = false;
+    },
     async remove() {
       this.loading = true;
+      this.loading_message = "Elimando";
       let evaluation_id = this.evaluation._id.$oid;
       await deleteEvaluation(evaluation_id);
       this.getEvaluations();
@@ -206,6 +254,10 @@ export default {
         }
       }
     }
+  }
+  .public {
+    display: flex;
+    justify-content: center;
   }
 }
 </style>

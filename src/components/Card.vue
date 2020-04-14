@@ -48,12 +48,15 @@ export default {
 }
 .card-actions {
   margin-bottom: 4% !important;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  // display: grid;
+  // grid-template-columns: repeat(2, 1fr);
   -webkit-column-gap: 8px;
 }
 .card-action {
+  flex-grow: 1;
   padding: 6px 12px;
+  margin: 0 2px;
   background: #ecdd84;
   color: #fff;
   font-size: 0.9rem;

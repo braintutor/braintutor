@@ -1,6 +1,6 @@
 <template>
   <div v-if="!evaluation">
-    <loading :active="loading" :message='loading_message'/>
+    <loading :active="loading" :message="loading_message" />
     <div class="row no-gutters">
       <div
         class="col-6 col-sm-4 col-md-3 px-2 pb-4"
@@ -16,8 +16,9 @@
               @click="select(evaluation)"
               class="card-action"
               style="color: #fff; font-size: 1.2rem"
-            >mdi-pencil</v-icon>
+            >{{evaluation.started? 'mdi-eye': 'mdi-pencil'}}</v-icon>
             <v-icon
+              v-if="evaluation.started"
               @click="results(evaluation)"
               class="card-action"
               style="color: #fff; font-size: 1.2rem"
