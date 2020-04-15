@@ -1,6 +1,6 @@
 <template>
   <div class="material-editor-container m-fullscreen">
-    <loading :active="loading" :message='loading_message'/>
+    <loading :active="loading" :message="loading_message" />
     <div class="menu">
       <div class="menu-left">
         <v-btn icon @click="loadMaterials()">
@@ -73,13 +73,24 @@
               dense
               hide-details
             ></v-textarea>
-            <v-btn
-              v-if="material.bullets.length > 1"
-              icon
-              @click="removeBullet(material.bullets, b_idx)"
-            >
-              <v-icon>mdi-close-circle-outline</v-icon>
-            </v-btn>
+            <v-menu v-if="material.bullets.length > 1" offset-y>
+              <template v-slot:activator="{ on }">
+                <v-btn icon v-on="on">
+                  <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item @click="moveUp(material.bullets, b_idx)">
+                  <v-list-item-title>Mover Arriba</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="moveDown(material.bullets, b_idx)">
+                  <v-list-item-title>Mover Abajo</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="remove(material.bullets, b_idx)">
+                  <v-list-item-title>Eliminar</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </div>
         </div>
         <!-- Examples -->
@@ -99,13 +110,24 @@
               dense
               hide-details
             ></v-textarea>
-            <v-btn
-              v-if="material.examples.length > 1"
-              icon
-              @click="removeExample(material.examples, e_idx)"
-            >
-              <v-icon>mdi-close-circle-outline</v-icon>
-            </v-btn>
+            <v-menu v-if="material.examples.length > 1" offset-y>
+              <template v-slot:activator="{ on }">
+                <v-btn icon v-on="on">
+                  <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item @click="moveUp(material.examples, e_idx)">
+                  <v-list-item-title>Mover Arriba</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="moveDown(material.examples, e_idx)">
+                  <v-list-item-title>Mover Abajo</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="remove(material.examples, e_idx)">
+                  <v-list-item-title>Eliminar</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </div>
         </div>
         <!-- Images -->
@@ -138,13 +160,24 @@
                 <img :src="image" />
               </div>
             </div>
-            <v-btn
-              v-if="material.images.length > 1"
-              icon
-              @click="removeImage(material.images, i_idx)"
-            >
-              <v-icon>mdi-close-circle-outline</v-icon>
-            </v-btn>
+            <v-menu v-if="material.images.length > 1" offset-y>
+              <template v-slot:activator="{ on }">
+                <v-btn icon v-on="on">
+                  <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item @click="moveUp(material.images, i_idx)">
+                  <v-list-item-title>Mover Arriba</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="moveDown(material.images, i_idx)">
+                  <v-list-item-title>Mover Abajo</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="remove(material.images, i_idx)">
+                  <v-list-item-title>Eliminar</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </div>
         </div>
         <!-- Movies -->
@@ -171,13 +204,24 @@
                 </div>
               </div>
             </div>
-            <v-btn
-              v-if="material.movies.length > 1"
-              icon
-              @click="removeMovie(material.movies, m_idx)"
-            >
-              <v-icon>mdi-close-circle-outline</v-icon>
-            </v-btn>
+            <v-menu v-if="material.movies.length > 1" offset-y>
+              <template v-slot:activator="{ on }">
+                <v-btn icon v-on="on">
+                  <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item @click="moveUp(material.movies, m_idx)">
+                  <v-list-item-title>Mover Arriba</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="moveDown(material.movies, m_idx)">
+                  <v-list-item-title>Mover Abajo</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="remove(material.movies, m_idx)">
+                  <v-list-item-title>Eliminar</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </div>
         </div>
         <!-- Exercises -->
@@ -228,15 +272,24 @@
                 </div>
               </v-radio-group>
             </div>
-            <div style="width: min-content">
-              <v-btn
-                v-if="material.exercises.length > 1"
-                icon
-                @click="removeExercise(material.exercises, e_idx)"
-              >
-                <v-icon>mdi-close-circle-outline</v-icon>
-              </v-btn>
-            </div>
+            <v-menu v-if="material.exercises.length > 1" offset-y>
+              <template v-slot:activator="{ on }">
+                <v-btn icon v-on="on">
+                  <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item @click="moveUp(material.exercises, e_idx)">
+                  <v-list-item-title>Mover Arriba</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="moveDown(material.exercises, e_idx)">
+                  <v-list-item-title>Mover Abajo</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="remove(material.exercises, e_idx)">
+                  <v-list-item-title>Eliminar</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </div>
         </div>
         <!-- FAQ -->
@@ -272,9 +325,24 @@
                 ></v-textarea>
               </div>
             </div>
-            <v-btn v-if="material.faq.length > 1" icon @click="removeFAQ(material.faq, c_idx)">
-              <v-icon>mdi-close-circle-outline</v-icon>
-            </v-btn>
+            <v-menu v-if="material.faq.length > 1" offset-y>
+              <template v-slot:activator="{ on }">
+                <v-btn icon v-on="on">
+                  <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item @click="moveUp(material.faq, c_idx)">
+                  <v-list-item-title>Mover Arriba</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="moveDown(material.faq, c_idx)">
+                  <v-list-item-title>Mover Abajo</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="remove(material.faq, c_idx)">
+                  <v-list-item-title>Eliminar</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </div>
         </div>
         <!-- Hyperlinks -->
@@ -310,13 +378,24 @@
                 ></v-text-field>
               </div>
             </div>
-            <v-btn
-              v-if="material.hyperlinks.length > 1"
-              icon
-              @click="removeHyperlink(material.hyperlinks, h_idx)"
-            >
-              <v-icon>mdi-close-circle-outline</v-icon>
-            </v-btn>
+            <v-menu v-if="material.hyperlinks.length > 1" offset-y>
+              <template v-slot:activator="{ on }">
+                <v-btn icon v-on="on">
+                  <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item @click="moveUp(material.hyperlinks, h_idx)">
+                  <v-list-item-title>Mover Arriba</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="moveDown(material.hyperlinks, h_idx)">
+                  <v-list-item-title>Mover Abajo</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="remove(material.hyperlinks, h_idx)">
+                  <v-list-item-title>Eliminar</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </div>
         </div>
       </div>
@@ -400,7 +479,7 @@ export default {
     category_idx: 0,
     //
     loading: false,
-    loading_message: '',
+    loading_message: "",
     dialog_image: false,
     dialog_delete: false
   }),
@@ -462,7 +541,7 @@ export default {
     async updateImage() {
       this.dialog_image = false;
       this.loading = true;
-      this.loading_message = 'Guardando Imagen'
+      this.loading_message = "Guardando Imagen";
       this.material.id = this.material._id.$oid;
       await updateMaterialImage(this.material);
       this.loading = false;
@@ -483,8 +562,8 @@ export default {
     },
     async saveMaterial() {
       this.loading = true;
-      this.loading_message = 'Guardando Material'
-      
+      this.loading_message = "Guardando Material";
+
       this.material.id = this.material._id.$oid;
       await Promise.all(
         ["overview", "explanation"].map(async category => {
@@ -495,11 +574,31 @@ export default {
 
       this.loading = false;
     },
+    //
+    moveUp(arr, idx) {
+      if (idx > 0) {
+        let aux = arr[idx];
+        arr[idx] = arr[idx - 1];
+        arr[idx - 1] = aux;
+        arr.splice();
+      }
+    },
+    moveDown(arr, idx) {
+      if (idx < arr.length - 1) {
+        let aux = arr[idx];
+        arr[idx] = arr[idx + 1];
+        arr[idx + 1] = aux;
+        arr.splice();
+      }
+    },
+    add(arr) {
+      arr.push("");
+    },
+    remove(arr, idx) {
+      arr.splice(idx, 1);
+    },
     addBullet(bullets) {
       bullets.push("");
-    },
-    removeBullet(bullets, bullet_idx) {
-      bullets.splice(bullet_idx, 1);
     },
     addHyperlink(hyperlinks) {
       hyperlinks.push({
@@ -507,14 +606,8 @@ export default {
         link: ""
       });
     },
-    removeHyperlink(hyperlinks, hyperlink_idx) {
-      hyperlinks.splice(hyperlink_idx, 1);
-    },
     addExample(examples) {
       examples.push("");
-    },
-    removeExample(examples, example_idx) {
-      examples.splice(example_idx, 1);
     },
     addExercise(exercises) {
       exercises.push({
@@ -522,9 +615,6 @@ export default {
         alternatives: ["", ""],
         correct: 0
       });
-    },
-    removeExercise(exercises, e_idx) {
-      exercises.splice(e_idx, 1);
     },
     addAlternative(exercises, exercise_idx) {
       exercises[exercise_idx].alternatives.push("");
@@ -535,23 +625,14 @@ export default {
     addMovie(movies) {
       movies.push("");
     },
-    removeMovie(movies, movie_idx) {
-      movies.splice(movie_idx, 1);
-    },
     addImage(images) {
       images.push("");
-    },
-    removeImage(images, image_idx) {
-      images.splice(image_idx, 1);
     },
     addFAQ(faq) {
       faq.push({
         question: "",
         answer: ""
       });
-    },
-    removeFAQ(faq, c_idx) {
-      faq.splice(c_idx, 1);
     }
   },
   components: {
@@ -603,7 +684,7 @@ export default {
       }
       .category-bullet {
         display: flex;
-        align-items: center;
+        // align-items: center;
         padding-bottom: 12px;
         .category-bullet-content {
           width: 100%;
