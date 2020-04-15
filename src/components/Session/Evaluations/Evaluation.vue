@@ -4,7 +4,7 @@
     <!-- Evaluation Content -->
     <div class="evaluation m-card">
       <div class="time">
-        <p>Faltan {{time_remaining}} segundo(s)</p>
+        <p>Faltan {{time.m}} minuto(s) y {{time.s}} segundo(s)</p>
       </div>
       <div class="question" v-for="(c, c_idx) in evaluation.content" :key="c_idx">
         <p class="question__statement">{{`${c_idx + 1}. ${c.question}`}}</p>
@@ -40,8 +40,16 @@ export default {
     loading: false,
     loading_message: ""
   }),
+  computed: {
+    time() {
+      return {
+        m: Math.floor(this.time_remaining / 60),
+        s: this.time_remaining % 60
+      };
+    }
+  },
   mounted() {
-    this.time_total = this.evaluation.time;
+    this.time_total = this.evaluation.time * 60;
     this.time_remaining = this.time_total;
     // Timer
     this.clearTimer();

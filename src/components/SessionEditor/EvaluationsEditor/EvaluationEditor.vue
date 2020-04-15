@@ -34,10 +34,10 @@
         <v-slider
           :disabled="evaluation.started"
           v-model="evaluation.time"
-          :label="`Tiempo: ${evaluation.time}s`"
-          min="10"
-          max="600"
-          step="10"
+          :label="`Tiempo: ${evaluation.time}min`"
+          min="5"
+          max="300"
+          step="5"
         ></v-slider>
       </div>
       <div

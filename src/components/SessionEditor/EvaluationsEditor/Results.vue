@@ -53,8 +53,7 @@
     <v-dialog v-model="dialog_delete" max-width="300">
       <v-card>
         <v-card-title>Confirmar eliminación</v-card-title>
-        <v-card-text>Si elimina la nota actual, el alumno podrá realizar el examen otra vez.
-        </v-card-text>
+        <v-card-text>Si elimina la nota actual, el alumno podrá realizar el examen otra vez.</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn small text @click="dialog_delete = false">Cancelar</v-btn>
@@ -76,11 +75,12 @@ import loading from "@/components/loading";
 
 import { getParam } from "@/services/router.js";
 import { getStudentsBySession } from "@/services/studentService";
-import { removeResult } from "@/services/evaluationService";
+import { getEvaluation, removeResult } from "@/services/evaluationService";
 
 export default {
-  props: ["evaluation", "getEvaluations", "unselect"],
+  props: ["evaluation_id", "getEvaluations", "unselect"],
   data: () => ({
+    evaluation: {},
     results: {},
     students: [],
     student_result_delete: null,
@@ -92,6 +92,8 @@ export default {
   }),
   async mounted() {
     let session_id = getParam("session_id");
+    this.loading_message = "Cargando Resultados";
+    this.evaluation = await getEvaluation(this.evaluation_id);
     this.loading_message = "Cargando Alumnos";
     this.students = await getStudentsBySession(session_id);
     this.students.forEach(student => {

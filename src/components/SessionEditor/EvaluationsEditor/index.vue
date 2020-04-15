@@ -10,7 +10,7 @@
         <Card>
           <p class="card-item">{{evaluation.name}}</p>
           <p class="card-value">{{evaluation.content.length}} pregunta(s)</p>
-          <p class="card-value">{{evaluation.time}} segundos</p>
+          <p class="card-value">{{evaluation.time}} minutos</p>
           <p class="card-actions">
             <v-icon
               @click="select(evaluation)"
@@ -37,7 +37,7 @@
     :getEvaluations="getEvaluations"
     :unselect="unselect"
   />
-  <Results v-else :evaluation="evaluation" :getEvaluations="getEvaluations" :unselect="unselect" />
+  <Results v-else :evaluation_id="evaluation._id.$oid" :getEvaluations="getEvaluations" :unselect="unselect" />
 </template>
 
 <script>
