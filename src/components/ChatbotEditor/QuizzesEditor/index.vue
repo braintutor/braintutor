@@ -71,6 +71,7 @@ export default {
     },
     async createQuiz() {
       this.loading_quizzes = true;
+      this.loading_message = "Creando";
       let new_quiz = {
         name: "Nombre",
         level: "Básico",
@@ -92,6 +93,7 @@ export default {
     async deleteQuiz(quiz_id) {
       this.quiz = null;
       this.loading_quizzes = true;
+      this.loading_message = "Eliminando";
       await removeQuiz(quiz_id);
       await this.restoreQuizzes();
     },

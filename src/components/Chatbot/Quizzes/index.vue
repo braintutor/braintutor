@@ -17,7 +17,13 @@
     </v-row>
   </v-container>
   <!-- Quiz Selected -->
-  <Quiz v-else :quiz="quiz_selected" :unselectQuiz="unselectQuiz" :setResult="setResult" :calculate="calculate" />
+  <Quiz
+    v-else
+    :quiz="quiz_selected"
+    :unselectQuiz="unselectQuiz"
+    :setResult="setResult"
+    :calculate="calculate"
+  />
 </template>
 
 <script>
@@ -26,7 +32,9 @@ import Quiz from "./Quiz";
 
 import { getParam } from "@/services/router.js";
 import { copy } from "@/services/object.js";
+getSession;
 import { getQuizzes, getQuizResultByStudent } from "@/services/quizService";
+import { getSession } from "@/services/security";
 
 export default {
   props: ["showServices"],
@@ -37,10 +45,13 @@ export default {
   async mounted() {
     let chatbot_id = getParam("chatbot_id");
     this.quizzes = await getQuizzes(chatbot_id);
-    for (let quiz of this.quizzes) {
-      quiz.result = await getQuizResultByStudent(quiz._id.$oid);
+
+    if (getSession().type == 2) { // student
+      for (let quiz of this.quizzes) {
+        quiz.result = await getQuizResultByStudent(quiz._id.$oid);
+      }
+      this.quizzes.splice();
     }
-    this.quizzes.splice();
   },
   methods: {
     setResult(quiz_id, result) {

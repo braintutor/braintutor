@@ -1,17 +1,24 @@
 <template>
   <AppSidebar :links="links">
     <ChatbotsEditor :slot="0" />
-    <KnowledgeEditor :slot="1" />
+    <KnowledgeEditor :get="get" :update="update" :slot="1" />
   </AppSidebar>
 </template>
 
 <script>
 import AppSidebar from "@/components/AppSidebar";
 import ChatbotsEditor from "@/components/CourseEditor/ChatbotsEditor";
-import KnowledgeEditor from "@/components/CourseEditor/KnowledgeEditor";
+import KnowledgeEditor from "@/components/globals/KnowledgeEditor";
+
+import { getParam } from "@/services/router.js";
+import {
+  getKnowledgeByCourse,
+  updateKnowledgeByCourse
+} from "@/services/knowledgeService";
 
 export default {
   data: () => ({
+    course_id: "",
     links: [
       {
         image:
@@ -24,6 +31,17 @@ export default {
       }
     ]
   }),
+  mounted() {
+    this.course_id = getParam("course_id");
+  },
+  methods: {
+    async get() {
+      return await getKnowledgeByCourse(this.course_id);
+    },
+    async update(knowledge) {
+      return await updateKnowledgeByCourse(this.course_id, knowledge);
+    }
+  },
   components: {
     AppSidebar,
     ChatbotsEditor,

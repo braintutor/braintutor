@@ -1,6 +1,6 @@
 <template>
   <div class="editor-container m-fullscreen">
-    <loading :active="loading" />
+    <loading :active="loading" :message="loading_message" />
     <div class="menu">
       <span class="menu-title">Conocimiento</span>
       <div class="menu-action">
@@ -65,9 +65,24 @@
               <v-icon v-else>mdi-chevron-down-circle-outline</v-icon>
             </v-btn>
           </v-badge>
-          <v-btn icon @click="removeKnowledge(k_idx)">
-            <v-icon>mdi-close-circle-outline</v-icon>
-          </v-btn>
+          <v-menu offset-y>
+            <template v-slot:activator="{ on }">
+              <v-btn icon v-on="on">
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item @click="moveUp(k_idx)">
+                <v-list-item-title>Mover Arriba</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="moveDown(k_idx)">
+                <v-list-item-title>Mover Abajo</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="removeKnowledge(k_idx)">
+                <v-list-item-title>Eliminar</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
         </div>
       </div>
     </div>
@@ -77,22 +92,21 @@
 <script>
 import loading from "@/components/loading";
 
-import { getKnowledgeByCourse, updateKnowledgeByCourse } from "@/services/knowledgeService";
 import { scrollDown } from "@/services/scroll";
-import { getParam } from "@/services/router.js";
 
 export default {
+  props: ["get", "update"],
   data: () => ({
     knowledge: [],
-    course_id: "",
     //
-    loading: false
+    loading: false,
+    loading_message: ""
   }),
   async mounted() {
-    this.course_id = getParam("course_id");
     await this.restoreKnowledge();
   },
   methods: {
+    // Menu
     addKnowledge() {
       this.knowledge.push({
         questions: [""],
@@ -104,18 +118,17 @@ export default {
     },
     async saveKnowledge() {
       this.loading = true;
-      await updateKnowledgeByCourse(this.course_id, this.knowledge);
+      this.loading_message = "Guardando Conocimiento";
+      await this.update(this.knowledge);
       this.loading = false;
-      await this.restoreKnowledge();
     },
     async restoreKnowledge() {
       this.loading = true;
-      this.knowledge = await getKnowledgeByCourse(this.course_id);
+      this.loading_message = "Cargando Conocimiento";
+      this.knowledge = await this.get();
       this.loading = false;
     },
-    removeKnowledge(knowledge_idx) {
-      this.knowledge.splice(knowledge_idx, 1);
-    },
+    //
     add(knowledge, arr) {
       arr.push("");
       knowledge.show = true;
@@ -126,6 +139,26 @@ export default {
     toggleShow(knowledge) {
       knowledge.show = !knowledge.show;
       this.$forceUpdate();
+    },
+    // Options
+    moveUp(k_idx) {
+      if (k_idx > 0) {
+        let aux = this.knowledge[k_idx];
+        this.knowledge[k_idx] = this.knowledge[k_idx - 1];
+        this.knowledge[k_idx - 1] = aux;
+        this.knowledge.splice();
+      }
+    },
+    moveDown(k_idx) {
+      if (k_idx < this.knowledge.length - 1) {
+        let aux = this.knowledge[k_idx];
+        this.knowledge[k_idx] = this.knowledge[k_idx + 1];
+        this.knowledge[k_idx + 1] = aux;
+        this.knowledge.splice();
+      }
+    },
+    removeKnowledge(knowledge_idx) {
+      this.knowledge.splice(knowledge_idx, 1);
     }
   },
   components: {

@@ -1,6 +1,6 @@
 <template>
   <div class="editor m-fullscreen">
-    <loading :active="loading" />
+    <loading :active="loading" :message="loading_message" />
     <div class="menu">
       <p class="menu-title">Configuración</p>
       <div class="menu-action">
@@ -9,17 +9,44 @@
         </v-btn>
       </div>
     </div>
-    <div v-if="chatbot" class="editor__content">
-      <v-text-field
-        class="mb-3"
-        label="Nombre"
-        v-model="chatbot.name"
-        dense
-        hide-details
-        autocomplete="off"
-      ></v-text-field>
-      <!-- Imagen -->
-      <v-card class="editor-image">
+    <div v-if="chatbot">
+      <div class="editor-chatbot m-card">
+        <v-text-field
+          class="mb-3"
+          label="Nombre"
+          v-model="chatbot.name"
+          dense
+          hide-details
+          autocomplete="off"
+        ></v-text-field>
+        <!-- Error -->
+        <v-alert
+          class="my-2"
+          v-model="show_error"
+          type="error"
+          icon="mdi-cloud-alert"
+          text
+          dismissible
+        >{{message_error}}</v-alert>
+        <div class="editor-chatbot__actions">
+          <v-btn class="editor-chatbot__action" small color="success" @click="train()">Entrenar Bot</v-btn>
+          <v-btn
+            class="editor-chatbot__action"
+            small
+            color="primary"
+            @click="save()"
+          >Guardar Cambios</v-btn>
+          <v-btn
+            class="editor-chatbot__action m-4"
+            small
+            color="error"
+            @click="dialog_delete = true; name = ''"
+          >Eliminar Unidad</v-btn>
+        </div>
+      </div>
+
+      <!-- Image -->
+      <div class="editor-image m-card">
         <div class="editor-image__menu">
           <v-text-field
             class="category-text mb-2"
@@ -28,7 +55,7 @@
             dense
             hide-details
           ></v-text-field>
-          <v-btn class="ml-2" @click="save()" text icon>
+          <v-btn class="ml-2" @click="saveImage()" text icon>
             <v-icon>mdi-content-save</v-icon>
           </v-btn>
           <v-btn onclick="upload_image.click()" text icon>
@@ -44,25 +71,6 @@
           v-model="image_file"
           style="display:none"
         ></v-file-input>
-      </v-card>
-      <!--  -->
-      <v-alert
-        class="mt-4 mb-0"
-        v-model="show_error"
-        type="error"
-        icon="mdi-cloud-alert"
-        text
-        dismissible
-      >{{message_error}}</v-alert>
-      <div class="editor__actions">
-        <v-btn class="editor__action" small color="success" @click="train()">Entrenar Bot</v-btn>
-        <v-btn class="editor__action" small color="primary" @click="save()">Guardar Cambios</v-btn>
-        <v-btn
-          class="editor__action m-4"
-          small
-          color="error"
-          @click="dialog_delete = true; name = ''"
-        >Eliminar Unidad</v-btn>
       </div>
     </div>
 
@@ -117,6 +125,7 @@ import { getParam, redirect } from "@/services/router.js";
 import {
   getChatbot,
   updateChatbot,
+  updateChatbotImage,
   removeChatbot
 } from "@/services/chatbotService";
 
@@ -130,6 +139,7 @@ export default {
     message_error: "",
     //
     loading: true,
+    loading_message: "",
     dialog_error: false,
     dialog_delete: false,
     //
@@ -146,12 +156,14 @@ export default {
   methods: {
     async restore() {
       this.loading = true;
+      this.loading_message = "Cargando Datos";
       let chatbot_id = getParam("chatbot_id");
       this.chatbot = await getChatbot(chatbot_id);
       this.loading = false;
     },
     async save() {
       this.loading = true;
+      this.loading_message = "Guardando Datos";
       this.chatbot.id = this.chatbot._id.$oid;
       await updateChatbot(this.chatbot);
       this.loading = false;
@@ -159,6 +171,7 @@ export default {
     async train() {
       try {
         this.loading = true;
+        this.loading_message = "Entrenando";
         await train(this.chatbot._id.$oid);
       } catch (error) {
         this.dialog_error = true;
@@ -168,6 +181,7 @@ export default {
     },
     async removeChatbot() {
       this.loading = true;
+      this.loading_message = "Eliminando";
       try {
         var ref = firebase
           .storage()
@@ -186,6 +200,13 @@ export default {
       this.loading = false;
     },
     // Image
+    async saveImage() {
+      this.loading = true;
+      this.loading_message = "Guardando Imagen";
+      this.chatbot.id = this.chatbot._id.$oid;
+      await updateChatbotImage(this.chatbot);
+      this.loading = false;
+    },
     onFileSelected() {
       this.loading = true;
       let ref = firebase
@@ -219,25 +240,11 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.editor-image {
-  &__menu {
-    padding: 10px;
-    padding-top: 16px;
-    display: flex;
-    align-items: flex-end;
-  }
-  &__img {
-    margin: 0 auto;
-    max-width: 600px;
-    img {
-      width: 100%;
-    }
-  }
-}
 .editor {
-  $self: &;
+  padding: 0 10px;
   .menu {
     padding: 10px;
+    padding-top: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -247,24 +254,31 @@ export default {
       font-weight: bold;
     }
   }
-  &__content {
-    padding: 10px;
-  }
-  &__image {
-    margin: 0 auto;
-    max-width: 200px;
-    img {
-      width: 100%;
-    }
-  }
+}
+.editor-chatbot {
+  margin-bottom: 20px;
+  padding: 16px 16px 10px;
   &__actions {
-    width: 100%;
-    margin: 18px auto;
-    float: right;
     display: flex;
     justify-content: center;
-    #{$self}__action {
-      margin: 0 4px;
+  }
+  &__action {
+    margin: 0 4px;
+  }
+}
+.editor-image {
+  margin-bottom: 20px;
+  &__menu {
+    padding: 10px;
+    padding-top: 16px;
+    display: flex;
+    align-items: flex-end;
+  }
+  &__img {
+    margin: 0 auto;
+    max-width: 500px;
+    img {
+      width: 100%;
     }
   }
 }
@@ -279,14 +293,13 @@ export default {
 }
 
 @media only screen and (max-width: 560px) {
-  .editor {
-    $self: &;
+  .editor-chatbot {
     &__actions {
       flex-direction: column;
       align-items: center;
-      #{$self}__action {
-        margin: 4px 0;
-      }
+    }
+    &__action {
+      margin: 4px 0;
     }
   }
 }

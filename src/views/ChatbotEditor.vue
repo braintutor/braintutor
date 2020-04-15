@@ -3,7 +3,7 @@
     <ChatbotEditor :slot="0" />
     <MaterialsEditor :slot="1" />
     <QuizzesEditor :slot="2" />
-    <KnowledgeEditor :slot="3" />
+    <KnowledgeEditor :slot="3" :get="get" :update="update" />
   </AppSidebar>
 </template>
 
@@ -11,9 +11,10 @@
 import AppSidebar from "@/components/AppSidebar";
 import MaterialsEditor from "@/components/ChatbotEditor/MaterialsEditor/index";
 import QuizzesEditor from "@/components/ChatbotEditor/QuizzesEditor/index";
-import KnowledgeEditor from "@/components/ChatbotEditor/KnowledgeEditor";
+import KnowledgeEditor from "@/components/globals/KnowledgeEditor";
 import ChatbotEditor from "@/components/ChatbotEditor/ChatbotEditor";
 
+import { getKnowledge, updateKnowledge } from "@/services/knowledgeService";
 import { redirect, getParam } from "@/services/router.js";
 
 export default {
@@ -53,6 +54,12 @@ export default {
   methods: {
     redirectChatbot() {
       redirect("chatbot", { chatbot_id: this.chatbot_id });
+    },
+    async get() {
+      return await getKnowledge(this.chatbot_id);
+    },
+    async update(knowledge) {
+      return await updateKnowledge(this.chatbot_id, knowledge);
     }
   },
   components: {

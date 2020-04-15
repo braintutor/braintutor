@@ -54,11 +54,12 @@
 </template>
 
 <script>
+import loading from "@/components/loading";
+
 import { createTimer } from "@/services/timer";
 import { percentage } from "@/services/math";
 import { setQuizResult } from "@/services/quizService";
-
-import loading from "@/components/loading";
+import { getSession } from "@/services/security";
 
 export default {
   props: ["quiz", "unselectQuiz", "setResult", "calculate"],
@@ -132,11 +133,14 @@ export default {
         corrects: this.corrects,
         total: this.total_questions
       };
-      this.loading = true;
-      this.loading_message = "Cargando Puntaje";
-      let response = await setQuizResult(this.quiz._id.$oid, result);
-      if (response.success) this.setResult(this.quiz._id.$oid, result);
-      this.loading = false;
+
+      if (getSession().type == 2) { // student
+        this.loading = true;
+        this.loading_message = "Cargando Puntaje";
+        let response = await setQuizResult(this.quiz._id.$oid, result);
+        if (response.success) this.setResult(this.quiz._id.$oid, result);
+        this.loading = false;
+      }
       //
       this.show_score = true;
       this.result_messages = [

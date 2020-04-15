@@ -1,6 +1,6 @@
 <template>
   <div class="quiz-editor-container m-fullscreen">
-    <loading :active="loading" />
+    <loading :active="loading" :message='loading_message' />
     <div class="menu">
       <div class="menu-left">
         <v-btn icon @click="loadQuizzes()">
@@ -101,6 +101,7 @@ export default {
   data: () => ({
     levels: ["Básico", "Intermedio", "Avanzado"],
     loading: false,
+    loading_message: '',
     dialog_delete: false
   }),
   methods: {
@@ -110,6 +111,7 @@ export default {
     },
     async saveQuiz() {
       this.loading = true;
+      this.loading_message = "Guardando";
       this.quiz.id = this.quiz._id.$oid;
       await updateQuiz(this.quiz);
       this.loading = false;

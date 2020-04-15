@@ -129,6 +129,7 @@ export default {
     async deleteMaterial(material_id) {
       this.material = null;
       this.loading_materials = true;
+      this.loading_message = 'Eliminando Material'
       // var ref = firebase.storage().refFromURL(url_image);
       try {
         var ref = firebase.storage().ref(`/material/${material_id}/image`);

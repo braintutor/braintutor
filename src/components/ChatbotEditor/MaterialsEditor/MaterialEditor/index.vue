@@ -1,6 +1,6 @@
 <template>
   <div class="material-editor-container m-fullscreen">
-    <loading :active="loading" />
+    <loading :active="loading" :message='loading_message'/>
     <div class="menu">
       <div class="menu-left">
         <v-btn icon @click="loadMaterials()">
@@ -400,6 +400,7 @@ export default {
     category_idx: 0,
     //
     loading: false,
+    loading_message: '',
     dialog_image: false,
     dialog_delete: false
   }),
@@ -461,6 +462,7 @@ export default {
     async updateImage() {
       this.dialog_image = false;
       this.loading = true;
+      this.loading_message = 'Guardando Imagen'
       this.material.id = this.material._id.$oid;
       await updateMaterialImage(this.material);
       this.loading = false;
@@ -481,7 +483,8 @@ export default {
     },
     async saveMaterial() {
       this.loading = true;
-
+      this.loading_message = 'Guardando Material'
+      
       this.material.id = this.material._id.$oid;
       await Promise.all(
         ["overview", "explanation"].map(async category => {

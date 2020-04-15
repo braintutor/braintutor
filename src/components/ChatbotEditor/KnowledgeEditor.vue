@@ -105,6 +105,7 @@ export default {
     },
     async saveKnowledge() {
       this.loading = true;
+      this.loading_message = "Guardando Conocimiento";
       await updateKnowledge(this.chatbot_id, this.knowledge);
       this.loading = false;
       await this.restoreKnowledge();

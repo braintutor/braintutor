@@ -37,10 +37,25 @@ function updateChatbot(chatbot) {
   })
 }
 
+function updateChatbotImage(chatbot) {
+  return fetch_post('updateChatbotImage', {
+    chatbot
+  })
+}
+
 function removeChatbot(chatbot_id) {
   return fetch_post('removeChatbot', {
     chatbot_id
   })
 }
 
-export { getChatbot, getChatbotsByCourse, getChatbotsBySession, getChatbotName, addChatbot, updateChatbot, removeChatbot }
+export {
+  getChatbot,
+  getChatbotsByCourse,
+  getChatbotsBySession,
+  getChatbotName,
+  addChatbot,
+  updateChatbot,
+  updateChatbotImage,
+  removeChatbot
+}
