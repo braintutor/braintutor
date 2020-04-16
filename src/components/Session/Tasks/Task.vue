@@ -9,8 +9,13 @@
       </div>
       <div class="menu-right"></div>
     </div>
-    <div id="tasks-scroll" class="m-fullscreen-content">
-      <div class="task m-card" :style="{'border-left': `6px solid ${task.color}`}" v-for="(task, t_idx) in tasks" :key="t_idx">
+    <div v-if="tasks.length > 0" id="tasks-scroll" class="m-fullscreen-content">
+      <div
+        class="task m-card"
+        :style="{'border-left': `6px solid ${task.color}`}"
+        v-for="(task, t_idx) in tasks"
+        :key="t_idx"
+      >
         <div class="task__menu">
           <span class="task__name">{{task.name}}</span>
         </div>
@@ -19,6 +24,7 @@
         </div>
       </div>
     </div>
+    <div class="no-info" v-else>No hay Tareas</div>
   </div>
 </template>
 

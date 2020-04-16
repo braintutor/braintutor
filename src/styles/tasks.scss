@@ -20,7 +20,7 @@
 }
 
 .task {
-  padding: 20px 28px;
+  padding: 20px 20px;
   margin: 4px 10px 16px 10px;
   border-radius: 0;
   border-left: 6px solid #3788d8;
@@ -36,6 +36,11 @@
     font-size: 1rem;
     white-space: pre-wrap;
   }
+}
+.no-info {
+  color: #999999;
+  font-size: 1.1rem;
+  text-align: center;
 }
 
 .fc-widget-content {

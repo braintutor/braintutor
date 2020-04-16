@@ -141,7 +141,7 @@ export default {
   }
   .create-container {
     height: 100%;
-    min-height: 160px;
+    min-height: 128px;
     border: 2px solid #c2c2c2;
     border-style: dashed;
     border-radius: 10px;

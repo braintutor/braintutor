@@ -35,7 +35,6 @@
       </div>
       <Chat
         class="chat-container col-12 col-md-4"
-        :available_questions="available_questions"
         :selectService="idx => selectService(idx)"
       />
     </v-row>
@@ -53,19 +52,12 @@ import { getParam } from "@/services/router.js";
 
 import { getChatbotName } from "@/services/chatbotService";
 import { getMaterials } from "@/services/materialService";
-import { getQuestionTemplate } from "@/services/chatService";
-import { getCourseIdByChatbot } from "@/services/courseService";
-import {
-  getKnowledge,
-  getKnowledgeByCourse
-} from "@/services/knowledgeService";
 
 export default {
   data: () => ({
     chatbot: {},
     chatbot_id: "",
     materials: [],
-    available_questions: [],
     show_services: true,
     service_selected: 0,
     //
@@ -84,7 +76,6 @@ export default {
     this.$store.commit("setMaterials", this.materials);
 
     this.loading_chatbot = false;
-    this.loadKnowledge();
   },
   methods: {
     scrollRight,
@@ -93,28 +84,6 @@ export default {
     },
     selectService(idx) {
       this.service_selected = idx;
-    },
-    async loadKnowledge() {
-      // this.loading_chatbot = true;
-      // this.loading_message = "Cargando Conocimiento";
-      let course_id = await getCourseIdByChatbot(this.chatbot_id);
-      let knowledge_course = await getKnowledgeByCourse(course_id);
-      let knowledge_chatbot = await getKnowledge(this.chatbot_id);
-      let knowledge = knowledge_course.concat(knowledge_chatbot);
-      this.available_questions = knowledge.map(item => item.questions[0]);
-
-      this.loading_message = "Cargando Preguntas";
-      let question_template = await getQuestionTemplate();
-      this.materials.forEach(material => {
-        Object.values(question_template).forEach(value => {
-          if (value[0])
-            this.available_questions.push(value[0].replace(/@/, material.name));
-        });
-        material.faq.forEach(item => {
-          this.available_questions.push(item.question);
-        });
-      });
-      // this.loading_chatbot = false;
     }
   },
   components: {

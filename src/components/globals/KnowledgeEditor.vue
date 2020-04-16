@@ -173,7 +173,7 @@ export default {
 .editor-container {
   flex-direction: column;
   .menu {
-    padding: 10px 20px 0 20px;
+    padding: 0 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -183,7 +183,8 @@ export default {
     }
   }
   .editor-content {
-    padding: 10px 14px;
+    padding: 10px 10px;
+    padding-top: 0;
     .editor-empty {
       color: rgb(148, 148, 148);
       font-size: 1rem;

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <loading :class="{active: loading_tasks}" />
+    <loading :active="loading_tasks" :message="loading_message" />
     <div v-show="!show_tasks_selected" class="calendar-container m-card">
       <div class="calendar-control">
         <span class="calendar-date">{{calendar_date}}</span>
@@ -84,6 +84,7 @@ export default {
     show_tasks_selected: false,
     calendar_date: null,
     loading_tasks: true,
+    loading_message: "",
     //
     calendar: null,
     locale: esLocale,
@@ -112,11 +113,9 @@ export default {
       this.show_tasks_selected = true;
     },
     eventClick() {},
-    async unselectTasks() {
+    unselectTasks() {
       this.show_tasks_selected = false;
-      this.loading_tasks = true;
-      this.tasks = await getTasksBySession(this.session_id);
-      this.loading_tasks = false;
+      this.restoreTasks()
     },
     async createTask() {
       let new_task = {
@@ -125,6 +124,7 @@ export default {
         description: "Descripción"
       };
       this.loading_tasks = true;
+      this.loading_message = "Creando";
       let task_id = await addTask(this.session_id, new_task);
       new_task._id = task_id;
       this.tasks.push(new_task);
@@ -135,6 +135,7 @@ export default {
     },
     async saveTask(task) {
       this.loading_tasks = true;
+      this.loading_message = "Guardando";
       await updateTask(task);
       this.loading_tasks = false;
     },
@@ -145,6 +146,7 @@ export default {
     async deleteTaskAction() {
       this.dialog_delete = false;
       this.loading_tasks = true;
+      this.loading_message = "Eliminando";
       await removeTask(this.task_delete_id);
       this.tasks = this.tasks.filter(
         task => task._id.$oid != this.task_delete_id
@@ -153,6 +155,7 @@ export default {
     },
     async restoreTasks() {
       this.loading_tasks = true;
+      this.loading_message = "Cargando Tareas";
       this.tasks = await getTasksBySession(this.session_id);
       this.loading_tasks = false;
     },

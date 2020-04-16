@@ -22,7 +22,10 @@
       <div class="col-12 col-sm-7 pa-0">
         <div class="diagram m-card">
           <canvas v-show="profile.learning_style" id="myChart" width="600" height="400"></canvas>
-          <div v-show="!profile.learning_style" class="no-style">Realiza un test para obtener tu estilo de aprendizaje</div>
+          <div
+            v-show="!profile.learning_style"
+            class="no-style"
+          >Realiza un test para obtener tu estilo de aprendizaje</div>
           <div class="diagram__actions">
             <v-btn @click="dialog_test = true" color="primary">Nuevo Test</v-btn>
           </div>
@@ -272,13 +275,36 @@ export default {
     ],
     myChart: null,
     loading: true,
+    loading_message: "",
     dialog_test: false,
     dialog_error: false
   }),
   async mounted() {
+    this.loading_message = "Cargando Datos";
     this.profile = await getProfile();
-    this.updateDashboard();
     this.loading = false;
+    // Chart
+    var ctx = document.getElementById("myChart").getContext("2d");
+    this.myChart = new Chart(ctx, {
+      type: "bar",
+      options: {
+        legend: {
+          display: false
+        },
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true,
+                max: 11,
+                stepSize: 1
+              }
+            }
+          ]
+        }
+      }
+    });
+    this.updateDashboard();
   },
   methods: {
     async saveTest() {
@@ -289,6 +315,7 @@ export default {
 
         let learning_style = this.calculate(answers);
         this.profile.learning_style = learning_style;
+        this.loading_message = "Guardando";
         await updateLearningStyle(learning_style);
         this.updateDashboard();
 
@@ -403,7 +430,6 @@ export default {
     },
     updateDashboard() {
       if (this.profile.learning_style) {
-        if (this.myChart) this.myChart.destroy();
         let {
           procesamiento,
           procesamiento_valor,
@@ -414,57 +440,38 @@ export default {
           comprension,
           comprension_valor
         } = this.profile.learning_style;
-        var ctx = document.getElementById("myChart").getContext("2d");
-        this.myChart = new Chart(ctx, {
-          type: "bar",
-          data: {
-            labels: [procesamiento, percepcion, entrada, comprension],
-            datasets: [
-              {
-                label: ["Estilo de Aprendizaje"],
-                data: [
-                  procesamiento_valor,
-                  percepcion_valor,
-                  entrada_valor,
-                  comprension_valor
-                ],
-                backgroundColor: [
-                  "rgba(255, 99, 132, 0.2)",
-                  "rgba(54, 162, 235, 0.2)",
-                  "rgba(255, 206, 86, 0.2)",
-                  "rgba(75, 192, 192, 0.2)",
-                  "rgba(153, 102, 255, 0.2)",
-                  "rgba(255, 159, 64, 0.2)"
-                ],
-                borderColor: [
-                  "rgba(255, 99, 132, 1)",
-                  "rgba(54, 162, 235, 1)",
-                  "rgba(255, 206, 86, 1)",
-                  "rgba(75, 192, 192, 1)",
-                  "rgba(153, 102, 255, 1)",
-                  "rgba(255, 159, 64, 1)"
-                ],
-                borderWidth: 1
-              }
-            ]
-          },
-          options: {
-            legend: {
-              display: false
-            },
-            scales: {
-              yAxes: [
-                {
-                  ticks: {
-                    beginAtZero: true,
-                    max: 11,
-                    stepSize: 1
-                  }
-                }
-              ]
+        this.myChart.data = {
+          labels: [procesamiento, percepcion, entrada, comprension],
+          datasets: [
+            {
+              label: ["Estilo de Aprendizaje"],
+              data: [
+                procesamiento_valor,
+                percepcion_valor,
+                entrada_valor,
+                comprension_valor
+              ],
+              backgroundColor: [
+                "rgba(255, 99, 132, 0.2)",
+                "rgba(54, 162, 235, 0.2)",
+                "rgba(255, 206, 86, 0.2)",
+                "rgba(75, 192, 192, 0.2)",
+                "rgba(153, 102, 255, 0.2)",
+                "rgba(255, 159, 64, 0.2)"
+              ],
+              borderColor: [
+                "rgba(255, 99, 132, 1)",
+                "rgba(54, 162, 235, 1)",
+                "rgba(255, 206, 86, 1)",
+                "rgba(75, 192, 192, 1)",
+                "rgba(153, 102, 255, 1)",
+                "rgba(255, 159, 64, 1)"
+              ],
+              borderWidth: 1
             }
-          }
-        });
+          ]
+        };
+        this.myChart.update();
       }
     }
   },

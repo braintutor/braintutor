@@ -1,6 +1,6 @@
 <template>
   <div>
-    <loading :active="loading" />
+    <loading :active="loading" :message='loading_message' />
     <p class="message" v-if="sessions.length <= 0">No tiene cursos asignados.</p>
     <div class="row no-gutters">
       <div
@@ -30,9 +30,11 @@ import { redirect } from "@/services/router.js";
 export default {
   data: () => ({
     sessions: [],
-    loading: true
+    loading: true,
+    loading_message: ''
   }),
   async mounted() {
+    this.loading_message = "Cargando Cursos";
     this.sessions = await getSessionsByTeacher();
     this.loading = false;
   },

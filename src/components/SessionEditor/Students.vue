@@ -1,6 +1,6 @@
 <template>
   <div>
-    <loading :active="loading" />
+    <loading :active="loading" :message='loading_message' />
     <div class="students m-card">
       <h1 class="students__title">Alumnos</h1>
       <div class="students__content">
@@ -58,7 +58,8 @@ export default {
     student: null,
     //
     show_dashboard: false,
-    loading: true
+    loading: true,
+    loading_message: ''
   }),
   watch: {
     student() {
@@ -67,6 +68,7 @@ export default {
   },
   async mounted() {
     this.session_id = getParam("session_id");
+    this.loading_message = 'Cargando Alumnos'
     this.students = await getStudentsBySession(this.session_id);
     this.loading = false;
     // Chart

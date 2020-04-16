@@ -1,8 +1,16 @@
 <template>
-  <AppSidebar :links="links">
-    <ChatbotsEditor :slot="0" />
-    <KnowledgeEditor :get="get" :update="update" :slot="1" />
-  </AppSidebar>
+  <div>
+    <div class="history">
+      <span class="history__back" @click="redirect()">Cursos</span>
+      <span class="history__divider">></span>
+      <span v-if="course">{{course.name}}</span>
+      <span v-else>...</span>
+    </div>
+    <AppSidebar :links="links">
+      <ChatbotsEditor :slot="0" />
+      <KnowledgeEditor :get="get" :update="update" :slot="1" />
+    </AppSidebar>
+  </div>
 </template>
 
 <script>
@@ -10,14 +18,16 @@ import AppSidebar from "@/components/AppSidebar";
 import ChatbotsEditor from "@/components/CourseEditor/ChatbotsEditor";
 import KnowledgeEditor from "@/components/globals/KnowledgeEditor";
 
-import { getParam } from "@/services/router.js";
+import { redirect, getParam } from "@/services/router.js";
 import {
   getKnowledgeByCourse,
   updateKnowledgeByCourse
 } from "@/services/knowledgeService";
+import { getCourseName } from "@/services/courseService";
 
 export default {
   data: () => ({
+    course: "",
     course_id: "",
     links: [
       {
@@ -31,8 +41,9 @@ export default {
       }
     ]
   }),
-  mounted() {
+  async mounted() {
     this.course_id = getParam("course_id");
+    this.course = await getCourseName(this.course_id);
   },
   methods: {
     async get() {
@@ -40,6 +51,9 @@ export default {
     },
     async update(knowledge) {
       return await updateKnowledgeByCourse(this.course_id, knowledge);
+    },
+    redirect() {
+      redirect("teacher");
     }
   },
   components: {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <loading :class="{active: loading_tasks}" />
+    <loading :active="loading_tasks" :message="loading_message" />
     <div v-show="!show_tasks_selected" class="calendar-container m-card">
       <div class="calendar-control">
         <span class="calendar-date">{{calendar_date}}</span>
@@ -62,6 +62,7 @@ export default {
     show_tasks_selected: false,
     calendar_date: null,
     loading_tasks: true,
+    loading_message: "",
     //
     calendar: null,
     locale: esLocale,
@@ -95,6 +96,7 @@ export default {
     },
     async restoreTasks() {
       this.loading_tasks = true;
+      this.loading_message = "Cargando Tareas";
       this.tasks = await getTasksBySessionStudent(this.session_id);
       this.loading_tasks = false;
     },

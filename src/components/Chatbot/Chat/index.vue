@@ -3,7 +3,11 @@
     <!-- Avatar -->
     <Avatar ref="component_avatar" />
     <!-- Messages -->
-    <div class="m-fullscreen-content background-pattern-1" id="messages-container">
+    <div
+      v-show="show_messages"
+      class="m-fullscreen-content background-pattern-1"
+      id="messages-container"
+    >
       <div
         v-for="(message, m_idx) in messages"
         :key="m_idx"
@@ -22,38 +26,40 @@
         <v-progress-linear color="primary" buffer-value="0" stream></v-progress-linear>
       </div>
     </div>
+    <!-- Available Questions -->
+    <div v-show="!show_messages" class="availables m-fullscreen-content">
+      <div class="availables__loading" v-show="loading_available">Cargando Preguntas ...</div>
+      <div
+        class="availables__question"
+        v-for="(available_question, c_idx) in available_questions"
+        :key="c_idx"
+        @click="selectAvailableQuestion(available_question); show_messages = true"
+      >
+        <span>{{ available_question }}</span>
+      </div>
+    </div>
     <!-- Input -->
-    <v-form class="input-container" @submit.prevent="sendMessage">
+    <v-form class="input-container" @submit.prevent="sendMessage(); show_messages = true">
       <v-text-field v-model="message_text" class="mr-3 mt-3" dense hide-details autocomplete="off"></v-text-field>
-      <v-btn :loading="loading_message" fab icon small color="primary" @click="talkMessage()">
+      <v-btn
+        :loading="loading_message"
+        fab
+        icon
+        small
+        color="primary"
+        @click="talkMessage(); show_messages = true"
+      >
         <v-icon>mdi-microphone</v-icon>
       </v-btn>
       <v-btn class="material-icon" fab icon small color="primary" @click="scrollLeft()">
         <v-icon>mdi-bookshelf</v-icon>
       </v-btn>
-      <v-menu offset-y>
-        <template v-slot:activator="{ on }">
-          <v-btn fab icon small color="primary" v-on="on">
-            <v-icon>mdi-help-circle-outline</v-icon>
-          </v-btn>
-        </template>
-        <div class="available-questions-container">
-          <p
-            class="available-questions-title"
-          >Preguntas disponibles ({{available_questions.length}})</p>
-          <div class="available-questions-content">
-            <v-list>
-              <v-list-item
-                v-for="(available_question, c_idx) in available_questions"
-                :key="c_idx"
-                @click="selectAvailableQuestion(available_question)"
-              >
-                <v-list-item-title>{{ available_question }}</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </div>
-        </div>
-      </v-menu>
+      <v-btn v-if="show_messages" fab icon small color="primary" @click="show_messages = false">
+        <v-icon>mdi-help-circle-outline</v-icon>
+      </v-btn>
+      <v-btn v-else fab icon small color="primary" @click="show_messages = true">
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
     </v-form>
   </div>
 </template>
@@ -67,12 +73,20 @@ import { getAnswer } from "@/services/chatService";
 import { SpeechToText } from "@/services/speech";
 import { getParam } from "@/services/router.js";
 
+import { getQuestionTemplate } from "@/services/chatService";
+import { getCourseIdByChatbot } from "@/services/courseService";
+import {
+  getKnowledge,
+  getKnowledgeByCourse
+} from "@/services/knowledgeService";
+
 export default {
-  props: ["available_questions", "selectService"],
+  props: ["selectService"],
   data: () => ({
     messages: [new Message("Hola.\n¿En qué puedo ayudarte?", 0)],
     message_text: "",
     chatbot_id: "",
+    available_questions: [],
     icons: [
       {
         category: "overview",
@@ -121,7 +135,9 @@ export default {
       }
     ],
     //
-    loading_message: false
+    loading_message: false,
+    loading_available: true,
+    show_messages: true
   }),
   computed: {
     materials() {
@@ -137,6 +153,7 @@ export default {
   mounted() {
     this.chatbot_id = getParam("chatbot_id");
     this.$store.commit("setComponentAvatar", this.$refs.component_avatar);
+    this.getKnowledge();
   },
   methods: {
     addMessage(text, type, action, icon) {
@@ -181,6 +198,7 @@ export default {
       }
     },
     talkMessage() {
+      this.component_avatar.stopTalk();
       SpeechToText(text => {
         this.message_text = text;
         this.sendMessage();
@@ -195,6 +213,26 @@ export default {
     },
     scrollLeft() {
       scrollLeft("chatbot-scroll");
+    },
+    //
+    async getKnowledge() {
+      let course_id = await getCourseIdByChatbot(this.chatbot_id);
+      let knowledge_course = await getKnowledgeByCourse(course_id);
+      let knowledge_chatbot = await getKnowledge(this.chatbot_id);
+      let knowledge = knowledge_course.concat(knowledge_chatbot);
+      this.available_questions = knowledge.map(item => item.questions[0]);
+
+      let question_template = await getQuestionTemplate();
+      this.materials.forEach(material => {
+        Object.values(question_template).forEach(value => {
+          if (value[0])
+            this.available_questions.push(value[0].replace(/@/, material.name));
+        });
+        material.faq.forEach(item => {
+          this.available_questions.push(item.question);
+        });
+      });
+      this.loading_available = false;
     }
   },
   components: {
@@ -241,6 +279,24 @@ export default {
     padding: 20px 8px 8px 8px;
     display: flex;
     align-items: flex-end;
+  }
+}
+
+.availables {
+  &__loading {
+    padding: 5px;
+    color: #888888;
+    text-align: center;
+  }
+  &__question {
+    padding: 4px 8px;
+    font-size: 0.9rem;
+    border-top: 1px solid #eeeeee;
+    transition: all 0.3s;
+    cursor: pointer;
+    &:hover {
+      background: #ecf1ff;
+    }
   }
 }
 

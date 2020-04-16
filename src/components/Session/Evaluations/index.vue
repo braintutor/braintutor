@@ -7,7 +7,7 @@
         v-for="(evaluation, c_idx) in evaluations"
         :key="c_idx"
       >
-        <div class="evaluation m-card transform-scale" @click="select(evaluation)">
+        <div class="evaluation m-card transform-scale" @click="showDialogStart(evaluation)">
           <p class="evaluation__name">{{evaluation.name}}</p>
           <p class="evaluation__detail">{{evaluation.content.length}} pregunta(s)</p>
           <p class="evaluation__detail">{{evaluation.time}} minutos</p>
@@ -18,6 +18,23 @@
         </div>
       </div>
     </div>
+    <!-- Dialog Start Evaluation -->
+    <v-dialog v-model="dialog_start" max-width="400">
+      <v-card>
+        <v-card-title>Iniciar Evaluación</v-card-title>
+        <v-card-text class="pb-2">Una vez que inicias una evaluación, solo podrás darla una vez.</v-card-text>
+        <v-card-text>No cierres la pestaña o cambies de página.</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn small text @click="dialog_start = false">Cerrar</v-btn>
+          <v-btn
+            small
+            color="primary"
+            @click="dialog_start = false; select(evaluation_to_start)"
+          >Iniciar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <!-- Dialog Result -->
     <v-dialog v-model="dialog_result" max-width="400">
       <v-card class="result">
@@ -62,6 +79,7 @@ import { percentage } from "@/services/math";
 export default {
   data: () => ({
     session_id: "",
+    evaluation_to_start: null,
     evaluation: null,
     evaluations: [],
     //
@@ -71,6 +89,7 @@ export default {
     //
     loading: true,
     loading_message: "",
+    dialog_start: false,
     dialog_result: false
   }),
   async mounted() {
@@ -116,6 +135,12 @@ export default {
         `Respondiste correctamente ${this.result.corrects} de ${this.result.total} preguntas.`,
         `Obtuviste un puntaje de ${this.calculate(this.result)}.`
       ];
+    },
+    showDialogStart(evaluation) {
+      if (!(evaluation.result && evaluation.result.started)) {
+        this.evaluation_to_start = evaluation;
+        this.dialog_start = true;
+      }
     }
   },
   components: {
