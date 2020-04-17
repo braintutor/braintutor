@@ -84,11 +84,11 @@ const router = new VueRouter({
 })
 router.beforeEach((to, from, next) => {
   reset()
-  const require_student = ['chatbot', 'student', 'session', 'profile'] // Require Student
+  const require_student = ['student', 'session', 'chatbot', 'profile'] // Require Student
   const require_admin = ['school-editor'] // Require Admin
   const require_teacher = ['chatbot', 'teacher', 'session-editor', 'course-editor', 'chatbot-editor'] // Require Teacher
   const require_director = ['director'] // Require Director
-  const require_parent = ['parent'] // Require Director
+  const require_parent = ['parent', 'session', 'chatbot'] // Require Director
 
   let to_name = to.name
   let session_exists = sessionExists()

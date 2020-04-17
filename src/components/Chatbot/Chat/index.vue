@@ -37,6 +37,14 @@
       >
         <span>{{ available_question }}</span>
       </div>
+      <div
+        class="availables__question"
+        v-for="(available_question, c_idx) in available_questions_materials"
+        :key="'m' + c_idx"
+        @click="selectAvailableQuestion(available_question); show_messages = true"
+      >
+        <span>{{ available_question }}</span>
+      </div>
     </div>
     <!-- Input -->
     <v-form class="input-container" @submit.prevent="sendMessage(); show_messages = true">
@@ -135,6 +143,7 @@ export default {
       }
     ],
     //
+    question_template: {},
     loading_message: false,
     loading_available: true,
     show_messages: true
@@ -148,6 +157,18 @@ export default {
     },
     component_materials() {
       return this.$store.state.component_materials;
+    },
+    available_questions_materials() {
+      let arr = [];
+      this.materials.forEach(material => {
+        Object.values(this.question_template).forEach(value => {
+          if (value[0]) arr.push(value[0].replace(/@/, material.name));
+        });
+        material.faq.forEach(item => {
+          arr.push(item.question);
+        });
+      });
+      return arr;
     }
   },
   mounted() {
@@ -218,22 +239,11 @@ export default {
     async getKnowledge() {
       let course_id = await getCourseIdByChatbot(this.chatbot_id);
       let knowledge_course = await getKnowledgeByCourse(course_id);
-      print(knowledge_course)
       let knowledge_chatbot = await getKnowledge(this.chatbot_id);
-      print(knowledge_chatbot)
+
       let knowledge = knowledge_course.concat(knowledge_chatbot);
       this.available_questions = knowledge.map(item => item.questions[0]);
-
-      let question_template = await getQuestionTemplate();
-      this.materials.forEach(material => {
-        Object.values(question_template).forEach(value => {
-          if (value[0])
-            this.available_questions.push(value[0].replace(/@/, material.name));
-        });
-        material.faq.forEach(item => {
-          this.available_questions.push(item.question);
-        });
-      });
+      this.question_template = await getQuestionTemplate();
       this.loading_available = false;
     }
   },

@@ -11,12 +11,12 @@
 </template>
 
 <script>
-import Sessions from "@/components/Parent/Sessions";
+import Sessions from "@/components/Student/Sessions";
 import Tasks from "@/components/Student/Tasks";
 
 export default {
   data: () => ({
-    show_courses: false
+    show_courses: true
   }),
   components: {
     Sessions,

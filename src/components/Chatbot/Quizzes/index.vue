@@ -46,7 +46,7 @@ export default {
     let chatbot_id = getParam("chatbot_id");
     this.quizzes = await getQuizzes(chatbot_id);
 
-    if (getSession().type == 2) { // student
+    if (getSession().type == 2 || getSession().type == 4) { // student
       for (let quiz of this.quizzes) {
         quiz.result = await getQuizResultByStudent(quiz._id.$oid);
       }

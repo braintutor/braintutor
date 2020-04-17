@@ -75,6 +75,7 @@ import {
 import { getParam } from "@/services/router.js";
 import { copy } from "@/services/object.js";
 import { percentage } from "@/services/math";
+import { getSession } from "@/services/security";
 
 export default {
   data: () => ({
@@ -83,6 +84,7 @@ export default {
     evaluation: null,
     evaluations: [],
     //
+    session_type: -1,
     score: 0,
     result_messages: [],
     result: {},
@@ -94,6 +96,7 @@ export default {
   }),
   async mounted() {
     this.session_id = getParam("session_id");
+    this.session_type = getSession().type
     this.getEvaluations();
   },
   methods: {
@@ -109,7 +112,7 @@ export default {
     },
     async select(evaluation) {
       // if the evaluation has not started previously
-      if (!(evaluation.result && evaluation.result.started)) {
+      if (!(evaluation.result && evaluation.result.started) && this.session_type == 2) {
         this.loading = true;
         this.loading_message = "Iniciando Evaluación";
         await startEvaluation(evaluation._id.$oid);
@@ -137,7 +140,7 @@ export default {
       ];
     },
     showDialogStart(evaluation) {
-      if (!(evaluation.result && evaluation.result.started)) {
+      if (!(evaluation.result && evaluation.result.started) && this.session_type == 2) {
         this.evaluation_to_start = evaluation;
         this.dialog_start = true;
       }
