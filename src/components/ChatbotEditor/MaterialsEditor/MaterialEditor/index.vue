@@ -131,7 +131,7 @@
           </div>
         </div>
         <!-- Images -->
-        <div v-if="category_selected === 'images'" class="category">
+        <!-- <div v-if="category_selected === 'images'" class="category">
           <div class="category-menu">
             <span>Imágenes</span>
             <v-btn icon @click="addImage(material.images)">
@@ -140,14 +140,6 @@
           </div>
           <div class="category-bullet" v-for="(image, i_idx) in material.images" :key="i_idx">
             <div class="category-bullet-content">
-              <!-- <v-progress-linear
-                v-if="image_files[i_idx] && image_files[i_idx].progress != 0"
-                :value="image_files[i_idx]? image_files[i_idx].progress: 0"
-              ></v-progress-linear>
-              <v-file-input
-                @change="onFileSelected(image_files, i_idx)"
-                v-model="image_files[i_idx]"
-              ></v-file-input>-->
               <v-text-field
                 class="category-text mb-2"
                 v-model="material.images[i_idx]"
@@ -159,6 +151,38 @@
               <div v-if="image" class="category-center">
                 <img :src="image" />
               </div>
+            </div>
+            <v-menu v-if="material.images.length > 1" offset-y>
+              <template v-slot:activator="{ on }">
+                <v-btn icon v-on="on">
+                  <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item @click="moveUp(material.images, i_idx)">
+                  <v-list-item-title>Mover Arriba</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="moveDown(material.images, i_idx)">
+                  <v-list-item-title>Mover Abajo</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="remove(material.images, i_idx)">
+                  <v-list-item-title>Eliminar</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </div>
+        </div>-->
+        <!-- Images -->
+        <div v-if="category_selected === 'images'" class="category">
+          <div class="category-menu">
+            <span>Imágenes</span>
+            <v-btn icon @click="addImage(material.images)">
+              <v-icon>mdi-plus-circle</v-icon>
+            </v-btn>
+          </div>
+          <div class="category-bullet" v-for="(image, i_idx) in material.images" :key="image">
+            <div class="category-bullet-content pa-2">
+              <ImageUpload :image="image" :callback="image_iu => saveImage(image_iu, i_idx)" />
             </div>
             <v-menu v-if="material.images.length > 1" offset-y>
               <template v-slot:activator="{ on }">
@@ -444,6 +468,7 @@ import OverviewEditor from "./OverviewEditor";
 import ExplanationEditor from "./ExplanationEditor";
 import Navigator from "@/components/Navigator";
 import loading from "@/components/loading";
+import ImageUpload from "@/components/ImageUpload";
 
 import {
   updateMaterial,
@@ -582,6 +607,7 @@ export default {
         arr[idx - 1] = aux;
         arr.splice();
       }
+      this.$forceUpdate();
     },
     moveDown(arr, idx) {
       if (idx < arr.length - 1) {
@@ -590,6 +616,7 @@ export default {
         arr[idx + 1] = aux;
         arr.splice();
       }
+      this.$forceUpdate();
     },
     add(arr) {
       arr.push("");
@@ -628,6 +655,9 @@ export default {
     addImage(images) {
       images.push("");
     },
+    saveImage(image_iu, i_idx) {
+      this.material.images[i_idx] = image_iu;
+    },
     addFAQ(faq) {
       faq.push({
         question: "",
@@ -639,7 +669,8 @@ export default {
     OverviewEditor,
     ExplanationEditor,
     Navigator,
-    loading
+    loading,
+    ImageUpload
   }
 };
 </script>

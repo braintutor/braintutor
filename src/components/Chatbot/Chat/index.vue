@@ -218,7 +218,9 @@ export default {
     async getKnowledge() {
       let course_id = await getCourseIdByChatbot(this.chatbot_id);
       let knowledge_course = await getKnowledgeByCourse(course_id);
+      print(knowledge_course)
       let knowledge_chatbot = await getKnowledge(this.chatbot_id);
+      print(knowledge_chatbot)
       let knowledge = knowledge_course.concat(knowledge_chatbot);
       this.available_questions = knowledge.map(item => item.questions[0]);
 
