@@ -41,19 +41,7 @@
           </div>
         </div>
         <!-- Category Examples -->
-        <div v-if="category_selected == 'examples'" class="category category-text">
-          <div class="category-text-menu">
-            <div class="category-text-title">Ejemplos</div>
-          </div>
-          <div
-            v-for="(example, e_idx) in material[category_selected]"
-            :key="e_idx"
-            class="category-text-content"
-          >
-            <v-icon class="mr-3">mdi-circle-medium</v-icon>
-            <div>{{example}}</div>
-          </div>
-        </div>
+        <div v-show="category_selected == 'examples'" id="examples-editor" class="category"></div>
         <!-- Category Exercises -->
         <Exercises
           class="category category-text"
@@ -138,7 +126,7 @@ export default {
     editors: {}
   }),
   mounted() {
-    ["overview", "explanation"].forEach(category => {
+    ["overview", "explanation", "examples"].forEach(category => {
       this.editors[category] = new EditorJS({
         holderId: `${category}-editor`,
         tools: {

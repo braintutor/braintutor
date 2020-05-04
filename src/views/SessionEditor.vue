@@ -39,8 +39,7 @@ export default {
         text: "Tareas"
       },
       {
-        image:
-          "https://www.jing.fm/clipimg/full/92-922422_go-live-handbook-icon-exam-png.png",
+        image: require("@/assets/braintutor/icon-exam.png"),
         text: "Evaluaciones"
       },
       {

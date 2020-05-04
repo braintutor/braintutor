@@ -94,41 +94,15 @@
           </div>
         </div>
         <!-- Examples -->
-        <div v-if="category_selected === 'examples'" class="category">
+        <div v-show="category_selected === 'examples'" class="category">
           <div class="category-menu">
             <span>Ejemplos</span>
-            <v-btn icon @click="addExample(material.examples)">
-              <v-icon>mdi-plus-circle</v-icon>
-            </v-btn>
           </div>
-          <div class="category-bullet" v-for="(example, e_idx) in material.examples" :key="e_idx">
-            <v-textarea
-              class="category-text"
-              v-model="material.examples[e_idx]"
-              :rows="1"
-              autoGrow
-              dense
-              hide-details
-            ></v-textarea>
-            <v-menu v-if="material.examples.length > 1" offset-y>
-              <template v-slot:activator="{ on }">
-                <v-btn icon v-on="on">
-                  <v-icon>mdi-dots-vertical</v-icon>
-                </v-btn>
-              </template>
-              <v-list>
-                <v-list-item @click="moveUp(material.examples, e_idx)">
-                  <v-list-item-title>Mover Arriba</v-list-item-title>
-                </v-list-item>
-                <v-list-item @click="moveDown(material.examples, e_idx)">
-                  <v-list-item-title>Mover Abajo</v-list-item-title>
-                </v-list-item>
-                <v-list-item @click="remove(material.examples, e_idx)">
-                  <v-list-item-title>Eliminar</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-          </div>
+          <ExamplesEditor
+            ref="examples"
+            :data="material.examples"
+            :setCategoryValue="setCategoryValue"
+          />
         </div>
         <!-- Images -->
         <!-- <div v-if="category_selected === 'images'" class="category">
@@ -466,6 +440,8 @@
 <script>
 import OverviewEditor from "./OverviewEditor";
 import ExplanationEditor from "./ExplanationEditor";
+import ExamplesEditor from "./ExamplesEditor";
+
 import Navigator from "@/components/Navigator";
 import loading from "@/components/loading";
 import ImageUpload from "@/components/ImageUpload";
@@ -591,7 +567,7 @@ export default {
 
       this.material.id = this.material._id.$oid;
       await Promise.all(
-        ["overview", "explanation"].map(async category => {
+        ["overview", "explanation", "examples"].map(async category => {
           await this.$refs[category].save(); // Save all child components
         })
       );
@@ -633,9 +609,6 @@ export default {
         link: ""
       });
     },
-    addExample(examples) {
-      examples.push("");
-    },
     addExercise(exercises) {
       exercises.push({
         question: "",
@@ -668,6 +641,7 @@ export default {
   components: {
     OverviewEditor,
     ExplanationEditor,
+    ExamplesEditor,
     Navigator,
     loading,
     ImageUpload

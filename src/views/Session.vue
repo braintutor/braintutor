@@ -22,6 +22,7 @@ import Evaluations from "@/components/Session/Evaluations/index";
 
 import { redirect, getParam } from "@/services/router";
 import { getCourseNameBySession } from "@/services/courseService";
+import { getSession } from "@/services/security";
 
 export default {
   data: () => ({
@@ -37,8 +38,7 @@ export default {
         text: "Tareas"
       },
       {
-        image:
-          "https://www.jing.fm/clipimg/full/92-922422_go-live-handbook-icon-exam-png.png",
+        image: require("@/assets/braintutor/icon-exam.png"),
         text: "Evaluaciones"
       }
     ]
@@ -49,7 +49,9 @@ export default {
   },
   methods: {
     redirect() {
-      redirect("student");
+      let session_type = getSession().type;
+      if (session_type == 2) redirect("student");
+      else if (session_type == 4) redirect("parent");
     }
   },
   components: {

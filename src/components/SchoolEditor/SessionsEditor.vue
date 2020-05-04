@@ -50,10 +50,12 @@
       <v-card class="edit">
         <v-card-title v-if="action === 'create'" class="py-5">Crear Sesión</v-card-title>
         <v-card-title v-else-if="action === 'edit'" class="py-5">Editar Sesión</v-card-title>
+        <v-alert v-model="show_error" type="error" icon="mdi-cloud-alert" text dismissible>{{error}}</v-alert>
         <v-card-text class="edit__content">
           <span class="mt-1 mr-4">Aula:</span>
           <v-select
             v-model="entity.classroom_id"
+            :disabled="action === 'edit'"
             :items="classrooms"
             item-text="name"
             item-value="_id"
@@ -63,6 +65,7 @@
           <span class="mt-1 mr-4">Curso:</span>
           <v-select
             v-model="entity.course_id"
+            :disabled="action === 'edit'"
             :items="courses"
             item-text="name"
             item-value="_id"
@@ -107,8 +110,10 @@ export default {
     classrooms: [],
     classroom_id: "",
     teachers: [],
-    //
     action: "",
+    error: "",
+    //
+    show_error: false,
     dialog_edit: false,
     loading: true,
     loading_save: false
@@ -148,39 +153,51 @@ export default {
   methods: {
     add() {
       this.action = "create";
+      this.show_error = false;
       this.entity = {};
     },
     edit(entity) {
       this.action = "edit";
+      this.show_error = false;
       this.entity = JSON.parse(JSON.stringify(entity));
       this.entity.id = this.entity._id.$oid;
     },
     async save() {
-      this.loading_save = true;
-      if (this.action === "create") {
-        // Create
-        try {
-          let entity_id = await addSession(this.entity);
-          this.entity._id = entity_id;
-          this.entities.push(this.entity);
-          this.dialog_edit = false;
-        } catch {
-          //
+      this.show_error = false;
+      if (this.validate()) {
+        this.loading_save = true;
+        if (this.action === "create") {
+          // Create
+          try {
+            let entity_id = await addSession(this.entity);
+            this.entity._id = entity_id;
+            this.entities.push(this.entity);
+            this.dialog_edit = false;
+          } catch {
+            //
+          }
+        } else if (this.action === "edit") {
+          // Update
+          try {
+            await updateSession(this.entity);
+            let entity_idx = this.entities.findIndex(
+              entity => entity._id.$oid === this.entity.id
+            );
+            this.entities[entity_idx] = JSON.parse(JSON.stringify(this.entity));
+            this.entities.splice(); // updates the array without modifying it
+          } catch {
+            //
+          }
         }
-      } else if (this.action === "edit") {
-        // Update
-        try {
-          await updateSession(this.entity);
-          let entity_idx = this.entities.findIndex(
-            entity => entity._id.$oid === this.entity.id
-          );
-          this.entities[entity_idx] = JSON.parse(JSON.stringify(this.entity));
-          this.entities.splice(); // updates the array without modifying it
-        } catch {
-          //
-        }
+        this.loading_save = false;
+      } else {
+        this.show_error = true;
+        this.error = "Completa todos los datos.";
       }
-      this.loading_save = false;
+    },
+    validate() {
+      let { classroom_id, course_id, teacher_id } = this.entity;
+      return classroom_id && course_id && teacher_id;
     }
   },
   components: {

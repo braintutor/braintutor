@@ -1,6 +1,6 @@
 <template>
   <div>
-    <loading :active="loading_materials" :message='loading_message'/>
+    <loading :active="loading_materials" :message="loading_message" />
     <!-- Material List -->
     <v-container v-if="!material" fluid class="materials-container">
       <v-row no-gutters>
@@ -58,7 +58,7 @@ export default {
     chatbot_id: "",
     //
     loading_materials: true,
-    loading_message: ''
+    loading_message: ""
   }),
   async mounted() {
     this.chatbot_id = getParam("chatbot_id");
@@ -70,14 +70,14 @@ export default {
     },
     async restoreMaterials() {
       this.loading_materials = true;
-      this.loading_message = 'Cargando Material'
+      this.loading_message = "Cargando Material";
       this.materials = await getMaterials(this.chatbot_id);
       this.loading_materials = false;
     },
     async createMaterial() {
       let overview = JSON.stringify({
         blocks: [
-          { type: "header", data: { text: "Título", level: 2 } },
+          { type: "header", data: { text: "Resumen", level: 2 } },
           { type: "paragraph", data: { text: "Descripción" } }
         ]
       });
@@ -85,6 +85,15 @@ export default {
         blocks: [
           { type: "header", data: { text: "Título", level: 2 } },
           { type: "paragraph", data: { text: "Descripción" } }
+        ]
+      });
+      let examples = JSON.stringify({
+        blocks: [
+          { type: "header", data: { text: "Ejemplos", level: 2 } },
+          {
+            type: "list",
+            data: { style: "unordered", items: ["Ejemplo 1", "Ejemplo 2"] }
+          }
         ]
       });
 
@@ -99,7 +108,7 @@ export default {
             { name: "Enlace 1", link: "" },
             { name: "Enlace 2", link: "" }
           ],
-          examples: ["Ejemplo 1", "Ejemplo 2"],
+          examples,
           exercises: [
             {
               question: "Pregunta 1",
@@ -129,7 +138,7 @@ export default {
     async deleteMaterial(material_id) {
       this.material = null;
       this.loading_materials = true;
-      this.loading_message = 'Eliminando Material'
+      this.loading_message = "Eliminando Material";
       // var ref = firebase.storage().refFromURL(url_image);
       try {
         var ref = firebase.storage().ref(`/material/${material_id}/image`);

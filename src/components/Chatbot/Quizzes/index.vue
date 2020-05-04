@@ -32,7 +32,6 @@ import Quiz from "./Quiz";
 
 import { getParam } from "@/services/router.js";
 import { copy } from "@/services/object.js";
-getSession;
 import { getQuizzes, getQuizResultByStudent } from "@/services/quizService";
 import { getSession } from "@/services/security";
 
