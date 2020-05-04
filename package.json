@@ -14,14 +14,14 @@
     "@fullcalendar/vue": "^4.4.0",
     "chart.js": "^2.9.3",
     "core-js": "^3.4.4",
-    "firebase": "^7.13.2",
+    "firebase": "^7.14.2",
     "vue": "^2.6.10",
     "vue-router": "^3.1.3",
     "vuetify": "^2.1.0",
     "vuex": "^3.1.2"
   },
   "devDependencies": {
-    "@editorjs/editorjs": "^2.16.1",
+    "@editorjs/editorjs": "^2.17.0",
     "@editorjs/header": "^2.4.0",
     "@editorjs/image": "^2.3.3",
     "@editorjs/list": "^1.4.0",
