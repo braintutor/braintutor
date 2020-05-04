@@ -12,6 +12,8 @@
         <div v-show="category_selected == 'overview'" id="overview-editor" class="category"></div>
         <!-- Category Explanation -->
         <div v-show="category_selected == 'explanation'" id="explanation-editor" class="category"></div>
+        <!-- Category Examples -->
+        <div v-show="category_selected == 'examples'" id="examples-editor" class="category"></div>
         <!-- Category Bullets -->
         <div v-if="category_selected == 'bullets'" class="category category-text">
           <div class="category-text-menu">
@@ -40,8 +42,6 @@
             <a :href="hyperlink.link" target="_blank">{{hyperlink.name}}</a>
           </div>
         </div>
-        <!-- Category Examples -->
-        <div v-show="category_selected == 'examples'" id="examples-editor" class="category"></div>
         <!-- Category Exercises -->
         <Exercises
           class="category category-text"

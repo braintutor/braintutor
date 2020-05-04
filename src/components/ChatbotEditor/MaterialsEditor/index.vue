@@ -49,7 +49,8 @@ import {
 } from "@/services/materialService";
 import { getParam } from "@/services/router.js";
 
-import firebase from "firebase";
+import firebase from "firebase/app";
+import 'firebase/storage';
 
 export default {
   data: () => ({

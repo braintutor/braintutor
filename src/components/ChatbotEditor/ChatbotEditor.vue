@@ -129,7 +129,8 @@ import {
   removeChatbot
 } from "@/services/chatbotService";
 
-import firebase from "firebase";
+import firebase from "firebase/app";
+import 'firebase/storage';
 
 export default {
   data: () => ({
@@ -227,7 +228,7 @@ export default {
           task.snapshot.ref.getDownloadURL().then(async url => {
             this.image_progress = 0;
             this.chatbot.image = url;
-            this.save();
+            this.saveImage();
           });
         }
       );

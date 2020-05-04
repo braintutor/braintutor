@@ -105,48 +105,6 @@
           />
         </div>
         <!-- Images -->
-        <!-- <div v-if="category_selected === 'images'" class="category">
-          <div class="category-menu">
-            <span>Imágenes</span>
-            <v-btn icon @click="addImage(material.images)">
-              <v-icon>mdi-plus-circle</v-icon>
-            </v-btn>
-          </div>
-          <div class="category-bullet" v-for="(image, i_idx) in material.images" :key="i_idx">
-            <div class="category-bullet-content">
-              <v-text-field
-                class="category-text mb-2"
-                v-model="material.images[i_idx]"
-                :rows="1"
-                autoGrow
-                dense
-                hide-details
-              ></v-text-field>
-              <div v-if="image" class="category-center">
-                <img :src="image" />
-              </div>
-            </div>
-            <v-menu v-if="material.images.length > 1" offset-y>
-              <template v-slot:activator="{ on }">
-                <v-btn icon v-on="on">
-                  <v-icon>mdi-dots-vertical</v-icon>
-                </v-btn>
-              </template>
-              <v-list>
-                <v-list-item @click="moveUp(material.images, i_idx)">
-                  <v-list-item-title>Mover Arriba</v-list-item-title>
-                </v-list-item>
-                <v-list-item @click="moveDown(material.images, i_idx)">
-                  <v-list-item-title>Mover Abajo</v-list-item-title>
-                </v-list-item>
-                <v-list-item @click="remove(material.images, i_idx)">
-                  <v-list-item-title>Eliminar</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-          </div>
-        </div>-->
-        <!-- Images -->
         <div v-if="category_selected === 'images'" class="category">
           <div class="category-menu">
             <span>Imágenes</span>
@@ -453,7 +411,8 @@ import {
 import { getEmbed } from "@/services/embed";
 import { Clamp } from "@/services/math";
 
-import firebase from "firebase";
+import firebase from "firebase/app";
+import 'firebase/storage';
 
 export default {
   props: [
