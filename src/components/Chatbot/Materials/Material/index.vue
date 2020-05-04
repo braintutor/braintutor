@@ -14,6 +14,8 @@
         <div v-show="category_selected == 'explanation'" id="explanation-editor" class="category"></div>
         <!-- Category Examples -->
         <div v-show="category_selected == 'examples'" id="examples-editor" class="category"></div>
+        <!-- Category Movies -->
+        <div v-show="category_selected == 'movies'" id="movies-editor" class="category"></div>
         <!-- Category Bullets -->
         <div v-if="category_selected == 'bullets'" class="category category-text">
           <div class="category-text-menu">
@@ -49,16 +51,6 @@
           :exercises="material[category_selected]"
           :talk="text => {startTalk(text)}"
         />
-        <!-- Category Movies -->
-        <div v-if="category_selected == 'movies'">
-          <div
-            v-for="(movie, m_idx) in material[category_selected]"
-            :key="m_idx"
-            class="category category-video aspect-ratio-video"
-          >
-            <iframe class="aspect-ratio-content" :src="movie" allowfullscreen />
-          </div>
-        </div>
         <!-- Category Images -->
         <div v-if="category_selected == 'images'">
           <div
@@ -110,9 +102,10 @@ import Header from "@editorjs/header";
 import List from "@editorjs/list";
 import SimpleImage from "@editorjs/simple-image";
 import Marker from "@editorjs/marker";
+import Embed from "@editorjs/embed";
 
 import Exercises from "./Exercises";
-import { getEmbed } from "@/services/embed";
+// import { getEmbed } from "@/services/embed";
 
 export default {
   props: [
@@ -126,19 +119,20 @@ export default {
     editors: {}
   }),
   mounted() {
-    ["overview", "explanation", "examples"].forEach(category => {
+    ["overview", "explanation", "examples", "movies"].forEach(category => {
       this.editors[category] = new EditorJS({
         holderId: `${category}-editor`,
         tools: {
           header: Header,
           list: List,
           image: SimpleImage,
-          marker: Marker
+          marker: Marker,
+          embed: Embed
         },
         data: JSON.parse(this.material[category])
       });
     });
-    this.material.movies = this.material.movies.map(movie => getEmbed(movie));
+    // this.material.movies = this.material.movies.map(movie => getEmbed(movie));
   },
   computed: {
     component_avatar() {
@@ -260,5 +254,8 @@ export default {
 [id$="-editor"] {
   padding: 20px;
   pointer-events: none;
+}
+#movies-editor {
+  pointer-events: all !important;
 }
 </style>

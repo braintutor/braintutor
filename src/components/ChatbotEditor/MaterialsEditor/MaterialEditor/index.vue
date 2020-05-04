@@ -56,6 +56,67 @@
             :setCategoryValue="setCategoryValue"
           />
         </div>
+        <!-- Examples -->
+        <div v-show="category_selected === 'examples'" class="category">
+          <div class="category-menu">
+            <span>Ejemplos</span>
+          </div>
+          <ExamplesEditor
+            ref="examples"
+            :data="material.examples"
+            :setCategoryValue="setCategoryValue"
+          />
+        </div>
+        <!-- Movies -->
+        <div v-show="category_selected === 'movies'" class="category">
+          <div class="category-menu">
+            <span>Videos</span>
+          </div>
+          <MoviesEditor ref="movies" :data="material.movies" :setCategoryValue="setCategoryValue" />
+        </div>
+        <!-- <div v-if="category_selected === 'movies'" class="category">
+          <div class="category-menu">
+            <span>Videos</span>
+            <v-btn icon @click="addMovie(material.movies)">
+              <v-icon>mdi-plus-circle</v-icon>
+            </v-btn>
+          </div>
+          <div class="category-bullet" v-for="(movie, m_idx) in material.movies" :key="m_idx">
+            <div class="category-bullet-content">
+              <v-text-field
+                class="category-text mb-2"
+                v-model="material.movies[m_idx]"
+                :rows="1"
+                autoGrow
+                dense
+                hide-details
+              ></v-text-field>
+              <div v-if="movie" class="category-center">
+                <div class="aspect-ratio-video">
+                  <iframe class="aspect-ratio-content" :src="embeds[m_idx]" allowfullscreen />
+                </div>
+              </div>
+            </div>
+            <v-menu v-if="material.movies.length > 1" offset-y>
+              <template v-slot:activator="{ on }">
+                <v-btn icon v-on="on">
+                  <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item @click="moveUp(material.movies, m_idx)">
+                  <v-list-item-title>Mover Arriba</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="moveDown(material.movies, m_idx)">
+                  <v-list-item-title>Mover Abajo</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="remove(material.movies, m_idx)">
+                  <v-list-item-title>Eliminar</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </div>
+        </div>-->
         <!-- Bullets -->
         <div v-if="category_selected === 'bullets'" class="category">
           <div class="category-menu">
@@ -93,17 +154,6 @@
             </v-menu>
           </div>
         </div>
-        <!-- Examples -->
-        <div v-show="category_selected === 'examples'" class="category">
-          <div class="category-menu">
-            <span>Ejemplos</span>
-          </div>
-          <ExamplesEditor
-            ref="examples"
-            :data="material.examples"
-            :setCategoryValue="setCategoryValue"
-          />
-        </div>
         <!-- Images -->
         <div v-if="category_selected === 'images'" class="category">
           <div class="category-menu">
@@ -130,50 +180,6 @@
                   <v-list-item-title>Mover Abajo</v-list-item-title>
                 </v-list-item>
                 <v-list-item @click="remove(material.images, i_idx)">
-                  <v-list-item-title>Eliminar</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-          </div>
-        </div>
-        <!-- Movies -->
-        <div v-if="category_selected === 'movies'" class="category">
-          <div class="category-menu">
-            <span>Videos</span>
-            <v-btn icon @click="addMovie(material.movies)">
-              <v-icon>mdi-plus-circle</v-icon>
-            </v-btn>
-          </div>
-          <div class="category-bullet" v-for="(movie, m_idx) in material.movies" :key="m_idx">
-            <div class="category-bullet-content">
-              <v-text-field
-                class="category-text mb-2"
-                v-model="material.movies[m_idx]"
-                :rows="1"
-                autoGrow
-                dense
-                hide-details
-              ></v-text-field>
-              <div v-if="movie" class="category-center">
-                <div class="aspect-ratio-video">
-                  <iframe class="aspect-ratio-content" :src="embeds[m_idx]" allowfullscreen />
-                </div>
-              </div>
-            </div>
-            <v-menu v-if="material.movies.length > 1" offset-y>
-              <template v-slot:activator="{ on }">
-                <v-btn icon v-on="on">
-                  <v-icon>mdi-dots-vertical</v-icon>
-                </v-btn>
-              </template>
-              <v-list>
-                <v-list-item @click="moveUp(material.movies, m_idx)">
-                  <v-list-item-title>Mover Arriba</v-list-item-title>
-                </v-list-item>
-                <v-list-item @click="moveDown(material.movies, m_idx)">
-                  <v-list-item-title>Mover Abajo</v-list-item-title>
-                </v-list-item>
-                <v-list-item @click="remove(material.movies, m_idx)">
                   <v-list-item-title>Eliminar</v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -399,6 +405,7 @@
 import OverviewEditor from "./OverviewEditor";
 import ExplanationEditor from "./ExplanationEditor";
 import ExamplesEditor from "./ExamplesEditor";
+import MoviesEditor from "./MoviesEditor";
 
 import Navigator from "@/components/Navigator";
 import loading from "@/components/loading";
@@ -412,7 +419,7 @@ import { getEmbed } from "@/services/embed";
 import { Clamp } from "@/services/math";
 
 import firebase from "firebase/app";
-import 'firebase/storage';
+import "firebase/storage";
 
 export default {
   props: [
@@ -526,9 +533,11 @@ export default {
 
       this.material.id = this.material._id.$oid;
       await Promise.all(
-        ["overview", "explanation", "examples"].map(async category => {
-          await this.$refs[category].save(); // Save all child components
-        })
+        ["overview", "explanation", "examples", "movies"].map(
+          async category => {
+            await this.$refs[category].save(); // Save all child components
+          }
+        )
       );
       await updateMaterial(this.material);
 
@@ -601,6 +610,7 @@ export default {
     OverviewEditor,
     ExplanationEditor,
     ExamplesEditor,
+    MoviesEditor,
     Navigator,
     loading,
     ImageUpload

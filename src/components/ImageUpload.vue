@@ -58,8 +58,6 @@ export default {
       if (this.convert) {
         this.convert = false;
         this.src = this.getBase64Image(event.target);
-        console.log(this.src);
-        
         this.callback(this.src);
       }
     },

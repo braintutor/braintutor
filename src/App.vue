@@ -107,4 +107,7 @@ export default {
 .cdx-simple-image__picture--with-background {
   background: #fff !important;
 }
+.cdx-input.embed-tool__caption {
+  display: none;
+}
 </style>
