@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
   <div class="material-editor-container m-fullscreen">
     <loading :active="loading" :message="loading_message" />
@@ -39,40 +40,28 @@
           <div class="category-menu">
             <span>Resumen</span>
           </div>
-          <OverviewEditor
-            ref="overview"
-            :data="material.overview"
-            :setCategoryValue="setCategoryValue"
-          />
+          <OverviewEditor ref="overview" :data="material.overview" />
         </div>
         <!-- Explanation -->
         <div v-show="category_selected === 'explanation'" class="category">
           <div class="category-menu">
             <span>Explicación</span>
           </div>
-          <ExplanationEditor
-            ref="explanation"
-            :data="material.explanation"
-            :setCategoryValue="setCategoryValue"
-          />
+          <ExplanationEditor ref="explanation" :data="material.explanation" />
         </div>
         <!-- Examples -->
         <div v-show="category_selected === 'examples'" class="category">
           <div class="category-menu">
             <span>Ejemplos</span>
           </div>
-          <ExamplesEditor
-            ref="examples"
-            :data="material.examples"
-            :setCategoryValue="setCategoryValue"
-          />
+          <ExamplesEditor ref="examples" :data="material.examples" />
         </div>
         <!-- Movies -->
         <div v-show="category_selected === 'movies'" class="category">
           <div class="category-menu">
             <span>Videos</span>
           </div>
-          <MoviesEditor ref="movies" :data="material.movies" :setCategoryValue="setCategoryValue" />
+          <MoviesEditor ref="movies" :data="material.movies" />
         </div>
         <!-- Bullets -->
         <div v-if="category_selected === 'bullets'" class="category">
@@ -481,22 +470,37 @@ export default {
       this.unselectMaterial();
       this.restoreMaterials();
     },
-    setCategoryValue(attribute, value) {
-      this.material[attribute] = value;
-    },
     async saveMaterial() {
       this.loading = true;
       this.loading_message = "Guardando Material";
 
       this.material.id = this.material._id.$oid;
-      await Promise.all(
-        ["overview", "explanation", "examples", "movies"].map(
-          async category => {
-            await this.$refs[category].save(); // Save all child components
+      try {
+        for (let category of [
+          "overview",
+          "explanation",
+          "examples",
+          "movies"
+        ]) {
+          let data = await this.$refs[category].save(); // Save all child components
+          let size = (data.length * 2) / 1000;
+          if (size > 500) {
+            //kB
+            let categories = {
+              overview: "Resumen",
+              explanation: "Explicación",
+              examples: "Ejemplos",
+              movies: "Videos"
+            };
+            throw `Ha sobrepasado el exceso de tamaño en la categoría ${categories[category]}.`;
           }
-        )
-      );
-      await updateMaterial(this.material);
+          console.log(`Saving ${size}kB in ${category}`);
+          this.material[category] = data;
+        }
+        await updateMaterial(this.material);
+      } catch (error) {
+        this.$root.$children[0].showMessage("Error al Guardar", error);
+      }
 
       this.loading = false;
     },

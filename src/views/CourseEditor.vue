@@ -41,7 +41,7 @@ export default {
       }
     ]
   }),
-  async mounted() {
+  async created() {
     this.course_id = getParam("course_id");
     this.course = await getCourseName(this.course_id);
   },

@@ -4,6 +4,17 @@
     <v-content>
       <router-view></router-view>
     </v-content>
+    <!-- showMessage -->
+    <v-dialog v-model="show" max-width="300">
+      <v-card>
+        <v-card-title>{{show_title}}</v-card-title>
+        <v-card-text>{{show_message}}</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn small text @click="show = false">Cerrar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -13,8 +24,16 @@ import Header from "./components/Header";
 export default {
   name: "App",
   data: () => ({
-    //
+    show: false,
+    show_message: ""
   }),
+  methods: {
+    showMessage(title, message) {
+      this.show = true;
+      this.show_title = title;
+      this.show_message = message;
+    }
+  },
   components: {
     Header
   }

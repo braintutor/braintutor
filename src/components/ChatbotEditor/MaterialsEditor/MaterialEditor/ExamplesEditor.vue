@@ -10,7 +10,7 @@ import SimpleImage from "@editorjs/simple-image";
 import Marker from "@editorjs/marker";
 
 export default {
-  props: ["data", "setCategoryValue"],
+  props: ["data"],
   data: () => ({
     editor: null
   }),
@@ -30,7 +30,7 @@ export default {
     async save() {
       let outputData = await this.editor.save();
       let data = JSON.stringify(outputData);
-      this.setCategoryValue("examples", data);
+      return data;
     }
   }
 };

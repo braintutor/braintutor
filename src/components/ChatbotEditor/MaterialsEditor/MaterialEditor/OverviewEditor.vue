@@ -13,7 +13,7 @@ import Header from "@editorjs/header";
 import List from "@editorjs/list";
 
 export default {
-  props: ["data", "setCategoryValue"],
+  props: ["data"],
   data: () => ({
     editor: null
   }),
@@ -31,7 +31,7 @@ export default {
     async save() {
       let outputData = await this.editor.save();
       let data = JSON.stringify(outputData);
-      this.setCategoryValue("overview", data);
+      return data;
     }
   }
   // mounted() {

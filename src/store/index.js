@@ -15,7 +15,7 @@ export default new Vuex.Store({
     //Components
     component_avatar: null,
     component_materials: null,
-    component_quizzes: null,
+    component_quizzes: null
   },
   mutations: {
     setSession(state, session) {
@@ -42,7 +42,7 @@ export default new Vuex.Store({
     },
     setComponentQuizzes(state, component_quizzes) {
       state.component_quizzes = component_quizzes
-    }
+    },
   },
   actions: {
   },
