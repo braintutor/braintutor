@@ -43,6 +43,14 @@ export default {
   }
 }
 
+.empty {
+  margin: 10px;
+  color: #797979;
+  font-size: 1.1rem;
+  font-weight: lighter;
+  text-align: center;
+}
+
 .history {
   margin: 0 16px 8px;
   color: #868686;

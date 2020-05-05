@@ -1,7 +1,7 @@
 <template>
   <div>
-    <loading :active="loading" :message='loading_message' />
-    <p class="message" v-if="sessions.length <= 0">No tiene cursos asignados.</p>
+    <loading :active="loading" :message="loading_message" />
+    <p class="empty" v-if="sessions.length <= 0">No tiene cursos asignados.</p>
     <div class="row no-gutters">
       <div
         class="col-6 col-md-4 col-lg-3 px-2 pb-4"
@@ -31,7 +31,7 @@ export default {
   data: () => ({
     sessions: [],
     loading: true,
-    loading_message: ''
+    loading_message: ""
   }),
   async mounted() {
     this.loading_message = "Cargando Cursos";
@@ -51,31 +51,4 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.classroom {
-  // height: 100%;
-  padding: 20px;
-  padding-bottom: 10px;
-  border-top: 6px solid rgb(121, 134, 255);
-  &:hover {
-    cursor: pointer;
-  }
-  &__item {
-    display: block;
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-  &__value {
-    display: block;
-    margin-bottom: 10px;
-    font-size: 1.1rem;
-    font-weight: lighter;
-  }
-}
-.message {
-  margin: 10px;
-  color: #797979;
-  font-size: 1.1rem;
-  font-weight: lighter;
-  text-align: center;
-}
 </style>

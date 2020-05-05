@@ -1,7 +1,7 @@
 <template>
   <div>
     <loading :active="loading" :message="loading_message" />
-    <p class="message" v-if="courses.length <= 0">No tiene cursos asignados.</p>
+    <p class="empty" v-if="courses.length <= 0">No tiene cursos asignados.</p>
     <div class="row no-gutters">
       <div
         class="col-6 col-md-4 col-lg-3 px-2 pb-4"
@@ -58,13 +58,4 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-@import "@/styles/box-shadow";
-
-.message {
-  margin: 10px;
-  color: #797979;
-  font-size: 1.1rem;
-  font-weight: lighter;
-  text-align: center;
-}
 </style>

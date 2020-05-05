@@ -17,6 +17,7 @@
       </div>
     </div>
     <div id="tasks-scroll" class="m-fullscreen-content">
+      <p class="empty" v-if="tasks.length <= 0">No tiene cursos asignados.</p>
       <div class="task m-card" v-for="(task, t_idx) in tasks" :key="t_idx">
         <div class="task__menu">
           <v-text-field
