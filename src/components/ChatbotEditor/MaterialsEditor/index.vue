@@ -50,7 +50,7 @@ import {
 import { getParam } from "@/services/router.js";
 
 import firebase from "firebase/app";
-import 'firebase/storage';
+import "firebase/storage";
 
 export default {
   data: () => ({
@@ -97,6 +97,9 @@ export default {
           }
         ]
       });
+      let movies = JSON.stringify({
+        blocks: [{ type: "header", data: { text: "Videos", level: 2 } }]
+      });
 
       if (!this.loading_create) {
         this.loading_materials = true;
@@ -104,6 +107,7 @@ export default {
           name: "Nombre",
           overview,
           explanation,
+          movies,
           bullets: ["Punto 1", "Punto 2"],
           hyperlinks: [
             { name: "Enlace 1", link: "" },
@@ -122,7 +126,6 @@ export default {
               correct: 0
             }
           ],
-          movies: ["", ""],
           images: ["", ""],
           faq: [
             { question: "Pregunta Frecuente 1", answer: "Respuesta" },
