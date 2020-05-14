@@ -135,9 +135,7 @@ export default {
       if (user && user.contains(e.target)) {
         // Clicked in box
       } else {
-        // console.log("dsds");
         if (this.user_options) this.user_options = false;
-        console.log(this.user_options);
       }
     });
   },
