@@ -82,43 +82,52 @@ export default {
       try {
         if (this.$refs.form_login.validate()) {
           this.loading_login = true;
-          let token = "";
+          let res = {};
           let name = "";
+          let user_type = "";
           let type = -1;
 
           if (this.type === "Administrador") {
-            token = (await loginAdmin(this.school_id, this.user, this.pass))
-              .token;
+            res = await loginAdmin(this.school_id, this.user, this.pass);
+            user_type = "administrador";
             name = "school-editor";
             type = 0;
           }
           if (this.type === "Profesor") {
-            token = (await loginTeacher(this.school_id, this.user, this.pass))
-              .token;
+            res = await loginTeacher(this.school_id, this.user, this.pass);
+            user_type = "profesor";
             name = "teacher";
             type = 1;
           }
           if (this.type === "Estudiante") {
-            token = (await loginStudent(this.school_id, this.user, this.pass))
-              .token;
+            res = await loginStudent(this.school_id, this.user, this.pass);
+            user_type = "estudiante";
             name = "student";
             type = 2;
           }
           if (this.type === "Director") {
-            token = (await loginDirector(this.school_id, this.user, this.pass))
-              .token;
+            res = await loginDirector(this.school_id, this.user, this.pass);
+            user_type = "director";
             name = "director";
             type = 3;
           }
           if (this.type === "Padre") {
-            token = (await loginParent(this.school_id, this.user, this.pass))
-              .token;
+            res = await loginParent(this.school_id, this.user, this.pass);
+            user_type = "padre";
             name = "parent";
             type = 4;
           }
 
+          let { token, user } = res;
           if (token) {
-            setSession(token, type);
+            setSession(
+              token,
+              type,
+              JSON.stringify({
+                name: `${user.last_name}, ${user.first_name}`,
+                type: user_type
+              })
+            );
             redirect(name);
           } else {
             this.alert_error = true;

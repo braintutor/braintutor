@@ -1,4 +1,3 @@
-/* eslint-disable */
 <template>
   <div class="material-editor-container m-fullscreen">
     <loading :active="loading" :message="loading_message" />
@@ -494,7 +493,7 @@ export default {
             };
             throw `Ha sobrepasado el exceso de tamaño en la categoría ${categories[category]}.`;
           }
-          console.log(`Saving ${size}kB in ${category}`);
+          // console.log(`Saving ${size}kB in ${category}`);
           this.material[category] = data;
         }
         await updateMaterial(this.material);

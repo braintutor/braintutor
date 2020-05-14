@@ -1,21 +1,24 @@
 import store from '../store'
 
-function setSession(token, type) { // type 0:teacher 1:student
+function setSession(token, type, user) { // type 0:teacher 1:student
   localStorage.setItem('token', token);
   localStorage.setItem('type', type);
+  localStorage.setItem('user', user);
   store.commit("setSession", getSession());
 }
 
 function getSession() {
   return {
     token: localStorage.getItem('token'),
-    type: localStorage.getItem('type')
+    type: localStorage.getItem('type'),
+    user: localStorage.getItem('user'),
   };
 }
 
 function removeSession() {
   localStorage.removeItem('token')
   localStorage.removeItem('type')
+  localStorage.removeItem('user')
   store.commit("setSession", null);
 }
 

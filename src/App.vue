@@ -25,6 +25,7 @@ export default {
   name: "App",
   data: () => ({
     show: false,
+    show_title: "",
     show_message: ""
   }),
   methods: {

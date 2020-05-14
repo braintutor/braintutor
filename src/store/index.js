@@ -8,6 +8,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     session: getSession(),
+    //User
+    user: {},
     //Materials
     materials: [],
     //Quizzes
@@ -20,6 +22,10 @@ export default new Vuex.Store({
   mutations: {
     setSession(state, session) {
       state.session = session
+    },
+    //User
+    setUser(state, user) {
+      state.user = user
     },
     //Materials
     setMaterials(state, materials) {
