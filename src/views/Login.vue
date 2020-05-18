@@ -119,20 +119,17 @@ export default {
           }
 
           let { token, user } = res;
-          if (token) {
-            setSession(
-              token,
-              type,
-              JSON.stringify({
-                name: `${user.last_name}, ${user.first_name}`,
-                type: user_type
-              })
-            );
-            redirect(name);
-          } else {
-            this.alert_error = true;
-            this.loading_login = false;
-          }
+          setSession(
+            token,
+            type,
+            JSON.stringify({
+              name: `${user.last_name || ""}${
+                user.last_name ? "," : ""
+              } ${user.first_name || ""}`,
+              type: user_type
+            })
+          );
+          redirect(name);
         }
       } catch (error) {
         this.alert_error = true;

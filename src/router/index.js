@@ -86,7 +86,7 @@ router.beforeEach((to, from, next) => {
   reset()
   const require_student = ['student', 'session', 'chatbot', 'profile'] // Require Student
   const require_admin = ['school-editor'] // Require Admin
-  const require_teacher = ['chatbot', 'teacher', 'session-editor', 'course-editor', 'chatbot-editor'] // Require Teacher
+  const require_teacher = ['chatbot', 'profile', 'teacher', 'session-editor', 'course-editor', 'chatbot-editor'] // Require Teacher
   const require_director = ['director'] // Require Director
   const require_parent = ['parent', 'session', 'chatbot'] // Require Director
 

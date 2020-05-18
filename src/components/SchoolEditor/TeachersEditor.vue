@@ -1,6 +1,7 @@
 <template>
   <div class="teachers-editor">
     <loading :active="loading" />
+    <input type="file" onclick="this.value=null" @change="onLoadFile($event)" />
     <div class="teachers-editor__menu">
       <h2 class="teachers-editor__title">Docentes</h2>
       <v-btn rounded small color="success" @click="dialog_edit = true; addTeacher()">
@@ -41,7 +42,7 @@
         </tbody>
       </table>
     </div>
-
+    <!--  -->
     <v-dialog v-model="dialog_edit" class="container" max-width="500">
       <v-card class="teacher-edit">
         <v-card-title v-if="action === 'create'" class="py-5">Crear Docente</v-card-title>
@@ -89,6 +90,30 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <!-- Dialog Import -->
+    <v-dialog v-model="dialog_import" max-width="800">
+      <v-card class="py-2 px-4">
+        <table class="m-table">
+          <thead>
+            <tr>
+              <th>Nombres</th>
+              <th>Apellidos</th>
+              <th>Usuario</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(entity, e_idx) in new_data" :key="e_idx">
+              <td>{{ entity.first_name }}</td>
+              <td>{{ entity.last_name }}</td>
+              <td>{{ entity.user }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <v-card-actions class="pt-3" style="width: min-content; margin: 0 auto">
+          <v-btn small color="primary">Guardar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -100,6 +125,7 @@ import {
   addTeacher,
   updateTeacher
 } from "@/services/teacherService";
+import * as XLSX from "xlsx";
 
 export default {
   data: () => ({
@@ -107,8 +133,10 @@ export default {
     teacher: {},
     action: "",
     error: "",
+    new_data: [],
     //
     dialog_edit: false,
+    dialog_import: false,
     loading: true,
     loading_save: false
   }),
@@ -117,6 +145,29 @@ export default {
     this.loading = false;
   },
   methods: {
+    onLoadFile(e) {
+      let file = e.target.files[0];
+      if (file) {
+        let reader = new FileReader();
+        reader.onload = e => {
+          let file_data = e.target.result;
+          let excel = XLSX.read(file_data, { type: "binary" });
+          let names = excel.SheetNames;
+          let data = XLSX.utils.sheet_to_json(excel.Sheets[names[0]]);
+          //
+          this.new_data = data.map(d => {
+            let { nombres, apellidos, usuario } = d;
+            return {
+              first_name: nombres,
+              last_name: apellidos,
+              user: usuario
+            };
+          });
+        };
+        reader.readAsBinaryString(file);
+      }
+      this.dialog_import = true;
+    },
     toogleShowPassword(teacher) {
       teacher.showPassword = !teacher.showPassword;
       this.$forceUpdate();

@@ -27,7 +27,7 @@
             <img src="https://i.ya-webdesign.com/images/avatar-png-1.png" alt />
           </div>
           <div v-show="user_options" class="user__options">
-            <v-btn v-show="session.type == '2'" small text @click="redirect('profile')">Perfil</v-btn>
+            <v-btn v-show="['1', '2'].includes(session.type)" small text @click="redirect('profile')">Perfil</v-btn>
             <v-btn small text @click="closeSession()">Cerrar Sesión</v-btn>
           </div>
         </div>
@@ -39,11 +39,7 @@
       <div class="nav-logo">
         <v-img alt="BrainTutor Logo" src="@/assets/braintutor/icon.png" width="25" />
       </div>
-      <div
-        class="user ml-0"
-        v-if="session && session.token"
-        @click="user_options = !user_options"
-      >
+      <div class="user ml-0" v-if="session && session.token" @click="user_options = !user_options">
         <span class="user__name">{{JSON.parse(session.user || "{}").name}}</span>
         <span class="user__type">{{(JSON.parse(session.user || "{}").type || "").toUpperCase()}}</span>
       </div>
@@ -61,7 +57,7 @@
           </v-list-item>
           <!--  -->
           <v-list-item
-            v-if="session && session.type == '2'"
+            v-if="session && ['1', '2'].includes(session.type)"
             @click="redirect('profile'); drawer=false"
           >
             <v-list-item-icon>
@@ -200,7 +196,7 @@ export default {
   &__name {
     color: #6d6d6d;
     text-align: right;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: bold;
   }
   &__type {
@@ -220,7 +216,7 @@ export default {
   }
   &__options {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 10px);
     right: 0;
     // width: 100%;
     background: #fff;

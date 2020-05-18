@@ -19,9 +19,21 @@
         </v-radio-group>
       </div>
       <div class="evaluation__action">
-        <v-btn color="primary" @click="save()">Guardar</v-btn>
+        <v-btn color="primary" @click="saveAction()">Guardar</v-btn>
       </div>
     </div>
+    <!-- Dialog Save -->
+    <v-dialog v-model="dlg_save" max-width="300">
+      <v-card>
+        <v-card-title>Guardar</v-card-title>
+        <v-card-text>{{dlg_save_msg}}</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn small text @click="dlg_save = false">Cancelar</v-btn>
+          <v-btn small depressed color="primary" @click="dlg_save = false; save()">Guardar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -38,7 +50,9 @@ export default {
     time_total: 0,
     //
     loading: false,
-    loading_message: ""
+    loading_message: "",
+    dlg_save: false,
+    dlg_save_msg: ""
   }),
   computed: {
     time() {
@@ -72,6 +86,13 @@ export default {
       await this.getEvaluations();
       this.showResult(result);
       this.loading = false;
+    },
+    saveAction() {
+      let answer = this.evaluation.content.map(c => c.answer);
+      this.dlg_save_msg = answer.every(a => a == null)
+        ? "No hay respuestas seleccionadas. ¿Desea continuar?"
+        : "¿Desea guardar las respuestas seleccionadas?";
+      this.dlg_save = true;
     },
     //
     clearTimer() {

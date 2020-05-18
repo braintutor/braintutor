@@ -19,7 +19,7 @@
         </div>
       </div>
 
-      <div class="col-12 col-sm-7 pa-0">
+      <div v-show="session_type == 2" class="col-12 col-sm-7 pa-0">
         <div class="diagram m-card">
           <canvas v-show="profile.learning_style" id="myChart" width="600" height="400"></canvas>
           <div
@@ -74,7 +74,12 @@
 import loading from "@/components/loading";
 import Chart from "chart.js";
 
-import { getProfile, updateLearningStyle } from "@/services/studentService";
+import { getSession } from "@/services/security.js";
+import {
+  getProfileStudent,
+  updateLearningStyle
+} from "@/services/studentService";
+import { getProfileTeacher } from "@/services/teacherService";
 
 class PreguntaTest {
   constructor(enunciado, alternatives) {
@@ -273,6 +278,8 @@ export default {
         ]
       )
     ],
+    //
+    session_type: -1,
     myChart: null,
     loading: true,
     loading_message: "",
@@ -281,30 +288,36 @@ export default {
   }),
   async mounted() {
     this.loading_message = "Cargando Datos";
-    this.profile = await getProfile();
+    this.session_type = getSession().type;
+    this.profile = await (this.session_type == 1
+      ? getProfileTeacher
+      : getProfileStudent)();
+
     this.loading = false;
     // Chart
-    var ctx = document.getElementById("myChart").getContext("2d");
-    this.myChart = new Chart(ctx, {
-      type: "bar",
-      options: {
-        legend: {
-          display: false
-        },
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true,
-                max: 11,
-                stepSize: 1
+    if (this.session_type == 2) {
+      var ctx = document.getElementById("myChart").getContext("2d");
+      this.myChart = new Chart(ctx, {
+        type: "bar",
+        options: {
+          legend: {
+            display: false
+          },
+          scales: {
+            yAxes: [
+              {
+                ticks: {
+                  beginAtZero: true,
+                  max: 11,
+                  stepSize: 1
+                }
               }
-            }
-          ]
+            ]
+          }
         }
-      }
-    });
-    this.updateDashboard();
+      });
+      this.updateDashboard();
+    }
   },
   methods: {
     async saveTest() {

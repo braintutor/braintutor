@@ -40,8 +40,8 @@ function updateStudent(student) {
   })
 }
 
-function getProfile() {
-  return fetch_get('getProfile')
+function getProfileStudent() {
+  return fetch_get('getProfileStudent')
 }
 
 function updateLearningStyle(learning_style) {
@@ -62,7 +62,7 @@ export {
   getStudentsBySession,
   addStudent,
   updateStudent,
-  getProfile,
+  getProfileStudent,
   updateLearningStyle,
   getCategoriesByLearningStyle
 }
