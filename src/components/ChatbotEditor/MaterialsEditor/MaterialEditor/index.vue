@@ -324,6 +324,7 @@
         <v-file-input
           id="upload_image"
           @change="onFileSelected()"
+          onclick="this.value = null"
           v-model="image_file"
           style="display:none"
         ></v-file-input>
@@ -427,28 +428,37 @@ export default {
   },
   methods: {
     onFileSelected() {
-      let ref = firebase
-        .storage()
-        .ref(`/material/${this.material._id.$oid}/image`);
-      let task = ref.put(this.image_file);
-      task.on(
-        "state_changed",
-        snapshot => {
-          this.image_progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        },
-        () => {
-          /* error */
-        },
-        () => {
-          this.image_progress = 100;
-          task.snapshot.ref.getDownloadURL().then(async url => {
-            this.image_progress = 0;
-            this.material.image = url;
-            this.updateImage();
-          });
-        }
-      );
+      let size = (this.image_file.size / 1024).toFixed(2);
+      if (size <= 100) {
+        let ref = firebase
+          .storage()
+          .ref(`/material/${this.material._id.$oid}/image`);
+
+        let task = ref.put(this.image_file);
+        task.on(
+          "state_changed",
+          snapshot => {
+            this.image_progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          },
+          () => {
+            /* error */
+          },
+          () => {
+            this.image_progress = 100;
+            task.snapshot.ref.getDownloadURL().then(async url => {
+              this.image_progress = 0;
+              this.material.image = url;
+              this.updateImage();
+            });
+          }
+        );
+      } else {
+        this.$root.$children[0].showMessage(
+          "Error al Guardar",
+          "La imagen excede el tamaño permitido: 100KB"
+        );
+      }
     },
     async updateImage() {
       this.dialog_image = false;
