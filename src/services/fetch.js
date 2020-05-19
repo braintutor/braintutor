@@ -16,14 +16,17 @@ function fetch_get(name) {
     .then(response => response.json())
 }
 
-function fetch_post(name, data) {
-  let headers = getHeaders()
-  return fetch(`${service}/${name}`, {
+async function fetch_post(name, data) {
+  let res = null
+  res = await fetch(`${service}/${name}`, {
     method: 'POST',
     body: JSON.stringify(data),
-    headers
+    headers: getHeaders()
   })
-    .then(response => response.json())
+  if (res.status >= 400 && res.status < 600)
+    throw await res.json();
+  
+  return res.json()
 }
 
 export { service, fetch_get, fetch_post }

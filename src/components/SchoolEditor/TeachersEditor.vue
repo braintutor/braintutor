@@ -203,15 +203,14 @@ export default {
           this.dialog_edit = false;
         }
       } else if (this.action === "edit") {
-        let response = await updateTeacher(this.teacher);
-        if (response.error) {
-          this.error = response.error;
-        } else {
-          this.teacher.user = response.user;
+        try {
+          await updateTeacher(this.teacher);
           let teacher_idx = this.teachers.findIndex(
             teacher => teacher._id.$oid === this.teacher.id
           );
           this.teachers[teacher_idx] = Object.assign({}, this.teacher);
+        } catch (error) {
+          this.$root.$children[0].showMessage("Error al Guardar", error.msg);
         }
       }
       this.loading_save = false;
