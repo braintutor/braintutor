@@ -193,14 +193,13 @@ export default {
       this.loading_save = true;
       this.error = "";
       if (this.action === "create") {
-        let response = await addTeacher(this.teacher);
-        if (response.error) {
-          this.error = response.error;
-        } else {
+        try {
+          let response = await addTeacher(this.teacher);
           this.teacher._id = response._id;
-          this.teacher.user = response.user;
           this.teachers.push(this.teacher);
           this.dialog_edit = false;
+        } catch (error) {
+          this.$root.$children[0].showMessage("Error al Guardar", error.msg);
         }
       } else if (this.action === "edit") {
         try {
