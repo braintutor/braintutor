@@ -216,7 +216,7 @@ export default {
   }
   &__options {
     position: absolute;
-    top: calc(100% + 10px);
+    top: calc(100% + 6px);
     right: 0;
     // width: 100%;
     background: #fff;

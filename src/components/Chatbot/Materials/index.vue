@@ -53,6 +53,17 @@ export default {
     material: null,
     adapt_content: true,
     category_idx: 0,
+    categories_to_show: [
+      // "overview",
+      "explanation",
+      // "bullets",
+      "images",
+      "movies",
+      "examples",
+      "exercises",
+      "faq",
+      "hyperlinks"
+    ],
     //
     categories_ls_original: {},
     categories_ls: {}
@@ -70,7 +81,10 @@ export default {
     categories() {
       let categories = Object.entries(this.categories_ls).reduce(
         (arr, [key, value]) => {
-          if (value.show || !this.adapt_content) {
+          if (
+            (value.show || !this.adapt_content) &&
+            this.categories_to_show.includes(key)
+          ) {
             arr.push(key);
           }
           return arr;

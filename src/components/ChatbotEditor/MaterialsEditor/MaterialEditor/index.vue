@@ -378,12 +378,12 @@ export default {
     image_file: {},
     image_progress: 0,
     categories: [
-      "overview",
+      // "overview",
       "explanation",
-      "bullets",
-      "examples",
+      // "bullets",
       "images",
       "movies",
+      "examples",
       "exercises",
       "faq",
       "hyperlinks"
