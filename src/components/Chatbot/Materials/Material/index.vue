@@ -230,9 +230,10 @@ export default {
     }
   }
   &.category-image img {
-    width: 100%;
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
     border-radius: 10px;
-    vertical-align: bottom;
   }
   &.category-video {
     iframe {
