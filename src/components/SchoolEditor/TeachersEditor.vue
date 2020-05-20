@@ -54,12 +54,11 @@
         </tbody>
       </table>
     </div>
-    <!--  -->
+    <!-- CREATE || EDIT -->
     <v-dialog v-model="dialog_edit" class="container" max-width="500">
       <v-card class="edit">
         <v-card-title v-if="action === 'create'" class="py-5">Crear</v-card-title>
         <v-card-title v-else-if="action === 'edit'" class="py-5">Editar</v-card-title>
-        <v-alert v-if="error" type="error" icon="mdi-cloud-alert" text dismissible>{{error}}</v-alert>
         <v-card-text class="edit__content">
           <span class="mt-1 mr-4">Nombres:</span>
           <v-text-field
@@ -109,7 +108,7 @@
       </v-card>
     </v-dialog>
     <!-- Dialog Import -->
-    <v-dialog v-model="dialog_import" persistent max-width="800">
+    <v-dialog v-model="dialog_import" persistent max-width="900">
       <v-card class="py-2 px-4">
         <table class="m-table">
           <thead>
@@ -117,7 +116,7 @@
               <th>Nombres</th>
               <th>Apellidos</th>
               <th>Usuario</th>
-              <th>Resultado</th>
+              <th>Contraseña</th>
             </tr>
           </thead>
           <tbody>
@@ -131,9 +130,34 @@
                   autocomplete="off"
                 ></v-text-field>
               </td>
-              <td>{{ entity.last_name }}</td>
-              <td>{{ entity.user }}</td>
-              <td style="color: red">{{ entity.response }}</td>
+              <td>
+                <v-text-field
+                  class="text-field"
+                  v-model="entity.last_name"
+                  dense
+                  hide-details
+                  autocomplete="off"
+                ></v-text-field>
+              </td>
+              <td>
+                <v-text-field
+                  class="text-field"
+                  v-model="entity.user"
+                  dense
+                  hide-details
+                  autocomplete="off"
+                ></v-text-field>
+              </td>
+              <td>
+                <v-text-field
+                  class="text-field"
+                  v-model="entity.pass"
+                  dense
+                  hide-details
+                  autocomplete="off"
+                ></v-text-field>
+              </td>
+              <td style="color: red; font-size: 0.8rem">{{ entity.response }}</td>
             </tr>
           </tbody>
         </table>
@@ -168,7 +192,6 @@ export default {
     entities: [],
     entity: {},
     action: "",
-    error: "",
     new_data: [],
     //
     dialog_edit: false,
@@ -189,7 +212,6 @@ export default {
     },
     add() {
       this.action = "create";
-      this.error = "";
       this.entity = {
         first_name: "",
         last_name: "",
@@ -199,18 +221,16 @@ export default {
     },
     edit(entity) {
       this.action = "edit";
-      this.error = "";
       this.entity = Object.assign({}, entity);
       this.entity.id = this.entity._id.$oid;
       this.entity.showPassword = false;
     },
     async save() {
       this.loading_save = true;
-      this.error = "";
       if (this.action === "create") {
         try {
-          let response = await addTeacher(this.entity);
-          this.entity._id = response._id;
+          let entity_id = await addTeacher(this.entity);
+          this.entity._id = entity_id;
           this.entities.push(this.entity);
           this.dialog_edit = false;
         } catch (error) {
@@ -233,7 +253,6 @@ export default {
       this.loading = true;
       this.loading_msg = "Eliminando Docente";
       this.dialog_edit = false;
-      this.error = "";
       try {
         await removeTeacher(this.entity._id.$oid);
         this.entities = this.entities.filter(
@@ -254,19 +273,23 @@ export default {
           let names = excel.SheetNames;
           let data = XLSX.utils.sheet_to_json(excel.Sheets[names[0]]);
           //
-          this.new_data = data.map(d => {
-            let { nombres, apellidos, usuario } = d;
-            return {
-              first_name: nombres,
-              last_name: apellidos,
-              user: usuario,
-              pass: ""
-            };
-          });
+          if (data.length <= 1000) {
+            this.new_data = data.map(d => {
+              let { nombres, apellidos, usuario, contraseña } = d;
+              return {
+                first_name: nombres || "",
+                last_name: apellidos || "",
+                user: usuario || "",
+                pass: contraseña || ""
+              };
+            });
+            this.dialog_import = true;
+          } else {
+            this.$root.$children[0].showMessage("Error al Importar", "");
+          }
         };
         reader.readAsBinaryString(file);
       }
-      this.dialog_import = true;
     },
     async saveAll() {
       this.loading_save = true;
@@ -274,8 +297,8 @@ export default {
       while (i < this.new_data.length) {
         let entity = this.new_data[i];
         try {
-          let res = await addTeacher(entity);
-          entity._id = res._id;
+          let entity_id = await addTeacher(entity);
+          entity._id = entity_id;
           this.entities.push(entity);
           this.new_data.splice(i, 1);
         } catch (error) {

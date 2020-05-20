@@ -39,6 +39,12 @@ function updateCourse(course) {
   })
 }
 
+function removeCourse(course_id) {
+  return fetch_post('removeCourse', {
+    course_id
+  })
+}
+
 export { 
   getCourseIdByChatbot, 
   getCourseName, 
@@ -46,5 +52,6 @@ export {
   getCoursesByTeacher, 
   getCoursesBySchool, 
   addCourse, 
-  updateCourse 
+  updateCourse ,
+  removeCourse
 }

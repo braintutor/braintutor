@@ -1,6 +1,6 @@
 <template>
   <div class="editor">
-    <loading :active="loading" />
+    <loading :active="loading" :message="loading_msg" />
     <div class="editor__menu">
       <h2 class="editor__title">Cursos</h2>
       <v-btn rounded small color="success" @click="dialog_edit = true; add()">
@@ -33,8 +33,8 @@
 
     <v-dialog v-model="dialog_edit" class="container" max-width="500">
       <v-card class="edit">
-        <v-card-title v-if="action === 'create'" class="py-5">Crear Curso</v-card-title>
-        <v-card-title v-else-if="action === 'edit'" class="py-5">Editar Curso</v-card-title>
+        <v-card-title v-if="action === 'create'" class="py-5">Crear</v-card-title>
+        <v-card-title v-else-if="action === 'edit'" class="py-5">Editar</v-card-title>
         <v-card-text class="edit__content">
           <span class="mt-1 mr-4">Nombre:</span>
           <v-text-field
@@ -55,6 +55,12 @@
           ></v-select>
         </v-card-text>
         <v-card-actions class="edit__actions">
+          <v-btn
+            v-if="action === 'edit'"
+            color="error"
+            :loading="loading_save"
+            @click="remove()"
+          >Eliminar</v-btn>
           <v-btn color="primary" :loading="loading_save" @click="save()">Guardar</v-btn>
         </v-card-actions>
       </v-card>
@@ -68,7 +74,8 @@ import loading from "@/components/loading";
 import {
   getCoursesBySchool,
   addCourse,
-  updateCourse
+  updateCourse,
+  removeCourse
 } from "@/services/courseService";
 import { getTeachersBySchool } from "@/services/teacherService";
 
@@ -81,9 +88,11 @@ export default {
     action: "",
     dialog_edit: false,
     loading: true,
+    loading_msg: "",
     loading_save: false
   }),
   async mounted() {
+    this.loading_msg = "Cargando Cursos";
     this.teachers = await getTeachersBySchool();
     this.entities = await getCoursesBySchool();
     this.loading = false;
@@ -103,7 +112,7 @@ export default {
           let teacher = this.teachers_aux.find(
             t => t._id.$oid === teacher_id.$oid
           );
-          if(teacher) e.teacher = teacher.name;
+          if (teacher) e.teacher = teacher.name;
         }
         return e;
       });
@@ -125,11 +134,15 @@ export default {
     async save() {
       this.loading_save = true;
       if (this.action === "create") {
-        // Create
-        let entity_id = await addCourse(this.entity);
-        this.entity._id = entity_id;
-        this.entities.push(this.entity);
-        this.dialog_edit = false;
+        try {
+          // Create
+          let entity_id = await addCourse(this.entity);
+          this.entity._id = entity_id;
+          this.entities.push(this.entity);
+          this.dialog_edit = false;
+        } catch (error) {
+          this.$root.$children[0].showMessage("Error al Guardar", error.msg);
+        }
       } else if (this.action === "edit") {
         // Update
         try {
@@ -139,11 +152,25 @@ export default {
           );
           this.entities[entity_idx] = JSON.parse(JSON.stringify(this.entity));
           this.entities.splice(); // updates the array without modifying it
-        } catch {
-          //
+        } catch (error) {
+          this.$root.$children[0].showMessage("Error al Guardar", error.msg);
         }
       }
       this.loading_save = false;
+    },
+    async remove() {
+      this.loading = true;
+      this.loading_msg = "Eliminando Curso";
+      this.dialog_edit = false;
+      try {
+        await removeCourse(this.entity._id.$oid);
+        this.entities = this.entities.filter(
+          e => e._id.$oid !== this.entity._id.$oid
+        );
+      } catch (error) {
+        this.$root.$children[0].showMessage("Error al Eliminar", error.msg);
+      }
+      this.loading = false;
     }
   },
   components: {
