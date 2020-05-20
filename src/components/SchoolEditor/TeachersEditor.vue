@@ -1,15 +1,27 @@
 <template>
-  <div class="teachers-editor">
-    <loading :active="loading" />
-    <input type="file" onclick="this.value=null" @change="onLoadFile($event)" />
-    <div class="teachers-editor__menu">
-      <h2 class="teachers-editor__title">Docentes</h2>
-      <v-btn rounded small color="success" @click="dialog_edit = true; addTeacher()">
-        Añadir
-        <v-icon right>mdi-plus</v-icon>
-      </v-btn>
+  <div class="editor">
+    <loading :active="loading" :message="loading_msg" />
+    <input
+      style="display: none"
+      id="ipt_file"
+      type="file"
+      onclick="this.value=null"
+      @change="onLoadFile($event)"
+    />
+    <div class="editor__menu">
+      <h2 class="editor__title">Docentes</h2>
+      <div class="editor__actions">
+        <v-btn class="mr-3" rounded small color="warning" onclick="ipt_file.click()">
+          Importar
+          <v-icon right>mdi-file-excel</v-icon>
+        </v-btn>
+        <v-btn rounded small color="success" @click="dialog_edit = true; add()">
+          Añadir
+          <v-icon right>mdi-plus</v-icon>
+        </v-btn>
+      </div>
     </div>
-    <div class="teachers-editor__content">
+    <div class="editor__content">
       <table class="m-table">
         <thead>
           <tr>
@@ -21,20 +33,20 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(teacher, s_idx) in teachers" :key="s_idx">
-            <td>{{ teacher.first_name }}</td>
-            <td>{{ teacher.last_name }}</td>
-            <td>{{ teacher.user }}</td>
+          <tr v-for="(entity, idx) in entities" :key="idx">
+            <td>{{ entity.first_name }}</td>
+            <td>{{ entity.last_name }}</td>
+            <td>{{ entity.user }}</td>
             <td>
-              <v-btn class="mr-2" small icon @click="toogleShowPassword(teacher)">
-                <v-icon v-if="teacher.showPassword">mdi-eye</v-icon>
+              <v-btn class="mr-2" small icon @click="toogleShowPassword(entity)">
+                <v-icon v-if="entity.showPassword">mdi-eye</v-icon>
                 <v-icon v-else>mdi-eye-off</v-icon>
               </v-btn>
-              <span v-if="teacher.showPassword">{{ teacher.pass }}</span>
+              <span v-if="entity.showPassword">{{ entity.pass }}</span>
               <span v-else>******</span>
             </td>
             <td class="text-center">
-              <v-btn small icon @click="dialog_edit = true; editTeacher(teacher)">
+              <v-btn small icon @click="dialog_edit = true; edit(entity)">
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
             </td>
@@ -44,15 +56,15 @@
     </div>
     <!--  -->
     <v-dialog v-model="dialog_edit" class="container" max-width="500">
-      <v-card class="teacher-edit">
-        <v-card-title v-if="action === 'create'" class="py-5">Crear Docente</v-card-title>
-        <v-card-title v-else-if="action === 'edit'" class="py-5">Editar Docente</v-card-title>
+      <v-card class="edit">
+        <v-card-title v-if="action === 'create'" class="py-5">Crear</v-card-title>
+        <v-card-title v-else-if="action === 'edit'" class="py-5">Editar</v-card-title>
         <v-alert v-if="error" type="error" icon="mdi-cloud-alert" text dismissible>{{error}}</v-alert>
-        <v-card-text class="teacher-edit__content">
+        <v-card-text class="edit__content">
           <span class="mt-1 mr-4">Nombres:</span>
           <v-text-field
             class="text-field"
-            v-model="teacher.first_name"
+            v-model="entity.first_name"
             dense
             hide-details
             autocomplete="off"
@@ -60,7 +72,7 @@
           <span class="mt-1 mr-4">Apellidos:</span>
           <v-text-field
             class="text-field"
-            v-model="teacher.last_name"
+            v-model="entity.last_name"
             dense
             hide-details
             autocomplete="off"
@@ -68,7 +80,7 @@
           <span class="mt-1 mr-4">Usuario:</span>
           <v-text-field
             class="text-field"
-            v-model="teacher.user"
+            v-model="entity.user"
             dense
             hide-details
             autocomplete="off"
@@ -76,22 +88,28 @@
           <span class="mt-1 mr-4">Contraseña:</span>
           <v-text-field
             class="text-field"
-            v-model="teacher.pass"
-            :append-icon="teacher.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            v-model="entity.pass"
+            :append-icon="entity.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             dense
             hide-details
             autocomplete="off"
-            :type="teacher.showPassword ? 'text' : 'password'"
-            @click:append="toogleShowPassword(teacher)"
+            :type="entity.showPassword ? 'text' : 'password'"
+            @click:append="toogleShowPassword(entity)"
           ></v-text-field>
         </v-card-text>
-        <v-card-actions class="teacher-edit__actions">
-          <v-btn color="primary" :loading="loading_save" @click="saveTeacher()">Guardar</v-btn>
+        <v-card-actions class="edit__actions">
+          <v-btn
+            v-if="action === 'edit'"
+            color="error"
+            :loading="loading_save"
+            @click="remove()"
+          >Eliminar</v-btn>
+          <v-btn color="primary" :loading="loading_save" @click="save()">Guardar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
     <!-- Dialog Import -->
-    <v-dialog v-model="dialog_import" max-width="800">
+    <v-dialog v-model="dialog_import" persistent max-width="800">
       <v-card class="py-2 px-4">
         <table class="m-table">
           <thead>
@@ -99,18 +117,35 @@
               <th>Nombres</th>
               <th>Apellidos</th>
               <th>Usuario</th>
+              <th>Resultado</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(entity, e_idx) in new_data" :key="e_idx">
-              <td>{{ entity.first_name }}</td>
+            <tr v-for="(entity, idx) in new_data" :key="idx">
+              <td>
+                <v-text-field
+                  class="text-field"
+                  v-model="entity.first_name"
+                  dense
+                  hide-details
+                  autocomplete="off"
+                ></v-text-field>
+              </td>
               <td>{{ entity.last_name }}</td>
               <td>{{ entity.user }}</td>
+              <td style="color: red">{{ entity.response }}</td>
             </tr>
           </tbody>
         </table>
         <v-card-actions class="pt-3" style="width: min-content; margin: 0 auto">
-          <v-btn small color="primary">Guardar</v-btn>
+          <v-btn
+            small
+            text
+            class="mr-3"
+            :loading="loading_save"
+            @click="dialog_import = false"
+          >Cerrar</v-btn>
+          <v-btn small color="primary" :loading="loading_save" @click="saveAll()">Guardar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -123,14 +158,15 @@ import loading from "@/components/loading";
 import {
   getTeachersBySchool,
   addTeacher,
-  updateTeacher
+  updateTeacher,
+  removeTeacher
 } from "@/services/teacherService";
 import * as XLSX from "xlsx";
 
 export default {
   data: () => ({
-    teachers: [],
-    teacher: {},
+    entities: [],
+    entity: {},
     action: "",
     error: "",
     new_data: [],
@@ -138,13 +174,76 @@ export default {
     dialog_edit: false,
     dialog_import: false,
     loading: true,
+    loading_msg: "",
     loading_save: false
   }),
   async mounted() {
-    this.teachers = await getTeachersBySchool();
+    this.loading_msg = "Cargando Docentes";
+    this.entities = await getTeachersBySchool();
     this.loading = false;
   },
   methods: {
+    toogleShowPassword(entity) {
+      entity.showPassword = !entity.showPassword;
+      this.$forceUpdate();
+    },
+    add() {
+      this.action = "create";
+      this.error = "";
+      this.entity = {
+        first_name: "",
+        last_name: "",
+        user: "",
+        pass: ""
+      };
+    },
+    edit(entity) {
+      this.action = "edit";
+      this.error = "";
+      this.entity = Object.assign({}, entity);
+      this.entity.id = this.entity._id.$oid;
+      this.entity.showPassword = false;
+    },
+    async save() {
+      this.loading_save = true;
+      this.error = "";
+      if (this.action === "create") {
+        try {
+          let response = await addTeacher(this.entity);
+          this.entity._id = response._id;
+          this.entities.push(this.entity);
+          this.dialog_edit = false;
+        } catch (error) {
+          this.$root.$children[0].showMessage("Error al Guardar", error.msg);
+        }
+      } else if (this.action === "edit") {
+        try {
+          await updateTeacher(this.entity);
+          let entity_idx = this.entities.findIndex(
+            entity => entity._id.$oid === this.entity.id
+          );
+          this.entities[entity_idx] = Object.assign({}, this.entity);
+        } catch (error) {
+          this.$root.$children[0].showMessage("Error al Guardar", error.msg);
+        }
+      }
+      this.loading_save = false;
+    },
+    async remove() {
+      this.loading = true;
+      this.loading_msg = "Eliminando Docente";
+      this.dialog_edit = false;
+      this.error = "";
+      try {
+        await removeTeacher(this.entity._id.$oid);
+        this.entities = this.entities.filter(
+          e => e._id.$oid !== this.entity._id.$oid
+        );
+      } catch (error) {
+        this.$root.$children[0].showMessage("Error al Eliminar", error.msg);
+      }
+      this.loading = false;
+    },
     onLoadFile(e) {
       let file = e.target.files[0];
       if (file) {
@@ -160,7 +259,8 @@ export default {
             return {
               first_name: nombres,
               last_name: apellidos,
-              user: usuario
+              user: usuario,
+              pass: ""
             };
           });
         };
@@ -168,50 +268,22 @@ export default {
       }
       this.dialog_import = true;
     },
-    toogleShowPassword(teacher) {
-      teacher.showPassword = !teacher.showPassword;
-      this.$forceUpdate();
-    },
-    addTeacher() {
-      this.action = "create";
-      this.error = "";
-      this.teacher = {
-        first_name: "",
-        last_name: "",
-        user: "",
-        pass: ""
-      };
-    },
-    editTeacher(teacher) {
-      this.action = "edit";
-      this.error = "";
-      this.teacher = Object.assign({}, teacher);
-      this.teacher.id = this.teacher._id.$oid;
-      this.teacher.showPassword = false;
-    },
-    async saveTeacher() {
+    async saveAll() {
       this.loading_save = true;
-      this.error = "";
-      if (this.action === "create") {
+      let i = 0;
+      while (i < this.new_data.length) {
+        let entity = this.new_data[i];
         try {
-          let response = await addTeacher(this.teacher);
-          this.teacher._id = response._id;
-          this.teachers.push(this.teacher);
-          this.dialog_edit = false;
+          let res = await addTeacher(entity);
+          entity._id = res._id;
+          this.entities.push(entity);
+          this.new_data.splice(i, 1);
         } catch (error) {
-          this.$root.$children[0].showMessage("Error al Guardar", error.msg);
-        }
-      } else if (this.action === "edit") {
-        try {
-          await updateTeacher(this.teacher);
-          let teacher_idx = this.teachers.findIndex(
-            teacher => teacher._id.$oid === this.teacher.id
-          );
-          this.teachers[teacher_idx] = Object.assign({}, this.teacher);
-        } catch (error) {
-          this.$root.$children[0].showMessage("Error al Guardar", error.msg);
+          entity.response = error.msg;
+          i++;
         }
       }
+      if (this.new_data.length <= 0) this.dialog_import = false;
       this.loading_save = false;
     }
   },
@@ -222,21 +294,23 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.teachers-editor {
+.editor {
   padding: 10px 16px;
   &__menu {
+    margin-bottom: 10px;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
   }
   &__title {
-    margin-bottom: 10px;
+    margin-bottom: 6px;
   }
   &__content {
     overflow-x: auto;
   }
 }
 
-.teacher-edit {
+.edit {
   &__content {
     display: grid;
     grid-template-columns: auto 1fr;

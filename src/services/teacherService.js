@@ -20,4 +20,10 @@ function updateTeacher(teacher) {
   })
 }
 
-export { getTeachersBySchool, getProfileTeacher, addTeacher, updateTeacher }
+function removeTeacher(teacher_id) {
+  return fetch_post('removeTeacher', {
+    teacher_id
+  })
+}
+
+export { getTeachersBySchool, getProfileTeacher, addTeacher, updateTeacher, removeTeacher }

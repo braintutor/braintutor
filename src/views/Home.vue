@@ -83,7 +83,7 @@ export default {
         title: "Chatbot",
         description: "Chatbot como agente de apoyo",
         image:
-          "https://www.stickpng.com/assets/images/580b57fbd9996e24bc43bdf6.png"
+          "https://www.synaptive.com/img/chatbot.png"
       },
       {
         title: "Monitoreo",
