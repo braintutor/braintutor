@@ -1,6 +1,6 @@
 <template>
   <div class="editor">
-    <loading :active="loading" />
+    <loading :active="loading" :message="loading_msg" />
     <div class="editor__menu">
       <h2 class="editor__title">Aulas</h2>
       <v-btn rounded small color="success" @click="dialog_edit = true; add()">
@@ -47,6 +47,12 @@
           ></v-text-field>
         </v-card-text>
         <v-card-actions class="edit__actions">
+          <v-btn
+            v-if="action === 'edit'"
+            color="error"
+            :loading="loading_save"
+            @click="remove()"
+          >Eliminar</v-btn>
           <v-btn color="primary" :loading="loading_save" @click="save()">Guardar</v-btn>
         </v-card-actions>
       </v-card>
@@ -60,7 +66,8 @@ import loading from "@/components/loading";
 import {
   addClassroom,
   getClassroomsBySchool,
-  updateClassroom
+  updateClassroom,
+  removeClassroom
 } from "@/services/classroomService";
 import { getStudentsByClassroom } from "@/services/studentService";
 
@@ -72,9 +79,11 @@ export default {
     action: "",
     dialog_edit: false,
     loading: true,
+    loading_msg: "",
     loading_save: false
   }),
   async mounted() {
+    this.loading_msg = "Cargando Aulas";
     this.entities = await getClassroomsBySchool();
     this.entities.sort((a, b) => a.name.localeCompare(b.name));
     for (let entity of this.entities) {
@@ -116,6 +125,20 @@ export default {
         }
       }
       this.loading_save = false;
+    },
+    async remove() {
+      this.loading = true;
+      this.loading_msg = "Eliminando Aula";
+      this.dialog_edit = false;
+      try {
+        await removeClassroom(this.entity._id.$oid);
+        this.entities = this.entities.filter(
+          e => e._id.$oid !== this.entity._id.$oid
+        );
+      } catch (error) {
+        this.$root.$children[0].showMessage("Error al Eliminar", error.msg);
+      }
+      this.loading = false;
     }
   },
   components: {

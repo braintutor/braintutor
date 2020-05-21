@@ -20,4 +20,10 @@ function updateClassroom(classroom) {
   })
 }
 
-export { getClassroomsBySchool, getClassroomsBySchoolDirector, addClassroom, updateClassroom }
+function removeClassroom(classroom_id) {
+  return fetch_post('removeClassroom', {
+    classroom_id
+  })
+}
+
+export { getClassroomsBySchool, getClassroomsBySchoolDirector, addClassroom, updateClassroom, removeClassroom }
