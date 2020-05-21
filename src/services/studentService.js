@@ -40,6 +40,12 @@ function updateStudent(student) {
   })
 }
 
+function removeStudent(student_id, key) {
+  return fetch_post('removeStudent', {
+    student_id, key
+  })
+}
+
 function getProfileStudent() {
   return fetch_get('getProfileStudent')
 }
@@ -62,6 +68,7 @@ export {
   getStudentsBySession,
   addStudent,
   updateStudent,
+  removeStudent,
   getProfileStudent,
   updateLearningStyle,
   getCategoriesByLearningStyle

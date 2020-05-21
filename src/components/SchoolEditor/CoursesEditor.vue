@@ -134,8 +134,8 @@ export default {
     async save() {
       this.loading_save = true;
       if (this.action === "create") {
+        // Create
         try {
-          // Create
           let entity_id = await addCourse(this.entity);
           this.entity._id = entity_id;
           this.entities.push(this.entity);

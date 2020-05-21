@@ -107,10 +107,14 @@ export default {
       this.loading_save = true;
       if (this.action === "create") {
         // Create
-        let entity_id = await addClassroom(this.entity);
-        this.entity._id = entity_id;
-        this.entities.push(this.entity);
-        this.dialog_edit = false;
+        try {
+          let entity_id = await addClassroom(this.entity);
+          this.entity._id = entity_id;
+          this.entities.push(this.entity);
+          this.dialog_edit = false;
+        } catch (error) {
+          this.$root.$children[0].showMessage("Error al Guardar", error.msg);
+        }
       } else if (this.action === "edit") {
         // Update
         try {
@@ -120,8 +124,8 @@ export default {
           );
           this.entities[entity_idx] = JSON.parse(JSON.stringify(this.entity));
           this.entities.splice(); // updates the array without modifying it
-        } catch {
-          //
+        } catch (error) {
+          this.$root.$children[0].showMessage("Error al Guardar", error.msg);
         }
       }
       this.loading_save = false;

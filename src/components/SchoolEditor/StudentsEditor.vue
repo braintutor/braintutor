@@ -3,7 +3,7 @@
     <loading :active="loading" />
     <div class="editor__menu">
       <h2 class="editor__title">Alumnos</h2>
-      <v-btn rounded small color="success" @click="dialog_edit = true; addStudent()">
+      <v-btn rounded small color="success" @click="dialog_edit = true; add()">
         Añadir
         <v-icon right>mdi-plus</v-icon>
       </v-btn>
@@ -45,7 +45,7 @@
               <span v-else>******</span>
             </td>
             <td class="text-center">
-              <v-btn small icon @click="dialog_edit = true; editStudent(entity)">
+              <v-btn small icon @click="dialog_edit = true; edit(entity)">
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
             </td>
@@ -59,7 +59,6 @@
       <v-card class="edit">
         <v-card-title v-if="action === 'create'" class="py-5">Crear Alumno</v-card-title>
         <v-card-title v-else-if="action === 'edit'" class="py-5">Editar Alumno</v-card-title>
-        <v-alert v-if="error" type="error" icon="mdi-cloud-alert" text dismissible>{{error}}</v-alert>
         <v-card-text class="edit__content">
           <span class="mt-1 mr-4">Nombres:</span>
           <v-text-field
@@ -107,7 +106,39 @@
           ></v-text-field>
         </v-card-text>
         <v-card-actions class="edit__actions">
-          <v-btn color="primary" :loading="loading_save" @click="saveStudent()">Guardar</v-btn>
+          <v-btn
+            v-if="action === 'edit'"
+            color="error"
+            :loading="loading_save"
+            @click="showRemove(entity._id.$oid)"
+          >Eliminar</v-btn>
+          <v-btn color="primary" :loading="loading_save" @click="save()">Guardar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!-- DIALOG REMOVE -->
+    <v-dialog v-model="dialog_remove" class="container" max-width="500">
+      <v-card class="edit">
+        <v-card-title class="py-5">Eliminar</v-card-title>
+        <v-card-text>
+          <p>Es posible que el alumno tenga evaluaciones guardadas. ¿Desea Continuar?</p>
+          <p>Escriba el usuario a eliminar:</p>
+          <v-text-field
+            class="text-field"
+            v-model="entity_user_remove"
+            dense
+            hide-details
+            autocomplete="off"
+          ></v-text-field>
+        </v-card-text>
+        <v-card-actions class="edit__actions">
+          <v-btn text @click="dialog_remove = false">Cancelar</v-btn>
+          <v-btn
+            v-if="action === 'edit'"
+            color="error"
+            :loading="loading_save"
+            @click="remove()"
+          >Eliminar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -120,7 +151,8 @@ import loading from "@/components/loading";
 import {
   getStudents,
   addStudent,
-  updateStudent
+  updateStudent,
+  removeStudent
 } from "@/services/studentService";
 import { getClassroomsBySchool } from "@/services/classroomService";
 
@@ -131,11 +163,14 @@ export default {
     classrooms: [],
     classroom_id: "",
     action: "",
-    error: "",
     //
     dialog_edit: false,
     loading: true,
-    loading_save: false
+    loading_save: false,
+    //
+    entity_id_remove: "",
+    entity_user_remove: "",
+    dialog_remove: false
   }),
   async mounted() {
     this.classrooms = await getClassroomsBySchool();
@@ -157,9 +192,8 @@ export default {
       entity.showPassword = !entity.showPassword;
       this.$forceUpdate();
     },
-    addStudent() {
+    add() {
       this.action = "create";
-      this.error = "";
       this.entity = {
         first_name: "",
         last_name: "",
@@ -167,40 +201,55 @@ export default {
         pass: ""
       };
     },
-    editStudent(entity) {
+    edit(entity) {
       this.action = "edit";
-      this.error = "";
       this.entity = Object.assign({}, entity);
       this.entity.id = this.entity._id.$oid;
       this.entity.showPassword = false;
     },
-    async saveStudent() {
+    async save() {
       this.loading_save = true;
-      this.error = "";
       if (this.action === "create") {
-        let response = await addStudent(this.entity);
-        if (response.error) {
-          this.error = response.error;
-        } else {
-          this.entity._id = response._id;
-          this.entity.user = response.user;
+        try {
+          let entity_id = await addStudent(this.entity);
+          this.entity._id = entity_id;
           this.entities.push(this.entity);
           this.dialog_edit = false;
+        } catch (error) {
+          this.$root.$children[0].showMessage("Error al Guardar", error.msg);
         }
       } else if (this.action === "edit") {
-        let response = await updateStudent(this.entity);
-        if (response.error) {
-          this.error = response.error;
-        } else {
-          this.entity.user = response.user;
+        try {
+          await updateStudent(this.entity);
           let entity_idx = this.entities.findIndex(
             entity => entity._id.$oid === this.entity.id
           );
           this.entities[entity_idx] = Object.assign({}, this.entity);
           this.entities.splice();
+        } catch (error) {
+          this.$root.$children[0].showMessage("Error al Guardar", error.msg);
         }
       }
       this.loading_save = false;
+    },
+    showRemove(entity_id) {
+      this.entity_id_remove = entity_id;
+      this.entity_user_remove = "";
+      this.dialog_remove = true;
+    },
+    async remove() {
+      this.loading = true;
+      this.loading_msg = "Eliminando Alumno";
+      this.dialog_remove = false;
+      this.dialog_edit = false;
+      let eid = this.entity_id_remove;
+      try {
+        await removeStudent(eid, this.entity_user_remove);
+        this.entities = this.entities.filter(e => e._id.$oid !== eid);
+      } catch (error) {
+        this.$root.$children[0].showMessage("Error al Eliminar", error.msg);
+      }
+      this.loading = false;
     }
   },
   components: {
