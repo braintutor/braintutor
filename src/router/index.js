@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
@@ -31,9 +32,14 @@ const routes = [
     component: () => import('../views/Director.vue')
   },
   {
-    path: '/student',
-    name: 'student',
-    component: () => import('../views/Student.vue')
+    path: '/sessions',
+    name: 'sessions',
+    component: () => import('../views/Sessions.vue')
+  },
+  {
+    path: '/tasks',
+    name: 'tasks',
+    component: () => import('../views/Tasks.vue')
   },
   {
     path: '/parent',
@@ -82,9 +88,9 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   reset()
-  const require_student = ['student', 'session', 'chatbot', 'profile'] // Require Student
+  const require_student = ['sessions', 'session', 'tasks', 'chatbot', 'profile'] // Require Student
   const require_admin = ['school-editor'] // Require Admin
   const require_teacher = ['chatbot', 'profile', 'teacher', 'session-editor', 'course-editor', 'chatbot-editor'] // Require Teacher
   const require_director = ['director'] // Require Director
@@ -93,7 +99,7 @@ router.beforeEach((to, from, next) => {
   let to_name = to.name
   let session_exists = sessionExists()
   // Admin
-  if (require_student.concat(require_admin, require_teacher, require_director, require_parent).includes(to_name))
+  if (require_student.concat(require_admin, require_teacher, require_director, require_parent).includes(to_name)) {
     if (session_exists)
       if ((require_admin.includes(to_name) && getSession().type == 0) ||
         (require_teacher.includes(to_name) && getSession().type == 1) ||
@@ -102,9 +108,10 @@ router.beforeEach((to, from, next) => {
         (require_parent.includes(to_name) && getSession().type == 4))
         next()
       else
-        redirect('home')
+        redirect('login')
     else
       redirect('login')
+  }
   else
     next()
 })

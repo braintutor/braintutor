@@ -17,19 +17,17 @@
             text
             dismissible
           >Datos incorrectos.</v-alert>
-
-          <v-select
+          <!-- <v-select
             class="mb-4"
             v-model="school_id"
             :items="schools"
             item-text="name"
             item-value="id"
             label="Colegio"
-          ></v-select>
-          <v-select class="mb-4" v-model="type" :items="types" label="Tipo"></v-select>
-
+          ></v-select>-->
           <v-text-field v-model="user" :rules="userRules" label="Usuario"></v-text-field>
           <v-text-field v-model="pass" :rules="passRules" label="Contraseña" type="password"></v-text-field>
+          <v-select class="mb-4" v-model="type" :items="types" label="Tipo"></v-select>
         </v-card-text>
         <v-card-actions>
           <v-btn :loading="loading_login" block color="primary" type="submit">Iniciar Sesión</v-btn>
@@ -49,16 +47,18 @@ import {
   loginDirector,
   loginParent
 } from "@/services/loginService";
-import { getSchools } from "@/services/schoolService";
+// import { getSchools } from "@/services/schoolService";
 import { setSession } from "@/services/security";
 import { redirect } from "@/services/router.js";
+import { getUser } from "@/services/userService";
 
 export default {
   data: () => ({
     schools: [],
     types: ["Estudiante", "Profesor", "Padre", "Director", "Administrador"],
     //
-    school_id: "",
+    school_id: "5e74f3061c9d440000a6b4e1",
+    // school_id: "5ecbfa290ef77501a888c530",
     type: "",
     user: "",
     pass: "",
@@ -70,11 +70,11 @@ export default {
     loading_login: false
   }),
   async mounted() {
-    let schools = await getSchools();
-    this.schools = schools.map(school => ({
-      ...school,
-      id: school._id.$oid
-    }));
+    // let schools = await getSchools();
+    // this.schools = schools.map(school => ({
+    //   ...school,
+    //   id: school._id.$oid
+    // }));
     this.loading = false;
   },
   methods: {
@@ -84,51 +84,39 @@ export default {
           this.loading_login = true;
           let res = {};
           let name = "";
-          let user_type = "";
           let type = -1;
 
           if (this.type === "Administrador") {
             res = await loginAdmin(this.school_id, this.user, this.pass);
-            user_type = "administrador";
             name = "school-editor";
             type = 0;
           }
           if (this.type === "Profesor") {
             res = await loginTeacher(this.school_id, this.user, this.pass);
-            user_type = "profesor";
             name = "teacher";
             type = 1;
           }
           if (this.type === "Estudiante") {
             res = await loginStudent(this.school_id, this.user, this.pass);
-            user_type = "estudiante";
-            name = "student";
+            name = "sessions";
             type = 2;
           }
           if (this.type === "Director") {
             res = await loginDirector(this.school_id, this.user, this.pass);
-            user_type = "director";
             name = "director";
             type = 3;
           }
           if (this.type === "Padre") {
             res = await loginParent(this.school_id, this.user, this.pass);
-            user_type = "padre";
             name = "parent";
             type = 4;
           }
 
-          let { token, user } = res;
-          setSession(
-            token,
-            type,
-            JSON.stringify({
-              name: `${user.last_name || ""}${
-                user.last_name ? "," : ""
-              } ${user.first_name || ""}`,
-              type: user_type
-            })
-          );
+          let { token } = res;
+          setSession(token, type, "{}");
+          let user = await getUser();
+          setSession(token, type, JSON.stringify(user));
+
           redirect(name);
         }
       } catch (error) {

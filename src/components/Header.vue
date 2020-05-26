@@ -1,5 +1,5 @@
 <template>
-  <div style="z-index: 1 !important">
+  <div style="z-index: 100 !important">
     <v-app-bar flat color="white">
       <div class="header-logo" @click="redirect('home')">
         <v-img alt="BrainTutor Logo" src="@/assets/braintutor/logo.png" width="160" />
@@ -18,16 +18,21 @@
         <div
           id="user"
           class="user"
-          v-if="session && session.token"
+          v-if="session && session.user"
           @click="user_options = !user_options"
         >
-          <span class="user__name">{{JSON.parse(session.user || "{}").name}}</span>
-          <span class="user__type">{{(JSON.parse(session.user || "{}").type || "").toUpperCase()}}</span>
+          <span class="user__name">{{user.name}}</span>
+          <span class="user__type">{{user.type}}</span>
           <div class="user__avatar">
             <img src="https://i.ya-webdesign.com/images/avatar-png-1.png" alt />
           </div>
           <div v-show="user_options" class="user__options">
-            <v-btn v-show="['1', '2'].includes(session.type)" small text @click="redirect('profile')">Perfil</v-btn>
+            <v-btn
+              v-show="['1', '2'].includes(session.type)"
+              small
+              text
+              @click="redirect('profile')"
+            >Perfil</v-btn>
             <v-btn small text @click="closeSession()">Cerrar Sesión</v-btn>
           </div>
         </div>
@@ -35,13 +40,13 @@
       </div>
     </v-app-bar>
 
-    <v-navigation-drawer style="z-index: 1 !important" v-model="drawer" fixed temporary>
+    <v-navigation-drawer style="z-index: 100 !important" v-model="drawer" fixed temporary>
       <div class="nav-logo">
         <v-img alt="BrainTutor Logo" src="@/assets/braintutor/icon.png" width="25" />
       </div>
-      <div class="user ml-0" v-if="session && session.token" @click="user_options = !user_options">
-        <span class="user__name">{{JSON.parse(session.user || "{}").name}}</span>
-        <span class="user__type">{{(JSON.parse(session.user || "{}").type || "").toUpperCase()}}</span>
+      <div class="user ml-0" v-if="session" @click="user_options = !user_options">
+        <span class="user__name">{{user.name}}</span>
+        <span class="user__type">{{user.type}}</span>
       </div>
       <v-list>
         <v-list-item-group active-class="blue--text text--accent-4">
@@ -55,9 +60,8 @@
             </v-list-item-icon>
             <v-list-item-title>{{link.title}}</v-list-item-title>
           </v-list-item>
-          <!--  -->
           <v-list-item
-            v-if="session && ['1', '2'].includes(session.type)"
+            v-show="session && ['1', '2'].includes(session.type)"
             @click="redirect('profile'); drawer=false"
           >
             <v-list-item-icon>
@@ -98,7 +102,13 @@ export default {
       },
       {
         title: "Cursos",
-        name: "student",
+        name: "sessions",
+        icon: "mdi-book",
+        session_types: ["2"]
+      },
+      {
+        title: "Tareas",
+        name: "tasks",
         icon: "mdi-book",
         session_types: ["2"]
       },
@@ -121,7 +131,6 @@ export default {
         session_types: ["3"]
       }
     ],
-    user: {},
     user_options: false,
     drawer: false
   }),
@@ -143,6 +152,9 @@ export default {
     },
     session() {
       return this.$store.state.session;
+    },
+    user() {
+      return this.$store.getters.getUser;
     }
   },
   methods: {

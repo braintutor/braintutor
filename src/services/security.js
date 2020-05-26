@@ -19,7 +19,7 @@ function removeSession() {
   localStorage.removeItem('token')
   localStorage.removeItem('type')
   localStorage.removeItem('user')
-  store.commit("setSession", null);
+  store.commit("setSession", {});
 }
 
 function sessionExists() {

@@ -53,6 +53,7 @@
           </tr>
         </tbody>
       </table>
+      <p class="text-center mt-2" v-show="entities.length === 0">No hay docentes.</p>
     </div>
     <!-- CREATE || EDIT -->
     <v-dialog v-model="dialog_edit" class="container" max-width="500">

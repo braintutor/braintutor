@@ -1,12 +1,25 @@
 <template>
   <div class="editor">
     <loading :active="loading" />
+    <input
+      style="display: none"
+      id="ipt_file"
+      type="file"
+      onclick="this.value=null"
+      @change="onLoadFile($event)"
+    />
     <div class="editor__menu">
       <h2 class="editor__title">Alumnos</h2>
-      <v-btn rounded small color="success" @click="dialog_edit = true; add()">
-        Añadir
-        <v-icon right>mdi-plus</v-icon>
-      </v-btn>
+      <div class="editor__actions">
+        <v-btn class="mr-3" rounded small color="warning" onclick="ipt_file.click()">
+          Importar
+          <v-icon right>mdi-file-excel</v-icon>
+        </v-btn>
+        <v-btn rounded small color="success" @click="dialog_edit = true; add()">
+          Añadir
+          <v-icon right>mdi-plus</v-icon>
+        </v-btn>
+      </div>
     </div>
     <div class="editor__filter">
       <h3 class="mr-5">Aula:</h3>
@@ -142,6 +155,83 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <!-- DIALOG IMPORT -->
+    <v-dialog v-model="dialog_import" persistent max-width="900">
+      <v-card class="py-2 px-4">
+        <div class="editor__filter mt-1 mb-5">
+          <h3 class="mr-5">Aula:</h3>
+          <v-select
+            v-model="classroom_id_import"
+            :items="classrooms"
+            item-text="name"
+            item-value="_id"
+            dense
+            solo
+          ></v-select>
+        </div>
+        <table class="m-table">
+          <thead>
+            <tr>
+              <th>Nombres</th>
+              <th>Apellidos</th>
+              <th>Usuario</th>
+              <th>Contraseña</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(entity, idx) in new_data" :key="idx">
+              <td>
+                <v-text-field
+                  class="text-field"
+                  v-model="entity.first_name"
+                  dense
+                  hide-details
+                  autocomplete="off"
+                ></v-text-field>
+              </td>
+              <td>
+                <v-text-field
+                  class="text-field"
+                  v-model="entity.last_name"
+                  dense
+                  hide-details
+                  autocomplete="off"
+                ></v-text-field>
+              </td>
+              <td>
+                <v-text-field
+                  class="text-field"
+                  v-model="entity.user"
+                  dense
+                  hide-details
+                  autocomplete="off"
+                ></v-text-field>
+              </td>
+              <td>
+                <v-text-field
+                  class="text-field"
+                  v-model="entity.pass"
+                  dense
+                  hide-details
+                  autocomplete="off"
+                ></v-text-field>
+              </td>
+              <td style="color: red; font-size: 0.8rem">{{ entity.response }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <v-card-actions class="pt-3" style="width: min-content; margin: 0 auto">
+          <v-btn
+            small
+            text
+            class="mr-3"
+            :loading="loading_save"
+            @click="dialog_import = false"
+          >Cerrar</v-btn>
+          <v-btn small color="primary" :loading="loading_save" @click="saveAll()">Guardar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -155,6 +245,7 @@ import {
   removeStudent
 } from "@/services/studentService";
 import { getClassroomsBySchool } from "@/services/classroomService";
+import * as XLSX from "xlsx";
 
 export default {
   data: () => ({
@@ -162,9 +253,12 @@ export default {
     entity: {},
     classrooms: [],
     classroom_id: "",
+    classroom_id_import: "",
     action: "",
+    new_data: [],
     //
     dialog_edit: false,
+    dialog_import: false,
     loading: true,
     loading_save: false,
     //
@@ -176,6 +270,7 @@ export default {
     this.classrooms = await getClassroomsBySchool();
     this.classrooms.sort((a, b) => a.name.localeCompare(b.name));
     this.classroom_id = this.classrooms[0]._id;
+    this.classroom_id_import = this.classrooms[0]._id;
     this.entities = await getStudents();
     this.loading = false;
   },
@@ -250,6 +345,53 @@ export default {
         this.$root.$children[0].showMessage("Error al Eliminar", error.msg);
       }
       this.loading = false;
+    },
+    onLoadFile(e) {
+      let file = e.target.files[0];
+      if (file) {
+        let reader = new FileReader();
+        reader.onload = e => {
+          let file_data = e.target.result;
+          let excel = XLSX.read(file_data, { type: "binary" });
+          let names = excel.SheetNames;
+          let data = XLSX.utils.sheet_to_json(excel.Sheets[names[0]]);
+          //
+          if (data.length <= 1000) {
+            this.new_data = data.map(d => {
+              let { nombres, apellidos, usuario, contraseña } = d;
+              return {
+                first_name: nombres || "",
+                last_name: apellidos || "",
+                user: usuario || "",
+                pass: contraseña || ""
+              };
+            });
+            this.dialog_import = true;
+          } else {
+            this.$root.$children[0].showMessage("Error al Importar", "");
+          }
+        };
+        reader.readAsBinaryString(file);
+      }
+    },
+    async saveAll() {
+      this.loading_save = true;
+      let i = 0;
+      while (i < this.new_data.length) {
+        let entity = this.new_data[i];
+        entity.classroom_id = this.classroom_id_import;
+        try {
+          let entity_id = await addStudent(entity);
+          entity._id = entity_id;
+          this.entities.push(entity);
+          this.new_data.splice(i, 1);
+        } catch (error) {
+          entity.response = error.msg;
+          i++;
+        }
+      }
+      if (this.new_data.length <= 0) this.dialog_import = false;
+      this.loading_save = false;
     }
   },
   components: {
@@ -262,7 +404,9 @@ export default {
 .editor {
   padding: 10px 16px;
   &__menu {
+    margin-bottom: 12px;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
   }
   &__filter {
@@ -270,7 +414,7 @@ export default {
     align-items: center;
   }
   &__title {
-    margin-bottom: 10px;
+    margin-bottom: 6px;
   }
   &__content {
     overflow-x: auto;

@@ -3,7 +3,7 @@
     <div class="student__title">
       <span :class="{'disable': !show_courses}" @click="show_courses = true">Mis Cursos</span>
       <span class="mx-1"></span>
-      <span :class="{'disable': show_courses}" @click="show_courses =  false">Mis Tareas</span>
+      <span :class="{'disable': show_courses}" @click="show_courses = false">Mis Tareas</span>
     </div>
     <Sessions v-if="show_courses" />
     <Tasks v-else />

@@ -8,8 +8,6 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     session: getSession(),
-    //User
-    user: {},
     //Materials
     materials: [],
     //Quizzes
@@ -22,10 +20,6 @@ export default new Vuex.Store({
   mutations: {
     setSession(state, session) {
       state.session = session
-    },
-    //User
-    setUser(state, user) {
-      state.user = user
     },
     //Materials
     setMaterials(state, materials) {
@@ -49,6 +43,12 @@ export default new Vuex.Store({
     setComponentQuizzes(state, component_quizzes) {
       state.component_quizzes = component_quizzes
     },
+  },
+  getters: {
+    getUser: state => {
+      let session = state.session
+      return session && session.user ? JSON.parse(state.session.user) : {}
+    }
   },
   actions: {
   },

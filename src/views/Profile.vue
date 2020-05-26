@@ -7,14 +7,19 @@
         <div class="profile m-card">
           <h2 class="profile__title">Mis Datos</h2>
           <div class="profile__content">
-            <!-- <span class="profile__item">Id:</span>
-            <span>{{profile._id.$oid}}</span>-->
             <span class="profile__item">Nombres:</span>
             <span>{{profile.first_name}}</span>
             <span class="profile__item">Apellidos:</span>
             <span>{{profile.last_name}}</span>
             <span class="profile__item">Usuario:</span>
             <span>{{profile.user}}</span>
+          </div>
+          <div class="profile__actions">
+            <v-btn
+              color="primary"
+              x-small
+              @click="old_password=''; new_password=''; dialog_password = true"
+            >Cambiar Contraseña</v-btn>
           </div>
         </div>
       </div>
@@ -56,7 +61,7 @@
       </div>
     </v-dialog>
 
-    <!-- Dialog Error -->
+    <!-- DIALOG ERROR -->
     <v-dialog v-model="dialog_error" max-width="300">
       <v-card>
         <v-card-title>Error</v-card-title>
@@ -64,6 +69,41 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn small text @click="dialog_error = false">Cerrar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- DIALOG PASSWORD -->
+    <v-dialog v-model="dialog_password" max-width="400">
+      <v-card>
+        <v-card-title>Cambiar Contraseña</v-card-title>
+        <v-card-text>
+          <div class="mt-3">
+            <span>Contraseña Actual</span>
+            <v-text-field
+              type="password"
+              class="text-field"
+              v-model="old_password"
+              dense
+              hide-details
+              autocomplete="off"
+            ></v-text-field>
+          </div>
+          <div class="mt-5">
+            <span>Nueva Contraseña</span>
+            <v-text-field
+              type="password"
+              class="text-field"
+              v-model="new_password"
+              dense
+              hide-details
+              autocomplete="off"
+            ></v-text-field>
+          </div>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" small @click="dialog_password = false; updatePassword()">Guardar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -80,6 +120,7 @@ import {
   updateLearningStyle
 } from "@/services/studentService";
 import { getProfileTeacher } from "@/services/teacherService";
+import { updatePassword } from "@/services/userService";
 
 class PreguntaTest {
   constructor(enunciado, alternatives) {
@@ -284,7 +325,11 @@ export default {
     loading: true,
     loading_message: "",
     dialog_test: false,
-    dialog_error: false
+    dialog_error: false,
+    //
+    old_password: "",
+    new_password: "",
+    dialog_password: false
   }),
   async mounted() {
     this.loading_message = "Cargando Datos";
@@ -292,8 +337,8 @@ export default {
     this.profile = await (this.session_type == 1
       ? getProfileTeacher
       : getProfileStudent)();
-
     this.loading = false;
+
     // Chart
     if (this.session_type == 2) {
       var ctx = document.getElementById("myChart").getContext("2d");
@@ -336,6 +381,16 @@ export default {
       } else {
         this.dialog_error = true;
       }
+    },
+    async updatePassword() {
+      this.loading = true;
+      try {
+        await updatePassword(this.old_password, this.new_password);
+        this.$root.$children[0].showMessage("Éxito", "Contraseña modificada.");
+      } catch (error) {
+        this.$root.$children[0].showMessage("Error al Guardar", error.msg);
+      }
+      this.loading = false;
     },
     calculate(respuestas) {
       //Dimension Procesamiento
@@ -497,7 +552,7 @@ export default {
 <style lang='scss' scoped>
 .profile {
   height: min-content;
-  padding: 20px 28px 30px 28px;
+  padding: 20px 28px;
   border-top: 4px solid #7b6dff;
   &__title {
     font-size: 1.5rem;
@@ -515,6 +570,11 @@ export default {
   &__item {
     font-size: 1rem;
     font-weight: bold;
+  }
+  &__actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
   }
 }
 
