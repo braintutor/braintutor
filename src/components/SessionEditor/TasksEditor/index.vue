@@ -97,6 +97,7 @@ export default {
       this.loading_msg = "";
       if (this.action === "create") {
         try {
+          this.task.time_start = new Date();
           let _id = await addTask(this.session_id, this.task);
           this.task._id = _id;
           this.tasks.unshift(this.task);
