@@ -1,6 +1,6 @@
 <template>
   <div>
-    <loading :active="loading" :message="loading_message" />
+    <loading :active="loading" :message="loading_msg" />
     <!-- MENU -->
     <div class="tasks__menu">
       <v-btn small rounded color="success" @click="showCreate()">
@@ -22,7 +22,7 @@
             <v-list-item @click="showEdit(task)">
               <v-list-item-title>Editar</v-list-item-title>
             </v-list-item>
-            <v-list-item>
+            <v-list-item @click="task_to_remove = task; remove()">
               <v-list-item-title>Eliminar</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -50,7 +50,12 @@
 <script>
 import loading from "@/components/loading";
 
-import { addTask, getTasksBySessionTeacher } from "@/services/taskService";
+import {
+  getTasksBySessionTeacher,
+  addTask,
+  updateTask,
+  removeTask
+} from "@/services/taskService";
 import { getParam } from "@/services/router.js";
 
 export default {
@@ -58,14 +63,15 @@ export default {
     session_id: "",
     tasks: [],
     task: {},
+    task_to_remove: {},
     action: "",
     //
     loading: true,
-    loading_message: "",
+    loading_msg: "",
     dialog_new: false
   }),
   async created() {
-    this.loading_message = "Cargando Tareas";
+    this.loading_msg = "Cargando Tareas";
     try {
       this.session_id = getParam("session_id");
       this.tasks = await getTasksBySessionTeacher(this.session_id);
@@ -83,23 +89,44 @@ export default {
     showEdit(task) {
       this.action = "edit";
       this.task = Object.assign({}, task);
+      this.task.id = this.task._id.$oid;
       this.dialog_new = true;
     },
     async create() {
       this.loading = true;
-      this.loading_message = "";
+      this.loading_msg = "";
       if (this.action === "create") {
         try {
           let _id = await addTask(this.session_id, this.task);
-          this.tasks.id = _id;
+          this.task._id = _id;
           this.tasks.unshift(this.task);
           this.dialog_new = false;
         } catch (error) {
           this.$root.$children[0].showMessage("Error al Guardar", error.msg);
         }
       } else if (this.action === "edit") {
-        console.log("Editando");
-        this.dialog_new = false;
+        try {
+          await updateTask(this.task);
+          let task_idx = this.tasks.findIndex(
+            tasks => tasks._id.$oid === this.task.id
+          );
+          this.tasks[task_idx] = Object.assign({}, this.task);
+          this.dialog_new = false;
+        } catch (error) {
+          this.$root.$children[0].showMessage("Error al Guardar", error.msg);
+        }
+      }
+      this.loading = false;
+    },
+    async remove() {
+      this.loading = true;
+      this.loading_msg = "Eliminando Tarea";
+      try {
+        let task_id_to_remove = this.task_to_remove._id.$oid;
+        await removeTask(task_id_to_remove);
+        this.tasks = this.tasks.filter(t => t._id.$oid !== task_id_to_remove);
+      } catch (error) {
+        this.$root.$children[0].showMessage("Error al Eliminar", error.msg);
       }
       this.loading = false;
     }
