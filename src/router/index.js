@@ -32,9 +32,14 @@ const routes = [
     component: () => import('../views/Director.vue')
   },
   {
-    path: '/sessions',
-    name: 'sessions',
-    component: () => import('../views/Sessions.vue')
+    path: '/sessions-student',
+    name: 'sessions-student',
+    component: () => import('../views/SessionsStudent.vue')
+  },
+  {
+    path: '/sessions-teacher',
+    name: 'sessions-teacher',
+    component: () => import('../views/SessionsTeacher.vue')
   },
   {
     path: '/tasks',
@@ -42,9 +47,9 @@ const routes = [
     component: () => import('../views/Tasks.vue')
   },
   {
-    path: '/parent',
-    name: 'parent',
-    component: () => import('../views/Parent.vue')
+    path: '/events',
+    name: 'events',
+    component: () => import('../views/Events.vue')
   },
   {
     path: '/session/:session_id',
@@ -52,9 +57,9 @@ const routes = [
     component: () => import('../views/Session.vue')
   },
   {
-    path: '/teacher',
-    name: 'teacher',
-    component: () => import('../views/Teacher.vue')
+    path: '/courses-editor',
+    name: 'courses-editor',
+    component: () => import('../views/CoursesEditor.vue')
   },
   {
     path: '/session-editor/:session_id',
@@ -90,11 +95,11 @@ const router = new VueRouter({
 })
 router.beforeEach(async (to, from, next) => {
   reset()
-  const require_student = ['sessions', 'session', 'tasks', 'chatbot', 'profile'] // Require Student
+  const require_student = ['sessions-student', 'session', 'tasks', 'events', 'chatbot', 'profile'] // Require Student
   const require_admin = ['school-editor'] // Require Admin
-  const require_teacher = ['chatbot', 'profile', 'teacher', 'session-editor', 'course-editor', 'chatbot-editor'] // Require Teacher
+  const require_teacher = ['chatbot', 'profile', 'courses-editor', 'sessions-teacher', 'session-editor', 'course-editor', 'chatbot-editor'] // Require Teacher
   const require_director = ['director'] // Require Director
-  const require_parent = ['parent', 'session', 'chatbot'] // Require Director
+  const require_parent = ['sessions-student', 'session', 'tasks', 'events', 'chatbot'] // Require Director
 
   let to_name = to.name
   let session_exists = sessionExists()

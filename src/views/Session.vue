@@ -8,7 +8,7 @@
     </div>
     <AppSidebar :links="links">
       <Chatbots :slot="0" />
-      <Tasks :slot="1" />
+      <Events :slot="1" />
       <Evaluations :slot="2" />
     </AppSidebar>
   </div>
@@ -17,7 +17,7 @@
 <script>
 import AppSidebar from "@/components/AppSidebar";
 import Chatbots from "@/components/Session/Chatbots";
-import Tasks from "@/components/Session/Tasks/index";
+import Events from "@/components/Session/Events/index";
 import Evaluations from "@/components/Session/Evaluations/index";
 
 import { redirect, getParam } from "@/services/router";
@@ -34,8 +34,8 @@ export default {
         text: "Aprender"
       },
       {
-        image: require("@/assets/braintutor/icon-task.png"),
-        text: "Tareas"
+        image: require("@/assets/braintutor/icon-event.png"),
+        text: "Eventos"
       },
       {
         image: require("@/assets/braintutor/icon-exam.png"),
@@ -50,14 +50,14 @@ export default {
   methods: {
     redirect() {
       let session_type = getSession().type;
-      if (session_type == 2) redirect("student");
+      if (session_type == 2) redirect("sessions");
       else if (session_type == 4) redirect("parent");
     }
   },
   components: {
     AppSidebar,
     Chatbots,
-    Tasks,
+    Events,
     Evaluations
   }
 };

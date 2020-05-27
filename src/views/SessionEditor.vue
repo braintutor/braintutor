@@ -10,7 +10,8 @@
       <Chatbots :slot="0" />
       <TasksEditor :slot="1" />
       <EvaluationsEditor :slot="2" />
-      <Students :slot="3" />
+      <EventsEditor :slot="3" />
+      <Students :slot="4" />
     </AppSidebar>
   </div>
 </template>
@@ -20,6 +21,7 @@ import AppSidebar from "@/components/AppSidebar";
 import Chatbots from "@/components/Session/Chatbots";
 import TasksEditor from "@/components/SessionEditor/TasksEditor/index";
 import EvaluationsEditor from "@/components/SessionEditor/EvaluationsEditor/index";
+import EventsEditor from "@/components/SessionEditor/EventsEditor/index";
 import Students from "@/components/SessionEditor/Students";
 
 import { redirect, getParam } from "@/services/router";
@@ -35,12 +37,17 @@ export default {
         text: "Aprender"
       },
       {
-        image: require("@/assets/braintutor/icon-task.png"),
+        image:
+          "https://limpiasol.com.ar/sitio/wp-content/uploads/2016/09/task-done-flat.png",
         text: "Tareas"
       },
       {
         image: require("@/assets/braintutor/icon-exam.png"),
         text: "Evaluaciones"
+      },
+      {
+        image: require("@/assets/braintutor/icon-event.png"),
+        text: "Eventos"
       },
       {
         image: require("@/assets/braintutor/icon-students.png"),
@@ -62,6 +69,7 @@ export default {
     Chatbots,
     TasksEditor,
     EvaluationsEditor,
+    EventsEditor,
     Students
   }
 };

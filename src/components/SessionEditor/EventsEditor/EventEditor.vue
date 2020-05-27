@@ -2,43 +2,43 @@
   <div class="m-fullscreen">
     <div class="menu">
       <div class="menu-left">
-        <v-btn icon @click="unselectTasks()">
+        <v-btn icon @click="unselectEvents()">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
-        <span class="menu-title">{{format(task_date)}}</span>
+        <span class="menu-title">{{format(event_date)}}</span>
       </div>
       <div class="menu-right">
-        <v-btn icon @click="createTask()">
+        <v-btn icon @click="createEvent()">
           <v-icon>mdi-calendar-plus</v-icon>
         </v-btn>
-        <v-btn icon @click="restoreTasks()">
+        <v-btn icon @click="restoreEvents()">
           <v-icon>mdi-restore</v-icon>
         </v-btn>
       </div>
     </div>
-    <div id="tasks-scroll" class="m-fullscreen-content">
-      <p class="empty" v-if="tasks.length <= 0">No tiene cursos asignados.</p>
-      <div class="task m-card" v-for="(task, t_idx) in tasks" :key="t_idx">
-        <div class="task__menu">
+    <div id="events-scroll" class="m-fullscreen-content">
+      <p class="empty" v-if="events.length <= 0">No hay eventos.</p>
+      <div class="event m-card" v-for="(event, t_idx) in events" :key="t_idx">
+        <div class="event__menu">
           <v-text-field
-            class="task__name"
-            v-model="task.name"
+            class="event__name"
+            v-model="event.name"
             autoGrow
             dense
             hide-details
             autocomplete="off"
           ></v-text-field>
-          <v-btn icon @click="deleteTask(task._id.$oid)">
+          <v-btn icon @click="deleteEvent(event._id.$oid)">
             <v-icon>mdi-delete</v-icon>
           </v-btn>
-          <v-btn icon @click="saveTask(task)">
+          <v-btn icon @click="saveEvent(event)">
             <v-icon>mdi-content-save</v-icon>
           </v-btn>
         </div>
-        <div class="task__content">
+        <div class="event__content">
           <v-textarea
-            class="task__description"
-            v-model="task.description"
+            class="event__description"
+            v-model="event.description"
             :rows="1"
             autoGrow
             dense
@@ -56,13 +56,13 @@ import { formatDate } from "@fullcalendar/core";
 
 export default {
   props: [
-    "task_date",
-    "tasks",
-    "unselectTasks",
-    "createTask",
-    "saveTask",
-    "deleteTask",
-    "restoreTasks"
+    "event_date",
+    "events",
+    "unselectEvents",
+    "createEvent",
+    "saveEvent",
+    "deleteEvent",
+    "restoreEvents"
   ],
   methods: {
     format(date) {

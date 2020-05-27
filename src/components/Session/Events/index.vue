@@ -1,7 +1,7 @@
 <template>
   <div>
-    <loading :active="loading_tasks" :message="loading_message" />
-    <div v-show="!show_tasks_selected" class="calendar-container m-card">
+    <loading :active="loading_events" :message="loading_message" />
+    <div v-show="!show_events_selected" class="calendar-container m-card">
       <div class="calendar-control">
         <span class="calendar-date">{{calendar_date}}</span>
         <div class="calendar-actions">
@@ -21,28 +21,28 @@
         ref="calendar"
         :locale="locale"
         :plugins="calendarPlugins"
-        :events="events"
+        :events="events_fc"
         @dateClick="dateClick"
         @eventClick="eventClick"
         eventTextColor="#fff"
       />
     </div>
-    <!-- Tasks Selected -->
-    <Task
-      v-show="show_tasks_selected"
-      :task_date="task_date"
-      :tasks="tasks_selected"
-      :unselectTasks="unselectTasks"
-      :restoreTasks="restoreTasks"
+    <!-- Events Selected -->
+    <Event
+      v-show="show_events_selected"
+      :event_date="event_date"
+      :events="events_selected"
+      :unselectEvents="unselectEvents"
+      :restoreEvents="restoreEvents"
     />
   </div>
 </template>
 
 <script>
-import Task from "./Task";
+import Event from "./Event";
 import loading from "@/components/loading";
 
-import { getTasksBySessionStudent } from "@/services/taskService";
+import { getEventsBySessionStudent } from "@/services/eventService";
 import { getParam } from "@/services/router.js";
 
 import FullCalendar from "@fullcalendar/vue";
@@ -54,14 +54,14 @@ import interactionPlugin from "@fullcalendar/interaction";
 export default {
   data: () => ({
     session_id: "",
-    task_date: "",
-    tasks: [],
-    task_delete_id: "",
+    event_date: "",
+    events: [],
+    event_delete_id: "",
     dialog_delete: false,
     //
-    show_tasks_selected: false,
+    show_events_selected: false,
     calendar_date: null,
-    loading_tasks: true,
+    loading_events: true,
     loading_message: "",
     //
     calendar: null,
@@ -69,36 +69,36 @@ export default {
     calendarPlugins: [dayGridPlugin, interactionPlugin]
   }),
   computed: {
-    events() {
-      return this.tasks.map(task => ({
-        title: task.name,
-        date: task.date
+    events_fc() {
+      return this.events.map(event => ({
+        title: event.name,
+        date: event.date
       }));
     },
-    tasks_selected() {
-      return this.tasks.filter(task => task.date === this.task_date);
+    events_selected() {
+      return this.events.filter(event => event.date === this.event_date);
     }
   },
   async mounted() {
     this.session_id = getParam("session_id");
     this.calendar = this.$refs.calendar.getApi();
     this.updateCalendarDate();
-    await this.restoreTasks();
+    await this.restoreEvents();
   },
   methods: {
     dateClick({ dateStr }) {
-      this.task_date = dateStr;
-      this.show_tasks_selected = true;
+      this.event_date = dateStr;
+      this.show_events_selected = true;
     },
     eventClick() {},
-    async unselectTasks() {
-      this.show_tasks_selected = false;
+    async unselectEvents() {
+      this.show_events_selected = false;
     },
-    async restoreTasks() {
-      this.loading_tasks = true;
-      this.loading_message = "Cargando Tareas";
-      this.tasks = await getTasksBySessionStudent(this.session_id);
-      this.loading_tasks = false;
+    async restoreEvents() {
+      this.loading_events = true;
+      this.loading_message = "Cargando Eventos";
+      this.events = await getEventsBySessionStudent(this.session_id);
+      this.loading_events = false;
     },
     // Calendar
     today() {
@@ -130,7 +130,7 @@ export default {
     }
   },
   components: {
-    Task,
+    Event,
     FullCalendar,
     loading
   }
@@ -138,5 +138,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/styles/tasks";
+@import "@/styles/events";
 </style>

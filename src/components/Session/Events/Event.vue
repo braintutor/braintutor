@@ -2,25 +2,25 @@
   <div class="m-fullscreen">
     <div class="menu">
       <div class="menu-left">
-        <v-btn icon @click="unselectTasks()">
+        <v-btn icon @click="unselectEvents()">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
-        <span class="menu-title">{{format(task_date)}}</span>
+        <span class="menu-title">{{format(event_date)}}</span>
       </div>
       <div class="menu-right"></div>
     </div>
-    <div v-if="tasks.length > 0" id="tasks-scroll" class="m-fullscreen-content">
+    <div v-if="events.length > 0" id="events-scroll" class="m-fullscreen-content">
       <div
-        class="task m-card"
-        :style="{'border-left': `6px solid ${task.color}`}"
-        v-for="(task, t_idx) in tasks"
+        class="event m-card"
+        :style="{'border-left': `6px solid ${event.color}`}"
+        v-for="(event, t_idx) in events"
         :key="t_idx"
       >
-        <div class="task__menu">
-          <span class="task__name">{{task.name}}</span>
+        <div class="event__menu">
+          <span class="event__name">{{event.name}}</span>
         </div>
-        <div class="task__content">
-          <span class="task__description">{{task.description}}</span>
+        <div class="event__content">
+          <span class="event__description">{{event.description}}</span>
         </div>
       </div>
     </div>
@@ -32,7 +32,7 @@
 import { formatDate } from "@fullcalendar/core";
 
 export default {
-  props: ["task_date", "tasks", "unselectTasks", "restoreTasks"],
+  props: ["event_date", "events", "unselectEvents", "restoreEvents"],
   methods: {
     format(date) {
       return formatDate(date, {

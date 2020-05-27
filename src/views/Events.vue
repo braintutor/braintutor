@@ -1,7 +1,7 @@
 <template>
   <div class="mb-3">
-    <loading :active="loading_tasks" :message="loading_message" />
-    <div v-show="!show_tasks_selected" class="calendar-container m-card">
+    <loading :active="loading" :message="loading_message" />
+    <div v-show="!show_events_selected" class="calendar-container m-card">
       <div class="calendar-control">
         <span class="calendar-date">{{calendar_date}}</span>
         <div class="calendar-actions">
@@ -21,7 +21,7 @@
         ref="calendar"
         :locale="locale"
         :plugins="calendarPlugins"
-        :events="events"
+        :events="events_fc"
         @dateClick="dateClick"
         @eventClick="eventClick"
         eventTextColor="#fff"
@@ -33,23 +33,23 @@
         </div>
       </div>
     </div>
-    <!-- Tasks Selected -->
-    <Task
-      v-show="show_tasks_selected"
-      :task_date="task_date"
-      :tasks="tasks_selected"
-      :unselectTasks="unselectTasks"
-      :restoreTasks="restoreTasks"
+    <!-- Events Selected -->
+    <Event
+      v-show="show_events_selected"
+      :event_date="event_date"
+      :events="events_selected"
+      :unselectEvents="unselectEvents"
+      :restoreEvents="restoreEvents"
     />
   </div>
 </template>
 
 <script>
-import Task from "@/components/Session/Tasks/Task";
+import Event from "@/components/Session/Events/Event";
 import loading from "@/components/loading";
 
 import { getSessionsByStudent } from "@/services/sessionService";
-import { getTasksByStudent } from "@/services/taskService";
+import { getEventsByStudent } from "@/services/eventService";
 
 import FullCalendar from "@fullcalendar/vue";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -59,15 +59,15 @@ import interactionPlugin from "@fullcalendar/interaction";
 
 export default {
   data: () => ({
-    tasks: [],
+    events: [],
     sessions: [],
-    task_date: "",
-    task_delete_id: "",
+    event_date: "",
+    event_delete_id: "",
     dialog_delete: false,
     //
-    show_tasks_selected: false,
+    show_events_selected: false,
     calendar_date: null,
-    loading_tasks: true,
+    loading: true,
     loading_message: "",
     //
     calendar: null,
@@ -75,15 +75,15 @@ export default {
     calendarPlugins: [dayGridPlugin, interactionPlugin]
   }),
   computed: {
-    events() {
-      return this.tasks.map(task => ({
-        title: task.name,
-        date: task.date,
-        color: task.color
+    events_fc() {
+      return this.events.map(event => ({
+        title: event.name,
+        date: event.date,
+        color: event.color
       }));
     },
-    tasks_selected() {
-      return this.tasks.filter(task => task.date === this.task_date);
+    events_selected() {
+      return this.events.filter(event => event.date === this.event_date);
     }
   },
   async mounted() {
@@ -91,40 +91,40 @@ export default {
     this.sessions = await getSessionsByStudent();
     this.calendar = this.$refs.calendar.getApi();
     this.updateCalendarDate();
-    await this.restoreTasks();
+    await this.restoreEvents();
   },
   methods: {
     dateClick({ dateStr }) {
-      this.task_date = dateStr;
-      this.show_tasks_selected = true;
+      this.event_date = dateStr;
+      this.show_events_selected = true;
     },
     eventClick() {},
-    async unselectTasks() {
-      this.show_tasks_selected = false;
+    async unselectEvents() {
+      this.show_events_selected = false;
     },
-    async restoreTasks() {
-      this.loading_tasks = true;
-      this.loading_message = "Cargando Tareas";
-      let tasks = await getTasksByStudent();
-      this.tasks = Object.entries(tasks).reduce(
-        (arr, [session_id, task_arr]) => {
-          if (task_arr) {
+    async restoreEvents() {
+      this.loading = true;
+      this.loading_message = "Cargando Eventos";
+      let events = await getEventsByStudent();
+      this.events = Object.entries(events).reduce(
+        (arr, [session_id, event_arr]) => {
+          if (event_arr) {
             // let color = "#" + (((1 << 24) * Math.random()) | 0).toString(16);
             let color = "hsl(" + 360 * Math.random() + ", 50%, 50%)";
             let session = this.sessions.find(
               session => session._id.$oid == session_id
             );
             session.color = color;
-            task_arr.map(task => {
-              task.color = color;
+            event_arr.map(event => {
+              event.color = color;
             });
-            arr = arr.concat(task_arr);
+            arr = arr.concat(event_arr);
           }
           return arr;
         },
         []
       );
-      this.loading_tasks = false;
+      this.loading = false;
     },
     // Calendar
     today() {
@@ -156,7 +156,7 @@ export default {
     }
   },
   components: {
-    Task,
+    Event,
     FullCalendar,
     loading
   }
@@ -164,7 +164,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/styles/tasks";
+@import "@/styles/events";
 
 .legend {
   margin-top: 30px;

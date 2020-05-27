@@ -75,9 +75,9 @@ export default {
         image: require("@/assets/braintutor/icon-quiz.png")
       },
       {
-        title: "Tareas",
-        description: "Creación de tareas programadas",
-        image: require("@/assets/braintutor/icon-task.png")
+        title: "Eventos",
+        description: "Creación de eventos",
+        image: require("@/assets/braintutor/icon-event.png")
       },
       {
         title: "Chatbot",

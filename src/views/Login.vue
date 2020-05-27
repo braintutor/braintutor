@@ -93,12 +93,12 @@ export default {
           }
           if (this.type === "Profesor") {
             res = await loginTeacher(this.school_id, this.user, this.pass);
-            name = "teacher";
+            name = "sessions-teacher";
             type = 1;
           }
           if (this.type === "Estudiante") {
             res = await loginStudent(this.school_id, this.user, this.pass);
-            name = "sessions";
+            name = "sessions-student";
             type = 2;
           }
           if (this.type === "Director") {
@@ -108,7 +108,7 @@ export default {
           }
           if (this.type === "Padre") {
             res = await loginParent(this.school_id, this.user, this.pass);
-            name = "parent";
+            name = "sessions-student";
             type = 4;
           }
 

@@ -1,6 +1,6 @@
 <template>
   <div style="z-index: 100 !important">
-    <v-app-bar flat color="white">
+    <v-app-bar flat style="background: #ffffff00 !important">
       <div class="header-logo" @click="redirect('home')">
         <v-img alt="BrainTutor Logo" src="@/assets/braintutor/logo.png" width="160" />
       </div>
@@ -94,36 +94,46 @@ import { removeSession } from "@/services/security.js";
 export default {
   data: () => ({
     links: [
-      {
-        title: "Cursos",
-        name: "teacher",
-        icon: "mdi-book",
-        session_types: ["1"]
-      },
-      {
-        title: "Cursos",
-        name: "sessions",
-        icon: "mdi-book",
-        session_types: ["2"]
-      },
-      {
-        title: "Tareas",
-        name: "tasks",
-        icon: "mdi-book",
-        session_types: ["2"]
-      },
-      {
-        title: "Cursos",
-        name: "parent",
-        icon: "mdi-book",
-        session_types: ["4"]
-      },
+      // 0
       {
         title: "Colegio",
         name: "school-editor",
         icon: "mdi-school",
         session_types: ["0"]
       },
+      // 1
+      {
+        title: "Cursos",
+        name: "sessions-teacher",
+        icon: "mdi-book",
+        session_types: ["1"]
+      },
+      {
+        title: "Editar",
+        name: "courses-editor",
+        icon: "mdi-book",
+        session_types: ["1"]
+      },
+      // 2, 4
+      {
+        title: "Cursos",
+        name: "sessions-student",
+        icon: "mdi-book",
+        session_types: ["2", "4"]
+      },
+      {
+        title: "Tareas",
+        name: "tasks",
+        icon: "mdi-book",
+        session_types: ["2", "4"]
+      },
+      {
+        title: "Eventos",
+        name: "events",
+        icon: "mdi-book",
+        session_types: ["2", "4"]
+      },
+      // 3
       {
         title: "Colegio",
         name: "director",
