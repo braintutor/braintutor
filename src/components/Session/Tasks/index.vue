@@ -56,7 +56,7 @@
         <v-btn color="primary" small>Responder</v-btn>
         </div>-->
       </div>
-      <div class="text-center" v-show="tasks.length === 0">No hay tareas.</div>
+      <div class="text-center" v-show="tasks_filtered.length === 0">No hay tareas.</div>
     </div>
     <Task v-else :task="task" :unselect="unselect" :restore="restore" />
   </div>

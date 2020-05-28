@@ -51,14 +51,14 @@
       </v-card>
     </v-dialog>
     <!-- DIALOG REMOVE -->
-    <v-dialog v-model="dialog_remove" persistent max-width="400">
+    <v-dialog v-model="dialog_remove" max-width="400">
       <v-card>
         <v-card-title>¿Eliminar la Tarea?</v-card-title>
         <v-card-text
           class="pb-3"
         >También se borrarán las respuestas y calificaciones de los alumnos.</v-card-text>
         <v-card-actions class="pb-3" style="width: min-content; margin: 0 auto">
-          <v-btn small text class="mr-1" @click="dialog_remove = false">Cerrar</v-btn>
+          <v-btn small text class="mr-1" @click="dialog_remove = false">Cancelar</v-btn>
           <v-btn small color="error" @click="dialog_remove = false; remove()">Eliminar</v-btn>
         </v-card-actions>
       </v-card>

@@ -98,7 +98,7 @@ export default {
       this.loading_msg = "Agregando Vínculo";
       try {
         let res = await fetch(
-          `http://api.linkpreview.net/?key=2b589ffa30e00a45f2b349fff781eb99&q=${this.link}`
+          `https://api.linkpreview.net/?key=2b589ffa30e00a45f2b349fff781eb99&q=${this.link}`
         );
         let data = await res.json();
         data.type = "link";
