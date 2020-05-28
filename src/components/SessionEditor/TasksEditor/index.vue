@@ -9,12 +9,15 @@
       </v-btn>
     </div>
     <!-- TASKS -->
-    <div class="task m-card" v-for="(task, idx) in tasks" :key="idx">
+    <div class="task m-card" v-for="(task, idx) in tasks_formatted" :key="idx">
       <div class="task__menu">
-        <p class="task__title">{{task.title}}</p>
+        <div>
+          <p class="task__time_start">{{task.time_start_f}}</p>
+          <p class="task__title">{{task.title}}</p>
+        </div>
         <v-menu bottom left>
           <template v-slot:activator="{ on }">
-            <v-btn icon v-on="on">
+            <v-btn icon small v-on="on">
               <v-icon>mdi-dots-vertical</v-icon>
             </v-btn>
           </template>
@@ -22,7 +25,7 @@
             <v-list-item @click="showEdit(task)">
               <v-list-item-title>Editar</v-list-item-title>
             </v-list-item>
-            <v-list-item @click="task_to_remove = task; remove()">
+            <v-list-item @click="task_to_remove = task; showRemove(task)">
               <v-list-item-title>Eliminar</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -32,7 +35,7 @@
     </div>
     <div class="text-center" v-show="tasks.length === 0">No hay tareas.</div>
     <!-- DIALOG NEW -->
-    <v-dialog v-model="dialog_new" persistent max-width="900">
+    <v-dialog v-model="dialog_new" persistent max-width="750">
       <v-card class="pt-4 pa-2">
         <v-card-text>
           <v-text-field v-model="task.title" label="Título"></v-text-field>
@@ -41,6 +44,19 @@
         <v-card-actions style="width: min-content; margin: 0 auto">
           <v-btn small text class="mr-1" v-show="!loading" @click="dialog_new = false">Cerrar</v-btn>
           <v-btn small color="primary" :loading="loading" @click="create()">Guardar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!-- DIALOG REMOVE -->
+    <v-dialog v-model="dialog_remove" persistent max-width="400">
+      <v-card>
+        <v-card-title>¿Eliminar la Tarea?</v-card-title>
+        <v-card-text
+          class="pb-3"
+        >También se borrarán las respuestas y calificaciones de los alumnos.</v-card-text>
+        <v-card-actions class="pb-3" style="width: min-content; margin: 0 auto">
+          <v-btn small text class="mr-1" @click="dialog_remove = false">Cerrar</v-btn>
+          <v-btn small color="error" @click="dialog_remove = false; remove()">Eliminar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -68,7 +84,8 @@ export default {
     //
     loading: true,
     loading_msg: "",
-    dialog_new: false
+    dialog_new: false,
+    dialog_remove: false
   }),
   async created() {
     this.loading_msg = "Cargando Tareas";
@@ -79,6 +96,21 @@ export default {
       this.$root.$children[0].showMessage("Error", error.msg);
     }
     this.loading = false;
+  },
+  computed: {
+    tasks_formatted() {
+      let tasks = this.tasks.map(t => {
+        let time_start_f = new Date(t.time_start).toLocaleString("es-ES");
+        return {
+          ...t,
+          time_start_f
+        };
+      });
+      tasks.sort(function(a, b) {
+        return new Date(b.time_start) - new Date(a.time_start);
+      });
+      return tasks;
+    }
   },
   methods: {
     showCreate() {
@@ -92,6 +124,11 @@ export default {
       this.task.id = this.task._id.$oid;
       this.dialog_new = true;
     },
+    showRemove(task) {
+      this.task = Object.assign({}, task);
+      this.task.id = this.task._id.$oid;
+      this.dialog_remove = true;
+    },
     async create() {
       this.loading = true;
       this.loading_msg = "";
@@ -100,7 +137,7 @@ export default {
           this.task.time_start = new Date();
           let _id = await addTask(this.session_id, this.task);
           this.task._id = _id;
-          this.tasks.unshift(this.task);
+          this.tasks.push(this.task);
           this.dialog_new = false;
         } catch (error) {
           this.$root.$children[0].showMessage("Error al Guardar", error.msg);
@@ -112,6 +149,7 @@ export default {
             tasks => tasks._id.$oid === this.task.id
           );
           this.tasks[task_idx] = Object.assign({}, this.task);
+          this.tasks.splice();
           this.dialog_new = false;
         } catch (error) {
           this.$root.$children[0].showMessage("Error al Guardar", error.msg);
@@ -140,19 +178,24 @@ export default {
 
 <style lang='scss' scoped>
 .tasks__menu {
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   //
   display: flex;
   justify-content: flex-end;
 }
 
 .task {
-  margin-bottom: 18px;
+  margin-bottom: 16px;
   &__menu {
     padding: 12px 10px 0 18px;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+  }
+  &__time_start {
+    margin-bottom: 2px;
+    color: #a0a0a0;
+    font-size: 0.75rem;
   }
   &__title {
     margin-bottom: 0;

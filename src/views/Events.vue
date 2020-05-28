@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-3">
+  <div class="container pt-0">
     <loading :active="loading" :message="loading_message" />
     <div v-show="!show_events_selected" class="calendar-container m-card">
       <div class="calendar-control">

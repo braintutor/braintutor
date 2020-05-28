@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container pa-0">
     <loading :active="loading" :message="loading_message" />
     <div class="row no-gutters">
       <div
@@ -60,14 +60,14 @@ export default {
   &__item {
     padding: 0 4px;
     margin-bottom: 2%;
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: bold;
   }
   &__value {
     padding: 6px 12px;
     margin-bottom: 7%;
     background: #f1f1f1;
-    font-size: 1rem;
+    font-size: 0.8rem;
     font-weight: lighter;
     border-radius: 10px;
   }

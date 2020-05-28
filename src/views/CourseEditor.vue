@@ -53,7 +53,7 @@ export default {
       return await updateKnowledgeByCourse(this.course_id, knowledge);
     },
     redirect() {
-      redirect("teacher");
+      redirect("courses-editor");
     }
   },
   components: {

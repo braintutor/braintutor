@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container pa-0">
     <div class="history">
       <span class="history__back" @click="redirect()">Cursos</span>
       <span class="history__divider">></span>
@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     redirect() {
-      redirect("teacher");
+      redirect("sessions-teacher");
     }
   },
   components: {

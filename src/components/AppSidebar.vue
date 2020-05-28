@@ -35,7 +35,7 @@
 export default {
   props: ["links", "action_links"],
   data: () => ({
-    idx: 1
+    idx: 0
   })
 };
 </script>
@@ -55,7 +55,7 @@ $color-hover-border: #a7b9ec;
 }
 
 .sidebar {
-  margin-right: 16px;
+  margin-right: 20px;
   &__links {
     overflow: hidden;
     height: min-content;

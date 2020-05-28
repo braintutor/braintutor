@@ -1,0 +1,156 @@
+<template>
+  <div>
+    <div v-if="!task" class="tasks">
+      <loading :active="loading" :message="loading_msg" />
+      <!-- MENU -->
+      <!-- <div class="tasks__menu">
+      <v-btn small rounded color="success" @click="showCreate()">
+        Crear
+        <v-icon right>mdi-plus</v-icon>
+      </v-btn>
+      </div>-->
+      <!-- TASKS -->
+      <div
+        class="task m-card"
+        v-for="(task, idx) in tasks_formatted"
+        :key="idx"
+        @click="select(task)"
+      >
+        <div class="task__menu">
+          <div>
+            <p class="task__time_start">{{task.time_start_f}}</p>
+            <p class="task__title">{{task.title}}</p>
+          </div>
+          <!-- <v-menu bottom left>
+          <template v-slot:activator="{ on }">
+            <v-btn icon small v-on="on">
+              <v-icon>mdi-dots-vertical</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item @click="showEdit(task)">
+              <v-list-item-title>Editar</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="task_to_remove = task; remove()">
+              <v-list-item-title>Eliminar</v-list-item-title>
+            </v-list-item>
+          </v-list>
+          </v-menu>-->
+        </div>
+        <p class="task__description">{{task.description}}</p>
+        <!-- <div class="task__actions">
+        <v-btn color="primary" small>Responder</v-btn>
+        </div>-->
+      </div>
+      <div class="text-center" v-show="tasks.length === 0">No hay tareas.</div>
+    </div>
+    <Task v-else :task="task" :unselect="unselect" :restore="restore" />
+  </div>
+</template>
+
+<script>
+import loading from "@/components/loading";
+import Task from "./Task";
+
+import { getTasksBySessionStudent } from "@/services/taskService";
+import { getParam } from "@/services/router.js";
+
+export default {
+  data: () => ({
+    session_id: "",
+    tasks: [],
+    task: null,
+    //
+    loading: true,
+    loading_msg: ""
+  }),
+  async created() {
+    this.session_id = getParam("session_id");
+    this.restore();
+  },
+  computed: {
+    tasks_formatted() {
+      let tasks = this.tasks.map(t => {
+        let time_start_f = new Date(t.time_start).toLocaleString("es-ES");
+        return {
+          ...t,
+          time_start_f
+        };
+      });
+      tasks.sort(function(a, b) {
+        return new Date(b.time_start) - new Date(a.time_start);
+      });
+      return tasks;
+    }
+  },
+  methods: {
+    async restore() {
+      this.loading = true;
+      this.loading_msg = "Cargando Tareas";
+      try {
+        this.tasks = await getTasksBySessionStudent(this.session_id);
+      } catch (error) {
+        this.$root.$children[0].showMessage("Error", error.msg);
+      }
+      this.loading = false;
+    },
+    select(task) {
+      this.task = task;
+    },
+    unselect() {
+      this.task = null;
+    }
+  },
+  components: {
+    loading,
+    Task
+  }
+};
+</script>
+
+<style lang='scss' scoped>
+.tasks__menu {
+  margin-bottom: 12px;
+  //
+  display: flex;
+  justify-content: flex-end;
+}
+
+.task {
+  margin-bottom: 16px;
+  border-left: 4px solid #3968eb;
+  transition: all 0.3s;
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.01);
+  }
+  &__menu {
+    padding: 12px 10px 0 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  &__time_start {
+    margin-bottom: 2px;
+    color: #a0a0a0;
+    font-size: 0.75rem;
+  }
+  &__title {
+    margin-bottom: 0;
+    font-size: 1.3rem;
+    font-weight: bold;
+  }
+  &__description {
+    padding: 12px 18px 16px 18px;
+    margin-bottom: 0;
+    font-size: 0.95rem;
+  }
+  &__actions {
+    padding: 12px;
+    padding-top: 0;
+    //
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+</style>

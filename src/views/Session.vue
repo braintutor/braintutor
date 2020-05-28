@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container pa-0">
     <div class="history">
       <span class="history__back" @click="redirect()">Cursos</span>
       <span class="history__divider">></span>
@@ -8,8 +8,9 @@
     </div>
     <AppSidebar :links="links">
       <Chatbots :slot="0" />
-      <Events :slot="1" />
-      <Evaluations :slot="2" />
+      <Tasks :slot="1" />
+      <Events :slot="2" />
+      <Evaluations :slot="3" />
     </AppSidebar>
   </div>
 </template>
@@ -17,12 +18,13 @@
 <script>
 import AppSidebar from "@/components/AppSidebar";
 import Chatbots from "@/components/Session/Chatbots";
+import Tasks from "@/components/Session/Tasks/index";
 import Events from "@/components/Session/Events/index";
 import Evaluations from "@/components/Session/Evaluations/index";
 
 import { redirect, getParam } from "@/services/router";
 import { getCourseNameBySession } from "@/services/courseService";
-import { getSession } from "@/services/security";
+// import { getSession } from "@/services/security";
 
 export default {
   data: () => ({
@@ -32,6 +34,11 @@ export default {
         image:
           "https://images.squarespace-cdn.com/content/v1/55d1e076e4b0be96a30dc726/1477412415649-WW90BD77ALIB9U99VTIA/ke17ZwdGBToddI8pDm48kDmvgM2_GYudIur22MWWiLdZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZamWLI2zvYWH8K3-s_4yszcp2ryTI0HqTOaaUohrI8PIvFa2r33EMaMk7hlBJBei4G1FTiqzsF6lpp3EXtW1YCk/image-asset.png",
         text: "Aprender"
+      },
+      {
+        image:
+          "https://limpiasol.com.ar/sitio/wp-content/uploads/2016/09/task-done-flat.png",
+        text: "Tareas"
       },
       {
         image: require("@/assets/braintutor/icon-event.png"),
@@ -49,13 +56,15 @@ export default {
   },
   methods: {
     redirect() {
-      let session_type = getSession().type;
-      if (session_type == 2) redirect("sessions");
-      else if (session_type == 4) redirect("parent");
+      redirect("sessions-student")
+      // let session_type = getSession().type;
+      // if (session_type == 2) redirect("sessions");
+      // else if (session_type == 4) redirect("parent");
     }
   },
   components: {
     AppSidebar,
+    Tasks,
     Chatbots,
     Events,
     Evaluations

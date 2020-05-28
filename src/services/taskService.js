@@ -1,7 +1,14 @@
 import { fetch_post } from "./fetch";
 
+
 function getTasksBySessionTeacher(session_id) {
   return fetch_post('getTasksBySessionTeacher', {
+    session_id
+  })
+}
+
+function getTasksBySessionStudent(session_id) {
+  return fetch_post('getTasksBySessionStudent', {
     session_id
   })
 }
@@ -19,10 +26,17 @@ function updateTask(task) {
   })
 }
 
+function updateTaskAnswer(task_id, answer) {
+  return fetch_post('updateTaskAnswer', {
+    task_id, 
+    answer
+  })
+}
+
 function removeTask(task_id) {
   return fetch_post('removeTask', {
     task_id
   })
 }
 
-export { getTasksBySessionTeacher, addTask, updateTask, removeTask }
+export { getTasksBySessionTeacher, getTasksBySessionStudent, addTask, updateTask, updateTaskAnswer, removeTask }

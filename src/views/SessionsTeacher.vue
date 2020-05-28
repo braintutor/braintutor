@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <loading :active="loading" :message="loading_message" />
     <p class="empty" v-if="sessions.length <= 0">No tiene cursos asignados.</p>
     <div class="row no-gutters">
