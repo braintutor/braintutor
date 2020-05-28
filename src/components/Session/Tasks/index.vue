@@ -3,16 +3,30 @@
     <div v-if="!task" class="tasks">
       <loading :active="loading" :message="loading_msg" />
       <!-- MENU -->
-      <!-- <div class="tasks__menu">
-      <v-btn small rounded color="success" @click="showCreate()">
-        Crear
-        <v-icon right>mdi-plus</v-icon>
-      </v-btn>
-      </div>-->
+      <div class="tasks__menu">
+        <span
+          class="tasks__menu-option"
+          :class="{'active': show_pending}"
+          small
+          rounded
+          color="success"
+          @click="show_pending = true"
+        >Pendientes</span>
+        <span class="mx-2">|</span>
+        <span
+          class="tasks__menu-option"
+          :class="{'active': !show_pending}"
+          small
+          rounded
+          color="success"
+          @click="show_pending = false"
+        >Respondidos</span>
+      </div>
       <!-- TASKS -->
       <div
         class="task m-card"
-        v-for="(task, idx) in tasks_formatted"
+        :style="{'border-left': show_pending? '4px solid #3968eb': '4px solid #aaa'}"
+        v-for="(task, idx) in tasks_filtered"
         :key="idx"
         @click="select(task)"
       >
@@ -60,6 +74,7 @@ export default {
     session_id: "",
     tasks: [],
     task: null,
+    show_pending: true,
     //
     loading: true,
     loading_msg: ""
@@ -69,7 +84,19 @@ export default {
     this.restore();
   },
   computed: {
-    tasks_formatted() {
+    tasks_filtered() {
+      let tasks = this.tasks_formated.filter(t => {
+        if (t.answers && Object.entries(t.answers)[0]) {
+          let answer = Object.entries(t.answers)[0][1];
+          if (answer.length > 0) {
+            return !this.show_pending;
+          }
+        }
+        return this.show_pending;
+      });
+      return tasks;
+    },
+    tasks_formated() {
       let tasks = this.tasks.map(t => {
         let time_start_f = new Date(t.time_start).toLocaleString("es-ES");
         return {
@@ -111,14 +138,26 @@ export default {
 <style lang='scss' scoped>
 .tasks__menu {
   margin-bottom: 12px;
+  font-size: 1.1rem;
   //
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  .tasks__menu-option {
+    color: #ccc;
+    transition: all 0.3s;
+    cursor: pointer;
+    &.active {
+      color: #000;
+      font-weight: bold;
+    }
+    &:hover {
+      color: #000;
+    }
+  }
 }
 
 .task {
   margin-bottom: 16px;
-  border-left: 4px solid #3968eb;
   transition: all 0.3s;
   &:hover {
     cursor: pointer;

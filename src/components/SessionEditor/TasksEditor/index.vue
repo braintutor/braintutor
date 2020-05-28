@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!task_selected">
     <loading :active="loading" :message="loading_msg" />
     <!-- MENU -->
     <div class="tasks__menu">
@@ -15,7 +15,7 @@
           <p class="task__time_start">{{task.time_start_f}}</p>
           <p class="task__title">{{task.title}}</p>
         </div>
-        <v-menu bottom left>
+        <v-menu offset-y left>
           <template v-slot:activator="{ on }">
             <v-btn icon small v-on="on">
               <v-icon>mdi-dots-vertical</v-icon>
@@ -25,13 +25,16 @@
             <v-list-item @click="showEdit(task)">
               <v-list-item-title>Editar</v-list-item-title>
             </v-list-item>
-            <v-list-item @click="task_to_remove = task; showRemove(task)">
+            <v-list-item @click="showRemove(task)">
               <v-list-item-title>Eliminar</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
       </div>
       <p class="task__description">{{task.description}}</p>
+      <div class="task__actions">
+        <v-btn text small @click="showAnswers(task)">Ver Respuestas</v-btn>
+      </div>
     </div>
     <div class="text-center" v-show="tasks.length === 0">No hay tareas.</div>
     <!-- DIALOG NEW -->
@@ -61,10 +64,14 @@
       </v-card>
     </v-dialog>
   </div>
+
+  <!-- TASK -->
+  <Task v-else :task="task_selected" :students="students" :unselect="unselect" :restore="restore" />
 </template>
 
 <script>
 import loading from "@/components/loading";
+import Task from "./Task";
 
 import {
   getTasksBySessionTeacher,
@@ -75,11 +82,12 @@ import {
 import { getParam } from "@/services/router.js";
 
 export default {
+  props: ["students"],
   data: () => ({
     session_id: "",
     tasks: [],
     task: {},
-    task_to_remove: {},
+    task_selected: null,
     action: "",
     //
     loading: true,
@@ -88,14 +96,8 @@ export default {
     dialog_remove: false
   }),
   async created() {
-    this.loading_msg = "Cargando Tareas";
-    try {
-      this.session_id = getParam("session_id");
-      this.tasks = await getTasksBySessionTeacher(this.session_id);
-    } catch (error) {
-      this.$root.$children[0].showMessage("Error", error.msg);
-    }
-    this.loading = false;
+    this.session_id = getParam("session_id");
+    this.restore();
   },
   computed: {
     tasks_formatted() {
@@ -129,6 +131,9 @@ export default {
       this.task.id = this.task._id.$oid;
       this.dialog_remove = true;
     },
+    showAnswers(task) {
+      this.task_selected = Object.assign({}, task);
+    },
     async create() {
       this.loading = true;
       this.loading_msg = "";
@@ -161,17 +166,31 @@ export default {
       this.loading = true;
       this.loading_msg = "Eliminando Tarea";
       try {
-        let task_id_to_remove = this.task_to_remove._id.$oid;
+        let task_id_to_remove = this.task._id.$oid;
         await removeTask(task_id_to_remove);
         this.tasks = this.tasks.filter(t => t._id.$oid !== task_id_to_remove);
       } catch (error) {
         this.$root.$children[0].showMessage("Error al Eliminar", error.msg);
       }
       this.loading = false;
+    },
+    async restore() {
+      this.loading = true;
+      this.loading_msg = "Cargando Tareas";
+      try {
+        this.tasks = await getTasksBySessionTeacher(this.session_id);
+      } catch (error) {
+        this.$root.$children[0].showMessage("Error", error.msg);
+      }
+      this.loading = false;
+    },
+    unselect() {
+      this.task_selected = null;
     }
   },
   components: {
-    loading
+    loading,
+    Task
   }
 };
 </script>
@@ -206,6 +225,13 @@ export default {
     padding: 12px 18px 16px 18px;
     margin-bottom: 0;
     font-size: 0.95rem;
+  }
+  &__actions {
+    padding: 12px;
+    padding-top: 0;
+    //
+    display: flex;
+    justify-content: flex-end;
   }
 }
 </style>

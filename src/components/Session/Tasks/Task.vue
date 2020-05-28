@@ -8,14 +8,6 @@
         </v-btn>
         <span class="menu-title"></span>
       </div>
-      <div class="menu-right">
-        <!-- <v-btn icon @click="createEvent()">
-          <v-icon>mdi-calendar-plus</v-icon>
-        </v-btn>
-        <v-btn icon @click="restoreEvents()">
-          <v-icon>mdi-restore</v-icon>
-        </v-btn>-->
-      </div>
     </div>
     <div class="task m-card">
       <div class="task__menu">
@@ -28,7 +20,7 @@
     </div>
     <div class="response m-card">
       <div class="response__menu">
-        <v-menu offset-y>
+        <v-menu offset-y left>
           <template v-slot:activator="{ on }">
             <v-btn color="success" small v-on="on">
               <v-icon small class="mr-1">mdi-plus</v-icon>Agregar
