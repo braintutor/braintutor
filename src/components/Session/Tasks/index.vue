@@ -85,14 +85,9 @@ export default {
   },
   computed: {
     tasks_filtered() {
-      let tasks = this.tasks_formated.filter(t => {
-        if (t.answers && Object.entries(t.answers)[0]) {
-          let answer = Object.entries(t.answers)[0][1];
-          if (answer.length > 0) {
-            return !this.show_pending;
-          }
-        }
-        return this.show_pending;
+      let tasks = this.tasks_formated.filter(({ answer }) => {
+        if (answer.data && answer.data.length > 0) return !this.show_pending;
+        else return this.show_pending;
       });
       return tasks;
     },

@@ -30,8 +30,8 @@
       <div v-if="student" class="col-12 col-sm-10">
         <div class="response m-card mb-4 ml-sm-5">
           <p class="response__student">{{`${student.last_name}, ${student.first_name}`}}</p>
-          <div v-if="answer.length > 0" class="response__answer">
-            <div class="mt-3" v-for="(item, idx) in answer" :key="idx">
+          <div v-if="answer.data && answer.data.length > 0" class="response__answer">
+            <div class="mt-3" v-for="(item, idx) in answer.data" :key="idx">
               <div class="link" v-if="item.type === 'link'">
                 <a class="link__data" :href="item.url" target="_blank">
                   <img class="link__image" :src="item.image" alt />
@@ -60,9 +60,9 @@ export default {
   },
   computed: {
     answer() {
-      let answer = [];
+      let answer = {};
       try {
-        answer = this.task.answers[this.student._id.$oid] || [];
+        answer = this.task.answers[this.student._id.$oid] || {};
       } catch (error) {
         //
       }

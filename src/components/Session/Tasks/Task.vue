@@ -34,7 +34,7 @@
         </v-menu>
       </div>
       <div class="response__answer">
-        <div class="mb-3" v-for="(item, idx) in answer" :key="idx">
+        <div class="mb-3" v-for="(item, idx) in answer.data" :key="idx">
           <div class="link" v-if="item.type === 'link'">
             <a class="link__data" :href="item.url" target="_blank">
               <img class="link__image" :src="item.image" alt />
@@ -46,7 +46,7 @@
             </v-btn>
           </div>
         </div>
-        <div class="no-response" v-show="answer.length === 0">No hay respuestas.</div>
+        <div class="no-response" v-show="answer.data.length === 0">No hay respuestas.</div>
       </div>
       <div class="response__actions">
         <v-btn color="primary" small @click="save()">
@@ -78,7 +78,8 @@ export default {
   props: ["task", "unselect", "restore"],
   data: () => ({
     session_id: "",
-    answer: [],
+    answer: {},
+    //
     link: "",
     //
     loading: false,
@@ -86,11 +87,12 @@ export default {
     //
     dialog_link: false
   }),
-  mounted() {
+  created() {
     this.session_id = getParam("session_id");
-    if (this.task.answers && Object.entries(this.task.answers)[0]) {
-      this.answer = Object.entries(this.task.answers)[0][1];
-    }
+    this.answer = {
+      ...this.task.answer,
+      data: this.task.answer.data || []
+    };
   },
   methods: {
     async addLink() {
@@ -103,7 +105,7 @@ export default {
         let data = await res.json();
         data.type = "link";
         data.url = this.link;
-        this.answer.push(data);
+        this.answer.data.push(data);
       } catch (error) {
         //
       }
@@ -120,7 +122,7 @@ export default {
       this.loading = false;
     },
     remove(idx) {
-      this.answer.splice(idx, 1);
+      this.answer.data.splice(idx, 1);
     }
   },
   components: {
