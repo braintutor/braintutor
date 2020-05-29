@@ -2,9 +2,10 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import vuetify from './plugins/vuetify';
+import vuetify from './plugins/vuetify'
 import './styles/main.scss'
-import firebase from 'firebase/app';
+import 'normalize.css'
+import firebase from 'firebase/app'
 
 Vue.config.productionTip = false
 

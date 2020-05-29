@@ -86,7 +86,8 @@ export default {
   computed: {
     tasks_filtered() {
       let tasks = this.tasks_formated.filter(({ answer }) => {
-        if (answer.data && answer.data.length > 0) return !this.show_pending;
+        if (answer.text || (answer.data && answer.data.length > 0))
+          return !this.show_pending;
         else return this.show_pending;
       });
       return tasks;

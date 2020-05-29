@@ -29,9 +29,20 @@
       <!-- ANSWER -->
       <div v-if="student" class="col-12 col-sm-10">
         <div class="response m-card mb-4 ml-sm-5">
-          <p class="response__student">{{`${student.last_name}, ${student.first_name}`}}</p>
-          <div v-if="answer.data && answer.data.length > 0" class="response__answer">
+          <div class="response__menu">
+            <p class="response__student">{{`${student.last_name}, ${student.first_name}`}}</p>
+            <p
+              v-if="answer.text || (answer.data && answer.data.length > 0)"
+              class="response__time"
+            >{{answer.time_f}}</p>
+          </div>
+          <div
+            v-if="answer.text || (answer.data && answer.data.length > 0)"
+            class="response__answer"
+          >
+            <p class="response__text">{{answer.text}}</p>
             <div class="mt-3" v-for="(item, idx) in answer.data" :key="idx">
+              <!-- LINK -->
               <div class="link" v-if="item.type === 'link'">
                 <a class="link__data" :href="item.url" target="_blank">
                   <img class="link__image" :src="item.image" alt />
@@ -41,7 +52,11 @@
               </div>
             </div>
           </div>
-          <div v-else class="text-center mt-2" style="color: #aaa">No hay respuestas.</div>
+          <div
+            v-else
+            class="text-center mt-3"
+            style="color: #aaa; font-size: .9rem"
+          >No hay respuestas.</div>
         </div>
       </div>
     </div>
@@ -63,6 +78,8 @@ export default {
       let answer = {};
       try {
         answer = this.task.answers[this.student._id.$oid] || {};
+        if (answer.time)
+          answer.time_f = new Date(answer.time).toLocaleString("es-ES");
       } catch (error) {
         //
       }
@@ -118,11 +135,20 @@ export default {
   padding: 12px;
   &__menu {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
   }
   &__student {
     margin-bottom: 0;
     font-weight: bold;
+  }
+  &__time {
+    margin-bottom: 2px;
+    color: #a0a0a0;
+    font-size: 0.75rem;
+  }
+  &__text {
+    margin: 10px 2px 0 2px;
+    font-size: 0.9rem;
   }
   &__actions {
     display: flex;

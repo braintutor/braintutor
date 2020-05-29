@@ -6,7 +6,7 @@
         <v-btn icon @click="unselect(); restore()">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
-        <span class="menu-title"></span>
+        <span class="menu-title">Ver Tareas</span>
       </div>
     </div>
     <div class="task m-card">
@@ -26,14 +26,30 @@
               <v-icon small class="mr-1">mdi-plus</v-icon>Agregar
             </v-btn>
           </template>
-          <v-list>
+          <v-list dense>
             <v-list-item @click="dialog_link = true; link = ''">
-              <v-list-item-title>Vínculo</v-list-item-title>
+              <v-list-item-icon class="mr-3">
+                <v-icon>mdi-link</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title class="mr-3">Vínculo</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="addFile()">
+              <v-list-item-icon class="mr-3">
+                <v-icon>mdi-file</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title class="mr-3">Documento</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
       </div>
       <div class="response__answer">
+        <v-textarea
+          class="response__text mb-3"
+          v-model="answer.text"
+          rows="1"
+          auto-grow
+          hide-details
+        ></v-textarea>
         <div class="mb-3" v-for="(item, idx) in answer.data" :key="idx">
           <div class="link" v-if="item.type === 'link'">
             <a class="link__data" :href="item.url" target="_blank">
@@ -46,7 +62,6 @@
             </v-btn>
           </div>
         </div>
-        <div class="no-response" v-show="answer.data.length === 0">No hay respuestas.</div>
       </div>
       <div class="response__actions">
         <v-btn color="primary" small @click="save()">
@@ -95,6 +110,9 @@ export default {
     };
   },
   methods: {
+    async addFile() {
+      // console.log('sadsad');
+    },
     async addLink() {
       this.loading = true;
       this.loading_msg = "Agregando Vínculo";
@@ -102,12 +120,13 @@ export default {
         let res = await fetch(
           `https://api.linkpreview.net/?key=2b589ffa30e00a45f2b349fff781eb99&q=${this.link}`
         );
+        if (res.status >= 400 && res.status < 600) throw "Vínculo inválido.";
         let data = await res.json();
         data.type = "link";
         data.url = this.link;
         this.answer.data.push(data);
       } catch (error) {
-        //
+        this.$root.$children[0].showMessage("Error", error);
       }
       this.loading = false;
     },
@@ -115,6 +134,7 @@ export default {
       this.loading = true;
       this.loading_msg = "Guardando Respuesta";
       try {
+        this.answer.time = new Date();
         await updateTaskAnswer(this.task._id.$oid, this.answer);
       } catch (error) {
         this.$root.$children[0].showMessage("Error al Guardar", error.msg);
@@ -165,17 +185,16 @@ export default {
   &__answer {
     margin: 12px 0;
   }
+  &__text {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
   &__actions {
     display: flex;
     justify-content: flex-end;
   }
-}
-.no-response {
-  padding: 20px;
-  color: #969696;
-  text-align: center;
-  border: 1px solid #ccc;
-  border-radius: 4px;
 }
 
 .link {
