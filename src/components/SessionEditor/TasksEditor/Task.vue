@@ -191,13 +191,13 @@ export default {
   }
   &__title {
     margin: 0;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: bold;
     grid-column-start: 2;
   }
   &__description {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     font-weight: lighter;
     grid-column-start: 2;
   }

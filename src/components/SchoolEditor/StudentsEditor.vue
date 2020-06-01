@@ -39,6 +39,7 @@
           <tr>
             <th class="text-left">Nombres</th>
             <th class="text-left">Apellidos</th>
+            <th class="text-left">Correo</th>
             <th class="text-left">Usuario</th>
             <th class="text-left">Contraseña</th>
             <th class="text-center">Acción</th>
@@ -48,6 +49,7 @@
           <tr v-for="(entity, e_idx) in entities_filtered" :key="e_idx">
             <td>{{ entity.first_name }}</td>
             <td>{{ entity.last_name }}</td>
+            <td>{{ entity.email }}</td>
             <td>{{ entity.user }}</td>
             <td>
               <v-btn class="mr-2" small icon @click="toogleShowPassword(entity)">
@@ -85,6 +87,14 @@
           <v-text-field
             class="text-field"
             v-model="entity.last_name"
+            dense
+            hide-details
+            autocomplete="off"
+          ></v-text-field>
+          <span class="mt-1 mr-4">Correo:</span>
+          <v-text-field
+            class="text-field"
+            v-model="entity.email"
             dense
             hide-details
             autocomplete="off"
@@ -174,8 +184,9 @@
             <tr>
               <th>Nombres</th>
               <th>Apellidos</th>
+              <th>Correo</th>
               <th>Usuario</th>
-              <th>Contraseña</th>
+              <!-- <th>Contraseña</th> -->
             </tr>
           </thead>
           <tbody>
@@ -201,7 +212,7 @@
               <td>
                 <v-text-field
                   class="text-field"
-                  v-model="entity.user"
+                  v-model="entity.email"
                   dense
                   hide-details
                   autocomplete="off"
@@ -210,12 +221,21 @@
               <td>
                 <v-text-field
                   class="text-field"
-                  v-model="entity.pass"
+                  v-model="entity.user"
                   dense
                   hide-details
                   autocomplete="off"
                 ></v-text-field>
               </td>
+              <!-- <td>
+                <v-text-field
+                  class="text-field"
+                  v-model="entity.pass"
+                  dense
+                  hide-details
+                  autocomplete="off"
+                ></v-text-field>
+              </td>-->
               <td style="color: red; font-size: 0.8rem">{{ entity.response }}</td>
             </tr>
           </tbody>
@@ -321,6 +341,7 @@ export default {
           );
           this.entities[entity_idx] = Object.assign({}, this.entity);
           this.entities.splice();
+          this.dialog_edit = false;
         } catch (error) {
           this.$root.$children[0].showMessage("Error al Guardar", error.msg);
         }
@@ -358,12 +379,13 @@ export default {
           //
           if (data.length <= 1000) {
             this.new_data = data.map(d => {
-              let { nombres, apellidos, usuario, contraseña } = d;
+              let { nombres, apellidos, usuario, correo /*, contraseña*/ } = d;
               return {
                 first_name: nombres || "",
                 last_name: apellidos || "",
                 user: usuario || "",
-                pass: contraseña || ""
+                email: correo || ""
+                // pass: contraseña || ""
               };
             });
             this.dialog_import = true;
@@ -380,6 +402,7 @@ export default {
       while (i < this.new_data.length) {
         let entity = this.new_data[i];
         entity.classroom_id = this.classroom_id_import;
+        entity.pass = "123";
         try {
           let entity_id = await addStudent(entity);
           entity._id = entity_id;

@@ -26,18 +26,20 @@
               <v-icon small class="mr-1">mdi-plus</v-icon>Agregar
             </v-btn>
           </template>
-          <v-list dense>
+          <v-list subheader dense>
             <v-list-item @click="dialog_link = true; link = ''">
               <v-list-item-icon class="mr-3">
                 <v-icon>mdi-link</v-icon>
               </v-list-item-icon>
-              <v-list-item-title class="mr-3">Vínculo</v-list-item-title>
+              <v-list-item-title class="mr-3">Añadir Vínculo</v-list-item-title>
             </v-list-item>
+            <v-divider></v-divider>
+            <v-subheader class="text-center">Google Drive</v-subheader>
             <v-list-item @click="addFile()">
               <v-list-item-icon class="mr-3">
-                <v-icon>mdi-file</v-icon>
+                <v-icon color="blue">mdi-text-box</v-icon>
               </v-list-item-icon>
-              <v-list-item-title class="mr-3">Documento</v-list-item-title>
+              <v-list-item-title class="mr-3">Crear Documento</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -99,8 +101,14 @@ export default {
     //
     loading: false,
     loading_msg: "",
-    //
-    dialog_link: false
+    dialog_link: false,
+    // GOOGLE DRIVE
+    client_id:
+      "777825196939-qm3a36q1v66f65cn5s627p71da3rgpsq.apps.googleusercontent.com",
+    // client_secret: "eqKgUl-Lx4pCs0RcozuUUbPa",
+    api_key: "AIzaSyAGFPLGWa0IFKZ7AP2Zk2aZsAi0Xxx7Hr8",
+    redirect_uri: "http://localhost:8080",
+    scope: "https://www.googleapis.com/auth/drive"
   }),
   created() {
     this.session_id = getParam("session_id");
@@ -111,11 +119,25 @@ export default {
   },
   methods: {
     async addFile() {
-      // console.log('sadsad');
+      let access_token = localStorage.getItem("access_token");
+      if (!access_token) {
+        this.login();
+        return;
+      }
+      this.loading = true;
+      this.loading_msg = "Creando Documento";
+      let { documentId } = await this.create();
+      if (documentId) {
+        let file = await this.get(documentId);
+        await this.createPermission(documentId, "mitsuoysharag@gmail.com");
+        this.link = file.webViewLink;
+        await this.addLink();
+      }
+      this.loading = false;
     },
     async addLink() {
       this.loading = true;
-      this.loading_msg = "Agregando Vínculo";
+      this.loading_msg = "Añadiendo Vínculo";
       try {
         let res = await fetch(
           `https://api.linkpreview.net/?key=2b589ffa30e00a45f2b349fff781eb99&q=${this.link}`
@@ -125,9 +147,11 @@ export default {
         data.type = "link";
         data.url = this.link;
         this.answer.data.push(data);
+        await this.save();
       } catch (error) {
         this.$root.$children[0].showMessage("Error", error);
       }
+      this.link = "";
       this.loading = false;
     },
     async save() {
@@ -143,6 +167,79 @@ export default {
     },
     remove(idx) {
       this.answer.data.splice(idx, 1);
+    },
+    // GOOGLE DRIVE
+    login() {
+      let redirect_uri = "http://localhost:8080";
+      let url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${this.client_id}&redirect_uri=${redirect_uri}&response_type=token&scope=${this.scope}&state=${this.session_id}`;
+      window.location = url;
+    },
+    async create() {
+      let access_token = localStorage.getItem("access_token");
+      try {
+        let res = await fetch(
+          `https://docs.googleapis.com/v1/documents?fields=*&key=${this.api_key}`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              title: "Título"
+            }),
+            headers: {
+              Authorization: `Bearer ${access_token}`,
+              Accept: "application/json",
+              "Content-Type": "application/json"
+            }
+          }
+        );
+        if (res.status >= 400 && res.status < 600) throw "Token inválido.";
+        let data = await res.json();
+        return data;
+      } catch (error) {
+        this.login();
+      }
+    },
+    async createPermission(id, emailAddress) {
+      let access_token = localStorage.getItem("access_token");
+      try {
+        let res = await fetch(
+          `https://www.googleapis.com/drive/v3/files/${id}/permissions?key=${this.api_key}`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              role: "reader",
+              type: "user",
+              emailAddress
+            }),
+            headers: {
+              Authorization: `Bearer ${access_token}`,
+              Accept: "application/json",
+              "Content-Type": "application/json"
+            }
+          }
+        );
+        let data = await res.json();
+        return data;
+      } catch (error) {
+        //
+      }
+    },
+    async get(id) {
+      let access_token = localStorage.getItem("access_token");
+      try {
+        let res = await fetch(
+          `https://www.googleapis.com/drive/v3/files/${id}?fields=*&key=${this.api_key}`,
+          {
+            headers: {
+              Authorization: `Bearer ${access_token}`,
+              Accept: "application/json"
+            }
+          }
+        );
+        let data = await res.json();
+        return data;
+      } catch (error) {
+        //
+      }
     }
   },
   components: {
@@ -230,13 +327,13 @@ export default {
   }
   &__title {
     margin: 0;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: bold;
     grid-column-start: 2;
   }
   &__description {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     font-weight: lighter;
     grid-column-start: 2;
   }

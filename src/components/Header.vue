@@ -121,12 +121,12 @@ export default {
         icon: "mdi-book",
         session_types: ["2", "4"]
       },
-      {
-        title: "Tareas",
-        name: "tasks",
-        icon: "mdi-book",
-        session_types: ["2", "4"]
-      },
+      // {
+      //   title: "Tareas",
+      //   name: "tasks",
+      //   icon: "mdi-book",
+      //   session_types: ["2", "4"]
+      // },
       {
         title: "Eventos",
         name: "events",

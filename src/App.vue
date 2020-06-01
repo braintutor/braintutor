@@ -20,6 +20,7 @@
 
 <script>
 import Header from "./components/Header";
+import { redirect } from "@/services/router.js";
 
 export default {
   name: "App",
@@ -28,6 +29,17 @@ export default {
     show_title: "",
     show_message: ""
   }),
+  mounted() {
+    let fragmentString = location.hash.substring(1);
+    let params = {};
+    var regex = /([^&=]+)=([^&]*)/g,
+      m;
+    while ((m = regex.exec(fragmentString))) {
+      params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+    }
+    localStorage.setItem("access_token", params.access_token);
+    redirect("session", { session_id: params["state"] || params["/state"] });
+  },
   methods: {
     showMessage(title, message) {
       this.show = true;
