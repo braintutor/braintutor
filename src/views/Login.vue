@@ -52,9 +52,7 @@ import {
   loginDirector,
   loginParent
 } from "@/services/loginService";
-import { setSession } from "@/services/security";
 import { redirect, getParam } from "@/services/router.js";
-import { getUser } from "@/services/userService";
 
 export default {
   data: () => ({
@@ -84,46 +82,30 @@ export default {
           let school_id = this.school._id.$oid;
           let res = {};
           let name = "";
-          let type = -1;
 
           if (this.type === "Administrador") {
             res = await loginAdmin(school_id, this.user, this.pass);
             name = "school-editor";
-            type = 0;
           }
           if (this.type === "Profesor") {
             res = await loginTeacher(school_id, this.user, this.pass);
             name = "sessions-teacher";
-            type = 1;
           }
           if (this.type === "Estudiante") {
             res = await loginStudent(school_id, this.user, this.pass);
             name = "sessions-student";
-            type = 2;
           }
           if (this.type === "Director") {
             res = await loginDirector(school_id, this.user, this.pass);
             name = "director";
-            type = 3;
           }
           if (this.type === "Padre") {
             res = await loginParent(school_id, this.user, this.pass);
             name = "sessions-student";
-            type = 4;
           }
 
           let { token } = res;
-          setSession(token, type, "{}");
-          let user = await getUser();
-          user["type"] = [
-            "ADMINISTRADOR",
-            "PROFESOR",
-            "ESTUDIANTE",
-            "DIRECTOR",
-            "PADRE"
-          ][type];
-          setSession(token, type, JSON.stringify(user));
-
+          localStorage.setItem("token", token);
           redirect(name);
         }
       } catch (error) {

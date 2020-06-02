@@ -24,7 +24,6 @@ import Evaluations from "@/components/Session/Evaluations/index";
 
 import { redirect, getParam } from "@/services/router";
 import { getCourseNameBySession } from "@/services/courseService";
-// import { getSession } from "@/services/security";
 
 export default {
   data: () => ({
@@ -56,10 +55,7 @@ export default {
   },
   methods: {
     redirect() {
-      redirect("sessions-student")
-      // let session_type = getSession().type;
-      // if (session_type == 2) redirect("sessions");
-      // else if (session_type == 4) redirect("parent");
+      redirect("sessions-student");
     }
   },
   components: {

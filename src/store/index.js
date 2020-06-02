@@ -1,13 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import { getSession } from '@/services/security'
-
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    session: getSession(),
     user: null,
     //Materials
     materials: [],
@@ -19,9 +16,6 @@ export default new Vuex.Store({
     component_quizzes: null
   },
   mutations: {
-    setSession(state, session) {
-      state.session = session
-    },
     setUser(state, user) {
       state.user = user
     },
@@ -47,12 +41,6 @@ export default new Vuex.Store({
     setComponentQuizzes(state, component_quizzes) {
       state.component_quizzes = component_quizzes
     },
-  },
-  getters: {
-    getUser: state => {
-      let session = state.session
-      return session && session.user ? JSON.parse(state.session.user) : {}
-    }
   },
   actions: {
   },

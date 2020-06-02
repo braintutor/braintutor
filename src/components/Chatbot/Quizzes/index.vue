@@ -33,7 +33,6 @@ import Quiz from "./Quiz";
 import { getParam } from "@/services/router.js";
 import { copy } from "@/services/object.js";
 import { getQuizzes, getQuizResultByStudent } from "@/services/quizService";
-import { getSession } from "@/services/security";
 
 export default {
   props: ["showServices"],
@@ -41,11 +40,17 @@ export default {
     quizzes: [],
     quiz_selected: null
   }),
+  computed: {
+    user() {
+      return this.$store.state.user;
+    }
+  },
   async mounted() {
     let chatbot_id = getParam("chatbot_id");
     this.quizzes = await getQuizzes(chatbot_id);
 
-    if (getSession().type == 2 || getSession().type == 4) { // student
+    if (this.user.type == 2 || this.user.type == 4) {
+      // student
       for (let quiz of this.quizzes) {
         quiz.result = await getQuizResultByStudent(quiz._id.$oid);
       }

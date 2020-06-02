@@ -114,7 +114,6 @@
 import loading from "@/components/loading";
 import Chart from "chart.js";
 
-import { getSession } from "@/services/security.js";
 import { updateLearningStyle } from "@/services/studentService";
 import { getUser } from "@/services/userService";
 import { updatePassword } from "@/services/userService";
@@ -330,7 +329,7 @@ export default {
   }),
   async mounted() {
     this.loading_msg = "Cargando Datos";
-    this.session_type = getSession().type;
+    this.session_type = this.$store.state.user.type;
     this.profile = await getUser();
     this.loading = false;
 

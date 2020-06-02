@@ -22,7 +22,9 @@
     <v-dialog v-model="dialog_start" max-width="400">
       <v-card>
         <v-card-title>Iniciar Evaluación</v-card-title>
-        <v-card-text class="pb-2">Una vez que inicias una evaluación, solo tendrás una oportunidad para responderla.</v-card-text>
+        <v-card-text
+          class="pb-2"
+        >Una vez que inicias una evaluación, solo tendrás una oportunidad para responderla.</v-card-text>
         <v-card-text>No cierres la pestaña o cambies de página.</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -75,7 +77,6 @@ import {
 import { getParam } from "@/services/router.js";
 import { copy } from "@/services/object.js";
 import { percentage } from "@/services/math";
-import { getSession } from "@/services/security";
 
 export default {
   data: () => ({
@@ -96,7 +97,7 @@ export default {
   }),
   async mounted() {
     this.session_id = getParam("session_id");
-    this.session_type = getSession().type;
+    this.session_type = this.$store.state.user.type;
     this.getEvaluations();
   },
   methods: {

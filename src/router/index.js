@@ -4,7 +4,6 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 
 import store from '../store'
-import { sessionExists, getSession } from '@/services/security'
 import { redirect } from '@/services/router'
 import { getUser } from "@/services/userService";
 
@@ -103,24 +102,18 @@ router.beforeEach(async (to, from, next) => {
   const require_parent = ['sessions-student', 'session', 'tasks', 'events', 'chatbot', 'profile'] // Require Director
 
   let to_name = to.name
-  let session_exists = sessionExists()
 
   if (require_student.concat(require_admin, require_teacher, require_director, require_parent).includes(to_name)) {
     try {
       let user = await getUser()
-      console.log(user);
-      
       store.commit('setUser', user)
 
-      if (session_exists)
-        if ((require_admin.includes(to_name) && getSession().type == 0) ||
-          (require_teacher.includes(to_name) && getSession().type == 1) ||
-          (require_student.includes(to_name) && getSession().type == 2) ||
-          (require_director.includes(to_name) && getSession().type == 3) ||
-          (require_parent.includes(to_name) && getSession().type == 4))
-          next()
-        else
-          redirect('home')
+      if ((require_admin.includes(to_name) && user.type == 0) ||
+        (require_teacher.includes(to_name) && user.type == 1) ||
+        (require_student.includes(to_name) && user.type == 2) ||
+        (require_director.includes(to_name) && user.type == 3) ||
+        (require_parent.includes(to_name) && user.type == 4))
+        next()
       else
         redirect('home')
     } catch (error) {
