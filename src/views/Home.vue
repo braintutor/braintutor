@@ -12,7 +12,11 @@
             <div
               class="principal-description"
             >Monitorear el aprendizaje de los alumnos y brindarles una enseñanza personalizada.</div>
-            <v-btn class="principal-action" color="grey darken-3" @click="redirect('login')">Empezar</v-btn>
+            <v-btn
+              class="principal-action"
+              color="grey darken-3"
+              @click="redirect('login', {school_user: 'maria-prado-de-bellido'})"
+            >Empezar</v-btn>
           </div>
           <div class="principal-image col-sm-6">
             <img src="@/assets/avatar/normal.png" alt />

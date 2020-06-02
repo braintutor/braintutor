@@ -67,7 +67,10 @@
             </v-list-item-icon>
             <v-list-item-title>Cerrar Sesión</v-list-item-title>
           </v-list-item>
-          <v-list-item v-else @click="redirect('login'); drawer=false">
+          <v-list-item
+            v-else
+            @click="redirect('login', {school_user: 'maria-prado-de-bellido'}); drawer=false"
+          >
             <v-list-item-icon>
               <v-icon>mdi-power</v-icon>
             </v-list-item-icon>
