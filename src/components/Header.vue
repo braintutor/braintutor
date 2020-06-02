@@ -27,16 +27,16 @@
             <img src="https://i.ya-webdesign.com/images/avatar-png-1.png" alt />
           </div>
           <div v-show="user_options" class="user__options">
-            <v-btn
-              v-show="['1', '2'].includes(session.type)"
-              small
-              text
-              @click="redirect('profile')"
-            >Perfil</v-btn>
+            <v-btn small text @click="redirect('profile')">Perfil</v-btn>
             <v-btn small text @click="closeSession()">Cerrar Sesión</v-btn>
           </div>
         </div>
-        <v-btn class="header-action" v-else text @click="redirect('login')">Iniciar Sesión</v-btn>
+        <v-btn
+          class="header-action"
+          v-else
+          text
+          @click="redirect('login', {school_user: 'maria-prado-de-bellido'})"
+        >Iniciar Sesión</v-btn>
       </div>
     </v-app-bar>
 
@@ -60,10 +60,7 @@
             </v-list-item-icon>
             <v-list-item-title>{{link.title}}</v-list-item-title>
           </v-list-item>
-          <v-list-item
-            v-show="session && ['1', '2'].includes(session.type)"
-            @click="redirect('profile'); drawer=false"
-          >
+          <v-list-item @click="redirect('profile'); drawer=false">
             <v-list-item-icon>
               <v-icon>mdi-account</v-icon>
             </v-list-item-icon>

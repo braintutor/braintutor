@@ -109,9 +109,13 @@
           <input type="text" placeholder="Buscar" v-model="file_search" />
         </div>
         <div class="files__body">
-          <p class="text-center" v-show="files_filtered.length === 0">Ningún elemento.</p>
-          <div class="row no-gutters pa-3">
-            <div class="col-12 col-sm-6 col-md-3 pa-2" v-for="(file, idx) in files_filtered" :key="idx">
+          <p class="text-center mt-3 mb-5" v-show="files_filtered.length === 0">Ningún elemento.</p>
+          <div class="row no-gutters">
+            <div
+              class="col-12 col-sm-6 col-md-3 pa-2"
+              v-for="(file, idx) in files_filtered"
+              :key="idx"
+            >
               <div class="m-card file" @click="addFileDrive(file)">
                 <img class="file__img" :src="file.iconLink" />
                 <p class="file__name">{{file.name}}</p>
@@ -184,7 +188,7 @@ export default {
   methods: {
     async showAll() {
       this.loading = true;
-      this.loading_msg = "Cargando Documentos";
+      this.loading_msg = "Cargando Archivos";
       this.file_search = "";
       this.files = await this.getAll();
       this.dialog_files = true;
@@ -192,7 +196,7 @@ export default {
     },
     async addFileDrive({ /*id,*/ webViewLink }) {
       this.loading = true;
-      this.loading_msg = "Compartiendo Documento";
+      this.loading_msg = "Compartiendo Archivo";
       this.dialog_files = false;
       // await this.createPermission(id, "mitsuoysharag@gmail.com");
       this.link = webViewLink;
@@ -206,7 +210,7 @@ export default {
         return;
       }
       this.loading = true;
-      this.loading_msg = "Creando Documento";
+      this.loading_msg = "Creando Archivo";
       let { documentId, presentationId, spreadsheetId } = await this.create(
         type
       );
@@ -446,14 +450,14 @@ export default {
 
 .files {
   &__title {
-    padding: 20px;
-    font-size: 1.3rem;
+    padding: 16px 20px;
+    font-size: 1.4rem;
     box-shadow: 0 1px 4px #ccc;
     display: flex;
     justify-content: space-between;
   }
   &__search {
-    padding: 12px 16px;
+    padding: 14px 16px;
     input[type="text"] {
       width: 100%;
       padding: 8px 14px;
@@ -468,7 +472,8 @@ export default {
   &__body {
     overflow-y: auto;
     max-height: 400px;
-    height: 100vh;
+    padding: 10px;
+    padding-top: 0;
   }
   &__actions {
     border-top: 0.5px solid #e7e7e7;

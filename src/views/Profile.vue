@@ -1,40 +1,40 @@
 <template>
-  <div class="container px-5">
-    <loading :active="loading" />
+  <div class="container py-0 px-3">
+    <loading :active="loading" :message="loading_msg" />
 
-    <div class="row">
-      <div class="col-12 col-sm-5 pa-0">
-        <div class="profile m-card">
-          <h2 class="profile__title">Mis Datos</h2>
-          <div class="profile__content">
-            <span class="profile__item">Nombres:</span>
-            <span>{{profile.first_name}}</span>
-            <span class="profile__item">Apellidos:</span>
-            <span>{{profile.last_name}}</span>
-            <span class="profile__item">Usuario:</span>
-            <span>{{profile.user}}</span>
-          </div>
-          <div class="profile__actions">
-            <v-btn
-              color="primary"
-              x-small
-              @click="old_password=''; new_password=''; dialog_password = true"
-            >Cambiar Contraseña</v-btn>
-          </div>
-        </div>
+    <div class="profile m-card">
+      <h2 class="profile__title">Mis Datos</h2>
+      <div class="profile__content">
+        <!--  -->
+        <v-icon class="profile__icon">mdi-card-account-details</v-icon>
+        <span class="profile__item">Nombres:</span>
+        <span class="profile__value">{{profile.first_name}}</span>
+        <!--  -->
+        <v-icon class="profile__icon">mdi-card-account-details</v-icon>
+        <span class="profile__item">Apellidos:</span>
+        <span class="profile__value">{{profile.last_name}}</span>
+        <!--  -->
+        <v-icon class="profile__icon">mdi-account</v-icon>
+        <span class="profile__item">Usuario:</span>
+        <span class="profile__value">{{profile.user}}</span>
       </div>
+      <div class="profile__actions">
+        <v-btn
+          color="primary"
+          small
+          @click="old_password=''; new_password=''; dialog_password = true"
+        >Cambiar Contraseña</v-btn>
+      </div>
+    </div>
 
-      <div v-show="session_type == 2" class="col-12 col-sm-7 pa-0">
-        <div class="diagram m-card">
-          <canvas v-show="profile.learning_style" id="myChart" width="600" height="400"></canvas>
-          <div
-            v-show="!profile.learning_style"
-            class="no-style"
-          >Realiza un test para obtener tu estilo de aprendizaje</div>
-          <div class="diagram__actions">
-            <v-btn @click="dialog_test = true" color="primary">Nuevo Test</v-btn>
-          </div>
-        </div>
+    <div v-show="session_type == 2" class="diagram m-card">
+      <canvas v-show="profile.learning_style" id="myChart" width="600" height="400"></canvas>
+      <div
+        v-show="!profile.learning_style"
+        class="no-style"
+      >Realiza un test para obtener tu estilo de aprendizaje</div>
+      <div class="diagram__actions">
+        <v-btn @click="dialog_test = true" small color="primary">Nuevo Test</v-btn>
       </div>
     </div>
 
@@ -115,11 +115,8 @@ import loading from "@/components/loading";
 import Chart from "chart.js";
 
 import { getSession } from "@/services/security.js";
-import {
-  getProfileStudent,
-  updateLearningStyle
-} from "@/services/studentService";
-import { getProfileTeacher } from "@/services/teacherService";
+import { updateLearningStyle } from "@/services/studentService";
+import { getUser } from "@/services/userService";
 import { updatePassword } from "@/services/userService";
 
 class PreguntaTest {
@@ -323,7 +320,7 @@ export default {
     session_type: -1,
     myChart: null,
     loading: true,
-    loading_message: "",
+    loading_msg: "",
     dialog_test: false,
     dialog_error: false,
     //
@@ -332,11 +329,9 @@ export default {
     dialog_password: false
   }),
   async mounted() {
-    this.loading_message = "Cargando Datos";
+    this.loading_msg = "Cargando Datos";
     this.session_type = getSession().type;
-    this.profile = await (this.session_type == 1
-      ? getProfileTeacher
-      : getProfileStudent)();
+    this.profile = await getUser();
     this.loading = false;
 
     // Chart
@@ -373,7 +368,7 @@ export default {
 
         let learning_style = this.calculate(answers);
         this.profile.learning_style = learning_style;
-        this.loading_message = "Guardando";
+        this.loading_msg = "Guardando";
         await updateLearningStyle(learning_style);
         this.updateDashboard();
 
@@ -384,6 +379,7 @@ export default {
     },
     async updatePassword() {
       this.loading = true;
+      this.loading_msg = "Cambiando Contraseña";
       try {
         await updatePassword(this.old_password, this.new_password);
         this.$root.$children[0].showMessage("Éxito", "Contraseña modificada.");
@@ -551,25 +547,39 @@ export default {
 
 <style lang='scss' scoped>
 .profile {
-  height: min-content;
+  max-width: 500px;
+  margin: 0 auto;
+  margin-bottom: 24px;
   padding: 20px 28px;
-  border-top: 4px solid #7b6dff;
+  border-radius: 0;
+  // border-top: 4px solid #7b6dff;
   &__title {
-    font-size: 1.5rem;
-    margin-bottom: 16px;
+    font-size: 1.8rem;
   }
   &__content {
+    margin: 24px 0 32px 0;
     font-size: 1rem;
     font-weight: lighter;
     display: grid;
-    grid-template-columns: auto 1fr;
-    grid-column-gap: 30px;
-    grid-row-gap: 8px;
+    grid-template-columns: auto auto 1fr;
+    grid-column-gap: 12px;
+    grid-row-gap: 24px;
     align-items: center;
   }
+  &__icon {
+    margin-bottom: 2px;
+    font-size: 1.2rem;
+  }
   &__item {
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: bold;
+  }
+  &__value {
+    margin-left: 14px;
+    padding: 6px 12px;
+    background: #eeeeee;
+    font-size: 0.9rem;
+    border-radius: 6px;
   }
   &__actions {
     margin-top: 20px;
@@ -579,9 +589,12 @@ export default {
 }
 
 .diagram {
+  max-width: 500px;
+  margin: 0 auto;
+  margin-bottom: 24px;
   padding: 4%;
   padding-bottom: 0;
-  margin-left: 20px;
+  border-radius: 0;
 
   &__actions {
     padding: 20px 0;
@@ -615,12 +628,5 @@ export default {
   border-radius: 10px;
   font-size: 1.4rem;
   text-align: center;
-}
-
-@media screen and (max-width: 598px) {
-  .diagram {
-    margin-top: 10px;
-    margin-left: 0;
-  }
 }
 </style>

@@ -2,11 +2,15 @@
   <div class="m-fullcenter">
     <loading :active="loading" />
     <v-card class="login_container" elevation="6">
-      <div class="login_icon">
+      <!-- <div class="login_icon">
         <img src="@/assets/braintutor/icon.png" width="100%" />
       </div>
       <div class="login_name">
         <img src="@/assets/braintutor/name.png" width="100%" />
+      </div>-->
+      <!-- {{school}} -->
+      <div class="login_icon">
+        <img :src="school.image" width="100%" />
       </div>
       <v-form ref="form_login" @submit.prevent="login">
         <v-card-text class="login_content">
@@ -40,6 +44,7 @@
 <script>
 import loading from "@/components/loading";
 
+import { getSchoolByUser } from "@/services/schoolService";
 import {
   loginAdmin,
   loginTeacher,
@@ -47,18 +52,15 @@ import {
   loginDirector,
   loginParent
 } from "@/services/loginService";
-// import { getSchools } from "@/services/schoolService";
 import { setSession } from "@/services/security";
-import { redirect } from "@/services/router.js";
+import { redirect, getParam } from "@/services/router.js";
 import { getUser } from "@/services/userService";
 
 export default {
   data: () => ({
-    schools: [],
+    school: {},
+    // FORM
     types: ["Estudiante", "Profesor", "Padre", "Director", "Administrador"],
-    //
-    school_id: "5e74f3061c9d440000a6b4e1",
-    // school_id: "5ecbfa290ef77501a888c530",
     type: "",
     user: "",
     pass: "",
@@ -70,11 +72,8 @@ export default {
     loading_login: false
   }),
   async mounted() {
-    // let schools = await getSchools();
-    // this.schools = schools.map(school => ({
-    //   ...school,
-    //   id: school._id.$oid
-    // }));
+    let school_user = getParam("school_user");
+    this.school = await getSchoolByUser(school_user);
     this.loading = false;
   },
   methods: {
@@ -82,32 +81,33 @@ export default {
       try {
         if (this.$refs.form_login.validate()) {
           this.loading_login = true;
+          let school_id = this.school._id.$oid;
           let res = {};
           let name = "";
           let type = -1;
 
           if (this.type === "Administrador") {
-            res = await loginAdmin(this.school_id, this.user, this.pass);
+            res = await loginAdmin(school_id, this.user, this.pass);
             name = "school-editor";
             type = 0;
           }
           if (this.type === "Profesor") {
-            res = await loginTeacher(this.school_id, this.user, this.pass);
+            res = await loginTeacher(school_id, this.user, this.pass);
             name = "sessions-teacher";
             type = 1;
           }
           if (this.type === "Estudiante") {
-            res = await loginStudent(this.school_id, this.user, this.pass);
+            res = await loginStudent(school_id, this.user, this.pass);
             name = "sessions-student";
             type = 2;
           }
           if (this.type === "Director") {
-            res = await loginDirector(this.school_id, this.user, this.pass);
+            res = await loginDirector(school_id, this.user, this.pass);
             name = "director";
             type = 3;
           }
           if (this.type === "Padre") {
-            res = await loginParent(this.school_id, this.user, this.pass);
+            res = await loginParent(school_id, this.user, this.pass);
             name = "sessions-student";
             type = 4;
           }
