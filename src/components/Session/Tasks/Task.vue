@@ -33,8 +33,14 @@
               </v-list-item-icon>
               <v-list-item-title class="mr-3">Añadir Vínculo</v-list-item-title>
             </v-list-item>
+            <v-list-item @click="showAll()">
+              <v-list-item-icon class="mr-3">
+                <v-icon>mdi-google-drive</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title class="mr-3">Google Drive</v-list-item-title>
+            </v-list-item>
             <v-divider></v-divider>
-            <v-subheader class="text-center">Google Drive</v-subheader>
+            <v-subheader class="text-center">Crear</v-subheader>
             <v-list-item @click="add(0)">
               <v-list-item-icon class="mr-2" style="display: flex; align-items: center">
                 <img
@@ -42,7 +48,7 @@
                   src="https://drive-thirdparty.googleusercontent.com/16/type/application/vnd.google-apps.document"
                 />
               </v-list-item-icon>
-              <v-list-item-title class="mr-3">Crear Documento</v-list-item-title>
+              <v-list-item-title class="mr-3">Documento</v-list-item-title>
             </v-list-item>
             <v-list-item @click="add(1)">
               <v-list-item-icon class="mr-2" style="display: flex; align-items: center">
@@ -51,7 +57,7 @@
                   src="https://drive-thirdparty.googleusercontent.com/16/type/application/vnd.google-apps.presentation"
                 />
               </v-list-item-icon>
-              <v-list-item-title class="mr-3">Crear Presentación</v-list-item-title>
+              <v-list-item-title class="mr-3">Presentación</v-list-item-title>
             </v-list-item>
             <v-list-item @click="add(2)">
               <v-list-item-icon class="mr-2" style="display: flex; align-items: center">
@@ -60,7 +66,7 @@
                   src="https://drive-thirdparty.googleusercontent.com/16/type/application/vnd.google-apps.spreadsheet"
                 />
               </v-list-item-icon>
-              <v-list-item-title class="mr-3">Crear Hoja de Cálculo</v-list-item-title>
+              <v-list-item-title class="mr-3">Hoja de Cálculo</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -92,6 +98,32 @@
         </v-btn>
       </div>
     </div>
+    <!-- DIALOG FILES -->
+    <v-dialog v-model="dialog_files" persistent max-width="1200">
+      <v-card class="files">
+        <h3 class="files__title">
+          Archivos en Google Drive
+          <v-icon @click="dialog_files = false">mdi-close</v-icon>
+        </h3>
+        <div class="files__search">
+          <input type="text" placeholder="Buscar" v-model="file_search" />
+        </div>
+        <div class="files__body">
+          <p class="text-center" v-show="files_filtered.length === 0">Ningún elemento.</p>
+          <div class="row no-gutters pa-3">
+            <div class="col-12 col-sm-6 col-md-3 pa-2" v-for="(file, idx) in files_filtered" :key="idx">
+              <div class="m-card file" @click="addFileDrive(file)">
+                <img class="file__img" :src="file.iconLink" />
+                <p class="file__name">{{file.name}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="files__actions">
+          <v-btn text small @click="dialog_files = false">Cancelar</v-btn>
+        </div>
+      </v-card>
+    </v-dialog>
     <!-- DIALOG LINK -->
     <v-dialog v-model="dialog_link" max-width="400">
       <v-card class="pt-3">
@@ -117,18 +149,21 @@ export default {
   data: () => ({
     session_id: "",
     answer: {},
-    //
+    files: [],
+    file_search: "",
     link: "",
     //
     loading: false,
     loading_msg: "",
+    dialog_files: false,
     dialog_link: false,
     // GOOGLE DRIVE
     client_id:
       "777825196939-qm3a36q1v66f65cn5s627p71da3rgpsq.apps.googleusercontent.com",
     // client_secret: "eqKgUl-Lx4pCs0RcozuUUbPa",
     api_key: "AIzaSyAGFPLGWa0IFKZ7AP2Zk2aZsAi0Xxx7Hr8",
-    redirect_uri: "http://localhost:8080",
+    // redirect_uri: "http://localhost:8080",
+    redirect_uri: "https://braintutor.github.io/braintutor",
     scope: "https://www.googleapis.com/auth/drive"
   }),
   created() {
@@ -138,7 +173,32 @@ export default {
       data: this.task.answer.data || []
     };
   },
+  computed: {
+    files_filtered() {
+      let files = this.files.filter(f =>
+        f.name.toLowerCase().includes(this.file_search.toLowerCase())
+      );
+      return files;
+    }
+  },
   methods: {
+    async showAll() {
+      this.loading = true;
+      this.loading_msg = "Cargando Documentos";
+      this.file_search = "";
+      this.files = await this.getAll();
+      this.dialog_files = true;
+      this.loading = false;
+    },
+    async addFileDrive({ /*id,*/ webViewLink }) {
+      this.loading = true;
+      this.loading_msg = "Compartiendo Documento";
+      this.dialog_files = false;
+      // await this.createPermission(id, "mitsuoysharag@gmail.com");
+      this.link = webViewLink;
+      await this.addLink();
+      this.loading = false;
+    },
     async add(type) {
       let access_token = localStorage.getItem("access_token");
       if (!access_token) {
@@ -194,10 +254,29 @@ export default {
     },
     // GOOGLE DRIVE
     login() {
-      // let redirect_uri = "http://localhost:8080";
-      let redirect_uri = "https://braintutor.github.io/braintutor";
-      let url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${this.client_id}&redirect_uri=${redirect_uri}&response_type=token&scope=${this.scope}&state=${this.session_id}`;
+      let url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${this.client_id}&redirect_uri=${this.redirect_uri}&response_type=token&scope=${this.scope}&state=${this.session_id}`;
       window.location = url;
+    },
+    async getAll() {
+      let access_token = localStorage.getItem("access_token");
+      try {
+        let res = await fetch(
+          `https://www.googleapis.com/drive/v3/files?fields=*&key=${this.api_key}`,
+          {
+            headers: {
+              Authorization: `Bearer ${access_token}`,
+              Accept: "application/json"
+            }
+          }
+        );
+        let { files } = await res.json();
+        files = files.filter(
+          f => !f.trashed && f.mimeType !== "application/vnd.google-apps.folder"
+        );
+        return files;
+      } catch (error) {
+        this.login();
+      }
     },
     async create(type) {
       let url = [
@@ -362,6 +441,60 @@ export default {
     font-size: 0.75rem;
     font-weight: lighter;
     grid-column-start: 2;
+  }
+}
+
+.files {
+  &__title {
+    padding: 20px;
+    font-size: 1.3rem;
+    box-shadow: 0 1px 4px #ccc;
+    display: flex;
+    justify-content: space-between;
+  }
+  &__search {
+    padding: 12px 16px;
+    input[type="text"] {
+      width: 100%;
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+  &__body {
+    overflow-y: auto;
+    max-height: 400px;
+    height: 100vh;
+  }
+  &__actions {
+    border-top: 0.5px solid #e7e7e7;
+    padding: 10px;
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+.file {
+  padding: 10px;
+  transition: all 0.2s;
+  cursor: pointer;
+  &__img {
+    display: block;
+    width: 24px;
+    margin: 20px auto;
+    margin-bottom: 24px;
+  }
+  &__name {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-align: center;
+  }
+  &:hover {
+    transform: scale(1.02);
   }
 }
 </style>
