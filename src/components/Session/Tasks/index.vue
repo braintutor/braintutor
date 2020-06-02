@@ -67,7 +67,7 @@ import loading from "@/components/loading";
 import Task from "./Task";
 
 import { getTasksBySessionStudent } from "@/services/taskService";
-import { getParam } from "@/services/router.js";
+import { getParam, redirect } from "@/services/router.js";
 
 export default {
   data: () => ({
@@ -118,7 +118,8 @@ export default {
       this.loading = false;
     },
     select(task) {
-      this.task = task;
+      redirect('task', { task_id: task._id.$oid })
+      // this.task = task;
     },
     unselect() {
       this.task = null;

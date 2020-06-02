@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div class="container pa-0 px-2">
     <loading :active="loading" :message="loading_msg" />
-    <div class="menu pa-0 pb-1">
+    <div class="menu pa-0 pb-2">
       <div class="menu-left">
-        <v-btn icon @click="unselect(); restore()">
+        <v-btn icon @click="redirect('session', { session_id: task.session_id.$oid })">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
-        <span class="menu-title">Ver Tareas</span>
+        <span class="menu-title">Volver</span>
       </div>
     </div>
     <div class="task m-card">
@@ -145,19 +145,19 @@
 <script>
 import loading from "@/components/loading";
 
-import { updateTaskAnswer } from "@/services/taskService";
-import { getParam } from "@/services/router.js";
+import { getTaskByStudent, updateTaskAnswer } from "@/services/taskService";
+import { getParam, redirect } from "@/services/router.js";
 
 export default {
-  props: ["task", "unselect", "restore"],
   data: () => ({
-    session_id: "",
+    task_id: "",
+    task: {},
     answer: {},
     files: [],
     file_search: "",
     link: "",
     //
-    loading: false,
+    loading: true,
     loading_msg: "",
     dialog_files: false,
     dialog_link: false,
@@ -170,12 +170,19 @@ export default {
     redirect_uri: "https://braintutor.github.io/braintutor",
     scope: "https://www.googleapis.com/auth/drive"
   }),
-  created() {
-    this.session_id = getParam("session_id");
-    this.answer = {
-      ...this.task.answer,
-      data: this.task.answer.data || []
-    };
+  async created() {
+    this.loading_msg = "Cargando Tarea";
+    try {
+      this.task_id = getParam("task_id");
+      this.task = await getTaskByStudent(this.task_id);
+      this.answer = {
+        ...this.task.answer,
+        data: this.task.answer.data || []
+      };
+    } catch (error) {
+      redirect("sessions-student");
+    }
+    this.loading = false;
   },
   computed: {
     files_filtered() {
@@ -186,6 +193,7 @@ export default {
     }
   },
   methods: {
+    redirect,
     async showAll() {
       this.loading = true;
       this.loading_msg = "Cargando Archivos";
@@ -258,7 +266,7 @@ export default {
     },
     // GOOGLE DRIVE
     login() {
-      let url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${this.client_id}&redirect_uri=${this.redirect_uri}&response_type=token&scope=${this.scope}&state=${this.session_id}`;
+      let url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${this.client_id}&redirect_uri=${this.redirect_uri}&response_type=token&scope=${this.scope}&state=${this.task_id}`;
       window.location = url;
     },
     async getAll() {
@@ -384,6 +392,7 @@ export default {
   }
 }
 .response {
+  margin-bottom: 20px;
   padding: 12px;
   &__menu {
     display: flex;

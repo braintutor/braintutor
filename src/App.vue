@@ -41,7 +41,7 @@ export default {
       localStorage.setItem("access_token", params.access_token);
     }
     if (params["state"] || params["/state"]) {
-      redirect("session", { session_id: params["state"] || params["/state"] });
+      redirect("task", { task_id: params["state"] || params["/state"] });
     }
   },
   methods: {

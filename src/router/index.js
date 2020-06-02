@@ -85,6 +85,11 @@ const routes = [
     path: '/profile',
     name: 'profile',
     component: () => import('../views/Profile.vue')
+  },
+  {
+    path: '/task/:task_id',
+    name: 'task',
+    component: () => import('../views/Task.vue')
   }
 ]
 
@@ -95,7 +100,7 @@ const router = new VueRouter({
 })
 router.beforeEach(async (to, from, next) => {
   reset()
-  const require_student = ['sessions-student', 'session', 'tasks', 'events', 'chatbot', 'profile'] // Require Student
+  const require_student = ['sessions-student', 'session', 'tasks', 'events', 'chatbot', 'profile', 'task'] // Require Student
   const require_admin = ['school-editor', 'profile'] // Require Admin
   const require_teacher = ['chatbot', 'courses-editor', 'sessions-teacher', 'session-editor', 'course-editor', 'chatbot-editor', 'profile'] // Require Teacher
   const require_director = ['director', 'profile'] // Require Director
