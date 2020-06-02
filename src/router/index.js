@@ -6,6 +6,7 @@ import Home from '../views/Home.vue'
 import store from '../store'
 import { sessionExists, getSession } from '@/services/security'
 import { redirect } from '@/services/router'
+import { getUser } from "@/services/userService";
 
 Vue.use(VueRouter)
 
@@ -103,19 +104,29 @@ router.beforeEach(async (to, from, next) => {
 
   let to_name = to.name
   let session_exists = sessionExists()
-  // Admin
+
   if (require_student.concat(require_admin, require_teacher, require_director, require_parent).includes(to_name)) {
-    if (session_exists)
-      if ((require_admin.includes(to_name) && getSession().type == 0) ||
-        (require_teacher.includes(to_name) && getSession().type == 1) ||
-        (require_student.includes(to_name) && getSession().type == 2) ||
-        (require_director.includes(to_name) && getSession().type == 3) ||
-        (require_parent.includes(to_name) && getSession().type == 4))
-        next()
+    try {
+      let user = await getUser()
+      console.log(user);
+      
+      store.commit('setUser', user)
+
+      if (session_exists)
+        if ((require_admin.includes(to_name) && getSession().type == 0) ||
+          (require_teacher.includes(to_name) && getSession().type == 1) ||
+          (require_student.includes(to_name) && getSession().type == 2) ||
+          (require_director.includes(to_name) && getSession().type == 3) ||
+          (require_parent.includes(to_name) && getSession().type == 4))
+          next()
+        else
+          redirect('home')
       else
-        redirect('login')
-    else
-      redirect('login')
+        redirect('home')
+    } catch (error) {
+      store.commit('setUser', null)
+      redirect('home')
+    }
   }
   else
     next()

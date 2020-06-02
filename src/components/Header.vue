@@ -15,14 +15,9 @@
           @click="redirect(link.name)"
         >{{link.title}}</v-btn>
         <!-- User -->
-        <div
-          id="user"
-          class="user"
-          v-if="session && session.user"
-          @click="user_options = !user_options"
-        >
+        <div id="user" class="user" v-if="user" @click="user_options = !user_options">
           <span class="user__name">{{user.name}}</span>
-          <span class="user__type">{{user.type}}</span>
+          <span class="user__type">{{types[user.type]}}</span>
           <div class="user__avatar">
             <img src="https://i.ya-webdesign.com/images/avatar-png-1.png" alt />
           </div>
@@ -44,9 +39,9 @@
       <div class="nav-logo">
         <v-img alt="BrainTutor Logo" src="@/assets/braintutor/icon.png" width="25" />
       </div>
-      <div class="user ml-0" v-if="session" @click="user_options = !user_options">
+      <div class="user ml-0" v-if="user" @click="user_options = !user_options">
         <span class="user__name">{{user.name}}</span>
-        <span class="user__type">{{user.type}}</span>
+        <span class="user__type">{{types[user.type]}}</span>
       </div>
       <v-list>
         <v-list-item-group active-class="blue--text text--accent-4">
@@ -66,7 +61,7 @@
             </v-list-item-icon>
             <v-list-item-title>Perfil</v-list-item-title>
           </v-list-item>
-          <v-list-item v-if="session && session.token" @click="closeSession(); drawer=false">
+          <v-list-item v-if="user" @click="closeSession(); drawer=false">
             <v-list-item-icon>
               <v-icon>mdi-power</v-icon>
             </v-list-item-icon>
@@ -86,7 +81,6 @@
 
 <script>
 import { redirect } from "@/services/router.js";
-import { removeSession } from "@/services/security.js";
 
 export default {
   data: () => ({
@@ -96,27 +90,27 @@ export default {
         title: "Colegio",
         name: "school-editor",
         icon: "mdi-school",
-        session_types: ["0"]
+        session_types: [0]
       },
       // 1
       {
         title: "Cursos",
         name: "sessions-teacher",
         icon: "mdi-book",
-        session_types: ["1"]
+        session_types: [1]
       },
       {
         title: "Editar",
         name: "courses-editor",
         icon: "mdi-book",
-        session_types: ["1"]
+        session_types: [1]
       },
       // 2, 4
       {
         title: "Cursos",
         name: "sessions-student",
         icon: "mdi-book",
-        session_types: ["2", "4"]
+        session_types: [2, 4]
       },
       // {
       //   title: "Tareas",
@@ -128,16 +122,17 @@ export default {
         title: "Eventos",
         name: "events",
         icon: "mdi-book",
-        session_types: ["2", "4"]
+        session_types: [2, 4]
       },
       // 3
       {
         title: "Colegio",
         name: "director",
         icon: "mdi-school",
-        session_types: ["3"]
+        session_types: [3]
       }
     ],
+    types: ["ADMINISTRADOR", "PROFESOR", "ESTUDIANTE", "DIRECTOR", "PADRE"],
     user_options: false,
     drawer: false
   }),
@@ -154,20 +149,18 @@ export default {
   computed: {
     links_filtered() {
       return this.links.filter(
-        l => this.session && l.session_types.includes(this.session.type)
+        l => this.user && l.session_types.includes(this.user.type)
       );
     },
-    session() {
-      return this.$store.state.session;
-    },
     user() {
-      return this.$store.getters.getUser;
+      return this.$store.state.user;
     }
   },
   methods: {
     redirect,
     closeSession() {
-      removeSession();
+      this.$store.state.user = null;
+      localStorage.setItem("token", null);
       redirect("home");
     }
   }

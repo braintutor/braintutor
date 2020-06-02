@@ -115,6 +115,13 @@ export default {
           let { token } = res;
           setSession(token, type, "{}");
           let user = await getUser();
+          user["type"] = [
+            "ADMINISTRADOR",
+            "PROFESOR",
+            "ESTUDIANTE",
+            "DIRECTOR",
+            "PADRE"
+          ][type];
           setSession(token, type, JSON.stringify(user));
 
           redirect(name);
