@@ -37,8 +37,12 @@ export default {
     while ((m = regex.exec(fragmentString))) {
       params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
     }
-    localStorage.setItem("access_token", params.access_token);
-    redirect("session", { session_id: params["state"] || params["/state"] });
+    if (params.access_token) {
+      localStorage.setItem("access_token", params.access_token);
+    }
+    if (params["state"] || params["/state"]) {
+      redirect("session", { session_id: params["state"] || params["/state"] });
+    }
   },
   methods: {
     showMessage(title, message) {

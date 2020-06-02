@@ -5,7 +5,7 @@
         <!-- Principal -->
         <div class="principal-container row">
           <div class="principal-content col-sm-6">
-            <h1 class="principal-title">BrainTutor</h1>
+            <h1 class="principal-title mt-1 mb-2">BrainTutor</h1>
             <div
               class="principal-description"
             >Braintutor es una plataforma para crear clases virtuales y chatbots educativos.</div>
@@ -82,8 +82,7 @@ export default {
       {
         title: "Chatbot",
         description: "Chatbot como agente de apoyo",
-        image:
-          "https://www.synaptive.com/img/chatbot.png"
+        image: "https://www.synaptive.com/img/chatbot.png"
       },
       {
         title: "Monitoreo",

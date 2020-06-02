@@ -22,7 +22,7 @@
     <v-dialog v-model="dialog_start" max-width="400">
       <v-card>
         <v-card-title>Iniciar Evaluación</v-card-title>
-        <v-card-text class="pb-2">Una vez que inicias una evaluación, solo podrás darla una vez.</v-card-text>
+        <v-card-text class="pb-2">Una vez que inicias una evaluación, solo tendrás una oportunidad para responderla.</v-card-text>
         <v-card-text>No cierres la pestaña o cambies de página.</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>

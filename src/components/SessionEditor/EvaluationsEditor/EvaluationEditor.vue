@@ -112,7 +112,7 @@
     <v-dialog v-model="dialog_public" max-width="300">
       <v-card>
         <v-card-title>Confirmar publicación</v-card-title>
-        <v-card-text>Una vez publicado, no podrá modificar el contenido.</v-card-text>
+        <v-card-text>Una vez publicada la evaluación, no podrá modificar su contenido.</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn small text @click="dialog_public = false">Cancelar</v-btn>

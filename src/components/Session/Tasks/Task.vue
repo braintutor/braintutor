@@ -35,11 +35,32 @@
             </v-list-item>
             <v-divider></v-divider>
             <v-subheader class="text-center">Google Drive</v-subheader>
-            <v-list-item @click="addFile()">
-              <v-list-item-icon class="mr-3">
-                <v-icon color="blue">mdi-text-box</v-icon>
+            <v-list-item @click="add(0)">
+              <v-list-item-icon class="mr-2" style="display: flex; align-items: center">
+                <img
+                  style="width: 16px; height: 16px"
+                  src="https://drive-thirdparty.googleusercontent.com/16/type/application/vnd.google-apps.document"
+                />
               </v-list-item-icon>
               <v-list-item-title class="mr-3">Crear Documento</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="add(1)">
+              <v-list-item-icon class="mr-2" style="display: flex; align-items: center">
+                <img
+                  style="width: 16px; height: 16px"
+                  src="https://drive-thirdparty.googleusercontent.com/16/type/application/vnd.google-apps.presentation"
+                />
+              </v-list-item-icon>
+              <v-list-item-title class="mr-3">Crear Presentación</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="add(2)">
+              <v-list-item-icon class="mr-2" style="display: flex; align-items: center">
+                <img
+                  style="width: 16px; height: 16px"
+                  src="https://drive-thirdparty.googleusercontent.com/16/type/application/vnd.google-apps.spreadsheet"
+                />
+              </v-list-item-icon>
+              <v-list-item-title class="mr-3">Crear Hoja de Cálculo</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -118,7 +139,7 @@ export default {
     };
   },
   methods: {
-    async addFile() {
+    async add(type) {
       let access_token = localStorage.getItem("access_token");
       if (!access_token) {
         this.login();
@@ -126,10 +147,13 @@ export default {
       }
       this.loading = true;
       this.loading_msg = "Creando Documento";
-      let { documentId } = await this.create();
-      if (documentId) {
-        let file = await this.get(documentId);
-        await this.createPermission(documentId, "mitsuoysharag@gmail.com");
+      let { documentId, presentationId, spreadsheetId } = await this.create(
+        type
+      );
+      let id = documentId || presentationId || spreadsheetId;
+      if (id) {
+        let file = await this.get(id);
+        // await this.createPermission(id, "mitsuoysharag@gmail.com");
         this.link = file.webViewLink;
         await this.addLink();
       }
@@ -170,28 +194,30 @@ export default {
     },
     // GOOGLE DRIVE
     login() {
-      let redirect_uri = "http://localhost:8080";
+      // let redirect_uri = "http://localhost:8080";
+      let redirect_uri = "https://braintutor.github.io/braintutor";
       let url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${this.client_id}&redirect_uri=${redirect_uri}&response_type=token&scope=${this.scope}&state=${this.session_id}`;
       window.location = url;
     },
-    async create() {
+    async create(type) {
+      let url = [
+        "https://docs.googleapis.com/v1/documents",
+        "https://slides.googleapis.com/v1/presentations",
+        "https://sheets.googleapis.com/v4/spreadsheets"
+      ][type];
+      let body = [{ title: "Título" }, { title: "Título" }, {}][type];
       let access_token = localStorage.getItem("access_token");
       try {
-        let res = await fetch(
-          `https://docs.googleapis.com/v1/documents?fields=*&key=${this.api_key}`,
-          {
-            method: "POST",
-            body: JSON.stringify({
-              title: "Título"
-            }),
-            headers: {
-              Authorization: `Bearer ${access_token}`,
-              Accept: "application/json",
-              "Content-Type": "application/json"
-            }
+        let res = await fetch(`${url}?key=${this.api_key}`, {
+          method: "POST",
+          body: JSON.stringify(body),
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+            Accept: "application/json",
+            "Content-Type": "application/json"
           }
-        );
-        if (res.status >= 400 && res.status < 600) throw "Token inválido.";
+        });
+        // if (res.status >= 400 && res.status < 600) throw "Token inválido.";
         let data = await res.json();
         return data;
       } catch (error) {
