@@ -2,6 +2,7 @@
   <v-app>
     <Header />
     <v-content>
+      <loading :active="loading" />
       <router-view></router-view>
     </v-content>
     <!-- showMessage -->
@@ -20,6 +21,7 @@
 
 <script>
 import Header from "./components/Header";
+import loading from "./components/loading";
 import { redirect } from "@/services/router.js";
 
 export default {
@@ -29,6 +31,11 @@ export default {
     show_title: "",
     show_message: ""
   }),
+  computed: {
+    loading() {
+      return this.$store.state.loading;
+    }
+  },
   mounted() {
     let fragmentString = location.hash.substring(1);
     let params = {};
@@ -52,7 +59,8 @@ export default {
     }
   },
   components: {
-    Header
+    Header,
+    loading
   }
 };
 </script>

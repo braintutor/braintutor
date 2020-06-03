@@ -110,7 +110,9 @@ router.beforeEach(async (to, from, next) => {
 
   if (require_student.concat(require_admin, require_teacher, require_director, require_parent).includes(to_name)) {
     try {
+      store.state.loading = true
       let user = await getUser()
+      store.state.loading = false
       store.commit('setUser', user)
 
       if ((require_admin.includes(to_name) && user.type == 0) ||
@@ -122,6 +124,7 @@ router.beforeEach(async (to, from, next) => {
       else
         redirect('home')
     } catch (error) {
+      store.state.loading = false
       store.commit('setUser', null)
       redirect('home')
     }
