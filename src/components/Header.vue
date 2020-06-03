@@ -163,7 +163,7 @@ export default {
     redirect,
     closeSession() {
       this.$store.state.user = null;
-      localStorage.setItem("token", null);
+      localStorage.removeItem("token");
       redirect("home");
     }
   }

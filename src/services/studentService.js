@@ -28,6 +28,13 @@ function getStudentsBySession(session_id) {
   })
 }
 
+function getStudentsBySessionStudent(session_id) {
+  return fetch_post('getStudentsBySessionStudent', {
+    session_id
+  })
+}
+
+
 function addStudent(student) {
   return fetch_post('addStudent', {
     student
@@ -66,6 +73,7 @@ export {
   getStudentsByClassroom,
   getStudentsByClassroomDirector,
   getStudentsBySession,
+  getStudentsBySessionStudent,
   addStudent,
   updateStudent,
   removeStudent,

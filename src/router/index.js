@@ -105,30 +105,31 @@ router.beforeEach(async (to, from, next) => {
   const require_teacher = ['chatbot', 'courses-editor', 'sessions-teacher', 'session-editor', 'course-editor', 'chatbot-editor', 'profile'] // Require Teacher
   const require_director = ['director', 'profile'] // Require Director
   const require_parent = ['sessions-student', 'session', 'tasks', 'events', 'chatbot', 'profile'] // Require Director
-
   let to_name = to.name
 
-  if (require_student.concat(require_admin, require_teacher, require_director, require_parent).includes(to_name)) {
+  let user = null
+  let token = localStorage.getItem('token')
+  if (token) {
+    store.state.loading = true
     try {
-      store.state.loading = true
-      let user = await getUser()
-      store.state.loading = false
+      user = await getUser()
       store.commit('setUser', user)
-
-      if ((require_admin.includes(to_name) && user.type == 0) ||
-        (require_teacher.includes(to_name) && user.type == 1) ||
-        (require_student.includes(to_name) && user.type == 2) ||
-        (require_director.includes(to_name) && user.type == 3) ||
-        (require_parent.includes(to_name) && user.type == 4))
-        next()
-      else
-        redirect('home')
     } catch (error) {
-      store.state.loading = false
+      localStorage.removeItem('token')
       store.commit('setUser', null)
-      redirect('home')
     }
+    store.state.loading = false
   }
+
+  if (require_student.concat(require_admin, require_teacher, require_director, require_parent).includes(to_name))
+    if (user && ((require_admin.includes(to_name) && user.type == 0) ||
+      (require_teacher.includes(to_name) && user.type == 1) ||
+      (require_student.includes(to_name) && user.type == 2) ||
+      (require_director.includes(to_name) && user.type == 3) ||
+      (require_parent.includes(to_name) && user.type == 4)))
+      next()
+    else
+      redirect('home')
   else
     next()
 })

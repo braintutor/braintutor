@@ -40,10 +40,11 @@
 
     <!-- Dialog Test -->
     <v-dialog v-model="dialog_test" max-width="900">
-      <div class="test m-card">
+      <div id="test" class="test m-card">
         <h2 class="test__title">Cuestionario de Estilos de Aprendizaje</h2>
+        <p class="test__page">Página {{questions_page + 1}} de 4</p>
         <div class="test__content">
-          <div class="test__question" v-for="(question, q_idx) in questions" :key="q_idx">
+          <div class="test__question" v-for="(question, q_idx) in _questions" :key="q_idx">
             <h3 class="test__question-title">{{(q_idx + 1)}}. {{question.enunciado}}</h3>
             <v-radio-group v-model="question.answer">
               <v-radio
@@ -56,21 +57,23 @@
           </div>
         </div>
         <div class="test__actions">
-          <v-btn color="primary" :loading="loading" @click="saveTest()">Guardar</v-btn>
+          <v-btn
+            v-if="questions_page !== 0"
+            color="primary"
+            @click="changePage(-1)"
+            small
+            class="mr-3"
+          >Anterior</v-btn>
+          <v-btn v-if="questions_page !== 3" color="primary" @click="changePage(1)" small>Siguiente</v-btn>
+          <v-btn
+            v-if="questions_page === 3"
+            color="success"
+            :loading="loading"
+            @click="saveTest()"
+            small
+          >Guardar</v-btn>
         </div>
       </div>
-    </v-dialog>
-
-    <!-- DIALOG ERROR -->
-    <v-dialog v-model="dialog_error" max-width="300">
-      <v-card>
-        <v-card-title>Error</v-card-title>
-        <v-card-text>Por favor no dejes preguntas sin responder.</v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn small text @click="dialog_error = false">Cerrar</v-btn>
-        </v-card-actions>
-      </v-card>
     </v-dialog>
 
     <!-- DIALOG PASSWORD -->
@@ -115,8 +118,8 @@ import loading from "@/components/loading";
 import Chart from "chart.js";
 
 import { updateLearningStyle } from "@/services/studentService";
-import { getUser } from "@/services/userService";
-import { updatePassword } from "@/services/userService";
+import { getUser, updatePassword } from "@/services/userService";
+import { scrollTop } from "@/services/scroll";
 
 class PreguntaTest {
   constructor(enunciado, alternatives) {
@@ -315,18 +318,28 @@ export default {
         ]
       )
     ],
+    questions_page: 0,
+    questions_size: 11,
     //
     session_type: -1,
     myChart: null,
     loading: true,
     loading_msg: "",
     dialog_test: false,
-    dialog_error: false,
     //
     old_password: "",
     new_password: "",
     dialog_password: false
   }),
+  computed: {
+    _questions() {
+      let questions = this.questions.slice(
+        this.questions_page * this.questions_size,
+        this.questions_page * this.questions_size + this.questions_size
+      );
+      return questions;
+    }
+  },
   async mounted() {
     this.loading_msg = "Cargando Datos";
     this.session_type = this.$store.state.user.type;
@@ -373,7 +386,10 @@ export default {
 
         this.loading = false;
       } else {
-        this.dialog_error = true;
+        this.$root.$children[0].showMessage(
+          "Error",
+          "No dejes preguntas sin responder."
+        );
       }
     },
     async updatePassword() {
@@ -536,6 +552,11 @@ export default {
         };
         this.myChart.update();
       }
+    },
+    changePage(n) {
+      // var element = document.getElementById("test");
+      scrollTop("test");
+      this.questions_page += n;
     }
   },
   components: {
@@ -603,13 +624,28 @@ export default {
 }
 
 .test {
+  max-height: calc(85vh);
+  overflow-y: auto;
   padding: 20px 26px;
   background: #fff;
+  border-radius: 0;
   &__title {
+    font-size: 1.3rem;
     text-align: center;
+  }
+  &__page {
+    width: max-content;
+    margin: 10px auto;
+    padding: 4px 12px;
+    background: #447fff;
+    color: #fff;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 8px;
   }
   &__question {
     padding: 16px 0;
+    font-size: 0.9rem;
     &-title {
       padding-bottom: 5px;
     }

@@ -12,6 +12,13 @@ function scrollRight(element_id) {
     behavior: 'smooth'
   });
 }
+function scrollTop(element_id) {
+  var element = element_id ? document.getElementById(element_id) : window
+  element.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+}
 function scrollDown(element_id) {
   var element = element_id ? document.getElementById(element_id) : window
   element.scrollTo({
@@ -20,4 +27,4 @@ function scrollDown(element_id) {
   });
 }
 
-export { scrollTopWindow, scrollLeft, scrollRight, scrollDown }
+export { scrollTopWindow, scrollLeft, scrollRight, scrollTop, scrollDown }

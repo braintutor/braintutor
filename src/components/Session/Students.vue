@@ -1,6 +1,6 @@
 <template>
   <div>
-    <loading :active="loading" :message="loading_message" />
+    <loading :active="loading" :message='loading_message' />
     <div class="students m-card">
       <h1 class="students__title">Alumnos</h1>
       <div class="students__content">
@@ -49,7 +49,7 @@ import loading from "@/components/loading";
 import Chart from "chart.js";
 
 import { getParam } from "@/services/router.js";
-import { getStudentsBySession } from "@/services/studentService";
+import { getStudentsBySessionStudent } from "@/services/studentService";
 
 export default {
   data: () => ({
@@ -59,7 +59,7 @@ export default {
     //
     show_dashboard: false,
     loading: true,
-    loading_message: ""
+    loading_message: ''
   }),
   watch: {
     student() {
@@ -68,8 +68,8 @@ export default {
   },
   async mounted() {
     this.session_id = getParam("session_id");
-    this.loading_message = "Cargando Alumnos";
-    this.students = await getStudentsBySession(this.session_id);
+    this.loading_message = 'Cargando Alumnos'
+    this.students = await getStudentsBySessionStudent(this.session_id);
     this.loading = false;
     // Chart
     this.showDashboardAll();
@@ -238,9 +238,9 @@ export default {
 <style lang='scss' scoped>
 .students {
   padding: 16px 24px;
-  margin: 0 0 6px 0;
+  margin-bottom: 1.2rem;
   &__title {
-    margin-bottom: 6px;
+    margin: 0 0 6px 0;
     font-size: 1.4rem;
   }
   &__content {
