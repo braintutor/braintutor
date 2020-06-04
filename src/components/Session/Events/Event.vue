@@ -23,7 +23,7 @@
           <span class="event__description">{{event.description}}</span>
         </div>
         <div v-if="event.type === 'task'" class="event__actions">
-          <v-btn text small @click="redirect('task', {task_id: event._id.$oid})">Ver Más</v-btn>
+          <v-btn text small @click="redirect('task', {task_id: event._id.$oid})">Ver Respuesta</v-btn>
         </div>
       </div>
     </div>

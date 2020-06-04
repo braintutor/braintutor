@@ -28,12 +28,12 @@
       />
       <div class="legend">
         <div class="legend__item">
-          <div class="legend__name">Tareas</div>
-          <div class="legend__color" style="background-color: #00af3d"></div>
-        </div>
-        <div class="legend__item">
           <div class="legend__name">Eventos</div>
           <div class="legend__color" style="background-color: #5252ff"></div>
+        </div>
+        <div class="legend__item">
+          <div class="legend__name">Tareas</div>
+          <div class="legend__color" style="background-color: #00af3d"></div>
         </div>
       </div>
     </div>
