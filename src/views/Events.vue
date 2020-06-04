@@ -1,57 +1,55 @@
 <template>
   <div class="container pt-0">
     <loading :active="loading" :message="loading_message" />
-    <div class="m-card">
-      <div class="filter">
-        <span class="filter__text">Mostrar:</span>
-        <label class="filter__item">
-          <input class="mr-1" type="checkbox" value="task" v-model="filters" />Tareas
-        </label>
-        <label class="filter__item">
-          <input class="mr-1" type="checkbox" value="event" v-model="filters" />Eventos
-        </label>
-      </div>
-      <div v-show="!show_events_selected" class="calendar-container pt-0">
-        <div class="calendar-control">
-          <span class="calendar-date">{{calendar_date}}</span>
-          <div class="calendar-actions">
-            <v-btn class="calendar-action" icon @click="today()">
-              <v-icon>mdi-calendar-today</v-icon>
-            </v-btn>
-            <v-btn class="calendar-action" icon @click="prev()">
-              <v-icon>mdi-chevron-left</v-icon>
-            </v-btn>
-            <v-btn class="calendar-action" icon @click="next()">
-              <v-icon>mdi-chevron-right</v-icon>
-            </v-btn>
-          </div>
-        </div>
-        <FullCalendar
-          class="fullcalendar"
-          ref="calendar"
-          :locale="locale"
-          :plugins="calendarPlugins"
-          :events="events_f"
-          @dateClick="dateClick"
-          @eventClick="eventClick"
-          eventTextColor="#fff"
-        />
-        <div class="legend">
-          <div class="legend__item" v-for="(session, s_idx) in sessions" :key="s_idx">
-            <div class="legend__name">{{session.course.name}}</div>
-            <div class="legend__color" :style="{'background-color': session.color}"></div>
-          </div>
-        </div>
-      </div>
-      <!-- Events Selected -->
-      <Event
-        v-show="show_events_selected"
-        :event_date="event_date"
-        :events="events_selected"
-        :unselectEvents="unselectEvents"
-        :restoreEvents="restoreEvents"
-      />
+    <div class="filter">
+      <span class="filter__text">Mostrar:</span>
+      <label class="filter__item">
+        <input class="mr-1" type="checkbox" value="event" v-model="filters" />Eventos
+      </label>
+      <label class="filter__item">
+        <input class="mr-1" type="checkbox" value="task" v-model="filters" />Tareas
+      </label>
     </div>
+    <div v-show="!show_events_selected" class="calendar-container m-card">
+      <div class="calendar-control">
+        <span class="calendar-date">{{calendar_date}}</span>
+        <div class="calendar-actions">
+          <v-btn class="calendar-action" icon @click="today()">
+            <v-icon>mdi-calendar-today</v-icon>
+          </v-btn>
+          <v-btn class="calendar-action" icon @click="prev()">
+            <v-icon>mdi-chevron-left</v-icon>
+          </v-btn>
+          <v-btn class="calendar-action" icon @click="next()">
+            <v-icon>mdi-chevron-right</v-icon>
+          </v-btn>
+        </div>
+      </div>
+      <FullCalendar
+        class="fullcalendar"
+        ref="calendar"
+        :locale="locale"
+        :plugins="calendarPlugins"
+        :events="events_f"
+        @dateClick="dateClick"
+        @eventClick="eventClick"
+        eventTextColor="#fff"
+      />
+      <div class="legend">
+        <div class="legend__item" v-for="(session, s_idx) in sessions" :key="s_idx">
+          <div class="legend__name">{{session.course.name}}</div>
+          <div class="legend__color" :style="{'background-color': session.color}"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Events Selected -->
+    <Event
+      v-show="show_events_selected"
+      :event_date="event_date"
+      :events="events_selected"
+      :unselectEvents="unselectEvents"
+      :restoreEvents="restoreEvents"
+    />
   </div>
 </template>
 
@@ -194,9 +192,7 @@ export default {
 @import "@/styles/events";
 .filter {
   width: max-content;
-  margin: 0 auto;
-  padding: 10px;
-  padding-top: 16px;
+  margin: 0 auto 14px;
   font-size: 1rem;
   &__text {
     margin-right: 0.5rem;
