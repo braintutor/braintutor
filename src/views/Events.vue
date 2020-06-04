@@ -196,7 +196,7 @@ export default {
   width: max-content;
   margin: 0 auto;
   padding: 10px;
-  padding-top: 14px;
+  padding-top: 16px;
   font-size: 1rem;
   &__text {
     margin-right: 0.5rem;

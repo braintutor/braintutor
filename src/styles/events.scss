@@ -14,7 +14,7 @@
     }
   }
   .fullcalendar {
-    max-width: 800px;
+    max-width: 750px;
     margin: 0 auto;
   }
 }
@@ -43,22 +43,22 @@
   }
 }
 .legend {
-  margin-top: 30px;
+  margin: 12px 0 4px;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   &__item {
-    margin: 0 20px 10px 20px;
+    margin: 10px 14px 0 14px;
     display: flex;
     align-items: center;
   }
   &__name {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
   &__color {
     height: 10px;
     width: 40px;
-    margin-left: 12px;
+    margin-left: 10px;
   }
 }
 .no-info {
