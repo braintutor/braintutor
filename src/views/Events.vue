@@ -192,7 +192,7 @@ export default {
 @import "@/styles/events";
 .filter {
   width: max-content;
-  margin: 0 auto 14px;
+  margin: 0 auto 12px;
   font-size: 1rem;
   &__text {
     margin-right: 0.5rem;
