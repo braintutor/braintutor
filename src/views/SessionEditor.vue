@@ -48,7 +48,7 @@ export default {
       },
       {
         image: require("@/assets/braintutor/icon-event.png"),
-        text: "Eventos"
+        text: "Agenda"
       },
       {
         image: require("@/assets/braintutor/icon-students.png"),

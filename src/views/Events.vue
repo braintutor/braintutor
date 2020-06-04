@@ -21,7 +21,7 @@
         ref="calendar"
         :locale="locale"
         :plugins="calendarPlugins"
-        :events="events_fc"
+        :events="events"
         @dateClick="dateClick"
         @eventClick="eventClick"
         eventTextColor="#fff"
@@ -75,13 +75,6 @@ export default {
     calendarPlugins: [dayGridPlugin, interactionPlugin]
   }),
   computed: {
-    events_fc() {
-      return this.events.map(event => ({
-        title: event.name,
-        date: event.date,
-        color: event.color
-      }));
-    },
     events_selected() {
       return this.events.filter(event => event.date === this.event_date);
     }
@@ -165,24 +158,4 @@ export default {
 
 <style lang="scss">
 @import "@/styles/events";
-
-.legend {
-  margin-top: 30px;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  &__item {
-    margin: 0 20px 10px 20px;
-    display: flex;
-    align-items: center;
-  }
-  &__name {
-    font-size: 0.9rem;
-  }
-  &__color {
-    height: 10px;
-    width: 40px;
-    margin-left: 12px;
-  }
-}
 </style>

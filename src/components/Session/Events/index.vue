@@ -21,11 +21,21 @@
         ref="calendar"
         :locale="locale"
         :plugins="calendarPlugins"
-        :events="events_fc"
+        :events="events"
         @dateClick="dateClick"
         @eventClick="eventClick"
         eventTextColor="#fff"
       />
+      <div class="legend">
+        <div class="legend__item">
+          <div class="legend__name">Tareas</div>
+          <div class="legend__color" style="background-color: #00af3d"></div>
+        </div>
+        <div class="legend__item">
+          <div class="legend__name">Eventos</div>
+          <div class="legend__color" style="background-color: #5252ff"></div>
+        </div>
+      </div>
     </div>
     <!-- Events Selected -->
     <Event
@@ -42,6 +52,7 @@
 import Event from "./Event";
 import loading from "@/components/loading";
 
+import { getTasksBySessionStudent } from "@/services/taskService";
 import { getEventsBySessionStudent } from "@/services/eventService";
 import { getParam } from "@/services/router.js";
 
@@ -69,12 +80,6 @@ export default {
     calendarPlugins: [dayGridPlugin, interactionPlugin]
   }),
   computed: {
-    events_fc() {
-      return this.events.map(event => ({
-        title: event.name,
-        date: event.date
-      }));
-    },
     events_selected() {
       return this.events.filter(event => event.date === this.event_date);
     }
@@ -97,8 +102,32 @@ export default {
     async restoreEvents() {
       this.loading_events = true;
       this.loading_message = "Cargando Eventos";
-      this.events = await getEventsBySessionStudent(this.session_id);
+      let events = await getEventsBySessionStudent(this.session_id);
+      events.forEach(i => {
+        i.color = "#5252ff";
+        i.type = "event";
+      });
+      let tasks = await getTasksBySessionStudent(this.session_id);
+      tasks.forEach(i => {
+        i.date = this.dateFormat(i.time_start);
+        i.color = "#00af3d";
+        i.type = "task";
+      });
+      this.events = events.concat(tasks);
       this.loading_events = false;
+    },
+    dateFormat(date) {
+      date = new Date(date);
+      let day = this.format_two_digits(date.getDate());
+      let month = this.format_two_digits(date.getMonth() + 1);
+      let year = date.getFullYear();
+      // let hours = this.format_two_digits(date.getHours());
+      // let minutes = this.format_two_digits(date.getMinutes());
+      date = `${year}-${month}-${day}`;
+      return date;
+    },
+    format_two_digits(n) {
+      return n < 10 ? "0" + n : n;
     },
     // Calendar
     today() {

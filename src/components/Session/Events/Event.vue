@@ -17,23 +17,28 @@
         :key="t_idx"
       >
         <div class="event__menu">
-          <span class="event__name">{{event.name}}</span>
+          <span class="event__name">{{event.title}}</span>
         </div>
         <div class="event__content">
           <span class="event__description">{{event.description}}</span>
         </div>
+        <div v-if="event.type === 'task'" class="event__actions">
+          <v-btn text small @click="redirect('task', {task_id: event._id.$oid})">Ver Más</v-btn>
+        </div>
       </div>
     </div>
-    <div class="no-info" v-else>No hay Tareas</div>
+    <div class="no-info" v-else>No hay eventos.</div>
   </div>
 </template>
 
 <script>
+import { redirect } from "@/services/router";
 import { formatDate } from "@fullcalendar/core";
 
 export default {
   props: ["event_date", "events", "unselectEvents", "restoreEvents"],
   methods: {
+    redirect,
     format(date) {
       return formatDate(date, {
         day: "numeric",

@@ -2,16 +2,16 @@
   <div class="m-fullcenter">
     <loading :active="loading" />
     <v-card class="login_container" elevation="6">
-      <!-- <div class="login_icon">
+      <div class="login_icon">
         <img src="@/assets/braintutor/icon.png" width="100%" />
       </div>
       <div class="login_name">
         <img src="@/assets/braintutor/name.png" width="100%" />
-      </div>-->
-      <!-- {{school}} -->
-      <div class="login_icon">
-        <img :src="school.image" width="100%" />
       </div>
+      <!-- {{school}} -->
+      <!-- <div class="login_icon">
+        <img :src="school.image" width="100%" />
+      </div> -->
       <v-form ref="form_login" @submit.prevent="login">
         <v-card-text class="login_content">
           <v-alert

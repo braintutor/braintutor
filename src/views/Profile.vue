@@ -34,7 +34,7 @@
         class="no-style"
       >Realiza un test para obtener tu estilo de aprendizaje</div>
       <div class="diagram__actions">
-        <v-btn @click="dialog_test = true" small color="primary">Nuevo Test</v-btn>
+        <v-btn @click="newTest()" small color="primary">Nuevo Test</v-btn>
       </div>
     </div>
 
@@ -553,10 +553,24 @@ export default {
         this.myChart.update();
       }
     },
+    newTest() {
+      this.questions_page = 0;
+      this.questions.forEach(q => {
+        q.answer = null;
+      });
+      this.dialog_test = true;
+    },
     changePage(n) {
-      // var element = document.getElementById("test");
-      scrollTop("test");
-      this.questions_page += n;
+      let answers = this._questions.map(q => q.answer);
+      if (n === -1 || !answers.includes(null)) {
+        scrollTop("test");
+        this.questions_page += n;
+      } else {
+        this.$root.$children[0].showMessage(
+          "Error",
+          "No dejes preguntas sin responder."
+        );
+      }
     }
   },
   components: {

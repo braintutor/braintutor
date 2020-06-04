@@ -55,7 +55,7 @@
             </v-list-item-icon>
             <v-list-item-title>{{link.title}}</v-list-item-title>
           </v-list-item>
-          <v-list-item @click="redirect('profile'); drawer=false">
+          <v-list-item v-if="user" @click="redirect('profile'); drawer=false">
             <v-list-item-icon>
               <v-icon>mdi-account</v-icon>
             </v-list-item-icon>
@@ -122,7 +122,7 @@ export default {
       //   session_types: ["2", "4"]
       // },
       {
-        title: "Eventos",
+        title: "Agenda",
         name: "events",
         icon: "mdi-book",
         session_types: [2, 4]
