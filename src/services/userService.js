@@ -11,4 +11,8 @@ function updatePassword(old_password, new_password) {
   })
 }
 
-export { getUser, updatePassword }
+function generatePassword() {
+  return Math.random().toString(36).slice(-8).toUpperCase()
+}
+
+export { getUser, updatePassword, generatePassword }

@@ -1,6 +1,6 @@
 <template>
   <div class="editor">
-    <loading :active="loading" :message='loading_msg' />
+    <loading :active="loading" :message="loading_msg" />
     <input
       style="display: none"
       id="ipt_file"
@@ -67,9 +67,10 @@
           </tr>
         </tbody>
       </table>
-      <p class="text-center mt-2" v-show="entities.length === 0">No hay alumnos.</p>
+      <p class="text-center mt-2" v-show="entities_filtered.length === 0">No hay alumnos.</p>
     </div>
 
+    <!-- CREATE | EDIT -->
     <v-dialog v-model="dialog_edit" class="container" max-width="500">
       <v-card class="edit">
         <v-card-title v-if="action === 'create'" class="py-5">Crear Alumno</v-card-title>
@@ -115,17 +116,6 @@
             dense
             hide-details
             autocomplete="off"
-          ></v-text-field>
-          <span class="mt-1 mr-4">Contraseña:</span>
-          <v-text-field
-            class="text-field"
-            v-model="entity.pass"
-            :append-icon="entity.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-            dense
-            hide-details
-            autocomplete="off"
-            :type="entity.showPassword ? 'text' : 'password'"
-            @click:append="toogleShowPassword(entity)"
           ></v-text-field>
         </v-card-text>
         <v-card-actions class="edit__actions">
@@ -186,7 +176,6 @@
               <th>Apellidos</th>
               <th>Correo</th>
               <th>Usuario</th>
-              <!-- <th>Contraseña</th> -->
             </tr>
           </thead>
           <tbody>
@@ -227,15 +216,6 @@
                   autocomplete="off"
                 ></v-text-field>
               </td>
-              <!-- <td>
-                <v-text-field
-                  class="text-field"
-                  v-model="entity.pass"
-                  dense
-                  hide-details
-                  autocomplete="off"
-                ></v-text-field>
-              </td>-->
               <td style="color: red; font-size: 0.8rem">{{ entity.response }}</td>
             </tr>
           </tbody>
@@ -264,6 +244,7 @@ import {
   updateStudent,
   removeStudent
 } from "@/services/studentService";
+import { generatePassword } from "@/services/userService";
 import { getClassroomsBySchool } from "@/services/classroomService";
 import * as XLSX from "xlsx";
 
@@ -281,16 +262,16 @@ export default {
     dialog_import: false,
     loading: true,
     loading_save: false,
-    loading_msg: '',
+    loading_msg: "",
     //
     entity_id_remove: "",
     entity_user_remove: "",
     dialog_remove: false
   }),
   async mounted() {
-    this.loading_msg = 'Cagando Alumnos'
+    this.loading_msg = "Cagando Alumnos";
     this.entities = await getStudents();
-    this.loading_msg = 'Cargando Aulas'
+    this.loading_msg = "Cargando Aulas";
     this.classrooms = await getClassroomsBySchool();
     if (this.classrooms.length !== 0) {
       this.classrooms.sort((a, b) => a.name.localeCompare(b.name));
@@ -331,6 +312,7 @@ export default {
       this.loading_save = true;
       if (this.action === "create") {
         try {
+          this.entity.pass = generatePassword();
           let entity_id = await addStudent(this.entity);
           this.entity._id = entity_id;
           this.entities.push(this.entity);
@@ -384,13 +366,12 @@ export default {
           //
           if (data.length <= 1000) {
             this.new_data = data.map(d => {
-              let { nombres, apellidos, usuario, correo /*, contraseña*/ } = d;
+              let { nombres, apellidos, usuario, correo } = d;
               return {
                 first_name: nombres || "",
                 last_name: apellidos || "",
                 user: usuario || "",
                 email: correo || ""
-                // pass: contraseña || ""
               };
             });
             this.dialog_import = true;
@@ -407,7 +388,7 @@ export default {
       while (i < this.new_data.length) {
         let entity = this.new_data[i];
         entity.classroom_id = this.classroom_id_import;
-        entity.pass = "123";
+        entity.pass = generatePassword();
         try {
           let entity_id = await addStudent(entity);
           entity._id = entity_id;
