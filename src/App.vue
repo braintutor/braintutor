@@ -22,7 +22,9 @@
 <script>
 import Header from "./components/Header";
 import loading from "./components/loading";
-import { redirect } from "@/services/router.js";
+
+// import { updateStudentTime } from "@/services/studentService";
+import { redirect } from "@/services/router";
 
 export default {
   name: "App",
@@ -34,9 +36,21 @@ export default {
   computed: {
     loading() {
       return this.$store.state.loading;
+    },
+    user() {
+      return this.$store.state.user;
     }
   },
   mounted() {
+    // TIME
+    // setInterval(async () => {
+    //   try {
+    //     if (this.user && this.user.type == 2) await updateStudentTime();
+    //   } catch (error) {
+    //     //
+    //   }
+    // }, 60000);
+    // GOOGLE
     let fragmentString = location.hash.substring(1);
     let params = {};
     var regex = /([^&=]+)=([^&]*)/g,
@@ -44,12 +58,11 @@ export default {
     while ((m = regex.exec(fragmentString))) {
       params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
     }
-    if (params.access_token) {
+    if (params.access_token)
       localStorage.setItem("access_token", params.access_token);
-    }
-    if (params["state"] || params["/state"]) {
-      redirect("task", { task_id: params["state"] || params["/state"] });
-    }
+
+    let state = params["state"] || params["/state"];
+    if (state) redirect("task", { task_id: state });
   },
   methods: {
     showMessage(title, message) {

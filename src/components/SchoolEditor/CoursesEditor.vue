@@ -29,6 +29,7 @@
           </tr>
         </tbody>
       </table>
+      <p class="text-center mt-2" v-show="entities_aux.length === 0">No hay cursos.</p>
     </div>
 
     <v-dialog v-model="dialog_edit" class="container" max-width="500">
@@ -122,9 +123,7 @@ export default {
   methods: {
     add() {
       this.action = "create";
-      this.entity = {
-        name: ""
-      };
+      this.entity = {};
     },
     edit(entity) {
       this.action = "edit";

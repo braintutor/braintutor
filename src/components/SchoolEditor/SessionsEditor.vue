@@ -43,7 +43,7 @@
           </tr>
         </tbody>
       </table>
-      <p class="editor__message" v-if="entities_filtered.length <= 0">Aún no hay sesiones.</p>
+      <p class="text-center mt-2" v-show="entities_filtered.length === 0">No hay sesiones.</p>
     </div>
 
     <v-dialog v-model="dialog_edit" class="container" max-width="500">
@@ -121,8 +121,10 @@ export default {
   async mounted() {
     this.courses = await getCoursesBySchool();
     this.classrooms = await getClassroomsBySchool();
-    this.classrooms.sort((a, b) => a.name.localeCompare(b.name));
-    this.classroom_id = this.classrooms[0]._id;
+    if (this.classrooms.length !== 0) {
+      this.classrooms.sort((a, b) => a.name.localeCompare(b.name));
+      this.classroom_id = this.classrooms[0]._id;
+    }
     this.teachers = await getTeachersBySchool();
     this.teachers.forEach(t => {
       t.name = `${t.first_name} ${t.last_name}`;
@@ -173,8 +175,8 @@ export default {
             this.entity._id = entity_id;
             this.entities.push(this.entity);
             this.dialog_edit = false;
-          } catch {
-            //
+          } catch (error) {
+            this.$root.$children[0].showMessage("Error al Guardar", error.msg);
           }
         } else if (this.action === "edit") {
           // Update
@@ -185,8 +187,9 @@ export default {
             );
             this.entities[entity_idx] = JSON.parse(JSON.stringify(this.entity));
             this.entities.splice(); // updates the array without modifying it
-          } catch {
-            //
+            this.dialog_edit = false;
+          } catch (error) {
+            this.$root.$children[0].showMessage("Error al Guardar", error.msg);
           }
         }
         this.loading_save = false;

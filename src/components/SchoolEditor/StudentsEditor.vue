@@ -1,6 +1,6 @@
 <template>
   <div class="editor">
-    <loading :active="loading" />
+    <loading :active="loading" :message='loading_msg' />
     <input
       style="display: none"
       id="ipt_file"
@@ -67,7 +67,7 @@
           </tr>
         </tbody>
       </table>
-      <p class="editor__message" v-if="entities_filtered.length <= 0">Aún no hay alumnos.</p>
+      <p class="text-center mt-2" v-show="entities.length === 0">No hay alumnos.</p>
     </div>
 
     <v-dialog v-model="dialog_edit" class="container" max-width="500">
@@ -281,17 +281,27 @@ export default {
     dialog_import: false,
     loading: true,
     loading_save: false,
+    loading_msg: '',
     //
     entity_id_remove: "",
     entity_user_remove: "",
     dialog_remove: false
   }),
   async mounted() {
-    this.classrooms = await getClassroomsBySchool();
-    this.classrooms.sort((a, b) => a.name.localeCompare(b.name));
-    this.classroom_id = this.classrooms[0]._id;
-    this.classroom_id_import = this.classrooms[0]._id;
+    this.loading_msg = 'Cagando Alumnos'
     this.entities = await getStudents();
+    this.loading_msg = 'Cargando Aulas'
+    this.classrooms = await getClassroomsBySchool();
+    if (this.classrooms.length !== 0) {
+      this.classrooms.sort((a, b) => a.name.localeCompare(b.name));
+      this.classroom_id = this.classrooms[0]._id;
+      this.classroom_id_import = this.classrooms[0]._id;
+    } else {
+      this.$root.$children[0].showMessage(
+        "Alerta",
+        "No puede crear alumnos sino hay aulas existentes."
+      );
+    }
     this.loading = false;
   },
   computed: {
@@ -309,12 +319,7 @@ export default {
     },
     add() {
       this.action = "create";
-      this.entity = {
-        first_name: "",
-        last_name: "",
-        user: "",
-        pass: ""
-      };
+      this.entity = {};
     },
     edit(entity) {
       this.action = "edit";

@@ -233,12 +233,7 @@ export default {
     },
     add() {
       this.action = "create";
-      this.entity = {
-        first_name: "",
-        last_name: "",
-        user: "",
-        pass: ""
-      };
+      this.entity = {};
     },
     edit(entity) {
       this.action = "edit";

@@ -459,6 +459,9 @@ export default {
 }
 
 .files {
+  max-height: 75vh !important;
+  display: flex;
+  flex-direction: column;
   &__title {
     padding: 16px 20px;
     font-size: 1.4rem;
@@ -481,7 +484,6 @@ export default {
   }
   &__body {
     overflow-y: auto;
-    max-height: 400px;
     padding: 10px;
     padding-top: 0;
   }
@@ -499,11 +501,11 @@ export default {
   &__img {
     display: block;
     width: 24px;
-    margin: 20px auto;
-    margin-bottom: 24px;
+    margin: 12px auto;
   }
   &__name {
     margin: 0;
+    padding-top: 8px;
     font-size: 0.9rem;
     font-weight: bold;
     text-align: center;
