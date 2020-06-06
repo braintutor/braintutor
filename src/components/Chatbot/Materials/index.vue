@@ -26,6 +26,7 @@
           />
         </v-col>
       </v-row>
+      <p class="text-center mt-2" v-show="materials.length === 0">No hay material.</p>
     </v-container>
     <!-- Material Selected -->
     <Material

@@ -18,6 +18,7 @@
         </div>
       </div>
     </div>
+    <p class="text-center mt-2" v-show="evaluations.length === 0">No hay evaluaciones.</p>
     <!-- Dialog Start Evaluation -->
     <v-dialog v-model="dialog_start" max-width="400">
       <v-card>

@@ -26,6 +26,7 @@
             </tr>
           </tbody>
         </table>
+        <p class="text-center mt-2" v-show="students.length === 0">No hay alumnos.</p>
       </div>
     </div>
     <div v-show="student" class="students-chart m-card">

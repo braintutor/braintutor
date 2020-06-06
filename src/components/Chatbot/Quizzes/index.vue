@@ -15,6 +15,7 @@
         </Card>
       </v-col>
     </v-row>
+    <p class="text-center mt-2" v-show="quizzes.length === 0">No hay quizzes.</p>
   </v-container>
   <!-- Quiz Selected -->
   <Quiz

@@ -196,7 +196,7 @@ export default {
         this.show_error = true;
         this.message_error = response.error;
       } else {
-        redirect("teacher");
+        redirect("courses-editor");
       }
       this.loading = false;
     },

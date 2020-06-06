@@ -6,6 +6,7 @@
         <Cartel :title="chatbot.name" :image='chatbot.image' :callback="() => select(chatbot)" />
       </div>
     </div>
+    <p class="text-center mt-2" v-show="chatbots.length === 0">No hay unidades.</p>
   </div>
 </template>
 

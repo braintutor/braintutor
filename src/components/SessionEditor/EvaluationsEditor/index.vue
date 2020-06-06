@@ -37,7 +37,12 @@
     :getEvaluations="getEvaluations"
     :unselect="unselect"
   />
-  <Results v-else :evaluation_id="evaluation._id.$oid" :getEvaluations="getEvaluations" :unselect="unselect" />
+  <Results
+    v-else
+    :evaluation_id="evaluation._id.$oid"
+    :getEvaluations="getEvaluations"
+    :unselect="unselect"
+  />
 </template>
 
 <script>

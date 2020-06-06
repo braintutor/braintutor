@@ -1,6 +1,6 @@
 <template>
   <div>
-    <loading :active="loading" :message='loading_message'/>
+    <loading :active="loading" :message="loading_message" />
     <div class="row no-gutters">
       <div
         class="col-6 col-sm-4 col-md-3 px-2 pb-4"
@@ -39,11 +39,11 @@ export default {
     course_id: "",
     chatbots: [],
     loading: true,
-    loading_message: ''
+    loading_message: ""
   }),
   async mounted() {
     this.course_id = getParam("course_id");
-    this.loading_message = 'Cargando Unidades'
+    this.loading_message = "Cargando Unidades";
     this.chatbots = await getChatbotsByCourse(this.course_id);
     this.loading = false;
   },
@@ -56,6 +56,7 @@ export default {
     },
     async createChatbot() {
       this.loading = true;
+      this.loading_message = "Creando Unidad";
       let chatbot = {
         name: "Nombre"
       };

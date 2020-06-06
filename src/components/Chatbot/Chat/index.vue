@@ -45,6 +45,10 @@
       >
         <span>{{ available_question }}</span>
       </div>
+      <p
+        class="text-center mt-2"
+        v-show="!loading_available && (available_questions.length + available_questions_materials.length) === 0"
+      >No hay preguntas disponibles.</p>
     </div>
     <!-- Input -->
     <v-form class="input-container" @submit.prevent="sendMessage(); show_messages = true">
@@ -212,7 +216,7 @@ export default {
           }
           this.addMessage(answer, 0, action, icon);
         } catch (error) {
-          // I want application to not crush, but don't care about the message
+          this.addMessage("No puedo responder en este momento.", 0, null, null);
         } finally {
           this.loading_message = false;
         }

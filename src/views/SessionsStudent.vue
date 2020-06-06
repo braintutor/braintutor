@@ -17,6 +17,7 @@
         </div>
       </div>
     </div>
+    <p class="text-center mt-2" v-show="sessions.length === 0">No hay cursos.</p>
   </div>
 </template>
 

@@ -107,7 +107,7 @@
               <v-icon>mdi-plus-circle</v-icon>
             </v-btn>
           </div>
-          <div class="category-bullet" v-for="(image, i_idx) in material.images" :key="image">
+          <div class="category-bullet" v-for="(image, i_idx) in material.images" :key="image || i_idx">
             <div class="category-bullet-content pa-2">
               <ImageUpload :image="image" :callback="image_iu => saveImage(image_iu, i_idx)" />
             </div>
