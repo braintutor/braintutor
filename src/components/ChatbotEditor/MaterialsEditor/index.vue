@@ -224,7 +224,6 @@ export default {
 
 <style lang="scss" scoped>
 .options {
-  margin-bottom: 6px;
   margin-right: 8px;
   display: flex;
   justify-content: flex-end;

@@ -3,16 +3,16 @@
     <div class="menu">
       <!-- <div class="name">{{chatbot.name}}</div> -->
       <div></div>
-      <div class="options">
+      <!-- <div class="options">
         <span class="mr-2">Contenido Adaptado</span>
         <v-switch class="options__switch" v-model="adapt_content"></v-switch>
-      </div>
+      </div>-->
     </div>
     <!-- Material List -->
     <div v-if="!material">
       <v-container class="list m-fullscreen-content" fluid>
         <!-- Sequential -->
-        <v-row v-if="categories_ls_original['understanding'] === 'sequential' && false" no-gutters>
+        <v-row v-if="categories_ls_original['understanding'] === 'global' && false" no-gutters>
           <v-col
             cols="6"
             md="3"
@@ -22,6 +22,7 @@
             class="pa-2"
           >
             <Cartel
+              style="height: 100%"
               :image="material.image"
               :description="material.name"
               :callback="() => selectMaterial(material)"
