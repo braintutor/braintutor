@@ -19,7 +19,7 @@
 <script>
 import AppSidebar from "@/components/AppSidebar";
 import Chatbots from "@/components/Session/Chatbots";
-import Tasks from "@/components/Session/Tasks/index";
+import Tasks from "@/components/Session/Tasks";
 import Events from "@/components/Session/Events/index";
 import Evaluations from "@/components/Session/Evaluations/index";
 import Students from "@/components/Session/Students";

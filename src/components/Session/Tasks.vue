@@ -58,13 +58,11 @@
       </div>
       <div class="text-center" v-show="tasks_filtered.length === 0">No hay tareas.</div>
     </div>
-    <Task v-else :task="task" :unselect="unselect" :restore="restore" />
   </div>
 </template>
 
 <script>
 import loading from "@/components/loading";
-import Task from "./Task";
 
 import { getTasksBySessionStudent } from "@/services/taskService";
 import { getParam, redirect } from "@/services/router.js";
@@ -126,8 +124,7 @@ export default {
     }
   },
   components: {
-    loading,
-    Task
+    loading
   }
 };
 </script>
