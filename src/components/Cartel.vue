@@ -33,7 +33,7 @@ export default {
 
 <style lang='scss' scoped>
 .cartel__container {
-  height: 100%;
+  // height: 100%;
   border-radius: 10px;
   background: #fff;
   //

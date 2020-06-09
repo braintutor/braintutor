@@ -1,6 +1,6 @@
 <template>
   <div class="editor">
-    <loading :active="loading" />
+    <loading :active="loading" :message="loading_msg" />
     <div class="editor__menu">
       <h2 class="editor__title">Sesión</h2>
       <v-btn rounded small color="success" @click="dialog_edit = true; add()">
@@ -116,9 +116,11 @@ export default {
     show_error: false,
     dialog_edit: false,
     loading: true,
-    loading_save: false
+    loading_save: false,
+    loading_msg: ""
   }),
   async mounted() {
+    this.loading_msg = "Cargando Sesiones";
     this.courses = await getCoursesBySchool();
     this.classrooms = await getClassroomsBySchool();
     if (this.classrooms.length !== 0) {

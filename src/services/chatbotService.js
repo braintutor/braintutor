@@ -18,8 +18,8 @@ function getChatbot(chatbot_id) {
   })
 }
 
-function getChatbotName(chatbot_id) {
-  return fetch_post('getChatbotName', {
+function getChatbotNameOrder(chatbot_id) {
+  return fetch_post('getChatbotNameOrder', {
     chatbot_id
   })
 }
@@ -43,6 +43,13 @@ function updateChatbotImage(chatbot) {
   })
 }
 
+function updateChatbotOrder(chatbot_id, order) {
+  return fetch_post('updateChatbotOrder', {
+    chatbot_id,
+    order
+  })
+}
+
 function removeChatbot(chatbot_id) {
   return fetch_post('removeChatbot', {
     chatbot_id
@@ -53,9 +60,10 @@ export {
   getChatbot,
   getChatbotsByCourse,
   getChatbotsBySession,
-  getChatbotName,
+  getChatbotNameOrder,
   addChatbot,
   updateChatbot,
   updateChatbotImage,
+  updateChatbotOrder,
   removeChatbot
 }

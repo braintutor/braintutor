@@ -33,10 +33,7 @@
           </div>
         </div>
       </div>
-      <Chat
-        class="chat-container col-12 col-md-4"
-        :selectService="idx => selectService(idx)"
-      />
+      <Chat class="chat-container col-12 col-md-4" :selectService="idx => selectService(idx)" />
     </v-row>
   </div>
 </template>
@@ -50,16 +47,16 @@ import loading from "@/components/loading";
 import { scrollRight } from "@/services/scroll";
 import { getParam } from "@/services/router.js";
 
-import { getChatbotName } from "@/services/chatbotService";
+import { getChatbotNameOrder } from "@/services/chatbotService";
 import { getMaterials } from "@/services/materialService";
 
 export default {
   data: () => ({
     chatbot: {},
     chatbot_id: "",
-    materials: [],
     show_services: true,
     service_selected: 0,
+    order: [],
     //
     loading_chatbot: true,
     loading_message: ""
@@ -68,12 +65,20 @@ export default {
     // Components
     this.$store.commit("setComponentMaterials", this.$refs.component_materials);
     this.$store.commit("setComponentQuizzes", this.$refs.component_quizzes);
-
     this.chatbot_id = getParam("chatbot_id");
+
     this.loading_message = "Cargando Material";
-    this.chatbot = await getChatbotName(this.chatbot_id);
-    this.materials = await getMaterials(this.chatbot_id);
-    this.$store.commit("setMaterials", this.materials);
+
+    this.chatbot = await getChatbotNameOrder(this.chatbot_id);
+    let order = (this.chatbot.order || []).reverse();
+
+    let materials = await getMaterials(this.chatbot_id);
+    materials.sort((a, b) => {
+      let a_order = order.indexOf(a._id.$oid);
+      let b_order = order.indexOf(b._id.$oid);
+      return b_order - a_order;
+    });
+    this.$store.commit("setMaterials", materials);
 
     this.loading_chatbot = false;
   },

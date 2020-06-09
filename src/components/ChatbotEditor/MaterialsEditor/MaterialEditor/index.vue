@@ -35,11 +35,18 @@
       <Navigator class="py-2" :actions="actions" />
       <div class="container">
         <!-- Overview -->
-        <div v-show="category_selected === 'overview'" class="category">
+        <div v-show="category_selected === 'overview'" class="category pb-3">
           <div class="category-menu">
             <span>Resumen</span>
           </div>
-          <OverviewEditor ref="overview" :data="material.overview" />
+          <v-textarea
+            class="category-text"
+            v-model="material.overview"
+            :rows="4"
+            autoGrow
+            dense
+            hide-details
+          ></v-textarea>
         </div>
         <!-- Explanation -->
         <div v-show="category_selected === 'explanation'" class="category">
@@ -62,43 +69,6 @@
           </div>
           <MoviesEditor ref="movies" :data="material.movies" />
         </div>
-        <!-- Bullets -->
-        <div v-if="category_selected === 'bullets'" class="category">
-          <div class="category-menu">
-            <span>Puntos Importantes</span>
-            <v-btn icon @click="addBullet(material.bullets)">
-              <v-icon>mdi-plus-circle</v-icon>
-            </v-btn>
-          </div>
-          <div class="category-bullet" v-for="(bullet, b_idx) in material.bullets" :key="b_idx">
-            <v-textarea
-              class="category-text"
-              v-model="material.bullets[b_idx]"
-              :rows="1"
-              autoGrow
-              dense
-              hide-details
-            ></v-textarea>
-            <v-menu v-if="material.bullets.length > 1" offset-y>
-              <template v-slot:activator="{ on }">
-                <v-btn icon v-on="on">
-                  <v-icon>mdi-dots-vertical</v-icon>
-                </v-btn>
-              </template>
-              <v-list>
-                <v-list-item @click="moveUp(material.bullets, b_idx)">
-                  <v-list-item-title>Mover Arriba</v-list-item-title>
-                </v-list-item>
-                <v-list-item @click="moveDown(material.bullets, b_idx)">
-                  <v-list-item-title>Mover Abajo</v-list-item-title>
-                </v-list-item>
-                <v-list-item @click="remove(material.bullets, b_idx)">
-                  <v-list-item-title>Eliminar</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-          </div>
-        </div>
         <!-- Images -->
         <div v-if="category_selected === 'images'" class="category">
           <div class="category-menu">
@@ -107,7 +77,11 @@
               <v-icon>mdi-plus-circle</v-icon>
             </v-btn>
           </div>
-          <div class="category-bullet" v-for="(image, i_idx) in material.images" :key="image || i_idx">
+          <div
+            class="category-bullet"
+            v-for="(image, i_idx) in material.images"
+            :key="image || i_idx"
+          >
             <div class="category-bullet-content pa-2">
               <ImageUpload :image="image" :callback="image_iu => saveImage(image_iu, i_idx)" />
             </div>
@@ -348,7 +322,6 @@
 </template>
 
 <script>
-import OverviewEditor from "./OverviewEditor";
 import ExplanationEditor from "./ExplanationEditor";
 import ExamplesEditor from "./ExamplesEditor";
 import MoviesEditor from "./MoviesEditor";
@@ -379,15 +352,14 @@ export default {
     image_file: {},
     image_progress: 0,
     categories: [
-      // "overview",
+      "overview",
       "explanation",
-      // "bullets",
-      "images",
       "movies",
+      "images",
       "examples",
       "exercises",
-      "faq",
-      "hyperlinks"
+      "hyperlinks",
+      "faq"
     ],
     category_idx: 0,
     //
@@ -485,18 +457,12 @@ export default {
 
       this.material.id = this.material._id.$oid;
       try {
-        for (let category of [
-          "overview",
-          "explanation",
-          "examples",
-          "movies"
-        ]) {
+        for (let category of ["explanation", "examples", "movies"]) {
           let data = await this.$refs[category].save(); // Save all child components
           let size = (data.length * 2) / 1000;
           if (size > 500) {
             //kB
             let categories = {
-              overview: "Resumen",
               explanation: "Explicación",
               examples: "Ejemplos",
               movies: "Videos"
@@ -538,9 +504,6 @@ export default {
     remove(arr, idx) {
       arr.splice(idx, 1);
     },
-    addBullet(bullets) {
-      bullets.push("");
-    },
     addHyperlink(hyperlinks) {
       hyperlinks.push({
         name: "",
@@ -577,7 +540,6 @@ export default {
     }
   },
   components: {
-    OverviewEditor,
     ExplanationEditor,
     ExamplesEditor,
     MoviesEditor,

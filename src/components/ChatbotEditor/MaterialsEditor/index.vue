@@ -1,8 +1,18 @@
 <template>
   <div>
-    <loading :active="loading_materials" :message="loading_message" />
+    <loading :active="loading" :message="loading_message" />
     <!-- Material List -->
     <v-container v-if="!material" fluid class="materials-container">
+      <div class="options">
+        <v-btn v-if="edit" small text @click="updateChatbotOrder()">
+          Finalizar
+          <v-icon class="ml-2" style="font-size: 0.95rem">mdi-close</v-icon>
+        </v-btn>
+        <v-btn v-else small text color="primary" @click="edit = true">
+          Editar Orden
+          <v-icon class="ml-2" style="font-size: 0.95rem">mdi-pencil</v-icon>
+        </v-btn>
+      </div>
       <v-row no-gutters>
         <v-col
           cols="6"
@@ -10,15 +20,25 @@
           md="2"
           v-for="(material, r_idx) in materials"
           :key="r_idx"
-          class="material-container"
+          class="material"
         >
           <Cartel
+            class="material__body"
             :description="material.name"
             :image="material.image"
             :callback="() => selectMaterial(material)"
           />
+          <div v-show="edit" class="material__actions">
+            <v-btn small icon @click="moveLeft(materials, r_idx)">
+              <v-icon>mdi-chevron-left</v-icon>
+            </v-btn>
+            <span>MOVER</span>
+            <v-btn small icon @click="moveRight(materials, r_idx)">
+              <v-icon>mdi-chevron-right</v-icon>
+            </v-btn>
+          </div>
         </v-col>
-        <v-col cols="6" sm="4" md="2" class="material-container">
+        <v-col v-show="!edit" cols="6" sm="4" md="2" class="material">
           <div class="create-container" @click="createMaterial()">
             <v-icon>mdi-plus</v-icon>
           </div>
@@ -47,6 +67,10 @@ import {
   addMaterial,
   removeMaterial
 } from "@/services/materialService";
+import {
+  getChatbotNameOrder,
+  updateChatbotOrder
+} from "@/services/chatbotService";
 import { getParam } from "@/services/router.js";
 
 export default {
@@ -55,7 +79,8 @@ export default {
     material: null,
     chatbot_id: "",
     //
-    loading_materials: true,
+    edit: false,
+    loading: true,
     loading_message: ""
   }),
   async mounted() {
@@ -67,18 +92,24 @@ export default {
       this.material = null;
     },
     async restoreMaterials() {
-      this.loading_materials = true;
+      this.loading = true;
       this.loading_message = "Cargando Material";
-      this.materials = await getMaterials(this.chatbot_id);
-      this.loading_materials = false;
+
+      let chatbot = await getChatbotNameOrder(this.chatbot_id);
+      let order = (chatbot.order || []).reverse();
+
+      let materials = await getMaterials(this.chatbot_id);
+      materials.sort((a, b) => {
+        let a_order = order.indexOf(a._id.$oid);
+        let b_order = order.indexOf(b._id.$oid);
+        return b_order - a_order;
+      });
+      this.materials = materials;
+
+      this.loading = false;
     },
     async createMaterial() {
-      let overview = JSON.stringify({
-        blocks: [
-          { type: "header", data: { text: "Resumen", level: 2 } },
-          { type: "paragraph", data: { text: "Descripción" } }
-        ]
-      });
+      let overview = "Resumen";
       let explanation = JSON.stringify({
         blocks: [
           { type: "header", data: { text: "Título", level: 2 } },
@@ -99,7 +130,7 @@ export default {
       });
 
       if (!this.loading_create) {
-        this.loading_materials = true;
+        this.loading = true;
         let new_material = {
           name: "Nombre",
           overview,
@@ -133,12 +164,12 @@ export default {
         new_material._id = material_id;
         this.materials.push(new_material);
         this.selectMaterial(new_material);
-        this.loading_materials = false;
+        this.loading = false;
       }
     },
     async deleteMaterial(material_id) {
       this.material = null;
-      this.loading_materials = true;
+      this.loading = true;
       this.loading_message = "Eliminando Material";
 
       await removeMaterial(material_id);
@@ -152,6 +183,35 @@ export default {
       this.material = this.materials.find(
         material => material._id.$oid == material_id
       );
+    },
+    async updateChatbotOrder() {
+      this.loading = true;
+      this.loading_message = "Guardando Cambios";
+      let order = this.materials.map(material => material._id.$oid);
+      try {
+        await updateChatbotOrder(this.chatbot_id, order);
+        this.edit = false;
+      } catch (error) {
+        this.$root.$children[0].showMessage("", "Error al Guardar");
+      }
+      this.loading = false;
+    },
+    //
+    moveLeft(arr, idx) {
+      if (idx > 0) {
+        let aux = arr[idx];
+        arr[idx] = arr[idx - 1];
+        arr[idx - 1] = aux;
+        arr.splice();
+      }
+    },
+    moveRight(arr, idx) {
+      if (idx < arr.length - 1) {
+        let aux = arr[idx];
+        arr[idx] = arr[idx + 1];
+        arr[idx + 1] = aux;
+        arr.splice();
+      }
     }
   },
   components: {
@@ -163,31 +223,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.loading-container {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: -20px;
-  left: 0;
-  background: #fff;
-  opacity: 0;
-  z-index: 1;
-  transition: opacity 1s;
-  pointer-events: none;
-  //
+.options {
+  margin-bottom: 6px;
+  margin-right: 8px;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  &.active {
-    pointer-events: initial;
-    opacity: 0.85;
-  }
+  justify-content: flex-end;
 }
+
 .materials-container {
   padding: 0;
-  .material-container {
-    padding: 8px;
-  }
   .create-container {
     height: 100%;
     min-height: 128px;
@@ -206,6 +250,26 @@ export default {
       cursor: pointer;
       background: #eeeeee;
     }
+  }
+}
+
+.material {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+
+  &__body {
+    height: 100%;
+  }
+  &__actions {
+    margin-top: 10px;
+    color: #747474;
+    font-size: 0.75rem;
+    font-weight: bold;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 }
 </style>

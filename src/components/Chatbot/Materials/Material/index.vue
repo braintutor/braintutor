@@ -9,7 +9,10 @@
     <div class="m-fullscreen-content">
       <div class="material-content">
         <!-- Category Overview -->
-        <div v-show="category_selected == 'overview'" id="overview-editor" class="category"></div>
+        <!-- <div
+          v-show="category_selected == 'overview'"
+          class="category category-text"
+        >{{material.overview}}</div> -->
         <!-- Category Explanation -->
         <div v-show="category_selected == 'explanation'" id="explanation-editor" class="category"></div>
         <!-- Category Examples -->
@@ -119,7 +122,7 @@ export default {
     editors: {}
   }),
   mounted() {
-    ["overview", "explanation", "examples", "movies"].forEach(category => {
+    ["explanation", "examples", "movies"].forEach(category => {
       this.editors[category] = new EditorJS({
         holderId: `${category}-editor`,
         tools: {

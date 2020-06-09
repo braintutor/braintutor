@@ -9,25 +9,42 @@
       </div>
     </div>
     <!-- Material List -->
-    <v-container class="list m-fullscreen-content" v-if="!material" fluid>
-      <v-row no-gutters>
-        <v-col
-          cols="6"
-          md="3"
-          lg="2"
-          v-for="(material, r_idx) in materials"
-          :key="r_idx"
-          class="pa-2"
-        >
-          <Cartel
-            :image="material.image"
-            :description="material.name"
-            :callback="() => selectMaterial(material)"
-          />
-        </v-col>
-      </v-row>
-      <p class="text-center mt-2" v-show="materials.length === 0">No hay material.</p>
-    </v-container>
+    <div v-if="!material">
+      <v-container class="list m-fullscreen-content" fluid>
+        <!-- Sequential -->
+        <v-row v-if="categories_ls_original['understanding'] === 'sequential' && false" no-gutters>
+          <v-col
+            cols="6"
+            md="3"
+            lg="2"
+            v-for="(material, r_idx) in materials"
+            :key="r_idx"
+            class="pa-2"
+          >
+            <Cartel
+              :image="material.image"
+              :description="material.name"
+              :callback="() => selectMaterial(material)"
+            />
+          </v-col>
+        </v-row>
+        <!-- Global -->
+        <div v-else class="ma-2">
+          <div class="mb-3" v-for="(material, r_idx) in materials" :key="r_idx">
+            <div class="m-cardx" @click="selectMaterial(material)">
+              <div class="m-cardx__img">
+                <img :src="material.image" />
+              </div>
+              <div class="m-cardx__body">
+                <p class="m-cardx__title">{{material.name}}</p>
+                <p class="m-cardx__description">{{material.overview}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="text-center mt-2" v-show="materials.length === 0">No hay material.</p>
+      </v-container>
+    </div>
     <!-- Material Selected -->
     <Material
       v-else
@@ -57,19 +74,18 @@ export default {
     categories_to_show: [
       // "overview",
       "explanation",
-      // "bullets",
-      "images",
       "movies",
+      "images",
       "examples",
       "exercises",
-      "faq",
-      "hyperlinks"
+      "hyperlinks",
+      "faq"
     ],
     //
     categories_ls_original: {},
     categories_ls: {}
   }),
-  async mounted() {
+  async created() {
     this.categories_ls_original = await getCategoriesByLearningStyle();
     this.categories_ls = JSON.parse(
       JSON.stringify(this.categories_ls_original)
@@ -80,22 +96,25 @@ export default {
       return this.$store.state.materials;
     },
     categories() {
-      let categories = Object.entries(this.categories_ls).reduce(
-        (arr, [key, value]) => {
-          if (
-            (value.show || !this.adapt_content) &&
-            this.categories_to_show.includes(key)
-          ) {
-            arr.push(key);
-          }
-          return arr;
-        },
-        []
+      // let categories = Object.entries(this.categories_ls).reduce(
+      //   (arr, [key, value]) => {
+      //     if (
+      //       (value.show || !this.adapt_content) &&
+      //       this.categories_to_show.includes(key)
+      //     ) {
+      //       arr.push(key);
+      //     }
+      //     return arr;
+      //   },
+      //   []
+      // );
+      // categories.sort();
+      // categories.sort((a, b) => {
+      //   return this.categories_ls[b].priority - this.categories_ls[a].priority;
+      // });
+      let categories = this.categories_to_show.filter(
+        category_to_show => (this.categories_ls[category_to_show] || {}).show
       );
-      categories.sort();
-      categories.sort((a, b) => {
-        return this.categories_ls[b].priority - this.categories_ls[a].priority;
-      });
       return categories;
     }
   },
@@ -152,7 +171,7 @@ export default {
   padding: 2px 6px 70px 6px;
 }
 .options {
-  padding: 0 10px;
+  padding: 0 8px;
   font-size: 0.85rem;
   color: rgb(92, 92, 92);
   //
