@@ -51,9 +51,9 @@ function deleteEvaluation(evaluation_id) {
 
 /*************************************************/
 
-function startEvaluation(evaluation_id) {
-  return fetch_post('startEvaluation', {
-    evaluation_id
+function getEvaluationByStudent(evaluation_id) {
+  return fetch_post('getEvaluationByStudent', {
+    evaluation_id 
   })
 }
 
@@ -63,10 +63,16 @@ function getResultByStudent(evaluation_id) {
   })
 }
 
-function setResult(evaluation_id, answers) {
-  return fetch_post('setResult', {
+function updateEvaluationAnswers(evaluation_id, answers) {
+  return fetch_post('updateEvaluationAnswers', {
     evaluation_id,
     answers
+  })
+}
+
+function finishEvaluation(evaluation_id) {
+  return fetch_post('finishEvaluation', {
+    evaluation_id
   })
 }
 
@@ -87,8 +93,9 @@ export {
   publicEvaluation,
   deleteEvaluation,
   //
-  startEvaluation,
+  getEvaluationByStudent,
   getResultByStudent,
-  setResult,
+  updateEvaluationAnswers,
+  finishEvaluation,
   removeResult
 }

@@ -6,10 +6,10 @@
       <router-view></router-view>
     </v-content>
     <!-- showMessage -->
-    <v-dialog v-model="show" max-width="300">
+    <v-dialog v-model="show" max-width="320">
       <v-card>
         <v-card-title>{{show_title}}</v-card-title>
-        <v-card-text>{{show_message}}</v-card-text>
+        <v-card-text v-show="show_message" style="font-size: .95rem">{{show_message}}</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn small text @click="show = false">Cerrar</v-btn>
@@ -23,7 +23,7 @@
 import Header from "./components/Header";
 import loading from "./components/loading";
 
-// import { updateStudentTime } from "@/services/studentService";
+import { updateStudentTime } from "@/services/studentService";
 import { redirect } from "@/services/router";
 
 export default {
@@ -43,13 +43,13 @@ export default {
   },
   mounted() {
     // TIME
-    // setInterval(async () => {
-    //   try {
-    //     if (this.user && this.user.type == 2) await updateStudentTime();
-    //   } catch (error) {
-    //     //
-    //   }
-    // }, 60000);
+    setInterval(async () => {
+      try {
+        if (this.user && this.user.type == 2) await updateStudentTime();
+      } catch (error) {
+        //
+      }
+    }, 60000);
     // GOOGLE
     let fragmentString = location.hash.substring(1);
     let params = {};

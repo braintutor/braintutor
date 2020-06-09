@@ -387,7 +387,7 @@ export default {
         this.loading = false;
       } else {
         this.$root.$children[0].showMessage(
-          "Error",
+          "Alerta",
           "No dejes preguntas sin responder."
         );
       }
@@ -567,7 +567,7 @@ export default {
         this.questions_page += n;
       } else {
         this.$root.$children[0].showMessage(
-          "Error",
+          "Alerta",
           "No dejes preguntas sin responder."
         );
       }

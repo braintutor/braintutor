@@ -1,6 +1,6 @@
 <template>
   <div v-if="!evaluation">
-    <loading :active="loading" :message="loading_message" />
+    <loading :active="loading" :message="loading_msg" />
     <div class="row no-gutters">
       <div
         class="col-6 col-sm-4 col-md-3 px-2 pb-4"
@@ -9,12 +9,14 @@
       >
         <div class="evaluation m-card transform-scale" @click="showDialogStart(evaluation)">
           <p class="evaluation__name">{{evaluation.name}}</p>
-          <p class="evaluation__detail">{{evaluation.content.length}} pregunta(s)</p>
-          <p class="evaluation__detail">{{evaluation.time}} minutos</p>
+          <p class="mb-2">Inicio</p>
+          <p class="evaluation__detail">{{dateFormat(evaluation.time_start)}}</p>
+          <p class="mb-2">Fin</p>
+          <p class="evaluation__detail">{{dateFormat(evaluation.time_end)}}</p>
           <p
             class="evaluation__result"
-            v-if="evaluation.result && evaluation.result.started"
-          >Puntaje: {{calculate(evaluation.result) || '00'}}</p>
+            v-if="evaluation.result && evaluation.result.result"
+          >Puntaje: {{format(evaluation.result.result)}}</p>
         </div>
       </div>
     </div>
@@ -39,7 +41,7 @@
       </v-card>
     </v-dialog>
     <!-- Dialog Result -->
-    <v-dialog v-model="dialog_result" max-width="400">
+    <!-- <v-dialog v-model="dialog_result" max-width="400">
       <v-card class="result">
         <v-progress-circular
           class="result__diagram"
@@ -55,7 +57,7 @@
           class="result__message"
         >{{message}}</span>
       </v-card>
-    </v-dialog>
+    </v-dialog>-->
   </div>
   <Evaluation
     v-else
@@ -72,12 +74,13 @@ import Evaluation from "./Evaluation";
 
 import {
   getEvaluationsBySessionStudent,
-  startEvaluation,
+  getEvaluationByStudent,
   getResultByStudent
 } from "@/services/evaluationService";
 import { getParam } from "@/services/router.js";
 import { copy } from "@/services/object.js";
 import { percentage } from "@/services/math";
+import { dateFormat, format_two_digits } from "@/services/date.js";
 
 export default {
   data: () => ({
@@ -92,7 +95,7 @@ export default {
     result: {},
     //
     loading: true,
-    loading_message: "",
+    loading_msg: "",
     dialog_start: false,
     dialog_result: false
   }),
@@ -102,35 +105,36 @@ export default {
     this.getEvaluations();
   },
   methods: {
+    dateFormat,
     async getEvaluations() {
       this.loading = true;
-      this.loading_message = "Cargando Evaluaciones";
+      this.loading_msg = "Cargando Evaluaciones";
       this.evaluations = await getEvaluationsBySessionStudent(this.session_id);
-      this.loading_message = "Cargando Puntajes";
+      this.loading_msg = "Cargando Puntajes";
       for (let evaluation of this.evaluations) {
         evaluation.result = await getResultByStudent(evaluation._id.$oid);
       }
       this.loading = false;
     },
     async select(evaluation) {
-      // if the evaluation has not started previously
-      if (
-        !(evaluation.result && evaluation.result.started) &&
-        this.session_type == 2
-      ) {
+      if (this.session_type == 2) {
         this.loading = true;
-        this.loading_message = "Iniciando Evaluación";
-        await startEvaluation(evaluation._id.$oid);
-        this.evaluation = copy(evaluation);
+        this.loading_msg = "Cargando Evaluación";
+        try {
+          evaluation = await getEvaluationByStudent(evaluation._id.$oid);
+          this.evaluation = copy(evaluation);
+        } catch (error) {
+          this.$root.$children[0].showMessage("", error.msg);
+        }
         this.loading = false;
       }
     },
     unselect() {
       this.evaluation = null;
     },
-    calculate(result) {
-      let score = Math.round((20 * result.corrects) / result.total) || 0;
-      score = ("0" + score).slice(-2);
+    format(result) {
+      let score = Math.round(result * 20);
+      score = format_two_digits(score);
       return score;
     },
     showResult(result) {
@@ -141,17 +145,19 @@ export default {
       }, 500);
       this.result_messages = [
         `Respondiste correctamente ${this.result.corrects} de ${this.result.total} preguntas.`,
-        `Obtuviste un puntaje de ${this.calculate(this.result)}.`
+        `Obtuviste un puntaje de ${this.format(this.result)}.`
       ];
     },
     showDialogStart(evaluation) {
       if (
-        !(evaluation.result && evaluation.result.started) &&
+        evaluation.result &&
+        evaluation.result.result &&
         this.session_type == 2
-      ) {
-        this.evaluation_to_start = evaluation;
-        this.dialog_start = true;
-      }
+      )
+        return;
+
+      this.evaluation_to_start = evaluation;
+      this.dialog_start = true;
     }
   },
   components: {

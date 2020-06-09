@@ -10,7 +10,8 @@
         <Card>
           <p class="card-item">{{evaluation.name}}</p>
           <p class="card-value">{{evaluation.content.length}} pregunta(s)</p>
-          <p class="card-value">{{evaluation.time}} minutos</p>
+          <p v-if="evaluation.time_start" class="card-value">{{dateFormat(evaluation.time_start)}}</p>
+          <p v-if="evaluation.time_end" class="card-value">{{dateFormat(evaluation.time_end)}}</p>
           <p class="card-actions">
             <v-icon
               @click="select(evaluation)"
@@ -57,6 +58,7 @@ import {
 } from "@/services/evaluationService";
 import { getParam } from "@/services/router.js";
 import { copy } from "@/services/object.js";
+import { dateFormat } from "@/services/date.js";
 
 export default {
   data: () => ({
@@ -72,6 +74,7 @@ export default {
     this.getEvaluations();
   },
   methods: {
+    dateFormat,
     async getEvaluations() {
       this.loading = true;
       this.loading_message = "Cargando Evaluaciones";
@@ -83,7 +86,6 @@ export default {
       this.loading_message = "Creando Evaluación";
       let new_evaluation = {
         name: "Nombre",
-        time: 60,
         content: [
           {
             question: "Pregunta",
@@ -92,10 +94,17 @@ export default {
           }
         ]
       };
-      let evaluation_id = await addEvaluation(this.session_id, new_evaluation);
-      new_evaluation._id = evaluation_id;
-      this.evaluations.push(new_evaluation);
-      this.select(new_evaluation);
+      try {
+        let evaluation_id = await addEvaluation(
+          this.session_id,
+          new_evaluation
+        );
+        new_evaluation._id = evaluation_id;
+        this.evaluations.push(new_evaluation);
+        this.select(new_evaluation);
+      } catch (error) {
+        this.$root.$children[0].showMessage("Error al Guardar", error.msg);
+      }
       this.loading = false;
     },
     select(evaluation) {

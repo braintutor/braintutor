@@ -35,7 +35,7 @@
 export default {
   props: ["links", "action_links"],
   data: () => ({
-    idx: 0
+    idx: 3
   })
 };
 </script>

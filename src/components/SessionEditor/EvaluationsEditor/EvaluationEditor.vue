@@ -31,14 +31,10 @@
     <!-- Quiz Content -->
     <div id="quiz-scroll" class="quiz-editor-content m-fullscreen-content">
       <div class="question-editor-text mb-3">
-        <v-slider
-          :disabled="evaluation.started"
-          v-model="evaluation.time"
-          :label="`Tiempo: ${evaluation.time}min`"
-          min="5"
-          max="300"
-          step="5"
-        ></v-slider>
+        <p>Tiempo de Inicio:</p>
+        <input type="datetime-local" v-model="evaluation.time_start" :disabled="evaluation.started" />
+        <p>Tiempo de Fin:</p>
+        <input type="datetime-local" v-model="evaluation.time_end" :disabled="evaluation.started" />
       </div>
       <div
         v-for="(c, c_idx) in evaluation.content"
@@ -164,7 +160,11 @@ export default {
       this.loading = true;
       this.loading_message = "Guardando";
       this.evaluation.id = this.evaluation._id.$oid;
-      await updateEvaluation(this.evaluation);
+      try {
+        await updateEvaluation(this.evaluation);
+      } catch (error) {
+        this.$root.$children[0].showMessage("Error al Guardar", error.msg);
+      }
       this.loading = false;
     },
     async publicEvaluation() {
