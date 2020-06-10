@@ -3,31 +3,40 @@
     <loading :active="loading" :message="loading_message" />
     <div class="row no-gutters">
       <div
-        class="col-6 col-sm-4 col-md-3 px-2 pb-4"
+        class="col-12 col-sm-6 col-md-4 px-2 pb-4"
         v-for="(evaluation, c_idx) in evaluations"
         :key="c_idx"
       >
-        <Card>
-          <p class="card-item">{{evaluation.name}}</p>
-          <p class="card-value">{{evaluation.content.length}} pregunta(s)</p>
-          <p v-if="evaluation.time_start" class="card-value">{{dateFormat(evaluation.time_start)}}</p>
-          <p v-if="evaluation.time_end" class="card-value">{{dateFormat(evaluation.time_end)}}</p>
-          <p class="card-actions">
+        <div class="m-cardd transform-scale">
+          <p class="m-cardd__name">{{evaluation.name}}</p>
+          <div class="m-cardd__body">
+            <span class="m-cardd__item">Tamaño:</span>
+            <span class="m-cardd__value">{{evaluation.content.length}} pregunta(s)</span>
+            <span v-if="evaluation.time_start" class="m-cardd__item">Inicio:</span>
+            <span
+              v-if="evaluation.time_start"
+              class="m-cardd__value"
+            >{{dateFormat(evaluation.time_start)}}</span>
+            <span v-if="evaluation.time_end" class="m-cardd__item">Fin:</span>
+            <span
+              v-if="evaluation.time_end"
+              class="m-cardd__value"
+            >{{dateFormat(evaluation.time_end)}}</span>
+          </div>
+          <div class="m-cardd__actions">
             <v-icon
+              class="m-cardd__action"
               @click="select(evaluation)"
-              class="card-action"
-              style="color: #fff; font-size: 1.2rem"
             >{{evaluation.started? 'mdi-eye': 'mdi-pencil'}}</v-icon>
             <v-icon
               v-if="evaluation.started"
+              class="m-cardd__action"
               @click="results(evaluation)"
-              class="card-action"
-              style="color: #fff; font-size: 1.2rem"
             >mdi-poll</v-icon>
-          </p>
-        </Card>
+          </div>
+        </div>
       </div>
-      <div class="col-6 col-sm-4 col-md-3 px-2 pb-4">
+      <div class="col-12 col-sm-6 col-md-4 px-2 pb-4">
         <div class="create" @click="create()">+</div>
       </div>
     </div>
@@ -48,7 +57,6 @@
 
 <script>
 import loading from "@/components/loading";
-import Card from "@/components/Card";
 import EvaluationEditor from "./EvaluationEditor";
 import Results from "./Results";
 
@@ -121,7 +129,6 @@ export default {
   },
   components: {
     loading,
-    Card,
     EvaluationEditor,
     Results
   }

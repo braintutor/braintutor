@@ -16,24 +16,41 @@
         ></v-text-field>
       </div>
       <div v-if="!evaluation.started" class="menu-right">
-        <v-btn icon @click="addQuestion(evaluation.content)">
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
-        <v-btn icon @click="save()">
-          <v-icon>mdi-content-save</v-icon>
-        </v-btn>
-        <v-btn icon @click="dialog_delete = true">
-          <v-icon>mdi-delete</v-icon>
-        </v-btn>
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon v-bind="attrs" v-on="on" @click="addQuestion(evaluation.content)">
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
+          </template>
+          <span style="font-size: .75rem">Crear Pregunta</span>
+        </v-tooltip>
+
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon v-bind="attrs" v-on="on" @click="save()">
+              <v-icon>mdi-content-save</v-icon>
+            </v-btn>
+          </template>
+          <span style="font-size: .75rem">Guardar Cambios</span>
+        </v-tooltip>
+
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon v-bind="attrs" v-on="on" @click="dialog_delete = true">
+              <v-icon>mdi-delete</v-icon>
+            </v-btn>
+          </template>
+          <span style="font-size: .75rem">Eliminar Evaluación</span>
+        </v-tooltip>
       </div>
     </div>
 
     <!-- Quiz Content -->
     <div id="quiz-scroll" class="quiz-editor-content m-fullscreen-content">
-      <div class="question-editor-text mb-3">
-        <p>Tiempo de Inicio:</p>
+      <div class="time-editor">
+        <span>Tiempo de Inicio:</span>
         <input type="datetime-local" v-model="evaluation.time_start" :disabled="evaluation.started" />
-        <p>Tiempo de Fin:</p>
+        <span>Tiempo de Fin:</span>
         <input type="datetime-local" v-model="evaluation.time_end" :disabled="evaluation.started" />
       </div>
       <div
@@ -100,7 +117,12 @@
         </v-radio-group>
       </div>
       <div class="public">
-        <v-btn color="primary" v-if="!evaluation.started" @click="dialog_public = true">Publicar</v-btn>
+        <v-btn
+          color="primary"
+          v-if="!evaluation.started"
+          @click="dialog_public = true"
+          small
+        >Publicar</v-btn>
       </div>
     </div>
 
@@ -258,6 +280,21 @@ export default {
   .public {
     display: flex;
     justify-content: center;
+  }
+}
+
+.time-editor {
+  width: max-content;
+  padding: 8px 10px 20px;
+
+  display: grid;
+  grid-template-columns: auto auto;
+  row-gap: 4px;
+  column-gap: 12px;
+
+  input {
+    border: 1px solid #ccc;
+    border-radius: 6px;
   }
 }
 </style>

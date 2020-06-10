@@ -42,4 +42,24 @@ $color-evaluation: #e5c280;
     font-weight: bold;
     border-radius: 10px;
   }
+  &__actions {
+    margin-top: 8px;
+    display: flex;
+  }
+  &__action {
+    width: 100%;
+    margin: 0 4px;
+    padding: 4px 8px;
+    background: $color-evaluation;
+    color: #fff !important;
+    text-align: center;
+    font-size: 1.2rem !important;
+    font-weight: bold;
+    border-radius: 10px;
+    box-shadow: 0px 4px 4px -1px rgba(0, 0, 0, 0.3);
+
+    &:hover {
+      box-shadow: none;
+    }
+  }
 }

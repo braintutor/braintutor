@@ -25,9 +25,7 @@
             <td>{{student.first_name}}</td>
             <td>{{student.last_name}}</td>
             <td>{{student.user}}</td>
-            <td v-if="student.score">
-              <span class="result">{{student.score}}</span>
-            </td>
+            <td v-if="student.score != null">{{student.score}}</td>
             <td v-else>
               <span class="no-result">Sin realizar</span>
             </td>
@@ -76,6 +74,7 @@ import loading from "@/components/loading";
 import { getParam } from "@/services/router.js";
 import { getStudentsBySession } from "@/services/studentService";
 import { getEvaluation, removeResult } from "@/services/evaluationService";
+import { format_two_digits } from "@/services/date.js";
 
 export default {
   props: ["evaluation_id", "getEvaluations", "unselect"],
@@ -97,13 +96,8 @@ export default {
     this.loading_message = "Cargando Alumnos";
     this.students = await getStudentsBySession(session_id);
     this.students.forEach(student => {
-      student.result = this.evaluation.results
-        ? this.evaluation.results[student._id.$oid]
-        : null;
-      student.score =
-        student.result && student.result.started
-          ? this.calculate(student.result)
-          : null;
+      let { score } = (this.evaluation.results || [])[student._id.$oid] || {};
+      student.score = score != null ? this.format(score) : null;
     });
     //
     var ctx = document.getElementById("myChart").getContext("2d");
@@ -168,6 +162,11 @@ export default {
       }, Array(21).fill(0));
       this.myChart.data.datasets[0].data = data;
       this.myChart.update();
+    },
+    format(result) {
+      let score = Math.round(result * 20);
+      score = format_two_digits(score);
+      return score;
     }
   },
   components: {
