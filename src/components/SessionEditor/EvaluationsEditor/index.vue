@@ -92,8 +92,18 @@ export default {
     async create() {
       this.loading = true;
       this.loading_message = "Creando Evaluación";
+
+      let now = () => {
+        let date = new Date();
+        date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+        return date
+      };
+      let format = date => date.toISOString().slice(0, 16);
+
       let new_evaluation = {
         name: "Nombre",
+        time_start: format(now()),
+        time_end: format(now().addHours(1)),
         content: [
           {
             question: "Pregunta",

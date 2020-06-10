@@ -63,6 +63,12 @@ export default {
 
     let state = params["state"] || params["/state"];
     if (state) redirect("task", { task_id: state });
+
+    // PROTOTYPE
+    Date.prototype.addHours = function(h) {
+      this.setHours(this.getHours() + h);
+      return this;
+    };
   },
   methods: {
     showMessage(title, message) {

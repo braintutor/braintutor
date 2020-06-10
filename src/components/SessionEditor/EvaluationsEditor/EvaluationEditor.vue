@@ -1,19 +1,20 @@
 <template>
   <div class="quiz-editor-container m-fullscreen">
-    <loading :active="loading" :message="loading_message" />
+    <loading :active="loading" :message="loading_msg" />
     <div class="menu">
       <div class="menu-left">
         <v-btn icon @click="unselect(); getEvaluations()">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
         <v-text-field
+          v-if="!evaluation.started"
           class="menu-title"
           v-model="evaluation.name"
-          :disabled="evaluation.started"
           dense
           hide-details
           autocomplete="off"
         ></v-text-field>
+        <span v-else class="menu-title">{{evaluation.name}}</span>
       </div>
       <div v-if="!evaluation.started" class="menu-right">
         <v-tooltip top>
@@ -60,13 +61,14 @@
       >
         <div class="question-editor-question question-editor-text">
           <v-textarea
-            :disabled="evaluation.started"
+            v-if="!evaluation.started"
             v-model="c.question"
             :rows="1"
             autoGrow
             dense
             hide-details
           ></v-textarea>
+          <span v-else>{{c.question}}</span>
           <v-btn
             v-if="!evaluation.started && evaluation.content.length > 1"
             icon
@@ -84,7 +86,7 @@
             >
               <div class="question-editor-alternative-content question-editor-text m-card">
                 <v-textarea
-                  :disabled="evaluation.started"
+                  v-if="!evaluation.started"
                   style="width: 0"
                   v-model="c.alternatives[a_idx]"
                   :rows="1"
@@ -92,6 +94,7 @@
                   dense
                   hide-details
                 ></v-textarea>
+                <span v-else>{{c.alternatives[a_idx]}}</span>
                 <v-btn
                   v-if="!evaluation.started && c.alternatives.length > 2"
                   icon
@@ -173,34 +176,39 @@ export default {
   props: ["evaluation", "getEvaluations", "unselect"],
   data: () => ({
     loading: false,
-    loading_message: "",
+    loading_msg: "",
     dialog_delete: false,
     dialog_public: false
   }),
   methods: {
     async save() {
       this.loading = true;
-      this.loading_message = "Guardando";
+      this.loading_msg = "Guardando";
       this.evaluation.id = this.evaluation._id.$oid;
       try {
         await updateEvaluation(this.evaluation);
+        this.loading = false;
+        return true;
       } catch (error) {
         this.$root.$children[0].showMessage("Error al Guardar", error.msg);
+        this.loading = false;
+        return false;
       }
-      this.loading = false;
     },
     async publicEvaluation() {
-      await this.save();
-      this.loading = true;
-      this.loading_message = "Publicando";
-      let evaluation_id = this.evaluation._id.$oid;
-      await publicEvaluation(evaluation_id);
-      this.evaluation.started = true;
-      this.loading = false;
+      let success = await this.save();
+      if (success) {
+        this.loading = true;
+        this.loading_msg = "Publicando";
+        let evaluation_id = this.evaluation._id.$oid;
+        await publicEvaluation(evaluation_id);
+        this.evaluation.started = true;
+        this.loading = false;
+      }
     },
     async remove() {
       this.loading = true;
-      this.loading_message = "Elimando";
+      this.loading_msg = "Eliminando";
       let evaluation_id = this.evaluation._id.$oid;
       await deleteEvaluation(evaluation_id);
       this.getEvaluations();
