@@ -3,20 +3,26 @@
     <loading :active="loading" :message="loading_msg" />
     <div class="row no-gutters">
       <div
-        class="col-6 col-sm-4 col-md-3 px-2 pb-4"
+        class="col-12 col-sm-6 col-md-4 px-2 pb-4"
         v-for="(evaluation, c_idx) in evaluations"
         :key="c_idx"
       >
-        <div class="evaluation m-card transform-scale" @click="showDialogStart(evaluation)">
-          <p class="evaluation__name">{{evaluation.name}}</p>
-          <p class="mb-2">Inicio</p>
-          <p class="evaluation__detail">{{dateFormat(evaluation.time_start)}}</p>
-          <p class="mb-2">Fin</p>
-          <p class="evaluation__detail">{{dateFormat(evaluation.time_end)}}</p>
-          <p
-            class="evaluation__result"
-            v-if="evaluation.result && evaluation.result.result"
-          >Puntaje: {{format(evaluation.result.result)}}</p>
+        <div class="m-cardd transform-scale" @click="showDialogStart(evaluation)">
+          <p class="m-cardd__name">{{evaluation.name}}</p>
+          <div class="m-cardd__body">
+            <span class="m-cardd__item">Inicio:</span>
+            <span class="m-cardd__value">{{dateFormat(evaluation.time_start)}}</span>
+            <span class="m-cardd__item">Fin:</span>
+            <span class="m-cardd__value">{{dateFormat(evaluation.time_end)}}</span>
+            <span
+              class="m-cardd__item"
+              v-if="evaluation.result && evaluation.result.score != null"
+            >Puntaje:</span>
+            <span
+              class="m-cardd__result"
+              v-if="evaluation.result && evaluation.result.score != null"
+            >{{format(evaluation.result.score)}}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -41,23 +47,23 @@
       </v-card>
     </v-dialog>
     <!-- Dialog Result -->
-    <!-- <v-dialog v-model="dialog_result" max-width="400">
+    <v-dialog v-model="dialog_score" max-width="400">
       <v-card class="result">
         <v-progress-circular
           class="result__diagram"
           :rotate="270"
-          :size="180"
+          :size="120"
           :width="8"
           :value="score"
           color="primary"
-        >{{`${result.corrects}/${result.total}`}}</v-progress-circular>
+        >{{score_f}}</v-progress-circular>
         <span
           v-for="(message, m_idx) in result_messages"
           :key="m_idx"
           class="result__message"
         >{{message}}</span>
       </v-card>
-    </v-dialog>-->
+    </v-dialog>
   </div>
   <Evaluation
     v-else
@@ -79,7 +85,6 @@ import {
 } from "@/services/evaluationService";
 import { getParam } from "@/services/router.js";
 import { copy } from "@/services/object.js";
-import { percentage } from "@/services/math";
 import { dateFormat, format_two_digits } from "@/services/date.js";
 
 export default {
@@ -91,13 +96,13 @@ export default {
     //
     session_type: -1,
     score: 0,
+    score_f: 0,
     result_messages: [],
-    result: {},
     //
     loading: true,
     loading_msg: "",
     dialog_start: false,
-    dialog_result: false
+    dialog_score: false
   }),
   async mounted() {
     this.session_id = getParam("session_id");
@@ -137,21 +142,19 @@ export default {
       score = format_two_digits(score);
       return score;
     },
-    showResult(result) {
-      this.dialog_result = true;
-      this.result = result;
+    showResult(score) {
+      this.dialog_score = true;
+      this.score = 0;
       setTimeout(() => {
-        this.score = percentage(this.result.total, this.result.corrects);
+        this.score = score * 100;
       }, 500);
-      this.result_messages = [
-        `Respondiste correctamente ${this.result.corrects} de ${this.result.total} preguntas.`,
-        `Obtuviste un puntaje de ${this.format(this.result)}.`
-      ];
+      this.score_f = this.format(score);
+      this.result_messages = [`Obtuviste un puntaje de ${this.score_f}.`];
     },
     showDialogStart(evaluation) {
       if (
         evaluation.result &&
-        evaluation.result.result &&
+        evaluation.result.score != null &&
         this.session_type == 2
       )
         return;
@@ -169,36 +172,6 @@ export default {
 
 <style lang='scss' scoped>
 $color-evaluation: #e5c280;
-
-.evaluation {
-  padding: 10px 12px 4px 12px;
-  border-top: 4px solid $color-evaluation;
-  border-radius: 7px;
-  text-align: center;
-  cursor: pointer;
-  &__name {
-    margin: 3px 0 9px 0;
-    text-align: center;
-    font-size: 1rem;
-    font-weight: bold;
-  }
-  &__result {
-    padding: 4px 10px;
-    margin-bottom: 10px;
-    background: $color-evaluation;
-    color: #fff;
-    font-weight: bold;
-    border-radius: 10px;
-  }
-  &__detail {
-    padding: 4px 10px;
-    margin-bottom: 10px;
-    background: #f1f1f1;
-    font-size: 0.9rem;
-    font-weight: lighter;
-    border-radius: 10px;
-  }
-}
 
 .result {
   padding: 40px;

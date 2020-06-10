@@ -81,9 +81,10 @@ export default {
       let evaluation_id = this.evaluation._id.$oid;
 
       try {
-        await finishEvaluation(evaluation_id);
+        let { score } = await finishEvaluation(evaluation_id);
         this.unselect();
-        this.getEvaluations();
+        await this.getEvaluations();
+        await this.showResult(score);
       } catch (error) {
         this.$root.$children[0].showMessage("", error.msg);
         this.unselect();
