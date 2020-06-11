@@ -7,7 +7,7 @@
         v-for="(evaluation, c_idx) in evaluations"
         :key="c_idx"
       >
-        <div class="m-cardd transform-scale" @click="showDialogStart(evaluation)">
+        <div class="m-cardd transform-scale" style="cursor: pointer" @click="showDialogStart(evaluation)">
           <p class="m-cardd__name">{{evaluation.name}}</p>
           <div class="m-cardd__body">
             <span class="m-cardd__item">Inicio:</span>

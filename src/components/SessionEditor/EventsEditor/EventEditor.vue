@@ -16,7 +16,6 @@
           </template>
           <span style="font-size: .75rem">Agregar Evento</span>
         </v-tooltip>
-
         <!-- <v-btn icon @click="restoreEvents()">
           <v-icon>mdi-restore</v-icon>
         </v-btn>-->
@@ -40,18 +39,18 @@
             hide-details
             autocomplete="off"
           ></v-text-field>
-          <span class="event__name">{{event.title}}</span>
-          <v-btn v-if="event.type !== 'task'" icon @click="deleteEvent(event._id.$oid)">
-            <v-icon>mdi-delete</v-icon>
-          </v-btn>
+          <span v-else class="event__name">{{event.title}}</span>
           <v-btn v-if="event.type !== 'task'" icon @click="saveEvent(event)">
             <v-icon>mdi-content-save</v-icon>
+          </v-btn>
+          <v-btn v-if="event.type !== 'task'" icon @click="deleteEvent(event._id.$oid)">
+            <v-icon>mdi-delete</v-icon>
           </v-btn>
         </div>
         <div class="event__content">
           <v-textarea
             v-if="event.type !== 'task'"
-            class="event__description"
+            class="event__description mt-2"
             v-model="event.description"
             :rows="1"
             autoGrow
@@ -59,7 +58,7 @@
             hide-details
             autocomplete="off"
           ></v-textarea>
-          <span class="event__description">{{event.description}}</span>
+          <span v-else class="event__description">{{event.description}}</span>
         </div>
       </div>
     </div>

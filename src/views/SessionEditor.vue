@@ -22,7 +22,7 @@ import Chatbots from "@/components/Session/Chatbots";
 import TasksEditor from "@/components/SessionEditor/TasksEditor/index";
 import EvaluationsEditor from "@/components/SessionEditor/EvaluationsEditor/index";
 import EventsEditor from "@/components/SessionEditor/EventsEditor/index";
-import Students from "@/components/SessionEditor/Students";
+import Students from "@/components/SessionEditor/Students/index";
 
 import { redirect, getParam } from "@/services/router";
 import { getCourseNameBySession } from "@/services/courseService";

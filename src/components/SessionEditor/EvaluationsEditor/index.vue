@@ -38,10 +38,9 @@
               <span style="font-size: .75rem">{{evaluation.started? 'Ver Evaluación': 'Editar'}}</span>
             </v-tooltip>
 
-            <v-tooltip bottom>
+            <v-tooltip v-if="evaluation.started" bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-icon
-                  v-if="evaluation.started"
                   class="m-cardd__action"
                   v-bind="attrs"
                   v-on="on"

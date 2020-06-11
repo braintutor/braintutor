@@ -30,14 +30,21 @@
               <span class="no-result">Sin realizar</span>
             </td>
             <td class="text-center">
-              <v-btn
-                :disabled="!student.score"
-                small
-                icon
-                @click="dialog_delete = true; student_result_delete = student"
-              >
-                <v-icon>mdi-playlist-remove</v-icon>
-              </v-btn>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    :disabled="!student.score"
+                    small
+                    icon
+                    v-bind="attrs"
+                    v-on="on"
+                    @click="dialog_delete = true; student_result_delete = student"
+                  >
+                    <v-icon>mdi-playlist-remove</v-icon>
+                  </v-btn>
+                </template>
+                <span style="font-size: .75rem">Eliminar Nota</span>
+              </v-tooltip>
             </td>
           </tr>
         </tbody>
