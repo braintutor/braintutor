@@ -22,7 +22,7 @@
         <v-btn
           color="primary"
           small
-          @click="old_password=''; new_password=''; dialog_password = true"
+          @click="current_password = ''; new_password = ''; confirm_new_password = ''; dialog_password = true"
         >Cambiar Contraseña</v-btn>
       </div>
     </div>
@@ -82,31 +82,39 @@
         <v-card-title>Cambiar Contraseña</v-card-title>
         <v-card-text>
           <div class="mt-3">
-            <span>Contraseña Actual</span>
+            <span>Contraseña actual</span>
             <v-text-field
               type="password"
               class="text-field"
-              v-model="old_password"
+              v-model="current_password"
               dense
               hide-details
-              autocomplete="off"
             ></v-text-field>
           </div>
-          <div class="mt-5">
-            <span>Nueva Contraseña</span>
+          <div class="mt-10">
+            <span>Nueva contraseña</span>
             <v-text-field
               type="password"
               class="text-field"
               v-model="new_password"
               dense
               hide-details
-              autocomplete="off"
+            ></v-text-field>
+          </div>
+          <div class="mt-5">
+            <span>Confirmar nueva contraseña</span>
+            <v-text-field
+              type="password"
+              class="text-field"
+              v-model="confirm_new_password"
+              dense
+              hide-details
             ></v-text-field>
           </div>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" small @click="dialog_password = false; updatePassword()">Guardar</v-btn>
+          <v-btn color="primary" small @click="updatePassword()">Guardar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -327,8 +335,9 @@ export default {
     loading_msg: "",
     dialog_test: false,
     //
-    old_password: "",
+    current_password: "",
     new_password: "",
+    confirm_new_password: "",
     dialog_password: false
   }),
   computed: {
@@ -393,11 +402,21 @@ export default {
       }
     },
     async updatePassword() {
+      if (this.new_password !== this.confirm_new_password) {
+        this.$root.$children[0].showMessage(
+          "",
+          "Las contraseñas no coinciden."
+        );
+        return;
+      }
+
+      this.dialog_password = false;
       this.loading = true;
       this.loading_msg = "Cambiando Contraseña";
+
       try {
-        await updatePassword(this.old_password, this.new_password);
-        this.$root.$children[0].showMessage("Éxito", "Contraseña modificada.");
+        await updatePassword(this.current_password, this.new_password);
+        this.$root.$children[0].showMessage("", "Contraseña modificada.");
       } catch (error) {
         this.$root.$children[0].showMessage("Error al Guardar", error.msg);
       }

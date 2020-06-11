@@ -7,6 +7,7 @@
         v-for="(evaluation, c_idx) in evaluations"
         :key="c_idx"
       >
+        <!--  -->
         <div class="m-cardd">
           <p class="m-cardd__name">{{evaluation.name}}</p>
           <div class="m-cardd__body">
@@ -23,16 +24,32 @@
             <span class="m-cardd__item">N° preg.</span>
             <span class="m-cardd__value">{{evaluation.content.length}} pregunta(s)</span>
           </div>
+          <!--  -->
           <div class="m-cardd__actions">
-            <v-icon
-              class="m-cardd__action"
-              @click="select(evaluation)"
-            >{{evaluation.started? 'mdi-eye': 'mdi-pencil'}}</v-icon>
-            <v-icon
-              v-if="evaluation.started"
-              class="m-cardd__action"
-              @click="results(evaluation)"
-            >mdi-poll</v-icon>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-icon
+                  class="m-cardd__action"
+                  v-bind="attrs"
+                  v-on="on"
+                  @click="select(evaluation)"
+                >{{evaluation.started? 'mdi-eye': 'mdi-pencil'}}</v-icon>
+              </template>
+              <span style="font-size: .75rem">{{evaluation.started? 'Ver Evaluación': 'Editar'}}</span>
+            </v-tooltip>
+
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-icon
+                  v-if="evaluation.started"
+                  class="m-cardd__action"
+                  v-bind="attrs"
+                  v-on="on"
+                  @click="results(evaluation)"
+                >mdi-poll</v-icon>
+              </template>
+              <span style="font-size: .75rem">Resultados</span>
+            </v-tooltip>
           </div>
         </div>
       </div>

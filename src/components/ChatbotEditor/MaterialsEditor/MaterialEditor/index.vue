@@ -18,15 +18,33 @@
         <!-- <v-btn icon @click="restoreMaterial(material._id.$oid)">
           <v-icon>mdi-restore</v-icon>
         </v-btn>-->
-        <v-btn icon @click="dialog_image = true">
-          <v-icon>mdi-image</v-icon>
-        </v-btn>
-        <v-btn icon @click="saveMaterial()">
-          <v-icon>mdi-content-save</v-icon>
-        </v-btn>
-        <v-btn icon @click="dialog_delete = true">
-          <v-icon>mdi-delete</v-icon>
-        </v-btn>
+
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon v-bind="attrs" v-on="on" @click="dialog_image = true">
+              <v-icon>mdi-image</v-icon>
+            </v-btn>
+          </template>
+          <span style="font-size: .75rem">Editar Imagen</span>
+        </v-tooltip>
+
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon v-bind="attrs" v-on="on" @click="saveMaterial()">
+              <v-icon>mdi-content-save</v-icon>
+            </v-btn>
+          </template>
+          <span style="font-size: .75rem">Guardar Cambios</span>
+        </v-tooltip>
+
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon v-bind="attrs" v-on="on" @click="dialog_delete = true">
+              <v-icon>mdi-delete</v-icon>
+            </v-btn>
+          </template>
+          <span style="font-size: .75rem">Eliminar Material</span>
+        </v-tooltip>
       </div>
     </div>
 
@@ -109,9 +127,14 @@
         <div v-if="category_selected === 'exercises'" class="category">
           <div class="category-menu">
             <span>Ejercicios</span>
-            <v-btn icon @click="addExercise(material.exercises)">
-              <v-icon>mdi-plus-circle</v-icon>
-            </v-btn>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn icon v-bind="attrs" v-on="on" @click="addExercise(material.exercises)">
+                  <v-icon>mdi-plus-circle</v-icon>
+                </v-btn>
+              </template>
+              <span style="font-size: .75rem">Agregar Pregunta</span>
+            </v-tooltip>
           </div>
           <div class="category-bullet" v-for="(exercise, e_idx) in material.exercises" :key="e_idx">
             <div class="category-bullet-content">
@@ -124,9 +147,6 @@
                   dense
                   hide-details
                 ></v-textarea>
-                <v-btn icon @click="addAlternative(material.exercises, e_idx)">
-                  <v-icon>mdi-plus</v-icon>
-                </v-btn>
               </div>
               <v-radio-group v-model="exercise.correct">
                 <div
@@ -159,7 +179,7 @@
                   <v-icon>mdi-dots-vertical</v-icon>
                 </v-btn>
               </template>
-              <v-list>
+              <v-list dense>
                 <v-list-item @click="moveUp(material.exercises, e_idx)">
                   <v-list-item-title>Mover Arriba</v-list-item-title>
                 </v-list-item>
@@ -283,10 +303,10 @@
     </div>
 
     <!-- Dialog Image -->
-    <v-dialog v-model="dialog_image" max-width="600">
-      <v-card class="material-editor-image">
+    <v-dialog v-model="dialog_image" max-width="500">
+      <v-card class="image">
         <v-progress-linear v-if="image_progress != 0" :value="image_progress"></v-progress-linear>
-        <div class="material-editor-image__menu">
+        <div class="image__menu">
           <v-text-field class="category-text mb-2" v-model="material.image" dense hide-details></v-text-field>
           <v-btn class="ml-2" @click="updateImage()" text icon>
             <v-icon>mdi-content-save</v-icon>
@@ -295,14 +315,16 @@
             <v-icon>mdi-upload</v-icon>
           </v-btn>
         </div>
-        <v-file-input
-          id="upload_image"
-          @change="onFileSelected()"
-          onclick="this.value = null"
-          v-model="image_file"
-          style="display:none"
-        ></v-file-input>
-        <img :src="material.image" alt />
+        <div class="image__input">
+          <v-file-input
+            id="upload_image"
+            @change="onFileSelected()"
+            onclick="this.value = null"
+            v-model="image_file"
+            style="display:none"
+          ></v-file-input>
+          <img :src="material.image" alt />
+        </div>
       </v-card>
     </v-dialog>
 
@@ -350,7 +372,7 @@ export default {
     "restoreMaterial"
   ],
   data: () => ({
-    chatbot_id: '',
+    chatbot_id: "",
     image_file: {},
     image_progress: 0,
     categories: [
@@ -558,16 +580,22 @@ export default {
 <style lang='scss' scoped>
 @import "@/styles/box-shadow.scss";
 
-.material-editor-image {
+.image {
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+
   &__menu {
     padding: 10px;
     padding-bottom: 10px;
     display: flex;
     align-items: flex-end;
   }
+  &__input {
+    flex-grow: 1;
+    overflow-y: auto;
+  }
   img {
-    display: block;
-    margin: 0 auto;
     width: 100%;
   }
 }

@@ -4,9 +4,9 @@ function getUser() {
   return fetch_get('getUser')
 }
 
-function updatePassword(old_password, new_password) {
+function updatePassword(current_password, new_password) {
   return fetch_post('updatePassword', {
-    old_password,
+    current_password,
     new_password
   })
 }

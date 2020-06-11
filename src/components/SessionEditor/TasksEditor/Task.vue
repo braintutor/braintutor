@@ -21,7 +21,7 @@
     <p style="font-weight: bold; font-size: 1.2rem" class="ml-2 mt-6 mb-3">Respuestas</p>
     <div class="row no-gutters">
       <!-- STUDENTS -->
-      <div class="students m-card col-12 col-sm-2 mb-3">
+      <div class="students m-card col-12 col-sm-2">
         <div
           class="student"
           :class="{'student--active': student === s}"
@@ -36,7 +36,7 @@
       <div v-if="student" class="col-12 col-sm-10">
         <div class="response m-card mb-4 ml-sm-5" style="border-radius: 0">
           <div class="response__menu">
-            <!-- <p class="response__student">{{`${student.last_name}, ${student.first_name}`}}</p> -->
+            <p class="response__student">{{`${student.last_name}, ${student.first_name}`}}</p>
             <p
               v-if="answer.text || (answer.data && answer.data.length > 0)"
               class="response__time"
@@ -60,7 +60,7 @@
           </div>
           <div
             v-else
-            class="text-center"
+            class="text-center pt-4 pb-2"
             style="color: #aaa; font-size: .9rem"
           >No hay respuestas.</div>
         </div>
@@ -130,7 +130,7 @@ export default {
 }
 .student {
   padding: 6px 10px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   transition: all 0.3s;
   border-left: 3px solid #fff;
   border-bottom: 0.5px solid #e0e0e0;
@@ -141,7 +141,7 @@ export default {
   }
   &--active {
     border-left: 3px solid #3968eb;
-    cursor: initial;
+    cursor: default;
     &:hover {
       border-left: 3px solid #3968eb;
       background: #fff;
@@ -153,9 +153,10 @@ export default {
   padding: 12px;
   &__menu {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
   }
   &__student {
+    font-size: .9rem;
     margin-bottom: 0;
     font-weight: bold;
   }
