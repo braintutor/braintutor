@@ -128,13 +128,16 @@ import {
   updateChatbotImage,
   removeChatbot
 } from "@/services/chatbotService";
+import { getChatbotToken } from "@/services/firebaseStorageService";
 
 import firebase from "firebase/app";
-import 'firebase/storage';
+import "firebase/storage";
+import "firebase/auth";
 
 export default {
   data: () => ({
     chatbot: {},
+    chatbot_id: "",
     image_file: null,
     show_error: false,
     message_error: "",
@@ -147,6 +150,13 @@ export default {
     name: ""
   }),
   async mounted() {
+    this.chatbot_id = getParam("chatbot_id");
+    try {
+      let { token } = await getChatbotToken(this.chatbot_id);
+      firebase.auth().signInWithCustomToken(token);
+    } catch (error) {
+      this.$root.$children[0].showMessage("Error", error.msg);
+    }
     this.restore();
   },
   computed: {
@@ -158,8 +168,7 @@ export default {
     async restore() {
       this.loading = true;
       this.loading_message = "Cargando Datos";
-      let chatbot_id = getParam("chatbot_id");
-      this.chatbot = await getChatbot(chatbot_id);
+      this.chatbot = await getChatbot(this.chatbot_id);
       this.loading = false;
     },
     async save() {
@@ -183,15 +192,8 @@ export default {
     async removeChatbot() {
       this.loading = true;
       this.loading_message = "Eliminando";
-      try {
-        var ref = firebase
-          .storage()
-          .ref(`/chatbot/${this.chatbot._id.$oid}/image`);
-        await ref.delete();
-      } catch (error) {
-        //
-      }
-      let response = await removeChatbot(this.chatbot._id.$oid);
+
+      let response = await removeChatbot(this.chatbot_id);
       if (response.error) {
         this.show_error = true;
         this.message_error = response.error;
@@ -210,9 +212,7 @@ export default {
     },
     onFileSelected() {
       this.loading = true;
-      let ref = firebase
-        .storage()
-        .ref(`/chatbot/${this.chatbot._id.$oid}/image`);
+      let ref = firebase.storage().ref(`/chatbot/${this.chatbot._id.$oid}`);
       let task = ref.put(this.image_file);
       task.on(
         "state_changed",

@@ -4,15 +4,32 @@
     <div class="menu">
       <span class="menu-title">Conocimiento</span>
       <div class="menu-action">
-        <v-btn icon @click="addKnowledge()">
-          <v-icon>mdi-comment-plus-outline</v-icon>
-        </v-btn>
-        <v-btn icon @click="restoreKnowledge()">
-          <v-icon>mdi-restore</v-icon>
-        </v-btn>
-        <v-btn icon @click="saveKnowledge()">
-          <v-icon>mdi-content-save</v-icon>
-        </v-btn>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon v-bind="attrs" v-on="on" @click="addKnowledge()">
+              <v-icon>mdi-comment-plus-outline</v-icon>
+            </v-btn>
+          </template>
+          <span style="font-size: .75rem">Agregar Conocimiento</span>
+        </v-tooltip>
+
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon v-bind="attrs" v-on="on" @click="restoreKnowledge()">
+              <v-icon>mdi-restore</v-icon>
+            </v-btn>
+          </template>
+          <span style="font-size: .75rem">Restaurar Cambios</span>
+        </v-tooltip>
+
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon v-bind="attrs" v-on="on" @click="saveKnowledge()">
+              <v-icon>mdi-content-save</v-icon>
+            </v-btn>
+          </template>
+          <span style="font-size: .75rem">Guardar Cambios</span>
+        </v-tooltip>
       </div>
     </div>
     <div id="knowledge-scroll" class="editor-content m-fullscreen-content">
@@ -71,7 +88,7 @@
                 <v-icon>mdi-dots-vertical</v-icon>
               </v-btn>
             </template>
-            <v-list>
+            <v-list dense>
               <v-list-item @click="moveUp(k_idx)">
                 <v-list-item-title>Mover Arriba</v-list-item-title>
               </v-list-item>

@@ -1,4 +1,5 @@
 $color-evaluation: #e5c280;
+$color-evaluation-shadow: #d8a84fd5;
 
 .m-cardd {
   padding: 10px;
@@ -6,7 +7,6 @@ $color-evaluation: #e5c280;
   border-top: 4px solid $color-evaluation;
   box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2),
   0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12) !important;
-  cursor: pointer;
   
   &__name {
     margin-bottom: 8px !important;
@@ -56,9 +56,11 @@ $color-evaluation: #e5c280;
     font-size: 1.2rem !important;
     font-weight: bold;
     border-radius: 10px;
-    box-shadow: 0px 4px 4px -1px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 3px 0 0px $color-evaluation-shadow;
+    cursor: pointer;
 
     &:hover {
+      transform: translateY(3px) !important;
       box-shadow: none;
     }
   }

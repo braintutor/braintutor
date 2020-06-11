@@ -5,15 +5,30 @@
       <div class="calendar-control">
         <span class="calendar-date">{{calendar_date}}</span>
         <div class="calendar-actions">
-          <v-btn class="calendar-action" icon @click="today()">
-            <v-icon>mdi-calendar-today</v-icon>
-          </v-btn>
-          <v-btn class="calendar-action" icon @click="prev()">
-            <v-icon>mdi-chevron-left</v-icon>
-          </v-btn>
-          <v-btn class="calendar-action" icon @click="next()">
-            <v-icon>mdi-chevron-right</v-icon>
-          </v-btn>
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon v-bind="attrs" v-on="on" class="calendar-action" @click="today()">
+                <v-icon>mdi-calendar-today</v-icon>
+              </v-btn>
+            </template>
+            <span style="font-size: .75rem">Hoy</span>
+          </v-tooltip>
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon v-bind="attrs" v-on="on" class="calendar-action" @click="prev()">
+                <v-icon>mdi-chevron-left</v-icon>
+              </v-btn>
+            </template>
+            <span style="font-size: .75rem">Mes Anterior</span>
+          </v-tooltip>
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon v-bind="attrs" v-on="on" class="calendar-action" @click="next()">
+                <v-icon>mdi-chevron-right</v-icon>
+              </v-btn>
+            </template>
+            <span style="font-size: .75rem">Mes Siguiente</span>
+          </v-tooltip>
         </div>
       </div>
       <FullCalendar

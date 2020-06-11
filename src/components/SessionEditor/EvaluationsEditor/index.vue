@@ -7,11 +7,9 @@
         v-for="(evaluation, c_idx) in evaluations"
         :key="c_idx"
       >
-        <div class="m-cardd transform-scale">
+        <div class="m-cardd">
           <p class="m-cardd__name">{{evaluation.name}}</p>
           <div class="m-cardd__body">
-            <span class="m-cardd__item">Tamaño:</span>
-            <span class="m-cardd__value">{{evaluation.content.length}} pregunta(s)</span>
             <span v-if="evaluation.time_start" class="m-cardd__item">Inicio:</span>
             <span
               v-if="evaluation.time_start"
@@ -22,6 +20,8 @@
               v-if="evaluation.time_end"
               class="m-cardd__value"
             >{{dateFormat(evaluation.time_end)}}</span>
+            <span class="m-cardd__item">N° preg.</span>
+            <span class="m-cardd__value">{{evaluation.content.length}} pregunta(s)</span>
           </div>
           <div class="m-cardd__actions">
             <v-icon
@@ -96,7 +96,7 @@ export default {
       let now = () => {
         let date = new Date();
         date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-        return date
+        return date;
       };
       let format = date => date.toISOString().slice(0, 16);
 
@@ -168,7 +168,7 @@ export default {
   }
 }
 .create {
-  min-height: 110px;
+  min-height: 150px;
   height: 100%;
   color: #acacac;
   font-size: 2.5rem;

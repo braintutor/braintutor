@@ -22,15 +22,21 @@
     <div class="row no-gutters">
       <!-- STUDENTS -->
       <div class="students m-card col-12 col-sm-2 mb-3">
-        <div class="student" v-for="(s, idx) in students" :key="idx" @click="student = s">
+        <div
+          class="student"
+          :class="{'student--active': student === s}"
+          v-for="(s, idx) in students"
+          :key="idx"
+          @click="student = s"
+        >
           <span>{{`${s.last_name}, ${s.first_name}`}}</span>
         </div>
       </div>
       <!-- ANSWER -->
       <div v-if="student" class="col-12 col-sm-10">
-        <div class="response m-card mb-4 ml-sm-5">
+        <div class="response m-card mb-4 ml-sm-5" style="border-radius: 0">
           <div class="response__menu">
-            <p class="response__student">{{`${student.last_name}, ${student.first_name}`}}</p>
+            <!-- <p class="response__student">{{`${student.last_name}, ${student.first_name}`}}</p> -->
             <p
               v-if="answer.text || (answer.data && answer.data.length > 0)"
               class="response__time"
@@ -54,7 +60,7 @@
           </div>
           <div
             v-else
-            class="text-center mt-3"
+            class="text-center"
             style="color: #aaa; font-size: .9rem"
           >No hay respuestas.</div>
         </div>
@@ -93,6 +99,7 @@ export default {
 <style lang='scss' scoped>
 .task {
   margin-bottom: 16px;
+  border-radius: 0;
   &__menu {
     padding: 12px 10px 0 18px;
     display: flex;
@@ -117,17 +124,28 @@ export default {
 }
 
 .students {
+  border-radius: 0;
   overflow: hidden;
   height: min-content;
 }
 .student {
   padding: 6px 10px;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   transition: all 0.3s;
+  border-left: 3px solid #fff;
   border-bottom: 0.5px solid #e0e0e0;
   cursor: pointer;
   &:hover {
     background: #e7e7e7;
+    border-left: 3px solid #e7e7e7;
+  }
+  &--active {
+    border-left: 3px solid #3968eb;
+    cursor: initial;
+    &:hover {
+      border-left: 3px solid #3968eb;
+      background: #fff;
+    }
   }
 }
 
@@ -135,7 +153,7 @@ export default {
   padding: 12px;
   &__menu {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
   }
   &__student {
     margin-bottom: 0;

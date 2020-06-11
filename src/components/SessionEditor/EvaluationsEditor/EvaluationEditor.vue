@@ -23,7 +23,7 @@
               <v-icon>mdi-plus</v-icon>
             </v-btn>
           </template>
-          <span style="font-size: .75rem">Crear Pregunta</span>
+          <span style="font-size: .75rem">Agregar Pregunta</span>
         </v-tooltip>
 
         <v-tooltip top>

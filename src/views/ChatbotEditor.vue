@@ -1,10 +1,12 @@
 <template>
-  <AppSidebar :links="links" :action_links="action_links">
-    <ChatbotEditor :slot="0" />
-    <MaterialsEditor :slot="1" />
-    <QuizzesEditor :slot="2" />
-    <KnowledgeEditor :slot="3" :get="get" :update="update" />
-  </AppSidebar>
+  <div>
+    <AppSidebar :links="links" :action_links="action_links">
+      <ChatbotEditor :slot="0" />
+      <MaterialsEditor :slot="1" />
+      <QuizzesEditor :slot="2" />
+      <KnowledgeEditor :slot="3" :get="get" :update="update" />
+    </AppSidebar>
+  </div>
 </template>
 
 <script>

@@ -8,12 +8,18 @@
         <span class="menu-title">{{format(event_date)}}</span>
       </div>
       <div class="menu-right">
-        <v-btn icon @click="createEvent()">
-          <v-icon>mdi-calendar-plus</v-icon>
-        </v-btn>
-        <v-btn icon @click="restoreEvents()">
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon v-bind="attrs" v-on="on" @click="createEvent()">
+              <v-icon>mdi-calendar-plus</v-icon>
+            </v-btn>
+          </template>
+          <span style="font-size: .75rem">Agregar Evento</span>
+        </v-tooltip>
+
+        <!-- <v-btn icon @click="restoreEvents()">
           <v-icon>mdi-restore</v-icon>
-        </v-btn>
+        </v-btn>-->
       </div>
     </div>
     <div id="events-scroll" class="m-fullscreen-content">
@@ -26,14 +32,15 @@
       >
         <div class="event__menu">
           <v-text-field
+            v-if="event.type !== 'task'"
             class="event__name"
-            :disabled="event.type === 'task'"
             v-model="event.title"
             autoGrow
             dense
             hide-details
             autocomplete="off"
           ></v-text-field>
+          <span class="event__name">{{event.title}}</span>
           <v-btn v-if="event.type !== 'task'" icon @click="deleteEvent(event._id.$oid)">
             <v-icon>mdi-delete</v-icon>
           </v-btn>
@@ -43,8 +50,8 @@
         </div>
         <div class="event__content">
           <v-textarea
+            v-if="event.type !== 'task'"
             class="event__description"
-            :disabled="event.type === 'task'"
             v-model="event.description"
             :rows="1"
             autoGrow
@@ -52,6 +59,7 @@
             hide-details
             autocomplete="off"
           ></v-textarea>
+          <span class="event__description">{{event.description}}</span>
         </div>
       </div>
     </div>

@@ -9,18 +9,41 @@
         <v-text-field class="menu-title" v-model="quiz.name" dense hide-details autocomplete="off"></v-text-field>
       </div>
       <div class="menu-right">
-        <v-btn icon @click="addQuestion(quiz.content)">
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
-        <v-btn icon @click="restoreQuiz(quiz._id.$oid)">
-          <v-icon>mdi-restore</v-icon>
-        </v-btn>
-        <v-btn icon @click="saveQuiz()">
-          <v-icon>mdi-content-save</v-icon>
-        </v-btn>
-        <v-btn icon @click="dialog_delete = true">
-          <v-icon>mdi-delete</v-icon>
-        </v-btn>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon v-bind="attrs" v-on="on" @click="addQuestion(quiz.content)">
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
+          </template>
+          <span style="font-size: .75rem">Agregar Pregunta</span>
+        </v-tooltip>
+        
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon v-bind="attrs" v-on="on" @click="restoreQuiz(quiz._id.$oid)">
+              <v-icon>mdi-restore</v-icon>
+            </v-btn>
+          </template>
+          <span style="font-size: .75rem">Restaurar Cambios</span>
+        </v-tooltip>
+        
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon v-bind="attrs" v-on="on" @click="saveQuiz()">
+              <v-icon>mdi-content-save</v-icon>
+            </v-btn>
+          </template>
+          <span style="font-size: .75rem">Guardar Cambios</span>
+        </v-tooltip>
+
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon v-bind="attrs" v-on="on" @click="dialog_delete = true">
+              <v-icon>mdi-delete</v-icon>
+            </v-btn>
+          </template>
+          <span style="font-size: .75rem">Eliminar Evaluación</span>
+        </v-tooltip>
       </div>
     </div>
 

@@ -336,6 +336,7 @@ import {
 } from "@/services/materialService";
 import { getEmbed } from "@/services/embed";
 import { Clamp } from "@/services/math";
+import { getParam } from "@/services/router.js";
 
 import firebase from "firebase/app";
 import "firebase/storage";
@@ -349,6 +350,7 @@ export default {
     "restoreMaterial"
   ],
   data: () => ({
+    chatbot_id: '',
     image_file: {},
     image_progress: 0,
     categories: [
@@ -398,13 +400,16 @@ export default {
       return this.material.movies.map(movie => getEmbed(movie));
     }
   },
+  mounted() {
+    this.chatbot_id = getParam("chatbot_id");
+  },
   methods: {
     onFileSelected() {
       let size = (this.image_file.size / 1024).toFixed(2);
       if (size <= 100) {
         let ref = firebase
           .storage()
-          .ref(`/material/${this.material._id.$oid}/image`);
+          .ref(`/material/${this.chatbot_id}/${this.material._id.$oid}`);
 
         let task = ref.put(this.image_file);
         task.on(
