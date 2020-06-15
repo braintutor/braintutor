@@ -7,7 +7,11 @@
         v-for="(evaluation, c_idx) in evaluations"
         :key="c_idx"
       >
-        <div class="m-cardd transform-scale" style="cursor: pointer" @click="showDialogStart(evaluation)">
+        <div
+          class="m-cardd transform-scale"
+          style="cursor: pointer"
+          @click="showDialogStart(evaluation)"
+        >
           <p class="m-cardd__name">{{evaluation.name}}</p>
           <div class="m-cardd__body">
             <span class="m-cardd__item">Inicio:</span>
@@ -122,7 +126,7 @@ export default {
       this.loading = false;
     },
     async select(evaluation) {
-      if (this.session_type == 2) {
+      if (this.session_type === 2) {
         this.loading = true;
         this.loading_msg = "Cargando Evaluación";
         try {
@@ -152,15 +156,10 @@ export default {
       this.result_messages = [`Obtuviste un puntaje de ${this.score_f}.`];
     },
     showDialogStart(evaluation) {
-      if (
-        evaluation.result &&
-        evaluation.result.score != null &&
-        this.session_type == 2
-      )
-        return;
-
-      this.evaluation_to_start = evaluation;
-      this.dialog_start = true;
+      if ((evaluation.result || {}).score == null && this.session_type === 2) {
+        this.evaluation_to_start = evaluation;
+        this.dialog_start = true;
+      }
     }
   },
   components: {

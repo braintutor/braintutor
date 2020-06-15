@@ -11,7 +11,7 @@
       <Tasks :slot="1" />
       <Events :slot="2" />
       <Evaluations :slot="3" />
-      <Students :slot="4" />
+      <Students :slot="4" :get='getStudentsBySessionStudent' />
     </AppSidebar>
   </div>
 </template>
@@ -22,10 +22,11 @@ import Chatbots from "@/components/Session/Chatbots";
 import Tasks from "@/components/Session/Tasks";
 import Events from "@/components/Session/Events/index";
 import Evaluations from "@/components/Session/Evaluations/index";
-import Students from "@/components/Session/Students";
+import Students from "@/components/Students/index";
 
 import { redirect, getParam } from "@/services/router";
 import { getCourseNameBySession } from "@/services/courseService";
+import { getStudentsBySessionStudent } from "@/services/studentService";
 
 export default {
   data: () => ({
@@ -60,6 +61,7 @@ export default {
     this.course = await getCourseNameBySession(session_id);
   },
   methods: {
+    getStudentsBySessionStudent,
     redirect() {
       redirect("sessions-student");
     }

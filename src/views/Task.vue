@@ -166,8 +166,8 @@ export default {
       "777825196939-qm3a36q1v66f65cn5s627p71da3rgpsq.apps.googleusercontent.com",
     // client_secret: "eqKgUl-Lx4pCs0RcozuUUbPa",
     api_key: "AIzaSyAGFPLGWa0IFKZ7AP2Zk2aZsAi0Xxx7Hr8",
-    // redirect_uri: "http://localhost:8080",
-    redirect_uri: "https://braintutor.github.io/braintutor",
+    redirect_uri: "http://localhost:8080",
+    // redirect_uri: "https://braintutor.github.io/braintutor",
     scope: "https://www.googleapis.com/auth/drive"
   }),
   async created() {
@@ -202,14 +202,25 @@ export default {
       this.dialog_files = true;
       this.loading = false;
     },
-    async addFileDrive({ /*id,*/ webViewLink }) {
-      this.loading = true;
-      this.loading_msg = "Compartiendo Archivo";
-      this.dialog_files = false;
+    async addFileDrive({ /*exportLinks*/ iconLink, name, webViewLink }) {
+      // this.loading = true;
+      // this.loading_msg = "Compartiendo Archivo";
+      // this.dialog_files = false;
       // await this.createPermission(id, "mitsuoysharag@gmail.com");
-      this.link = webViewLink;
-      await this.addLink();
-      this.loading = false;
+      // this.link = webViewLink;
+      // await this.addLink();
+      // this.loading = false;
+
+      this.dialog_files = false;
+      let data = {
+        type: "link",
+        url: webViewLink,
+        image: iconLink,
+        title: name
+      };
+      this.answer.data.push(data);
+
+      await this.save();
     },
     async add(type) {
       let access_token = localStorage.getItem("access_token");
@@ -243,6 +254,7 @@ export default {
         data.type = "link";
         data.url = this.link;
         this.answer.data.push(data);
+
         await this.save();
       } catch (error) {
         this.$root.$children[0].showMessage("Error", error);

@@ -49,9 +49,9 @@ import Student from "./Student";
 import Chart from "chart.js";
 
 import { getParam } from "@/services/router.js";
-import { getStudentsBySession } from "@/services/studentService";
 
 export default {
+  props: ['get'],
   data: () => ({
     session_id: "",
     students: [],
@@ -63,7 +63,7 @@ export default {
   async mounted() {
     this.session_id = getParam("session_id");
     this.loading_message = "Cargando Alumnos";
-    this.students = await getStudentsBySession(this.session_id);
+    this.students = await this.get(this.session_id);
     this.loading = false;
     // Chart
     this.showDashboardAll();
