@@ -106,6 +106,7 @@ router.beforeEach(async (to, from, next) => {
   const require_director = ['director', 'profile'] // Require Director
   const require_parent = ['sessions-student', 'session', 'tasks', 'events', 'chatbot', 'profile'] // Require Director
   let to_name = to.name
+  let redirects = ['school-editor', 'sessions-teacher', 'sessions-student', 'director', 'sessions-student']
 
   let user = null
   let token = localStorage.getItem('token')
@@ -130,8 +131,8 @@ router.beforeEach(async (to, from, next) => {
       next()
     else
       redirect('home')
-  else if (to_name === 'login' && user)
-    redirect('home')
+  else if (['home', 'login'].includes(to_name) && user)
+    redirect(redirects[user.type])
   else next()
 })
 

@@ -118,8 +118,8 @@ export default {
 
       let new_evaluation = {
         name: "Nombre",
-        time_start: format(now()),
-        time_end: format(now().addHours(1)),
+        time_start: format(now().addHours(1)),
+        time_end: format(now().addHours(2)),
         content: [
           {
             question: "Pregunta",

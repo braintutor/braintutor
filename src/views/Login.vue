@@ -72,32 +72,25 @@ export default {
           this.loading_login = true;
           let school_id = this.school._id.$oid;
           let res = {};
-          let name = "";
 
-          if (this.type === "Administrador") {
+          if (this.type === "Administrador")
             res = await loginAdmin(school_id, this.user, this.pass);
-            name = "school-editor";
-          }
-          if (this.type === "Profesor") {
+
+          if (this.type === "Profesor")
             res = await loginTeacher(school_id, this.user, this.pass);
-            name = "sessions-teacher";
-          }
-          if (this.type === "Estudiante") {
+
+          if (this.type === "Estudiante")
             res = await loginStudent(school_id, this.user, this.pass);
-            name = "sessions-student";
-          }
-          if (this.type === "Director") {
+
+          if (this.type === "Director")
             res = await loginDirector(school_id, this.user, this.pass);
-            name = "director";
-          }
-          if (this.type === "Padre") {
+
+          if (this.type === "Padre")
             res = await loginParent(school_id, this.user, this.pass);
-            name = "sessions-student";
-          }
 
           let { token } = res;
           localStorage.setItem("token", token);
-          redirect(name);
+          redirect("home");
         }
       } catch (error) {
         this.alert_error = true;
