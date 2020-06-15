@@ -16,14 +16,15 @@
         ></v-select>
       </div>
     </div>
-    <Students v-if="classroom_id" :students="students" />
-    <div v-else class="no-classroom">Seleccione un Aula.</div>
+    <Students ref="students" v-show="classroom_id" :get="getStudents" />
+    <div v-show="!classroom_id" class="no-classroom">Seleccione un Aula.</div>
   </div>
 </template>
 
 <script>
 import loading from "@/components/loading";
-import Students from "./Students";
+// import Students from "./Students";
+import Students from "@/components/Students/index";
 
 import { getClassroomsBySchoolDirector } from "@/services/classroomService";
 import { getStudentsByClassroomDirector } from "@/services/studentService";
@@ -39,7 +40,7 @@ export default {
   }),
   watch: {
     classroom_id() {
-      this.select(this.classroom_id);
+      this.$refs.students.update();
     }
   },
   mounted() {
@@ -53,13 +54,10 @@ export default {
       this.classrooms.sort((a, b) => a.name.localeCompare(b.name));
       this.loading = false;
     },
-    async select() {
-      this.loading = true;
-      this.loading_message = "Cargando Alumnos";
-      this.students = await getStudentsByClassroomDirector(
-        this.classroom_id.$oid
-      );
-      this.loading = false;
+    async getStudents() {
+      if (this.classroom_id)
+        return await getStudentsByClassroomDirector(this.classroom_id.$oid);
+      else return [];
     }
   },
   components: {
@@ -70,7 +68,7 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-@import '@/styles/filters';
+@import "@/styles/filters";
 
 .no-classroom {
   margin: 20px 0;

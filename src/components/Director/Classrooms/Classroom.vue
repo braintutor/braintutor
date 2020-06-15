@@ -33,6 +33,7 @@ import loading from "@/components/loading";
 import { getSessionsByClassroom } from "@/services/sessionService";
 import { getEvaluationsBySessionDirector } from "@/services/evaluationService";
 import { getStudentsByClassroomDirector } from "@/services/studentService";
+import { format_two_digits } from "@/services/date.js";
 import Chart from "chart.js";
 
 export default {
@@ -72,7 +73,7 @@ export default {
           if (evaluation.results) {
             this.students.forEach(student => {
               let result = evaluation.results[student._id.$oid];
-              if (result && result.started) scores.push(this.calculate(result));
+              if (result && result.score) scores.push(this.calculate(result.score));
             });
           }
           let data = scores.reduce((arr, score) => {
@@ -86,7 +87,8 @@ export default {
       }
     },
     calculate(result) {
-      let score = Math.round((20 * result.corrects) / result.total) || 0;
+      let score = Math.round(result * 20);
+      score = format_two_digits(score);
       return score;
     },
     showDashboard(id, data) {

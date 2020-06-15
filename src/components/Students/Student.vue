@@ -11,7 +11,7 @@
         v-show="!student.learning_style"
         class="text-center"
         style="color: #b7b7b7"
-      >No hay información.</p>
+      >No hay información</p>
     </div>
 
     <div class="m-card mt-3 pa-3">
@@ -19,7 +19,7 @@
       <div v-show="student.time" class="crt">
         <canvas id="crt-t"></canvas>
       </div>
-      <p v-show="!student.time" class="text-center" style="color: #b7b7b7">No hay información.</p>
+      <p v-show="!student.time" class="text-center" style="color: #b7b7b7">No hay información</p>
     </div>
   </div>
 </template>

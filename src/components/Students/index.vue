@@ -48,10 +48,10 @@ import loading from "@/components/loading";
 import Student from "./Student";
 import Chart from "chart.js";
 
-import { getParam } from "@/services/router.js";
+// import { getParam } from "@/services/router.js";
 
 export default {
-  props: ['get'],
+  props: ["get"],
   data: () => ({
     session_id: "",
     students: [],
@@ -61,12 +61,7 @@ export default {
     loading_message: ""
   }),
   async mounted() {
-    this.session_id = getParam("session_id");
-    this.loading_message = "Cargando Alumnos";
-    this.students = await this.get(this.session_id);
-    this.loading = false;
-    // Chart
-    this.showDashboardAll();
+    await this.update();
   },
   methods: {
     select(student) {
@@ -162,6 +157,13 @@ export default {
           }
         }
       });
+    },
+    async update() {
+      this.loading = true;
+      this.loading_message = "Cargando Alumnos";
+      this.students = await this.get();
+      this.showDashboardAll();
+      this.loading = false;
     }
   },
   components: {

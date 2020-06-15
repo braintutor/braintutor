@@ -79,10 +79,10 @@ import {
   updateTask,
   removeTask
 } from "@/services/taskService";
+import { getStudentsBySession } from "@/services/studentService";
 import { getParam } from "@/services/router.js";
 
 export default {
-  props: ["students"],
   data: () => ({
     session_id: "",
     tasks: [],
@@ -178,6 +178,7 @@ export default {
       this.loading = true;
       this.loading_msg = "Cargando Tareas";
       try {
+        this.students = await getStudentsBySession(this.session_id);
         this.tasks = await getTasksBySessionTeacher(this.session_id);
       } catch (error) {
         this.$root.$children[0].showMessage("Error", error.msg);

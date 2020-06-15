@@ -11,7 +11,7 @@
       <Tasks :slot="1" />
       <Events :slot="2" />
       <Evaluations :slot="3" />
-      <Students :slot="4" :get='getStudentsBySessionStudent' />
+      <Students :slot="4" :get="getStudents" />
     </AppSidebar>
   </div>
 </template>
@@ -31,6 +31,7 @@ import { getStudentsBySessionStudent } from "@/services/studentService";
 export default {
   data: () => ({
     course: null,
+    session_id: "",
     links: [
       {
         image:
@@ -57,13 +58,15 @@ export default {
     ]
   }),
   async mounted() {
-    let session_id = getParam("session_id");
-    this.course = await getCourseNameBySession(session_id);
+    this.session_id = getParam("session_id");
+    this.course = await getCourseNameBySession(this.session_id);
   },
   methods: {
-    getStudentsBySessionStudent,
     redirect() {
       redirect("sessions-student");
+    },
+    async getStudents() {
+      return await getStudentsBySessionStudent(this.session_id);
     }
   },
   components: {

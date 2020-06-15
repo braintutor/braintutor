@@ -9,7 +9,7 @@
 <script>
 import AppSidebar from "@/components/AppSidebar";
 import Classrooms from "@/components/Director/Classrooms/index";
-import Students from "@/components/Director/Students/index";
+import Students from "@/components/Director/Students";
 
 export default {
   data: () => ({

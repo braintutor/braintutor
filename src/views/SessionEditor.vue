@@ -8,10 +8,10 @@
     </div>
     <AppSidebar :links="links">
       <Chatbots :slot="0" />
-      <TasksEditor :slot="1" :students='students' />
+      <TasksEditor :slot="1" />
       <EvaluationsEditor :slot="2" />
       <EventsEditor :slot="3" />
-      <Students :slot="4" :get='getStudentsBySession'/>
+      <Students :slot="4" :get="getStudents" />
     </AppSidebar>
   </div>
 </template>
@@ -54,18 +54,18 @@ export default {
         image: require("@/assets/braintutor/icon-students.png"),
         text: "Alumnos"
       }
-    ],
-    students: []
+    ]
   }),
   async mounted() {
-    let session_id = getParam("session_id");
-    this.course = await getCourseNameBySession(session_id);
-    this.students = await getStudentsBySession(session_id);
+    this.session_id = getParam("session_id");
+    this.course = await getCourseNameBySession(this.session_id);
   },
   methods: {
-    getStudentsBySession,
     redirect() {
       redirect("sessions-teacher");
+    },
+    async getStudents() {
+      return await getStudentsBySession(this.session_id);
     }
   },
   components: {
