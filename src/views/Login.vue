@@ -2,16 +2,15 @@
   <div class="m-fullcenter">
     <loading :active="loading" />
     <v-card class="login_container" elevation="6">
-      <div class="login_icon">
+      <!-- <div class="login_icon">
         <img src="@/assets/braintutor/icon.png" width="100%" />
       </div>
       <div class="login_name">
         <img src="@/assets/braintutor/name.png" width="100%" />
-      </div>
-      <!-- {{school}} -->
-      <!-- <div class="login_icon">
+      </div>-->
+      <div class="login_icon">
         <img :src="school.image" width="100%" />
-      </div> -->
+      </div>
       <v-form ref="form_login" @submit.prevent="login">
         <v-card-text class="login_content">
           <v-alert
@@ -21,14 +20,6 @@
             text
             dismissible
           >Datos incorrectos.</v-alert>
-          <!-- <v-select
-            class="mb-4"
-            v-model="school_id"
-            :items="schools"
-            item-text="name"
-            item-value="id"
-            label="Colegio"
-          ></v-select>-->
           <v-text-field v-model="user" :rules="userRules" label="Usuario"></v-text-field>
           <v-text-field v-model="pass" :rules="passRules" label="Contraseña" type="password"></v-text-field>
           <v-select class="mb-4" v-model="type" :items="types" label="Tipo"></v-select>
