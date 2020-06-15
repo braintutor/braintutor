@@ -167,7 +167,8 @@ export default {
     // client_secret: "eqKgUl-Lx4pCs0RcozuUUbPa",
     api_key: "AIzaSyAGFPLGWa0IFKZ7AP2Zk2aZsAi0Xxx7Hr8",
     // redirect_uri: "http://localhost:8080",
-    redirect_uri: "https://braintutor.github.io/braintutor",
+    // redirect_uri: "https://braintutor.github.io/braintutor",
+    redirect_uri: "https://braintutor.netlify.app/",
     scope: "https://www.googleapis.com/auth/drive"
   }),
   async created() {
