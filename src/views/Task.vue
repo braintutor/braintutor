@@ -235,10 +235,9 @@ export default {
       );
       let id = documentId || presentationId || spreadsheetId;
       if (id) {
-        let file = await this.get(id);
+        let { iconLink, name, webViewLink } = await this.get(id);
         // await this.createPermission(id, "mitsuoysharag@gmail.com");
-        this.link = file.webViewLink;
-        await this.addLink();
+        await this.addFileDrive({ iconLink, name, webViewLink });
       }
       this.loading = false;
     },
