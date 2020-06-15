@@ -130,8 +130,9 @@ router.beforeEach(async (to, from, next) => {
       next()
     else
       redirect('home')
-  else
-    next()
+  else if (to_name === 'login' && user)
+    redirect('home')
+  else next()
 })
 
 function reset() {
