@@ -15,7 +15,7 @@
           solo
         ></v-select>
       </div>
-      <div class="filter">
+      <!-- <div class="filter">
         <span class="filter__name">Periodo:</span>
         <v-select
           class="filter__input"
@@ -25,7 +25,7 @@
           dense
           solo
         ></v-select>
-      </div>
+      </div> -->
     </div>
     <Classroom v-if="classroom_id" :classroom_id="classroom_id.$oid" />
     <div v-else class="no-classroom">Seleccione un Aula.</div>

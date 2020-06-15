@@ -162,6 +162,7 @@ export default {
       this.loading = true;
       this.loading_message = "Cargando Alumnos";
       this.students = await this.get();
+      this.student = null;
       this.showDashboardAll();
       this.loading = false;
     }
