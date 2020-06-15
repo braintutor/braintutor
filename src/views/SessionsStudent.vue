@@ -34,6 +34,21 @@ export default {
     loading_message: ""
   }),
   async mounted() {
+    // GOOGLE
+    let fragmentString = location.hash.substring(1);
+    let params = {};
+    var regex = /([^&=]+)=([^&]*)/g,
+      m;
+    while ((m = regex.exec(fragmentString))) {
+      params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+    }
+    if (params.access_token)
+      localStorage.setItem("access_token", params.access_token);
+
+    let state = params["state"] || params["/state"];
+    if (state) redirect("task", { task_id: state });
+
+    // 
     this.loading_message = "Cargando Cursos";
     this.sessions = await getSessionsByStudent();
     this.loading = false;

@@ -24,7 +24,6 @@ import Header from "./components/Header";
 import loading from "./components/loading";
 
 import { updateStudentTime } from "@/services/studentService";
-import { redirect } from "@/services/router";
 
 export default {
   name: "App",
@@ -50,19 +49,6 @@ export default {
         //
       }
     }, 60000);
-    // GOOGLE
-    let fragmentString = location.hash.substring(1);
-    let params = {};
-    var regex = /([^&=]+)=([^&]*)/g,
-      m;
-    while ((m = regex.exec(fragmentString))) {
-      params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
-    }
-    if (params.access_token)
-      localStorage.setItem("access_token", params.access_token);
-
-    let state = params["state"] || params["/state"];
-    if (state) redirect("task", { task_id: state });
 
     // PROTOTYPE
     Date.prototype.addHours = function(h) {
