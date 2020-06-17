@@ -56,6 +56,13 @@
                   <p class="link__description">{{item.description}}</p>
                 </a>
               </div>
+              <!-- LINK FILE -->
+              <div class="linkFile" v-if="item.type === 'file'">
+                <a class="linkFile__data" :href="item.url" target="_blank">
+                  <img class="linkFile__image" :src="item.image" alt />
+                  <p class="linkFile__title">{{item.title}}</p>
+                </a>
+              </div>
             </div>
           </div>
           <div
@@ -219,6 +226,39 @@ export default {
     font-size: 0.75rem;
     font-weight: lighter;
     grid-column-start: 2;
+  }
+}
+.linkFile {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: all 0.3s;
+  cursor: pointer;
+  //
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    box-shadow: 0 2px 6px #ccc;
+  }
+
+  &__data {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+  }
+  &__image {
+    width: 20px;
+    height: 20px;
+  }
+  &__title {
+    flex-grow: 1;
+    margin: 0;
+    color: #3b3b3b;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-align: center;
   }
 }
 </style>

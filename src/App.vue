@@ -44,7 +44,9 @@ export default {
     // TIME
     setInterval(async () => {
       try {
-        if (this.user && this.user.type == 2) await updateStudentTime();
+        if (this.user && this.user.type == 2) {
+          await updateStudentTime();
+        }
       } catch (error) {
         //
       }

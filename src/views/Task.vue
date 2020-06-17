@@ -71,6 +71,7 @@
           </v-list>
         </v-menu>
       </div>
+      <!-- RESPONSE -->
       <div class="response__answer">
         <v-textarea
           class="response__text mb-3"
@@ -80,12 +81,26 @@
           hide-details
         ></v-textarea>
         <div class="mb-3" v-for="(item, idx) in answer.data" :key="idx">
+          <!-- LINK -->
           <div class="link" v-if="item.type === 'link'">
             <a class="link__data" :href="item.url" target="_blank">
               <img class="link__image" :src="item.image" alt />
               <p class="link__title">{{item.title}}</p>
               <p class="link__description">{{item.description}}</p>
             </a>
+            <v-btn class="ml-1" small icon @click="remove(idx)">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </div>
+          <!-- LINK FILE -->
+          <div class="linkFile" v-if="item.type === 'file'">
+            <a class="linkFile__data" :href="item.url" target="_blank">
+              <img class="linkFile__image" :src="item.image" alt />
+              <p class="linkFile__title">{{item.title}}</p>
+            </a>
+            <v-btn class="ml-1" small icon @click="update(item, idx)">
+              <v-icon>mdi-sync</v-icon>
+            </v-btn>
             <v-btn class="ml-1" small icon @click="remove(idx)">
               <v-icon>mdi-close</v-icon>
             </v-btn>
@@ -202,7 +217,7 @@ export default {
       this.dialog_files = true;
       this.loading = false;
     },
-    async addFileDrive({ /*exportLinks*/ iconLink, name, webViewLink }) {
+    async addFileDrive({ /*exportLinks*/ id, iconLink, name, webViewLink }) {
       // this.loading = true;
       // this.loading_msg = "Compartiendo Archivo";
       // this.dialog_files = false;
@@ -213,7 +228,8 @@ export default {
 
       this.dialog_files = false;
       let data = {
-        type: "link",
+        id,
+        type: "file",
         url: webViewLink,
         image: iconLink,
         title: name
@@ -367,8 +383,24 @@ export default {
         let data = await res.json();
         return data;
       } catch (error) {
-        //
+        this.login();
       }
+    },
+    async update({ id }, idx) {
+      let access_token = localStorage.getItem("access_token");
+      if (!access_token) {
+        this.login();
+        return;
+      }
+
+      this.loading = true;
+      this.loading_msg = "Actualizando Archivo";
+
+      let { name } = await this.get(id);
+      this.answer.data[idx].title = name;
+      await this.save();
+
+      this.loading = false;
     }
   },
   components: {
@@ -466,6 +498,40 @@ export default {
     font-size: 0.75rem;
     font-weight: lighter;
     grid-column-start: 2;
+  }
+}
+
+.linkFile {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: all 0.3s;
+  cursor: pointer;
+  //
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    box-shadow: 0 2px 6px #ccc;
+  }
+
+  &__data {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+  }
+  &__image {
+    width: 20px;
+    height: 20px;
+  }
+  &__title {
+    flex-grow: 1;
+    margin: 0;
+    color: #3b3b3b;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-align: center;
   }
 }
 
