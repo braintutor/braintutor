@@ -59,7 +59,7 @@ export default {
       this.sessions = await getSessionsByClassroom(this.classroom_id);
       this.students = await getStudentsByClassroomDirector(this.classroom_id);
       this.loading = false;
-      
+
       for (let session of this.sessions) {
         session.loading = true;
         session.evaluations = await getEvaluationsBySessionDirector(
@@ -73,7 +73,8 @@ export default {
           if (evaluation.results) {
             this.students.forEach(student => {
               let result = evaluation.results[student._id.$oid];
-              if (result && result.score) scores.push(this.calculate(result.score));
+              if (result && result.score)
+                scores.push(this.calculate(result.score));
             });
           }
           let data = scores.reduce((arr, score) => {
@@ -92,38 +93,41 @@ export default {
       return score;
     },
     showDashboard(id, data) {
-      let ctx = document.getElementById(id).getContext("2d");
-      new Chart(ctx, {
-        type: "bar",
-        data: {
-          labels: [...Array(21).keys()],
-          datasets: [
-            {
-              label: ["Alumnos"],
-              data,
-              backgroundColor: "rgba(255, 99, 132, 0.2)",
-              borderColor: "rgba(255, 99, 132, 1)",
-              borderWidth: 1
-            }
-          ]
-        },
-        options: {
-          legend: {
-            display: false
-          },
-          scales: {
-            yAxes: [
+      let ctx = document.getElementById(id);
+      if (ctx) {
+        ctx = ctx.getContext("2d");
+        new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: [...Array(21).keys()],
+            datasets: [
               {
-                ticks: {
-                  beginAtZero: true,
-                  max: this.students.length,
-                  stepSize: 1
-                }
+                label: ["Alumnos"],
+                data,
+                backgroundColor: "rgba(255, 99, 132, 0.2)",
+                borderColor: "rgba(255, 99, 132, 1)",
+                borderWidth: 1
               }
             ]
+          },
+          options: {
+            legend: {
+              display: false
+            },
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                    max: this.students.length,
+                    stepSize: 1
+                  }
+                }
+              ]
+            }
           }
-        }
-      });
+        });
+      }
     }
   },
   components: {

@@ -181,8 +181,6 @@ export default {
       "777825196939-qm3a36q1v66f65cn5s627p71da3rgpsq.apps.googleusercontent.com",
     // client_secret: "eqKgUl-Lx4pCs0RcozuUUbPa",
     api_key: "AIzaSyAGFPLGWa0IFKZ7AP2Zk2aZsAi0Xxx7Hr8",
-    // redirect_uri: "http://localhost:8080/sessions-student",
-    redirect_uri: "https://braintutor.netlify.app/sessions-student",
     scope: "https://www.googleapis.com/auth/drive"
   }),
   async created() {
@@ -293,7 +291,8 @@ export default {
     },
     // GOOGLE DRIVE
     login() {
-      let url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${this.client_id}&redirect_uri=${this.redirect_uri}&response_type=token&scope=${this.scope}&state=${this.task_id}`;
+      let redirect_uri = `${window.location.protocol}//${window.location.host}/sessions-student`;
+      let url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${this.client_id}&redirect_uri=${redirect_uri}&response_type=token&scope=${this.scope}&state=${this.task_id}`;
       window.location = url;
     },
     async getAll() {
@@ -380,6 +379,7 @@ export default {
             }
           }
         );
+        if (res.status >= 400 && res.status < 600) throw "Token inválido.";
         let data = await res.json();
         return data;
       } catch (error) {

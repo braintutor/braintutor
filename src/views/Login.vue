@@ -22,9 +22,8 @@
           >Datos incorrectos.</v-alert>
           <v-text-field v-model="user" :rules="userRules" label="Usuario"></v-text-field>
           <v-text-field v-model="pass" :rules="passRules" label="Contraseña" type="password"></v-text-field>
-          <v-select class="mb-4" v-model="type" :items="types" label="Tipo"></v-select>
         </v-card-text>
-        <v-card-actions>
+        <v-card-actions class="pt-0">
           <v-btn :loading="loading_login" block color="primary" type="submit">Iniciar Sesión</v-btn>
         </v-card-actions>
       </v-form>
@@ -36,21 +35,13 @@
 import loading from "@/components/loading";
 
 import { getSchoolByUser } from "@/services/schoolService";
-import {
-  loginAdmin,
-  loginTeacher,
-  loginStudent,
-  loginDirector,
-  loginParent
-} from "@/services/loginService";
+import { login } from "@/services/loginService";
 import { redirect, getParam } from "@/services/router.js";
 
 export default {
   data: () => ({
     school: {},
     // FORM
-    types: ["Estudiante", "Profesor", "Padre", "Director", "Administrador"],
-    type: "",
     user: "",
     pass: "",
     userRules: [v => !!v || "Usuario es requerido"],
@@ -71,24 +62,7 @@ export default {
         if (this.$refs.form_login.validate()) {
           this.loading_login = true;
           let school_id = this.school._id.$oid;
-          let res = {};
-
-          if (this.type === "Administrador")
-            res = await loginAdmin(school_id, this.user, this.pass);
-
-          if (this.type === "Profesor")
-            res = await loginTeacher(school_id, this.user, this.pass);
-
-          if (this.type === "Estudiante")
-            res = await loginStudent(school_id, this.user, this.pass);
-
-          if (this.type === "Director")
-            res = await loginDirector(school_id, this.user, this.pass);
-
-          if (this.type === "Padre")
-            res = await loginParent(school_id, this.user, this.pass);
-
-          let { token } = res;
+          let { token } = await login(school_id, this.user, this.pass);
           localStorage.setItem("token", token);
           redirect("home");
         }
