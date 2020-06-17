@@ -1,6 +1,32 @@
 <template>
   <div>
-    <loading :active="loading_quizzes" :message="loading_message" />
+    <loading :active="loading" :message="loading_msg" />
+    <!-- Material List -->
+    <v-container v-for="(material, idx) in materials" :key="idx" fluid class="quizzes-container">
+      <p>{{material.name}}</p>
+      <v-row no-gutters>
+        <v-col
+          cols="6"
+          sm="4"
+          md="2"
+          v-for="(quiz, r_idx) in quizzes"
+          :key="r_idx"
+          class="quiz-container"
+        >
+          <Card :callback="() => selectQuiz(quiz)">
+            <p class="card-item">{{quiz.name}}</p>
+            <p class="card-value">{{quiz.content.length}} pregunta(s)</p>
+            <p class="card-value">{{quiz.time}} segundos</p>
+            <p class="card-value">{{quiz.level}}</p>
+          </Card>
+        </v-col>
+        <v-col cols="6" sm="4" md="2" class="quiz-container">
+          <div class="create-container" @click="createQuiz()">
+            <v-icon>mdi-plus</v-icon>
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
     <!-- Quiz List -->
     <v-container v-if="!quiz" fluid class="quizzes-container">
       <v-row no-gutters>
@@ -43,17 +69,19 @@ import Card from "@/components/Card";
 import QuizEditor from "./QuizEditor";
 import loading from "@/components/loading";
 
+import { getMaterials } from "@/services/materialService";
 import { getQuizzes, addQuiz, removeQuiz } from "@/services/quizService";
 import { getParam } from "@/services/router.js";
 
 export default {
   data: () => ({
+    materials: [],
     quizzes: [],
     quiz: null,
     chatbot_id: "",
     //
-    loading_quizzes: true,
-    loading_message: ""
+    loading: true,
+    loading_msg: ""
   }),
   async mounted() {
     this.chatbot_id = getParam("chatbot_id");
@@ -64,14 +92,17 @@ export default {
       this.quiz = null;
     },
     async restoreQuizzes() {
-      this.loading_quizzes = true;
-      this.loading_message = "Cargando Pruebas";
+      this.loading = true;
+      this.loading_msg = "Cargando Materiales";
+      this.materials = await getMaterials(this.chatbot_id);
+      this.loading_msg = "Cargando Pruebas";
       this.quizzes = await getQuizzes(this.chatbot_id);
-      this.loading_quizzes = false;
+      
+      this.loading = false;
     },
     async createQuiz() {
-      this.loading_quizzes = true;
-      this.loading_message = "Creando";
+      this.loading = true;
+      this.loading_msg = "Creando";
       let new_quiz = {
         name: "Nombre",
         level: "Básico",
@@ -88,12 +119,12 @@ export default {
       new_quiz._id = quiz_id;
       this.quizzes.push(new_quiz);
       this.selectQuiz(new_quiz);
-      this.loading_quizzes = false;
+      this.loading = false;
     },
     async deleteQuiz(quiz_id) {
       this.quiz = null;
-      this.loading_quizzes = true;
-      this.loading_message = "Eliminando";
+      this.loading = true;
+      this.loading_msg = "Eliminando";
       await removeQuiz(quiz_id);
       await this.restoreQuizzes();
     },
