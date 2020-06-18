@@ -1,6 +1,6 @@
 <template>
   <!-- Quiz List -->
-  <v-container class="list" v-if="!quiz_selected" fluid>
+  <v-container class="pa-0" v-if="!quiz_selected" fluid>
     <v-row no-gutters>
       <v-col cols="6" md="4" v-for="(quiz, e_idx) in quizzes" :key="e_idx" class="pa-2">
         <Card :callback="() => selectQuiz(quiz)">
@@ -15,7 +15,7 @@
         </Card>
       </v-col>
     </v-row>
-    <p class="text-center mt-2" v-show="quizzes.length === 0">No hay quizzes.</p>
+    <p class="text-center mt-2" v-show="quizzes.length === 0">No hay quizzes</p>
   </v-container>
   <!-- Quiz Selected -->
   <Quiz
@@ -31,14 +31,12 @@
 import Card from "@/components/Card";
 import Quiz from "./Quiz";
 
-import { getParam } from "@/services/router.js";
 import { copy } from "@/services/object.js";
-import { getQuizzes, getQuizResultByStudent } from "@/services/quizService";
+import { getQuizResultByStudent } from "@/services/quizService";
 
 export default {
-  props: ["showServices"],
+  props: ["quizzes"],
   data: () => ({
-    quizzes: [],
     quiz_selected: null
   }),
   computed: {
@@ -47,9 +45,6 @@ export default {
     }
   },
   async mounted() {
-    let chatbot_id = getParam("chatbot_id");
-    this.quizzes = await getQuizzes(chatbot_id);
-
     if (this.user.type == 2 || this.user.type == 4) {
       // student
       for (let quiz of this.quizzes) {
@@ -66,11 +61,9 @@ export default {
     },
     selectQuiz(quiz) {
       this.quiz_selected = copy(quiz);
-      this.showServices(false);
     },
     unselectQuiz() {
       this.quiz_selected = null;
-      this.showServices(true);
     },
     calculate(result) {
       let score = Math.round((20 * result.corrects) / result.total) || 0;
@@ -88,9 +81,6 @@ export default {
 <style lang='scss' scoped>
 $color-evaluation: #e5c280;
 
-.list {
-  padding-bottom: 70px;
-}
 .result {
   background: $color-evaluation;
   color: #fff;

@@ -12,7 +12,7 @@
         <!-- <div
           v-show="category_selected == 'overview'"
           class="category category-text"
-        >{{material.overview}}</div> -->
+        >{{material.overview}}</div>-->
         <!-- Category Explanation -->
         <div v-show="category_selected == 'explanation'" id="explanation-editor" class="category"></div>
         <!-- Category Examples -->
@@ -79,6 +79,10 @@
             </div>
           </div>
         </div>
+        <!-- Category Quizzes -->
+        <div v-if="category_selected == 'quizzes'">
+          <Quizzes :quizzes="material.quizzes" />
+        </div>
         <!-- Category Document
         <div v-if="category_selected == 'documento'" class="category category-document">
           <embed :src="material[category_selected]" alt />
@@ -86,6 +90,7 @@
       </div>
     </div>
     <div class="material-navigator">
+      <!-- <div v-for="(category, idx) in categories" :key="idx">{{category}}</div> -->
       <div class="material-actions elevation-3">
         <v-btn class="material-action" icon @click="changeCategory(-1)">
           <v-icon>mdi-chevron-left</v-icon>
@@ -108,6 +113,7 @@ import Marker from "@editorjs/marker";
 import Embed from "@editorjs/embed";
 
 import Exercises from "./Exercises";
+import Quizzes from "@/components/Chatbot/Quizzes/index";
 // import { getEmbed } from "@/services/embed";
 
 export default {
@@ -151,7 +157,8 @@ export default {
     }
   },
   components: {
-    Exercises
+    Exercises,
+    Quizzes
   }
 };
 </script>

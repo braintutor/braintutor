@@ -93,7 +93,6 @@ import {
 } from "@/services/knowledgeService";
 
 export default {
-  props: ["selectService"],
   data: () => ({
     messages: [new Message("Hola.\n¿En qué puedo ayudarte?", 0)],
     message_text: "",
@@ -207,7 +206,6 @@ export default {
           if (material_id) {
             action = () => {
               let material = this.getMaterial(material_id);
-              this.selectService(0);
               this.component_materials.selectMaterial(material, category);
               this.scrollLeft();
             };

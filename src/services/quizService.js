@@ -1,14 +1,14 @@
 import { fetch_post } from "./fetch";
 
-function getQuizzes(chatbot_id) {
-  return fetch_post('getQuizzes', {
-    chatbot_id
+function getQuizzesByMaterial(material_id) {
+  return fetch_post('getQuizzesByMaterial', {
+    material_id
   })
 }
 
-function addQuiz(chatbot_id, quiz) {
+function addQuiz(material_id, quiz) {
   return fetch_post('addQuiz', {
-    chatbot_id,
+    material_id,
     quiz
   })
 }
@@ -38,4 +38,4 @@ function getQuizResultByStudent(quiz_id) {
   })
 }
 
-export { addQuiz, getQuizzes, updateQuiz, removeQuiz, setQuizResult, getQuizResultByStudent }
+export { addQuiz, getQuizzesByMaterial, updateQuiz, removeQuiz, setQuizResult, getQuizResultByStudent }

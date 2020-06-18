@@ -67,7 +67,7 @@ import { getCategoriesByLearningStyle } from "@/services/studentService.js";
 import { Clamp } from "@/services/math";
 
 export default {
-  props: ["chatbot", "showServices"],
+  props: ["chatbot"],
   data: () => ({
     material: null,
     adapt_content: true,
@@ -80,7 +80,8 @@ export default {
       "examples",
       "exercises",
       "hyperlinks",
-      "faq"
+      "faq",
+      "quizzes"
     ],
     //
     categories_ls_original: {},
@@ -88,6 +89,7 @@ export default {
   }),
   async created() {
     this.categories_ls_original = await getCategoriesByLearningStyle();
+    this.categories_ls_original.quizzes = { show: true };
     this.categories_ls = JSON.parse(
       JSON.stringify(this.categories_ls_original)
     );
@@ -136,12 +138,10 @@ export default {
           this.categories_ls[category].show = true;
           this.category_idx = this.categories.indexOf(category);
         } else this.category_idx = 0;
-        this.showServices(false);
       }, 100);
     },
     unselectMaterial() {
       this.material = null;
-      this.showServices(true);
     },
     changeCategory(direction) {
       this.category_idx = Clamp(
@@ -169,7 +169,8 @@ export default {
   }
 }
 .list {
-  padding: 2px 6px 70px 6px;
+  padding: 5px;
+  padding-top: 0;
 }
 .options {
   padding: 0 8px;

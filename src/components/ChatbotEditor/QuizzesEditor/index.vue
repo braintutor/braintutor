@@ -1,15 +1,15 @@
 <template>
-  <div>
+  <div v-if="!quiz">
     <loading :active="loading" :message="loading_msg" />
     <!-- Material List -->
-    <v-container v-for="(material, idx) in materials" :key="idx" fluid class="quizzes-container">
-      <p>{{material.name}}</p>
+    <v-container v-for="(material, idx) in materials" :key="idx" fluid class="material">
+      <p class="material__title">{{material.name}}</p>
       <v-row no-gutters>
         <v-col
           cols="6"
           sm="4"
-          md="2"
-          v-for="(quiz, r_idx) in quizzes"
+          md="3"
+          v-for="(quiz, r_idx) in material.quizzes"
           :key="r_idx"
           class="quiz-container"
         >
@@ -20,48 +20,22 @@
             <p class="card-value">{{quiz.level}}</p>
           </Card>
         </v-col>
-        <v-col cols="6" sm="4" md="2" class="quiz-container">
-          <div class="create-container" @click="createQuiz()">
+        <v-col cols="6" sm="4" md="3" class="quiz-container">
+          <div class="create-container" @click="createQuiz(material._id.$oid)">
             <v-icon>mdi-plus</v-icon>
           </div>
         </v-col>
       </v-row>
     </v-container>
-    <!-- Quiz List -->
-    <v-container v-if="!quiz" fluid class="quizzes-container">
-      <v-row no-gutters>
-        <v-col
-          cols="6"
-          sm="4"
-          md="2"
-          v-for="(quiz, r_idx) in quizzes"
-          :key="r_idx"
-          class="quiz-container"
-        >
-          <Card :callback="() => selectQuiz(quiz)">
-            <p class="card-item">{{quiz.name}}</p>
-            <p class="card-value">{{quiz.content.length}} pregunta(s)</p>
-            <p class="card-value">{{quiz.time}} segundos</p>
-            <p class="card-value">{{quiz.level}}</p>
-          </Card>
-        </v-col>
-        <v-col cols="6" sm="4" md="2" class="quiz-container">
-          <div class="create-container" @click="createQuiz()">
-            <v-icon>mdi-plus</v-icon>
-          </div>
-        </v-col>
-      </v-row>
-    </v-container>
-    <!-- Quiz Selected -->
-    <QuizEditor
-      v-else
-      :quiz="quiz"
-      :unselectQuiz="unselectQuiz"
-      :deleteQuiz="deleteQuiz"
-      :restoreQuiz="restoreQuiz"
-      :restoreQuizzes="restoreQuizzes"
-    />
   </div>
+  <!-- Quiz Selected -->
+  <QuizEditor
+    v-else
+    :quiz="quiz"
+    :unselectQuiz="unselectQuiz"
+    :deleteQuiz="deleteQuiz"
+    :restoreQuizzes="restoreQuizzes"
+  />
 </template>
 
 <script>
@@ -70,13 +44,16 @@ import QuizEditor from "./QuizEditor";
 import loading from "@/components/loading";
 
 import { getMaterials } from "@/services/materialService";
-import { getQuizzes, addQuiz, removeQuiz } from "@/services/quizService";
+import {
+  getQuizzesByMaterial,
+  addQuiz,
+  removeQuiz
+} from "@/services/quizService";
 import { getParam } from "@/services/router.js";
 
 export default {
   data: () => ({
     materials: [],
-    quizzes: [],
     quiz: null,
     chatbot_id: "",
     //
@@ -95,14 +72,18 @@ export default {
       this.loading = true;
       this.loading_msg = "Cargando Materiales";
       this.materials = await getMaterials(this.chatbot_id);
+
       this.loading_msg = "Cargando Pruebas";
-      this.quizzes = await getQuizzes(this.chatbot_id);
-      
+      for (let material of this.materials) {
+        material.quizzes = await getQuizzesByMaterial(material._id.$oid);
+      }
+
       this.loading = false;
     },
-    async createQuiz() {
+    async createQuiz(material_id) {
       this.loading = true;
       this.loading_msg = "Creando";
+
       let new_quiz = {
         name: "Nombre",
         level: "Básico",
@@ -115,10 +96,13 @@ export default {
           }
         ]
       };
-      let quiz_id = await addQuiz(this.chatbot_id, new_quiz);
+      let quiz_id = await addQuiz(material_id, new_quiz);
       new_quiz._id = quiz_id;
-      this.quizzes.push(new_quiz);
+      this.materials
+        .find(m => m._id.$oid === material_id)
+        .quizzes.push(new_quiz);
       this.selectQuiz(new_quiz);
+
       this.loading = false;
     },
     async deleteQuiz(quiz_id) {
@@ -130,11 +114,11 @@ export default {
     },
     selectQuiz(quiz) {
       this.quiz = quiz;
-    },
-    async restoreQuiz(quiz_id) {
-      await this.restoreQuizzes();
-      this.quiz = this.quizzes.find(quiz => quiz._id.$oid == quiz_id);
     }
+    // async restoreQuiz(quiz_id) {
+    //   await this.restoreQuizzes();
+    //   this.quiz = this.quizzes.find(quiz => quiz._id.$oid == quiz_id);
+    // }
   },
   components: {
     Card,
@@ -145,49 +129,39 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.loading-container {
-  position: absolute;
-  width: 100%;
+.material {
+  padding: 0;
+  margin-bottom: 24px;
+  // border: 1px solid #ccc;
+
+  &__title {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin: 2px 10px;
+  }
+}
+
+.quiz-container {
+  padding: 8px;
+}
+
+.create-container {
   height: 100%;
-  top: -20px;
-  left: 0;
-  background: #fff;
-  opacity: 0;
-  z-index: 1;
-  transition: opacity 1s;
-  pointer-events: none;
+  min-height: 160px;
+  border: 2px solid #c2c2c2;
+  border-style: dashed;
+  border-radius: 10px;
+  transition: all 0.3s;
   //
   display: flex;
   justify-content: center;
-  align-items: center;
-  &.active {
-    pointer-events: initial;
-    opacity: 0.85;
+  & * {
+    color: #c2c2c2;
+    font-size: 40px !important;
   }
-}
-.quizzes-container {
-  padding: 0;
-  .quiz-container {
-    padding: 8px;
-  }
-  .create-container {
-    height: 100%;
-    min-height: 128px;
-    border: 2px solid #c2c2c2;
-    border-style: dashed;
-    border-radius: 10px;
-    transition: all 0.3s;
-    //
-    display: flex;
-    justify-content: center;
-    & * {
-      color: #c2c2c2;
-      font-size: 40px !important;
-    }
-    &:hover {
-      cursor: pointer;
-      background: #eeeeee;
-    }
+  &:hover {
+    cursor: pointer;
+    background: #eeeeee;
   }
 }
 </style>

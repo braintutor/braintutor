@@ -18,14 +18,14 @@
           <span style="font-size: .75rem">Agregar Pregunta</span>
         </v-tooltip>
         
-        <v-tooltip bottom>
+        <!-- <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
             <v-btn icon v-bind="attrs" v-on="on" @click="restoreQuiz(quiz._id.$oid)">
               <v-icon>mdi-restore</v-icon>
             </v-btn>
           </template>
           <span style="font-size: .75rem">Restaurar Cambios</span>
-        </v-tooltip>
+        </v-tooltip> -->
         
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">

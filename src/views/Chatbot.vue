@@ -8,30 +8,7 @@
           ref="component_materials"
           v-show="service_selected === 0"
           :chatbot="chatbot"
-          :showServices="bool => showServices(bool)"
         />
-        <Quizzes
-          class="m-fullscreen-content"
-          ref="component_quizzes"
-          v-show="service_selected === 1"
-          :showServices="bool => showServices(bool)"
-        />
-        <div v-show="show_services" class="services-navigator">
-          <div class="services-actions elevation-3">
-            <div class="services-action transform-scale-plus" @click="selectService(0)">
-              <img src="@/assets/braintutor/icon-material.png" alt />
-            </div>
-            <div class="services-action transform-scale-plus" @click="selectService(1)">
-              <img src="@/assets/braintutor/icon-quiz.png" alt />
-            </div>
-            <div
-              class="services-action services-action-bot transform-scale-plus"
-              @click="scrollRight('chatbot-scroll')"
-            >
-              <img src="@/assets/avatar/normal.png" alt />
-            </div>
-          </div>
-        </div>
       </div>
       <Chat class="chat-container col-12 col-md-4" :selectService="idx => selectService(idx)" />
     </v-row>
@@ -41,14 +18,13 @@
 <script>
 import Chat from "@/components/Chatbot/Chat/index";
 import Materials from "@/components/Chatbot/Materials/index";
-import Quizzes from "@/components/Chatbot/Quizzes/index";
 import loading from "@/components/loading";
 
-import { scrollRight } from "@/services/scroll";
 import { getParam } from "@/services/router.js";
 
 import { getChatbotNameOrder } from "@/services/chatbotService";
 import { getMaterials } from "@/services/materialService";
+import { getQuizzesByMaterial } from "@/services/quizService";
 
 export default {
   data: () => ({
@@ -64,7 +40,6 @@ export default {
   async mounted() {
     // Components
     this.$store.commit("setComponentMaterials", this.$refs.component_materials);
-    this.$store.commit("setComponentQuizzes", this.$refs.component_quizzes);
     this.chatbot_id = getParam("chatbot_id");
 
     this.loading_message = "Cargando Material";
@@ -73,6 +48,9 @@ export default {
     let order = (this.chatbot.order || []).reverse();
 
     let materials = await getMaterials(this.chatbot_id);
+    for (let material of materials) {
+      material.quizzes = await getQuizzesByMaterial(material._id.$oid);
+    }
     materials.sort((a, b) => {
       let a_order = order.indexOf(a._id.$oid);
       let b_order = order.indexOf(b._id.$oid);
@@ -82,19 +60,9 @@ export default {
 
     this.loading_chatbot = false;
   },
-  methods: {
-    scrollRight,
-    showServices(bool) {
-      this.show_services = bool;
-    },
-    selectService(idx) {
-      this.service_selected = idx;
-    }
-  },
   components: {
     Chat,
     Materials,
-    Quizzes,
     loading
   }
 };
@@ -108,33 +76,6 @@ export default {
   .chatbot-content {
     position: relative;
     border-right: 1px solid #eee;
-    .services-navigator {
-      z-index: 1;
-      position: absolute;
-      width: 100%;
-      bottom: 8px;
-      pointer-events: none;
-      .services-actions {
-        width: max-content;
-        padding: 8px;
-        margin: 0 auto;
-        background: #fff;
-        border-radius: 10px;
-        display: flex;
-        pointer-events: all;
-        &:hover {
-          cursor: pointer;
-        }
-        .services-action {
-          margin: 0 8px;
-          img {
-            width: 40px;
-            height: 40px;
-            vertical-align: bottom;
-          }
-        }
-      }
-    }
   }
 }
 .services-action-bot {
