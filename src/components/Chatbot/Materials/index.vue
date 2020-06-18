@@ -54,7 +54,8 @@
       :categories="categories"
       :category_idx="category_idx"
       :unselectMaterial="unselectMaterial"
-      :changeCategory="direction => changeCategory(direction)"
+      :changeCategory="changeCategory"
+      :setCategory="setCategory"
     />
   </div>
 </template>
@@ -142,6 +143,9 @@ export default {
     },
     unselectMaterial() {
       this.material = null;
+    },
+    setCategory(idx) {
+      this.category_idx = idx;
     },
     changeCategory(direction) {
       this.category_idx = Clamp(

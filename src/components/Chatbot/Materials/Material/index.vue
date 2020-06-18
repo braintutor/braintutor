@@ -90,13 +90,18 @@
       </div>
     </div>
     <div class="material-navigator">
-      <!-- <div v-for="(category, idx) in categories" :key="idx">{{category}}</div> -->
       <div class="material-actions elevation-3">
-        <v-btn class="material-action" icon @click="changeCategory(-1)">
+        <v-btn small class="material-action" icon @click="changeCategory(-1)">
           <v-icon>mdi-chevron-left</v-icon>
         </v-btn>
-        <span class="material-action">{{`${category_idx + 1}/${categories.length}`}}</span>
-        <v-btn class="material-action" icon @click="changeCategory(1)">
+        <div
+          class="item"
+          :class="[`item--${category === 'quizzes'? 'qui': 'mat'}`, `${category_idx === idx ? 'item--active': ''}`]"
+          v-for="(category, idx) in categories"
+          :key="idx"
+          @click="setCategory(idx)"
+        ></div>
+        <v-btn small class="material-action" icon @click="changeCategory(1)">
           <v-icon>mdi-chevron-right</v-icon>
         </v-btn>
       </div>
@@ -122,7 +127,8 @@ export default {
     "categories",
     "category_idx",
     "unselectMaterial",
-    "changeCategory"
+    "changeCategory",
+    "setCategory"
   ],
   data: () => ({
     editors: {}
@@ -186,31 +192,6 @@ export default {
   .material-content {
     padding: 5px 20px 56px 20px;
   }
-  .material-navigator {
-    position: absolute;
-    width: 100%;
-    bottom: 0;
-    pointer-events: none;
-    z-index: 1;
-    .material-actions {
-      width: max-content;
-      padding: 8px 6px;
-      margin: 0 auto 8px auto;
-      background: #fff;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      pointer-events: all;
-      &:hover {
-        cursor: pointer;
-      }
-      .material-action {
-        margin: 0 8px;
-        font-weight: bold;
-        font-size: 1.5rem;
-      }
-    }
-  }
 }
 
 .category {
@@ -262,6 +243,61 @@ export default {
   }
 }
 
+.material-navigator {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 1;
+  .material-actions {
+    width: max-content;
+    padding: 8px 0;
+    margin: 0 auto 8px auto;
+    background: #fff;
+    border-radius: 40px;
+    display: flex;
+    align-items: center;
+    pointer-events: all;
+    &:hover {
+      cursor: pointer;
+    }
+    .material-action {
+      margin: 0 8px;
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+  }
+}
+
+.item {
+  margin: 0 2px;
+  width: 20px;
+  height: 20px;
+  // background: green;
+  border-radius: 100%;
+
+  &--mat {
+    border: 2px solid #4dc54b;
+    &:hover {
+      background: #80e27e;
+    }
+    &.item--active {
+      background: #80e27e;
+    }
+  }
+
+  &--qui {
+    border: 2px solid #ddaf5a;
+    &:hover {
+      background: #e5c280;
+    }
+    &.item--active {
+      background: #e5c280;
+    }
+  }
+}
+
+//
 [id$="-editor"] {
   padding: 20px;
   pointer-events: none;
