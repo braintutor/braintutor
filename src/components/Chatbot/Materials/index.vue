@@ -54,7 +54,6 @@
       :categories="categories"
       :category_idx="category_idx"
       :unselectMaterial="unselectMaterial"
-      :changeCategory="changeCategory"
       :setCategory="setCategory"
     />
   </div>
@@ -145,14 +144,7 @@ export default {
       this.material = null;
     },
     setCategory(idx) {
-      this.category_idx = idx;
-    },
-    changeCategory(direction) {
-      this.category_idx = Clamp(
-        this.category_idx + direction,
-        0,
-        this.categories.length - 1
-      );
+      this.category_idx = Clamp(idx, 0, this.categories.length - 1);
     }
   },
   components: {

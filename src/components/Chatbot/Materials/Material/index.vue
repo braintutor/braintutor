@@ -91,7 +91,7 @@
     </div>
     <div class="material-navigator">
       <div class="material-actions elevation-3">
-        <v-btn small class="material-action" icon @click="changeCategory(-1)">
+        <v-btn small class="material-action" icon @click="setCategory(category_idx - 1)">
           <v-icon>mdi-chevron-left</v-icon>
         </v-btn>
         <div
@@ -101,7 +101,7 @@
           :key="idx"
           @click="setCategory(idx)"
         ></div>
-        <v-btn small class="material-action" icon @click="changeCategory(1)">
+        <v-btn small class="material-action" icon @click="setCategory(category_idx + 1)">
           <v-icon>mdi-chevron-right</v-icon>
         </v-btn>
       </div>
@@ -127,7 +127,6 @@ export default {
     "categories",
     "category_idx",
     "unselectMaterial",
-    "changeCategory",
     "setCategory"
   ],
   data: () => ({
@@ -273,8 +272,8 @@ export default {
   margin: 0 4px;
   width: 22px;
   height: 22px;
-  // background: green;
   border-radius: 100%;
+  transition: all 0.2s;
 
   &--mat {
     border: 2px solid #4dc54b;
