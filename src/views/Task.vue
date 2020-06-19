@@ -88,9 +88,21 @@
               <p class="link__title">{{item.title}}</p>
               <p class="link__description">{{item.description}}</p>
             </a>
-            <v-btn class="ml-1" small icon @click="remove(idx)">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
+            <v-tooltip top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  v-bind="attrs"
+                  v-on="on"
+                  class="ml-1"
+                  small
+                  icon
+                  @click="idx_to_remove = idx; dialog_remove = true;"
+                >
+                  <v-icon>mdi-close</v-icon>
+                </v-btn>
+              </template>
+              <span style="font-size: .75rem">Remover</span>
+            </v-tooltip>
           </div>
           <!-- LINK FILE -->
           <div class="linkFile" v-if="item.type === 'file'">
@@ -98,12 +110,31 @@
               <img class="linkFile__image" :src="item.image" alt />
               <p class="linkFile__title">{{item.title}}</p>
             </a>
-            <v-btn class="ml-1" small icon @click="update(item, idx)">
-              <v-icon>mdi-sync</v-icon>
-            </v-btn>
-            <v-btn class="ml-1" small icon @click="remove(idx)">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
+
+            <v-tooltip top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn v-bind="attrs" v-on="on" class="ml-1" small icon @click="update(item, idx)">
+                  <v-icon>mdi-sync</v-icon>
+                </v-btn>
+              </template>
+              <span style="font-size: .75rem">Actualizar Nombre</span>
+            </v-tooltip>
+
+            <v-tooltip top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  v-bind="attrs"
+                  v-on="on"
+                  class="ml-1"
+                  small
+                  icon
+                  @click="idx_to_remove = idx; dialog_remove = true;"
+                >
+                  <v-icon>mdi-close</v-icon>
+                </v-btn>
+              </template>
+              <span style="font-size: .75rem">Remover</span>
+            </v-tooltip>
           </div>
         </div>
       </div>
@@ -154,6 +185,18 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+    <!-- DIALOG REMOVE -->
+    <v-dialog v-model="dialog_remove" max-width="280">
+      <v-card>
+        <v-card-text class="text-center pt-4 pb-3" style="font-size: 1rem">
+          <span>¿Desea quitar el enlace?</span>
+        </v-card-text>
+        <v-card-actions style="width: max-content; margin: 0 auto">
+          <v-btn small text @click="dialog_remove = false">Cancelar</v-btn>
+          <v-btn color="primary" small @click="dialog_remove = false; remove()">Continuar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -171,11 +214,13 @@ export default {
     files: [],
     file_search: "",
     link: "",
+    idx_to_remove: -1,
     //
     loading: true,
     loading_msg: "",
     dialog_files: false,
     dialog_link: false,
+    dialog_remove: false,
     // GOOGLE DRIVE
     client_id:
       "777825196939-qm3a36q1v66f65cn5s627p71da3rgpsq.apps.googleusercontent.com",
@@ -286,8 +331,9 @@ export default {
       }
       this.loading = false;
     },
-    remove(idx) {
-      this.answer.data.splice(idx, 1);
+    remove() {
+      this.answer.data.splice(this.idx_to_remove, 1);
+      this.save();
     },
     // GOOGLE DRIVE
     login() {
