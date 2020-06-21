@@ -41,7 +41,7 @@
             <th class="text-left">Apellidos</th>
             <th class="text-left">Correo</th>
             <th class="text-left">Usuario</th>
-            <th class="text-left">Contraseña</th>
+            <!-- <th class="text-left">Contraseña</th> -->
             <th class="text-center">Acción</th>
           </tr>
         </thead>
@@ -51,14 +51,14 @@
             <td>{{ entity.last_name }}</td>
             <td>{{ entity.email }}</td>
             <td>{{ entity.user }}</td>
-            <td>
+            <!-- <td>
               <v-btn class="mr-2" small icon @click="toogleShowPassword(entity)">
                 <v-icon v-if="entity.showPassword">mdi-eye</v-icon>
                 <v-icon v-else>mdi-eye-off</v-icon>
               </v-btn>
               <span v-if="entity.showPassword">{{ entity.pass }}</span>
               <span v-else>******</span>
-            </td>
+            </td>-->
             <td class="text-center">
               <v-btn small icon @click="dialog_edit = true; edit(entity)">
                 <v-icon>mdi-pencil</v-icon>
@@ -116,6 +116,18 @@
             dense
             hide-details
             autocomplete="off"
+          ></v-text-field>
+          <span class="mt-1 mr-4" v-if="action === 'create'">Contraseña:</span>
+          <v-text-field
+            v-if="action === 'create'"
+            class="text-field"
+            :type="entity.showPassword? 'text': 'password'"
+            v-model="entity.pass"
+            dense
+            hide-details
+            autocomplete="off"
+            :append-icon="entity.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            @click:append="toogleShowPassword(entity)"
           ></v-text-field>
         </v-card-text>
         <v-card-actions class="edit__actions">
@@ -176,6 +188,7 @@
               <th>Apellidos</th>
               <th>Correo</th>
               <th>Usuario</th>
+              <th>Contraseña</th>
             </tr>
           </thead>
           <tbody>
@@ -216,6 +229,18 @@
                   autocomplete="off"
                 ></v-text-field>
               </td>
+              <td>
+                <v-text-field
+                  class="text-field"
+                  :type="entity.showPassword? 'text': 'password'"
+                  v-model="entity.pass"
+                  dense
+                  hide-details
+                  autocomplete="off"
+                  :append-icon="entity.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                  @click:append="toogleShowPassword(entity)"
+                ></v-text-field>
+              </td>
               <td style="color: red; font-size: 0.8rem">{{ entity.response }}</td>
             </tr>
           </tbody>
@@ -244,7 +269,7 @@ import {
   updateStudent,
   removeStudent
 } from "@/services/studentService";
-import { generatePassword } from "@/services/userService";
+// import { generatePassword } from "@/services/userService";
 import { getClassroomsBySchool } from "@/services/classroomService";
 import * as XLSX from "xlsx";
 
@@ -312,7 +337,7 @@ export default {
       this.loading_save = true;
       if (this.action === "create") {
         try {
-          this.entity.pass = generatePassword();
+          // this.entity.pass = generatePassword();
           let entity_id = await addStudent(this.entity);
           this.entity._id = entity_id;
           this.entities.push(this.entity);
@@ -366,12 +391,21 @@ export default {
           //
           if (data.length <= 1000) {
             this.new_data = data.map(d => {
-              let { nombres, apellidos, usuario, correo } = d;
+              let {
+                nombres,
+                apellidos,
+                usuario,
+                correo,
+                Nombres,
+                Apellidos,
+                Usuario,
+                Correo
+              } = d;
               return {
-                first_name: nombres || "",
-                last_name: apellidos || "",
-                user: usuario || "",
-                email: correo || ""
+                first_name: nombres || Nombres || "",
+                last_name: apellidos || Apellidos || "",
+                email: correo || Correo || "",
+                user: usuario || Usuario || ""
               };
             });
             this.dialog_import = true;
@@ -388,7 +422,7 @@ export default {
       while (i < this.new_data.length) {
         let entity = this.new_data[i];
         entity.classroom_id = this.classroom_id_import;
-        entity.pass = generatePassword();
+        // entity.pass = generatePassword();
         try {
           let entity_id = await addStudent(entity);
           entity._id = entity_id;
