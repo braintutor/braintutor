@@ -1,40 +1,117 @@
 <template>
+  <!-- QUIZ -->
   <section class="quiz">
+    <!-- QUIZ MENU -->
+    <div class="quiz__menu">
+      <v-btn v-if="edit" @click="$emit('submit', data)" text small rounded>
+        <v-icon class="mr-2" small>mdi-content-save</v-icon>Guardar
+      </v-btn>
+      <v-btn v-if="edit" @click="edit = false; $emit('submit', data)" text small rounded>
+        <v-icon class="mr-2" small>mdi-close</v-icon>Finalizar
+      </v-btn>
+      <v-btn v-else @click="edit = true" text small rounded>
+        <v-icon class="mr-2" small>mdi-pencil</v-icon>Editar
+      </v-btn>
+    </div>
     <!-- QUESTION -->
-    <section v-for="(d, d_idx) in data" :key="d_idx" class="question m-card pa-3 mt-4">
-      <v-textarea v-model="d.question" class="mb-3" rows="1" auto-grow dense hide-details></v-textarea>
-      <!-- ALTERNATIVES -->
-      <div class="alternatives">
-        <!-- ALTERNATIVE -->
-        <div v-for="(alternative, a_idx) in d.alternatives" :key="a_idx" class="alternative mt-2">
-          <v-textarea
-            v-model="d.alternatives[a_idx]"
-            rows="1"
-            :append-icon="d.alternatives.length > 2 ? 'mdi-close' : ''"
-            @click:append="remove(d.alternatives, a_idx)"
-            append.click
-            auto-grow
-            filled
-            rounded
-            dense
-            hide-details
-          ></v-textarea>
+    <div v-for="(d, d_idx) in data" :key="d_idx" class="question mt-4">
+      <section class="question__body m-card pa-3">
+        <v-textarea
+          v-if="edit"
+          v-model="d.question"
+          class="mb-3"
+          rows="1"
+          auto-grow
+          dense
+          hide-details
+        ></v-textarea>
+        <p v-else class="mb-3">{{d.question}}</p>
+        <!-- ALTERNATIVES -->
+        <div class="alternatives">
+          <!-- ALTERNATIVE -->
+          <div v-for="(alternative, a_idx) in d.alternatives" :key="a_idx" class="alternative mt-2">
+            <input type="radio" v-model="d.correct" :value="a_idx" :disabled="!edit" class="mr-2" />
+            <v-textarea
+              v-model="d.alternatives[a_idx]"
+              :disabled="!edit"
+              rows="1"
+              append.click
+              auto-grow
+              filled
+              rounded
+              dense
+              hide-details
+            ></v-textarea>
+            <v-btn
+              v-if="edit && d.alternatives.length > 2"
+              @click="remove(d.alternatives, a_idx)"
+              class="ml-2"
+              small
+              icon
+            >
+              <v-icon small>mdi-close</v-icon>
+            </v-btn>
+          </div>
+          <!-- ALTERNATIVE ADD -->
+          <div v-if="edit" class="alternative">
+            <input type="radio" style="pointer-events: none; opacity: 0" class="mr-2" />
+            <div @click="addAlternative(d.alternatives)" class="alternative--add mt-2">+</div>
+            <v-btn
+              v-if="d.alternatives.length > 2"
+              class="ml-2"
+              style="pointer-events: none; opacity: 0"
+              small
+              icon
+            >
+              <v-icon small>mdi-close</v-icon>
+            </v-btn>
+          </div>
         </div>
-        <div @click="addAlternative(d.alternatives)" class="alternative--add mt-2">+</div>
+      </section>
+      <!-- QUESTION MENU -->
+      <div v-if="edit" class="ml-2">
+        <v-menu offset-y>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn v-bind="attrs" v-on="on" small icon>
+              <v-icon>mdi-dots-vertical</v-icon>
+            </v-btn>
+          </template>
+          <v-list class="pa-0" dense>
+            <v-list-item @click="moveUp(data, d_idx)">
+              <v-list-item-title>Mover Arriba</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="moveDown(data, d_idx)">
+              <v-list-item-title>Mover Abajo</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="remove(data, d_idx)">
+              <v-list-item-title>Eliminar</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
       </div>
-    </section>
-    <div @click="addQuestion(data)" class="quiz--add mt-4">+</div>
+    </div>
+    <!-- QUESTION ADD -->
+    <div v-if="edit" class="question">
+      <div @click="addQuestion(data)" class="question--add mt-4">+</div>
+      <v-btn class="ml-2" style="pointer-events: none; opacity: 0" small icon>
+        <v-icon small>mdi-dots-vertical</v-icon>
+      </v-btn>
+    </div>
   </section>
 </template>
 
 <script>
 export default {
   props: ["data"],
+  data: () => ({
+    edit: false
+  }),
   methods: {
     addQuestion(arr) {
       arr.push({
         question: "Pregunta",
-        alternatives: ["Alternativa 1", "Alternativa 2"]
+        alternatives: ["Alternativa", "Alternativa"],
+        correct: 0
       });
     },
     addAlternative(arr) {
@@ -42,6 +119,22 @@ export default {
     },
     remove(arr, idx) {
       arr.splice(idx, 1);
+    },
+    moveUp(arr, idx) {
+      if (idx > 0) {
+        let aux = arr[idx];
+        arr[idx] = arr[idx - 1];
+        arr[idx - 1] = aux;
+        arr.splice();
+      }
+    },
+    moveDown(arr, idx) {
+      if (idx < arr.length - 1) {
+        let aux = arr[idx];
+        arr[idx] = arr[idx + 1];
+        arr[idx + 1] = aux;
+        arr.splice();
+      }
     }
   }
 };
@@ -49,7 +142,21 @@ export default {
 
 <style lang='scss' scoped>
 .quiz {
+  &__menu {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+.question {
+  display: flex;
+
+  &__body {
+    flex-grow: 1;
+  }
+
   &--add {
+    flex-grow: 1;
     padding: 20px;
     color: #ccc;
     font-size: 1.5rem;
@@ -65,14 +172,19 @@ export default {
   }
 }
 
-.question {
-}
-
 .alternatives {
 }
 
 .alternative {
+  display: flex;
+  align-items: center;
+
+  input[type="radio"] {
+    cursor: pointer;
+  }
+
   &--add {
+    flex-grow: 1;
     padding: 2px;
     color: #ccc;
     font-size: 1.5rem;

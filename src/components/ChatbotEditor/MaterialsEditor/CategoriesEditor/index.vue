@@ -1,5 +1,5 @@
 <template>
-  <div class="material-editor-container m-fullscreen">
+  <div class="material material-editor-container m-fullscreen">
     <loading :active="loading" :message="loading_message" />
     <div class="menu">
       <div class="menu-left">
@@ -46,6 +46,11 @@
           <span style="font-size: .75rem">Eliminar Material</span>
         </v-tooltip>
       </div>
+    </div>
+
+    <div class="material__menu my-2">
+      <v-btn @click="show_type = 'MAT'" :outlined="show_type !== 'MAT'" class="mx-1" color="green" dark small rounded>Material</v-btn>
+      <v-btn @click="show_type = 'QUI'" :outlined="show_type !== 'QUI'" class="mx-1" color="warning" dark small rounded>Pruebas</v-btn>
     </div>
 
     <!-- Material Content -->
@@ -387,6 +392,7 @@ export default {
     ],
     category_idx: 0,
     //
+    show_type: 'MAT',
     loading: false,
     loading_message: "",
     dialog_image: false,
@@ -653,6 +659,13 @@ export default {
         font-weight: bold;
       }
     }
+  }
+}
+
+.material {
+  &__menu {
+    display: flex;
+    justify-content: center;
   }
 }
 </style>

@@ -2,7 +2,7 @@
   <div>
     <loading :active="loading" :message="loading_message" />
     <!-- Material List -->
-    <v-container v-if="show === 'list'" fluid class="materials-container">
+    <v-container v-if="!material" fluid class="materials-container">
       <div class="options">
         <v-btn v-if="edit_order" small text @click="updateChatbotOrder()">
           Finalizar
@@ -17,7 +17,7 @@
         <v-col
           cols="6"
           sm="4"
-          md="2"
+          md="3"
           v-for="(material, r_idx) in materials"
           :key="r_idx"
           class="material"
@@ -38,7 +38,7 @@
             </v-btn>
           </div>
         </v-col>
-        <v-col v-show="!edit_order" cols="6" sm="4" md="2" class="material">
+        <v-col v-show="!edit_order" cols="6" sm="4" md="3" class="material">
           <div class="create-container" @click="createMaterial()">
             <v-icon>mdi-plus</v-icon>
           </div>
@@ -47,26 +47,16 @@
     </v-container>
     <!-- Material Editor -->
     <MaterialEditor
-      v-if="show === 'material'"
+      v-else
       :material="material"
-      :unselectMaterial="unselectMaterial"
-      :deleteMaterial="deleteMaterial"
-      :restoreMaterial="restoreMaterial"
-      :restoreMaterials="restoreMaterials"
-    />
-    <!-- Quizzes Editor -->
-    <QuizzesEditor
-      v-if="show === 'quizzes'"
-      :material="material"
-      :unselectMaterial="unselectMaterial"
+      :unselect="unselect"
     />
   </div>
 </template>
 
 <script>
 import Cartel from "@/components/Cartel";
-import MaterialEditor from "./MaterialEditor/index";
-import QuizzesEditor from "./QuizzesEditor";
+import MaterialEditor from "./MaterialEditor";
 import loading from "@/components/loading";
 
 import {
@@ -85,7 +75,6 @@ export default {
     materials: [],
     material: null,
     chatbot_id: "",
-    show: "list",
     //
     edit_order: false,
     loading: true,
@@ -98,16 +87,15 @@ export default {
   methods: {
     selectMaterial(material) {
       this.material = material;
-      // this.show = "material";
-      this.show = "quizzes";
     },
-    unselectMaterial() {
+    unselect() {
       this.material = null;
-      this.show = "list";
+      this.restoreMaterials();
     },
     async restoreMaterials() {
       this.loading = true;
       this.loading_message = "Cargando Material";
+      this.materials = [];
 
       let chatbot = await getChatbotNameOrder(this.chatbot_id);
       let order = (chatbot.order || []).reverse();
@@ -147,7 +135,7 @@ export default {
       let quiz = [
         {
           question: "Pregunta",
-          alternatives: ["Alternativa 1", "Alternativa 2"],
+          alternatives: ["Alternativa", "Alternativa"],
           correct: 0
         }
       ];
@@ -243,7 +231,6 @@ export default {
   components: {
     Cartel,
     MaterialEditor,
-    QuizzesEditor,
     loading
   }
 };

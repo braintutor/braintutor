@@ -74,8 +74,11 @@ export default {
 
 <style lang="scss">
 // HTML
+p {
+  font-size: 0.9rem;
+}
 textarea {
-  font-size: .95rem !important;
+  font-size: 0.9rem !important;
 }
 
 //

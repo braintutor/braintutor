@@ -19,6 +19,18 @@ function updateMaterial(material) {
   })
 }
 
+function updateMaterialName(material_id, name) {
+  return fetch_post('updateMaterialName', {
+    material_id, name
+  })
+}
+
+function updateMaterialQuiz(material_id, quiz, quiz_type) {
+  return fetch_post('updateMaterialQuiz', {
+    material_id, quiz, quiz_type
+  })
+}
+
 function updateMaterialImage(material) {
   return fetch_post('updateMaterialImage', {
     material
@@ -31,4 +43,4 @@ function removeMaterial(material_id) {
   })
 }
 
-export { getMaterials, addMaterial, updateMaterial, updateMaterialImage, removeMaterial }
+export { getMaterials, addMaterial, updateMaterial, updateMaterialName, updateMaterialImage, updateMaterialQuiz, removeMaterial }
