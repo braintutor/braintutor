@@ -26,7 +26,7 @@
             class="material__body"
             :description="material.name"
             :image="material.image"
-            :callback="() => selectMaterial(material)"
+            :callback="() => select(material)"
           />
           <div v-show="edit_order" class="material__actions">
             <v-btn small icon @click="moveLeft(materials, r_idx)">
@@ -46,11 +46,7 @@
       </v-row>
     </v-container>
     <!-- Material Editor -->
-    <MaterialEditor
-      v-else
-      :material="material"
-      :unselect="unselect"
-    />
+    <MaterialEditor v-else :material="material" :unselect="unselect" />
   </div>
 </template>
 
@@ -59,11 +55,7 @@ import Cartel from "@/components/Cartel";
 import MaterialEditor from "./MaterialEditor";
 import loading from "@/components/loading";
 
-import {
-  getMaterials,
-  addMaterial,
-  removeMaterial
-} from "@/services/materialService";
+import { getMaterials, addMaterial } from "@/services/materialService";
 import {
   getChatbotNameOrder,
   updateChatbotOrder
@@ -85,13 +77,6 @@ export default {
     this.restoreMaterials();
   },
   methods: {
-    selectMaterial(material) {
-      this.material = material;
-    },
-    unselect() {
-      this.material = null;
-      this.restoreMaterials();
-    },
     async restoreMaterials() {
       this.loading = true;
       this.loading_message = "Cargando Material";
@@ -180,23 +165,16 @@ export default {
         let material_id = await addMaterial(this.chatbot_id, new_material);
         new_material._id = material_id;
         this.materials.push(new_material);
-        this.selectMaterial(new_material);
+        this.select(new_material);
         this.loading = false;
       }
     },
-    async deleteMaterial(material_id) {
-      this.material = null;
-      this.loading = true;
-      this.loading_message = "Eliminando Material";
-
-      await removeMaterial(material_id);
-      await this.restoreMaterials();
+    select(material) {
+      this.material = material;
     },
-    async restoreMaterial(material_id) {
-      await this.restoreMaterials();
-      this.material = this.materials.find(
-        material => material._id.$oid == material_id
-      );
+    unselect() {
+      this.material = null;
+      this.restoreMaterials();
     },
     // Chatbot Order
     async updateChatbotOrder() {

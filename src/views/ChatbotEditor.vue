@@ -2,9 +2,8 @@
   <div class="container">
     <AppSidebar :links="links" :action_links="action_links">
       <MaterialsEditor :slot="0" />
-      <QuizzesEditor :slot="1" />
-      <KnowledgeEditor :slot="2" :get="get" :update="update" />
-      <ChatbotEditor :slot="3" />
+      <KnowledgeEditor :slot="1" :get="get" :update="update" />
+      <ChatbotEditor :slot="2" />
     </AppSidebar>
   </div>
 </template>
@@ -12,7 +11,6 @@
 <script>
 import AppSidebar from "@/components/AppSidebar";
 import MaterialsEditor from "@/components/ChatbotEditor/MaterialsEditor/index";
-import QuizzesEditor from "@/components/ChatbotEditor/QuizzesEditor/index";
 import KnowledgeEditor from "@/components/globals/KnowledgeEditor";
 import ChatbotEditor from "@/components/ChatbotEditor/ChatbotEditor";
 
@@ -26,10 +24,6 @@ export default {
       {
         image: require("@/assets/braintutor/icon-material.png"),
         text: "Materiales"
-      },
-      {
-        image: require("@/assets/braintutor/icon-quiz.png"),
-        text: "Pruebas"
       },
       {
         image: require("@/assets/braintutor/icon-knowledge.png"),
@@ -67,7 +61,6 @@ export default {
   components: {
     AppSidebar,
     MaterialsEditor,
-    QuizzesEditor,
     KnowledgeEditor,
     ChatbotEditor
   }

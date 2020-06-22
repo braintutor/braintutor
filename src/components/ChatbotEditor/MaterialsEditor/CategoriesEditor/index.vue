@@ -1,61 +1,13 @@
 <template>
   <div class="material material-editor-container m-fullscreen">
     <loading :active="loading" :message="loading_message" />
-    <div class="menu">
-      <div class="menu-left">
-        <v-btn icon @click="loadMaterials()">
-          <v-icon>mdi-arrow-left</v-icon>
-        </v-btn>
-        <v-text-field
-          class="menu-title"
-          v-model="material.name"
-          dense
-          hide-details
-          autocomplete="off"
-        ></v-text-field>
-      </div>
-      <div class="menu-right">
-        <!-- <v-btn icon @click="restoreMaterial(material._id.$oid)">
-          <v-icon>mdi-restore</v-icon>
-        </v-btn>-->
-
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon v-bind="attrs" v-on="on" @click="dialog_image = true">
-              <v-icon>mdi-image</v-icon>
-            </v-btn>
-          </template>
-          <span style="font-size: .75rem">Editar Imagen</span>
-        </v-tooltip>
-
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon v-bind="attrs" v-on="on" @click="saveMaterial()">
-              <v-icon>mdi-content-save</v-icon>
-            </v-btn>
-          </template>
-          <span style="font-size: .75rem">Guardar Cambios</span>
-        </v-tooltip>
-
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon v-bind="attrs" v-on="on" @click="dialog_delete = true">
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
-          </template>
-          <span style="font-size: .75rem">Eliminar Material</span>
-        </v-tooltip>
-      </div>
-    </div>
-
-    <div class="material__menu my-2">
-      <v-btn @click="show_type = 'MAT'" :outlined="show_type !== 'MAT'" class="mx-1" color="green" dark small rounded>Material</v-btn>
-      <v-btn @click="show_type = 'QUI'" :outlined="show_type !== 'QUI'" class="mx-1" color="warning" dark small rounded>Pruebas</v-btn>
-    </div>
 
     <!-- Material Content -->
     <div class="material-editor-content m-fullscreen-content">
       <Navigator class="py-2" :actions="actions" />
+      <v-btn @click="saveMaterial()">
+        <v-icon>mdi-content-save</v-icon>
+      </v-btn>
       <div class="container">
         <!-- Overview -->
         <div v-show="category_selected === 'overview'" class="category pb-3">
@@ -306,45 +258,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Dialog Image -->
-    <v-dialog v-model="dialog_image" max-width="500">
-      <v-card class="image">
-        <v-progress-linear v-if="image_progress != 0" :value="image_progress"></v-progress-linear>
-        <div class="image__menu">
-          <v-text-field class="category-text mb-2" v-model="material.image" dense hide-details></v-text-field>
-          <v-btn class="ml-2" @click="updateImage()" text icon>
-            <v-icon>mdi-content-save</v-icon>
-          </v-btn>
-          <v-btn onclick="upload_image.click()" text icon>
-            <v-icon>mdi-upload</v-icon>
-          </v-btn>
-        </div>
-        <div class="image__input">
-          <v-file-input
-            id="upload_image"
-            @change="onFileSelected()"
-            onclick="this.value = null"
-            v-model="image_file"
-            style="display:none"
-          ></v-file-input>
-          <img :src="material.image" alt />
-        </div>
-      </v-card>
-    </v-dialog>
-
-    <!-- Dialog Delete -->
-    <v-dialog v-model="dialog_delete" max-width="300">
-      <v-card>
-        <v-card-title>Confirmar eliminación</v-card-title>
-        <v-card-text>Si elimina este contenido, no podrá revertir los cambios.</v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn small text @click="dialog_delete = false">Cancelar</v-btn>
-          <v-btn small depressed color="error" @click="deleteMaterial(material._id.$oid)">Eliminar</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </div>
 </template>
 
@@ -357,29 +270,14 @@ import Navigator from "@/components/Navigator";
 import loading from "@/components/loading";
 import ImageUpload from "@/components/ImageUpload";
 
-import {
-  updateMaterial,
-  updateMaterialImage
-} from "@/services/materialService";
-import { getEmbed } from "@/services/embed";
+import { updateMaterial } from "@/services/materialService";
 import { Clamp } from "@/services/math";
 import { getParam } from "@/services/router.js";
 
-import firebase from "firebase/app";
-import "firebase/storage";
-
 export default {
-  props: [
-    "material",
-    "unselectMaterial",
-    "restoreMaterials",
-    "deleteMaterial",
-    "restoreMaterial"
-  ],
+  props: ["material"],
   data: () => ({
     chatbot_id: "",
-    image_file: {},
-    image_progress: 0,
     categories: [
       "overview",
       "explanation",
@@ -392,11 +290,8 @@ export default {
     ],
     category_idx: 0,
     //
-    show_type: 'MAT',
     loading: false,
-    loading_message: "",
-    dialog_image: false,
-    dialog_delete: false
+    loading_message: ""
   }),
   computed: {
     category_selected() {
@@ -423,66 +318,18 @@ export default {
           }
         }
       ];
-    },
-    embeds() {
-      return this.material.movies.map(movie => getEmbed(movie));
     }
   },
   mounted() {
     this.chatbot_id = getParam("chatbot_id");
   },
   methods: {
-    onFileSelected() {
-      let size = (this.image_file.size / 1024).toFixed(2);
-      if (size <= 100) {
-        let ref = firebase
-          .storage()
-          .ref(`/material/${this.chatbot_id}/${this.material._id.$oid}`);
-
-        let task = ref.put(this.image_file);
-        task.on(
-          "state_changed",
-          snapshot => {
-            this.image_progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          },
-          () => {
-            /* error */
-          },
-          () => {
-            this.image_progress = 100;
-            task.snapshot.ref.getDownloadURL().then(async url => {
-              this.image_progress = 0;
-              this.material.image = url;
-              this.updateImage();
-            });
-          }
-        );
-      } else {
-        this.$root.$children[0].showMessage(
-          "Error al Guardar",
-          "La imagen excede el tamaño permitido: 100KB"
-        );
-      }
-    },
-    async updateImage() {
-      this.dialog_image = false;
-      this.loading = true;
-      this.loading_message = "Guardando Imagen";
-      this.material.id = this.material._id.$oid;
-      await updateMaterialImage(this.material);
-      this.loading = false;
-    },
     changeCategory(direction) {
       this.category_idx = Clamp(
         this.category_idx + direction,
         0,
         this.categories.length - 1
       );
-    },
-    loadMaterials() {
-      this.unselectMaterial();
-      this.restoreMaterials();
     },
     async saveMaterial() {
       this.loading = true;
@@ -586,26 +433,6 @@ export default {
 <style lang='scss' scoped>
 @import "@/styles/box-shadow.scss";
 
-.image {
-  max-height: 80vh;
-  display: flex;
-  flex-direction: column;
-
-  &__menu {
-    padding: 10px;
-    padding-bottom: 10px;
-    display: flex;
-    align-items: flex-end;
-  }
-  &__input {
-    flex-grow: 1;
-    overflow-y: auto;
-  }
-  img {
-    width: 100%;
-  }
-}
-
 .material-editor-container {
   .material-editor-content {
     .category {
@@ -659,13 +486,6 @@ export default {
         font-weight: bold;
       }
     }
-  }
-}
-
-.material {
-  &__menu {
-    display: flex;
-    justify-content: center;
   }
 }
 </style>

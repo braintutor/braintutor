@@ -46,8 +46,8 @@
 
     <div class="types my-4">
       <v-btn
-        @click="show_type = 'MAT'"
-        :outlined="show_type !== 'MAT'"
+        @click="show_type = 'CAT'"
+        :outlined="show_type !== 'CAT'"
         class="mx-1"
         color="green"
         dark
@@ -66,6 +66,7 @@
     </div>
 
     <QuizzesEditor v-show="show_type === 'QUI'" :material='material'/>
+    <CategoriesEditor v-show="show_type === 'CAT'" :material='material'/>
 
     <!-- Dialog Image -->
     <v-dialog v-model="dlg_image" max-width="500">
@@ -111,6 +112,7 @@
 <script>
 import loading from "@/components/loading";
 import QuizzesEditor from "./QuizzesEditor";
+import CategoriesEditor from "./CategoriesEditor/index";
 
 import {
   updateMaterialName,
@@ -126,7 +128,7 @@ export default {
   props: ["material", "unselect"],
   data: () => ({
     chatbot_id: "",
-    show_type: "MAT",
+    show_type: "CAT",
     //
     loading: false,
     loading_msg: "",
@@ -210,7 +212,8 @@ export default {
   },
   components: {
     loading,
-    QuizzesEditor
+    QuizzesEditor,
+    CategoriesEditor
   }
 };
 </script>
