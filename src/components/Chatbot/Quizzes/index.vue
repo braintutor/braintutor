@@ -1,7 +1,8 @@
 <template>
   <!-- Quiz List -->
   <v-container class="pa-0" v-if="!quiz_selected" fluid>
-    <v-row no-gutters>
+    {{quizzes}}
+    <!-- <v-row no-gutters>
       <v-col cols="6" md="4" v-for="(quiz, e_idx) in quizzes" :key="e_idx" class="pa-2">
         <Card :callback="() => selectQuiz(quiz)">
           <p class="card-item">{{quiz.name}}</p>
@@ -14,7 +15,7 @@
           >Máx. Puntaje: {{calculate(quiz.result) || '00'}}</p>
         </Card>
       </v-col>
-    </v-row>
+    </v-row> -->
     <p class="text-center mt-2" v-show="quizzes.length === 0">No hay quizzes</p>
   </v-container>
   <!-- Quiz Selected -->
@@ -28,7 +29,7 @@
 </template>
 
 <script>
-import Card from "@/components/Card";
+// import Card from "@/components/Card";
 import Quiz from "./Quiz";
 
 import { copy } from "@/services/object.js";
@@ -72,8 +73,8 @@ export default {
     }
   },
   components: {
-    Quiz,
-    Card
+    Quiz
+    // Card
   }
 };
 </script>

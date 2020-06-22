@@ -24,7 +24,6 @@ import { getParam } from "@/services/router.js";
 
 import { getChatbotNameOrder } from "@/services/chatbotService";
 import { getMaterials } from "@/services/materialService";
-import { getQuizzesByMaterial } from "@/services/quizService";
 
 export default {
   data: () => ({
@@ -48,9 +47,9 @@ export default {
     let order = (this.chatbot.order || []).reverse();
 
     let materials = await getMaterials(this.chatbot_id);
-    for (let material of materials) {
-      material.quizzes = await getQuizzesByMaterial(material._id.$oid);
-    }
+    // for (let material of materials) {
+    //   material.quizzes = await getQuizzesByMaterial(material._id.$oid);
+    // }
     materials.sort((a, b) => {
       let a_order = order.indexOf(a._id.$oid);
       let b_order = order.indexOf(b._id.$oid);

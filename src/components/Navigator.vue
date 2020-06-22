@@ -19,7 +19,6 @@ export default {
 
 <style lang='scss' scoped>
 .navigator-container {
-  width: 100%;
   pointer-events: none;
   .navigator-actions {
     width: max-content;

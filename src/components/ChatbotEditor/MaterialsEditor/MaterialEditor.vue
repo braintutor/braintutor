@@ -44,7 +44,7 @@
       </div>
     </div>
 
-    <div class="types my-4">
+    <div class="types my-3">
       <v-btn
         @click="show_type = 'CAT'"
         :outlined="show_type !== 'CAT'"
