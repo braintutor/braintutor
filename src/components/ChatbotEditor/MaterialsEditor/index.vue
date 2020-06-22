@@ -2,13 +2,13 @@
   <div>
     <loading :active="loading" :message="loading_message" />
     <!-- Material List -->
-    <v-container v-if="!material" fluid class="materials-container">
+    <v-container v-if="show === 'list'" fluid class="materials-container">
       <div class="options">
-        <v-btn v-if="edit" small text @click="updateChatbotOrder()">
+        <v-btn v-if="edit_order" small text @click="updateChatbotOrder()">
           Finalizar
           <v-icon class="ml-2" style="font-size: 0.95rem">mdi-close</v-icon>
         </v-btn>
-        <v-btn v-else small text color="primary" @click="edit = true">
+        <v-btn v-else small text color="primary" @click="edit_order = true">
           Editar Orden
           <v-icon class="ml-2" style="font-size: 0.95rem">mdi-pencil</v-icon>
         </v-btn>
@@ -28,7 +28,7 @@
             :image="material.image"
             :callback="() => selectMaterial(material)"
           />
-          <div v-show="edit" class="material__actions">
+          <div v-show="edit_order" class="material__actions">
             <v-btn small icon @click="moveLeft(materials, r_idx)">
               <v-icon>mdi-chevron-left</v-icon>
             </v-btn>
@@ -38,21 +38,27 @@
             </v-btn>
           </div>
         </v-col>
-        <v-col v-show="!edit" cols="6" sm="4" md="2" class="material">
+        <v-col v-show="!edit_order" cols="6" sm="4" md="2" class="material">
           <div class="create-container" @click="createMaterial()">
             <v-icon>mdi-plus</v-icon>
           </div>
         </v-col>
       </v-row>
     </v-container>
-    <!-- Material Selected -->
+    <!-- Material Editor -->
     <MaterialEditor
-      v-else
+      v-if="show === 'material'"
       :material="material"
       :unselectMaterial="unselectMaterial"
       :deleteMaterial="deleteMaterial"
       :restoreMaterial="restoreMaterial"
       :restoreMaterials="restoreMaterials"
+    />
+    <!-- Quizzes Editor -->
+    <QuizzesEditor
+      v-if="show === 'quizzes'"
+      :material="material"
+      :unselectMaterial="unselectMaterial"
     />
   </div>
 </template>
@@ -60,6 +66,7 @@
 <script>
 import Cartel from "@/components/Cartel";
 import MaterialEditor from "./MaterialEditor/index";
+import QuizzesEditor from "./QuizzesEditor";
 import loading from "@/components/loading";
 
 import {
@@ -78,8 +85,9 @@ export default {
     materials: [],
     material: null,
     chatbot_id: "",
+    show: "list",
     //
-    edit: false,
+    edit_order: false,
     loading: true,
     loading_message: ""
   }),
@@ -88,8 +96,14 @@ export default {
     this.restoreMaterials();
   },
   methods: {
+    selectMaterial(material) {
+      this.material = material;
+      // this.show = "material";
+      this.show = "quizzes";
+    },
     unselectMaterial() {
       this.material = null;
+      this.show = "list";
     },
     async restoreMaterials() {
       this.loading = true;
@@ -129,6 +143,20 @@ export default {
         blocks: [{ type: "header", data: { text: "Videos", level: 2 } }]
       });
 
+      // Quizzes
+      let quiz = [
+        {
+          question: "Pregunta",
+          alternatives: ["Alternativa 1", "Alternativa 2"],
+          correct: 0
+        }
+      ];
+      let quizzes = {
+        BAS: quiz,
+        INT: quiz,
+        ADV: quiz
+      };
+
       if (!this.loading_create) {
         this.loading = true;
         let new_material = {
@@ -158,7 +186,8 @@ export default {
           faq: [
             { question: "Pregunta Frecuente 1", answer: "Respuesta" },
             { question: "Pregunta Frecuente 2", answer: "Respuesta" }
-          ]
+          ],
+          quizzes
         };
         let material_id = await addMaterial(this.chatbot_id, new_material);
         new_material._id = material_id;
@@ -175,28 +204,25 @@ export default {
       await removeMaterial(material_id);
       await this.restoreMaterials();
     },
-    selectMaterial(material) {
-      this.material = material;
-    },
     async restoreMaterial(material_id) {
       await this.restoreMaterials();
       this.material = this.materials.find(
         material => material._id.$oid == material_id
       );
     },
+    // Chatbot Order
     async updateChatbotOrder() {
       this.loading = true;
       this.loading_message = "Guardando Cambios";
       let order = this.materials.map(material => material._id.$oid);
       try {
         await updateChatbotOrder(this.chatbot_id, order);
-        this.edit = false;
+        this.edit_order = false;
       } catch (error) {
         this.$root.$children[0].showMessage("", "Error al Guardar");
       }
       this.loading = false;
     },
-    //
     moveLeft(arr, idx) {
       if (idx > 0) {
         let aux = arr[idx];
@@ -217,6 +243,7 @@ export default {
   components: {
     Cartel,
     MaterialEditor,
+    QuizzesEditor,
     loading
   }
 };

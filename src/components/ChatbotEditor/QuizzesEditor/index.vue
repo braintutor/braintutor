@@ -105,12 +105,20 @@ export default {
 
       this.loading = false;
     },
-    async deleteQuiz(quiz_id) {
+    async deleteQuiz(quiz) {
       this.quiz = null;
       this.loading = true;
       this.loading_msg = "Eliminando";
-      await removeQuiz(quiz_id);
-      await this.restoreQuizzes();
+
+      await removeQuiz(quiz._id.$oid);
+      let material = this.materials.find(
+        m => m._id.$oid === quiz.material_id.$oid
+      );
+      material.quizzes = material.quizzes.filter(
+        q => q._id.$oid === quiz._id.$oid
+      );
+
+      this.loading = false;
     },
     selectQuiz(quiz) {
       this.quiz = quiz;

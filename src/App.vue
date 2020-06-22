@@ -73,6 +73,12 @@ export default {
 </script>
 
 <style lang="scss">
+// HTML
+textarea {
+  font-size: .95rem !important;
+}
+
+//
 .menu {
   padding: 5px 10px;
   display: flex;

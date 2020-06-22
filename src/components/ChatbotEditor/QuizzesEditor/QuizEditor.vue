@@ -100,7 +100,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn small text @click="dialog_delete = false">Cancelar</v-btn>
-          <v-btn small depressed color="error" @click="deleteQuiz(quiz._id.$oid)">Eliminar</v-btn>
+          <v-btn small depressed color="error" @click="deleteQuiz(quiz)">Eliminar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -130,7 +130,7 @@ export default {
   methods: {
     loadQuizzes() {
       this.unselectQuiz();
-      this.restoreQuizzes();
+      // this.restoreQuizzes();
     },
     async saveQuiz() {
       this.loading = true;

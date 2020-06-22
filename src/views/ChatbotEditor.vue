@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div class="container">
     <AppSidebar :links="links" :action_links="action_links">
-      <ChatbotEditor :slot="0" />
-      <MaterialsEditor :slot="1" />
-      <QuizzesEditor :slot="2" />
-      <KnowledgeEditor :slot="3" :get="get" :update="update" />
+      <MaterialsEditor :slot="0" />
+      <QuizzesEditor :slot="1" />
+      <KnowledgeEditor :slot="2" :get="get" :update="update" />
+      <ChatbotEditor :slot="3" />
     </AppSidebar>
   </div>
 </template>
@@ -24,10 +24,6 @@ export default {
     chatbot_id: "",
     links: [
       {
-        image: require("@/assets/braintutor/icon-settings.png"),
-        text: "Configuración"
-      },
-      {
         image: require("@/assets/braintutor/icon-material.png"),
         text: "Materiales"
       },
@@ -38,6 +34,10 @@ export default {
       {
         image: require("@/assets/braintutor/icon-knowledge.png"),
         text: "Conocimiento"
+      },
+      {
+        image: require("@/assets/braintutor/icon-settings.png"),
+        text: "Configuración"
       }
     ],
     action_links: []
