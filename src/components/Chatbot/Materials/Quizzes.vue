@@ -1,10 +1,9 @@
 <template>
   <div>
-    <section class="quizzes mb-4">
+    <section v-if="!quiz" class="quizzes mb-4">
       <v-btn
         class="quizzes__type"
-        @click="show_type = 'BAS'"
-        :outlined="show_type !== 'BAS'"
+        @click="selectQuiz('BAS')"
         color="warning"
         dark
         small
@@ -12,8 +11,7 @@
       >Básico</v-btn>
       <v-btn
         class="quizzes__type"
-        @click="show_type = 'INT'"
-        :outlined="show_type !== 'INT'"
+        @click="selectQuiz('INT')"
         color="warning"
         dark
         small
@@ -21,8 +19,7 @@
       >Intermedio</v-btn>
       <v-btn
         class="quizzes__type"
-        @click="show_type = 'ADV'"
-        :outlined="show_type !== 'ADV'"
+        @click="selectQuiz('ADV')"
         color="warning"
         dark
         small
@@ -58,6 +55,13 @@
           small
           rounded
         >Siguiente</v-btn>
+        <v-btn
+          v-if="question_idx === quiz.length - 1"
+          @click="unselectQuiz()"
+          color="primary"
+          small
+          rounded
+        >Finalizar</v-btn>
       </div>
     </div>
   </div>
@@ -67,7 +71,7 @@
 export default {
   props: ["quizzes"],
   data: () => ({
-    show_type: "BAS",
+    quiz: null,
     question_idx: 0
   }),
   computed: {
@@ -79,6 +83,13 @@ export default {
     }
   },
   methods: {
+    selectQuiz(type) {
+      this.question_idx = 0;
+      this.quiz = JSON.parse(JSON.stringify(this.quizzes[type]));
+    },
+    unselectQuiz() {
+      this.quiz = null;
+    },
     selectAlternative(question, a_idx) {
       if (!question.show_correct) {
         question.show_correct = true;
