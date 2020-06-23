@@ -75,9 +75,6 @@ export default {
     question_idx: 0
   }),
   computed: {
-    quiz() {
-      return this.quizzes[this.show_type];
-    },
     question() {
       return this.quiz[this.question_idx];
     }
@@ -120,6 +117,9 @@ export default {
 }
 
 .quiz {
+  max-width: 560px;
+  margin: 0 auto;
+
   &__actions {
     margin-top: 10px;
     display: flex;
@@ -132,7 +132,8 @@ export default {
   text-align: center;
 
   &__statement {
-    font-size: 0.95rem;
+    margin-bottom: 20px;
+    font-size: 1rem;
     font-weight: bold;
   }
 }
@@ -145,21 +146,22 @@ $color-incorrect: #ff7c77;
 
 .alternative {
   margin-top: 10px;
-  padding: 5px 10px;
+  padding: 6px 12px;
   font-size: 0.9rem;
   font-weight: initial;
+  border-radius: 15px;
   border: 1px solid #ccc;
-  border-radius: 20px;
   transition: 0.2s;
   cursor: pointer;
 
   &:hover {
-    background: #eeeeee;
+    background: #f3f3f3;
   }
 
   &--correct {
     background: $color-correct !important;
     color: #fff;
+    font-weight: bold;
     border: none;
     &:hover {
       background: $color-correct !important;
@@ -169,6 +171,7 @@ $color-incorrect: #ff7c77;
   &--incorrect {
     background: $color-incorrect;
     color: #fff;
+    font-weight: bold;
     border: none;
     &:hover {
       background: $color-incorrect;
