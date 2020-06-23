@@ -109,11 +109,13 @@ export default {
 
 <style lang='scss' scoped>
 .quizzes {
+  max-width: 200px;
+  margin: 0 auto;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
 
   &__type {
-    margin: 0 4px;
+    margin: 8px 4px;
   }
 }
 
