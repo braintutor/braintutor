@@ -118,7 +118,7 @@ import Marker from "@editorjs/marker";
 import Embed from "@editorjs/embed";
 
 import Exercises from "./Exercises";
-import Quizzes from "@/components/Chatbot/Quizzes/index";
+import Quizzes from "./Quizzes";
 // import { getEmbed } from "@/services/embed";
 
 export default {

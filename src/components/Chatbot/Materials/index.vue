@@ -61,7 +61,7 @@
 
 <script>
 import Cartel from "@/components/Cartel";
-import Material from "./Material/index";
+import Material from "./Material";
 
 import { getCategoriesByLearningStyle } from "@/services/studentService.js";
 import { Clamp } from "@/services/math";
