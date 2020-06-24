@@ -28,7 +28,6 @@
     </div>
     <!-- Available Questions -->
     <div v-show="!show_messages" class="availables m-fullscreen-content">
-      <div class="availables__loading" v-show="loading_available">Cargando Preguntas ...</div>
       <div
         class="availables__question"
         v-for="(available_question, c_idx) in available_questions"
@@ -37,17 +36,9 @@
       >
         <span>{{ available_question }}</span>
       </div>
-      <div
-        class="availables__question"
-        v-for="(available_question, c_idx) in available_questions_materials"
-        :key="'m' + c_idx"
-        @click="selectAvailableQuestion(available_question); show_messages = true"
-      >
-        <span>{{ available_question }}</span>
-      </div>
       <p
         class="text-center mt-2"
-        v-show="!loading_available && (available_questions.length + available_questions_materials.length) === 0"
+        v-show="available_questions.length === 0"
       >No hay preguntas disponibles.</p>
     </div>
     <!-- Input -->
@@ -81,23 +72,16 @@ import Avatar from "./Avatar";
 import Message from "@/models/Message";
 
 import { scrollLeft, scrollDown } from "@/services/scroll";
-import { getAnswer } from "@/services/chatService";
+// import { getAnswer } from "@/services/chatService";
 import { SpeechToText } from "@/services/speech";
 import { getParam } from "@/services/router.js";
 
-import { getQuestionTemplate } from "@/services/chatService";
-import { getCourseIdByChatbot } from "@/services/courseService";
-import {
-  getKnowledge,
-  getKnowledgeByCourse
-} from "@/services/knowledgeService";
-
 export default {
+  props: ["bot", "knowledge"],
   data: () => ({
     messages: [new Message("Hola.\n¿En qué puedo ayudarte?", 0)],
     message_text: "",
     chatbot_id: "",
-    available_questions: [],
     icons: [
       {
         category: "overview",
@@ -148,7 +132,6 @@ export default {
     //
     question_template: {},
     loading_message: false,
-    loading_available: true,
     show_messages: true
   }),
   computed: {
@@ -161,23 +144,13 @@ export default {
     component_materials() {
       return this.$store.state.component_materials;
     },
-    available_questions_materials() {
-      let arr = [];
-      this.materials.forEach(material => {
-        Object.values(this.question_template).forEach(value => {
-          if (value[0]) arr.push(value[0].replace(/@/, material.name));
-        });
-        material.faq.forEach(item => {
-          arr.push(item.question);
-        });
-      });
-      return arr;
+    available_questions() {
+      return this.knowledge.map(k => k.questions[0]);
     }
   },
   mounted() {
     this.chatbot_id = getParam("chatbot_id");
     this.$store.commit("setComponentAvatar", this.$refs.component_avatar);
-    this.getKnowledge();
   },
   methods: {
     addMessage(text, type, action, icon) {
@@ -199,10 +172,15 @@ export default {
         this.message_text = "";
 
         try {
-          let { answer, material_id, category } = await getAnswer(
-            this.chatbot_id,
+          // let { answer, material_id, category } = await getAnswer(
+          //   this.chatbot_id,
+          //   message_text
+          // );
+          let { answers, material_id, category } = this.bot.getAnswer(
             message_text
           );
+          let answer = answers[Math.floor(Math.random() * answers.length)];
+
           if (material_id) {
             action = () => {
               let material = this.getMaterial(material_id);
@@ -214,6 +192,8 @@ export default {
           }
           this.addMessage(answer, 0, action, icon);
         } catch (error) {
+          console.log(error);
+
           this.addMessage("No puedo responder en este momento.", 0, null, null);
         } finally {
           this.loading_message = false;
@@ -236,17 +216,6 @@ export default {
     },
     scrollLeft() {
       scrollLeft("chatbot-scroll");
-    },
-    //
-    async getKnowledge() {
-      let course_id = await getCourseIdByChatbot(this.chatbot_id);
-      let knowledge_course = await getKnowledgeByCourse(course_id);
-      let knowledge_chatbot = await getKnowledge(this.chatbot_id);
-
-      let knowledge = knowledge_course.concat(knowledge_chatbot);
-      this.available_questions = knowledge.map(item => item.questions[0]);
-      this.question_template = await getQuestionTemplate();
-      this.loading_available = false;
     }
   },
   components: {

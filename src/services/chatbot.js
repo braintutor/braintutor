@@ -1,0 +1,87 @@
+import { CountVectorizer } from 'machinelearn/feature_extraction';
+
+export default class Chatbot {
+  constructor() {
+    this.x = []
+    this.y = []
+    this.model = null
+    this.knowledge = []
+    // Voice
+    this.msg = new SpeechSynthesisUtterance();
+    this.msg.rate = 1.15;
+    this.msg.pitch = 1
+    window.speechSynthesis.onvoiceschanged = () => {
+      let voices = window.speechSynthesis.getVoices()
+      voices = voices.filter(voice => voice.lang.substring(0, 2) === 'es')
+      if (voices[2]) this.msg.voice = voices[2] // or 3
+    };
+  }
+
+  train(knowledge) {
+    this.knowledge = knowledge
+    this.knowledge.forEach(({ questions }, idx) => {
+      this.x = this.x.concat(questions.map(question => this._getHash(question)))
+      this.y = this.y.concat(Array(questions.length).fill(idx))
+    })
+    this.model = new CountVectorizer()
+    this.model.fit_transform(this.x);
+  }
+
+  getAnswer(question, showAnswers = false) {
+    if (this.model) {
+      let sim_arr = []
+      let vector = this.model.transform([this._getHash(question)])[0];
+      this.model.transform(this.x).forEach(vectorK => {
+        let similarity = this._cosinesim(vector, vectorK)
+        sim_arr.push(similarity)
+      })
+      let idx_max_sim = sim_arr.indexOf(Math.max(...sim_arr))
+
+      let res = this.knowledge[this.y[idx_max_sim]]
+
+      if (showAnswers)
+        return res.answers
+
+      return res
+    }
+  }
+
+  talk(text) {
+    this.msg.text = text
+    let synth = window.speechSynthesis;
+    synth.cancel()
+    synth.speak(this.msg);
+  }
+
+  _clean(text) {
+    text = text.toLowerCase()
+    text = text.replace(/[^@_a-zá-úñÑ0-9\s]/g, ' ') // remove other characters
+    text = text.normalize("NFD").replace(/[\u0300-\u036f]/g, "") // remove accent
+    text = text.trim().split(/\s+/) // remove extra spaces
+    return `_${text.join('_')}_` // adding '_'
+  }
+
+  _getHash(text) {
+    text = this._clean(text)
+    let hash_arr = []
+    for (let i = 0; i < text.length - 2; i++) {
+      hash_arr.push(text.substring(i, i + 3));
+    }
+    return hash_arr.join(' ')
+  }
+
+  _cosinesim(A, B) {
+    var dotproduct = 0;
+    var mA = 0;
+    var mB = 0;
+    for (let i = 0; i < A.length; i++) { // here you missed the i++
+      dotproduct += (A[i] * B[i]);
+      mA += (A[i] * A[i]);
+      mB += (B[i] * B[i]);
+    }
+    mA = Math.sqrt(mA);
+    mB = Math.sqrt(mB);
+    var similarity = (dotproduct) / ((mA) * (mB)) || 0 // here you needed extra brackets
+    return similarity;
+  }
+}

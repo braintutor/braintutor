@@ -29,7 +29,7 @@
           dismissible
         >{{message_error}}</v-alert>
         <div class="editor-chatbot__actions">
-          <v-btn class="editor-chatbot__action" small color="success" @click="train()">Entrenar Bot</v-btn>
+          <!-- <v-btn class="editor-chatbot__action" small color="success" @click="train()">Entrenar Bot</v-btn> -->
           <v-btn
             class="editor-chatbot__action"
             small
@@ -120,7 +120,7 @@
 <script>
 import loading from "@/components/loading";
 
-import { train } from "@/services/chatService";
+// import { train } from "@/services/chatService";
 import { getParam, redirect } from "@/services/router.js";
 import {
   getChatbot,
@@ -178,17 +178,17 @@ export default {
       await updateChatbot(this.chatbot);
       this.loading = false;
     },
-    async train() {
-      try {
-        this.loading = true;
-        this.loading_message = "Entrenando";
-        await train(this.chatbot._id.$oid);
-      } catch (error) {
-        this.dialog_error = true;
-      } finally {
-        this.loading = false;
-      }
-    },
+    // async train() {
+    //   try {
+    //     this.loading = true;
+    //     this.loading_message = "Entrenando";
+    //     await train(this.chatbot._id.$oid);
+    //   } catch (error) {
+    //     this.dialog_error = true;
+    //   } finally {
+    //     this.loading = false;
+    //   }
+    // },
     async removeChatbot() {
       this.loading = true;
       this.loading_message = "Eliminando";

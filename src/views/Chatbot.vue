@@ -1,16 +1,11 @@
 <template>
   <div class="chatbot-container">
-    <loading :active="loading_chatbot" :message="loading_message" />
+    <loading :active="loading" :message="loading_msg" />
     <v-row id="chatbot-scroll" class="chatbot-scroll fill-height" no-gutters>
       <div class="chatbot-content col-12 col-md-8 m-fullscreen">
-        <Materials
-          class="m-fullscreen-content"
-          ref="component_materials"
-          v-show="service_selected === 0"
-          :chatbot="chatbot"
-        />
+        <Materials class="m-fullscreen-content" ref="component_materials" :chatbot="chatbot" />
       </div>
-      <Chat class="chat-container col-12 col-md-4" :selectService="idx => selectService(idx)" />
+      <Chat class="chat-container col-12 col-md-4" :bot="bot" :knowledge="knowledge" />
     </v-row>
   </div>
 </template>
@@ -21,43 +16,84 @@ import Materials from "@/components/Chatbot/Materials/index";
 import loading from "@/components/loading";
 
 import { getParam } from "@/services/router.js";
+import Chatbot from "@/services/chatbot";
 
-import { getChatbotNameOrder } from "@/services/chatbotService";
+import { getCourseIdByChatbot } from "@/services/courseService";
 import { getMaterials } from "@/services/materialService";
+import { getQuestionTemplate } from "@/services/chatService";
+import { getChatbotNameOrder } from "@/services/chatbotService";
+import {
+  getKnowledge,
+  getKnowledgeByCourse
+} from "@/services/knowledgeService";
 
 export default {
   data: () => ({
     chatbot: {},
-    chatbot_id: "",
-    show_services: true,
-    service_selected: 0,
-    order: [],
+    // CHAT
+    bot: null,
+    knowledge: [],
     //
-    loading_chatbot: true,
-    loading_message: ""
+    loading: true,
+    loading_msg: ""
   }),
-  async mounted() {
-    // Components
-    this.$store.commit("setComponentMaterials", this.$refs.component_materials);
-    this.chatbot_id = getParam("chatbot_id");
+  async created() {
+    let chatbot_id = getParam("chatbot_id");
 
-    this.loading_message = "Cargando Material";
+    // Materials
+    this.loading_msg = "Cargando Material";
 
-    this.chatbot = await getChatbotNameOrder(this.chatbot_id);
+    this.chatbot = await getChatbotNameOrder(chatbot_id);
     let order = (this.chatbot.order || []).reverse();
-
-    let materials = await getMaterials(this.chatbot_id);
-    // for (let material of materials) {
-    //   material.quizzes = await getQuizzesByMaterial(material._id.$oid);
-    // }
-    materials.sort((a, b) => {
-      let a_order = order.indexOf(a._id.$oid);
-      let b_order = order.indexOf(b._id.$oid);
-      return b_order - a_order;
-    });
+    let materials = await getMaterials(chatbot_id);
+    materials.sort(
+      (a, b) => order.indexOf(b._id.$oid) - order.indexOf(a._id.$oid)
+    );
     this.$store.commit("setMaterials", materials);
 
-    this.loading_chatbot = false;
+    // Knowledge
+    this.loading_msg = "Cargando Conocimiento";
+
+    let course_id = await getCourseIdByChatbot(chatbot_id);
+    let knowledge_course = await getKnowledgeByCourse(course_id);
+    let knowledge_chatbot = await getKnowledge(chatbot_id);
+    let knowledge = knowledge_course.concat(knowledge_chatbot);
+
+    // Knowledge Material
+    let question_template = await getQuestionTemplate();
+    materials.forEach(material => {
+      Object.entries(question_template).forEach(([category, questions]) => {
+        if (questions[0]) {
+          questions = questions.map(question =>
+            question.replace(/@/, material.name)
+          );
+          knowledge.push({
+            questions,
+            answers: [],
+            material_id: material._id.$oid,
+            category
+          });
+        }
+      });
+      material.faq.forEach(({ question, answer }) => {
+        knowledge.push({
+          questions: [question],
+          answers: [answer],
+          material_id: material._id.$oid
+        });
+      });
+    });
+    this.knowledge = knowledge;
+
+    // Chatbot
+    let bot = new Chatbot();
+    bot.train(knowledge);
+    this.bot = bot;
+
+    this.loading = false;
+  },
+  mounted() {
+    this.$store.commit("setComponentMaterials", this.$refs.component_materials);
   },
   components: {
     Chat,
