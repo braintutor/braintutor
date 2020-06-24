@@ -27,6 +27,8 @@ import {
   getKnowledgeByCourse
 } from "@/services/knowledgeService";
 
+import { mapState } from "vuex";
+
 export default {
   data: () => ({
     chatbot: {},
@@ -37,6 +39,9 @@ export default {
     loading: true,
     loading_msg: ""
   }),
+  computed: {
+    ...mapState(["user"])
+  },
   async created() {
     let chatbot_id = getParam("chatbot_id");
 
@@ -69,7 +74,10 @@ export default {
           );
           knowledge.push({
             questions,
-            answers: [],
+            answers: [
+              "Esto te puede servir.",
+              "He encontrado esta información."
+            ],
             material_id: material._id.$oid,
             category
           });
@@ -87,7 +95,13 @@ export default {
 
     // Chatbot
     let bot = new Chatbot();
-    bot.train(knowledge);
+    let entities = {
+      usuario: {
+        nombre: this.user.first_name
+      }
+    };
+
+    bot.train(knowledge, entities);
     this.bot = bot;
 
     this.loading = false;

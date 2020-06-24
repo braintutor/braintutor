@@ -17,8 +17,10 @@ export default class Chatbot {
     };
   }
 
-  train(knowledge) {
+  train(knowledge, entities) {
     this.knowledge = knowledge
+    this.entities = entities
+
     this.knowledge.forEach(({ questions }, idx) => {
       this.x = this.x.concat(questions.map(question => this._getHash(question)))
       this.y = this.y.concat(Array(questions.length).fill(idx))
@@ -38,12 +40,24 @@ export default class Chatbot {
       let idx_max_sim = sim_arr.indexOf(Math.max(...sim_arr))
 
       let res = this.knowledge[this.y[idx_max_sim]]
+      res.answers = this.setEntities(res.answers)
 
       if (showAnswers)
         return res.answers
 
       return res
     }
+  }
+
+  setEntities(answers) {
+    return answers.map(answer => { // 'Hi @user@first_name @user@last_name.'
+      let required_entities = answer.match(/@[\wñÑ]+@[\wñÑ]+/g) // [@user@first_name, @user@last_name] 
+      required_entities.forEach(required_entity => { // (1) @user@first_name  (2) @user@last_name
+        let [object, attribute] = required_entity.split('@').slice(1, 3) // (1) [user, first_name]  (2) [user, last_name]
+        answer = answer.replace(required_entities, this.entities[object][attribute]) // (1) Hi Mitsuo @user@last_name.  (2) Hi Mitsuo Yshara.
+      })
+      return answer
+    })
   }
 
   talk(text) {

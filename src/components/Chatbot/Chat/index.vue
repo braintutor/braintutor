@@ -192,8 +192,6 @@ export default {
           }
           this.addMessage(answer, 0, action, icon);
         } catch (error) {
-          console.log(error);
-
           this.addMessage("No puedo responder en este momento.", 0, null, null);
         } finally {
           this.loading_message = false;
