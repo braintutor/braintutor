@@ -40,6 +40,7 @@ export default class Chatbot {
       let idx_max_sim = sim_arr.indexOf(Math.max(...sim_arr))
 
       let res = this.knowledge[this.y[idx_max_sim]]
+      res.answers = this.setEntities(res.answers)
 
       return res
     }
