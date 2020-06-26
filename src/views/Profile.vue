@@ -16,7 +16,7 @@
         <!--  -->
         <v-icon class="profile__icon">mdi-account</v-icon>
         <span class="profile__item">Usuario:</span>
-        <span class="profile__value">{{profile.user}}</span>
+        <span class="profile__value">{{profile.username}}</span>
       </div>
       <div class="profile__actions">
         <v-btn
