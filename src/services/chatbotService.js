@@ -43,16 +43,16 @@ function updateChatbotImage(chatbot) {
   })
 }
 
-function updateChatbotOrder(chatbot_id, order) {
+function updateChatbotOrder(id, order) {
   return fetch_post('updateChatbotOrder', {
-    chatbot_id,
+    id,
     order
   })
 }
 
-function removeChatbot(chatbot_id) {
+function removeChatbot(id) {
   return fetch_post('removeChatbot', {
-    chatbot_id
+    id
   })
 }
 

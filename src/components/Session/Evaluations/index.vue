@@ -98,7 +98,7 @@ export default {
     evaluation: null,
     evaluations: [],
     //
-    session_type: -1,
+    user_role: -1,
     score: 0,
     score_f: 0,
     result_messages: [],
@@ -110,7 +110,7 @@ export default {
   }),
   async mounted() {
     this.session_id = getParam("session_id");
-    this.session_type = this.$store.state.user.type;
+    this.user_role = this.$store.state.user.role;
     this.getEvaluations();
   },
   methods: {
@@ -126,7 +126,7 @@ export default {
       this.loading = false;
     },
     async select(evaluation) {
-      if (this.session_type === 2) {
+      if (this.user_role === 'STU') {
         this.loading = true;
         this.loading_msg = "Cargando Evaluación";
         try {
@@ -156,7 +156,7 @@ export default {
       this.result_messages = [`Obtuviste un puntaje de ${this.score_f}.`];
     },
     showDialogStart(evaluation) {
-      if ((evaluation.result || {}).score == null && this.session_type === 2) {
+      if ((evaluation.result || {}).score == null && this.user_role === 'STU') {
         this.evaluation_to_start = evaluation;
         this.dialog_start = true;
       }

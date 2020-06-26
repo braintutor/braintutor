@@ -19,15 +19,6 @@
           hide-details
           autocomplete="off"
         ></v-text-field>
-        <!-- Error -->
-        <v-alert
-          class="my-2"
-          v-model="show_error"
-          type="error"
-          icon="mdi-cloud-alert"
-          text
-          dismissible
-        >{{message_error}}</v-alert>
         <div class="editor-chatbot__actions">
           <!-- <v-btn class="editor-chatbot__action" small color="success" @click="train()">Entrenar Bot</v-btn> -->
           <v-btn
@@ -139,7 +130,6 @@ export default {
     chatbot: {},
     chatbot_id: "",
     image_file: null,
-    show_error: false,
     message_error: "",
     //
     loading: true,
@@ -193,13 +183,13 @@ export default {
       this.loading = true;
       this.loading_message = "Eliminando";
 
-      let response = await removeChatbot(this.chatbot_id);
-      if (response.error) {
-        this.show_error = true;
-        this.message_error = response.error;
-      } else {
+      try {
+        await removeChatbot(this.chatbot_id);
         redirect("courses-editor");
+      } catch (error) {
+        this.$root.$children[0].showMessage("Error", error.msg);
       }
+
       this.loading = false;
     },
     // Image

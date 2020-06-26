@@ -1,9 +1,9 @@
 import { fetch_post } from "./fetch";
 
 
-function getTaskByStudent(task_id) {
+function getTaskByStudent(id) {
   return fetch_post('getTaskByStudent', {
-    task_id
+    id
   })
 }
 
@@ -13,9 +13,9 @@ function getTasksBySessionTeacher(session_id) {
   })
 }
 
-function getTasksBySessionStudent(session_id) {
+function getTasksBySessionStudent(id) {
   return fetch_post('getTasksBySessionStudent', {
-    session_id
+    id
   })
 }
 
@@ -32,9 +32,9 @@ function updateTask(task) {
   })
 }
 
-function updateTaskAnswer(task_id, answer) {
+function updateTaskAnswer(id, answer) {
   return fetch_post('updateTaskAnswer', {
-    task_id, 
+    id, 
     answer
   })
 }

@@ -100,39 +100,39 @@ export default {
         title: "Cursos",
         name: "sessions-teacher",
         icon: "mdi-book",
-        session_roles: [1]
+        session_roles: ["TEA"]
       },
       {
         title: "Editar",
         name: "courses-editor",
         icon: "mdi-book",
-        session_roles: [1]
+        session_roles: ["TEA"]
       },
       // 2, 4
       {
         title: "Cursos",
         name: "sessions-student",
         icon: "mdi-book",
-        session_roles: [2, 4]
+        session_roles: ["STU", "PAR"]
       },
       // {
       //   title: "Tareas",
       //   name: "tasks",
       //   icon: "mdi-book",
-      //   session_roles: ["2", "4"]
+      //   session_roles: ['STU', 'PAR']
       // },
       {
         title: "Agenda",
         name: "events",
         icon: "mdi-book",
-        session_roles: [2, 4]
+        session_roles: ["STU", "PAR"]
       },
       // 3
       {
         title: "Colegio",
         name: "director",
         icon: "mdi-school",
-        session_roles: [3]
+        session_roles: ["DIR"]
       }
     ],
     roles: {

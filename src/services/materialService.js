@@ -19,15 +19,15 @@ function updateMaterial(material) {
   })
 }
 
-function updateMaterialName(material_id, name) {
+function updateMaterialName(id, name) {
   return fetch_post('updateMaterialName', {
-    material_id, name
+    id, name
   })
 }
 
-function updateMaterialQuiz(material_id, quiz, quiz_type) {
+function updateMaterialQuiz(id, quiz, quiz_type) {
   return fetch_post('updateMaterialQuiz', {
-    material_id, quiz, quiz_type
+    id, quiz, quiz_type
   })
 }
 

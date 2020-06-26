@@ -27,7 +27,7 @@
       </div>
     </div>
 
-    <div v-show="session_type == 2" class="diagram m-card">
+    <div v-show="user_role === 'STU'" class="diagram m-card">
       <canvas v-show="profile.learning_style" id="myChart" width="600" height="400"></canvas>
       <div
         v-show="!profile.learning_style"
@@ -134,8 +134,6 @@ class PreguntaTest {
     this.enunciado = enunciado;
     this.alternatives = alternatives;
     this.answer = null;
-    // this.answer = Math.round(Math.random());
-    // this.answer = 1;
   }
 }
 
@@ -329,7 +327,7 @@ export default {
     questions_page: 0,
     questions_size: 11,
     //
-    session_type: -1,
+    user_role: -1,
     myChart: null,
     loading: true,
     loading_msg: "",
@@ -351,12 +349,12 @@ export default {
   },
   async mounted() {
     this.loading_msg = "Cargando Datos";
-    this.session_type = this.$store.state.user.type;
+    this.user_role = this.$store.state.user.role;
     this.profile = await getUser();
     this.loading = false;
 
     // Chart
-    if (this.session_type == 2) {
+    if (this.user_role === "STU") {
       var ctx = document.getElementById("myChart").getContext("2d");
       this.myChart = new Chart(ctx, {
         type: "bar",
@@ -576,6 +574,7 @@ export default {
       this.questions_page = 0;
       this.questions.forEach(q => {
         q.answer = null;
+        // q.answer = Math.round(Math.random());
       });
       this.dialog_test = true;
     },

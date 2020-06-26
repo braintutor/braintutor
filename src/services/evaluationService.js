@@ -12,9 +12,9 @@ function getEvaluation(evaluation_id) {
   })
 }
 
-function getEvaluationsBySessionStudent(session_id) {
+function getEvaluationsBySessionStudent(id) {
   return fetch_post('getEvaluationsBySessionStudent', {
-    session_id
+    id
   })
 }
 
