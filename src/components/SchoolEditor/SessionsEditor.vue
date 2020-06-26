@@ -31,10 +31,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(entity, e_idx) in entities_filtered" :key="e_idx">
+          <tr v-for="(entity, e_idx) in entities_f" :key="e_idx">
             <td>{{entity.classroom}}</td>
             <td>{{entity.course}}</td>
-            <td>{{entity.teacher}}</td>
+            <td>{{`${entity.teacher? entity.teacher.name: ''}`}}</td>
             <td class="text-center">
               <v-btn small icon @click="dialog_edit = true; edit(entity)">
                 <v-icon>mdi-pencil</v-icon>
@@ -43,7 +43,7 @@
           </tr>
         </tbody>
       </table>
-      <p class="text-center mt-2" v-show="entities_filtered.length === 0">No hay sesiones.</p>
+      <p class="text-center mt-2" v-show="entities_f.length === 0">No hay sesiones</p>
     </div>
 
     <v-dialog v-model="dialog_edit" class="container" max-width="500">
@@ -119,36 +119,38 @@ export default {
     loading_save: false,
     loading_msg: ""
   }),
-  async mounted() {
+  async created() {
     this.loading_msg = "Cargando Sesiones";
+
     this.courses = await getCoursesBySchool();
+
     this.classrooms = await getClassroomsBySchool();
-    if (this.classrooms.length !== 0) {
-      this.classrooms.sort((a, b) => a.name.localeCompare(b.name));
+    this.classrooms.sort((a, b) => a.name.localeCompare(b.name));
+    if (this.classrooms.length !== 0)
       this.classroom_id = this.classrooms[0]._id;
-    }
-    this.teachers = await getTeachersBySchool();
-    this.teachers.forEach(t => {
-      t.name = `${t.first_name} ${t.last_name}`;
-    });
+
+    let teachers = await getTeachersBySchool();
+    this.teachers = teachers.map(t => ({
+      ...t,
+      name: `${t.last_name}, ${t.first_name}`
+    }));
+
     this.entities = await getSessionsBySchool();
+
     this.loading = false;
   },
   computed: {
-    entities_aux() {
+    entities_f() {
       let entities = this.entities.map(e => {
         e.course = this.courses.find(c => c._id.$oid === e.course_id.$oid).name;
         e.classroom = this.classrooms.find(
           c => c._id.$oid === e.classroom_id.$oid
         ).name;
-        let teacher = this.teachers.find(c => c._id.$oid === e.teacher_id.$oid);
-        e.teacher = `${teacher.first_name} ${teacher.last_name}`;
+        e.teacher = this.teachers.find(c => c._id.$oid === e.teacher_id.$oid);
+
         return e;
       });
-      return entities;
-    },
-    entities_filtered() {
-      let entities = this.entities_aux.filter(
+      entities = entities.filter(
         e => e.classroom_id.$oid === this.classroom_id.$oid
       );
       return entities;

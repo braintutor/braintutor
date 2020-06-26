@@ -17,7 +17,7 @@
         <!-- User -->
         <div id="user" class="user" v-if="user" @click="user_options = !user_options">
           <span class="user__name">{{user.name}}</span>
-          <span class="user__type">{{types[user.type]}}</span>
+          <span class="user__role">{{roles[user.role]}}</span>
           <div class="user__avatar">
             <img src="https://i.ya-webdesign.com/images/avatar-png-1.png" alt />
           </div>
@@ -41,7 +41,7 @@
       </div>
       <div class="user ml-0" v-if="user" @click="user_options = !user_options">
         <span class="user__name">{{user.name}}</span>
-        <span class="user__type">{{types[user.type]}}</span>
+        <span class="user__role">{{roles[user.role]}}</span>
       </div>
       <v-list>
         <v-list-item-group active-class="blue--text text--accent-4">
@@ -93,49 +93,55 @@ export default {
         title: "Colegio",
         name: "school-editor",
         icon: "mdi-school",
-        session_types: [0]
+        session_roles: ["ADM"]
       },
       // 1
       {
         title: "Cursos",
         name: "sessions-teacher",
         icon: "mdi-book",
-        session_types: [1]
+        session_roles: [1]
       },
       {
         title: "Editar",
         name: "courses-editor",
         icon: "mdi-book",
-        session_types: [1]
+        session_roles: [1]
       },
       // 2, 4
       {
         title: "Cursos",
         name: "sessions-student",
         icon: "mdi-book",
-        session_types: [2, 4]
+        session_roles: [2, 4]
       },
       // {
       //   title: "Tareas",
       //   name: "tasks",
       //   icon: "mdi-book",
-      //   session_types: ["2", "4"]
+      //   session_roles: ["2", "4"]
       // },
       {
         title: "Agenda",
         name: "events",
         icon: "mdi-book",
-        session_types: [2, 4]
+        session_roles: [2, 4]
       },
       // 3
       {
         title: "Colegio",
         name: "director",
         icon: "mdi-school",
-        session_types: [3]
+        session_roles: [3]
       }
     ],
-    types: ["ADMINISTRADOR", "PROFESOR", "ESTUDIANTE", "DIRECTOR", "PADRE"],
+    roles: {
+      ADM: "ADMINISTRADOR",
+      TEA: "PROFESOR",
+      EST: "ESTUDIANTE",
+      DIR: "DIRECTOR",
+      PAR: "PADRE"
+    },
     user_options: false,
     drawer: false
   }),
@@ -152,7 +158,7 @@ export default {
   computed: {
     links_filtered() {
       return this.links.filter(
-        l => this.user && l.session_types.includes(this.user.type)
+        l => this.user && l.session_roles.includes(this.user.role)
       );
     },
     user() {
@@ -214,7 +220,7 @@ export default {
     font-size: 0.75rem;
     font-weight: bold;
   }
-  &__type {
+  &__role {
     color: #5856da;
     text-align: right;
     font-size: 0.65rem;

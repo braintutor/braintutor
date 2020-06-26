@@ -8,21 +8,21 @@ function getProfileTeacher() {
   return fetch_get('getProfileTeacher')
 }
 
-function addTeacher(teacher) {
+function addTeacher(user) {
   return fetch_post('addTeacher', {
-    teacher
+    user
   })
 }
 
-function updateTeacher(teacher) {
+function updateTeacher(user) {
   return fetch_post('updateTeacher', {
-    teacher
+    user
   })
 }
 
-function removeTeacher(teacher_id) {
+function removeTeacher(id) {
   return fetch_post('removeTeacher', {
-    teacher_id
+    id
   })
 }
 

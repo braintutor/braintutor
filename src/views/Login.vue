@@ -20,8 +20,8 @@
             text
             dismissible
           >Datos incorrectos.</v-alert>
-          <v-text-field v-model="user" :rules="userRules" label="Usuario"></v-text-field>
-          <v-text-field v-model="pass" :rules="passRules" label="Contraseña" type="password"></v-text-field>
+          <v-text-field v-model="username" :rules="usernameRules" label="Usuario"></v-text-field>
+          <v-text-field v-model="password" :rules="passwordRules" label="Contraseña" type="password"></v-text-field>
         </v-card-text>
         <v-card-actions class="pt-0">
           <v-btn :loading="loading_login" block color="primary" type="submit">Iniciar Sesión</v-btn>
@@ -42,10 +42,10 @@ export default {
   data: () => ({
     school: {},
     // FORM
-    user: "",
-    pass: "",
-    userRules: [v => !!v || "Usuario es requerido"],
-    passRules: [v => !!v || "Contraseña es requerida"],
+    username: "",
+    password: "",
+    usernameRules: [v => !!v || "Usuario es requerido"],
+    passwordRules: [v => !!v || "Contraseña es requerida"],
     //
     loading: true,
     alert_error: false,
@@ -62,7 +62,7 @@ export default {
         if (this.$refs.form_login.validate()) {
           this.loading_login = true;
           let school_id = this.school._id.$oid;
-          let { token } = await login(school_id, this.user, this.pass);
+          let { token } = await login(school_id, this.username, this.password);
           localStorage.setItem("token", token);
           redirect("home");
         }

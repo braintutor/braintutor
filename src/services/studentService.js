@@ -4,12 +4,6 @@ function getStudents() {
   return fetch_get('getStudents')
 }
 
-function getStudentsByText(text) {
-  return fetch_post('getStudentsByText', {
-    text
-  })
-}
-
 function getStudentsByClassroom(classroom_id) {
   return fetch_post('getStudentsByClassroom', {
     classroom_id
@@ -35,15 +29,15 @@ function getStudentsBySessionStudent(session_id) {
 }
 
 
-function addStudent(student) {
+function addStudent(user) {
   return fetch_post('addStudent', {
-    student
+    user
   })
 }
 
-function updateStudent(student) {
+function updateStudent(user) {
   return fetch_post('updateStudent', {
-    student
+    user
   })
 }
 
@@ -51,9 +45,9 @@ function updateStudentTime() {
   return fetch_get('updateStudentTime')
 }
 
-function removeStudent(student_id, key) {
+function removeStudent(id, key) {
   return fetch_post('removeStudent', {
-    student_id, key
+    id, key
   })
 }
 
@@ -73,7 +67,6 @@ function getCategoriesByLearningStyle() {
 
 export {
   getStudents,
-  getStudentsByText,
   getStudentsByClassroom,
   getStudentsByClassroomDirector,
   getStudentsBySession,

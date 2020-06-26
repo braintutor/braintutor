@@ -97,7 +97,7 @@ export default {
     let bot = new Chatbot();
     let entities = {
       usuario: {
-        nombre: this.user.first_name
+        nombre: this.user.first_name.split(/\s+/g)[0]
       }
     };
 

@@ -38,15 +38,7 @@
             <td>{{ entity.first_name }}</td>
             <td>{{ entity.last_name }}</td>
             <td>{{ entity.email }}</td>
-            <td>{{ entity.user }}</td>
-            <!-- <td>
-              <v-btn class="mr-2" small icon @click="toogleShowPassword(entity)">
-                <v-icon v-if="entity.showPassword">mdi-eye</v-icon>
-                <v-icon v-else>mdi-eye-off</v-icon>
-              </v-btn>
-              <span v-if="entity.showPassword">{{ entity.pass }}</span>
-              <span v-else>******</span>
-            </td>-->
+            <td>{{ entity.username }}</td>
             <td class="text-center">
               <v-btn small icon @click="dialog_edit = true; edit(entity)">
                 <v-icon>mdi-pencil</v-icon>
@@ -90,7 +82,7 @@
           <span class="mt-1 mr-4">Usuario:</span>
           <v-text-field
             class="text-field"
-            v-model="entity.user"
+            v-model="entity.username"
             dense
             hide-details
             autocomplete="off"
@@ -100,7 +92,7 @@
             v-if="action === 'create'"
             class="text-field"
             :type="entity.showPassword? 'text': 'password'"
-            v-model="entity.pass"
+            v-model="entity.password"
             dense
             hide-details
             autocomplete="off"
@@ -164,7 +156,7 @@
               <td>
                 <v-text-field
                   class="text-field"
-                  v-model="entity.user"
+                  v-model="entity.username"
                   dense
                   hide-details
                   autocomplete="off"
@@ -174,7 +166,7 @@
                 <v-text-field
                   class="text-field"
                   :type="entity.showPassword? 'text': 'password'"
-                  v-model="entity.pass"
+                  v-model="entity.password"
                   dense
                   hide-details
                   autocomplete="off"

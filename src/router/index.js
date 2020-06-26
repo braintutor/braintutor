@@ -106,7 +106,7 @@ router.beforeEach(async (to, from, next) => {
   const require_director = ['director', 'profile'] // Require Director
   const require_parent = ['sessions-student', 'session', 'tasks', 'events', 'chatbot', 'profile'] // Require Director
   let to_name = to.name
-  let redirects = ['school-editor', 'sessions-teacher', 'sessions-student', 'director', 'sessions-student']
+  let redirects = { ADM: 'school-editor', TEA: 'sessions-teacher', STU: 'sessions-student', DIR: 'director', PAR: 'sessions-student' }
 
   let user = null
   let token = localStorage.getItem('token')
@@ -123,16 +123,16 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if (require_student.concat(require_admin, require_teacher, require_director, require_parent).includes(to_name))
-    if (user && ((require_admin.includes(to_name) && user.type == 0) ||
-      (require_teacher.includes(to_name) && user.type == 1) ||
-      (require_student.includes(to_name) && user.type == 2) ||
-      (require_director.includes(to_name) && user.type == 3) ||
-      (require_parent.includes(to_name) && user.type == 4)))
+    if (user && ((require_admin.includes(to_name) && user.role === 'ADM') ||
+      (require_teacher.includes(to_name) && user.role === 'TEA') ||
+      (require_student.includes(to_name) && user.role === 'STU') ||
+      (require_director.includes(to_name) && user.role === 'DIR') ||
+      (require_parent.includes(to_name) && user.role === 'PAR')))
       next()
     else
       redirect('home')
   else if (['home', 'login'].includes(to_name) && user)
-    redirect(redirects[user.type])
+    redirect(redirects[user.role])
   else next()
 })
 

@@ -41,7 +41,6 @@
             <th class="text-left">Apellidos</th>
             <th class="text-left">Correo</th>
             <th class="text-left">Usuario</th>
-            <!-- <th class="text-left">Contraseña</th> -->
             <th class="text-center">Acción</th>
           </tr>
         </thead>
@@ -50,15 +49,7 @@
             <td>{{ entity.first_name }}</td>
             <td>{{ entity.last_name }}</td>
             <td>{{ entity.email }}</td>
-            <td>{{ entity.user }}</td>
-            <!-- <td>
-              <v-btn class="mr-2" small icon @click="toogleShowPassword(entity)">
-                <v-icon v-if="entity.showPassword">mdi-eye</v-icon>
-                <v-icon v-else>mdi-eye-off</v-icon>
-              </v-btn>
-              <span v-if="entity.showPassword">{{ entity.pass }}</span>
-              <span v-else>******</span>
-            </td>-->
+            <td>{{ entity.username }}</td>
             <td class="text-center">
               <v-btn small icon @click="dialog_edit = true; edit(entity)">
                 <v-icon>mdi-pencil</v-icon>
@@ -112,7 +103,7 @@
           <span class="mt-1 mr-4">Usuario:</span>
           <v-text-field
             class="text-field"
-            v-model="entity.user"
+            v-model="entity.username"
             dense
             hide-details
             autocomplete="off"
@@ -122,7 +113,7 @@
             v-if="action === 'create'"
             class="text-field"
             :type="entity.showPassword? 'text': 'password'"
-            v-model="entity.pass"
+            v-model="entity.password"
             dense
             hide-details
             autocomplete="off"
@@ -150,7 +141,7 @@
           <p>Escriba el usuario a eliminar:</p>
           <v-text-field
             class="text-field"
-            v-model="entity_user_remove"
+            v-model="entity_username_remove"
             dense
             hide-details
             autocomplete="off"
@@ -223,7 +214,7 @@
               <td>
                 <v-text-field
                   class="text-field"
-                  v-model="entity.user"
+                  v-model="entity.username"
                   dense
                   hide-details
                   autocomplete="off"
@@ -233,7 +224,7 @@
                 <v-text-field
                   class="text-field"
                   :type="entity.showPassword? 'text': 'password'"
-                  v-model="entity.pass"
+                  v-model="entity.password"
                   dense
                   hide-details
                   autocomplete="off"
@@ -290,7 +281,7 @@ export default {
     loading_msg: "",
     //
     entity_id_remove: "",
-    entity_user_remove: "",
+    entity_username_remove: "",
     dialog_remove: false
   }),
   async mounted() {
@@ -362,7 +353,7 @@ export default {
     },
     showRemove(entity_id) {
       this.entity_id_remove = entity_id;
-      this.entity_user_remove = "";
+      this.entity_username_remove = "";
       this.dialog_remove = true;
     },
     async remove() {
@@ -372,7 +363,7 @@ export default {
       this.dialog_edit = false;
       let eid = this.entity_id_remove;
       try {
-        await removeStudent(eid, this.entity_user_remove);
+        await removeStudent(eid, this.entity_username_remove);
         this.entities = this.entities.filter(e => e._id.$oid !== eid);
       } catch (error) {
         this.$root.$children[0].showMessage("Error al Eliminar", error.msg);
@@ -405,7 +396,7 @@ export default {
                 first_name: nombres || Nombres || "",
                 last_name: apellidos || Apellidos || "",
                 email: correo || Correo || "",
-                user: usuario || Usuario || ""
+                username: usuario || Usuario || ""
               };
             });
             this.dialog_import = true;

@@ -151,6 +151,7 @@ export default {
           );
           this.entities[entity_idx] = JSON.parse(JSON.stringify(this.entity));
           this.entities.splice(); // updates the array without modifying it
+          this.dialog_edit = false;
         } catch (error) {
           this.$root.$children[0].showMessage("Error al Guardar", error.msg);
         }

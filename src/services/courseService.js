@@ -39,9 +39,9 @@ function updateCourse(course) {
   })
 }
 
-function removeCourse(course_id) {
+function removeCourse(id) {
   return fetch_post('removeCourse', {
-    course_id
+    id
   })
 }
 
