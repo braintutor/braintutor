@@ -21,7 +21,8 @@ import Chatbot from "@/services/chatbot";
 // TODO getCourseIdByChatbot + getChatbotNameOrder = getChatbotByStudent | getChatbotByTeacher
 import {
   getCourseIdByChatbot,
-  getCourseByTeacher
+  getCourseByTeacher,
+  getCourseByStudent
 } from "@/services/courseService";
 import { getMaterials } from "@/services/materialService";
 import { getQuestionTemplate } from "@/services/chatService";
@@ -60,7 +61,9 @@ export default {
     this.loading_msg = "Cargando Conocimiento";
 
     let course_id = await getCourseIdByChatbot(chatbot_id);
-    let course = await getCourseByTeacher(course_id);
+    let course = await (this.$store.state.user.role === "TEA"
+      ? getCourseByTeacher(course_id)
+      : getCourseByStudent(course_id));
     let knowledge = course.knowledge || [];
 
     // Knowledge Material

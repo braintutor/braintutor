@@ -23,7 +23,7 @@
               >
                 <td>{{ entity.first_name }}</td>
                 <td>{{ entity.last_name }}</td>
-                <td>{{ entity.user }}</td>
+                <td>{{ entity.username }}</td>
                 <td>{{ entity.email }}</td>
               </tr>
             </tbody>

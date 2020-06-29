@@ -13,6 +13,12 @@ function getCourseByTeacher(course_id) {
   })
 }
 
+function getCourseByStudent(course_id) {
+  return fetch_post('getCourseByStudent', {
+    course_id
+  })
+}
+
 function getCourseNameBySession(session_id) {
   return fetch_post('getCourseNameBySession', {
     session_id
@@ -48,6 +54,7 @@ function removeCourse(id) {
 export { 
   getCourseIdByChatbot, 
   getCourseByTeacher, 
+  getCourseByStudent,
   getCourseNameBySession, 
   getCoursesByTeacher, 
   getCoursesBySchool, 
