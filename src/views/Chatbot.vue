@@ -18,14 +18,14 @@ import loading from "@/components/loading";
 import { getParam } from "@/services/router.js";
 import Chatbot from "@/services/chatbot";
 
-import { getCourseIdByChatbot } from "@/services/courseService";
+// TODO getCourseIdByChatbot + getChatbotNameOrder = getChatbotByStudent | getChatbotByTeacher
+import {
+  getCourseIdByChatbot,
+  getCourseByTeacher
+} from "@/services/courseService";
 import { getMaterials } from "@/services/materialService";
 import { getQuestionTemplate } from "@/services/chatService";
 import { getChatbotNameOrder } from "@/services/chatbotService";
-import {
-  getKnowledge,
-  getKnowledgeByCourse
-} from "@/services/knowledgeService";
 
 import { mapState } from "vuex";
 
@@ -60,9 +60,8 @@ export default {
     this.loading_msg = "Cargando Conocimiento";
 
     let course_id = await getCourseIdByChatbot(chatbot_id);
-    let knowledge_course = await getKnowledgeByCourse(course_id);
-    let knowledge_chatbot = await getKnowledge(chatbot_id);
-    let knowledge = knowledge_course.concat(knowledge_chatbot);
+    let course = await getCourseByTeacher(course_id);
+    let knowledge = course.knowledge || [];
 
     // Knowledge Material
     let question_template = await getQuestionTemplate();

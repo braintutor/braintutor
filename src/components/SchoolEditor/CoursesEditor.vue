@@ -135,6 +135,7 @@ export default {
       if (this.action === "create") {
         // Create
         try {
+          this.entity.knowledge = [];
           let entity_id = await addCourse(this.entity);
           this.entity._id = entity_id;
           this.entities.push(this.entity);

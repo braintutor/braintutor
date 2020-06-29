@@ -19,11 +19,12 @@ import ChatbotsEditor from "@/components/CourseEditor/ChatbotsEditor";
 import KnowledgeEditor from "@/components/globals/KnowledgeEditor";
 
 import { redirect, getParam } from "@/services/router.js";
-import {
-  getKnowledgeByCourse,
-  updateKnowledgeByCourse
-} from "@/services/knowledgeService";
-import { getCourseName } from "@/services/courseService";
+// import {
+//   getKnowledgeByCourse,
+//   updateKnowledgeByCourse
+// } from "@/services/knowledgeService";
+import { updateCourseKnowledge } from "@/services/knowledgeService";
+import { getCourseByTeacher } from "@/services/courseService";
 
 export default {
   data: () => ({
@@ -43,14 +44,15 @@ export default {
   }),
   async created() {
     this.course_id = getParam("course_id");
-    this.course = await getCourseName(this.course_id);
+    this.course = await getCourseByTeacher(this.course_id);
   },
   methods: {
     async get() {
-      return await getKnowledgeByCourse(this.course_id);
+      let { knowledge } = await getCourseByTeacher(this.course_id);
+      return knowledge || [];
     },
     async update(knowledge) {
-      return await updateKnowledgeByCourse(this.course_id, knowledge);
+      return await updateCourseKnowledge(this.course_id, knowledge);
     },
     redirect() {
       redirect("courses-editor");
