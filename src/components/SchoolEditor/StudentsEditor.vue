@@ -127,8 +127,9 @@
             color="error"
             :loading="loading_save"
             @click="showRemove(entity._id.$oid)"
+            small
           >Eliminar</v-btn>
-          <v-btn color="primary" :loading="loading_save" @click="save()">Guardar</v-btn>
+          <v-btn color="primary" :loading="loading_save" @click="save()" small>Guardar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -148,16 +149,18 @@
           ></v-text-field>
         </v-card-text>
         <v-card-actions class="edit__actions">
-          <v-btn text @click="dialog_remove = false">Cancelar</v-btn>
+          <v-btn text @click="dialog_remove = false" small>Cancelar</v-btn>
           <v-btn
             v-if="action === 'edit'"
             color="error"
             :loading="loading_save"
-            @click="remove()"
+            @click="dialog_remove = true"
+            small
           >Eliminar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
+
     <!-- DIALOG IMPORT -->
     <v-dialog v-model="dialog_import" persistent max-width="900">
       <v-card class="py-2 px-4">

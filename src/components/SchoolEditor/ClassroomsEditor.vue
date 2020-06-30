@@ -52,9 +52,21 @@
             v-if="action === 'edit'"
             color="error"
             :loading="loading_save"
-            @click="remove()"
+            @click="dialog_remove = true"
+            small
           >Eliminar</v-btn>
-          <v-btn color="primary" :loading="loading_save" @click="save()">Guardar</v-btn>
+          <v-btn color="primary" :loading="loading_save" @click="save()" small>Guardar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- Dialog Remove -->
+    <v-dialog v-model="dialog_remove" persistent max-width="300">
+      <v-card class="edit">
+        <div class="py-5 text-center">¿Desea eliminar?</div>
+        <v-card-actions class="edit__actions">
+          <v-btn @click="dialog_remove = false" small text>Cancelar</v-btn>
+          <v-btn @click="remove(); dialog_remove = false" color="error" small>Eliminar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -79,6 +91,7 @@ export default {
     //
     action: "",
     dialog_edit: false,
+    dialog_remove: false,
     loading: true,
     loading_msg: "",
     loading_save: false

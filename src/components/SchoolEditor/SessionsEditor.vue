@@ -83,7 +83,7 @@
           ></v-select>
         </v-card-text>
         <v-card-actions class="edit__actions">
-          <v-btn color="primary" :loading="loading_save" @click="save()">Guardar</v-btn>
+          <v-btn color="primary" :loading="loading_save" @click="save()" small>Guardar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
