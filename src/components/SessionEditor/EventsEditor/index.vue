@@ -137,17 +137,17 @@ export default {
       this.show_events_selected = false;
       this.restoreEvents();
     },
-    async createEvent() {
-      let new_event = {
-        title: "Nombre",
-        date: this.event_date,
-        description: "Descripción"
-      };
+    async createEvent(new_event) {
+      new_event.date = this.event_date;
       this.loading_events = true;
       this.loading_message = "Creando";
+
       let event_id = await addEvent(this.session_id, new_event);
       new_event._id = event_id;
+      new_event.type = "event";
+      new_event.color = "#5252ff";
       this.events.push(new_event);
+
       this.loading_events = false;
       setTimeout(() => {
         scrollDown("events-scroll");
