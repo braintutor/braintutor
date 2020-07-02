@@ -33,6 +33,12 @@ function getCoursesBySchool() {
   return fetch_get('getCoursesBySchool')
 }
 
+function getCourseByMaterial(material_id) {
+  return fetch_post('getCourseByMaterial', {
+    material_id
+  })
+}
+
 function addCourse(course) {
   return fetch_post('addCourse', {
     course
@@ -51,14 +57,15 @@ function removeCourse(id) {
   })
 }
 
-export { 
-  getCourseIdByChatbot, 
-  getCourseByTeacher, 
+export {
+  getCourseIdByChatbot,
+  getCourseByTeacher,
   getCourseByStudent,
-  getCourseNameBySession, 
-  getCoursesByTeacher, 
-  getCoursesBySchool, 
-  addCourse, 
-  updateCourse ,
+  getCourseNameBySession,
+  getCoursesByTeacher,
+  getCoursesBySchool,
+  getCourseByMaterial,
+  addCourse,
+  updateCourse,
   removeCourse
 }

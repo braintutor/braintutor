@@ -82,6 +82,11 @@ const routes = [
     component: () => import('../views/Chatbot.vue')
   },
   {
+    path: '/material-editor/:material_id',
+    name: 'material-editor',
+    component: () => import('../views/MaterialEditor.vue')
+  },
+  {
     path: '/profile',
     name: 'profile',
     component: () => import('../views/Profile.vue')
@@ -102,7 +107,7 @@ router.beforeEach(async (to, from, next) => {
   reset()
   const require_student = ['sessions-student', 'session', 'tasks', 'events', 'chatbot', 'profile', 'task'] // Require Student
   const require_admin = ['school-editor', 'profile'] // Require Admin
-  const require_teacher = ['chatbot', 'courses-editor', 'sessions-teacher', 'session-editor', 'course-editor', 'chatbot-editor', 'profile'] // Require Teacher
+  const require_teacher = ['chatbot', 'courses-editor', 'sessions-teacher', 'session-editor', 'course-editor', 'chatbot-editor', 'material-editor', 'profile'] // Require Teacher
   const require_director = ['director', 'profile'] // Require Director
   const require_parent = ['sessions-student', 'session', 'tasks', 'events', 'chatbot', 'profile'] // Require Director
   let to_name = to.name

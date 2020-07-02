@@ -1,5 +1,11 @@
 import { fetch_post } from "./fetch";
 
+function getMaterial(material_id) {
+  return fetch_post('getMaterial', {
+    material_id
+  })
+}
+
 function getMaterials(chatbot_id) {
   return fetch_post('getMaterials', {
     chatbot_id
@@ -43,4 +49,4 @@ function removeMaterial(material_id) {
   })
 }
 
-export { getMaterials, addMaterial, updateMaterial, updateMaterialName, updateMaterialImage, updateMaterialQuiz, removeMaterial }
+export { getMaterial, getMaterials, addMaterial, updateMaterial, updateMaterialName, updateMaterialImage, updateMaterialQuiz, removeMaterial }
