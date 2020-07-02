@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div id="scroll" class="container">
     <loading :active="loading" :message="loading_msg" />
 
     <!-- Course -->
@@ -45,15 +45,22 @@
               <v-btn v-else icon small>
                 <v-icon>mdi-chevron-down</v-icon>
               </v-btn>-->
-              <v-btn
-                v-show="!chatbot.edit_name && !chatbot.edit_order"
-                @click="selectChatbot(chatbot._id.$oid)"
-                class="ml-2"
-                icon
-                small
-              >
-                <v-icon>mdi-robot</v-icon>
-              </v-btn>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    v-show="!chatbot.edit_name && !chatbot.edit_order"
+                    @click="selectChatbot(chatbot._id.$oid)"
+                    class="ml-2"
+                    icon
+                    small
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    <v-icon>mdi-robot</v-icon>
+                  </v-btn>
+                </template>
+                <span style="font-size: .75rem">Ver Chatbot</span>
+              </v-tooltip>
               <v-menu v-if="!chatbot.edit_name && !chatbot.edit_order" offset-y>
                 <template v-slot:activator="{ on }">
                   <v-btn class="ml-2" icon small v-on="on">
@@ -66,6 +73,9 @@
                   </v-list-item>
                   <v-list-item @click="chatbot.edit_order = true; $forceUpdate()">
                     <v-list-item-title>Editar Orden</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item @click="createMaterial(chatbot)">
+                    <v-list-item-title>Crear Material</v-list-item-title>
                   </v-list-item>
                   <v-list-item @click="removeChatbot(chatbot._id.$oid)">
                     <v-list-item-title>Eliminar</v-list-item-title>
@@ -136,11 +146,11 @@
             </div>
 
             <!-- Material Create -->
-            <div
+            <!-- <div
               v-show="!chatbot.edit_name && !chatbot.edit_order"
               @click="createMaterial(chatbot)"
               class="material--create"
-            >+</div>
+            >+</div>-->
           </div>
         </section>
       </section>
@@ -161,6 +171,7 @@ import loading from "@/components/loading";
 import KnowledgeEditor from "@/components/globals/KnowledgeEditor";
 
 import { getParam, redirect } from "@/services/router.js";
+import { scrollDown } from "@/services/scroll";
 import { getCourseByTeacher } from "@/services/courseService";
 import {
   getChatbotsByCourse,
@@ -224,8 +235,9 @@ export default {
         new_chatbot._id = chatbot_id;
         new_chatbot.materials = [];
         this.chatbots.push(new_chatbot);
+        setTimeout(scrollDown, 100);
       } catch (error) {
-        this.$root.$children[0].showMessage("Error", error.msg);
+        this.$root.$children[0].showMessage("", error.msg);
       }
 
       this.loading = false;
@@ -320,10 +332,8 @@ export default {
         new_material._id = material_id;
         chatbot.materials = chatbot.materials || [];
         chatbot.materials.push(new_material);
-        this.selectMaterial(material_id.$oid);
+        // this.selectMaterial(material_id.$oid);
       } catch (error) {
-        console.log(error);
-
         this.$root.$children[0].showMessage("Error", error.msg);
       }
       this.loading = false;
@@ -332,12 +342,10 @@ export default {
       this.loading = true;
       this.loading_msg = "Guardando Cambios";
       try {
-        chatbot.id = chatbot._id.$oid
+        chatbot.id = chatbot._id.$oid;
         await updateChatbot(chatbot);
         chatbot.edit_name = false;
       } catch (error) {
-        console.log(error);
-        
         this.$root.$children[0].showMessage("", "Error al Guardar");
       }
       this.loading = false;
@@ -439,6 +447,7 @@ export default {
     display: grid;
     grid-template-columns: minmax(60px, 10%) auto;
     grid-template-rows: auto 1fr;
+    align-items: center;
 
     transition: 0.3s;
     cursor: pointer;
