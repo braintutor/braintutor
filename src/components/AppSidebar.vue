@@ -10,15 +10,6 @@
           </label>
         </div>
       </div>
-      <div class="sidebar__actions">
-        <div
-          v-for="(action_link, a_idx) in action_links"
-          :key="a_idx"
-          @click="action_link.action()"
-        >
-          <img :src="action_link.image" />
-        </div>
-      </div>
     </div>
     <div class="content">
       <slot name="default"></slot>
@@ -33,7 +24,7 @@
 
 <script>
 export default {
-  props: ["links", "action_links"],
+  props: ["links"],
   data: () => ({
     idx: 0
   })
@@ -102,23 +93,6 @@ $color-hover-border: #a7b9ec;
       border-left: 3px solid $color-hover-border;
     }
   }
-  &__actions {
-    height: min-content;
-    width: min-content;
-    border-radius: 50%;
-    @include box-shadow;
-    img {
-      width: 36px;
-      height: 36px;
-      margin: 8px;
-      border-radius: 50%;
-      vertical-align: bottom;
-    }
-    &:hover {
-      cursor: pointer;
-      background: $color-selected;
-    }
-  }
 }
 input[type="radio"] {
   display: none;
@@ -168,14 +142,6 @@ input[type="radio"] {
         border-bottom: 3px solid $color-hover-border;
         cursor: pointer;
         opacity: 1;
-      }
-    }
-    &__actions {
-      margin-left: 8px;
-      img {
-        width: 36px;
-        height: 36px;
-        margin: 5px;
       }
     }
   }
