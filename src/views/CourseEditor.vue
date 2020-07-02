@@ -174,13 +174,13 @@ import { getParam, redirect } from "@/services/router.js";
 import { scrollDown } from "@/services/scroll";
 import { getCourseByTeacher } from "@/services/courseService";
 import {
-  getChatbotsByCourse,
+  getChatbotsAndMaterials,
   addChatbot,
   removeChatbot,
   updateChatbot,
   updateChatbotOrder
 } from "@/services/chatbotService.js";
-import { getMaterials, addMaterial } from "@/services/materialService";
+import { addMaterial } from "@/services/materialService";
 import { updateCourseKnowledge } from "@/services/knowledgeService";
 
 export default {
@@ -200,19 +200,16 @@ export default {
 
     try {
       this.course = await getCourseByTeacher(this.course_id);
-      this.chatbots = await getChatbotsByCourse(this.course_id);
+      this.chatbots = await getChatbotsAndMaterials(this.course_id);
 
       // Materials
       for (let chatbot of this.chatbots) {
-        let materials = await getMaterials(chatbot._id.$oid);
         let order = (chatbot.order || []).reverse();
-
-        materials.sort((a, b) => {
+        chatbot.materials.sort((a, b) => {
           let a_order = order.indexOf(a._id.$oid);
           let b_order = order.indexOf(b._id.$oid);
           return b_order - a_order;
         });
-        chatbot.materials = materials;
       }
     } catch (error) {
       this.$root.$children[0].showMessage("Error", error.msg);
@@ -252,7 +249,7 @@ export default {
           chatbot => chatbot._id.$oid !== chatbot_id
         );
       } catch (error) {
-        this.$root.$children[0].showMessage("Error", error.msg);
+        this.$root.$children[0].showMessage("", error.msg);
       }
 
       this.loading = false;
@@ -330,7 +327,6 @@ export default {
       try {
         let material_id = await addMaterial(chatbot._id.$oid, new_material);
         new_material._id = material_id;
-        chatbot.materials = chatbot.materials || [];
         chatbot.materials.push(new_material);
         // this.selectMaterial(material_id.$oid);
       } catch (error) {
