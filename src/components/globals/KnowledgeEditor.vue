@@ -2,7 +2,8 @@
   <div class="editor-container m-fullscreen">
     <loading :active="loading" :message="loading_message" />
     <div class="menu">
-      <span class="menu-title">Conocimiento</span>
+      <!-- <span class="menu-title">Conocimiento</span> -->
+      <div></div>
       <div class="menu-action">
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
