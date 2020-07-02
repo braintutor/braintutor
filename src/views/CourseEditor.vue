@@ -89,6 +89,7 @@
                 small
                 text
                 rounded
+                outlined
               >
                 Finalizar
                 <v-icon class="ml-2" small>mdi-close</v-icon>
@@ -100,6 +101,7 @@
                 small
                 text
                 rounded
+                outlined
               >
                 Finalizar
                 <v-icon class="ml-2" small>mdi-close</v-icon>

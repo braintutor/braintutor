@@ -1,9 +1,9 @@
 import { fetch_post } from "./fetch";
 
-function getChatbotToken(chatbot_id) {
-  return fetch_post('getChatbotToken', {
-    chatbot_id
+function getCourseToken(course_id) {
+  return fetch_post('getCourseToken', {
+    course_id
   })
 }
 
-export { getChatbotToken }
+export { getCourseToken }

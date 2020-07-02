@@ -43,12 +43,6 @@ function updateChatbot(chatbot) {
   })
 }
 
-function updateChatbotImage(chatbot) {
-  return fetch_post('updateChatbotImage', {
-    chatbot
-  })
-}
-
 function updateChatbotOrder(id, order) {
   return fetch_post('updateChatbotOrder', {
     id,
@@ -70,7 +64,6 @@ export {
   getChatbotsAndMaterials,
   addChatbot,
   updateChatbot,
-  updateChatbotImage,
   updateChatbotOrder,
   removeChatbot
 }

@@ -122,9 +122,11 @@ import {
   removeMaterial
 } from "@/services/materialService";
 import { getCourseByMaterial } from "@/services/courseService";
+import { getCourseToken } from "@/services/firebaseStorageService";
 
 import firebase from "firebase/app";
 import "firebase/storage";
+import "firebase/auth";
 
 export default {
   data: () => ({
@@ -148,6 +150,8 @@ export default {
     try {
       this.material = await getMaterial(this.material_id);
       this.course = await getCourseByMaterial(this.material_id);
+      let { token } = await getCourseToken(this.course._id.$oid);
+      firebase.auth().signInWithCustomToken(token);
     } catch (error) {
       this.$root.$children[0].showMessage("Error", error.msg);
     }
@@ -186,7 +190,7 @@ export default {
       if (size <= 100) {
         let ref = firebase
           .storage()
-          .ref(`/material/${this.chatbot_id}/${this.material._id.$oid}`);
+          .ref(`/course/${this.course._id.$oid}/${this.material._id.$oid}`);
 
         let task = ref.put(this.image_file);
         task.on(
