@@ -24,9 +24,9 @@
 
 <script>
 export default {
-  props: ["links"],
+  props: ["links"], // {image: '', text: ''}
   data: () => ({
-    idx: 0
+    idx: 2
   })
 };
 </script>

@@ -37,9 +37,9 @@ function updateMaterialQuiz(id, quiz, quiz_type) {
   })
 }
 
-function updateMaterialImage(material) {
+function updateMaterialImage(id, image) {
   return fetch_post('updateMaterialImage', {
-    material
+    id, image
   })
 }
 
