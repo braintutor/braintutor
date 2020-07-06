@@ -5,26 +5,19 @@
     <!-- Categories -->
     <div v-show="!category" class="container">
       <div class="row no-gutters">
-        <div class="col-6 col-sm-3 px-1">
-          <!-- Category -->
-          <section class="category" @click="selectCategory('explanation')">
+        <!-- Category -->
+        <div
+          v-for="([category, value], idx) in Object.entries(categories)"
+          :key="idx"
+          class="col-6 col-sm-3 px-1"
+        >
+          <section class="category" @click="selectCategory(category)">
             <img
               class="category__image"
               src="https://www.iconarchive.com/download/i94273/bokehlicia/captiva/accessories-text-editor.ico"
               alt
             />
-            <span class="category__name">{{categories['explanation']}}</span>
-          </section>
-        </div>
-        <div class="col-6 col-sm-3 px-1">
-          <!-- Category -->
-          <section class="category" @click="selectCategory('movies')">
-            <img
-              class="category__image"
-              src="https://www.iconarchive.com/download/i94273/bokehlicia/captiva/accessories-text-editor.ico"
-              alt
-            />
-            <span class="category__name">{{categories['movies']}}</span>
+            <span class="category__name">{{value.name}}</span>
           </section>
         </div>
       </div>
@@ -33,17 +26,15 @@
     <!-- CategoryEditor -->
     <section v-if="category" class="editor">
       <div class="editor__menu">
-        <div style="display: flex; align-items: center">
-          <v-btn @click="category = null" icon small>
-            <v-icon style="font-size: 1.4rem">mdi-arrow-left</v-icon>
-          </v-btn>
-          <span class="editor__title">{{categories[category]}}</span>
-        </div>
-        <v-btn @click="save()" small rounded text>
-          <v-icon class="mr-2" small>mdi-content-save</v-icon>Guardar
+        <v-btn @click="category = null" icon small>
+          <v-icon style="font-size: 1.4rem">mdi-arrow-left</v-icon>
         </v-btn>
+        <span class="editor__title">{{categories[category].name}}</span>
       </div>
-      <TextEditor ref="text-editor" class="m-card" :data="material[category]" />
+      <!-- Exercises -->
+      <QuizEditor v-if="category === 'exercises'" :data="material[category]" @submit="save" />
+      <!-- Default -->
+      <TextEditor v-else class="m-card" :data="material[category]" @submit="save" />
     </section>
   </div>
 </template>
@@ -51,6 +42,7 @@
 <script>
 import loading from "@/components/loading";
 import TextEditor from "@/components/globals/TextEditor";
+import QuizEditor from "@/components/globals/QuizEditor";
 
 import { updateMaterialCategory } from "@/services/materialService";
 
@@ -59,8 +51,30 @@ export default {
   data: () => ({
     category: null,
     categories: {
-      explanation: "Explicación",
-      movies: "Videos"
+      overview: {
+        name: "Resumen"
+      },
+      explanation: {
+        name: "Explicación"
+      },
+      hyperlinks: {
+        name: "Enlaces"
+      },
+      examples: {
+        name: "Ejemplos"
+      },
+      exercises: {
+        name: "Ejercicios"
+      },
+      movies: {
+        name: "Videos"
+      },
+      images: {
+        name: "Imágenes"
+      },
+      faq: {
+        name: "Preguntas Frecuentes"
+      }
     },
     //
     loading: false,
@@ -70,13 +84,12 @@ export default {
     selectCategory(category) {
       this.category = category;
     },
-    async save() {
+    async save(data) {
       this.loading = true;
       this.loading_msg = "Guardando";
 
       let material_id = this.material._id.$oid;
       let category = this.category;
-      let data = await this.$refs["text-editor"].getData();
 
       try {
         await updateMaterialCategory(material_id, category, data);
@@ -90,7 +103,8 @@ export default {
   },
   components: {
     loading,
-    TextEditor
+    TextEditor,
+    QuizEditor
   }
 };
 </script>
@@ -99,6 +113,7 @@ export default {
 .category {
   padding: 10px;
   border-radius: 20px;
+  text-align: center;
   transition: 0.5s;
   cursor: pointer;
 
@@ -127,7 +142,6 @@ export default {
     margin-bottom: 12px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
   }
   &__title {
     margin-top: 1px;

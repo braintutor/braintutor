@@ -1,5 +1,11 @@
 <template>
   <div class="pa-2">
+    <div class="menu">
+      <v-btn @click="submit" small rounded text>
+        <v-icon class="mr-2" small>mdi-content-save</v-icon>Guardar
+      </v-btn>
+    </div>
+
     <div id="text-editor"></div>
   </div>
 </template>
@@ -40,14 +46,18 @@ export default {
         data
       });
     },
-    async getData() {
+    async submit() {
       let outputData = await this.editor.save();
       let data = JSON.stringify(outputData);
-      return data;
+      this.$emit("submit", data);
     }
   }
 };
 </script>
 
 <style lang='scss' scoped>
+.menu {
+  display: flex;
+  justify-content: flex-end;
+}
 </style>
