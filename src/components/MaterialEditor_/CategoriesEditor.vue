@@ -132,7 +132,7 @@ export default {
     max-width: 50%;
   }
   &__name {
-    margin-top: 8px;
+    margin-top: 6px;
     font-weight: bold;
   }
 }

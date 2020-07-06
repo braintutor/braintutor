@@ -26,46 +26,43 @@
           hide-details
         ></v-textarea>
         <p v-else class="mb-3">{{d.question}}</p>
-        <!-- ALTERNATIVES -->
-        <div class="alternatives">
-          <!-- ALTERNATIVE -->
-          <div v-for="(alternative, a_idx) in d.alternatives" :key="a_idx" class="alternative mt-2">
-            <input type="radio" v-model="d.correct" :value="a_idx" :disabled="!edit" class="mr-2" />
-            <v-textarea
-              v-model="d.alternatives[a_idx]"
-              :disabled="!edit"
-              rows="1"
-              append.click
-              auto-grow
-              filled
-              rounded
-              dense
-              hide-details
-            ></v-textarea>
-            <v-btn
-              v-if="edit && d.alternatives.length > 2"
-              @click="remove(d.alternatives, a_idx)"
-              class="ml-2"
-              small
-              icon
-            >
-              <v-icon small>mdi-close</v-icon>
-            </v-btn>
-          </div>
-          <!-- ALTERNATIVE ADD -->
-          <div v-if="edit" class="alternative">
-            <input type="radio" style="pointer-events: none; opacity: 0" class="mr-2" />
-            <div @click="addAlternative(d.alternatives)" class="alternative--add mt-2">+</div>
-            <v-btn
-              v-if="d.alternatives.length > 2"
-              class="ml-2"
-              style="pointer-events: none; opacity: 0"
-              small
-              icon
-            >
-              <v-icon small>mdi-close</v-icon>
-            </v-btn>
-          </div>
+        <!-- ALTERNATIVE -->
+        <div v-for="(alternative, a_idx) in d.alternatives" :key="a_idx" class="alternative mt-2">
+          <input type="radio" v-model="d.correct" :value="a_idx" :disabled="!edit" class="mr-2" />
+          <v-textarea
+            v-model="d.alternatives[a_idx]"
+            :disabled="!edit"
+            rows="1"
+            append.click
+            auto-grow
+            filled
+            rounded
+            dense
+            hide-details
+          ></v-textarea>
+          <v-btn
+            v-if="edit && d.alternatives.length > 2"
+            @click="remove(d.alternatives, a_idx)"
+            class="ml-2"
+            small
+            icon
+          >
+            <v-icon small>mdi-close</v-icon>
+          </v-btn>
+        </div>
+        <!-- ALTERNATIVE ADD -->
+        <div v-if="edit" class="alternative">
+          <input type="radio" style="pointer-events: none; opacity: 0" class="mr-2" />
+          <div @click="addAlternative(d.alternatives)" class="alternative--add mt-2">+</div>
+          <v-btn
+            v-if="d.alternatives.length > 2"
+            class="ml-2"
+            style="pointer-events: none; opacity: 0"
+            small
+            icon
+          >
+            <v-icon small>mdi-close</v-icon>
+          </v-btn>
         </div>
       </section>
       <!-- QUESTION MENU -->
@@ -170,9 +167,6 @@ export default {
       background: #f5f5f5;
     }
   }
-}
-
-.alternatives {
 }
 
 .alternative {
