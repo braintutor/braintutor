@@ -19,9 +19,9 @@ function addMaterial(chatbot_id, material) {
   })
 }
 
-function updateMaterial(material) {
-  return fetch_post('updateMaterial', {
-    material
+function updateMaterialCategory(material_id, category, data) {
+  return fetch_post('updateMaterialCategory', {
+    material_id, category, data
   })
 }
 
@@ -49,4 +49,13 @@ function removeMaterial(material_id) {
   })
 }
 
-export { getMaterial, getMaterials, addMaterial, updateMaterial, updateMaterialName, updateMaterialImage, updateMaterialQuiz, removeMaterial }
+export {
+  getMaterial,
+  getMaterials,
+  addMaterial,
+  updateMaterialCategory,
+  updateMaterialName,
+  updateMaterialImage,
+  updateMaterialQuiz,
+  removeMaterial
+}

@@ -1,17 +1,32 @@
 <template>
-  <div>
+  <div class="px-2">
     <loading :active="loading" :message="loading_msg" />
 
     <h1 class="m-title">Configuración</h1>
     <section class="form">
-      <span class="mt-1">Nombre:</span>
-      <v-text-field style="font-size: .95rem" v-model="material.name" hide-details dense></v-text-field>
-      <span class="mt-1">Imagen:</span>
+      <!-- Name -->
+      <strong class="mt-1">Nombre:</strong>
+      <v-text-field
+        v-if="show_edit"
+        style="font-size: .95rem"
+        v-model="material.name"
+        hide-details
+        dense
+      ></v-text-field>
+      <span class="mt-1" v-else>{{material.name}}</span>
+      <v-btn v-if="show_edit" @click="saveName()" icon small>
+        <v-icon style="font-size: 1.4rem">mdi-content-save</v-icon>
+      </v-btn>
+      <v-btn v-else @click="show_edit = true" icon small>
+        <v-icon style="font-size: 1.4rem">mdi-pencil</v-icon>
+      </v-btn>
+      <!-- Image -->
+      <strong class="mt-1">Imagen:</strong>
       <div>
-        <v-btn onclick="upload_image.click()" small rounded>
+        <v-btn onclick="upload_image.click()" text outlined small rounded>
           <v-icon class="mr-2" small>mdi-upload</v-icon>Archivo
         </v-btn>
-        <v-btn @click="image_url = ''; dlg_url = true" class="ml-2" small rounded>
+        <v-btn @click="image_url = ''; dlg_url = true" class="ml-2" text outlined small rounded>
           <v-icon class="mr-2" small>mdi-link</v-icon>URL
         </v-btn>
         <v-file-input
@@ -27,12 +42,18 @@
     <img class="image" :src="material.image" alt />
 
     <!-- dlg url -->
-    <v-dialog v-model="dlg_url" max-width="400px" persistent>
-      <v-card>
-        <v-card-text class="pa-3">
-          <v-text-field style="font-size: .95rem" v-model="image_url" hide-details dense></v-text-field>
+    <v-dialog v-model="dlg_url" max-width="450px" persistent>
+      <v-card class="pa-1">
+        <v-card-text class="py-2 px-3">
+          <v-text-field
+            style="font-size: .95rem"
+            v-model="image_url"
+            placeholder="URL"
+            hide-details
+            dense
+          ></v-text-field>
         </v-card-text>
-        <v-card-actions style="width: min-content; margin: 0 auto">
+        <v-card-actions class="pt-3" style="width: min-content; margin: 0 auto">
           <v-btn @click="dlg_url = false" text small>Cerrar</v-btn>
           <v-btn @click="dlg_url = false; saveImage()" color="primary" small>Guardar</v-btn>
         </v-card-actions>
@@ -44,7 +65,10 @@
 <script>
 import loading from "@/components/loading";
 
-import { updateMaterialImage } from "@/services/materialService";
+import {
+  updateMaterialName,
+  updateMaterialImage
+} from "@/services/materialService";
 import firebase from "firebase/app";
 import "firebase/storage";
 
@@ -54,11 +78,27 @@ export default {
     image_file: null,
     image_url: "",
     dlg_url: false,
+    show_edit: false,
     //
     loading: false,
     loading_msg: ""
   }),
   methods: {
+    async saveName() {
+      this.loading = true;
+      this.loading_msg = "Guardando";
+
+      let material_id = this.material._id.$oid;
+      let name = this.material.name;
+      try {
+        await updateMaterialName(material_id, name);
+        this.show_edit = false;
+      } catch (error) {
+        this.$root.$children[0].showMessage("Error", error.msg);
+      }
+
+      this.loading = false;
+    },
     async saveImage() {
       this.loading = true;
       this.loading_msg = "Guardando Imagen";
@@ -94,7 +134,6 @@ export default {
             this.loading = false;
           },
           () => {
-            this.loading = false;
             task.snapshot.ref.getDownloadURL().then(async url => {
               this.image_url = url;
               this.saveImage();
@@ -118,22 +157,24 @@ export default {
 <style lang='scss' scoped>
 .m-title {
   margin: 0;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
 }
 
 .form {
-  margin: 20px 0;
+  margin: 16px 0;
 
   display: grid;
-  grid-template-columns: auto 1fr;
-  row-gap: 16px;
+  grid-template-columns: auto 1fr auto;
+  row-gap: 12px;
   column-gap: 16px;
   align-items: flex-start;
 }
 
 .image {
   display: block;
-  max-width: 500px;
-  margin: 0 auto;
+  width: 400px;
+  max-width: 100%;
+  margin: 20px auto;
+  border-radius: 8px;
 }
 </style>

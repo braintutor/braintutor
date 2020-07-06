@@ -3,9 +3,9 @@
     <AppSidebar :links="links">
       <loading :active="loading" :message="loading_msg" />
 
-      <CategoriesEditor :slot="0" :material="material" />
-      <div :slot="1">Pruebas</div>
-      <MaterialSettings :slot="2" :material="material" :course='course' />
+      <MaterialSettings :slot="0" :material="material" :course="course" />
+      <CategoriesEditor :slot="1" :material="material" />
+      <QuizzesEditor :slot="2" :material="material" />
     </AppSidebar>
   </div>
 </template>
@@ -13,8 +13,9 @@
 <script>
 import loading from "@/components/loading";
 import AppSidebar from "@/components/AppSidebar";
-import CategoriesEditor from "@/components/MaterialEditor_/CategoriesEditor";
 import MaterialSettings from "@/components/MaterialEditor_/MaterialSettings";
+import CategoriesEditor from "@/components/MaterialEditor_/CategoriesEditor";
+import QuizzesEditor from "@/components/MaterialEditor_/QuizzesEditor";
 
 import { getParam } from "@/services/router.js";
 import { getMaterial } from "@/services/materialService";
@@ -28,16 +29,16 @@ export default {
   data: () => ({
     links: [
       {
+        image: require("@/assets/braintutor/icon-settings.png"),
+        text: "Configuración"
+      },
+      {
         image: require("@/assets/braintutor/icon-material.png"),
         text: "Material"
       },
       {
         image: require("@/assets/braintutor/icon-quiz.png"),
         text: "Pruebas"
-      },
-      {
-        image: require("@/assets/braintutor/icon-settings.png"),
-        text: "Configuración"
       }
     ],
     material_id: "",
@@ -66,8 +67,9 @@ export default {
   components: {
     loading,
     AppSidebar,
+    MaterialSettings,
     CategoriesEditor,
-    MaterialSettings
+    QuizzesEditor
   }
 };
 </script>
