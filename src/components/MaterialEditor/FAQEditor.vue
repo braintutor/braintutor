@@ -1,8 +1,11 @@
 <template>
   <section class="editor">
     <div class="editor__menu">
-      <v-btn v-if="show_edit" @click="show_edit = false; $emit('submit', data)" text small rounded>
+      <v-btn v-if="show_edit" @click="$emit('submit', data)" text small rounded>
         <v-icon class="mr-2" small>mdi-content-save</v-icon>Guardar
+      </v-btn>
+      <v-btn v-if="show_edit" @click="show_edit = false; $emit('submit', data)" text small rounded>
+        <v-icon class="mr-2" small>mdi-close</v-icon>Finalizar
       </v-btn>
       <v-btn v-else @click="show_edit = true" text small rounded>
         <v-icon class="mr-2" small>mdi-pencil</v-icon>Editar
