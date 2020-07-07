@@ -16,6 +16,8 @@
         <div v-show="category_selected == 'movies'" id="movies-editor" class="category"></div>
         <!-- Category Images -->
         <div v-show="category_selected == 'images'" id="images-editor" class="category"></div>
+        <!-- Category Hyperlinks -->
+        <div v-show="category_selected == 'hyperlinks'" id="hyperlinks-editor" class="category"></div>
         <!-- Category Bullets -->
         <div v-if="category_selected == 'bullets'" class="category category-text">
           <div class="category-text-menu">
@@ -28,20 +30,6 @@
           >
             <v-icon class="mr-3">mdi-circle-medium</v-icon>
             <div>{{bullet}}</div>
-          </div>
-        </div>
-        <!-- Category Hyperlinks -->
-        <div v-if="category_selected == 'hyperlinks'" class="category category-text">
-          <div class="category-text-menu">
-            <div class="category-text-title">Más información</div>
-          </div>
-          <div
-            v-for="(hyperlink, f_idx) in material[category_selected]"
-            :key="f_idx"
-            class="category-text-content"
-          >
-            <v-icon class="mr-3">mdi-circle-medium</v-icon>
-            <a :href="hyperlink.link" target="_blank">{{hyperlink.name}}</a>
           </div>
         </div>
         <!-- Category Exercises -->
@@ -103,6 +91,7 @@ import List from "@editorjs/list";
 import SimpleImage from "@editorjs/simple-image";
 import Marker from "@editorjs/marker";
 import Embed from "@editorjs/embed";
+import LinkTool from "@editorjs/link";
 
 import Exercises from "./Exercises";
 import Quizzes from "./Quizzes";
@@ -120,19 +109,29 @@ export default {
     editors: {}
   }),
   mounted() {
-    ["explanation", "examples", "movies", "images"].forEach(category => {
-      this.editors[category] = new EditorJS({
-        holderId: `${category}-editor`,
-        tools: {
-          header: Header,
-          list: List,
-          image: SimpleImage,
-          marker: Marker,
-          embed: Embed
-        },
-        data: JSON.parse(this.material[category])
-      });
-    });
+    ["explanation", "examples", "movies", "images", "hyperlinks"].forEach(
+      category => {
+        this.editors[category] = new EditorJS({
+          holderId: `${category}-editor`,
+          tools: {
+            header: Header,
+            list: List,
+            image: SimpleImage,
+            marker: Marker,
+            embed: Embed,
+            linkTool: {
+              class: LinkTool,
+              config: {
+                // endpoint: "http://localhost:5000/getLinkPreview"
+                endpoint:
+                  "https://braintutor-service-v2.herokuapp.com/getLinkPreview"
+              }
+            }
+          },
+          data: JSON.parse(this.material[category])
+        });
+      }
+    );
     // this.material.movies = this.material.movies.map(movie => getEmbed(movie));
   },
   computed: {
@@ -286,6 +285,9 @@ export default {
   pointer-events: none;
 }
 #movies-editor {
+  pointer-events: all !important;
+}
+#hyperlinks-editor {
   pointer-events: all !important;
 }
 </style>

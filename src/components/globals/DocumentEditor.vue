@@ -17,6 +17,7 @@ import List from "@editorjs/list";
 import SimpleImage from "@editorjs/simple-image";
 import Marker from "@editorjs/marker";
 import Embed from "@editorjs/embed";
+import LinkTool from "@editorjs/link";
 
 export default {
   props: ["data"],
@@ -41,7 +42,15 @@ export default {
           list: List,
           image: SimpleImage,
           marker: Marker,
-          embed: Embed
+          embed: Embed,
+          linkTool: {
+            class: LinkTool,
+            config: {
+              // endpoint: "http://localhost:5000/getLinkPreview"
+              endpoint:
+                "https://braintutor-service-v2.herokuapp.com/getLinkPreview"
+            }
+          }
         },
         data
       });
