@@ -13,15 +13,15 @@
         <thead>
           <tr>
             <th class="text-left">Nombre</th>
-            <th class="text-center">Alumnos</th>
+            <!-- <th class="text-center">Alumnos</th> -->
             <th class="text-center">Acción</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(entity, e_idx) in entities" :key="e_idx">
             <td>{{ entity.name }}</td>
-            <td class="text-center" v-if="!entity.students">0</td>
-            <td class="text-center" v-else>{{ entity.students.length }}</td>
+            <!-- <td class="text-center" v-if="!entity.students">0</td>
+            <td class="text-center" v-else>{{ entity.students.length }}</td>-->
             <td class="text-center">
               <v-btn small icon @click="dialog_edit = true; edit(entity)">
                 <v-icon>mdi-pencil</v-icon>
@@ -82,7 +82,7 @@ import {
   updateClassroom,
   removeClassroom
 } from "@/services/classroomService";
-import { getStudentsByClassroom } from "@/services/studentService";
+// import { getStudentsByClassroom } from "@/services/studentService";
 
 export default {
   data: () => ({
@@ -100,9 +100,9 @@ export default {
     this.loading_msg = "Cargando Aulas";
     this.entities = await getClassroomsBySchool();
     this.entities.sort((a, b) => a.name.localeCompare(b.name));
-    for (let entity of this.entities) {
-      entity.students = await getStudentsByClassroom(entity._id.$oid);
-    }
+    // for (let entity of this.entities) {
+    //   entity.students = await getStudentsByClassroom(entity._id.$oid);
+    // }
     this.loading = false;
   },
   methods: {

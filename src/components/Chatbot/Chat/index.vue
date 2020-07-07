@@ -94,11 +94,6 @@ export default {
         text: "Ver información"
       },
       {
-        category: "bullets",
-        icon: "",
-        text: "Ver información"
-      },
-      {
         category: "hyperlinks",
         icon: "",
         text: "Ver enlaces"

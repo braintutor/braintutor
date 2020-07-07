@@ -58,7 +58,7 @@
           </tr>
         </tbody>
       </table>
-      <p class="text-center mt-2" v-show="entities_filtered.length === 0">No hay alumnos.</p>
+      <p class="text-center mt-2" v-show="entities_filtered.length === 0">No hay alumnos</p>
     </div>
 
     <!-- CREATE | EDIT -->

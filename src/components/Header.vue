@@ -138,7 +138,7 @@ export default {
     roles: {
       ADM: "ADMINISTRADOR",
       TEA: "PROFESOR",
-      EST: "ESTUDIANTE",
+      STU: "ESTUDIANTE",
       DIR: "DIRECTOR",
       PAR: "PADRE"
     },

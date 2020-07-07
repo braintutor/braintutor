@@ -18,20 +18,6 @@
         <div v-show="category_selected == 'images'" id="images-editor" class="category"></div>
         <!-- Category Hyperlinks -->
         <div v-show="category_selected == 'hyperlinks'" id="hyperlinks-editor" class="category"></div>
-        <!-- Category Bullets -->
-        <div v-if="category_selected == 'bullets'" class="category category-text">
-          <div class="category-text-menu">
-            <div class="category-text-title">{{material.name}}</div>
-          </div>
-          <div
-            v-for="(bullet, e_idx) in material[category_selected]"
-            :key="e_idx"
-            class="category-text-content"
-          >
-            <v-icon class="mr-3">mdi-circle-medium</v-icon>
-            <div>{{bullet}}</div>
-          </div>
-        </div>
         <!-- Category Exercises -->
         <Exercises
           class="category category-text"

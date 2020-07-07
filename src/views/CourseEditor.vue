@@ -297,7 +297,6 @@ export default {
         overview: "Resumen",
         explanation,
         movies,
-        bullets: ["Punto 1", "Punto 2"],
         hyperlinks: [
           { name: "Enlace 1", link: "" },
           { name: "Enlace 2", link: "" }
