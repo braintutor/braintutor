@@ -54,42 +54,35 @@ export default {
     categories: {
       overview: {
         name: "Resumen",
-        image:
-          "https://www.iconarchive.com/download/i94273/bokehlicia/captiva/accessories-text-editor.ico"
+        image: require('@/assets/material/overview.png')
       },
       explanation: {
         name: "Explicación",
-        image:
-          "https://www.iconarchive.com/download/i94273/bokehlicia/captiva/accessories-text-editor.ico"
-      },
-      hyperlinks: {
-        name: "Enlaces",
-        image:
-          "https://www.iconarchive.com/download/i94273/bokehlicia/captiva/accessories-text-editor.ico"
-      },
-      examples: {
-        name: "Ejemplos",
-        image:
-          "https://www.iconarchive.com/download/i94273/bokehlicia/captiva/accessories-text-editor.ico"
-      },
-      exercises: {
-        name: "Ejercicios",
-        image:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRkmq45_2g0hGqOCas-drdv6s0eBmhrNe8vFA&usqp=CAU"
+        image: require('@/assets/material/explanation.png')
       },
       movies: {
         name: "Videos",
-        image:
-          "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/movie-alt2-512.png"
+        image: require('@/assets/material/movies.png')
       },
       images: {
         name: "Imágenes",
-        image:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSdqsOutCbiXqw52hFLOULGtMDOsMwNrLelpw&usqp=CAU"
+        image: require('@/assets/material/images.png')
+      },
+      examples: {
+        name: "Ejemplos",
+        image: require('@/assets/material/examples.png')
+      },
+      exercises: {
+        name: "Ejercicios",
+        image: require('@/assets/material/exercises.png')
       },
       faq: {
         name: "Preguntas Frecuentes",
-        image: "https://designvillage.ch/wp-content/uploads/2019/05/faq.png"
+        image: require('@/assets/material/faq.png')
+      },
+      hyperlinks: {
+        name: "Enlaces",
+        image: require('@/assets/material/hyperlinks.png')
       }
     },
     //

@@ -145,7 +145,7 @@
       </div>
     </div>
     <!-- DIALOG FILES -->
-    <v-dialog v-model="dialog_files" persistent max-width="1200">
+    <v-dialog v-model="dialog_files" max-width="1200" persistent>
       <v-card class="files">
         <h3 class="files__title">
           Archivos en Google Drive
@@ -175,12 +175,13 @@
       </v-card>
     </v-dialog>
     <!-- DIALOG LINK -->
-    <v-dialog v-model="dialog_link" max-width="400">
-      <v-card class="pt-3">
-        <v-card-text>
+    <v-dialog v-model="dialog_link" max-width="500" persistent>
+      <v-card>
+        <v-card-text class="pt-2 pb-3">
           <v-text-field v-model="link" label="Vínculo"></v-text-field>
-          <div style="width: min-content; margin: 0 auto">
-            <v-btn color="primary" small @click="dialog_link = false; addLink()">Agregar</v-btn>
+          <div style="width: max-content; margin: 0 auto">
+            <v-btn @click="dialog_link = false" class="mr-2" small text>Cerrar</v-btn>
+            <v-btn @click="dialog_link = false; addLink()" color="primary" small depressed>Agregar</v-btn>
           </div>
         </v-card-text>
       </v-card>
@@ -193,7 +194,7 @@
         </v-card-text>
         <v-card-actions style="width: max-content; margin: 0 auto">
           <v-btn small text @click="dialog_remove = false">Cancelar</v-btn>
-          <v-btn color="primary" small @click="dialog_remove = false; remove()">Continuar</v-btn>
+          <v-btn color="primary" small @click="dialog_remove = false; remove()" depressed>Continuar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -233,10 +234,14 @@ export default {
     try {
       this.task_id = getParam("task_id");
       this.task = await getTaskByStudent(this.task_id);
+
       this.answer = {
         ...this.task.answer,
         data: this.task.answer.data || []
       };
+      this.task.time_start_f = new Date(this.task.time_start).toLocaleString(
+        "es-ES"
+      );
     } catch (error) {
       redirect("sessions-student");
     }
@@ -304,13 +309,22 @@ export default {
       this.loading = true;
       this.loading_msg = "Añadiendo Vínculo";
       try {
+        // let res = await fetch(
+        //   `https://api.linkpreview.net/?key=2b589ffa30e00a45f2b349fff781eb99&q=${this.link}`
+        // );
         let res = await fetch(
-          `https://api.linkpreview.net/?key=2b589ffa30e00a45f2b349fff781eb99&q=${this.link}`
+          `https://braintutor-service-v2.herokuapp.com/getLinkPreview?url=${this.link}`
         );
         if (res.status >= 400 && res.status < 600) throw "Vínculo inválido.";
-        let data = await res.json();
-        data.type = "link";
-        data.url = this.link;
+
+        let { meta } = await res.json();
+        let data = {
+          type: "link",
+          url: this.link,
+          image: meta.image.url,
+          title: meta.title,
+          description: meta.description
+        };
         this.answer.data.push(data);
 
         await this.save();

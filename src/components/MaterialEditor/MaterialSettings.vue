@@ -98,7 +98,7 @@ import firebase from "firebase/app";
 import "firebase/storage";
 
 export default {
-  props: ["material", "course"],
+  props: ["material", "course", "signInFirebase"],
   data: () => ({
     image_file: null,
     image_url: "",
@@ -142,30 +142,37 @@ export default {
     async onFileSelected() {
       let size = (this.image_file.size / 1024).toFixed(2);
       if (size <= 100) {
-        let ref = firebase
-          .storage()
-          .ref(`/course/${this.course._id.$oid}/${this.material._id.$oid}`);
+        this.loading = true;
+        this.loading_msg = "Subiendo Archivo";
+        try {
+          // Get Firebase Token
+          await this.signInFirebase();
+          // Upload File
+          let task = firebase
+            .storage()
+            .ref(`/course/${this.course._id.$oid}/${this.material._id.$oid}`)
+            .put(this.image_file);
+          task.on(
+            "state_changed",
+            snapshot => {
+              let image_progress =
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
 
-        let task = ref.put(this.image_file);
-        task.on(
-          "state_changed",
-          snapshot => {
-            let image_progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-
-            this.loading = true;
-            this.loading_msg = `Subiendo Archivo (${image_progress}%)`;
-          },
-          () => {
-            this.loading = false;
-          },
-          () => {
-            task.snapshot.ref.getDownloadURL().then(async url => {
-              this.image_url = url;
-              this.saveImage();
-            });
-          }
-        );
+              this.loading = true;
+              this.loading_msg = `Subiendo Archivo (${image_progress}%)`;
+            },
+            () => {
+              this.loading = false;
+            },
+            async () => {
+              this.image_url = await task.snapshot.ref.getDownloadURL();
+              await this.saveImage();
+            }
+          );
+        } catch (error) {
+          this.$root.$children[0].showMessage("Error", error.msg);
+        }
+        this.loading = false;
       } else {
         this.$root.$children[0].showMessage(
           "",
