@@ -14,7 +14,7 @@
       </v-btn>
     </div>
     <!-- QUESTION -->
-    <div v-for="(d, d_idx) in data" :key="d_idx" class="question mt-4">
+    <div v-for="(d, d_idx) in data" :key="d_idx" class="question mt-3">
       <section class="question__body m-card pa-3">
         <v-textarea
           v-if="edit"

@@ -57,6 +57,7 @@ export default {
 
 <style lang='scss' scoped>
 .menu {
+  padding: 0;
   display: flex;
   justify-content: flex-end;
 }

@@ -8,17 +8,14 @@
     </div>
     <div class="m-fullscreen-content">
       <div class="material-content">
-        <!-- Category Overview -->
-        <!-- <div
-          v-show="category_selected == 'overview'"
-          class="category category-text"
-        >{{material.overview}}</div>-->
         <!-- Category Explanation -->
         <div v-show="category_selected == 'explanation'" id="explanation-editor" class="category"></div>
         <!-- Category Examples -->
         <div v-show="category_selected == 'examples'" id="examples-editor" class="category"></div>
         <!-- Category Movies -->
         <div v-show="category_selected == 'movies'" id="movies-editor" class="category"></div>
+        <!-- Category Images -->
+        <div v-show="category_selected == 'images'" id="images-editor" class="category"></div>
         <!-- Category Bullets -->
         <div v-if="category_selected == 'bullets'" class="category category-text">
           <div class="category-text-menu">
@@ -54,16 +51,6 @@
           :exercises="material[category_selected]"
           :talk="text => {startTalk(text)}"
         />
-        <!-- Category Images -->
-        <div v-if="category_selected == 'images'">
-          <div
-            v-for="(image, i_idx) in material[category_selected]"
-            :key="i_idx"
-            class="category category-image"
-          >
-            <img :src="image" />
-          </div>
-        </div>
         <!-- Category FAQ -->
         <div v-if="category_selected == 'faq'">
           <div
@@ -133,7 +120,7 @@ export default {
     editors: {}
   }),
   mounted() {
-    ["explanation", "examples", "movies"].forEach(category => {
+    ["explanation", "examples", "movies", "images"].forEach(category => {
       this.editors[category] = new EditorJS({
         holderId: `${category}-editor`,
         tools: {
@@ -168,11 +155,8 @@ export default {
 };
 </script>
 
-<style lang='scss'>
+<style lang='scss' scoped>
 @import "@/styles/box-shadow.scss";
-.material-content .codex-editor__redactor {
-  margin-right: 0 !important;
-}
 
 .material-container {
   position: relative;

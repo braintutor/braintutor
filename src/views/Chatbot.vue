@@ -129,17 +129,8 @@ export default {
     border-right: 1px solid #eee;
   }
 }
-.services-action-bot {
-  display: none;
-  img {
-    border-radius: 10px;
-  }
-}
 
 @media only screen and (max-width: 955px) {
-  .services-action-bot {
-    display: block;
-  }
   .chatbot-container {
     height: calc(100vh - 57px);
     margin: 0;

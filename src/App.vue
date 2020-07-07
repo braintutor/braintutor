@@ -44,7 +44,7 @@ export default {
     // TIME
     setInterval(async () => {
       try {
-        if (this.user && this.user.role === 'STU') {
+        if (this.user && this.user.role === "STU") {
           await updateStudentTime();
         }
       } catch (error) {
@@ -177,5 +177,8 @@ textarea {
 }
 .cdx-input.embed-tool__caption {
   display: none;
+}
+.codex-editor__redactor {
+  margin-right: 0 !important;
 }
 </style>
