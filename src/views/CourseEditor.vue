@@ -472,6 +472,7 @@ export default {
     padding: 10px;
     margin: 0;
     font-size: 0.9rem;
+    white-space: pre-wrap;
   }
   &__menu {
     margin-left: 10px;

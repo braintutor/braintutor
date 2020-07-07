@@ -1,7 +1,6 @@
 <template>
   <div>
     <loading :active="loading" :message="loading_msg" />
-    <!-- <p>{{material}}</p> -->
     <!-- Categories -->
     <div v-show="!category" class="container">
       <div class="row no-gutters">
@@ -31,18 +30,21 @@
         </v-btn>
         <span class="editor__title">{{categories[category].name}}</span>
       </div>
+      <!-- Overview -->
+      <TextEditor v-if="category === 'overview'" :text="material[category]" @submit="save" />
       <!-- Exercises -->
-      <QuizEditor v-if="category === 'exercises'" :data="material[category]" @submit="save" />
+      <QuizEditor v-else-if="category === 'exercises'" :quiz="material[category]" @submit="save" />
       <!-- Default -->
-      <TextEditor v-else class="m-card" :data="material[category]" @submit="save" />
+      <DocumentEditor v-else class="m-card" :data="material[category]" @submit="save" />
     </section>
   </div>
 </template>
 
 <script>
 import loading from "@/components/loading";
-import TextEditor from "@/components/globals/TextEditor";
+import TextEditor from "./TextEditor";
 import QuizEditor from "@/components/globals/QuizEditor";
+import DocumentEditor from "@/components/globals/DocumentEditor";
 
 import { updateMaterialCategory } from "@/services/materialService";
 
@@ -92,10 +94,12 @@ export default {
       let category = this.category;
 
       try {
+        if ((data.length * 2) / 1000 > 500)
+          throw { msg: "Ha sobrepasado el exceso de tamaño." };
         await updateMaterialCategory(material_id, category, data);
         this.material[category] = data;
       } catch (error) {
-        this.$root.$children[0].showMessage("Error", error.msg);
+        this.$root.$children[0].showMessage("", error.msg);
       }
 
       this.loading = false;
@@ -104,7 +108,8 @@ export default {
   components: {
     loading,
     TextEditor,
-    QuizEditor
+    QuizEditor,
+    DocumentEditor
   }
 };
 </script>

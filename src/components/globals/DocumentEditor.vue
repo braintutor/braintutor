@@ -6,7 +6,7 @@
       </v-btn>
     </div>
 
-    <div id="text-editor"></div>
+    <div id="editor"></div>
   </div>
 </template>
 
@@ -24,10 +24,10 @@ export default {
     editor: null
   }),
   mounted() {
-    this.read();
+    this.create();
   },
   methods: {
-    read() {
+    create() {
       let data = {};
       try {
         data = JSON.parse(this.data);
@@ -35,7 +35,7 @@ export default {
         //
       }
       this.editor = new EditorJS({
-        holderId: "text-editor",
+        holderId: "editor",
         tools: {
           header: Header,
           list: List,

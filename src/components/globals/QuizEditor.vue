@@ -99,30 +99,49 @@
 
 <script>
 export default {
-  props: ["data"],
+  props: ["quiz"],
   data: () => ({
+    data: [],
     edit: false
   }),
+  watch: {
+    quiz() {
+      this.create();
+    }
+  },
+  mounted() {
+    this.create();
+  },
   methods: {
+    create() {
+      try {
+        this.data = JSON.parse(JSON.stringify(this.quiz));
+      } catch (error) {
+        this.data = [];
+      }
+    },
     addQuestion(arr) {
       arr.push({
         question: "Pregunta",
         alternatives: ["Alternativa", "Alternativa"],
         correct: 0
       });
+      this.$forceUpdate();
     },
     addAlternative(arr) {
       arr.push("Alternativa");
+      this.$forceUpdate();
     },
     remove(arr, idx) {
       arr.splice(idx, 1);
+      this.$forceUpdate();
     },
     moveUp(arr, idx) {
       if (idx > 0) {
         let aux = arr[idx];
         arr[idx] = arr[idx - 1];
         arr[idx - 1] = aux;
-        arr.splice();
+        this.$forceUpdate();
       }
     },
     moveDown(arr, idx) {
@@ -130,7 +149,7 @@ export default {
         let aux = arr[idx];
         arr[idx] = arr[idx + 1];
         arr[idx + 1] = aux;
-        arr.splice();
+        this.$forceUpdate();
       }
     }
   }

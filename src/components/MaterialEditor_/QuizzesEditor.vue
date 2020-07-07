@@ -32,13 +32,13 @@
     </section>
 
     <section v-show="show_type === 'BAS'" class="quiz">
-      <QuizEditor :data="getQuiz('BAS')" @submit="save($event, 'BAS')" />
+      <QuizEditor :quiz="getQuiz('BAS')" @submit="save" />
     </section>
     <section v-show="show_type === 'INT'" class="quiz">
-      <QuizEditor :data="getQuiz('INT')" @submit="save($event, 'INT')" />
+      <QuizEditor :quiz="getQuiz('INT')" @submit="save" />
     </section>
     <section v-show="show_type === 'ADV'" class="quiz">
-      <QuizEditor :data="getQuiz('ADV')" @submit="save($event, 'ADV')" />
+      <QuizEditor :quiz="getQuiz('ADV')" @submit="save" />
     </section>
   </div>
 </template>
@@ -61,11 +61,15 @@ export default {
       let quiz = (this.material.quizzes || {})[type] || [];
       return quiz;
     },
-    async save(data, type) {
+    async save(data) {
       this.loading = true;
       this.loading_msg = "Guardando";
+
+      let material_id = this.material._id.$oid;
+      let type = this.show_type;
       try {
-        await updateMaterialQuiz(this.material._id.$oid, data, type);
+        await updateMaterialQuiz(material_id, data, type);
+        this.material.quizzes[type] = data;
       } catch (error) {
         this.$root.$children[0].showMessage("Error", error.msg);
       }
