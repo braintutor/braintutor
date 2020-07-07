@@ -11,11 +11,7 @@
           class="col-6 col-sm-3 px-1"
         >
           <section class="category" @click="selectCategory(category)">
-            <img
-              class="category__image"
-              src="https://www.iconarchive.com/download/i94273/bokehlicia/captiva/accessories-text-editor.ico"
-              alt
-            />
+            <img class="category__image" :src="value.image" alt />
             <span class="category__name">{{value.name}}</span>
           </section>
         </div>
@@ -57,28 +53,43 @@ export default {
     category: null,
     categories: {
       overview: {
-        name: "Resumen"
+        name: "Resumen",
+        image:
+          "https://www.iconarchive.com/download/i94273/bokehlicia/captiva/accessories-text-editor.ico"
       },
       explanation: {
-        name: "Explicación"
+        name: "Explicación",
+        image:
+          "https://www.iconarchive.com/download/i94273/bokehlicia/captiva/accessories-text-editor.ico"
       },
       hyperlinks: {
-        name: "Enlaces"
+        name: "Enlaces",
+        image:
+          "https://www.iconarchive.com/download/i94273/bokehlicia/captiva/accessories-text-editor.ico"
       },
       examples: {
-        name: "Ejemplos"
+        name: "Ejemplos",
+        image:
+          "https://www.iconarchive.com/download/i94273/bokehlicia/captiva/accessories-text-editor.ico"
       },
       exercises: {
-        name: "Ejercicios"
+        name: "Ejercicios",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRkmq45_2g0hGqOCas-drdv6s0eBmhrNe8vFA&usqp=CAU"
       },
       movies: {
-        name: "Videos"
+        name: "Videos",
+        image:
+          "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/movie-alt2-512.png"
       },
       images: {
-        name: "Imágenes"
+        name: "Imágenes",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSdqsOutCbiXqw52hFLOULGtMDOsMwNrLelpw&usqp=CAU"
       },
       faq: {
-        name: "Preguntas Frecuentes"
+        name: "Preguntas Frecuentes",
+        image: "https://designvillage.ch/wp-content/uploads/2019/05/faq.png"
       }
     },
     //
