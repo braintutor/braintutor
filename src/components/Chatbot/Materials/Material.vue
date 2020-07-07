@@ -95,7 +95,6 @@ import LinkTool from "@editorjs/link";
 
 import Exercises from "./Exercises";
 import Quizzes from "./Quizzes";
-// import { getEmbed } from "@/services/embed";
 
 export default {
   props: [
@@ -132,7 +131,6 @@ export default {
         });
       }
     );
-    // this.material.movies = this.material.movies.map(movie => getEmbed(movie));
   },
   computed: {
     component_avatar() {

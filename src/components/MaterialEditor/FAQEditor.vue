@@ -1,21 +1,27 @@
 <template>
   <section class="editor">
     <div class="editor__menu">
-      <v-btn @click="$emit('submit', data)" text small rounded>
+      <v-btn v-if="show_edit" @click="show_edit = false; $emit('submit', data)" text small rounded>
         <v-icon class="mr-2" small>mdi-content-save</v-icon>Guardar
+      </v-btn>
+      <v-btn v-else @click="show_edit = true" text small rounded>
+        <v-icon class="mr-2" small>mdi-pencil</v-icon>Editar
       </v-btn>
     </div>
     <!-- Questions -->
     <section v-for="(d, idx) in data" :key="idx" class="question">
       <div class="question__body m-card">
         <v-text-field
+          v-if="show_edit"
           style="font-size: 1rem; font-weight: bold"
           v-model="d.question"
           placeholder="Pregunta"
           hide-details
           dense
         />
+        <div style="font-size: 1rem; font-weight: bold" v-else>{{d.question}}</div>
         <v-textarea
+          v-if="show_edit"
           class="mt-3"
           style="font-size: .9rem"
           v-model="d.answer"
@@ -25,8 +31,9 @@
           rows="1"
           auto-grow
         />
+        <div class="mt-3" style="font-size: .9rem" v-else>{{d.answer}}</div>
       </div>
-      <v-menu offset-y>
+      <v-menu v-if="show_edit" offset-y>
         <template v-slot:activator="{ on, attrs }">
           <v-btn class="ml-2" v-bind="attrs" v-on="on" small icon>
             <v-icon style="font-size: 1.5rem">mdi-dots-vertical</v-icon>
@@ -46,7 +53,7 @@
       </v-menu>
     </section>
     <!-- Question Add -->
-    <section class="question">
+    <section v-if="show_edit" class="question">
       <div class="question--add" @click="addQuestion()">+</div>
       <v-btn style="pointer-events: none; opacity: 0" class="ml-2" icon small>
         <v-icon style="font-size: 1.5rem">mdi-plus</v-icon>
@@ -59,7 +66,8 @@
 export default {
   props: ["faq"],
   data: () => ({
-    data: ""
+    data: "",
+    show_edit: false
   }),
   mounted() {
     this.data = JSON.parse(JSON.stringify(this.faq));
