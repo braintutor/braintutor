@@ -24,7 +24,7 @@
           <tr v-for="(student, s_idx) in students" :key="s_idx">
             <td>{{student.first_name}}</td>
             <td>{{student.last_name}}</td>
-            <td>{{student.user}}</td>
+            <td>{{student.username}}</td>
             <td v-if="student.score != null">{{student.score}}</td>
             <td v-else>
               <span class="no-result">Sin realizar</span>
