@@ -262,8 +262,8 @@ export default {
     async createMaterial(chatbot) {
       let explanation = JSON.stringify({
         blocks: [
-          { type: "header", data: { text: "Título", level: 2 } },
-          { type: "paragraph", data: { text: "Descripción" } }
+          { type: "header", data: { text: "Título", level: 2 } }
+          // { type: "paragraph", data: { text: "Descripción" } }
         ]
       });
       let examples = JSON.stringify({
@@ -277,6 +277,12 @@ export default {
       });
       let movies = JSON.stringify({
         blocks: [{ type: "header", data: { text: "Videos", level: 2 } }]
+      });
+      let images = JSON.stringify({
+        blocks: [{ type: "header", data: { text: "Imágenes", level: 2 } }]
+      });
+      let hyperlinks = JSON.stringify({
+        blocks: [{ type: "header", data: { text: "Enlaces", level: 2 } }]
       });
       // Quizzes
       let quiz = [
@@ -297,28 +303,11 @@ export default {
         overview: "Resumen",
         explanation,
         movies,
-        hyperlinks: [
-          { name: "Enlace 1", link: "" },
-          { name: "Enlace 2", link: "" }
-        ],
+        images,
+        hyperlinks,
         examples,
-        exercises: [
-          {
-            question: "Pregunta 1",
-            alternatives: ["Alternativa 1", "Alternativa 2"],
-            correct: 0
-          },
-          {
-            question: "Pregunta 2",
-            alternatives: ["Alternativa 1", "Alternativa 2"],
-            correct: 0
-          }
-        ],
-        images: {},
-        faq: [
-          { question: "Pregunta 1", answer: "Respuesta" },
-          { question: "Pregunta 2", answer: "Respuesta" }
-        ],
+        exercises: quiz,
+        faq: [{ question: "Pregunta", answer: "Respuesta" }],
         quizzes
       };
 

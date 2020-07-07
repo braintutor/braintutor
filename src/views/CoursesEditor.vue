@@ -10,11 +10,11 @@
       >
         <Card :callback="() => edit(course)" color="#86bd98">
           <p class="card-item">{{course.name}}</p>
-          <div
+          <!-- <div
             class="card-value"
             v-for="(chatbot, ch_idx) in course.chatbots"
             :key="ch_idx"
-          >{{chatbot.name}}</div>
+          >{{chatbot.name}}</div>-->
         </Card>
       </div>
     </div>
@@ -26,7 +26,7 @@ import loading from "@/components/loading";
 import Card from "@/components/Card";
 
 import { getCoursesByTeacher } from "@/services/courseService";
-import { getChatbotsByCourse } from "@/services/chatbotService";
+// import { getChatbotsByCourse } from "@/services/chatbotService";
 import { redirect } from "@/services/router.js";
 
 export default {
@@ -38,11 +38,11 @@ export default {
   async mounted() {
     this.loading_message = "Cargando Cursos";
     this.courses = await getCoursesByTeacher();
-    this.loading_message = "Cargando Unidades";
-    for (let course of this.courses) {
-      let chatbots = await getChatbotsByCourse(course._id.$oid);
-      course.chatbots = chatbots;
-    }
+    // this.loading_message = "Cargando Unidades";
+    // for (let course of this.courses) {
+    //   let chatbots = await getChatbotsByCourse(course._id.$oid);
+    //   course.chatbots = chatbots;
+    // }
     this.loading = false;
   },
   methods: {
