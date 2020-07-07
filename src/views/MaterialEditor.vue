@@ -13,9 +13,9 @@
 <script>
 import loading from "@/components/loading";
 import AppSidebar from "@/components/AppSidebar";
-import MaterialSettings from "@/components/MaterialEditor_/MaterialSettings";
-import CategoriesEditor from "@/components/MaterialEditor_/CategoriesEditor";
-import QuizzesEditor from "@/components/MaterialEditor_/QuizzesEditor";
+import MaterialSettings from "@/components/MaterialEditor/MaterialSettings";
+import CategoriesEditor from "@/components/MaterialEditor/CategoriesEditor";
+import QuizzesEditor from "@/components/MaterialEditor/QuizzesEditor";
 
 import { getParam } from "@/services/router.js";
 import { getMaterial } from "@/services/materialService";

@@ -40,6 +40,10 @@
       </div>
     </section>
     <img class="image" :src="material.image" alt />
+    <!-- Actions -->
+    <div class="options">
+      <v-btn @click="dlg_remove = true" color="error" small>Eliminar Material</v-btn>
+    </div>
 
     <!-- dlg url -->
     <v-dialog v-model="dlg_url" max-width="450px" persistent>
@@ -55,7 +59,25 @@
         </v-card-text>
         <v-card-actions class="pt-3" style="width: min-content; margin: 0 auto">
           <v-btn @click="dlg_url = false" text small>Cerrar</v-btn>
-          <v-btn @click="dlg_url = false; saveImage()" color="primary" small>Guardar</v-btn>
+          <v-btn @click="dlg_url = false; saveImage()" color="primary" depressed small>Guardar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- dlg remove -->
+    <v-dialog v-model="dlg_remove" max-width="300">
+      <v-card>
+        <v-card-title>Confirmar eliminación</v-card-title>
+        <v-card-text>Si elimina este contenido, no podrá revertir los cambios.</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn small text @click="dlg_remove = false">Cancelar</v-btn>
+          <v-btn
+            small
+            depressed
+            color="error"
+            @click="dlg_remove = false; removeMaterial()"
+          >Eliminar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -65,10 +87,13 @@
 <script>
 import loading from "@/components/loading";
 
+import { redirect } from "@/services/router.js";
 import {
   updateMaterialName,
-  updateMaterialImage
+  updateMaterialImage,
+  removeMaterial
 } from "@/services/materialService";
+
 import firebase from "firebase/app";
 import "firebase/storage";
 
@@ -81,7 +106,8 @@ export default {
     show_edit: false,
     //
     loading: false,
-    loading_msg: ""
+    loading_msg: "",
+    dlg_remove: false
   }),
   methods: {
     async saveName() {
@@ -146,6 +172,21 @@ export default {
           "La imagen excede el tamaño permitido: 100KB"
         );
       }
+    },
+    async removeMaterial() {
+      this.loading = true;
+      this.loading_msg = "Eliminando";
+
+      let material_id = this.material._id.$oid;
+      let course_id = this.course._id.$oid;
+      try {
+        await removeMaterial(material_id);
+        redirect("course-editor", { course_id });
+      } catch (error) {
+        this.$root.$children[0].showMessage("Error", error.msg);
+      }
+
+      this.loading = false;
     }
   },
   components: {
@@ -156,16 +197,16 @@ export default {
 
 <style lang='scss' scoped>
 .m-title {
-  margin: 0;
+  margin: 8px 0;
   font-size: 1.6rem;
 }
 
 .form {
-  margin: 16px 0;
+  margin: 14px 0;
 
   display: grid;
   grid-template-columns: auto 1fr auto;
-  row-gap: 12px;
+  row-gap: 10px;
   column-gap: 16px;
   align-items: flex-start;
 }
@@ -176,5 +217,10 @@ export default {
   max-width: 100%;
   margin: 20px auto;
   border-radius: 8px;
+}
+
+.options {
+  display: flex;
+  justify-content: center;
 }
 </style>

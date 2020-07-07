@@ -6,7 +6,7 @@
       </v-btn>
     </div>
 
-    <v-textarea class="editor__text" v-model="data" rows="5" outlined auto-grow></v-textarea>
+    <v-textarea class="editor__text" v-model="data" rows="3" solo auto-grow></v-textarea>
   </section>
 </template>
 
@@ -18,8 +18,7 @@ export default {
   }),
   mounted() {
     this.data = JSON.parse(JSON.stringify(this.text));
-  },
-  methods: {}
+  }
 };
 </script>
 
@@ -31,6 +30,7 @@ export default {
     justify-content: flex-end;
   }
   &__text {
+    border-radius: 10px;
   }
 }
 </style>

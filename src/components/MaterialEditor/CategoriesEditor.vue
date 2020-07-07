@@ -34,6 +34,8 @@
       <TextEditor v-if="category === 'overview'" :text="material[category]" @submit="save" />
       <!-- Exercises -->
       <QuizEditor v-else-if="category === 'exercises'" :quiz="material[category]" @submit="save" />
+      <!-- FAQ -->
+      <FAQEditor v-else-if="category === 'faq'" :faq="material[category]" @submit="save" />
       <!-- Default -->
       <DocumentEditor v-else class="m-card" :data="material[category]" @submit="save" />
     </section>
@@ -44,6 +46,7 @@
 import loading from "@/components/loading";
 import TextEditor from "./TextEditor";
 import QuizEditor from "@/components/globals/QuizEditor";
+import FAQEditor from "./FAQEditor";
 import DocumentEditor from "@/components/globals/DocumentEditor";
 
 import { updateMaterialCategory } from "@/services/materialService";
@@ -109,6 +112,7 @@ export default {
     loading,
     TextEditor,
     QuizEditor,
+    FAQEditor,
     DocumentEditor
   }
 };

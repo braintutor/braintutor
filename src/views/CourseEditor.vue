@@ -260,7 +260,6 @@ export default {
       redirect("material-editor", { material_id });
     },
     async createMaterial(chatbot) {
-      let overview = "Resumen";
       let explanation = JSON.stringify({
         blocks: [
           { type: "header", data: { text: "Título", level: 2 } },
@@ -295,7 +294,7 @@ export default {
 
       let new_material = {
         name: "Nombre",
-        overview,
+        overview: "Resumen",
         explanation,
         movies,
         bullets: ["Punto 1", "Punto 2"],
@@ -316,10 +315,10 @@ export default {
             correct: 0
           }
         ],
-        images: ["", ""],
+        images: {},
         faq: [
-          { question: "Pregunta Frecuente 1", answer: "Respuesta" },
-          { question: "Pregunta Frecuente 2", answer: "Respuesta" }
+          { question: "Pregunta 1", answer: "Respuesta" },
+          { question: "Pregunta 2", answer: "Respuesta" }
         ],
         quizzes
       };
