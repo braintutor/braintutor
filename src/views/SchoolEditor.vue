@@ -17,6 +17,7 @@
       <ClassroomsEditor :slot="3" />
       <StudentsEditor :slot="4" />
       <SessionsEditor :slot="5" />
+      <DirectorEditor :slot="6" />
     </app-sidebar>
   </div>
 </template>
@@ -29,6 +30,7 @@ import ClassroomsEditor from "@/components/SchoolEditor/ClassroomsEditor";
 import StudentsEditor from "@/components/SchoolEditor/StudentsEditor";
 import CoursesEditor from "@/components/SchoolEditor/CoursesEditor";
 import SessionsEditor from "@/components/SchoolEditor/SessionsEditor";
+import DirectorEditor from "@/components/SchoolEditor/DirectorEditor";
 
 import { getSchool, updateSchool } from "@/services/schoolService";
 
@@ -69,6 +71,11 @@ export default {
       {
         image: require("@/assets/avatar/normal.png"),
         text: "Sesiones"
+      },
+      {
+        image:
+          "https://www.kindpng.com/picc/m/475-4750705_school-administrator-icon-png-transparent-png.png",
+        text: "Director"
       }
     ];
     this.school = await getSchool();
@@ -93,6 +100,7 @@ export default {
     CoursesEditor,
     ClassroomsEditor,
     SessionsEditor,
+    DirectorEditor,
     loading
   }
 };
