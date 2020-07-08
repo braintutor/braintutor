@@ -15,7 +15,7 @@
           Importar
           <v-icon right>mdi-file-excel</v-icon>
         </v-btn>
-        <v-btn rounded small color="success" @click="dialog_edit = true; add()">
+        <v-btn rounded small color="success" @click="dlg_edit = true; add()">
           Añadir
           <v-icon right>mdi-plus</v-icon>
         </v-btn>
@@ -41,19 +41,37 @@
             <th class="text-left">Apellidos</th>
             <th class="text-left">Correo</th>
             <th class="text-left">Usuario</th>
-            <th class="text-center">Acción</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(entity, e_idx) in entities_filtered" :key="e_idx">
-            <td>{{ entity.first_name }}</td>
-            <td>{{ entity.last_name }}</td>
-            <td>{{ entity.email }}</td>
-            <td>{{ entity.username }}</td>
+          <tr v-for="(e, e_idx) in entities_filtered" :key="e_idx">
+            <td>{{ e.first_name }}</td>
+            <td>{{ e.last_name }}</td>
+            <td>{{ e.email }}</td>
+            <td>{{ e.username }}</td>
             <td class="text-center">
-              <v-btn small icon @click="dialog_edit = true; edit(entity)">
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
+              <v-menu offset-y>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn v-bind="attrs" v-on="on" small icon>
+                    <v-icon>mdi-dots-vertical</v-icon>
+                  </v-btn>
+                </template>
+                <v-list class="pa-0" dense>
+                  <v-list-item @click="dlg_edit = true; edit(e)">
+                    <v-list-item-title>Editar Alumno</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item
+                    @click="new_password = ''; confirm_new_password = ''; dlg_password = true; entity = e"
+                  >
+                    <v-list-item-title>Cambiar Contraseña</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item
+                    @click="entity = e; entity_username_remove = ''; dialog_remove = true"
+                  >
+                    <v-list-item-title>Eliminar Alumno</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
             </td>
           </tr>
         </tbody>
@@ -62,7 +80,7 @@
     </div>
 
     <!-- CREATE | EDIT -->
-    <v-dialog v-model="dialog_edit" class="container" max-width="500">
+    <v-dialog v-model="dlg_edit" class="container" max-width="500" persistent>
       <v-card class="edit">
         <v-card-title v-if="action === 'create'" class="py-5">Crear Alumno</v-card-title>
         <v-card-title v-else-if="action === 'edit'" class="py-5">Editar Alumno</v-card-title>
@@ -122,14 +140,8 @@
           ></v-text-field>
         </v-card-text>
         <v-card-actions class="edit__actions">
-          <v-btn
-            v-if="action === 'edit'"
-            color="error"
-            :loading="loading_save"
-            @click="showRemove(entity._id.$oid)"
-            small
-          >Eliminar</v-btn>
-          <v-btn color="primary" :loading="loading_save" @click="save()" small>Guardar</v-btn>
+          <v-btn v-if="!loading_save" @click="dlg_edit = false" small text>Cerrar</v-btn>
+          <v-btn color="primary" :loading="loading_save" @click="save()" small depressed>Guardar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -150,17 +162,10 @@
         </v-card-text>
         <v-card-actions class="edit__actions">
           <v-btn text @click="dialog_remove = false" small>Cancelar</v-btn>
-          <v-btn
-            v-if="action === 'edit'"
-            color="error"
-            :loading="loading_save"
-            @click="dialog_remove = true"
-            small
-          >Eliminar</v-btn>
+          <v-btn color="error" :loading="loading_save" @click="remove()" small>Eliminar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-
     <!-- DIALOG IMPORT -->
     <v-dialog v-model="dialog_import" persistent max-width="900">
       <v-card class="py-2 px-4">
@@ -251,6 +256,39 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <!-- Dialog Password -->
+    <v-dialog v-model="dlg_password" max-width="400" persistent>
+      <v-card>
+        <v-card-title>Cambiar Contraseña</v-card-title>
+        <v-card-text>
+          <div class="mt-3">
+            <span>Nueva contraseña</span>
+            <v-text-field
+              type="password"
+              class="text-field"
+              v-model="new_password"
+              dense
+              hide-details
+            ></v-text-field>
+          </div>
+          <div class="mt-5">
+            <span>Confirmar nueva contraseña</span>
+            <v-text-field
+              type="password"
+              class="text-field"
+              v-model="confirm_new_password"
+              dense
+              hide-details
+            ></v-text-field>
+          </div>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn @click="dlg_password = false" small text>Cerrar</v-btn>
+          <v-btn @click="savePassword()" color="primary" small depressed>Guardar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -265,6 +303,8 @@ import {
 } from "@/services/studentService";
 // import { generatePassword } from "@/services/userService";
 import { getClassroomsBySchool } from "@/services/classroomService";
+import { updatePasswordByAdmin } from "@/services/userService";
+
 import * as XLSX from "xlsx";
 
 export default {
@@ -277,15 +317,18 @@ export default {
     action: "",
     new_data: [],
     //
-    dialog_edit: false,
+    dlg_edit: false,
     dialog_import: false,
     loading: true,
     loading_save: false,
     loading_msg: "",
-    //
-    entity_id_remove: "",
+    // Remove
     entity_username_remove: "",
-    dialog_remove: false
+    dialog_remove: false,
+    // Change Password
+    new_password: "",
+    confirm_new_password: "",
+    dlg_password: false
   }),
   async mounted() {
     this.loading_msg = "Cagando Alumnos";
@@ -335,7 +378,7 @@ export default {
           let entity_id = await addStudent(this.entity);
           this.entity._id = entity_id;
           this.entities.push(this.entity);
-          this.dialog_edit = false;
+          this.dlg_edit = false;
         } catch (error) {
           this.$root.$children[0].showMessage("Error al Guardar", error.msg);
         }
@@ -347,29 +390,47 @@ export default {
           );
           this.entities[entity_idx] = Object.assign({}, this.entity);
           this.entities.splice();
-          this.dialog_edit = false;
+          this.dlg_edit = false;
         } catch (error) {
           this.$root.$children[0].showMessage("Error al Guardar", error.msg);
         }
       }
       this.loading_save = false;
     },
-    showRemove(entity_id) {
-      this.entity_id_remove = entity_id;
-      this.entity_username_remove = "";
-      this.dialog_remove = true;
+    async savePassword() {
+      if (this.new_password !== this.confirm_new_password) {
+        this.$root.$children[0].showMessage(
+          "",
+          "Las contraseñas no coinciden."
+        );
+        return;
+      }
+
+      this.dlg_password = false;
+      this.loading = true;
+      this.loading_msg = "Cambiando Contraseña";
+
+      try {
+        await updatePasswordByAdmin(this.entity._id.$oid, this.new_password);
+        this.$root.$children[0].showMessage("", "Contraseña modificada.");
+      } catch (error) {
+        this.$root.$children[0].showMessage("", error.msg);
+      }
+
+      this.loading = false;
     },
     async remove() {
       this.loading = true;
       this.loading_msg = "Eliminando Alumno";
       this.dialog_remove = false;
-      this.dialog_edit = false;
-      let eid = this.entity_id_remove;
+
       try {
-        await removeStudent(eid, this.entity_username_remove);
-        this.entities = this.entities.filter(e => e._id.$oid !== eid);
+        await removeStudent(this.entity._id.$oid, this.entity_username_remove);
+        this.entities = this.entities.filter(
+          e => e._id.$oid !== this.entity._id.$oid
+        );
       } catch (error) {
-        this.$root.$children[0].showMessage("Error al Eliminar", error.msg);
+        this.$root.$children[0].showMessage("", error.msg);
       }
       this.loading = false;
     },
