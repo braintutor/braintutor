@@ -98,7 +98,7 @@ import firebase from "firebase/app";
 import "firebase/storage";
 
 export default {
-  props: ["material", "course", "signInFirebase"],
+  props: ["material", "course"],
   data: () => ({
     image_file: null,
     image_url: "",
@@ -141,12 +141,11 @@ export default {
     },
     async onFileSelected() {
       let size = (this.image_file.size / 1024).toFixed(2);
-      if (size <= 100) {
+      // if (size <= 100) {
+      if (size <= 500000) {
         this.loading = true;
         this.loading_msg = "Subiendo Archivo";
         try {
-          // Get Firebase Token
-          await this.signInFirebase();
           // Upload File
           let task = firebase
             .storage()

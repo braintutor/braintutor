@@ -9,7 +9,7 @@
         :course="course"
         :signInFirebase="signInFirebase"
       />
-      <CategoriesEditor :slot="1" :material="material" />
+      <ContentEditor :slot="1" :material="material" />
       <QuizzesEditor :slot="2" :material="material" />
     </AppSidebar>
   </div>
@@ -19,7 +19,7 @@
 import loading from "@/components/loading";
 import AppSidebar from "@/components/AppSidebar";
 import MaterialSettings from "@/components/MaterialEditor/MaterialSettings";
-import CategoriesEditor from "@/components/MaterialEditor/CategoriesEditor";
+import ContentEditor from "@/components/MaterialEditor/ContentEditor";
 import QuizzesEditor from "@/components/MaterialEditor/QuizzesEditor";
 
 import { getParam } from "@/services/router.js";
@@ -60,6 +60,7 @@ export default {
     try {
       this.material = await getMaterial(material_id);
       this.course = await getCourseByMaterial(material_id);
+      await this.signInFirebase();
     } catch (error) {
       this.$root.$children[0].showMessage("Error", error.msg);
     }
@@ -76,7 +77,7 @@ export default {
     loading,
     AppSidebar,
     MaterialSettings,
-    CategoriesEditor,
+    ContentEditor,
     QuizzesEditor
   }
 };

@@ -1,6 +1,7 @@
 <template>
   <div>
     <loading :active="loading" :message="loading_msg" />
+
     <!-- Categories -->
     <div v-show="!category" class="container">
       <div class="row no-gutters">

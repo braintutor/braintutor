@@ -49,6 +49,18 @@
               </template>
               <span style="font-size: .75rem">Resultados</span>
             </v-tooltip>
+
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-icon
+                  class="m-cardd__action"
+                  v-bind="attrs"
+                  v-on="on"
+                  @click="dlg_remove = true; evaluation_to_remove = evaluation"
+                >mdi-delete</v-icon>
+              </template>
+              <span style="font-size: .75rem">Eliminar</span>
+            </v-tooltip>
           </div>
         </div>
       </div>
@@ -56,6 +68,18 @@
         <div class="create" @click="create()">+</div>
       </div>
     </div>
+
+    <!-- Dialog Remove -->
+    <v-dialog v-model="dlg_remove" persistent max-width="300">
+      <v-card>
+        <div class="pt-4 pb-3 text-center">¿Desea eliminar?</div>
+        <v-card-text class="text-center pb-2">Se borrarán también los resultados de los alumnos.</v-card-text>
+        <v-card-actions style="width: max-content; margin: 0 auto">
+          <v-btn @click="dlg_remove = false" small text>Cancelar</v-btn>
+          <v-btn @click=" dlg_remove = false; remove()" color="error" small depressed>Eliminar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
   <EvaluationEditor
     v-else-if="edit"
@@ -78,7 +102,8 @@ import Results from "./Results";
 
 import {
   getEvaluationsBySession,
-  addEvaluation
+  addEvaluation,
+  deleteEvaluation
 } from "@/services/evaluationService";
 import { getParam } from "@/services/router.js";
 import { copy } from "@/services/object.js";
@@ -88,8 +113,11 @@ export default {
   data: () => ({
     session_id: "",
     evaluation: null,
+    evaluation_to_remove: null,
     evaluations: [],
     edit: false,
+    dlg_remove: false,
+    //
     loading: true,
     loading_message: ""
   }),
@@ -139,6 +167,21 @@ export default {
       } catch (error) {
         this.$root.$children[0].showMessage("Error al Guardar", error.msg);
       }
+      this.loading = false;
+    },
+    async remove() {
+      this.loading = true;
+      this.loading_message = "Eliminando";
+
+      try {
+        await deleteEvaluation(this.evaluation_to_remove._id.$oid);
+        this.evaluations = this.evaluations.filter(
+          e => e._id.$oid !== this.evaluation_to_remove._id.$oid
+        );
+      } catch (error) {
+        this.$root.$children[0].showMessage("", error.msg);
+      }
+
       this.loading = false;
     },
     select(evaluation) {
