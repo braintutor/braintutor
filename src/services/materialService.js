@@ -25,6 +25,12 @@ function updateMaterialCategory(material_id, category, data) {
   })
 }
 
+function updateMaterialDocuments(material_id, documents) {
+  return fetch_post('updateMaterialDocuments', {
+    material_id, documents
+  })
+}
+
 function updateMaterialName(id, name) {
   return fetch_post('updateMaterialName', {
     id, name
@@ -54,6 +60,7 @@ export {
   getMaterials,
   addMaterial,
   updateMaterialCategory,
+  updateMaterialDocuments,
   updateMaterialName,
   updateMaterialImage,
   updateMaterialQuiz,

@@ -1,12 +1,12 @@
 <template>
-  <div class="pa-2">
-    <div class="menu">
+  <div>
+    <div v-if="!hideControls" class="menu">
       <v-btn @click="submit" small rounded text>
         <v-icon class="mr-2" small>mdi-content-save</v-icon>Guardar
       </v-btn>
     </div>
 
-    <div id="editor"></div>
+    <div :id="id" class="m-card py-3"></div>
   </div>
 </template>
 
@@ -20,7 +20,16 @@ import Embed from "@editorjs/embed";
 import LinkTool from "@editorjs/link";
 
 export default {
-  props: ["data"],
+  props: {
+    id: {
+      type: String,
+      default: "editor"
+    },
+    data: {
+      type: [String, Object]
+    },
+    hideControls: Boolean
+  },
   data: () => ({
     editor: null
   }),
@@ -36,7 +45,7 @@ export default {
         //
       }
       this.editor = new EditorJS({
-        holderId: "editor",
+        holderId: this.id,
         tools: {
           header: Header,
           list: List,
@@ -55,9 +64,13 @@ export default {
         data
       });
     },
-    async submit() {
+    async getData() {
       let outputData = await this.editor.save();
       let data = JSON.stringify(outputData);
+      return data;
+    },
+    async submit() {
+      let data = await this.getData();
       this.$emit("submit", data);
     }
   }
@@ -67,6 +80,7 @@ export default {
 <style lang='scss' scoped>
 .menu {
   padding: 0;
+  margin-bottom: 8px;
   display: flex;
   justify-content: flex-end;
 }

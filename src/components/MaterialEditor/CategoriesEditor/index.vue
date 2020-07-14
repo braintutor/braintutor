@@ -34,7 +34,7 @@
       <!-- FAQ -->
       <FAQEditor v-else-if="category === 'faq'" :faq="material[category]" @submit="save" />
       <!-- Default -->
-      <DocumentEditor v-else class="m-card" :data="material[category]" @submit="save" />
+      <DocumentEditor v-else :data="material[category]" @submit="save" />
     </section>
   </div>
 </template>
@@ -104,7 +104,7 @@ export default {
 
       try {
         if ((data.length * 2) / 1000 > 500)
-          throw { msg: "Ha sobrepasado el exceso de tamaño." };
+          throw { msg: "Ha sobrepasado el tamaño permitido." };
         await updateMaterialCategory(material_id, category, data);
         this.material[category] = data;
       } catch (error) {
@@ -154,7 +154,7 @@ export default {
 
 .editor {
   &__menu {
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     display: flex;
     align-items: center;
   }

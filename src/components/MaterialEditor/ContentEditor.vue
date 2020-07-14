@@ -21,8 +21,8 @@
       >Adaptativo</v-btn>
     </div>
 
-    <CategoriesEditor v-if="adaptive" />
-    <DocumentsEditor v-else />
+    <CategoriesEditor v-if="adaptive" :material="material" />
+    <DocumentsEditor v-else :material="material" />
   </div>
 </template>
 
@@ -31,6 +31,7 @@ import CategoriesEditor from "./CategoriesEditor/index";
 import DocumentsEditor from "./DocumentsEditor/index";
 
 export default {
+  props: ["material"],
   data: () => ({
     adaptive: false
   }),
@@ -43,7 +44,8 @@ export default {
 
 <style lang='scss' scoped>
 .menu {
+  padding: 6px 0;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
 }
 </style>

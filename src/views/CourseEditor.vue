@@ -284,6 +284,12 @@ export default {
       let hyperlinks = JSON.stringify({
         blocks: [{ type: "header", data: { text: "Enlaces", level: 2 } }]
       });
+      // Documents
+      let documents = [
+        JSON.stringify({
+          blocks: [{ type: "header", data: { text: "Título", level: 2 } }]
+        })
+      ];
       // Quizzes
       let quiz = [
         {
@@ -308,7 +314,8 @@ export default {
         examples,
         exercises: quiz,
         faq: [{ question: "Pregunta", answer: "Respuesta" }],
-        quizzes
+        quizzes,
+        documents
       };
 
       this.loading = true;
