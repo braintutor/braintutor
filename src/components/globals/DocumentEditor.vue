@@ -18,6 +18,8 @@ import SimpleImage from "@editorjs/simple-image";
 import Marker from "@editorjs/marker";
 import Embed from "@editorjs/embed";
 import LinkTool from "@editorjs/link";
+import Delimiter from "@editorjs/delimiter";
+import Table from "@editorjs/table";
 
 export default {
   props: {
@@ -52,6 +54,10 @@ export default {
           image: SimpleImage,
           marker: Marker,
           embed: Embed,
+          delimiter: Delimiter,
+          table: {
+            class: Table
+          },
           linkTool: {
             class: LinkTool,
             config: {

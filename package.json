@@ -31,7 +31,9 @@
     "xlsx": "^0.16.0"
   },
   "devDependencies": {
+    "@editorjs/delimiter": "^1.1.0",
     "@editorjs/image": "^2.3.4",
+    "@editorjs/table": "^1.2.2",
     "@vue/cli-plugin-babel": "^4.1.0",
     "@vue/cli-plugin-eslint": "^4.1.0",
     "@vue/cli-service": "^4.1.0",

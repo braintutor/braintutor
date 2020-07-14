@@ -29,4 +29,4 @@ async function fetch_post(name, data) {
   return res.json()
 }
 
-export { service, fetch_get, fetch_post }
+export { service, fetch_get, fetch_post, getHeaders }

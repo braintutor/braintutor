@@ -94,9 +94,6 @@ import {
   removeMaterial
 } from "@/services/materialService";
 
-import firebase from "firebase/app";
-import "firebase/storage";
-
 export default {
   props: ["material", "course"],
   data: () => ({
@@ -140,44 +137,35 @@ export default {
       this.loading = false;
     },
     async onFileSelected() {
-      let size = (this.image_file.size / 1024).toFixed(2);
-      // if (size <= 100) {
-      if (size <= 500000) {
-        this.loading = true;
-        this.loading_msg = "Subiendo Archivo";
-        try {
-          // Upload File
-          let task = firebase
-            .storage()
-            .ref(`/course/${this.course._id.$oid}/${this.material._id.$oid}`)
-            .put(this.image_file);
-          task.on(
-            "state_changed",
-            snapshot => {
-              let image_progress =
-                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      this.loading = true;
+      this.loading_msg = "Subiendo Archivo";
 
-              this.loading = true;
-              this.loading_msg = `Subiendo Archivo (${image_progress}%)`;
-            },
-            () => {
-              this.loading = false;
-            },
-            async () => {
-              this.image_url = await task.snapshot.ref.getDownloadURL();
-              await this.saveImage();
+      var data = new FormData();
+      data.append("file", this.image_file);
+      data.append("material_id", this.material._id.$oid);
+
+      try {
+        let res = await fetch(
+          "https://braintutor-service-v2.herokuapp.com/uploadMaterialImage",
+          {
+            // let res = await fetch("http://localhost:5000/uploadMaterialImage", {
+            method: "POST",
+            body: data,
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`
             }
-          );
-        } catch (error) {
-          this.$root.$children[0].showMessage("Error", error.msg);
-        }
-        this.loading = false;
-      } else {
-        this.$root.$children[0].showMessage(
-          "",
-          "La imagen excede el tamaño permitido: 100KB"
+          }
         );
+        if (res.status >= 400 && res.status < 600) throw await res.json();
+
+        let { url } = await res.json();
+        this.image_url = url;
+        await this.saveImage();
+      } catch (error) {
+        this.$root.$children[0].showMessage("Error", error.msg);
       }
+
+      this.loading = false;
     },
     async removeMaterial() {
       this.loading = true;

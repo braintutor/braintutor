@@ -3,12 +3,7 @@
     <AppSidebar :links="links">
       <loading :active="loading" :message="loading_msg" />
 
-      <MaterialSettings
-        :slot="0"
-        :material="material"
-        :course="course"
-        :signInFirebase="signInFirebase"
-      />
+      <MaterialSettings :slot="0" :material="material" :course="course" />
       <ContentEditor :slot="1" :material="material" />
       <QuizzesEditor :slot="2" :material="material" />
     </AppSidebar>
@@ -25,10 +20,6 @@ import QuizzesEditor from "@/components/MaterialEditor/QuizzesEditor";
 import { getParam } from "@/services/router.js";
 import { getMaterial } from "@/services/materialService";
 import { getCourseByMaterial } from "@/services/courseService";
-import { getCourseToken } from "@/services/firebaseStorageService";
-
-import firebase from "firebase/app";
-import "firebase/auth";
 
 export default {
   data: () => ({
@@ -60,18 +51,11 @@ export default {
     try {
       this.material = await getMaterial(material_id);
       this.course = await getCourseByMaterial(material_id);
-      await this.signInFirebase();
     } catch (error) {
       this.$root.$children[0].showMessage("Error", error.msg);
     }
 
     this.loading = false;
-  },
-  methods: {
-    async signInFirebase() {
-      let { token } = await getCourseToken(this.course._id.$oid);
-      await firebase.auth().signInWithCustomToken(token);
-    }
   },
   components: {
     loading,
