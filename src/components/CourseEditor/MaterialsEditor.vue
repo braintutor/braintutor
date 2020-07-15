@@ -4,8 +4,7 @@
 
     <div class="options">
       <v-btn @click="createChatbot()" small text rounded>
-        Crear Unidad
-        <v-icon class="ml-2" small>mdi-plus</v-icon>
+        <v-icon class="mr-2" small>mdi-plus</v-icon>Crear Unidad
       </v-btn>
     </div>
 

@@ -9,9 +9,9 @@
     </section>
 
     <AppSidebar :links="links">
-      <MaterialSettings :slot="0" :material="material" :course="course" />
-      <ContentEditor :slot="1" :material="material" />
-      <QuizzesEditor :slot="2" :material="material" />
+      <ContentEditor :slot="0" v-if="material._id" :material="material" :course="course" />
+      <QuizzesEditor :slot="1" :material="material" />
+      <MaterialSettings :slot="2" :material="material" :course="course" />
     </AppSidebar>
   </div>
 </template>
@@ -31,16 +31,16 @@ export default {
   data: () => ({
     links: [
       {
-        image: require("@/assets/braintutor/icon-settings.png"),
-        text: "Configuración"
-      },
-      {
         image: require("@/assets/braintutor/icon-material.png"),
         text: "Material"
       },
       {
         image: require("@/assets/braintutor/icon-quiz.png"),
         text: "Pruebas"
+      },
+      {
+        image: require("@/assets/braintutor/icon-settings.png"),
+        text: "Configuración"
       }
     ],
     material: {},
@@ -82,7 +82,7 @@ export default {
 .path {
   margin-bottom: 6px;
   color: #7a7a7a;
-  font-size: .95rem;
+  font-size: 0.95rem;
 
   &__link {
     text-decoration: underline;

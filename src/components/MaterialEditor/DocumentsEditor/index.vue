@@ -12,7 +12,6 @@
         <v-icon class="mr-2" small>mdi-content-save</v-icon>Guardar
       </v-btn>
     </div>
-
     <!-- Document Editor -->
     <DocumentEditor
       v-for="(document, idx) in documents"
@@ -40,13 +39,11 @@ export default {
     loading: false,
     loading_msg: ""
   }),
-  computed: {
-    document() {
-      return this.documents[this.document_idx];
-    }
-  },
   mounted() {
-    this.documents = this.material.documents || ["{}"];
+    this.documents =
+      this.material.documents && this.material.documents.length > 0
+        ? this.material.documents
+        : ["{}"];
   },
   methods: {
     selectDocument(document, idx) {

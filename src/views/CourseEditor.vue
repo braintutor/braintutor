@@ -8,8 +8,8 @@
 
     <AppSidebar :links="links">
       <MaterialsEditor :slot="0" />
-      <KnowledgeEditor :get="getKnowledge" :update="updateKnowledge" :slot="1" />
-      <div :slot="2">2</div>
+      <KnowledgeEditor :slot="1" :get="getKnowledge" :update="updateKnowledge" />
+      <CourseSettings :slot="2" :course="course" />
     </AppSidebar>
   </div>
 </template>
@@ -19,6 +19,7 @@ import loading from "@/components/loading";
 import AppSidebar from "@/components/AppSidebar";
 import MaterialsEditor from "@/components/CourseEditor/MaterialsEditor";
 import KnowledgeEditor from "@/components/globals/KnowledgeEditor";
+import CourseSettings from "@/components/CourseEditor/CourseSettings";
 
 import { getParam } from "@/services/router.js";
 import {
@@ -36,11 +37,11 @@ export default {
       {
         image: require("@/assets/braintutor/icon-knowledge.png"),
         text: "Conocimiento"
+      },
+      {
+        image: require("@/assets/braintutor/icon-settings.png"),
+        text: "Configuración"
       }
-      // {
-      //   image: require("@/assets/braintutor/icon-settings.png"),
-      //   text: "Configuración"
-      // }
     ],
     course_id: "",
     course: {},
@@ -72,7 +73,8 @@ export default {
     loading,
     AppSidebar,
     MaterialsEditor,
-    KnowledgeEditor
+    KnowledgeEditor,
+    CourseSettings
   }
 };
 </script>
