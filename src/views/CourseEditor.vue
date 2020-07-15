@@ -36,11 +36,11 @@ export default {
       {
         image: require("@/assets/braintutor/icon-knowledge.png"),
         text: "Conocimiento"
-      },
-      {
-        image: require("@/assets/braintutor/icon-settings.png"),
-        text: "Configuración"
       }
+      // {
+      //   image: require("@/assets/braintutor/icon-settings.png"),
+      //   text: "Configuración"
+      // }
     ],
     course_id: "",
     course: {},
