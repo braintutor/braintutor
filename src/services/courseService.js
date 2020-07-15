@@ -51,6 +51,18 @@ function updateCourse(course) {
   })
 }
 
+function updateCourseKnowledge(course_id, knowledge) {
+  return fetch_post('updateCourseKnowledge', {
+    course_id, knowledge
+  })
+}
+
+function updateCourseAdaptive(course_id, adaptive) {
+  return fetch_post('updateCourseAdaptive', {
+    course_id, adaptive
+  })
+}
+
 function removeCourse(id) {
   return fetch_post('removeCourse', {
     id
@@ -67,5 +79,7 @@ export {
   getCourseByMaterial,
   addCourse,
   updateCourse,
+  updateCourseKnowledge,
+  updateCourseAdaptive,
   removeCourse
 }

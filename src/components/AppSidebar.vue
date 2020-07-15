@@ -41,7 +41,6 @@ $color-hover-border: #a7b9ec;
 
 .app-sidebar {
   padding-top: 0;
-  margin: 0 16px;
   display: flex;
 }
 

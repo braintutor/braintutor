@@ -1,8 +1,14 @@
 <template>
-  <div class="container">
-    <AppSidebar :links="links">
-      <loading :active="loading" :message="loading_msg" />
+  <div class="container pt-0">
+    <loading :active="loading" :message="loading_msg" />
 
+    <section class="path">
+      <span class="path__link" @click="redirectCourse()">{{course.name}}</span>
+      <span class="mx-2">></span>
+      <span>{{material.name}}</span>
+    </section>
+
+    <AppSidebar :links="links">
       <MaterialSettings :slot="0" :material="material" :course="course" />
       <ContentEditor :slot="1" :material="material" />
       <QuizzesEditor :slot="2" :material="material" />
@@ -17,7 +23,7 @@ import MaterialSettings from "@/components/MaterialEditor/MaterialSettings";
 import ContentEditor from "@/components/MaterialEditor/ContentEditor";
 import QuizzesEditor from "@/components/MaterialEditor/QuizzesEditor";
 
-import { getParam } from "@/services/router.js";
+import { getParam, redirect } from "@/services/router.js";
 import { getMaterial } from "@/services/materialService";
 import { getCourseByMaterial } from "@/services/courseService";
 
@@ -57,6 +63,11 @@ export default {
 
     this.loading = false;
   },
+  methods: {
+    redirectCourse() {
+      redirect("course-editor", { course_id: this.course._id.$oid });
+    }
+  },
   components: {
     loading,
     AppSidebar,
@@ -67,5 +78,16 @@ export default {
 };
 </script>
 
-<style>
+<style lang='scss' scoped>
+.path {
+  margin-bottom: 6px;
+  color: #7a7a7a;
+  font-size: .95rem;
+
+  &__link {
+    text-decoration: underline;
+    font-weight: bold;
+    cursor: pointer;
+  }
+}
 </style>
