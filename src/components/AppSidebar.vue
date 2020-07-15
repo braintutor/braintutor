@@ -110,7 +110,6 @@ input[type="radio"] {
 
 @media only screen and (max-width: 768px) {
   .app-sidebar {
-    margin: 8px;
     margin-top: 0;
     flex-direction: column;
   }

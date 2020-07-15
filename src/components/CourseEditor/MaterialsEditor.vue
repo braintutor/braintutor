@@ -100,7 +100,7 @@
               />
               <div v-else class="material__image"></div>
               <p class="material__name">{{material.name}}</p>
-              <p class="material__description">{{material.overview}}</p>
+              <p class="material__description">{{material.description}}</p>
             </div>
             <!-- Material Menu -->
             <div v-show="chatbot.edit_order" class="material__menu">
@@ -264,6 +264,7 @@ export default {
 
       let new_material = {
         name: "Nombre",
+        description: "Descripción",
         overview: "Resumen",
         explanation,
         movies,

@@ -31,9 +31,9 @@ function updateMaterialDocuments(material_id, documents) {
   })
 }
 
-function updateMaterialName(id, name) {
-  return fetch_post('updateMaterialName', {
-    id, name
+function updateMaterial(id, name, description) {
+  return fetch_post('updateMaterial', {
+    id, name, description
   })
 }
 
@@ -61,7 +61,7 @@ export {
   addMaterial,
   updateMaterialCategory,
   updateMaterialDocuments,
-  updateMaterialName,
+  updateMaterial,
   updateMaterialImage,
   updateMaterialQuiz,
   removeMaterial
