@@ -6,7 +6,7 @@
       </v-btn>
     </div>
 
-    <div :id="id" class="m-card py-3"></div>
+    <div :id="id" :class="{'m-card py-3': !hideBorder}"></div>
   </div>
 </template>
 
@@ -30,7 +30,8 @@ export default {
     data: {
       type: [String, Object]
     },
-    hideControls: Boolean
+    hideControls: Boolean,
+    hideBorder: Boolean
   },
   data: () => ({
     editor: null

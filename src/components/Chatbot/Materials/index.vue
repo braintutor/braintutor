@@ -51,6 +51,7 @@
       v-else
       class="m-fullscreen-content"
       :material="material"
+      :adaptive="course.adaptive"
       :categories="categories"
       :category_idx="category_idx"
       :unselectMaterial="unselectMaterial"
@@ -67,7 +68,7 @@ import { getCategoriesByLearningStyle } from "@/services/studentService.js";
 import { Clamp } from "@/services/math";
 
 export default {
-  props: ["chatbot"],
+  props: ["chatbot", "course"],
   data: () => ({
     material: null,
     adapt_content: true,

@@ -7,7 +7,8 @@
       <span class="material-title">{{material.name}}</span>
     </div>
     <div class="m-fullscreen-content">
-      <div class="material-content">
+      <!-- Categories -->
+      <div v-if="adaptive" class="material-content">
         <!-- Category Explanation -->
         <div v-show="category_selected == 'explanation'" id="explanation-editor" class="category"></div>
         <!-- Category Examples -->
@@ -49,8 +50,12 @@
           <embed :src="material[category_selected]" alt />
         </div>-->
       </div>
+      <!-- Documents -->
+      <div class="material-content" v-else>
+        <DocumentEditor :data="material.documents[0]" hideControls hideBorder/>
+      </div>
     </div>
-    <div class="material-navigator">
+    <div v-if="adaptive" class="material-navigator">
       <div class="material-actions elevation-3">
         <v-btn small class="material-action" icon @click="setCategory(category_idx - 1)">
           <v-icon>mdi-chevron-left</v-icon>
@@ -71,6 +76,8 @@
 </template>
 
 <script>
+import DocumentEditor from "@/components/globals/DocumentEditor";
+
 import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
 import List from "@editorjs/list";
@@ -85,6 +92,7 @@ import Quizzes from "./Quizzes";
 export default {
   props: [
     "material",
+    "adaptive",
     "categories",
     "category_idx",
     "unselectMaterial",
@@ -94,29 +102,30 @@ export default {
     editors: {}
   }),
   mounted() {
-    ["explanation", "examples", "movies", "images", "hyperlinks"].forEach(
-      category => {
-        this.editors[category] = new EditorJS({
-          holderId: `${category}-editor`,
-          tools: {
-            header: Header,
-            list: List,
-            image: SimpleImage,
-            marker: Marker,
-            embed: Embed,
-            linkTool: {
-              class: LinkTool,
-              config: {
-                // endpoint: "http://localhost:5000/getLinkPreview"
-                endpoint:
-                  "https://braintutor-service-v2.herokuapp.com/getLinkPreview"
+    if (this.adaptive)
+      ["explanation", "examples", "movies", "images", "hyperlinks"].forEach(
+        category => {
+          this.editors[category] = new EditorJS({
+            holderId: `${category}-editor`,
+            tools: {
+              header: Header,
+              list: List,
+              image: SimpleImage,
+              marker: Marker,
+              embed: Embed,
+              linkTool: {
+                class: LinkTool,
+                config: {
+                  // endpoint: "http://localhost:5000/getLinkPreview"
+                  endpoint:
+                    "https://braintutor-service-v2.herokuapp.com/getLinkPreview"
+                }
               }
-            }
-          },
-          data: JSON.parse(this.material[category])
-        });
-      }
-    );
+            },
+            data: JSON.parse(this.material[category])
+          });
+        }
+      );
   },
   computed: {
     component_avatar() {
@@ -133,7 +142,8 @@ export default {
   },
   components: {
     Exercises,
-    Quizzes
+    Quizzes,
+    DocumentEditor
   }
 };
 </script>

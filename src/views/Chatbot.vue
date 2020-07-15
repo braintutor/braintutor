@@ -3,7 +3,12 @@
     <loading :active="loading" :message="loading_msg" />
     <v-row id="chatbot-scroll" class="chatbot-scroll fill-height" no-gutters>
       <div class="chatbot-content col-12 col-md-8 m-fullscreen">
-        <Materials class="m-fullscreen-content" ref="component_materials" :chatbot="chatbot" />
+        <Materials
+          class="m-fullscreen-content"
+          ref="component_materials"
+          :chatbot="chatbot"
+          :course="course"
+        />
       </div>
       <Chat class="chat-container col-12 col-md-4" :bot="bot" :knowledge="knowledge" />
     </v-row>
@@ -32,6 +37,7 @@ import { mapState } from "vuex";
 
 export default {
   data: () => ({
+    course: {},
     chatbot: {},
     // CHAT
     bot: null,
@@ -61,38 +67,55 @@ export default {
     this.loading_msg = "Cargando Conocimiento";
 
     let course_id = await getCourseIdByChatbot(chatbot_id);
-    let course = await (this.$store.state.user.role === "TEA"
+    this.course = await (this.$store.state.user.role === "TEA"
       ? getCourseByTeacher(course_id)
       : getCourseByStudent(course_id));
-    let knowledge = course.knowledge || [];
+    let knowledge = this.course.knowledge || [];
 
     // Knowledge Material
-    let question_template = await getQuestionTemplate();
-    materials.forEach(material => {
-      Object.entries(question_template).forEach(([category, questions]) => {
-        if (questions[0]) {
-          questions = questions.map(question =>
-            question.replace(/@/, material.name)
-          );
+    if (this.course.adaptive) {
+      let question_template = await getQuestionTemplate();
+      materials.forEach(material => {
+        Object.entries(question_template).forEach(([category, questions]) => {
+          if (questions[0]) {
+            questions = questions.map(question =>
+              question.replace(/@/, material.name)
+            );
+            knowledge.push({
+              questions,
+              answers: [
+                "Esto te puede servir.",
+                "He encontrado esta información."
+              ],
+              material_id: material._id.$oid,
+              category
+            });
+          }
+        });
+        material.faq.forEach(({ question, answer }) => {
           knowledge.push({
-            questions,
-            answers: [
-              "Esto te puede servir.",
-              "He encontrado esta información."
-            ],
-            material_id: material._id.$oid,
-            category
+            questions: [question],
+            answers: [answer],
+            material_id: material._id.$oid
           });
-        }
+        });
       });
-      material.faq.forEach(({ question, answer }) => {
+    } else {
+      let questions = [
+        "Muéstrame información sobre @.",
+        '"Háblame sobre @.',
+        "Explícame sobre @."
+      ];
+      materials.forEach(material => {
         knowledge.push({
-          questions: [question],
-          answers: [answer],
+          questions: questions.map(question =>
+            question.replace(/@/, material.name)
+          ),
+          answers: ["Esto te puede servir.", "He encontrado esta información."],
           material_id: material._id.$oid
         });
       });
-    });
+    }
     this.knowledge = knowledge;
 
     // Chatbot
