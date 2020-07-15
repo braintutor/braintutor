@@ -38,7 +38,7 @@
               </div>
               <div class="m-cardx__body">
                 <p class="m-cardx__title">{{material.name}}</p>
-                <p class="m-cardx__description">{{material.overview}}</p>
+                <p class="m-cardx__description">{{material.description}}</p>
               </div>
             </div>
           </div>
