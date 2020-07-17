@@ -1,12 +1,12 @@
 <template>
   <div>
     <div v-if="!hideControls" class="menu">
-      <v-btn @click="submit" small rounded text>
+      <v-btn @click="submit" small rounded outlined text>
         <v-icon class="mr-2" small>mdi-content-save</v-icon>Guardar
       </v-btn>
     </div>
 
-    <div :id="id" :class="{'m-card py-3': !hideBorder}"></div>
+    <div :id="id" class="document"></div>
   </div>
 </template>
 
@@ -31,7 +31,7 @@ export default {
       type: [String, Object]
     },
     hideControls: Boolean,
-    hideBorder: Boolean
+    readonly: Boolean
   },
   data: () => ({
     editor: null
@@ -68,7 +68,22 @@ export default {
             }
           }
         },
-        data
+        data,
+        onReady: () => {
+          if (this.readonly) {
+            let editable_elements = document.querySelectorAll(
+              "[contenteditable=true]"
+            );
+            editable_elements.forEach(el =>
+              el.removeAttribute("contenteditable")
+            );
+
+            let icon_settings = document.querySelectorAll(
+              ".ce-toolbar__settings-btn"
+            );
+            icon_settings.forEach(el => el.remove());
+          }
+        }
       });
     },
     async getData() {
@@ -91,4 +106,8 @@ export default {
   display: flex;
   justify-content: flex-end;
 }
+// .document {
+//   border-top: 1px solid #ccc;
+//   border-bottom: 1px solid #ccc;
+// }
 </style>

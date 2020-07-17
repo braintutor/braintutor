@@ -8,7 +8,7 @@
     </div>-->
 
     <div class="menu">
-      <v-btn @click="save()" small rounded text>
+      <v-btn @click="save()" small rounded outlined text>
         <v-icon class="mr-2" small>mdi-content-save</v-icon>Guardar
       </v-btn>
     </div>

@@ -1,22 +1,20 @@
 <template>
-  <div class="container pt-0">
+  <Layout :links="links">
     <loading :active="loading" :message="loading_msg" />
 
     <section class="path">
       <span>{{course.name}}</span>
     </section>
 
-    <AppSidebar :links="links">
-      <MaterialsEditor :slot="0" />
-      <KnowledgeEditor :slot="1" :get="getKnowledge" :update="updateKnowledge" />
-      <CourseSettings :slot="2" :course="course" />
-    </AppSidebar>
-  </div>
+    <MaterialsEditor :slot="0" />
+    <KnowledgeEditor :slot="1" :get="getKnowledge" :update="updateKnowledge" />
+    <CourseSettings :slot="2" :course="course" />
+  </Layout>
 </template>
 
 <script>
 import loading from "@/components/loading";
-import AppSidebar from "@/components/AppSidebar";
+import Layout from "@/components/Layout";
 import MaterialsEditor from "@/components/CourseEditor/MaterialsEditor";
 import KnowledgeEditor from "@/components/globals/KnowledgeEditor";
 import CourseSettings from "@/components/CourseEditor/CourseSettings";
@@ -32,15 +30,15 @@ export default {
     links: [
       {
         image: require("@/assets/braintutor/icon-material.png"),
-        text: "Material"
+        name: "Material"
       },
       {
         image: require("@/assets/braintutor/icon-knowledge.png"),
-        text: "Conocimiento"
+        name: "Conocimiento"
       },
       {
         image: require("@/assets/braintutor/icon-settings.png"),
-        text: "Configuración"
+        name: "Configuración"
       }
     ],
     course_id: "",
@@ -71,7 +69,7 @@ export default {
   },
   components: {
     loading,
-    AppSidebar,
+    Layout,
     MaterialsEditor,
     KnowledgeEditor,
     CourseSettings

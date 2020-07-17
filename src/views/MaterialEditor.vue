@@ -1,24 +1,22 @@
 <template>
-  <div class="container pt-0">
+  <Layout :links="links">
     <loading :active="loading" :message="loading_msg" />
 
     <section class="path">
       <span class="path__link" @click="redirectCourse()">{{course.name}}</span>
-      <span class="mx-2">></span>
+      <span class="mx-2">/</span>
       <span>{{material.name}}</span>
     </section>
 
-    <AppSidebar :links="links">
-      <ContentEditor :slot="0" v-if="material._id" :material="material" :course="course" />
-      <QuizzesEditor :slot="1" :material="material" />
-      <MaterialSettings :slot="2" :material="material" :course="course" />
-    </AppSidebar>
-  </div>
+    <ContentEditor :slot="0" v-if="material._id" :material="material" :course="course" />
+    <QuizzesEditor :slot="1" :material="material" />
+    <MaterialSettings :slot="2" :material="material" :course="course" />
+  </Layout>
 </template>
 
 <script>
 import loading from "@/components/loading";
-import AppSidebar from "@/components/AppSidebar";
+import Layout from "@/components/Layout";
 import MaterialSettings from "@/components/MaterialEditor/MaterialSettings";
 import ContentEditor from "@/components/MaterialEditor/ContentEditor";
 import QuizzesEditor from "@/components/MaterialEditor/QuizzesEditor";
@@ -32,15 +30,15 @@ export default {
     links: [
       {
         image: require("@/assets/braintutor/icon-material.png"),
-        text: "Material"
+        name: "Material"
       },
       {
         image: require("@/assets/braintutor/icon-quiz.png"),
-        text: "Pruebas"
+        name: "Pruebas"
       },
       {
         image: require("@/assets/braintutor/icon-settings.png"),
-        text: "Configuración"
+        name: "Configuración"
       }
     ],
     material: {},
@@ -70,7 +68,7 @@ export default {
   },
   components: {
     loading,
-    AppSidebar,
+    Layout,
     MaterialSettings,
     ContentEditor,
     QuizzesEditor

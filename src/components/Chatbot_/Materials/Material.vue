@@ -52,7 +52,7 @@
       </div>
       <!-- Documents -->
       <div class="material-content" v-else>
-        <DocumentEditor :data="material.documents[0]" hideControls hideBorder/>
+        <DocumentEditor :data="material.documents[0]" hideControls readonly/>
       </div>
     </div>
     <div v-if="adaptive" class="material-navigator">

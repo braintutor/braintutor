@@ -12,8 +12,8 @@ function getChatbotsBySession(session_id) {
   })
 }
 
-function getChatbot(chatbot_id) {
-  return fetch_post('getChatbot', {
+function getChatbotAndMaterialsByTeacher(chatbot_id) {
+  return fetch_post('getChatbotAndMaterialsByTeacher', {
     chatbot_id
   })
 }
@@ -57,7 +57,7 @@ function removeChatbot(id) {
 }
 
 export {
-  getChatbot,
+  getChatbotAndMaterialsByTeacher,
   getChatbotsByCourse,
   getChatbotsBySession,
   getChatbotNameOrder,

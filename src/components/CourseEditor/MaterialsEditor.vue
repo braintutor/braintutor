@@ -191,7 +191,7 @@ export default {
         new_chatbot._id = chatbot_id;
         new_chatbot.materials = [];
         this.chatbots.push(new_chatbot);
-        setTimeout(scrollDown, 100);
+        setTimeout(() => scrollDown('app__body'), 100);
       } catch (error) {
         this.$root.$children[0].showMessage("", error.msg);
       }

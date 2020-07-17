@@ -2,7 +2,7 @@
   <v-app>
     <Header />
     <v-content>
-      <loading :active="loading" />
+      <loading :active="loading" :message="loading_msg" />
       <router-view></router-view>
     </v-content>
     <!-- showMessage -->
@@ -25,6 +25,8 @@ import loading from "./components/loading";
 
 import { updateStudentTime } from "@/services/studentService";
 
+import { mapState } from "vuex";
+
 export default {
   name: "App",
   data: () => ({
@@ -33,12 +35,7 @@ export default {
     show_message: ""
   }),
   computed: {
-    loading() {
-      return this.$store.state.loading;
-    },
-    user() {
-      return this.$store.state.user;
-    }
+    ...mapState(["user", "loading", "loading_msg"])
   },
   mounted() {
     // TIME

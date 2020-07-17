@@ -43,7 +43,7 @@ export default {
       try {
         await updateCourseAdaptive(course_id, this.adaptive);
         this.course.adaptive = this.adaptive;
-        this.$root.$children[0].showMessage("", "Guardado correctamnte.");
+        // this.$root.$children[0].showMessage("", "Guardado correctamente.");
       } catch (error) {
         this.$root.$children[0].showMessage("Error", error.msg);
       }

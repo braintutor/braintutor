@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     user: null,
     loading: false,
+    loading_msg: '',
     //Materials
     materials: [],
     //Quizzes
@@ -19,6 +20,12 @@ export default new Vuex.Store({
   mutations: {
     setUser(state, user) {
       state.user = user
+    },
+    loading(state, loading) {
+      state.loading = loading
+    },
+    loading_msg(state, loading_msg) {
+      state.loading_msg = loading_msg
     },
     //Materials
     setMaterials(state, materials) {

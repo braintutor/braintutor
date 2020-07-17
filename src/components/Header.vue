@@ -2,7 +2,7 @@
   <div style="z-index: 100 !important">
     <v-app-bar flat style="background: #ffffff00 !important">
       <div class="header-logo" @click="redirect('home')">
-        <v-img alt="BrainTutor Logo" src="@/assets/braintutor/logo.png" width="160" />
+        <v-img alt="BrainTutor Logo" src="@/assets/braintutor/logo.png" width="120" />
       </div>
       <v-spacer></v-spacer>
       <v-app-bar-nav-icon class="nav-icon" @click="drawer = true"></v-app-bar-nav-icon>
@@ -178,8 +178,10 @@ export default {
 
 <style lang='scss' scoped>
 .header-logo {
+  transition: 0.3s;
+  cursor: pointer;
   &:hover {
-    cursor: pointer;
+    transform: scale(1.05);
   }
 }
 .header-actions {
@@ -200,7 +202,7 @@ export default {
 
 .user {
   position: relative;
-  padding: 10px;
+  padding: 8px;
   margin-left: 20px;
   border-radius: 4px;
   transition: background-color 0.5s;
