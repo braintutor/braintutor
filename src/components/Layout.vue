@@ -48,6 +48,7 @@ export default {
 
 .sidebar {
   width: 110px;
+  border-right: 1px solid #ccc;
 }
 
 .content {
@@ -60,7 +61,6 @@ export default {
   color: #707070;
   font-size: 0.75rem;
   font-weight: bold;
-  border-radius: 0 12px 12px 0;
   opacity: 0.5;
   transition: 0.3s;
   cursor: pointer;
@@ -70,7 +70,7 @@ export default {
   align-items: center;
 
   &:hover {
-    box-shadow: 0 2px 6px #d1d1d1;
+    background: #ebf1ff;
     opacity: 0.75;
   }
 
@@ -82,13 +82,40 @@ export default {
   }
 
   &--active {
-    background: #fff;
-    box-shadow: 0 2px 6px #9b9b9b;
+    background: #e0eaff;
     opacity: 1;
     cursor: unset;
     &:hover {
-      box-shadow: 0 2px 6px #9b9b9b;
+      background: #e0eaff;
       opacity: 1;
+    }
+  }
+}
+
+// @media only screen and (max-width: 2000px) {
+@media only screen and (max-width: 768px) {
+  .app {
+    flex-direction: column;
+    &__body {
+      height: auto;
+      padding: 20px 0;
+    }
+  }
+  .sidebar {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #ccc;
+
+    display: flex;
+    justify-content: center;
+  }
+
+  .link {
+    &__image {
+      margin: 0;
+    }
+    &__name {
+      display: none;
     }
   }
 }

@@ -3,8 +3,8 @@
     <h1 class="mtitle">
       <v-icon class="mr-3" style="font-size: 2.4rem">mdi-bookshelf</v-icon>Mis Cursos
     </h1>
-    <div class="row">
-      <div v-for="(session, idx) in sessions" :key="idx" class="col-12 col-sm-6 col-md-4">
+    <div class="row no-gutters">
+      <div v-for="(session, idx) in sessions" :key="idx" class="col-12 col-sm-6 col-md-4 pa-3">
         <section @click="selectSession(session)" class="session">
           <div
             class="session__image"

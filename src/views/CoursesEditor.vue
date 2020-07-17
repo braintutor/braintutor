@@ -2,10 +2,10 @@
 <template>
   <div class="mcontainer">
     <h1 class="mtitle">
-      <v-icon class="mr-3" style="font-size: 2.4rem">mdi-monitor-edit</v-icon>Editar Cursos
+      <v-icon class="mr-4" style="font-size: 2.4rem">mdi-monitor-edit</v-icon>Editar Cursos
     </h1>
-    <div class="row">
-      <div v-for="(course, idx) in courses" :key="idx" class="col-12 col-sm-6 col-md-4">
+    <div class="row no-gutters">
+      <div v-for="(course, idx) in courses" :key="idx" class="col-12 col-sm-6 col-md-4 pa-3">
         <section @click="selectCourse(course)" class="course">
           <div
             class="course__image"
@@ -44,7 +44,7 @@ export default {
     courses: []
   }),
   computed: {
-    ...mapState(['user'])
+    ...mapState(["user"])
   },
   async created() {
     this.loading(true);

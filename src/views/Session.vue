@@ -1,23 +1,22 @@
 <template>
-  <div class="container pa-0">
+  <Layout :links="links">
     <div class="history">
       <span class="history__back" @click="redirect()">Cursos</span>
       <span class="history__divider">></span>
       <span v-if="course">{{course.name}}</span>
       <span v-else>...</span>
     </div>
-    <AppSidebar :links="links">
-      <Chatbots :slot="0" />
-      <Tasks :slot="1" />
-      <Events :slot="2" />
-      <Evaluations :slot="3" />
-      <Students :slot="4" :get="getStudents" />
-    </AppSidebar>
-  </div>
+
+    <Chatbots :slot="0" />
+    <Tasks :slot="1" />
+    <Events :slot="2" />
+    <Evaluations :slot="3" />
+    <Students :slot="4" :get="getStudents" />
+  </Layout>
 </template>
 
 <script>
-import AppSidebar from "@/components/AppSidebar";
+import Layout from "@/components/Layout";
 import Chatbots from "@/components/Session/Chatbots";
 import Tasks from "@/components/Session/Tasks";
 import Events from "@/components/Session/Events/index";
@@ -36,24 +35,24 @@ export default {
       {
         image:
           "https://images.squarespace-cdn.com/content/v1/55d1e076e4b0be96a30dc726/1477412415649-WW90BD77ALIB9U99VTIA/ke17ZwdGBToddI8pDm48kDmvgM2_GYudIur22MWWiLdZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZamWLI2zvYWH8K3-s_4yszcp2ryTI0HqTOaaUohrI8PIvFa2r33EMaMk7hlBJBei4G1FTiqzsF6lpp3EXtW1YCk/image-asset.png",
-        text: "Aprender"
+        name: "Aprender"
       },
       {
         image:
           "https://limpiasol.com.ar/sitio/wp-content/uploads/2016/09/task-done-flat.png",
-        text: "Tareas"
+        name: "Tareas"
       },
       {
         image: require("@/assets/braintutor/icon-event.png"),
-        text: "Agenda"
+        name: "Agenda"
       },
       {
         image: require("@/assets/braintutor/icon-exam.png"),
-        text: "Evaluaciones"
+        name: "Evaluaciones"
       },
       {
         image: require("@/assets/braintutor/icon-students.png"),
-        text: "Alumnos"
+        name: "Alumnos"
       }
     ]
   }),
@@ -70,7 +69,7 @@ export default {
     }
   },
   components: {
-    AppSidebar,
+    Layout,
     Tasks,
     Chatbots,
     Events,
