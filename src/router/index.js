@@ -112,6 +112,7 @@ router.beforeEach(async (to, from, next) => {
   let token = localStorage.getItem('token')
   if (token) {
     store.state.loading = true
+    store.state.loading_msg = ''
     try {
       user = await getUser()
       store.commit('setUser', user)
