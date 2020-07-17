@@ -21,7 +21,12 @@
             dismissible
           >Datos incorrectos.</v-alert>
           <v-text-field v-model="username" :rules="usernameRules" label="Usuario"></v-text-field>
-          <v-text-field v-model="password" :rules="passwordRules" label="Contraseña" type="password"></v-text-field>
+          <v-text-field
+            v-model="password"
+            :rules="passwordRules"
+            label="Contraseña"
+            type="password"
+          ></v-text-field>
         </v-card-text>
         <v-card-actions class="pt-0">
           <v-btn :loading="loading_login" block color="primary" type="submit">Iniciar Sesión</v-btn>
@@ -53,7 +58,11 @@ export default {
   }),
   async mounted() {
     let school_user = getParam("school_user");
-    this.school = await getSchoolByUser(school_user);
+    try {
+      this.school = await getSchoolByUser(school_user);
+    } catch (error) {
+      this.$root.$children[0].showMessage("Error", error.msg);
+    }
     this.loading = false;
   },
   methods: {

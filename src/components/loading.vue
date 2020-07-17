@@ -1,6 +1,6 @@
 <template>
   <div class="loading" :class="{active: active}">
-    <v-progress-circular :width="3" :size="80" indeterminate color="green"></v-progress-circular>
+    <v-progress-circular :width="3" :size="80" indeterminate color="#5553ff"></v-progress-circular>
     <p class="loading__message">{{message}}</p>
   </div>
 </template>

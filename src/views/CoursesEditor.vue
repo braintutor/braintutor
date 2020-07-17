@@ -1,61 +1,163 @@
+
 <template>
-  <div class="container">
-    <loading :active="loading" :message="loading_message" />
-    <p class="empty" v-if="courses.length <= 0">No tiene cursos asignados.</p>
-    <div class="row no-gutters">
-      <div
-        class="col-6 col-md-4 col-lg-3 px-2 pb-4"
-        v-for="(course, c_idx) in courses"
-        :key="c_idx"
-      >
-        <Card :callback="() => edit(course)" color="#86bd98">
-          <p class="card-item">{{course.name}}</p>
-          <!-- <div
-            class="card-value"
-            v-for="(chatbot, ch_idx) in course.chatbots"
-            :key="ch_idx"
-          >{{chatbot.name}}</div>-->
-        </Card>
+  <div class="mcontainer">
+    <h1 class="mtitle">
+      <v-icon class="mr-3" style="font-size: 2.4rem">mdi-monitor-edit</v-icon>Editar Cursos
+    </h1>
+    <div class="row">
+      <div v-for="(course, idx) in courses" :key="idx" class="col-12 col-sm-6 col-md-4">
+        <section @click="selectCourse(course)" class="course">
+          <div
+            class="course__image"
+            :style="{ backgroundImage: `url('${course.image || 'https://images.clipartlogo.com/files/istock/previews/1074/107415123-back-to-school-themed-doodle-background-school-doodles-vector-set.jpg'}')` }"
+          />
+          <section class="course__body">
+            <div class="course__classroom">
+              <v-icon class="course__avatar">mdi-account</v-icon>
+              <span>{{user.name}}</span>
+            </div>
+            <span class="course__course mb-7">{{course.name}}</span>
+            <div class="course__actions">
+              <button class="button">
+                Editar
+                <v-icon
+                  class="ml-1"
+                  style="color: rgb(85, 83, 255); font-size: 1.4rem"
+                >mdi-arrow-right</v-icon>
+              </button>
+            </div>
+          </section>
+        </section>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import loading from "@/components/loading";
-import Card from "@/components/Card";
-
 import { getCoursesByTeacher } from "@/services/courseService";
-// import { getChatbotsByCourse } from "@/services/chatbotService";
 import { redirect } from "@/services/router.js";
+
+import { mapState, mapMutations } from "vuex";
 
 export default {
   data: () => ({
-    courses: [],
-    loading: true,
-    loading_message: ""
+    courses: []
   }),
-  async mounted() {
-    this.loading_message = "Cargando Cursos";
-    this.courses = await getCoursesByTeacher();
-    // this.loading_message = "Cargando Unidades";
-    // for (let course of this.courses) {
-    //   let chatbots = await getChatbotsByCourse(course._id.$oid);
-    //   course.chatbots = chatbots;
-    // }
-    this.loading = false;
+  computed: {
+    ...mapState(['user'])
+  },
+  async created() {
+    this.loading(true);
+    this.loading_msg("Cargando Cursos");
+
+    try {
+      this.courses = await getCoursesByTeacher();
+    } catch (error) {
+      this.$root.$children[0].showMessage("Error", error.msg);
+    }
+    this.loading(false);
   },
   methods: {
-    edit(course) {
+    ...mapMutations(["loading", "loading_msg"]),
+    selectCourse(course) {
       redirect("course-editor", { course_id: course._id.$oid });
     }
-  },
-  components: {
-    loading,
-    Card
   }
 };
 </script>
 
 <style lang='scss' scoped>
+.mcontainer {
+  max-width: 950px;
+  margin: 0 auto;
+}
+
+.mtitle {
+  margin: 10px 4px;
+  color: #5b5b6a;
+}
+
+.course {
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  transition: 0.4s;
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+
+  &--disable {
+    -webkit-filter: grayscale(1);
+    opacity: 0.75;
+  }
+
+  &__image {
+    height: 160px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  &__body {
+    flex-grow: 1;
+    padding: 10px;
+
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__classroom {
+    margin: 8px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+  }
+
+  &__avatar {
+    height: 30px;
+    width: 30px;
+    margin-right: 10px;
+    background: #5553ff;
+    color: #fff;
+    font-size: 1rem;
+    border-radius: 50%;
+  }
+
+  &__course {
+    display: block;
+    margin: 4px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    letter-spacing: 0.25px;
+  }
+
+  &__actions {
+    margin-top: auto;
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+.button {
+  padding: 10px 12px;
+  font-weight: bold;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  transition: 0.4s;
+
+  &:hover {
+    background: #e4e4e4;
+  }
+  &:focus {
+    outline: none;
+  }
+}
 </style>
