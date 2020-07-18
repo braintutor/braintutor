@@ -118,6 +118,7 @@ export default {
   }
 
   &__avatar {
+    flex-shrink: 0;
     height: 30px;
     width: 30px;
     margin-right: 10px;

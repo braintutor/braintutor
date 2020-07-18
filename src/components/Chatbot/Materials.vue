@@ -6,7 +6,7 @@
       <!-- <div class="search">
         <input type="text" v-model="material_search" placeholder="Buscar" />
         <v-icon>mdi-magnify</v-icon>
-      </div> -->
+      </div>-->
       <div class="row">
         <div v-for="(material, idx) in materials" :key="idx" class="col-12 col-sm-6 col-md-4 pa-4">
           <section @click="selectMaterial(material)" class="material">
@@ -59,6 +59,14 @@ export default {
   methods: {
     selectMaterial(material) {
       this.material = material;
+    },
+    selectMaterialByID(material_id) {
+      if (this.material && this.material._id.$oid === material_id) return;
+
+      this.material = null;
+      setTimeout(() => {
+        this.material = this.materials.find(m => m._id.$oid === material_id);
+      }, 100);
     },
     unselectMaterial() {
       this.material = null;

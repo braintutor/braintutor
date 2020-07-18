@@ -1,7 +1,7 @@
 <template>
   <div class="mcontainer">
-    <Materials :course="course" :chatbot="chatbot" :materials="materials" />
-    <MChatbot />
+    <Materials ref="materials" :course="course" :chatbot="chatbot" :materials="materials" />
+    <MChatbot :knowledge="knowledge" />
   </div>
 </template>
 
@@ -18,6 +18,7 @@ import {
   getCourseByTeacher,
   getCourseByStudent
 } from "@/services/courseService";
+import { getQuestionTemplate } from "@/services/chatService";
 
 import { mapMutations } from "vuex";
 
@@ -39,7 +40,8 @@ export default {
     ],
     course: {},
     chatbot: {},
-    materials: []
+    materials: [],
+    knowledge: []
   }),
   async created() {
     this.loading(true);
@@ -60,8 +62,77 @@ export default {
       this.materials.sort(
         (a, b) => order.indexOf(b._id.$oid) - order.indexOf(a._id.$oid)
       );
+
+      //Knowledge Course
+      let knowledge = this.course.knowledge || [];
+
+      // Knowledge Material
+      if (this.course.adaptive) {
+        let question_template = await getQuestionTemplate();
+        this.materials.forEach(material => {
+          Object.entries(question_template).forEach(([category, questions]) => {
+            if (questions[0]) {
+              questions = questions.map(question =>
+                question.replace(/@/, material.name)
+              );
+              knowledge.push({
+                questions,
+                answers: [
+                  "Esto te puede servir.",
+                  "He encontrado esta información."
+                ],
+                material_id: material._id.$oid,
+                category
+              });
+            }
+          });
+          material.faq.forEach(({ question, answer }) => {
+            knowledge.push({
+              questions: [question],
+              answers: [answer],
+              material_id: material._id.$oid
+            });
+          });
+        });
+      } else {
+        let questions = [
+          "Muéstrame información sobre @.",
+          '"Háblame sobre @.',
+          "Explícame sobre @."
+        ];
+        this.materials.forEach(material => {
+          knowledge.push({
+            questions: questions.map(question =>
+              question.replace(/@/, material.name)
+            ),
+            answers: [
+              "Esto te puede servir.",
+              "He encontrado esta información."
+            ],
+            material_id: material._id.$oid
+          });
+        });
+      }
+
+      //Knowledge Formating
+      knowledge.forEach(k => {
+        if (k.material_id) {
+          k.actions = [
+            {
+              text: "Ver información",
+              action: () => {
+                this.$refs.materials.selectMaterialByID(k.material_id);
+              }
+            }
+          ];
+        }
+      });
+      this.knowledge = knowledge;
     } catch (error) {
-      this.$root.$children[0].showMessage("Error", error.msg);
+      this.$root.$children[0].showMessage(
+        "",
+        error.msg || "Ha ocurrido un error."
+      );
     }
 
     this.loading(false);

@@ -10,7 +10,15 @@
         :key="idx"
         class="message"
         :class="`message--${message.type}`"
-      >{{message.text}}</div>
+      >
+        <span class="message__text">{{message.text}}</span>
+        <div
+          v-for="(action, idx) in message.actions"
+          :key="idx"
+          @click="action.action"
+          class="message__action"
+        >{{action.text}}</div>
+      </div>
     </div>
     <!-- Input -->
     <form @submit.prevent="newMessage()" class="input">
@@ -35,79 +43,77 @@ import { scrollDown } from "@/services/scroll";
 import Chatbot from "@/services/chatbot";
 
 export default {
+  props: {
+    knowledge: Array
+  },
   data: () => ({
-    chatbot: null,
+    chatbot: new Chatbot(),
     messages: [
       {
-        text: "hola soy tu ayudante",
-        type: "bot"
-      },
-      {
-        text: "hola soy tu ayudante asdad sada dsad sadsa dsa sadas",
-        type: "user"
-      },
-      {
-        text:
-          "hola soy tu ayudante asdasd sadsa sad sad sadsa sadsa dsa dsadsa",
-        type: "bot"
-      },
-      {
-        text: "hola soy tu ayudante asdasd sa dsa sad",
-        type: "user"
-      },
-      {
-        text:
-          "hola soy tu ayudante asdasd sadsa sad sad sadsa sadsa dsa dsadsa",
-        type: "bot"
-      },
-      {
-        text: "hola soy tu ayudante asdasd sa dsa sad",
-        type: "user"
+        text: "Hola.\n¿En qué puedo ayudarte?",
+        type: "bot",
+        actions: [
+          {
+            text: "Ver más",
+            action: () => {
+              console.log("hola");
+            }
+          },
+          {
+            text: "Ver videos",
+            action: () => {
+              console.log("hola");
+            }
+          }
+        ]
       }
     ],
     new_message: "",
     show: true
   }),
+  watch: {
+    knowledge() {
+      this.init();
+    }
+  },
   mounted() {
-    this.chatbot = new Chatbot();
-    let knowledge = [
-      { questions: ["Hola"], answers: ["Hola @usuario@nombre."] },
-      {
-        questions: ["Adiós", "Chau", "Nos vemos"],
-        answers: ["Nos vemos pronto @usuario@nombre.", "Adiós @usuario@nombre."]
-      },
-      { questions: ["Gracias"], answers: ["No hay de qué."] }
-    ];
-    let entities = {
-      usuario: {
-        nombre: this.$store.state.user.first_name.split(/\s+/g)[0]
-      }
-    };
-    this.chatbot.train(knowledge, entities);
+    this.init();
   },
   methods: {
+    init() {
+      if (this.knowledge.length > 1) {
+        let entities = {
+          usuario: {
+            nombre: this.$store.state.user.first_name.split(/\s+/g)[0]
+          }
+        };
+        this.chatbot.train(this.knowledge, entities);
+      }
+    },
     newMessage() {
       let answer = this.new_message;
       this.addMessage(answer, "user");
       this.new_message = "";
 
-      answer = this.getAnswer(answer);
+      let { answers, actions } = this.getAnswer(answer);
+      answer = answers[Math.floor(Math.random() * answers.length)];
+
       this.$refs.avatar.startAnimationTalk();
       this.chatbot.talk(answer, () => this.$refs.avatar.startAnimationNormal());
-      this.addMessage(answer, "bot");
+      this.addMessage(answer, "bot", actions);
     },
-    addMessage(text, type) {
+    addMessage(text, type, actions = []) {
       this.messages.push({
         text,
-        type
+        type,
+        actions
       });
       setTimeout(() => {
         scrollDown("messages");
       }, 20);
     },
     getAnswer(answer) {
-      let { answers } = this.chatbot.getAnswer(answer);
-      return answers[Math.floor(Math.random() * answers.length)];
+      return this.chatbot.getAnswer(answer);
     },
     //
     showChatbot() {
@@ -136,6 +142,8 @@ export default {
 $time: 0.3s;
 $icon-height: 90px;
 $icon-width: 90px;
+
+$color-blue: #0078ff;
 
 .chatbot {
   height: $icon-height;
@@ -230,24 +238,50 @@ $icon-width: 90px;
 }
 
 .message {
+  overflow: hidden;
   width: max-content;
-  max-width: 80%;
-  padding: 4px 10px;
+  max-width: 85%;
   font-size: 0.85rem;
   border-radius: 14px;
   word-wrap: break-word;
+  white-space: pre-wrap;
 
   &:not(:last-child) {
     margin-bottom: 8px;
   }
 
+  &__text {
+    display: block;
+    padding: 4px 10px;
+  }
+
+  &__action {
+    padding: 4px 10px;
+    background: #fff;
+    color: $color-blue;
+    font-weight: bold;
+    text-align: center;
+
+    cursor: pointer;
+  }
+
   &--bot {
-    background: #e2e2e2;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+
+    .message__action {
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
   }
   &--user {
     margin-left: auto;
-    background: #437bff;
+    background: $color-blue;
+    border: 1px solid $color-blue;
     color: #fff;
+
+    .message__action {
+      border-top: 1px solid $color-blue;
+    }
   }
 }
 
@@ -261,7 +295,7 @@ $icon-width: 90px;
     flex-grow: 1;
     padding: 6px 14px;
 
-    background: #d1d1d1;
+    background: #ececec;
     font-size: 0.85rem;
     border-radius: 20px;
     transition: $time;
