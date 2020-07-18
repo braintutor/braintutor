@@ -92,7 +92,7 @@ export default {
 }
 
 // @media only screen and (max-width: 2000px) {
-  @media only screen and (max-width: 768px) {
+@media only screen and (max-width: 768px) {
   .app {
     flex-direction: column;
     &__body {
