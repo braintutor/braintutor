@@ -1,11 +1,13 @@
 <template>
   <div class="mcontainer">
     <Materials :course="course" :chatbot="chatbot" :materials="materials" />
+    <MChatbot />
   </div>
 </template>
 
 <script>
 import Materials from "@/components/Chatbot/Materials";
+import MChatbot from "@/components/MChatbot/index";
 
 import { getParam } from "@/services/router.js";
 import {
@@ -68,7 +70,8 @@ export default {
     ...mapMutations(["loading", "loading_msg"])
   },
   components: {
-    Materials
+    Materials,
+    MChatbot
   }
 };
 </script>
@@ -77,5 +80,6 @@ export default {
 .mcontainer {
   max-width: 950px;
   margin: 0 auto;
+  margin-bottom: 100px;
 }
 </style>
