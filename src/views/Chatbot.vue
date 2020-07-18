@@ -1,17 +1,17 @@
 <template>
-  <Layout :links="links">
-    <Materials :slot="0" :course="course" :chatbot="chatbot" :materials="materials" />
-    <div :slot="1">Conocimiento</div>
-    <div :slot="2">Configuración</div>
-  </Layout>
+  <div class="mcontainer">
+    <Materials :course="course" :chatbot="chatbot" :materials="materials" />
+  </div>
 </template>
 
 <script>
-import Layout from "@/components/Layout";
 import Materials from "@/components/Chatbot/Materials";
 
 import { getParam } from "@/services/router.js";
-import { getChatbotAndMaterialsByTeacher } from "@/services/chatbotService";
+import {
+  getChatbotAndMaterialsByStudent,
+  getChatbotAndMaterialsByTeacher
+} from "@/services/chatbotService";
 import {
   getCourseByTeacher,
   getCourseByStudent
@@ -45,7 +45,9 @@ export default {
 
     let chatbot_id = getParam("chatbot_id");
     try {
-      this.chatbot = (await getChatbotAndMaterialsByTeacher(chatbot_id))[0];
+      this.chatbot = (this.$store.state.user.role === "TEA"
+        ? await getChatbotAndMaterialsByTeacher(chatbot_id)
+        : await getChatbotAndMaterialsByStudent(chatbot_id))[0];
       this.materials = this.chatbot.materials;
       this.course = await (this.$store.state.user.role === "TEA"
         ? getCourseByTeacher(this.chatbot.course_id.$oid)
@@ -57,7 +59,6 @@ export default {
         (a, b) => order.indexOf(b._id.$oid) - order.indexOf(a._id.$oid)
       );
     } catch (error) {
-      console.log(error);
       this.$root.$children[0].showMessage("Error", error.msg);
     }
 
@@ -67,11 +68,14 @@ export default {
     ...mapMutations(["loading", "loading_msg"])
   },
   components: {
-    Layout,
     Materials
   }
 };
 </script>
 
-<style>
+<style lang='scss' scoped>
+.mcontainer {
+  max-width: 950px;
+  margin: 0 auto;
+}
 </style>

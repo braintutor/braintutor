@@ -120,7 +120,7 @@ export default {
         0,
         Math.min(this.category_idx + dir, this.categories.length - 1)
       );
-      scrollTop("app__body");
+      scrollTop();
     }
   },
   components: {

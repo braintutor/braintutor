@@ -3,10 +3,10 @@
     <!-- List -->
     <div v-show="!material">
       <h1 class="title_">{{chatbot.name}}</h1>
-      <div class="search">
+      <!-- <div class="search">
         <input type="text" v-model="material_search" placeholder="Buscar" />
         <v-icon>mdi-magnify</v-icon>
-      </div>
+      </div> -->
       <div class="row">
         <div v-for="(material, idx) in materials" :key="idx" class="col-12 col-sm-6 col-md-4 pa-4">
           <section @click="selectMaterial(material)" class="material">

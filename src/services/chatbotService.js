@@ -18,6 +18,12 @@ function getChatbotAndMaterialsByTeacher(chatbot_id) {
   })
 }
 
+function getChatbotAndMaterialsByStudent(chatbot_id) {
+  return fetch_post('getChatbotAndMaterialsByStudent', {
+    chatbot_id
+  })
+}
+
 function getChatbotNameOrder(chatbot_id) {
   return fetch_post('getChatbotNameOrder', {
     chatbot_id
@@ -58,6 +64,7 @@ function removeChatbot(id) {
 
 export {
   getChatbotAndMaterialsByTeacher,
+  getChatbotAndMaterialsByStudent,
   getChatbotsByCourse,
   getChatbotsBySession,
   getChatbotNameOrder,
