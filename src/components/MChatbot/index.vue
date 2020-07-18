@@ -1,15 +1,8 @@
 <template>
-  <div
-    class="chatbot"
-    :class="{' chatbot--active': show}"
-    onclick="input.focus()"
-    @click="showChatbot()"
-  >
+  <div class="chatbot" :class="{' chatbot--active': show}" @click="showChatbot()">
     <v-icon @click="hideChatbot($event)" class="chatbot__close">mdi-close</v-icon>
     <!-- Avatar -->
-    <div class="avatar">
-      <img :src="require('@/assets/avatar/normal.png')" alt />
-    </div>
+    <Avatar ref="avatar" />
     <!-- Messages -->
     <div id="messages" class="messages messages--active">
       <div
@@ -36,6 +29,8 @@
 </template>
 
 <script>
+import Avatar from "./Avatar";
+
 import { scrollDown } from "@/services/scroll";
 import Chatbot from "@/services/chatbot";
 
@@ -97,7 +92,8 @@ export default {
       this.new_message = "";
 
       answer = this.getAnswer(answer);
-      this.chatbot.talk(answer);
+      this.$refs.avatar.startAnimationTalk();
+      this.chatbot.talk(answer, () => this.$refs.avatar.startAnimationNormal());
       this.addMessage(answer, "bot");
     },
     addMessage(text, type) {
@@ -115,15 +111,23 @@ export default {
     },
     //
     showChatbot() {
-      this.show = true;
-      setTimeout(() => {
-        scrollDown("messages");
-      }, 500);
+      if (!this.show) {
+        this.show = true;
+        document.getElementById("input").focus();
+        setTimeout(() => {
+          scrollDown("messages");
+        }, 500);
+      }
     },
     hideChatbot(e) {
-      e.stopPropagation();
-      this.show = false;
+      if (this.show) {
+        e.stopPropagation();
+        this.show = false;
+      }
     }
+  },
+  components: {
+    Avatar
   }
 };
 </script>
@@ -165,6 +169,7 @@ $icon-width: 90px;
     right: 4px;
     opacity: 0;
     transition: $time;
+    z-index: 10001;
 
     color: #fff;
     pointer-events: none;

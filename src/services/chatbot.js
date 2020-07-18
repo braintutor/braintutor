@@ -58,11 +58,12 @@ export default class Chatbot {
     })
   }
 
-  talk(text) {
+  talk(text, onend = () => { }) {
     this.msg.text = text
     let synth = window.speechSynthesis;
     synth.cancel()
     synth.speak(this.msg);
+    this.msg.onend = onend;
   }
 
   _clean(text) {
