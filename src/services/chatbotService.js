@@ -24,12 +24,6 @@ function getChatbotAndMaterialsByStudent(chatbot_id) {
   })
 }
 
-function getChatbotNameOrder(chatbot_id) {
-  return fetch_post('getChatbotNameOrder', {
-    chatbot_id
-  })
-}
-
 function getChatbotsAndMaterials(course_id) {
   return fetch_post('getChatbotsAndMaterials', {
     course_id
@@ -67,7 +61,6 @@ export {
   getChatbotAndMaterialsByStudent,
   getChatbotsByCourse,
   getChatbotsBySession,
-  getChatbotNameOrder,
   getChatbotsAndMaterials,
   addChatbot,
   updateChatbot,

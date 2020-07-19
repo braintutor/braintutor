@@ -1,5 +1,10 @@
 <template>
-  <div class="chatbot" :class="{' chatbot--active': show}" @click="showChatbot()">
+  <div
+    class="chatbot"
+    :class="{' chatbot--active': show}"
+    onclick="input.focus()"
+    @click="showChatbot()"
+  >
     <v-icon @click="hideChatbot($event)" class="chatbot__close">mdi-close</v-icon>
     <!-- Avatar -->
     <Avatar ref="avatar" />
@@ -105,7 +110,6 @@ export default {
     showChatbot() {
       if (!this.show) {
         this.show = true;
-        document.getElementById("input").focus();
         setTimeout(() => {
           scrollDown("messages");
         }, 500);
