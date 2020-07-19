@@ -146,7 +146,7 @@ $color-blue: #0078ff;
   border-radius: 50%;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   transition: $time;
-  z-index: 10000;
+  z-index: 2;
   cursor: pointer;
 
   position: fixed;
@@ -167,7 +167,7 @@ $color-blue: #0078ff;
     right: 4px;
     opacity: 0;
     transition: $time;
-    z-index: 10001;
+    z-index: 1;
 
     color: #fff;
     pointer-events: none;
