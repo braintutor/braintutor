@@ -51,25 +51,11 @@ export default {
     messages: [
       {
         text: "Hola.\n¿En qué puedo ayudarte?",
-        type: "bot",
-        actions: [
-          {
-            text: "Ver más",
-            action: () => {
-              console.log("hola");
-            }
-          },
-          {
-            text: "Ver videos",
-            action: () => {
-              console.log("hola");
-            }
-          }
-        ]
+        type: "bot"
       }
     ],
     new_message: "",
-    show: true
+    show: false
   }),
   watch: {
     knowledge() {

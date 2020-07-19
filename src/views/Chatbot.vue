@@ -121,7 +121,7 @@ export default {
             {
               text: "Ver información",
               action: () => {
-                this.$refs.materials.selectMaterialByID(k.material_id);
+                this.$refs.materials.selectMaterialByID(k.material_id, k.category);
               }
             }
           ];

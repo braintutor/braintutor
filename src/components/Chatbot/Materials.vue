@@ -29,16 +29,16 @@
       </div>
     </div>
     <!-- Material -->
-    <MaterialCategories
-      v-if="material && course.adaptive"
-      :material="material"
-      @unselectMaterial="unselectMaterial"
-    />
-    <MaterialDocuments
-      v-if="material && !course.adaptive"
-      :material="material"
-      @unselectMaterial="unselectMaterial"
-    />
+    <div v-if="material">
+      <div class="mmaterial__menu">
+        <button @click="unselectMaterial()" class="button">
+          <v-icon class="ml-1" style="color: rgb(85, 83, 255); font-size: 1.4rem">mdi-arrow-left</v-icon>
+        </button>
+        <span class="mmaterial__name">{{material.name}}</span>
+      </div>
+      <MaterialCategories v-if="course.adaptive" :material="material" />
+      <MaterialDocuments v-else :material="material" />
+    </div>
   </div>
 </template>
 
@@ -59,13 +59,15 @@ export default {
   methods: {
     selectMaterial(material) {
       this.material = material;
+      this.material.default = "";
     },
-    selectMaterialByID(material_id) {
-      if (this.material && this.material._id.$oid === material_id) return;
+    selectMaterialByID(material_id, category) {
+      // if (this.material && this.material._id.$oid === material_id) return;
 
       this.material = null;
       setTimeout(() => {
         this.material = this.materials.find(m => m._id.$oid === material_id);
+        this.material.default = category;
       }, 100);
     },
     unselectMaterial() {
@@ -167,6 +169,21 @@ export default {
     margin-top: auto;
     display: flex;
     justify-content: flex-end;
+  }
+}
+
+.mmaterial {
+  &__menu {
+    display: flex;
+    align-items: center;
+  }
+
+  &__name {
+    display: block;
+    margin-left: 10px;
+    font-weight: bold;
+    font-size: 1.4rem;
+    letter-spacing: 0.25px;
   }
 }
 
