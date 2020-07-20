@@ -2,10 +2,12 @@
   <Layout :links="links">
     <loading :active="loading" :message="loading_msg" />
 
-    <section class="path">
-      <span class="path__link" @click="redirectCourse()">{{course.name}}</span>
-      <span class="mx-2">/</span>
-      <span>{{material.name}}</span>
+    <section slot="header" class="m-path">
+      <span @click="redirectCourses()" class="m-path__name m-path__name--link">Editar Cursos</span>
+      <span class="m-path__icon">></span>
+      <span @click="redirectCourse()" class="m-path__name m-path__name--link">{{course.name}}</span>
+      <span class="m-path__icon">></span>
+      <span class="m-path__name">{{material.name}}</span>
     </section>
 
     <ContentEditor :slot="0" v-if="material._id" :material="material" :course="course" />
@@ -41,8 +43,12 @@ export default {
         name: "Configuración"
       }
     ],
-    material: {},
-    course: {},
+    material: {
+      name: "..."
+    },
+    course: {
+      name: "..."
+    },
     //
     loading: false,
     loading_msg: ""
@@ -64,6 +70,9 @@ export default {
   methods: {
     redirectCourse() {
       redirect("course-editor", { course_id: this.course._id.$oid });
+    },
+    redirectCourses() {
+      redirect("courses-editor");
     }
   },
   components: {
@@ -77,15 +86,4 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.path {
-  margin-bottom: 6px;
-  color: #7a7a7a;
-  font-size: 0.95rem;
-
-  &__link {
-    text-decoration: underline;
-    font-weight: bold;
-    cursor: pointer;
-  }
-}
 </style>

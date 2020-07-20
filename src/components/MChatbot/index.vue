@@ -146,7 +146,7 @@ $color-blue: #0078ff;
   border-radius: 50%;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   transition: $time;
-  z-index: 2;
+  z-index: 100;
   cursor: pointer;
 
   position: fixed;
@@ -231,7 +231,7 @@ $color-blue: #0078ff;
   overflow: hidden;
   width: max-content;
   max-width: 85%;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   border-radius: 14px;
   word-wrap: break-word;
   white-space: pre-wrap;
@@ -283,10 +283,10 @@ $color-blue: #0078ff;
 
   input[type="text"] {
     flex-grow: 1;
-    padding: 6px 14px;
+    padding: 8px 14px;
 
     background: #ececec;
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     border-radius: 20px;
     transition: $time;
 

@@ -3,7 +3,6 @@
 
 @import './animation.scss';
 @import './aspect-ratio.scss';
-@import './background.scss';
 @import './layout.scss';
 @import './m-card.scss';
 @import './m-cardd.scss';
@@ -13,6 +12,32 @@
 body, body * {
   font-family: Comfortaa, Arial, Helvetica, sans-serif;
   // font-family: 'Nunito Sans', Arial, Helvetica, sans-serif;
+}
+
+.m-path {
+  padding: 8px 10px;
+  padding-top: 0;
+  color: #7a7a7a;
+  font-size: 0.9rem;
+
+  &__icon {
+    margin: 0 4px;
+    color: #5553ff;
+  }
+
+  &__name {
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: .3s;
+
+    &--link {
+      font-weight: bold;
+      cursor: pointer;
+      &:hover {
+        background: #e4e4e4;
+      }
+    }
+  }
 }
 
 /*Scrollbar*/

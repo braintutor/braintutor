@@ -263,6 +263,7 @@ export default {
 
       let new_material = {
         name: "Nombre",
+        image: require('@/assets/braintutor/icon.png'),
         description: "Descripción",
         overview: "Resumen",
         explanation,

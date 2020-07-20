@@ -1,5 +1,10 @@
 <template>
   <div class="app">
+    <!-- Header -->
+    <div class="header">
+      <slot name="header"></slot>
+    </div>
+    <!-- Sidebar -->
     <nav class="sidebar">
       <div
         v-for="(link, idx) in links"
@@ -12,6 +17,7 @@
         <div class="link__name">{{link.name}}</div>
       </div>
     </nav>
+    <!-- Body -->
     <div id="app__body" class="app__body">
       <div class="content">
         <slot name="default"></slot>
@@ -36,14 +42,24 @@ export default {
 
 <style lang='scss' scoped>
 .app {
-  height: 100%;
-  display: flex;
+  height: calc(100vh - 64px);
+  display: grid;
+
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr;
 
   &__body {
-    height: calc(100vh - 64px);
     overflow-y: auto;
     flex-grow: 1;
   }
+}
+
+.header {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  // box-shadow: 0 2px 3px #ccc;
+  border-bottom: 1px solid #ccc;
+  z-index: 1;
 }
 
 .sidebar {
@@ -52,6 +68,7 @@ export default {
 }
 
 .content {
+  padding: 10px;
   max-width: 950px;
   margin: 0 auto;
 }
@@ -94,12 +111,15 @@ export default {
 // @media only screen and (max-width: 2000px) {
 @media only screen and (max-width: 768px) {
   .app {
-    flex-direction: column;
-    &__body {
-      height: auto;
-      padding: 20px 0;
-    }
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr;
   }
+
+  .header {
+    grid-column-start: 1;
+    grid-column-end: 2;
+  }
+
   .sidebar {
     width: 100%;
     border: none;

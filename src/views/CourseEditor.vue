@@ -2,8 +2,10 @@
   <Layout :links="links">
     <loading :active="loading" :message="loading_msg" />
 
-    <section class="path">
-      <span>{{course.name}}</span>
+    <section slot="header" class="m-path">
+      <span @click="redirectCourses()" class="m-path__name m-path__name--link">Editar Cursos</span>
+      <span class="m-path__icon">></span>
+      <span class="m-path__name">{{course.name}}</span>
     </section>
 
     <MaterialsEditor :slot="0" />
@@ -19,7 +21,7 @@ import MaterialsEditor from "@/components/CourseEditor/MaterialsEditor";
 import KnowledgeEditor from "@/components/globals/KnowledgeEditor";
 import CourseSettings from "@/components/CourseEditor/CourseSettings";
 
-import { getParam } from "@/services/router.js";
+import { getParam, redirect } from "@/services/router.js";
 import {
   getCourseByTeacher,
   updateCourseKnowledge
@@ -59,6 +61,9 @@ export default {
     this.loading = false;
   },
   methods: {
+    redirectCourses() {
+      redirect("courses-editor");
+    },
     async getKnowledge() {
       let { knowledge } = await getCourseByTeacher(this.course_id);
       return knowledge || [];
@@ -78,15 +83,4 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.path {
-  margin-bottom: 6px;
-  color: #7a7a7a;
-  font-size: 0.95rem;
-
-  &__link {
-    text-decoration: underline;
-    font-weight: bold;
-    cursor: pointer;
-  }
-}
 </style>

@@ -178,17 +178,16 @@ export default {
       data.append("material_id", this.material._id.$oid);
 
       try {
-        let res = await fetch(
-          "https://braintutor-service-v2.herokuapp.com/uploadMaterialImage",
-          {
-            // let res = await fetch("http://localhost:5000/uploadMaterialImage", {
-            method: "POST",
-            body: data,
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`
-            }
+        // let res = await fetch(
+        //   "https://braintutor-service-v2.herokuapp.com/uploadMaterialImage",
+        //   {
+        let res = await fetch("http://localhost:5000/uploadMaterialImage", {
+          method: "POST",
+          body: data,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
           }
-        );
+        });
         if (res.status >= 400 && res.status < 600) throw await res.json();
 
         let { url } = await res.json();

@@ -1,11 +1,10 @@
 <template>
   <Layout :links="links">
-    <div class="history">
-      <span class="history__back" @click="redirect()">Cursos</span>
-      <span class="history__divider">></span>
-      <span v-if="course">{{course.name}}</span>
-      <span v-else>...</span>
-    </div>
+    <section slot="header" class="m-path">
+      <span @click="redirectCourses()" class="m-path__name m-path__name--link">Cursos</span>
+      <span class="m-path__icon">></span>
+      <span class="m-path__name">{{course.name}}</span>
+    </section>
 
     <Chatbots :slot="0" />
     <Tasks :slot="1" />
@@ -29,7 +28,9 @@ import { getStudentsBySessionStudent } from "@/services/studentService";
 
 export default {
   data: () => ({
-    course: null,
+    course: {
+      name: "..."
+    },
     session_id: "",
     links: [
       {
@@ -61,7 +62,7 @@ export default {
     this.course = await getCourseNameBySession(this.session_id);
   },
   methods: {
-    redirect() {
+    redirectCourses() {
       redirect("sessions-student");
     },
     async getStudents() {
