@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!task_selected">
+  <div v-if="!task_selected" class="m-container py-3">
     <loading :active="loading" :message="loading_msg" />
     <!-- MENU -->
     <div class="tasks__menu">
@@ -66,7 +66,7 @@
   </div>
 
   <!-- TASK -->
-  <Task v-else :task="task_selected" :students="students" :unselect="unselect" :restore="restore" />
+  <Task v-else :task="task_selected" :students="students" :unselect="unselect" :restore="restore"  class="m-container py-3"/>
 </template>
 
 <script>

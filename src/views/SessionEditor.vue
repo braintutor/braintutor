@@ -10,7 +10,6 @@
       v-if="course._id"
       :course="course"
       :get="getStudents"
-      :class="{'m-container py-3': link_idx !== 0}"
     />
   </Layout>
 </template>

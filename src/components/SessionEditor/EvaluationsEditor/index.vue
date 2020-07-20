@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!evaluation">
+  <div v-if="!evaluation" class="m-container py-3">
     <loading :active="loading" :message="loading_message" />
     <div class="row no-gutters">
       <div
@@ -86,12 +86,14 @@
     :evaluation="evaluation"
     :getEvaluations="getEvaluations"
     :unselect="unselect"
+    class="m-container py-3"
   />
   <Results
     v-else
     :evaluation_id="evaluation._id.$oid"
     :getEvaluations="getEvaluations"
     :unselect="unselect"
+    class="m-container py-3"
   />
 </template>
 

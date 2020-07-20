@@ -20,7 +20,7 @@
         <div
           v-for="(action, idx) in message.actions"
           :key="idx"
-          @click="action.action"
+          @click="actionChatbot($event, action.action)"
           class="message__action"
         >{{action.text}}</div>
       </div>
@@ -107,6 +107,13 @@ export default {
       return this.chatbot.getAnswer(answer);
     },
     //
+    actionChatbot(e, action) {
+      e.stopPropagation();
+      this.show = false;
+      setTimeout(() => {
+        action();
+      }, 200);
+    },
     showChatbot() {
       if (!this.show) {
         this.show = true;
@@ -129,7 +136,7 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-$time: 0.3s;
+$time: 0.2s;
 $icon-height: 90px;
 $icon-width: 90px;
 

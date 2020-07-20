@@ -134,7 +134,7 @@ export default {
 //   }
 // }
 
-$time: 0.3s;
+$time: 0.2s;
 $icon-height: 90px;
 $icon-width: 90px;
 
