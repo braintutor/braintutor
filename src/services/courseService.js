@@ -19,12 +19,6 @@ function getCourseByStudent(course_id) {
   })
 }
 
-function getCourseNameBySession(session_id) {
-  return fetch_post('getCourseNameBySession', {
-    session_id
-  })
-}
-
 function getCoursesByTeacher() {
   return fetch_get('getCoursesByTeacher')
 }
@@ -73,7 +67,6 @@ export {
   getCourseIdByChatbot,
   getCourseByTeacher,
   getCourseByStudent,
-  getCourseNameBySession,
   getCoursesByTeacher,
   getCoursesBySchool,
   getCourseByMaterial,

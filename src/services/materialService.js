@@ -12,6 +12,12 @@ function getMaterials(chatbot_id) {
   })
 }
 
+function getMaterialsByCourseTeacher(course_id) {
+  return fetch_post('getMaterialsByCourseTeacher', {
+    course_id
+  })
+}
+
 function addMaterial(chatbot_id, material) {
   return fetch_post('addMaterial', {
     chatbot_id,
@@ -58,6 +64,7 @@ function removeMaterial(material_id) {
 export {
   getMaterial,
   getMaterials,
+  getMaterialsByCourseTeacher,
   addMaterial,
   updateMaterialCategory,
   updateMaterialDocuments,

@@ -19,7 +19,7 @@
     </nav>
     <!-- Body -->
     <div id="app__body" class="app__body">
-      <div class="content">
+      <div class="content m-container">
         <slot name="default"></slot>
         <div v-for="(link, idx) in links" :key="idx">
           <slot v-if="link_idx === idx" :name="idx"></slot>
@@ -69,7 +69,6 @@ export default {
 
 .content {
   padding: 10px;
-  max-width: 950px;
   margin: 0 auto;
 }
 

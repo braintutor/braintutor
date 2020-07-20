@@ -1,5 +1,11 @@
 import { fetch_get, fetch_post } from "./fetch";
 
+function getSessionByTeacher(session_id) {
+  return fetch_post('getSessionByTeacher', {
+    session_id
+  })
+}
+
 function getSessionsBySchool() {
   return fetch_get('getSessionsBySchool')
 }
@@ -30,4 +36,4 @@ function updateSession(session) {
   })
 }
 
-export { getSessionsBySchool, getSessionsByTeacher, getSessionsByStudent, getSessionsByClassroom, addSession, updateSession }
+export { getSessionByTeacher, getSessionsBySchool, getSessionsByTeacher, getSessionsByStudent, getSessionsByClassroom, addSession, updateSession }

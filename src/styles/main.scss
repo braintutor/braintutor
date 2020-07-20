@@ -14,6 +14,11 @@ body, body * {
   // font-family: 'Nunito Sans', Arial, Helvetica, sans-serif;
 }
 
+.m-container {
+  max-width: 950px;
+  margin: 0 auto;
+}
+
 .m-path {
   padding: 8px 10px;
   padding-top: 0;

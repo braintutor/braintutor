@@ -6,7 +6,8 @@
       <span class="m-path__name">{{course.name}}</span>
     </section>
 
-    <Chatbots :slot="0" />
+    <!-- <Chatbots :slot="0" /> -->
+    <Materials :slot="0" v-if="course._id" :course="course" />
     <TasksEditor :slot="1" />
     <EvaluationsEditor :slot="2" />
     <EventsEditor :slot="3" />
@@ -16,15 +17,18 @@
 
 <script>
 import Layout from "@/components/Layout";
-import Chatbots from "@/components/Session/Chatbots";
+// import Chatbots from "@/components/Session/Chatbots";
+import Materials from "@/components/SessionEditor/Materials";
 import TasksEditor from "@/components/SessionEditor/TasksEditor/index";
 import EvaluationsEditor from "@/components/SessionEditor/EvaluationsEditor/index";
 import EventsEditor from "@/components/SessionEditor/EventsEditor/index";
 import Students from "@/components/Students/index";
 
 import { redirect, getParam } from "@/services/router";
-import { getCourseNameBySession } from "@/services/courseService";
+import { getSessionByTeacher } from "@/services/sessionService";
 import { getStudentsBySession } from "@/services/studentService";
+
+import { mapMutations } from "vuex";
 
 export default {
   data: () => ({
@@ -56,11 +60,22 @@ export default {
       }
     ]
   }),
-  async mounted() {
-    this.session_id = getParam("session_id");
-    this.course = await getCourseNameBySession(this.session_id);
+  async created() {
+    this.loading(true);
+    this.loading_msg("Cargando");
+
+    let session_id = getParam("session_id");
+    try {
+      let session = await getSessionByTeacher(session_id);
+      this.course = session.course;
+    } catch (error) {
+      this.$root.$children[0].showMessage("", error.msg);
+    }
+
+    this.loading(false);
   },
   methods: {
+    ...mapMutations(["loading", "loading_msg"]),
     redirectCourses() {
       redirect("sessions-teacher");
     },
@@ -70,7 +85,8 @@ export default {
   },
   components: {
     Layout,
-    Chatbots,
+    // Chatbots,
+    Materials,
     TasksEditor,
     EvaluationsEditor,
     EventsEditor,
