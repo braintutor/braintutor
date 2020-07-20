@@ -1,5 +1,5 @@
 <template>
-  <Layout :links="links">
+  <Layout :links="links" fluid>
     <section slot="header" class="m-path">
       <span @click="redirectCourses()" class="m-path__name m-path__name--link">Cursos</span>
       <span class="m-path__icon">></span>
@@ -8,17 +8,17 @@
 
     <!-- <Chatbots :slot="0" /> -->
     <Materials :slot="0" v-if="course._id" :course="course" />
-    <TasksEditor :slot="1" />
-    <EvaluationsEditor :slot="2" />
-    <EventsEditor :slot="3" />
-    <Students :slot="4" :get="getStudents" />
+    <TasksEditor class="m-container" :slot="1" />
+    <EvaluationsEditor class="m-container" :slot="2" />
+    <EventsEditor class="m-container" :slot="3" />
+    <Students class="m-container" :slot="4" :get="getStudents" />
   </Layout>
 </template>
 
 <script>
 import Layout from "@/components/Layout";
 // import Chatbots from "@/components/Session/Chatbots";
-import Materials from "@/components/SessionEditor/Materials";
+import Materials from "@/components/SessionEditor/Materials/index";
 import TasksEditor from "@/components/SessionEditor/TasksEditor/index";
 import EvaluationsEditor from "@/components/SessionEditor/EvaluationsEditor/index";
 import EventsEditor from "@/components/SessionEditor/EventsEditor/index";

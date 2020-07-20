@@ -6,6 +6,12 @@ function getChatbotsByCourse(course_id) {
   })
 }
 
+function getChatbotsByCourseTeacher(course_id) {
+  return fetch_post('getChatbotsByCourseTeacher', {
+    course_id
+  })
+}
+
 function getChatbotsBySession(session_id) {
   return fetch_post('getChatbotsBySession', {
     session_id
@@ -57,6 +63,7 @@ function removeChatbot(id) {
 }
 
 export {
+  getChatbotsByCourseTeacher,
   getChatbotAndMaterialsByTeacher,
   getChatbotAndMaterialsByStudent,
   getChatbotsByCourse,

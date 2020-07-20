@@ -19,11 +19,11 @@
     </nav>
     <!-- Body -->
     <div id="app__body" class="app__body">
-      <div class="content m-container">
+      <div class="content" :class="{'m-container': !fluid}">
         <slot name="default"></slot>
-        <div v-for="(link, idx) in links" :key="idx">
-          <slot v-if="link_idx === idx" :name="idx"></slot>
-        </div>
+        <template v-for="(link, idx) in links">
+          <slot v-if="link_idx === idx" :name="idx" style="height: 100%"></slot>
+        </template>
       </div>
     </div>
   </div>
@@ -32,7 +32,8 @@
 <script>
 export default {
   props: {
-    links: Array
+    links: Array,
+    fluid: Boolean
   },
   data: () => ({
     link_idx: 0
@@ -68,7 +69,8 @@ export default {
 }
 
 .content {
-  padding: 10px;
+  // padding: 10px;
+  height: 100%;
   margin: 0 auto;
 }
 
