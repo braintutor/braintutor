@@ -63,13 +63,28 @@ const routes = [
   },
   {
     path: '/session-editor/:session_id',
-    name: 'session-editor',
     component: () => import('../views/SessionEditor.vue'),
     children: [
       {
-        // path: '',
         path: '',
-        component: () => import('../components/Materials/index.vue')
+        name: 'session-editor',
+        component: () => import('../components/Materials/index')
+      },
+      {
+        path: 'tasks',
+        component: () => import('../components/SessionEditor/TasksEditor/index')
+      },
+      {
+        path: 'evaluations',
+        component: () => import('../components/SessionEditor/EvaluationsEditor/index')
+      },
+      {
+        path: 'events',
+        component: () => import('../components/SessionEditor/EventsEditor/index')
+      },
+      {
+        path: 'students',
+        component: () => import('../components/Students/index')
       }
     ]
   },

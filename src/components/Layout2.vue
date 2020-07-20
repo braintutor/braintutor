@@ -9,9 +9,9 @@
       <div
         v-for="(link, idx) in links"
         :key="idx"
-        @click="link_idx = idx"
+        @click="$emit('input', idx); link.action()"
         class="link"
-        :class="{'link--active': idx === link_idx}"
+        :class="{'link--active': idx === value}"
       >
         <img :src="link.image" class="link__image" />
         <div class="link__name">{{link.name}}</div>
@@ -21,9 +21,6 @@
     <div id="app__body" class="app__body">
       <div class="content" :class="{'m-container': !fluid}">
         <slot name="default"></slot>
-        <template v-for="(link, idx) in links">
-          <slot v-if="link_idx === idx" :name="idx" style="height: 100%"></slot>
-        </template>
       </div>
     </div>
   </div>
@@ -32,12 +29,10 @@
 <script>
 export default {
   props: {
+    value: Number,
     links: Array,
     fluid: Boolean
-  },
-  data: () => ({
-    link_idx: 0
-  })
+  }
 };
 </script>
 

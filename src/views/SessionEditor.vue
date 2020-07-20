@@ -1,28 +1,22 @@
 <template>
-  <Layout :links="links" fluid>
+  <Layout v-model="link_idx" :links="links" fluid>
     <section slot="header" class="m-path">
       <span @click="redirectCourses()" class="m-path__name m-path__name--link">Cursos</span>
       <span class="m-path__icon">></span>
       <span class="m-path__name">{{course.name}}</span>
     </section>
 
-    <router-view :slot="0" v-if="course._id" :course="course" />
-
-    <!-- <Materials :slot="0" v-if="course._id" :course="course" /> -->
-    <TasksEditor class="m-container" :slot="1" />
-    <EvaluationsEditor class="m-container" :slot="2" />
-    <EventsEditor class="m-container" :slot="3" />
-    <Students class="m-container" :slot="4" :get="getStudents" />
+    <router-view
+      v-if="course._id"
+      :course="course"
+      :get="getStudents"
+      :class="{'m-container my-3': link_idx !== 0}"
+    />
   </Layout>
 </template>
 
 <script>
 import Layout from "@/components/Layout2";
-// import Materials from "@/components/Materials/index";
-import TasksEditor from "@/components/SessionEditor/TasksEditor/index";
-import EvaluationsEditor from "@/components/SessionEditor/EvaluationsEditor/index";
-import EventsEditor from "@/components/SessionEditor/EventsEditor/index";
-import Students from "@/components/Students/index";
 
 import { redirect, getParam } from "@/services/router";
 import { getSessionByTeacher } from "@/services/sessionService";
@@ -35,32 +29,48 @@ export default {
     course: {
       name: "..."
     },
-    links: [
+    links: [],
+    link_idx: 0
+  }),
+  async created() {
+    this.links = [
       {
         image:
           "https://images.squarespace-cdn.com/content/v1/55d1e076e4b0be96a30dc726/1477412415649-WW90BD77ALIB9U99VTIA/ke17ZwdGBToddI8pDm48kDmvgM2_GYudIur22MWWiLdZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZamWLI2zvYWH8K3-s_4yszcp2ryTI0HqTOaaUohrI8PIvFa2r33EMaMk7hlBJBei4G1FTiqzsF6lpp3EXtW1YCk/image-asset.png",
-        name: "Aprender"
+        name: "Aprender",
+        action: () => this.redirect("")
       },
       {
         image:
           "https://limpiasol.com.ar/sitio/wp-content/uploads/2016/09/task-done-flat.png",
-        name: "Tareas"
+        name: "Tareas",
+        action: () => this.redirect("tasks")
       },
       {
         image: require("@/assets/braintutor/icon-exam.png"),
-        name: "Evaluaciones"
+        name: "Evaluaciones",
+        action: () => this.redirect("evaluations")
       },
       {
         image: require("@/assets/braintutor/icon-event.png"),
-        name: "Agenda"
+        name: "Agenda",
+        action: () => this.redirect("events")
       },
       {
         image: require("@/assets/braintutor/icon-students.png"),
-        name: "Alumnos"
+        name: "Alumnos",
+        action: () => this.redirect("students")
       }
-    ]
-  }),
-  async created() {
+    ];
+
+    let paths = window.location.href.split("/");
+    let router_child = paths[paths.length - 1];
+    this.link_idx = { "": 0, tasks: 1, evaluations: 2, events: 3, students: 4 }[
+      router_child
+    ];
+    if (this.link_idx == null) this.link_idx = 0;
+
+    //
     this.loading(true);
     this.loading_msg("Cargando");
 
@@ -80,21 +90,18 @@ export default {
       redirect("sessions-teacher");
     },
     async getStudents() {
-      return await getStudentsBySession(this.session_id);
-    },
-    prueba() {
       let session_id = getParam("session_id");
-      // redirect("/session-editor/learn");
-      this.$router.push(`/session-editor/learn/${session_id}`).catch(() => {});
+      return await getStudentsBySession(session_id);
+    },
+    redirect(name) {
+      let session_id = getParam("session_id");
+      this.$router
+        .push(`/session-editor/${session_id}/${name}`)
+        .catch(() => {});
     }
   },
   components: {
-    Layout,
-    // Materials,
-    TasksEditor,
-    EvaluationsEditor,
-    EventsEditor,
-    Students
+    Layout
   }
 };
 </script>
