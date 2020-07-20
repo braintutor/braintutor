@@ -64,10 +64,8 @@ export default {
     ];
 
     let paths = window.location.href.split("/");
-    let router_child = paths[paths.length - 1];
-    this.link_idx = { "": 0, tasks: 1, evaluations: 2, events: 3, students: 4 }[
-      router_child
-    ];
+    let path = paths[paths.length - 1];
+    this.link_idx = { tasks: 1, evaluations: 2, events: 3, students: 4 }[path];
     if (this.link_idx == null) this.link_idx = 0;
 
     //
