@@ -269,7 +269,6 @@ export default {
     padding: 10px 20px;
     color: #8d8a8a;
     font-size: 1rem;
-    border-bottom: 1px solid #ccc;
 
     cursor: pointer;
     display: flex;
@@ -321,7 +320,7 @@ export default {
   }
 }
 
-@media only screen and (max-width: 2000px) {
+@media only screen and (max-width: 1100px) {
   .layout {
     flex-direction: column;
     height: auto;
