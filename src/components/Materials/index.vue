@@ -18,6 +18,27 @@
       </section>
     </section>
 
+    <section class="list2">
+      <div v-if="material" @click="show = !show" class="list2__menu">
+        <span>{{material.name}}</span>
+        <v-icon class="list__show" :class="{'list__show--active': show}">mdi-chevron-down</v-icon>
+      </div>
+      <div v-show="show">
+        <section v-for="(c, c_idx) in chatbots" :key="c_idx">
+          <div class="list2__title">
+            <span>{{c.name}}</span>
+          </div>
+          <section
+            v-for="(m, m_idx) in c.materials"
+            :key="m_idx"
+            @click="selectMaterial(m)"
+            class="link"
+            :class="{'link--active': m === material}"
+          >{{m.name}}</section>
+        </section>
+      </div>
+    </section>
+
     <!-- Material -->
     <div id="scroll" style="overflow-y: auto; width: 100%; padding: 0 20px">
       <div v-if="material" class="material">
@@ -53,7 +74,9 @@ export default {
     chatbots: [],
     materials: [],
     material: null,
-    knowledge: []
+    knowledge: [],
+    //
+    show: false
   }),
   computed: {
     ...mapState(["user"])
@@ -110,8 +133,13 @@ export default {
                         "Esto te puede servir.",
                         "He encontrado esta información."
                       ],
-                      material_id: material._id.$oid,
-                      category
+                      actions: [
+                        {
+                          text: "Ver información",
+                          action: () =>
+                            this.selectMaterialByID(material._id.$oid, category)
+                        }
+                      ]
                     });
                   }
                 }
@@ -120,7 +148,13 @@ export default {
                 knowledge.push({
                   questions: [question],
                   answers: [answer],
-                  material_id: material._id.$oid
+                  actions: [
+                    {
+                      text: "Ver información",
+                      action: () =>
+                        this.selectMaterialByID(material._id.$oid, null)
+                    }
+                  ]
                 });
               });
             });
@@ -139,24 +173,16 @@ export default {
                   "Esto te puede servir.",
                   "He encontrado esta información."
                 ],
-                material_id: material._id.$oid
+                actions: [
+                  {
+                    text: "Ver información",
+                    action: () =>
+                      this.selectMaterialByID(material._id.$oid, null)
+                  }
+                ]
               });
             });
           }
-
-          //Knowledge Formating
-          knowledge.forEach(k => {
-            if (k.material_id) {
-              k.actions = [
-                {
-                  text: "Ver información",
-                  action: () => {
-                    this.selectMaterialByID(k.material_id, k.category);
-                  }
-                }
-              ];
-            }
-          });
           this.knowledge = knowledge;
         } catch (error) {
           this.$root.$children[0].showMessage("Error", error.msg);
@@ -166,6 +192,7 @@ export default {
     },
     selectMaterial(material) {
       this.material = null;
+      this.show = false;
       setTimeout(() => {
         this.material = material;
       }, 100);
@@ -174,6 +201,7 @@ export default {
       // if (this.material && this.material._id.$oid === material_id) return;
 
       this.material = null;
+      this.show = false;
       setTimeout(() => {
         this.material = this.materials.find(m => m._id.$oid === material_id);
         this.material.default = category;
@@ -181,6 +209,7 @@ export default {
     },
     unselectMaterial() {
       this.material = null;
+      this.show = false;
     }
   },
   components: {
@@ -232,6 +261,29 @@ export default {
   }
 }
 
+.list2 {
+  display: none;
+  background: #fafafa;
+
+  &__menu {
+    padding: 10px 20px;
+    color: #8d8a8a;
+    font-size: 1rem;
+    border-bottom: 1px solid #ccc;
+
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__title {
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin: 16px 24px;
+  }
+}
+
 .link {
   padding: 10px 12px;
   padding-left: 32px;
@@ -266,6 +318,20 @@ export default {
     font-weight: bold;
     font-size: 1.5rem;
     letter-spacing: 0.25px;
+  }
+}
+
+@media only screen and (max-width: 2000px) {
+  .layout {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .list {
+    display: none;
+  }
+  .list2 {
+    display: initial;
   }
 }
 </style>

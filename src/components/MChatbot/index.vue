@@ -108,11 +108,8 @@ export default {
     },
     //
     actionChatbot(e, action) {
-      e.stopPropagation();
-      this.show = false;
-      setTimeout(() => {
-        action();
-      }, 200);
+      this.hideChatbot(e);
+      setTimeout(action, 200);
     },
     showChatbot() {
       if (!this.show) {
