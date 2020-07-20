@@ -59,104 +59,111 @@ export default {
     ...mapState(["user"])
   },
   async created() {
-    this.loading(true);
-    this.loading_msg("Cargando Material");
+    await this.init();
+  },
+  methods: {
+    ...mapMutations(["loading", "loading_msg"]),
+    async init() {
+      if (this.course._id) {
+        this.loading(true);
+        this.loading_msg("Cargando Material");
 
-    let course_id = this.course._id.$oid;
-    try {
-      this.chatbots = await getChatbotsByCourseTeacher(course_id);
-      this.materials = await getMaterialsByCourseTeacher(course_id);
+        let course_id = this.course._id.$oid;
+        try {
+          this.chatbots = await getChatbotsByCourseTeacher(course_id);
+          this.materials = await getMaterialsByCourseTeacher(course_id);
 
-      if (this.materials[0]) this.selectMaterial(this.materials[0]);
-      this.chatbots.forEach(c => {
-        c.show = true;
-        // Find Materials
-        let materials = this.materials.filter(m => {
-          return m.chatbot_id.$oid === c._id.$oid;
-        });
-        // Sorting Materials
-        let order = (c.order || []).reverse();
-        materials.sort((a, b) => {
-          let a_order = order.indexOf(a._id.$oid);
-          let b_order = order.indexOf(b._id.$oid);
-          return b_order - a_order;
-        });
-        c.materials = materials;
-      });
+          if (this.materials[0]) this.selectMaterial(this.materials[0]);
+          this.chatbots.forEach(c => {
+            c.show = true;
+            // Find Materials
+            let materials = this.materials.filter(m => {
+              return m.chatbot_id.$oid === c._id.$oid;
+            });
+            // Sorting Materials
+            let order = (c.order || []).reverse();
+            materials.sort((a, b) => {
+              let a_order = order.indexOf(a._id.$oid);
+              let b_order = order.indexOf(b._id.$oid);
+              return b_order - a_order;
+            });
+            c.materials = materials;
+          });
 
-      //Knowledge
-      this.loading_msg("Cargando Conocimiento");
-      let knowledge = this.course.knowledge || [];
+          //Knowledge
+          this.loading_msg("Cargando Conocimiento");
+          let knowledge = this.course.knowledge || [];
 
-      // Knowledge Material
-      if (this.course.adaptive) {
-        let question_template = await getQuestionTemplate();
-        this.materials.forEach(material => {
-          Object.entries(question_template).forEach(([category, questions]) => {
-            if (questions[0]) {
-              questions = questions.map(question =>
-                question.replace(/@/, material.name)
+          // Knowledge Material
+          if (this.course.adaptive) {
+            let question_template = await getQuestionTemplate();
+            this.materials.forEach(material => {
+              Object.entries(question_template).forEach(
+                ([category, questions]) => {
+                  if (questions[0]) {
+                    questions = questions.map(question =>
+                      question.replace(/@/, material.name)
+                    );
+                    knowledge.push({
+                      questions,
+                      answers: [
+                        "Esto te puede servir.",
+                        "He encontrado esta información."
+                      ],
+                      material_id: material._id.$oid,
+                      category
+                    });
+                  }
+                }
               );
+              material.faq.forEach(({ question, answer }) => {
+                knowledge.push({
+                  questions: [question],
+                  answers: [answer],
+                  material_id: material._id.$oid
+                });
+              });
+            });
+          } else {
+            let questions = [
+              "Muéstrame información sobre @.",
+              '"Háblame sobre @.',
+              "Explícame sobre @."
+            ];
+            this.materials.forEach(material => {
               knowledge.push({
-                questions,
+                questions: questions.map(question =>
+                  question.replace(/@/, material.name)
+                ),
                 answers: [
                   "Esto te puede servir.",
                   "He encontrado esta información."
                 ],
-                material_id: material._id.$oid,
-                category
+                material_id: material._id.$oid
               });
-            }
-          });
-          material.faq.forEach(({ question, answer }) => {
-            knowledge.push({
-              questions: [question],
-              answers: [answer],
-              material_id: material._id.$oid
             });
-          });
-        });
-      } else {
-        let questions = [
-          "Muéstrame información sobre @.",
-          '"Háblame sobre @.',
-          "Explícame sobre @."
-        ];
-        this.materials.forEach(material => {
-          knowledge.push({
-            questions: questions.map(question =>
-              question.replace(/@/, material.name)
-            ),
-            answers: [
-              "Esto te puede servir.",
-              "He encontrado esta información."
-            ],
-            material_id: material._id.$oid
-          });
-        });
-      }
+          }
 
-      //Knowledge Formating
-      knowledge.forEach(k => {
-        if (k.material_id) {
-          k.actions = [
-            {
-              text: "Ver información",
-              action: () => {
-                this.selectMaterialByID(k.material_id, k.category);
-              }
+          //Knowledge Formating
+          knowledge.forEach(k => {
+            if (k.material_id) {
+              k.actions = [
+                {
+                  text: "Ver información",
+                  action: () => {
+                    this.selectMaterialByID(k.material_id, k.category);
+                  }
+                }
+              ];
             }
-          ];
+          });
+          this.knowledge = knowledge;
+        } catch (error) {
+          this.$root.$children[0].showMessage("Error", error.msg);
         }
-      });
-      this.knowledge = knowledge;
-    } catch (error) {
-      this.$root.$children[0].showMessage("Error", error.msg);
-    }
-    this.loading(false);
-  },
-  methods: {
-    ...mapMutations(["loading", "loading_msg"]),
+        this.loading(false);
+      }
+    },
     selectMaterial(material) {
       this.material = null;
       setTimeout(() => {

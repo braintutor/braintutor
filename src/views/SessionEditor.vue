@@ -6,7 +6,9 @@
       <span class="m-path__name">{{course.name}}</span>
     </section>
 
-    <Materials :slot="0" v-if="course._id" :course="course" />
+    <router-view :slot="0" v-if="course._id" :course="course" />
+
+    <!-- <Materials :slot="0" v-if="course._id" :course="course" /> -->
     <TasksEditor class="m-container" :slot="1" />
     <EvaluationsEditor class="m-container" :slot="2" />
     <EventsEditor class="m-container" :slot="3" />
@@ -15,8 +17,8 @@
 </template>
 
 <script>
-import Layout from "@/components/Layout";
-import Materials from "@/components/Materials/index";
+import Layout from "@/components/Layout2";
+// import Materials from "@/components/Materials/index";
 import TasksEditor from "@/components/SessionEditor/TasksEditor/index";
 import EvaluationsEditor from "@/components/SessionEditor/EvaluationsEditor/index";
 import EventsEditor from "@/components/SessionEditor/EventsEditor/index";
@@ -79,11 +81,16 @@ export default {
     },
     async getStudents() {
       return await getStudentsBySession(this.session_id);
+    },
+    prueba() {
+      let session_id = getParam("session_id");
+      // redirect("/session-editor/learn");
+      this.$router.push(`/session-editor/learn/${session_id}`).catch(() => {});
     }
   },
   components: {
     Layout,
-    Materials,
+    // Materials,
     TasksEditor,
     EvaluationsEditor,
     EventsEditor,

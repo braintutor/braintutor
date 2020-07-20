@@ -64,7 +64,14 @@ const routes = [
   {
     path: '/session-editor/:session_id',
     name: 'session-editor',
-    component: () => import('../views/SessionEditor.vue')
+    component: () => import('../views/SessionEditor.vue'),
+    children: [
+      {
+        // path: '',
+        path: '',
+        component: () => import('../components/Materials/index.vue')
+      }
+    ]
   },
   {
     path: '/course-editor/:course_id',
