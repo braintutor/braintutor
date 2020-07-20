@@ -6,7 +6,6 @@
       <span class="m-path__name">{{course.name}}</span>
     </section>
 
-    <!-- <Chatbots :slot="0" /> -->
     <Materials :slot="0" v-if="course._id" :course="course" />
     <TasksEditor class="m-container" :slot="1" />
     <EvaluationsEditor class="m-container" :slot="2" />
@@ -17,8 +16,7 @@
 
 <script>
 import Layout from "@/components/Layout";
-// import Chatbots from "@/components/Session/Chatbots";
-import Materials from "@/components/SessionEditor/Materials/index";
+import Materials from "@/components/Materials/index";
 import TasksEditor from "@/components/SessionEditor/TasksEditor/index";
 import EvaluationsEditor from "@/components/SessionEditor/EvaluationsEditor/index";
 import EventsEditor from "@/components/SessionEditor/EventsEditor/index";
@@ -85,7 +83,6 @@ export default {
   },
   components: {
     Layout,
-    // Chatbots,
     Materials,
     TasksEditor,
     EvaluationsEditor,
