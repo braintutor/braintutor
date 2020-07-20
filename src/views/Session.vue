@@ -1,37 +1,38 @@
 <template>
-  <Layout :links="links">
+  <Layout :links="links" fluid>
     <section slot="header" class="m-path">
       <span @click="redirectCourses()" class="m-path__name m-path__name--link">Cursos</span>
       <span class="m-path__icon">></span>
       <span class="m-path__name">{{course.name}}</span>
     </section>
 
-    <Chatbots :slot="0" />
-    <Tasks :slot="1" />
-    <Events :slot="2" />
-    <Evaluations :slot="3" />
-    <Students :slot="4" :get="getStudents" />
+    <Materials :slot="0" v-if="course._id" :course="course" />
+    <Tasks :slot="1" class="m-container my-3" />
+    <Events :slot="2" class="m-container my-3" />
+    <Evaluations :slot="3" class="m-container my-3" />
+    <Students :slot="4" :get="getStudents" class="m-container my-3" />
   </Layout>
 </template>
 
 <script>
 import Layout from "@/components/Layout";
-import Chatbots from "@/components/Session/Chatbots";
+import Materials from "@/components/Materials/index";
 import Tasks from "@/components/Session/Tasks";
 import Events from "@/components/Session/Events/index";
 import Evaluations from "@/components/Session/Evaluations/index";
 import Students from "@/components/Students/index";
 
 import { redirect, getParam } from "@/services/router";
-import { getCourseNameBySession } from "@/services/courseService";
+import { getSessionByStudent } from "@/services/sessionService";
 import { getStudentsBySessionStudent } from "@/services/studentService";
+
+import { mapMutations } from "vuex";
 
 export default {
   data: () => ({
     course: {
       name: "..."
     },
-    session_id: "",
     links: [
       {
         image:
@@ -58,10 +59,27 @@ export default {
     ]
   }),
   async mounted() {
-    this.session_id = getParam("session_id");
-    this.course = await getCourseNameBySession(this.session_id);
+    this.loading(true);
+    this.loading_msg("Cargando");
+
+    let session_id = getParam("session_id");
+
+    try {
+      let session = await getSessionByStudent(session_id);
+      this.course = session.course;
+    } catch (error) {
+      this.$root.$children[0].showMessage(
+        "",
+        error.msg || "Ha ocurrido un error."
+      );
+    }
+
+    this.loading(false);
+    // this.session_id = getParam("session_id");
+    // this.course = await getCourseNameBySession(this.session_id);
   },
   methods: {
+    ...mapMutations(["loading", "loading_msg"]),
     redirectCourses() {
       redirect("sessions-student");
     },
@@ -72,7 +90,7 @@ export default {
   components: {
     Layout,
     Tasks,
-    Chatbots,
+    Materials,
     Events,
     Evaluations,
     Students

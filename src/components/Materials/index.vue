@@ -60,8 +60,14 @@ import MaterialCategories from "./MaterialCategories";
 import MaterialDocuments from "./MaterialDocuments";
 import Chatbot from "@/components/MChatbot/index";
 
-import { getChatbotsByCourseTeacher } from "@/services/chatbotService";
-import { getMaterialsByCourseTeacher } from "@/services/materialService";
+import {
+  getChatbotsByCourseTeacher,
+  getChatbotsByCourseStudent
+} from "@/services/chatbotService";
+import {
+  getMaterialsByCourseTeacher,
+  getMaterialsByCourseStudent
+} from "@/services/materialService";
 import { getQuestionTemplate } from "@/services/chatService";
 
 import { mapState, mapMutations } from "vuex";
@@ -93,8 +99,12 @@ export default {
 
         let course_id = this.course._id.$oid;
         try {
-          this.chatbots = await getChatbotsByCourseTeacher(course_id);
-          this.materials = await getMaterialsByCourseTeacher(course_id);
+          this.chatbots = await (this.user.role === "TEA"
+            ? getChatbotsByCourseTeacher(course_id)
+            : getChatbotsByCourseStudent(course_id));
+          this.materials = await (this.user.role === "TEA"
+            ? getMaterialsByCourseTeacher(course_id)
+            : getMaterialsByCourseStudent(course_id));
 
           if (this.materials[0]) this.selectMaterial(this.materials[0]);
           this.chatbots.forEach(c => {

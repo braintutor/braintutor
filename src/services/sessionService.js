@@ -6,6 +6,12 @@ function getSessionByTeacher(session_id) {
   })
 }
 
+function getSessionByStudent(session_id) {
+  return fetch_post('getSessionByStudent', {
+    session_id
+  })
+}
+
 function getSessionsBySchool() {
   return fetch_get('getSessionsBySchool')
 }
@@ -36,4 +42,13 @@ function updateSession(session) {
   })
 }
 
-export { getSessionByTeacher, getSessionsBySchool, getSessionsByTeacher, getSessionsByStudent, getSessionsByClassroom, addSession, updateSession }
+export {
+  getSessionByTeacher,
+  getSessionByStudent,
+  getSessionsBySchool,
+  getSessionsByTeacher,
+  getSessionsByStudent,
+  getSessionsByClassroom,
+  addSession,
+  updateSession
+}

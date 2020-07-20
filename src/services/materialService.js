@@ -6,14 +6,13 @@ function getMaterial(material_id) {
   })
 }
 
-function getMaterials(chatbot_id) {
-  return fetch_post('getMaterials', {
-    chatbot_id
-  })
-}
-
 function getMaterialsByCourseTeacher(course_id) {
   return fetch_post('getMaterialsByCourseTeacher', {
+    course_id
+  })
+}
+function getMaterialsByCourseStudent(course_id) {
+  return fetch_post('getMaterialsByCourseStudent', {
     course_id
   })
 }
@@ -63,8 +62,8 @@ function removeMaterial(material_id) {
 
 export {
   getMaterial,
-  getMaterials,
   getMaterialsByCourseTeacher,
+  getMaterialsByCourseStudent,
   addMaterial,
   updateMaterialCategory,
   updateMaterialDocuments,
