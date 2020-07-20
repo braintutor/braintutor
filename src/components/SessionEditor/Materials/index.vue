@@ -2,13 +2,9 @@
   <div class="layout">
     <section class="list">
       <section v-for="(c, c_idx) in chatbots" :key="c_idx">
-        <div class="list__title">
+        <div @click="c.show = !c.show; $forceUpdate()" class="list__title">
           <span>{{c.name}}</span>
-          <v-icon
-            class="list__show"
-            :class="{'list__show--active': c.show}"
-            @click="c.show = !c.show; $forceUpdate()"
-          >mdi-chevron-down</v-icon>
+          <v-icon class="list__show" :class="{'list__show--active': c.show}">mdi-chevron-down</v-icon>
         </div>
         <div v-show="c.show">
           <section
@@ -23,8 +19,8 @@
     </section>
 
     <!-- Material -->
-    <div id="scroll" style="overflow-y: auto; width: 100%">
-      <div v-if="material" class="material my-5">
+    <div id="scroll" style="overflow-y: auto; width: 100%; padding: 0 20px">
+      <div v-if="material" class="material">
         <div class="material__menu">
           <span class="material__name">{{material.name}}</span>
         </div>
@@ -32,15 +28,20 @@
         <MaterialDocuments v-else :material="material" />
       </div>
     </div>
+
+    <!-- Chatbot -->
+    <Chatbot :knowledge="knowledge" />
   </div>
 </template>
 
 <script>
 import MaterialCategories from "./MaterialCategories";
 import MaterialDocuments from "./MaterialDocuments";
+import Chatbot from "@/components/MChatbot/index";
 
 import { getChatbotsByCourseTeacher } from "@/services/chatbotService";
 import { getMaterialsByCourseTeacher } from "@/services/materialService";
+import { getQuestionTemplate } from "@/services/chatService";
 
 import { mapState, mapMutations } from "vuex";
 
@@ -50,38 +51,106 @@ export default {
   },
   data: () => ({
     chatbots: [],
-    material: null
+    materials: [],
+    material: null,
+    knowledge: []
   }),
   computed: {
     ...mapState(["user"])
   },
   async created() {
     this.loading(true);
-    this.loading_msg("Cargando");
+    this.loading_msg("Cargando Material");
 
     let course_id = this.course._id.$oid;
     try {
       this.chatbots = await getChatbotsByCourseTeacher(course_id);
-      let materials = await getMaterialsByCourseTeacher(course_id);
+      this.materials = await getMaterialsByCourseTeacher(course_id);
 
+      if (this.materials[0]) this.selectMaterial(this.materials[0]);
       this.chatbots.forEach(c => {
         c.show = true;
         // Find Materials
-        let c_materials = materials.filter(m => {
+        let materials = this.materials.filter(m => {
           return m.chatbot_id.$oid === c._id.$oid;
         });
         // Sorting Materials
         let order = (c.order || []).reverse();
-        c_materials.sort((a, b) => {
+        materials.sort((a, b) => {
           let a_order = order.indexOf(a._id.$oid);
           let b_order = order.indexOf(b._id.$oid);
           return b_order - a_order;
         });
-        c.materials = c_materials;
+        c.materials = materials;
       });
-      if (materials[0]) this.selectMaterial(materials[0]);
+
+      //Knowledge
+      this.loading_msg("Cargando Conocimiento");
+      let knowledge = this.course.knowledge || [];
+
+      // Knowledge Material
+      if (this.course.adaptive) {
+        let question_template = await getQuestionTemplate();
+        this.materials.forEach(material => {
+          Object.entries(question_template).forEach(([category, questions]) => {
+            if (questions[0]) {
+              questions = questions.map(question =>
+                question.replace(/@/, material.name)
+              );
+              knowledge.push({
+                questions,
+                answers: [
+                  "Esto te puede servir.",
+                  "He encontrado esta información."
+                ],
+                material_id: material._id.$oid,
+                category
+              });
+            }
+          });
+          material.faq.forEach(({ question, answer }) => {
+            knowledge.push({
+              questions: [question],
+              answers: [answer],
+              material_id: material._id.$oid
+            });
+          });
+        });
+      } else {
+        let questions = [
+          "Muéstrame información sobre @.",
+          '"Háblame sobre @.',
+          "Explícame sobre @."
+        ];
+        this.materials.forEach(material => {
+          knowledge.push({
+            questions: questions.map(question =>
+              question.replace(/@/, material.name)
+            ),
+            answers: [
+              "Esto te puede servir.",
+              "He encontrado esta información."
+            ],
+            material_id: material._id.$oid
+          });
+        });
+      }
+
+      //Knowledge Formating
+      knowledge.forEach(k => {
+        if (k.material_id) {
+          k.actions = [
+            {
+              text: "Ver información",
+              action: () => {
+                this.selectMaterialByID(k.material_id, k.category);
+              }
+            }
+          ];
+        }
+      });
+      this.knowledge = knowledge;
     } catch (error) {
-      console.log(error);
       this.$root.$children[0].showMessage("Error", error.msg);
     }
     this.loading(false);
@@ -94,13 +163,23 @@ export default {
         this.material = material;
       }, 100);
     },
+    selectMaterialByID(material_id, category) {
+      // if (this.material && this.material._id.$oid === material_id) return;
+
+      this.material = null;
+      setTimeout(() => {
+        this.material = this.materials.find(m => m._id.$oid === material_id);
+        this.material.default = category;
+      }, 100);
+    },
     unselectMaterial() {
       this.material = null;
     }
   },
   components: {
     MaterialCategories,
-    MaterialDocuments
+    MaterialDocuments,
+    Chatbot
   }
 };
 </script>
@@ -111,6 +190,7 @@ export default {
 }
 
 .list {
+  overflow-y: auto;
   flex-shrink: 0;
   height: 100%;
   width: 300px;
@@ -120,6 +200,7 @@ export default {
     font-weight: bold;
     font-size: 1.5rem;
     margin: 16px 24px;
+    cursor: pointer;
 
     display: flex;
     justify-content: space-between;
@@ -129,7 +210,6 @@ export default {
   &__show {
     font-size: 2rem;
     border-radius: 50%;
-    cursor: pointer;
 
     &:hover {
       background: #e5e5e5;
@@ -146,7 +226,7 @@ export default {
 }
 
 .link {
-  padding: 8px 12px;
+  padding: 10px 12px;
   padding-left: 32px;
   font-size: 0.85rem;
   transition: 0.3s;
@@ -165,7 +245,8 @@ export default {
 }
 
 .material {
-  margin: 0 auto;
+  margin: 20px auto;
+  margin-bottom: 130px;
   max-width: 650px;
 
   &__menu {
