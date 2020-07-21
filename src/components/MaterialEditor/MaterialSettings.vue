@@ -189,13 +189,18 @@ export default {
             }
           }
         );
+        if (res.status === 413)
+          throw { msg: "El archivo excede el tamaño de 1MB" };
         if (res.status >= 400 && res.status < 600) throw await res.json();
 
         let { url } = await res.json();
         this.image_url = url;
         await this.saveImage();
       } catch (error) {
-        this.$root.$children[0].showMessage("Error", error.msg);
+        this.$root.$children[0].showMessage(
+          "",
+          error.msg || "Ha ocurrido un error."
+        );
       }
 
       this.loading = false;
