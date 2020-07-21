@@ -1,100 +1,100 @@
 <template>
-  <div v-if="!evaluation" class="m-container py-3">
-    <loading :active="loading" :message="loading_message" />
-    <div class="row no-gutters">
-      <div
-        class="col-12 col-sm-6 col-md-4 px-2 pb-4"
-        v-for="(evaluation, c_idx) in evaluations"
-        :key="c_idx"
-      >
-        <!--  -->
-        <div class="m-cardd">
-          <p class="m-cardd__name">{{evaluation.name}}</p>
-          <div class="m-cardd__body">
-            <span v-if="evaluation.time_start" class="m-cardd__item">Inicio:</span>
-            <span
-              v-if="evaluation.time_start"
-              class="m-cardd__value"
-            >{{dateFormat(evaluation.time_start)}}</span>
-            <span v-if="evaluation.time_end" class="m-cardd__item">Fin:</span>
-            <span
-              v-if="evaluation.time_end"
-              class="m-cardd__value"
-            >{{dateFormat(evaluation.time_end)}}</span>
-            <span class="m-cardd__item">N° preg.</span>
-            <span class="m-cardd__value">{{evaluation.content.length}} pregunta(s)</span>
-          </div>
+  <div class="m-container pa-3">
+    <div v-if="!evaluation">
+      <loading :active="loading" :message="loading_message" />
+      <div class="row no-gutters">
+        <div
+          class="col-12 col-sm-6 col-md-4 px-2 pb-4"
+          v-for="(evaluation, c_idx) in evaluations"
+          :key="c_idx"
+        >
           <!--  -->
-          <div class="m-cardd__actions">
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-icon
-                  class="m-cardd__action"
-                  v-bind="attrs"
-                  v-on="on"
-                  @click="select(evaluation)"
-                >{{evaluation.started? 'mdi-eye': 'mdi-pencil'}}</v-icon>
-              </template>
-              <span style="font-size: .75rem">{{evaluation.started? 'Ver Evaluación': 'Editar'}}</span>
-            </v-tooltip>
+          <div class="m-cardd">
+            <p class="m-cardd__name">{{evaluation.name}}</p>
+            <div class="m-cardd__body">
+              <span v-if="evaluation.time_start" class="m-cardd__item">Inicio:</span>
+              <span
+                v-if="evaluation.time_start"
+                class="m-cardd__value"
+              >{{dateFormat(evaluation.time_start)}}</span>
+              <span v-if="evaluation.time_end" class="m-cardd__item">Fin:</span>
+              <span
+                v-if="evaluation.time_end"
+                class="m-cardd__value"
+              >{{dateFormat(evaluation.time_end)}}</span>
+              <span class="m-cardd__item">N° preg.</span>
+              <span class="m-cardd__value">{{evaluation.content.length}} pregunta(s)</span>
+            </div>
+            <!--  -->
+            <div class="m-cardd__actions">
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon
+                    class="m-cardd__action"
+                    v-bind="attrs"
+                    v-on="on"
+                    @click="select(evaluation)"
+                  >{{evaluation.started? 'mdi-eye': 'mdi-pencil'}}</v-icon>
+                </template>
+                <span style="font-size: .75rem">{{evaluation.started? 'Ver Evaluación': 'Editar'}}</span>
+              </v-tooltip>
 
-            <v-tooltip v-if="evaluation.started" bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-icon
-                  class="m-cardd__action"
-                  v-bind="attrs"
-                  v-on="on"
-                  @click="results(evaluation)"
-                >mdi-poll</v-icon>
-              </template>
-              <span style="font-size: .75rem">Resultados</span>
-            </v-tooltip>
+              <v-tooltip v-if="evaluation.started" bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon
+                    class="m-cardd__action"
+                    v-bind="attrs"
+                    v-on="on"
+                    @click="results(evaluation)"
+                  >mdi-poll</v-icon>
+                </template>
+                <span style="font-size: .75rem">Resultados</span>
+              </v-tooltip>
 
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-icon
-                  class="m-cardd__action"
-                  v-bind="attrs"
-                  v-on="on"
-                  @click="dlg_remove = true; evaluation_to_remove = evaluation"
-                >mdi-delete</v-icon>
-              </template>
-              <span style="font-size: .75rem">Eliminar</span>
-            </v-tooltip>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon
+                    class="m-cardd__action"
+                    v-bind="attrs"
+                    v-on="on"
+                    @click="dlg_remove = true; evaluation_to_remove = evaluation"
+                  >mdi-delete</v-icon>
+                </template>
+                <span style="font-size: .75rem">Eliminar</span>
+              </v-tooltip>
+            </div>
           </div>
         </div>
+        <div class="col-12 col-sm-6 col-md-4 px-2 pb-4">
+          <div class="create" @click="create()">+</div>
+        </div>
       </div>
-      <div class="col-12 col-sm-6 col-md-4 px-2 pb-4">
-        <div class="create" @click="create()">+</div>
-      </div>
-    </div>
 
-    <!-- Dialog Remove -->
-    <v-dialog v-model="dlg_remove" persistent max-width="300">
-      <v-card>
-        <div class="pt-4 pb-3 text-center">¿Desea eliminar?</div>
-        <v-card-text class="text-center pb-2">Se borrarán también los resultados de los alumnos.</v-card-text>
-        <v-card-actions style="width: max-content; margin: 0 auto">
-          <v-btn @click="dlg_remove = false" small text>Cancelar</v-btn>
-          <v-btn @click=" dlg_remove = false; remove()" color="error" small depressed>Eliminar</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+      <!-- Dialog Remove -->
+      <v-dialog v-model="dlg_remove" persistent max-width="300">
+        <v-card>
+          <div class="pt-4 pb-3 text-center">¿Desea eliminar?</div>
+          <v-card-text class="text-center pb-2">Se borrarán también los resultados de los alumnos.</v-card-text>
+          <v-card-actions style="width: max-content; margin: 0 auto">
+            <v-btn @click="dlg_remove = false" small text>Cancelar</v-btn>
+            <v-btn @click=" dlg_remove = false; remove()" color="error" small depressed>Eliminar</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
+    <EvaluationEditor
+      v-else-if="edit"
+      :evaluation="evaluation"
+      :getEvaluations="getEvaluations"
+      :unselect="unselect"
+    />
+    <Results
+      v-else
+      :evaluation_id="evaluation._id.$oid"
+      :getEvaluations="getEvaluations"
+      :unselect="unselect"
+    />
   </div>
-  <EvaluationEditor
-    v-else-if="edit"
-    :evaluation="evaluation"
-    :getEvaluations="getEvaluations"
-    :unselect="unselect"
-    class="m-container py-3"
-  />
-  <Results
-    v-else
-    :evaluation_id="evaluation._id.$oid"
-    :getEvaluations="getEvaluations"
-    :unselect="unselect"
-    class="m-container py-3"
-  />
 </template>
 
 <script>

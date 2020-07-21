@@ -1,5 +1,5 @@
 <template>
-  <div class="m-container py-3">
+  <div class="m-container pa-3">
     <loading :active="loading_events" :message="loading_message" />
     <div v-show="!show_events_selected" class="calendar-container m-card">
       <div class="calendar-control">

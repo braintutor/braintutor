@@ -276,8 +276,10 @@ export default {
 }
 
 @media only screen and (max-width: 690px) {
-  .header-actions {
-    display: none;
+  .header {
+    &__actions {
+      display: none;
+    }
   }
   .nav-icon {
     display: unset;

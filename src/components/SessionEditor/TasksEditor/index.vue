@@ -1,72 +1,80 @@
 <template>
-  <div v-if="!task_selected" class="m-container py-3">
-    <loading :active="loading" :message="loading_msg" />
-    <!-- MENU -->
-    <div class="tasks__menu">
-      <v-btn small rounded color="success" @click="showCreate()">
-        Crear
-        <v-icon right>mdi-plus</v-icon>
-      </v-btn>
-    </div>
-    <!-- TASKS -->
-    <div class="task m-card" v-for="(task, idx) in tasks_formatted" :key="idx">
-      <div class="task__menu">
-        <div>
-          <p class="task__time_start">{{task.time_start_f}}</p>
-          <p class="task__title">{{task.title}}</p>
+  <div class="m-container pa-3">
+    <div v-if="!task_selected">
+      <loading :active="loading" :message="loading_msg" />
+      <!-- MENU -->
+      <div class="tasks__menu">
+        <v-btn small rounded color="success" @click="showCreate()">
+          Crear
+          <v-icon right>mdi-plus</v-icon>
+        </v-btn>
+      </div>
+      <!-- TASKS -->
+      <div class="task m-card" v-for="(task, idx) in tasks_formatted" :key="idx">
+        <div class="task__menu">
+          <div>
+            <p class="task__time_start">{{task.time_start_f}}</p>
+            <p class="task__title">{{task.title}}</p>
+          </div>
+          <v-menu offset-y left>
+            <template v-slot:activator="{ on }">
+              <v-btn icon small v-on="on">
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item @click="showEdit(task)">
+                <v-list-item-title>Editar</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="showRemove(task)">
+                <v-list-item-title>Eliminar</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
         </div>
-        <v-menu offset-y left>
-          <template v-slot:activator="{ on }">
-            <v-btn icon small v-on="on">
-              <v-icon>mdi-dots-vertical</v-icon>
-            </v-btn>
-          </template>
-          <v-list>
-            <v-list-item @click="showEdit(task)">
-              <v-list-item-title>Editar</v-list-item-title>
-            </v-list-item>
-            <v-list-item @click="showRemove(task)">
-              <v-list-item-title>Eliminar</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
+        <p class="task__description">{{task.description}}</p>
+        <div class="task__actions">
+          <v-btn text small @click="showAnswers(task)">Ver Respuestas</v-btn>
+        </div>
       </div>
-      <p class="task__description">{{task.description}}</p>
-      <div class="task__actions">
-        <v-btn text small @click="showAnswers(task)">Ver Respuestas</v-btn>
-      </div>
+      <div class="text-center" v-show="tasks.length === 0">No hay tareas.</div>
+      <!-- DIALOG NEW -->
+      <v-dialog v-model="dialog_new" persistent max-width="750">
+        <v-card class="pt-4 pa-2">
+          <v-card-text>
+            <v-text-field v-model="task.title" label="Título"></v-text-field>
+            <v-textarea v-model="task.description" label="Descripición" value></v-textarea>
+          </v-card-text>
+          <v-card-actions style="width: min-content; margin: 0 auto">
+            <v-btn small text class="mr-1" v-show="!loading" @click="dialog_new = false">Cerrar</v-btn>
+            <v-btn small color="primary" :loading="loading" @click="create()">Guardar</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <!-- DIALOG REMOVE -->
+      <v-dialog v-model="dialog_remove" max-width="400">
+        <v-card>
+          <v-card-title>¿Eliminar la Tarea?</v-card-title>
+          <v-card-text
+            class="pb-3"
+          >También se borrarán las respuestas y calificaciones de los alumnos.</v-card-text>
+          <v-card-actions class="pb-3" style="width: min-content; margin: 0 auto">
+            <v-btn small text class="mr-1" @click="dialog_remove = false">Cancelar</v-btn>
+            <v-btn small color="error" @click="dialog_remove = false; remove()">Eliminar</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </div>
-    <div class="text-center" v-show="tasks.length === 0">No hay tareas.</div>
-    <!-- DIALOG NEW -->
-    <v-dialog v-model="dialog_new" persistent max-width="750">
-      <v-card class="pt-4 pa-2">
-        <v-card-text>
-          <v-text-field v-model="task.title" label="Título"></v-text-field>
-          <v-textarea v-model="task.description" label="Descripición" value></v-textarea>
-        </v-card-text>
-        <v-card-actions style="width: min-content; margin: 0 auto">
-          <v-btn small text class="mr-1" v-show="!loading" @click="dialog_new = false">Cerrar</v-btn>
-          <v-btn small color="primary" :loading="loading" @click="create()">Guardar</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <!-- DIALOG REMOVE -->
-    <v-dialog v-model="dialog_remove" max-width="400">
-      <v-card>
-        <v-card-title>¿Eliminar la Tarea?</v-card-title>
-        <v-card-text
-          class="pb-3"
-        >También se borrarán las respuestas y calificaciones de los alumnos.</v-card-text>
-        <v-card-actions class="pb-3" style="width: min-content; margin: 0 auto">
-          <v-btn small text class="mr-1" @click="dialog_remove = false">Cancelar</v-btn>
-          <v-btn small color="error" @click="dialog_remove = false; remove()">Eliminar</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </div>
 
-  <!-- TASK -->
-  <Task v-else :task="task_selected" :students="students" :unselect="unselect" :restore="restore"  class="m-container py-3"/>
+    <!-- TASK -->
+    <Task
+      v-else
+      :task="task_selected"
+      :students="students"
+      :unselect="unselect"
+      :restore="restore"
+    />
+  </div>
 </template>
 
 <script>

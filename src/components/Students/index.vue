@@ -1,5 +1,5 @@
 <template>
-  <div class="m-container py-3">
+  <div class="m-container pa-3">
     <loading :active="loading" :message="loading_message" />
     <div v-show="!student">
       <div class="students m-card">
