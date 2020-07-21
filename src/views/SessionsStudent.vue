@@ -85,7 +85,7 @@ export default {
 }
 
 .mtitle {
-  margin: 10px 4px;
+  margin: 10px;
   color: #5b5b6a;
 }
 
