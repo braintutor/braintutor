@@ -122,7 +122,8 @@ export default {
         0,
         Math.min(this.category_idx + dir, this.categories.length - 1)
       );
-      scrollTop('scroll');
+      scrollTop("scroll"); //desktop
+      scrollTop("app__body"); //mobile
     }
   },
   components: {

@@ -77,11 +77,12 @@ export default {
             editable_elements.forEach(el =>
               el.removeAttribute("contenteditable")
             );
-
-            let icon_settings = document.querySelectorAll(
-              ".ce-toolbar__settings-btn"
-            );
+            let icon_settings = document.querySelectorAll(".ce-toolbar");
             icon_settings.forEach(el => el.remove());
+            // let icon_settings = document.querySelectorAll(
+            //   ".ce-toolbar__settings-btn"
+            // );
+            // icon_settings.forEach(el => el.remove());
           }
         }
       });
