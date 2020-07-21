@@ -1,7 +1,7 @@
 <template>
-  <v-app id="braintutor">
+  <v-app class="m-app" id="braintutor">
     <Header />
-    <v-content>
+    <v-content class="m-app__body">
       <loading :active="loading" :message="loading_msg" />
       <router-view></router-view>
     </v-content>
@@ -70,6 +70,27 @@ export default {
 </script>
 
 <style lang="scss">
+.m-app {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  &__body {
+    height: calc(100vh - 64px);
+    overflow-y: auto;
+  }
+}
+
+@media only screen and (max-width: 690px) {
+  .m-app {
+    &__body {
+      // height: calc(100vh - 56px);
+    }
+  }
+}
+
 // HTML
 p {
   font-size: 0.9rem;
