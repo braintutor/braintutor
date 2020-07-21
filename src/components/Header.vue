@@ -1,16 +1,15 @@
 <template>
   <div style="z-index: 100 !important">
-    <v-app-bar flat style="background: #ffffff00 !important">
-      <div class="header-logo" @click="redirect('home')">
+    <header class="header">
+      <div class="header__logo" @click="redirect('home')">
         <v-img alt="BrainTutor Logo" src="@/assets/braintutor/logo.png" width="120" />
       </div>
       <v-spacer></v-spacer>
-      <v-app-bar-nav-icon class="nav-icon" @click="drawer = true"></v-app-bar-nav-icon>
-      <div class="header-actions">
+      <div class="header__actions">
         <v-btn
           v-for="(link, l_idx) in links_filtered"
           :key="l_idx"
-          class="header-action"
+          class="header__action"
           text
           @click="redirect(link.name)"
         >{{link.title}}</v-btn>
@@ -27,13 +26,14 @@
           </div>
         </div>
         <v-btn
-          class="header-action"
+          class="header__action"
           v-else
           text
           @click="redirect('login', {school_user: 'maria-prado-de-bellido'})"
         >Iniciar Sesión</v-btn>
       </div>
-    </v-app-bar>
+      <v-app-bar-nav-icon class="nav-icon" @click="drawer = true"></v-app-bar-nav-icon>
+    </header>
 
     <v-navigation-drawer style="z-index: 100 !important" v-model="drawer" fixed temporary>
       <div class="nav-logo">
@@ -187,21 +187,33 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.header-logo {
-  transition: 0.3s;
-  cursor: pointer;
-  &:hover {
-    transform: scale(1.05);
-  }
-}
-.header-actions {
+.header {
+  height: 56px;
+  padding: 0 20px;
+  padding-right: 10px;
+
   display: flex;
   align-items: center;
-  .header-action {
+
+  &__logo {
+    transition: 0.3s;
+    cursor: pointer;
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+  }
+
+  &__action {
     padding: 0 20px;
     font-weight: bold;
   }
 }
+
 .nav-icon {
   display: none;
 }

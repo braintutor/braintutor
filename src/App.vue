@@ -78,7 +78,7 @@ export default {
   right: 0;
 
   &__body {
-    height: calc(100vh - 64px);
+    height: calc(100vh - 56px);
     overflow-y: auto;
   }
 }
