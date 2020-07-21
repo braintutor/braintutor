@@ -43,7 +43,7 @@ export default {
 
 <style lang='scss' scoped>
 .app {
-  height: calc(100vh - 64px);
+  height: calc(100vh - 56px);
   display: grid;
 
   grid-template-columns: auto 1fr;
