@@ -79,10 +79,6 @@ export default {
             );
             let icon_settings = document.querySelectorAll(".ce-toolbar");
             icon_settings.forEach(el => el.remove());
-            // let icon_settings = document.querySelectorAll(
-            //   ".ce-toolbar__settings-btn"
-            // );
-            // icon_settings.forEach(el => el.remove());
           }
         }
       });
