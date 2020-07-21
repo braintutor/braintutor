@@ -1,9 +1,8 @@
 <template>
-  <div>
+  <div class="m-container pa-2">
     <loading :active="loading" :message="loading_msg" />
-
     <div class="options">
-      <v-btn @click="createChatbot()" small text rounded>
+      <v-btn @click="createChatbot()" class="ml-2" small text rounded>
         <v-icon class="mr-2" small>mdi-plus</v-icon>Crear Unidad
       </v-btn>
     </div>
@@ -21,22 +20,6 @@
               <v-btn v-else icon small>
                 <v-icon>mdi-chevron-down</v-icon>
           </v-btn>-->
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                v-show="!chatbot.edit_name && !chatbot.edit_order"
-                @click="selectChatbot(chatbot._id.$oid)"
-                class="ml-2"
-                icon
-                small
-                v-bind="attrs"
-                v-on="on"
-              >
-                <v-icon>mdi-robot</v-icon>
-              </v-btn>
-            </template>
-            <span style="font-size: .75rem">Ver Chatbot</span>
-          </v-tooltip>
           <v-menu v-if="!chatbot.edit_name && !chatbot.edit_order" offset-y>
             <template v-slot:activator="{ on }">
               <v-btn class="ml-2" icon small v-on="on">
@@ -146,6 +129,7 @@ import { addMaterial } from "@/services/materialService.js";
 export default {
   data: () => ({
     course_id: "",
+    course: "",
     chatbots: [],
     //
     loading: false,
@@ -157,6 +141,7 @@ export default {
     this.course_id = getParam("course_id");
 
     try {
+      // this.course = await getCourseByTeacher(this.course_id);
       this.chatbots = await getChatbotsAndMaterials(this.course_id);
 
       // Materials
@@ -169,15 +154,15 @@ export default {
         });
       }
     } catch (error) {
-      this.$root.$children[0].showMessage("Error", error.msg);
+      this.$root.$children[0].showMessage(
+        "",
+        error.msg || "Ha ocurrido un error."
+      );
     }
 
     this.loading = false;
   },
   methods: {
-    selectChatbot(chatbot_id) {
-      redirect("chatbot", { chatbot_id });
-    },
     async createChatbot() {
       this.loading = true;
       this.loading_msg = "Creando Unidad";
@@ -191,7 +176,7 @@ export default {
         new_chatbot._id = chatbot_id;
         new_chatbot.materials = [];
         this.chatbots.push(new_chatbot);
-        setTimeout(() => scrollDown('app__body'), 100);
+        setTimeout(() => scrollDown("app__body"), 100);
       } catch (error) {
         this.$root.$children[0].showMessage("", error.msg);
       }
@@ -263,7 +248,7 @@ export default {
 
       let new_material = {
         name: "Nombre",
-        image: require('@/assets/braintutor/icon.png'),
+        image: require("@/assets/braintutor/icon.png"),
         description: "Descripción",
         overview: "Resumen",
         explanation,

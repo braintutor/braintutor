@@ -1,5 +1,5 @@
 <template>
-  <Layout :links="links">
+  <Layout :links="links" fluid>
     <loading :active="loading" :message="loading_msg" />
 
     <section slot="header" class="m-path">
@@ -9,8 +9,9 @@
     </section>
 
     <MaterialsEditor :slot="0" />
-    <KnowledgeEditor :slot="1" :get="getKnowledge" :update="updateKnowledge" />
-    <CourseSettings :slot="2" :course="course" />
+    <KnowledgeEditor :slot="1" :get="getKnowledge" :update="updateKnowledge" class="m-container" />
+    <MaterialsPreview :slot="2" />
+    <!-- <CourseSettings :slot="2" :course="course" class="m-container" /> -->
   </Layout>
 </template>
 
@@ -19,7 +20,8 @@ import loading from "@/components/loading";
 import Layout from "@/components/Layout";
 import MaterialsEditor from "@/components/CourseEditor/MaterialsEditor";
 import KnowledgeEditor from "@/components/globals/KnowledgeEditor";
-import CourseSettings from "@/components/CourseEditor/CourseSettings";
+import MaterialsPreview from "@/components/CourseEditor/MaterialsPreview";
+// import CourseSettings from "@/components/CourseEditor/CourseSettings";
 
 import { getParam, redirect } from "@/services/router.js";
 import {
@@ -39,9 +41,13 @@ export default {
         name: "Conocimiento"
       },
       {
-        image: require("@/assets/braintutor/icon-settings.png"),
-        name: "Configuración"
+        image: require("@/assets/avatar/normal.png"),
+        name: "Vista previa"
       }
+      // {
+      //   image: require("@/assets/braintutor/icon-settings.png"),
+      //   name: "Configuración"
+      // }
     ],
     course_id: "",
     course: {},
@@ -77,7 +83,8 @@ export default {
     Layout,
     MaterialsEditor,
     KnowledgeEditor,
-    CourseSettings
+    MaterialsPreview
+    // CourseSettings
   }
 };
 </script>

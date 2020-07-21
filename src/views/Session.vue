@@ -7,10 +7,10 @@
     </section>
 
     <Materials :slot="0" v-if="course._id" :course="course" />
-    <Tasks :slot="1" class="m-container my-3" />
-    <Events :slot="2" class="m-container my-3" />
-    <Evaluations :slot="3" class="m-container my-3" />
-    <Students :slot="4" :get="getStudents" class="m-container my-3" />
+    <Tasks :slot="1" class="m-container py-3" />
+    <Events :slot="2" class="m-container py-3" />
+    <Evaluations :slot="3" class="m-container py-3" />
+    <Students :slot="4" :get="getStudents" class="m-container py-3" />
   </Layout>
 </template>
 

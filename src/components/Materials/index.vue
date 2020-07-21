@@ -330,7 +330,7 @@ export default {
   }
 }
 
-@media only screen and (max-width: 1100px) {
+@media only screen and (max-width: 1000px) {
   .layout {
     flex-direction: column;
     height: auto;

@@ -1,9 +1,9 @@
 <template>
-  <div class="container pa-0 px-2">
+  <div class="m-container pa-2">
     <loading :active="loading" :message="loading_msg" />
     <div class="menu pa-0 pb-2">
       <div class="menu-left">
-        <v-btn icon @click="redirect('session', { session_id: task.session_id.$oid })">
+        <v-btn icon @click="redirectSession()">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
         <span class="menu-title">Volver</span>
@@ -256,7 +256,11 @@ export default {
     }
   },
   methods: {
-    redirect,
+    redirectSession() {
+      this.$router
+        .push(`/session/${this.task.session_id.$oid}`)
+        .catch(() => {});
+    },
     async showAll() {
       this.loading = true;
       this.loading_msg = "Cargando Archivos";
