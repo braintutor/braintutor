@@ -21,10 +21,13 @@ body, body * {
 }
 
 .m-path {
-  padding: 8px 10px;
+  padding: 6px 8px;
   padding-top: 0;
   color: #7a7a7a;
   font-size: 0.9rem;
+
+  display: flex;
+  align-items: center;
 
   &__icon {
     margin: 0 4px;
@@ -32,7 +35,7 @@ body, body * {
   }
 
   &__name {
-    padding: 4px 8px;
+    padding: 4px 10px;
     border-radius: 4px;
     transition: .3s;
 
