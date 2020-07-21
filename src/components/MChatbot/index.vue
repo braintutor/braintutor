@@ -60,7 +60,8 @@ export default {
       }
     ],
     new_message: "",
-    show: false
+    show: false,
+    allow: true
   }),
   watch: {
     knowledge() {
@@ -82,16 +83,26 @@ export default {
       }
     },
     newMessage() {
-      let answer = this.new_message;
-      this.addMessage(answer, "user");
-      this.new_message = "";
+      let answer = this.new_message.trim();
+      if (this.allow && answer) {
+        // User
+        this.new_message = "";
+        this.addMessage(answer, "user");
+        this.allow = false;
 
-      let { answers, actions } = this.getAnswer(answer);
-      answer = answers[Math.floor(Math.random() * answers.length)];
+        // Bot
+        setTimeout(() => {
+          let { answers, actions } = this.getAnswer(answer);
+          answer = answers[Math.floor(Math.random() * answers.length)];
 
-      this.$refs.avatar.startAnimationTalk();
-      this.chatbot.talk(answer, () => this.$refs.avatar.startAnimationNormal());
-      this.addMessage(answer, "bot", actions);
+          this.$refs.avatar.startAnimationTalk();
+          this.chatbot.talk(answer, () =>
+            this.$refs.avatar.startAnimationNormal()
+          );
+          this.addMessage(answer, "bot", actions);
+          this.allow = true;
+        }, 1000);
+      }
     },
     addMessage(text, type, actions = []) {
       this.messages.push({
@@ -188,7 +199,7 @@ $color-blue: #0078ff;
 
   &--active {
     width: 350px;
-    height: 500px;
+    height: 550px;
     border-radius: 4px;
     cursor: initial;
 
