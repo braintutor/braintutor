@@ -4,10 +4,6 @@ function getTeachersBySchool() {
   return fetch_get('getTeachersBySchool')
 }
 
-function getProfileTeacher() {
-  return fetch_get('getProfileTeacher')
-}
-
 function addTeacher(user) {
   return fetch_post('addTeacher', {
     user
@@ -26,4 +22,4 @@ function removeTeacher(id) {
   })
 }
 
-export { getTeachersBySchool, getProfileTeacher, addTeacher, updateTeacher, removeTeacher }
+export { getTeachersBySchool, addTeacher, updateTeacher, removeTeacher }

@@ -82,7 +82,6 @@ import {
   updateClassroom,
   removeClassroom
 } from "@/services/classroomService";
-// import { getStudentsByClassroom } from "@/services/studentService";
 
 export default {
   data: () => ({
@@ -100,9 +99,6 @@ export default {
     this.loading_msg = "Cargando Aulas";
     this.entities = await getClassroomsBySchool();
     this.entities.sort((a, b) => a.name.localeCompare(b.name));
-    // for (let entity of this.entities) {
-    //   entity.students = await getStudentsByClassroom(entity._id.$oid);
-    // }
     this.loading = false;
   },
   methods: {

@@ -1,20 +1,9 @@
 
 import { fetch_get, fetch_post } from "./fetch";
 
-function getCourseIdByChatbot(chatbot_id) {
-  return fetch_post('getCourseIdByChatbot', {
-    chatbot_id
-  })
-}
 
 function getCourseByTeacher(course_id) {
   return fetch_post('getCourseByTeacher', {
-    course_id
-  })
-}
-
-function getCourseByStudent(course_id) {
-  return fetch_post('getCourseByStudent', {
     course_id
   })
 }
@@ -25,12 +14,6 @@ function getCoursesByTeacher() {
 
 function getCoursesBySchool() {
   return fetch_get('getCoursesBySchool')
-}
-
-function getCourseByMaterial(material_id) {
-  return fetch_post('getCourseByMaterial', {
-    material_id
-  })
 }
 
 function addCourse(course) {
@@ -64,12 +47,9 @@ function removeCourse(id) {
 }
 
 export {
-  getCourseIdByChatbot,
   getCourseByTeacher,
-  getCourseByStudent,
   getCoursesByTeacher,
   getCoursesBySchool,
-  getCourseByMaterial,
   addCourse,
   updateCourse,
   updateCourseKnowledge,

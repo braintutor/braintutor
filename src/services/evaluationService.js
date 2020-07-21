@@ -53,7 +53,7 @@ function deleteEvaluation(evaluation_id) {
 
 function getEvaluationByStudent(evaluation_id) {
   return fetch_post('getEvaluationByStudent', {
-    evaluation_id 
+    evaluation_id
   })
 }
 
