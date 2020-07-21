@@ -1,8 +1,7 @@
 <template>
   <div
     class="chatbot"
-    :class="{' chatbot--active': show}"
-    onclick="input.focus()"
+    :class="{'chatbot--loading': loading, 'chatbot--active': show && !loading}"
     @click="showChatbot()"
   >
     <v-icon @click="hideChatbot($event)" class="chatbot__close">mdi-close</v-icon>
@@ -49,6 +48,10 @@ import Chatbot from "@/services/chatbot";
 
 export default {
   props: {
+    loading: {
+      type: Boolean,
+      default: false
+    },
     knowledge: Array
   },
   data: () => ({
@@ -125,6 +128,7 @@ export default {
     showChatbot() {
       if (!this.show) {
         this.show = true;
+        document.getElementById("input").focus();
         setTimeout(() => {
           scrollDown("messages");
         }, 500);
@@ -197,6 +201,24 @@ $color-blue: #0078ff;
     }
   }
 
+  &--loading {
+    &::after {
+      content: "";
+      background: rgba(255, 255, 255, 0.555);
+      border-radius: 50%;
+      border: 4px solid #6b6bff;
+      border-top: 4px solid transparent;
+
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+
+      animation: rotating 1s ease infinite;
+    }
+  }
+
   &--active {
     width: 350px;
     height: 550px;
@@ -207,6 +229,14 @@ $color-blue: #0078ff;
       transform: none;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     }
+  }
+}
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 

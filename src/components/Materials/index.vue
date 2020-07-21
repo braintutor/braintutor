@@ -40,7 +40,7 @@
     </section>
 
     <!-- Material -->
-    <div id="scroll" style="overflow-y: auto; width: 100%; padding: 0 20px">
+    <div id="scroll" class="pa-3" style="overflow-y: auto; width: 100%">
       <div v-if="material" class="material">
         <div class="material__menu">
           <span class="material__name">{{material.name}}</span>
@@ -51,7 +51,7 @@
     </div>
 
     <!-- Chatbot -->
-    <Chatbot :knowledge="knowledge" />
+    <Chatbot :knowledge="knowledge" :loading="loading_knowledge" />
   </div>
 </template>
 
@@ -82,7 +82,8 @@ export default {
     material: null,
     knowledge: [],
     //
-    show: false
+    show: false,
+    loading_knowledge: true
   }),
   computed: {
     ...mapState(["user"])
@@ -194,6 +195,7 @@ export default {
             });
           }
           this.knowledge = knowledge;
+          this.loading_knowledge = false;
         } catch (error) {
           this.$root.$children[0].showMessage("Error", error.msg);
         }
@@ -313,8 +315,7 @@ export default {
 }
 
 .material {
-  margin: 20px auto;
-  margin-bottom: 130px;
+  margin: 0 auto 120px;
   max-width: 650px;
 
   &__menu {

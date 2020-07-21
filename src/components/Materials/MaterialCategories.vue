@@ -2,56 +2,54 @@
   <div>
     <div class="material">
       <!-- Body -->
-      <div class="material__body">
-        <DocumentEditor
-          v-show="category === 'explanation'"
-          :id="'explanation'"
-          :data="material['explanation']"
-          hideControls
-          readonly
-        />
-        <DocumentEditor
-          v-show="category === 'examples'"
-          :id="'examples'"
-          :data="material['examples']"
-          hideControls
-          readonly
-        />
-        <DocumentEditor
-          v-show="category === 'movies'"
-          :id="'movies'"
-          :data="material['movies']"
-          hideControls
-          readonly
-        />
-        <DocumentEditor
-          v-show="category === 'images'"
-          :id="'images'"
-          :data="material['images']"
-          hideControls
-          readonly
-        />
-        <DocumentEditor
-          v-show="category === 'hyperlinks'"
-          :id="'hyperlinks'"
-          :data="material['hyperlinks']"
-          hideControls
-          readonly
-        />
-        <Exercises
-          v-show="category === 'exercises'"
-          :exercises="material['exercises']"
-          class="mcontainer"
-        />
-        <div v-show="category === 'faq'" class="mcontainer">
-          <h2 class="faq__title">Preguntas Frecuentes</h2>
-          <div v-for="(faq, idx) in material['faq']" :key="idx" class="faq">
-            <p class="faq__question">{{faq.question}}</p>
-            <p class="faq__answer">{{faq.answer}}</p>
-          </div>
+      <DocumentEditor
+        v-show="category === 'explanation'"
+        :id="'explanation'"
+        :data="material['explanation']"
+        hideControls
+        readonly
+      />
+      <DocumentEditor
+        v-show="category === 'examples'"
+        :id="'examples'"
+        :data="material['examples']"
+        hideControls
+        readonly
+      />
+      <DocumentEditor
+        v-show="category === 'movies'"
+        :id="'movies'"
+        :data="material['movies']"
+        hideControls
+        readonly
+      />
+      <DocumentEditor
+        v-show="category === 'images'"
+        :id="'images'"
+        :data="material['images']"
+        hideControls
+        readonly
+      />
+      <DocumentEditor
+        v-show="category === 'hyperlinks'"
+        :id="'hyperlinks'"
+        :data="material['hyperlinks']"
+        hideControls
+        readonly
+      />
+      <Exercises
+        v-show="category === 'exercises'"
+        :exercises="material['exercises']"
+        class="mcontainer"
+      />
+      <div v-show="category === 'faq'" class="mcontainer">
+        <h2 class="faq__title">Preguntas Frecuentes</h2>
+        <div v-for="(faq, idx) in material['faq']" :key="idx" class="faq">
+          <p class="faq__question">{{faq.question}}</p>
+          <p class="faq__answer">{{faq.answer}}</p>
         </div>
-        <Quizzes v-show="category === 'quizzes'" :quizzes="material['quizzes']" />
       </div>
+      <Quizzes v-show="category === 'quizzes'" :quizzes="material['quizzes']" />
       <!-- Actions -->
       <div class="material__actions">
         <button v-show="category_idx > 0" @click="move(-1)" class="button button--secondary">
@@ -141,10 +139,6 @@ export default {
 }
 
 .material {
-  &__body {
-    margin-top: 20px;
-  }
-
   &__actions {
     display: flex;
     justify-content: space-between;

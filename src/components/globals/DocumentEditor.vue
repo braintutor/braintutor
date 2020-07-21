@@ -79,6 +79,11 @@ export default {
             );
             let icon_settings = document.querySelectorAll(".ce-toolbar");
             icon_settings.forEach(el => el.remove());
+
+            let box = document.querySelectorAll(".codex-editor__redactor");
+            box.forEach(el => {
+              el.style.paddingBottom = "0px !important";
+            });
           }
         }
       });
@@ -103,8 +108,4 @@ export default {
   display: flex;
   justify-content: flex-end;
 }
-// .document {
-//   border-top: 1px solid #ccc;
-//   border-bottom: 1px solid #ccc;
-// }
 </style>

@@ -79,15 +79,7 @@ export default {
 
   &__body {
     height: calc(100vh - 56px);
-    overflow-y: auto;
-  }
-}
-
-@media only screen and (max-width: 690px) {
-  .m-app {
-    &__body {
-      // height: calc(100vh - 56px);
-    }
+    overflow-y: overlay;
   }
 }
 
