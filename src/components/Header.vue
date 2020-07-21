@@ -61,6 +61,12 @@
             </v-list-item-icon>
             <v-list-item-title>Perfil</v-list-item-title>
           </v-list-item>
+          <v-list-item @click="enableFullscreen(); drawer=false">
+            <v-list-item-icon>
+              <v-icon>mdi-fullscreen</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Pantalla completa</v-list-item-title>
+          </v-list-item>
           <v-list-item v-if="user" @click="closeSession(); drawer=false">
             <v-list-item-icon>
               <v-icon>mdi-power</v-icon>
@@ -105,7 +111,7 @@ export default {
       {
         title: "Editar",
         name: "courses-editor",
-        icon: "mdi-book",
+        icon: "mdi-file-edit",
         session_roles: ["TEA"]
       },
       // 2, 4
@@ -171,6 +177,10 @@ export default {
       this.$store.state.user = null;
       localStorage.removeItem("token");
       redirect("home");
+    },
+    enableFullscreen() {
+      let container = document.getElementById("braintutor");
+      container.requestFullscreen();
     }
   }
 };

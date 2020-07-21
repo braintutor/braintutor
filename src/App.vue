@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app id="braintutor">
     <Header />
     <v-content>
       <loading :active="loading" :message="loading_msg" />
