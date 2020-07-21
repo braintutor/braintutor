@@ -42,9 +42,9 @@
     <!-- Material -->
     <div id="scroll" class="pa-3" style="overflow-y: auto; width: 100%">
       <div v-if="material" class="material">
-        <div class="material__menu">
+        <!-- <div class="material__menu">
           <span class="material__name">{{material.name}}</span>
-        </div>
+        </div>-->
         <MaterialCategories v-if="course.adaptive" :material="material" />
         <MaterialDocuments v-else :material="material" />
       </div>
@@ -318,17 +318,17 @@ export default {
   margin: 0 auto 120px;
   max-width: 650px;
 
-  &__menu {
-    display: flex;
-    align-items: center;
-  }
+  // &__menu {
+  //   display: flex;
+  //   align-items: center;
+  // }
 
-  &__name {
-    display: block;
-    font-weight: bold;
-    font-size: 1.5rem;
-    letter-spacing: 0.25px;
-  }
+  // &__name {
+  //   display: block;
+  //   font-weight: bold;
+  //   font-size: 1.5rem;
+  //   letter-spacing: 0.25px;
+  // }
 }
 
 @media only screen and (max-width: 1000px) {

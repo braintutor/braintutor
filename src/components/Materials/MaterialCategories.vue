@@ -49,7 +49,7 @@
           <p class="faq__answer">{{faq.answer}}</p>
         </div>
       </div>
-      <Quizzes v-show="category === 'quizzes'" :quizzes="material['quizzes']" />
+      <Quizzes v-show="category === 'quizzes'" :quizzes="material['quizzes']" class="mcontainer" />
       <!-- Actions -->
       <div class="material__actions">
         <button v-show="category_idx > 0" @click="move(-1)" class="button button--secondary">
@@ -136,6 +136,7 @@ export default {
 .mcontainer {
   max-width: 650px;
   margin: 0 auto;
+  margin-top: 20px;
 }
 
 .material {
