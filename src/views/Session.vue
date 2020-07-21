@@ -75,8 +75,6 @@ export default {
     }
 
     this.loading(false);
-    // this.session_id = getParam("session_id");
-    // this.course = await getCourseNameBySession(this.session_id);
   },
   methods: {
     ...mapMutations(["loading", "loading_msg"]),
@@ -84,7 +82,8 @@ export default {
       redirect("sessions-student");
     },
     async getStudents() {
-      return await getStudentsBySessionStudent(this.session_id);
+      let session_id = getParam("session_id");
+      return await getStudentsBySessionStudent(session_id);
     }
   },
   components: {
