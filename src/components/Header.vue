@@ -130,7 +130,7 @@ export default {
       {
         title: "Agenda",
         name: "events",
-        icon: "mdi-book",
+        icon: "mdi-calendar",
         session_roles: ["STU", "PAR"]
       },
       // 3
