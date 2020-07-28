@@ -23,9 +23,14 @@
           class="message__action"
         >{{action.text}}</div>
       </div>
+      <div v-if="writing" class="message message--bot message--writing">
+        <div class="message--writing__dot" style="--offset: 0s"></div>
+        <div class="message--writing__dot" style="--offset: .2s"></div>
+        <div class="message--writing__dot" style="--offset: .4s"></div>
+      </div>
     </div>
     <!-- Input -->
-    <form @submit.prevent="newMessage()" class="input">
+    <form @submit.prevent="newMessage(new_message)" class="input">
       <input
         id="input"
         type="text"
@@ -33,9 +38,9 @@
         placeholder="Escribe un mensaje"
         autocomplete="off"
       />
-      <!-- <v-btn icon small>
-        <v-icon small>mdi-send</v-icon>
-      </v-btn>-->
+      <v-btn @click="talk()" class="ml-1" icon>
+        <v-icon>mdi-microphone</v-icon>
+      </v-btn>
     </form>
   </div>
 </template>
@@ -43,6 +48,7 @@
 <script>
 import Avatar from "./Avatar";
 
+import { SpeechToText } from "@/services/speech";
 import { scrollDown } from "@/services/scroll";
 import Chatbot from "@/services/chatbot";
 
@@ -50,26 +56,27 @@ export default {
   props: {
     loading: {
       type: Boolean,
-      default: false
+      default: false,
     },
-    knowledge: Array
+    knowledge: Array,
   },
   data: () => ({
     chatbot: new Chatbot(),
     messages: [
       {
         text: "Hola.\n¿En qué puedo ayudarte?",
-        type: "bot"
-      }
+        type: "bot",
+      },
     ],
     new_message: "",
+    allow_new_message: true,
+    writing: false,
     show: false,
-    allow: true
   }),
   watch: {
     knowledge() {
       this.init();
-    }
+    },
   },
   mounted() {
     this.init();
@@ -79,23 +86,24 @@ export default {
       if (this.knowledge.length > 1) {
         let entities = {
           usuario: {
-            nombre: this.$store.state.user.first_name.split(/\s+/g)[0]
-          }
+            nombre: this.$store.state.user.first_name.split(/\s+/g)[0],
+          },
         };
         this.chatbot.train(this.knowledge, entities);
       }
     },
-    newMessage() {
-      let answer = this.new_message.trim();
-      if (this.allow && answer) {
+    newMessage(new_message) {
+      let answer = new_message.trim();
+      if (this.allow_new_message && answer) {
         // User
         this.new_message = "";
         this.addMessage(answer, "user");
-        this.allow = false;
+        this.allow_new_message = false;
+        this.writing = true;
 
         // Bot
         setTimeout(() => {
-          let { answers, actions } = this.getAnswer(answer);
+          let { answers, actions } = this.chatbot.getAnswer(answer);
           answer = answers[Math.floor(Math.random() * answers.length)];
 
           this.$refs.avatar.startAnimationTalk();
@@ -103,22 +111,23 @@ export default {
             this.$refs.avatar.startAnimationNormal()
           );
           this.addMessage(answer, "bot", actions);
-          this.allow = true;
-        }, 1000);
+          this.allow_new_message = true;
+          this.writing = false;
+        }, 2000);
       }
+    },
+    talk() {
+      SpeechToText((text) => this.newMessage(text));
     },
     addMessage(text, type, actions = []) {
       this.messages.push({
         text,
         type,
-        actions
+        actions,
       });
       setTimeout(() => {
         scrollDown("messages");
       }, 20);
-    },
-    getAnswer(answer) {
-      return this.chatbot.getAnswer(answer);
     },
     //
     actionChatbot(e, action) {
@@ -139,11 +148,11 @@ export default {
         e.stopPropagation();
         this.show = false;
       }
-    }
+    },
   },
   components: {
-    Avatar
-  }
+    Avatar,
+  },
 };
 </script>
 
@@ -317,6 +326,34 @@ $color-blue: #0078ff;
     .message__action {
       border-top: 1px solid $color-blue;
     }
+  }
+  &--writing {
+    // animation: blink 1s linear infinite;
+    padding: 10px;
+    padding-left: calc(10px - 0.3rem);
+    display: flex;
+
+    &__dot {
+      width: 0.4rem;
+      height: 0.4rem;
+      margin-left: 0.3rem;
+      background: rgb(128, 128, 128);
+      border-radius: 50%;
+
+      animation: blink 1s linear infinite var(--offset);
+    }
+  }
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
 
