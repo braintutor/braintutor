@@ -113,7 +113,7 @@ export default {
           this.addMessage(answer, "bot", actions);
           this.allow_new_message = true;
           this.writing = false;
-        }, 2000);
+        }, 1500);
       }
     },
     talk() {

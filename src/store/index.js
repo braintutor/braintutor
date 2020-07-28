@@ -8,6 +8,7 @@ export default new Vuex.Store({
     user: null,
     loading: false,
     loading_msg: '',
+    material: null
   },
   mutations: {
     setUser(state, user) {
@@ -18,6 +19,9 @@ export default new Vuex.Store({
     },
     loading_msg(state, loading_msg) {
       state.loading_msg = loading_msg
+    },
+    setMaterial(state, material) {
+      state.material = material
     }
   },
   actions: {

@@ -62,11 +62,11 @@ import Chatbot from "@/components/MChatbot/index";
 
 import {
   getChatbotsByCourseTeacher,
-  getChatbotsByCourseStudent
+  getChatbotsByCourseStudent,
 } from "@/services/chatbotService";
 import {
   getMaterialsByCourseTeacher,
-  getMaterialsByCourseStudent
+  getMaterialsByCourseStudent,
 } from "@/services/materialService";
 import { getQuestionTemplate } from "@/services/chatService";
 
@@ -74,25 +74,25 @@ import { mapState, mapMutations } from "vuex";
 
 export default {
   props: {
-    course: Object
+    course: Object,
   },
   data: () => ({
     chatbots: [],
     materials: [],
-    material: null,
+    // material: null,
     knowledge: [],
     //
     show: false,
-    loading_knowledge: true
+    loading_knowledge: true,
   }),
   computed: {
-    ...mapState(["user"])
+    ...mapState(["user", "material"]),
   },
   async created() {
     await this.init();
   },
   methods: {
-    ...mapMutations(["loading", "loading_msg"]),
+    ...mapMutations(["loading", "loading_msg", "setMaterial"]),
     async init() {
       if (this.course._id) {
         this.loading(true);
@@ -108,10 +108,10 @@ export default {
             : getMaterialsByCourseStudent(course_id));
 
           if (this.materials[0]) this.selectMaterial(this.materials[0]);
-          this.chatbots.forEach(c => {
+          this.chatbots.forEach((c) => {
             c.show = true;
             // Find Materials
-            let materials = this.materials.filter(m => {
+            let materials = this.materials.filter((m) => {
               return m.chatbot_id.$oid === c._id.$oid;
             });
             // Sorting Materials
@@ -131,26 +131,29 @@ export default {
           // Knowledge Material
           if (this.course.adaptive) {
             let question_template = await getQuestionTemplate();
-            this.materials.forEach(material => {
+            this.materials.forEach((material) => {
               Object.entries(question_template).forEach(
                 ([category, questions]) => {
                   if (questions[0]) {
-                    questions = questions.map(question =>
+                    questions = questions.map((question) =>
                       question.replace(/@/, material.name)
                     );
                     knowledge.push({
                       questions,
                       answers: [
                         "Esto te puede servir.",
-                        "He encontrado esta información."
+                        "He encontrado esta información.",
                       ],
                       actions: [
                         {
                           text: "Ver información",
                           action: () =>
-                            this.selectMaterialByID(material._id.$oid, category)
-                        }
-                      ]
+                            this.selectMaterialByID(
+                              material._id.$oid,
+                              category
+                            ),
+                        },
+                      ],
                     });
                   }
                 }
@@ -163,9 +166,9 @@ export default {
                     {
                       text: "Ver información",
                       action: () =>
-                        this.selectMaterialByID(material._id.$oid, null)
-                    }
-                  ]
+                        this.selectMaterialByID(material._id.$oid, null),
+                    },
+                  ],
                 });
               });
             });
@@ -173,24 +176,24 @@ export default {
             let questions = [
               "Muéstrame información sobre @.",
               '"Háblame sobre @.',
-              "Explícame sobre @."
+              "Explícame sobre @.",
             ];
-            this.materials.forEach(material => {
+            this.materials.forEach((material) => {
               knowledge.push({
-                questions: questions.map(question =>
+                questions: questions.map((question) =>
                   question.replace(/@/, material.name)
                 ),
                 answers: [
                   "Esto te puede servir.",
-                  "He encontrado esta información."
+                  "He encontrado esta información.",
                 ],
                 actions: [
                   {
                     text: "Ver información",
                     action: () =>
-                      this.selectMaterialByID(material._id.$oid, null)
-                  }
-                ]
+                      this.selectMaterialByID(material._id.$oid, null),
+                  },
+                ],
               });
             });
           }
@@ -203,32 +206,38 @@ export default {
       }
     },
     selectMaterial(material) {
-      this.material = null;
+      this.setMaterial(null);
+      // this.material = null;
       this.show = false;
       setTimeout(() => {
-        this.material = material;
+        this.setMaterial(material);
+        // this.material = material;
       }, 100);
     },
     selectMaterialByID(material_id, category) {
       // if (this.material && this.material._id.$oid === material_id) return;
 
-      this.material = null;
+      this.setMaterial(null);
+      // this.material = null;
       this.show = false;
       setTimeout(() => {
-        this.material = this.materials.find(m => m._id.$oid === material_id);
-        this.material.default = category;
+        let material = this.materials.find((m) => m._id.$oid === material_id);
+        material.default = category;
+        this.setMaterial(material);
+        // this.material = material
       }, 100);
     },
     unselectMaterial() {
-      this.material = null;
+      this.setMaterial(null);
+      // this.material = null;
       this.show = false;
-    }
+    },
   },
   components: {
     MaterialCategories,
     MaterialDocuments,
-    Chatbot
-  }
+    Chatbot,
+  },
 };
 </script>
 
