@@ -29,7 +29,7 @@ import { mapState } from "vuex";
 export default {
   name: "App",
   data: () => ({
-    dlg_message: true,
+    dlg_message: false,
     show_title: "",
     show_message: "",
   }),
@@ -37,11 +37,6 @@ export default {
     ...mapState(["user", "loading", "loading_msg"]),
   },
   mounted() {
-    this.showMessage(
-      "Esto es un Título",
-      "Esto es un descripción, un poco más larga. Ahora sigamos probando."
-    );
-
     // TIME
     setInterval(async () => {
       try {
