@@ -5,16 +5,15 @@
       <loading :active="loading" :message="loading_msg" />
       <router-view></router-view>
     </v-content>
-    <!-- showMessage -->
-    <v-dialog v-model="show" max-width="320">
-      <v-card>
-        <v-card-title>{{show_title}}</v-card-title>
-        <v-card-text v-show="show_message" style="font-size: .95rem">{{show_message}}</v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn small text @click="show = false">Cerrar</v-btn>
-        </v-card-actions>
-      </v-card>
+    <!-- Message -->
+    <v-dialog v-model="dlg_message" max-width="320" persistent>
+      <div class="m-msg">
+        <div class="m-msg__body">
+          <p v-if="show_title" class="m-msg__title">{{show_title}}</p>
+          <p class="m-msg__description">{{show_message}}</p>
+        </div>
+        <button @click="dlg_message = false" class="m-msg__btn">Cerrar</button>
+      </div>
     </v-dialog>
   </v-app>
 </template>
@@ -30,14 +29,19 @@ import { mapState } from "vuex";
 export default {
   name: "App",
   data: () => ({
-    show: false,
+    dlg_message: true,
     show_title: "",
-    show_message: ""
+    show_message: "",
   }),
   computed: {
-    ...mapState(["user", "loading", "loading_msg"])
+    ...mapState(["user", "loading", "loading_msg"]),
   },
   mounted() {
+    this.showMessage(
+      "Esto es un Título",
+      "Esto es un descripción, un poco más larga. Ahora sigamos probando."
+    );
+
     // TIME
     setInterval(async () => {
       try {
@@ -50,22 +54,22 @@ export default {
     }, 60000);
 
     // PROTOTYPE
-    Date.prototype.addHours = function(h) {
+    Date.prototype.addHours = function (h) {
       this.setHours(this.getHours() + h);
       return this;
     };
   },
   methods: {
     showMessage(title, message) {
-      this.show = true;
+      this.dlg_message = true;
       this.show_title = title;
       this.show_message = message;
-    }
+    },
   },
   components: {
     Header,
-    loading
-  }
+    loading,
+  },
 };
 </script>
 
@@ -80,6 +84,52 @@ export default {
   &__body {
     height: calc(100vh - 56px);
     overflow-y: overlay;
+  }
+}
+
+.m-msg {
+  padding: 10px;
+  background: #fff;
+  border-radius: 16px;
+
+  &__body {
+    padding: 20px;
+  }
+
+  &__title {
+    margin-bottom: 20px !important;
+    color: rgb(78, 78, 78);
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.25rem;
+  }
+
+  &__description {
+    margin-bottom: 0 !important;
+    color: rgb(109, 109, 109);
+    text-align: center;
+    font-size: 0.9rem;
+  }
+
+  &__btn {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    color: rgb(109, 109, 109);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    border-radius: 16px;
+    transition: 0.3s;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.075);
+    }
+    &:focus {
+      outline: none;
+    }
+    &:active {
+      background: rgba(0, 0, 0, 0.15);
+    }
   }
 }
 
