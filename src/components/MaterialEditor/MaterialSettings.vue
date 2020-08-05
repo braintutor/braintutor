@@ -16,7 +16,7 @@
         ></v-text-field>
         <span class="mt-1" v-else>{{material.name}}</span>
         <!-- Description -->
-        <strong class="mt-1">Descripción:</strong>
+        <!-- <strong class="mt-1">Descripción:</strong>
         <v-textarea
           v-if="show_edit"
           style="font-size: .95rem"
@@ -30,7 +30,7 @@
           v-else
           class="mt-1"
           style="word-break: break-word; white-space: pre-wrap"
-        >{{material.description}}</span>
+        >{{material.description}}</span>-->
       </section>
       <!-- Actions -->
       <div class="form__actions">
@@ -47,7 +47,7 @@
     </section>
 
     <!-- Image -->
-    <div class="form m-card py-2 px-3 mt-3">
+    <!-- <div class="form m-card py-2 px-3 mt-3">
       <section class="form__body">
         <strong class="mt-1">Imagen:</strong>
         <div>
@@ -68,7 +68,7 @@
         </div>
       </section>
       <img class="image" :src="material.image" alt />
-    </div>
+    </div>-->
 
     <!-- Actions -->
     <div class="options my-3">
@@ -121,7 +121,7 @@ import { redirect } from "@/services/router.js";
 import {
   updateMaterial,
   updateMaterialImage,
-  removeMaterial
+  removeMaterial,
 } from "@/services/materialService";
 
 export default {
@@ -135,7 +135,7 @@ export default {
     //
     loading: false,
     loading_msg: "",
-    dlg_remove: false
+    dlg_remove: false,
   }),
   methods: {
     async save() {
@@ -143,11 +143,11 @@ export default {
       this.loading_msg = "Guardando";
 
       let material_id = this.material._id.$oid;
-      let { name, description } = this.material_aux;
+      let { name /*, description*/ } = this.material_aux;
       try {
-        await updateMaterial(material_id, name, description);
+        await updateMaterial(material_id, name /*, description*/);
         this.material.name = name;
-        this.material.description = description;
+        // this.material.description = description;
         this.show_edit = false;
       } catch (error) {
         this.$root.$children[0].showMessage("Error", error.msg);
@@ -185,8 +185,8 @@ export default {
             method: "POST",
             body: data,
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`
-            }
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
           }
         );
         if (res.status === 413)
@@ -224,11 +224,11 @@ export default {
     showEdit() {
       this.material_aux = Object.assign({}, this.material);
       this.show_edit = true;
-    }
+    },
   },
   components: {
-    loading
-  }
+    loading,
+  },
 };
 </script>
 

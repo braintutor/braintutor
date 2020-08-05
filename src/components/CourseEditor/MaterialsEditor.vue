@@ -8,7 +8,7 @@
     </div>
 
     <!-- Chatbot -->
-    <section class="chatbot m-card" v-for="(chatbot, idx) in chatbots" :key="idx">
+    <section class="chatbot" v-for="(chatbot, idx) in chatbots" :key="idx">
       <!-- <div class="chatbot__menu" @click="chatbot.show = !chatbot.show; $forceUpdate()"> -->
       <div class="chatbot__menu">
         <p v-if="!chatbot.edit_name" class="chatbot__name">{{chatbot.name}}</p>
@@ -73,16 +73,11 @@
         <div v-for="(material, m_idx) in chatbot.materials" :key="m_idx">
           <!-- Material -->
           <div class="material">
-            <div class="material__body m-card" @click="selectMaterial(material._id.$oid)">
-              <img
-                v-if="material.image"
-                class="material__image"
-                :src="material.image"
-                :alt="material.name"
-              />
-              <div v-else class="material__image"></div>
-              <p class="material__name">{{material.name}}</p>
-              <p class="material__description">{{material.description}}</p>
+            <p class="material__name">{{material.name}}</p>
+            <div v-show="!chatbot.edit_order" class="material__options">
+              <v-btn icon small @click="selectMaterial(material._id.$oid)">
+                <v-icon style="color: #999; font-size: 1.2rem">mdi-pencil</v-icon>
+              </v-btn>
             </div>
             <!-- Material Menu -->
             <div v-show="chatbot.edit_order" class="material__menu">
@@ -122,7 +117,7 @@ import {
   getChatbotsAndMaterials,
   updateChatbot,
   updateChatbotOrder,
-  removeChatbot
+  removeChatbot,
 } from "@/services/chatbotService.js";
 import { addMaterial } from "@/services/materialService.js";
 
@@ -133,7 +128,7 @@ export default {
     chatbots: [],
     //
     loading: false,
-    loading_msg: ""
+    loading_msg: "",
   }),
   async created() {
     this.loading = true;
@@ -168,7 +163,7 @@ export default {
       this.loading_msg = "Creando Unidad";
 
       let new_chatbot = {
-        name: "Nombre"
+        name: "Nombre",
       };
 
       try {
@@ -190,7 +185,7 @@ export default {
       try {
         await removeChatbot(chatbot_id);
         this.chatbots = this.chatbots.filter(
-          chatbot => chatbot._id.$oid !== chatbot_id
+          (chatbot) => chatbot._id.$oid !== chatbot_id
         );
       } catch (error) {
         this.$root.$children[0].showMessage("", error.msg);
@@ -204,46 +199,46 @@ export default {
     async createMaterial(chatbot) {
       let explanation = JSON.stringify({
         blocks: [
-          { type: "header", data: { text: "Título", level: 2 } }
+          { type: "header", data: { text: "Título", level: 2 } },
           // { type: "paragraph", data: { text: "Descripción" } }
-        ]
+        ],
       });
       let examples = JSON.stringify({
         blocks: [
           { type: "header", data: { text: "Ejemplos", level: 2 } },
           {
             type: "list",
-            data: { style: "unordered", items: ["Ejemplo 1", "Ejemplo 2"] }
-          }
-        ]
+            data: { style: "unordered", items: ["Ejemplo 1", "Ejemplo 2"] },
+          },
+        ],
       });
       let movies = JSON.stringify({
-        blocks: [{ type: "header", data: { text: "Videos", level: 2 } }]
+        blocks: [{ type: "header", data: { text: "Videos", level: 2 } }],
       });
       let images = JSON.stringify({
-        blocks: [{ type: "header", data: { text: "Imágenes", level: 2 } }]
+        blocks: [{ type: "header", data: { text: "Imágenes", level: 2 } }],
       });
       let hyperlinks = JSON.stringify({
-        blocks: [{ type: "header", data: { text: "Enlaces", level: 2 } }]
+        blocks: [{ type: "header", data: { text: "Enlaces", level: 2 } }],
       });
       // Documents
       let documents = [
         JSON.stringify({
-          blocks: [{ type: "header", data: { text: "Título", level: 2 } }]
-        })
+          blocks: [{ type: "header", data: { text: "Título", level: 2 } }],
+        }),
       ];
       // Quizzes
       let quiz = [
         {
           question: "Pregunta",
           alternatives: ["Alternativa", "Alternativa"],
-          correct: 0
-        }
+          correct: 0,
+        },
       ];
       let quizzes = {
         BAS: quiz,
         INT: quiz,
-        ADV: quiz
+        ADV: quiz,
       };
 
       let new_material = {
@@ -259,7 +254,7 @@ export default {
         exercises: quiz,
         faq: [{ question: "Pregunta", answer: "Respuesta" }],
         quizzes,
-        documents
+        documents,
       };
 
       this.loading = true;
@@ -288,7 +283,7 @@ export default {
     },
     // Chatbot Order
     async updateChatbotOrder(chatbot) {
-      let order = chatbot.materials.map(material => material._id.$oid);
+      let order = chatbot.materials.map((material) => material._id.$oid);
       this.loading = true;
       this.loading_msg = "Guardando Cambios";
       try {
@@ -314,11 +309,11 @@ export default {
         arr[idx + 1] = aux;
         this.$forceUpdate();
       }
-    }
+    },
   },
   components: {
-    loading
-  }
+    loading,
+  },
 };
 </script>
 
@@ -331,6 +326,10 @@ export default {
 
 .chatbot {
   margin-bottom: 16px;
+  border-radius: 12px;
+  transition: 0.3s;
+  box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2),
+    0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12) !important;
 
   &__menu {
     padding: 16px 20px;
@@ -354,45 +353,29 @@ export default {
 
 .material {
   margin-top: 12px;
+  padding: 12px 16px;
+  background: #eee;
+  color: #555;
+  border-radius: 12px;
+
   display: flex;
+  align-items: center;
 
-  &__body {
-    flex-grow: 1;
-    display: grid;
-    grid-template-columns: minmax(60px, 10%) auto;
-    grid-template-rows: auto 1fr;
-    align-items: center;
-
-    transition: 0.3s;
-    cursor: pointer;
-
-    &:hover {
-      transform: scale(1.005);
-    }
-  }
-  &__image {
-    width: 100%;
-    padding: 10px;
-
-    grid-row-start: 1;
-    grid-row-end: 3;
-  }
   &__name {
-    padding: 10px;
-    padding-bottom: 0;
+    flex-grow: 1;
     margin: 0;
     font-weight: bold;
     font-size: 1rem;
   }
-  &__description {
-    padding: 10px;
-    margin: 0;
-    font-size: 0.9rem;
-    white-space: pre-wrap;
+  &__options {
+    opacity: 0;
+    transition: 0.3s;
+
+    .material:hover & {
+      opacity: 1;
+    }
   }
   &__menu {
-    margin-left: 10px;
-    margin-top: 10px;
     display: flex;
     flex-direction: column;
   }
