@@ -16,10 +16,8 @@
         v-for="(event, t_idx) in events"
         :key="t_idx"
       >
-        <div class="event__menu">
-          <span class="event__name">{{event.title}}</span>
-        </div>
         <div class="event__content">
+          <p class="event__title">{{event.title}}</p>
           <span class="event__description">{{event.description}}</span>
         </div>
         <div v-if="event.type === 'task'" class="event__actions">
@@ -44,10 +42,10 @@ export default {
         day: "numeric",
         month: "long",
         year: "numeric",
-        locale: "es"
+        locale: "es",
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

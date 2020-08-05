@@ -75,9 +75,17 @@
           <div class="material">
             <p class="material__name">{{material.name}}</p>
             <div v-show="!chatbot.edit_order" class="material__options">
-              <v-btn icon small @click="selectMaterial(material._id.$oid)">
-                <v-icon style="color: #999; font-size: 1.2rem">mdi-pencil</v-icon>
-              </v-btn>
+              <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                  <!-- <v-btn icon v-bind="attrs" v-on="on" class="calendar-action" @click="prev()">
+                    <v-icon>mdi-chevron-left</v-icon>
+                  </v-btn> -->
+                  <v-btn icon v-bind="attrs" v-on="on" small @click="selectMaterial(material._id.$oid)">
+                    <v-icon style="color: #999; font-size: 1.2rem">mdi-pencil</v-icon>
+                  </v-btn>
+                </template>
+                <span style="font-size: .75rem">Editar Material</span>
+              </v-tooltip>
             </div>
             <!-- Material Menu -->
             <div v-show="chatbot.edit_order" class="material__menu">
@@ -364,7 +372,7 @@ export default {
   &__name {
     flex-grow: 1;
     margin: 0;
-    font-weight: bold;
+    // font-weight: bold;
     font-size: 1rem;
   }
   &__options {
