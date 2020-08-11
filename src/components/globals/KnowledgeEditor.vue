@@ -118,7 +118,7 @@ export default {
     knowledge: [],
     //
     loading: false,
-    loading_message: ""
+    loading_message: "",
   }),
   async mounted() {
     await this.restoreKnowledge();
@@ -128,7 +128,7 @@ export default {
     addKnowledge() {
       this.knowledge.push({
         questions: [""],
-        answers: [""]
+        answers: [""],
       });
       setTimeout(() => {
         scrollDown("knowledge-scroll");
@@ -137,7 +137,11 @@ export default {
     async saveKnowledge() {
       this.loading = true;
       this.loading_message = "Guardando Conocimiento";
-      await this.update(this.knowledge);
+      let knowledge = this.knowledge.map((k) => ({
+        questions: k.questions,
+        answers: k.answers,
+      }));
+      await this.update(knowledge);
       this.loading = false;
     },
     async restoreKnowledge() {
@@ -177,11 +181,11 @@ export default {
     },
     removeKnowledge(knowledge_idx) {
       this.knowledge.splice(knowledge_idx, 1);
-    }
+    },
   },
   components: {
-    loading
-  }
+    loading,
+  },
 };
 </script>
 

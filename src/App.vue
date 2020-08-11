@@ -1,10 +1,11 @@
 <template>
   <v-app class="m-app" id="braintutor">
     <Header />
-    <v-content class="m-app__body">
+    <v-main class="m-app__body">
       <loading :active="loading" :message="loading_msg" />
       <router-view></router-view>
-    </v-content>
+    </v-main>
+    <Chatbot v-if="show_chatbot" :knowledge="knowledge" :loading='loading_knowledge' />
     <!-- Message -->
     <v-dialog v-model="dlg_message" max-width="320" persistent>
       <div class="m-msg">
@@ -21,6 +22,7 @@
 <script>
 import Header from "./components/Header";
 import loading from "./components/loading";
+import Chatbot from "@/components/MChatbot/index";
 
 import { updateStudentTime } from "@/services/studentService";
 
@@ -34,7 +36,14 @@ export default {
     show_message: "",
   }),
   computed: {
-    ...mapState(["user", "loading", "loading_msg"]),
+    ...mapState([
+      "user",
+      "loading",
+      "loading_msg",
+      "show_chatbot",
+      "loading_knowledge",
+      "knowledge",
+    ]),
   },
   mounted() {
     // TIME
@@ -64,6 +73,7 @@ export default {
   components: {
     Header,
     loading,
+    Chatbot,
   },
 };
 </script>

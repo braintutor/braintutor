@@ -49,16 +49,12 @@
         <MaterialDocuments v-else :material="material" />
       </div>
     </div>
-
-    <!-- Chatbot -->
-    <Chatbot :knowledge="knowledge" :loading="loading_knowledge" />
   </div>
 </template>
 
 <script>
 import MaterialCategories from "./MaterialCategories";
 import MaterialDocuments from "./MaterialDocuments";
-import Chatbot from "@/components/MChatbot/index";
 
 import {
   getChatbotsByCourseTeacher,
@@ -79,24 +75,30 @@ export default {
   data: () => ({
     chatbots: [],
     materials: [],
-    // material: null,
-    knowledge: [],
     //
     show: false,
-    loading_knowledge: true,
   }),
   computed: {
     ...mapState(["user", "material"]),
   },
   async created() {
+    this.show_chatbot(true);
     await this.init();
   },
   methods: {
-    ...mapMutations(["loading", "loading_msg", "setMaterial"]),
+    ...mapMutations([
+      "loading",
+      "loading_msg",
+      "setMaterial",
+      "show_chatbot",
+      "loading_knowledge",
+      "knowledge",
+    ]),
     async init() {
       if (this.course._id) {
         this.loading(true);
         this.loading_msg("Cargando Material");
+        this.loading_knowledge(true);
 
         let course_id = this.course._id.$oid;
         try {
@@ -197,8 +199,8 @@ export default {
               });
             });
           }
-          this.knowledge = knowledge;
-          this.loading_knowledge = false;
+          this.knowledge(knowledge);
+          this.loading_knowledge(false);
         } catch (error) {
           this.$root.$children[0].showMessage("Error", error.msg);
         }
@@ -236,7 +238,6 @@ export default {
   components: {
     MaterialCategories,
     MaterialDocuments,
-    Chatbot,
   },
 };
 </script>

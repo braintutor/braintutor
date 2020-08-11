@@ -103,14 +103,17 @@ export default {
 
         // Bot
         setTimeout(() => {
-          let { answers, actions } = this.chatbot.getAnswer(answer);
-          answer = answers[Math.floor(Math.random() * answers.length)];
+          let res = this.chatbot.getAnswer(answer);
+          if (res) {
+            let { answers, actions } = res;
+            answer = answers[Math.floor(Math.random() * answers.length)];
 
-          this.$refs.avatar.startAnimationTalk();
-          this.chatbot.talk(answer, () =>
-            this.$refs.avatar.startAnimationNormal()
-          );
-          this.addMessage(answer, "bot", actions);
+            this.$refs.avatar.startAnimationTalk();
+            this.chatbot.talk(answer, () =>
+              this.$refs.avatar.startAnimationNormal()
+            );
+            this.addMessage(answer, "bot", actions);
+          }
           this.allow_new_message = true;
           this.writing = false;
         }, 1500);

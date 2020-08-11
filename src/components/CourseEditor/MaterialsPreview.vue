@@ -1,9 +1,5 @@
 <template>
-  <Materials v-if="course._id" :course="course">
-    <v-btn @click="$emit('edit')" depressed tile>
-      <v-icon class="mr-2" style="font-size: 1.1rem">mdi-pencil</v-icon>Editar
-    </v-btn>
-  </Materials>
+  <Materials v-if="course._id" :course="course" />
 </template>
 
 <script>
@@ -16,7 +12,7 @@ import { mapMutations } from "vuex";
 
 export default {
   data: () => ({
-    course: {}
+    course: {},
   }),
   async created() {
     this.loading(true);
@@ -34,11 +30,11 @@ export default {
     this.loading(false);
   },
   methods: {
-    ...mapMutations(["loading", "loading_msg"])
+    ...mapMutations(["loading", "loading_msg"]),
   },
   components: {
-    Materials
-  }
+    Materials,
+  },
 };
 </script>
 

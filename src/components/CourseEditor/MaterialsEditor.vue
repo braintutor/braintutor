@@ -81,7 +81,7 @@
                     <v-icon>mdi-chevron-left</v-icon>
                   </v-btn> -->
                   <v-btn icon v-bind="attrs" v-on="on" small @click="selectMaterial(material._id.$oid)">
-                    <v-icon style="color: #999; font-size: 1.2rem">mdi-pencil</v-icon>
+                    <v-icon style="color: #999; font-size: 1.3rem">mdi-pencil</v-icon>
                   </v-btn>
                 </template>
                 <span style="font-size: .75rem">Editar Material</span>
