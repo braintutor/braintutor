@@ -113,6 +113,7 @@ export default {
   },
   mounted() {
     this.category = this.material.default || "explanation";
+    console.log(this.material);
   },
   methods: {
     move(dir) {

@@ -6,11 +6,7 @@
       <span class="m-path__name">{{course.name}}</span>
     </section>
 
-    <router-view
-      v-if="course._id"
-      :course="course"
-      :get="getStudents"
-    />
+    <router-view v-if="course._id" :course="course" :get="getStudents" />
   </Layout>
 </template>
 
@@ -26,10 +22,10 @@ import { mapMutations } from "vuex";
 export default {
   data: () => ({
     course: {
-      name: "..."
+      name: "...",
     },
     links: [],
-    link_idx: 0
+    link_idx: 0,
   }),
   async created() {
     this.links = [
@@ -37,29 +33,29 @@ export default {
         image:
           "https://images.squarespace-cdn.com/content/v1/55d1e076e4b0be96a30dc726/1477412415649-WW90BD77ALIB9U99VTIA/ke17ZwdGBToddI8pDm48kDmvgM2_GYudIur22MWWiLdZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZamWLI2zvYWH8K3-s_4yszcp2ryTI0HqTOaaUohrI8PIvFa2r33EMaMk7hlBJBei4G1FTiqzsF6lpp3EXtW1YCk/image-asset.png",
         name: "Aprender",
-        action: () => this.redirect("")
+        action: () => this.redirect(""),
       },
       {
         image:
           "https://limpiasol.com.ar/sitio/wp-content/uploads/2016/09/task-done-flat.png",
         name: "Tareas",
-        action: () => this.redirect("tasks")
+        action: () => this.redirect("tasks"),
       },
       {
         image: require("@/assets/braintutor/icon-exam.png"),
         name: "Evaluaciones",
-        action: () => this.redirect("evaluations")
+        action: () => this.redirect("evaluations"),
       },
       {
         image: require("@/assets/braintutor/icon-event.png"),
         name: "Agenda",
-        action: () => this.redirect("events")
+        action: () => this.redirect("events"),
       },
       {
         image: require("@/assets/braintutor/icon-students.png"),
         name: "Alumnos",
-        action: () => this.redirect("students")
-      }
+        action: () => this.redirect("students"),
+      },
     ];
 
     let paths = window.location.href.split("/");
@@ -76,7 +72,10 @@ export default {
       let session = await getSessionByTeacher(session_id);
       this.course = session.course;
     } catch (error) {
-      this.$root.$children[0].showMessage("", error.msg || 'Ha ocurrido un error.');
+      this.$root.$children[0].showMessage(
+        "",
+        error.msg || "Ha ocurrido un error."
+      );
     }
 
     this.loading(false);
@@ -95,11 +94,11 @@ export default {
       this.$router
         .push(`/session-editor/${session_id}/${name}`)
         .catch(() => {});
-    }
+    },
   },
   components: {
-    Layout
-  }
+    Layout,
+  },
 };
 </script>
 
