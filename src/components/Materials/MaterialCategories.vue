@@ -86,7 +86,7 @@ import { scrollTop } from "@/services/scroll";
 
 export default {
   props: {
-    material: Object
+    material: Object,
   },
   data: () => ({
     categories: [
@@ -97,23 +97,22 @@ export default {
       "exercises",
       "hyperlinks",
       "faq",
-      "quizzes"
+      "quizzes",
     ],
-    category_idx: 0
+    category_idx: 0,
   }),
   computed: {
     category: {
-      get: function() {
+      get: function () {
         return this.categories[this.category_idx];
       },
-      set: function(value) {
+      set: function (value) {
         this.category_idx = this.categories.indexOf(value);
-      }
-    }
+      },
+    },
   },
   mounted() {
     this.category = this.material.default || "explanation";
-    console.log(this.material);
   },
   methods: {
     move(dir) {
@@ -123,13 +122,13 @@ export default {
       );
       scrollTop("scroll"); //desktop
       scrollTop("app__body"); //mobile
-    }
+    },
   },
   components: {
     DocumentEditor,
     Exercises,
-    Quizzes
-  }
+    Quizzes,
+  },
 };
 </script>
 
