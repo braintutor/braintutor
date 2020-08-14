@@ -45,7 +45,7 @@
         <!-- <div class="material__menu">
           <span class="material__name">{{material.name}}</span>
         </div>-->
-        <MaterialCategories v-if="course.adaptive" :material="material" />
+        <MaterialCategories v-if="course.adaptive" :material="material" :categories="categories" />
         <MaterialDocuments v-else :material="material" />
       </div>
     </div>
@@ -65,6 +65,7 @@ import {
   getMaterialsByCourseStudent,
 } from "@/services/materialService";
 import { getQuestionTemplate } from "@/services/chatService";
+import { getCategoriesByLearningStyle } from "@/services/studentService";
 
 import { mapState, mapMutations } from "vuex";
 
@@ -75,6 +76,7 @@ export default {
   data: () => ({
     chatbots: [],
     materials: [],
+    categories: [],
     //
     show: false,
   }),
@@ -109,6 +111,24 @@ export default {
             ? getMaterialsByCourseTeacher(course_id)
             : getMaterialsByCourseStudent(course_id));
 
+          // Categories by Style
+          let categories = [
+            "explanation",
+            "movies",
+            "images",
+            "examples",
+            "exercises",
+            "hyperlinks",
+            "faq",
+            "quizzes",
+          ];
+          if (this.user.role === "STU") {
+            let res = await getCategoriesByLearningStyle();
+            categories = categories.filter((c) => res[c] && res[c].show);
+          }
+          this.categories = categories;
+
+          //Materials
           if (this.materials[0]) this.selectMaterial(this.materials[0]);
           this.chatbots.forEach((c) => {
             c.show = true;
@@ -212,6 +232,7 @@ export default {
       // this.material = null;
       this.show = false;
       setTimeout(() => {
+        material.default = null;
         this.setMaterial(material);
         // this.material = material;
       }, 100);

@@ -87,18 +87,9 @@ import { scrollTop } from "@/services/scroll";
 export default {
   props: {
     material: Object,
+    categories: Array,
   },
   data: () => ({
-    categories: [
-      "explanation",
-      "movies",
-      "images",
-      "examples",
-      "exercises",
-      "hyperlinks",
-      "faq",
-      "quizzes",
-    ],
     category_idx: 0,
   }),
   computed: {
@@ -107,12 +98,14 @@ export default {
         return this.categories[this.category_idx];
       },
       set: function (value) {
-        this.category_idx = this.categories.indexOf(value);
+        this.category_idx = this.categories.includes(value)
+          ? this.categories.indexOf(value)
+          : 0;
       },
     },
   },
   mounted() {
-    this.category = this.material.default || "explanation";
+    if (this.material.default) this.category = this.material.default;
   },
   methods: {
     move(dir) {
