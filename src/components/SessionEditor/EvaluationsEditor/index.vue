@@ -105,7 +105,7 @@ import Results from "./Results";
 import {
   getEvaluationsBySession,
   addEvaluation,
-  deleteEvaluation
+  deleteEvaluation,
 } from "@/services/evaluationService";
 import { getParam } from "@/services/router.js";
 import { copy } from "@/services/object.js";
@@ -121,7 +121,7 @@ export default {
     dlg_remove: false,
     //
     loading: true,
-    loading_message: ""
+    loading_message: "",
   }),
   async mounted() {
     this.session_id = getParam("session_id");
@@ -133,6 +133,16 @@ export default {
       this.loading = true;
       this.loading_message = "Cargando Evaluaciones";
       this.evaluations = await getEvaluationsBySession(this.session_id);
+      this.evaluations.forEach((e) => {
+        if (typeof e.time_start === "object")
+          e.time_start = new Date(e.time_start.$date)
+            .toISOString()
+            .substring(0, 16);
+        if (typeof e.time_end === "object")
+          e.time_end = new Date(e.time_end.$date)
+            .toISOString()
+            .substring(0, 16);
+      });
       this.loading = false;
     },
     async create() {
@@ -144,7 +154,7 @@ export default {
         date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
         return date;
       };
-      let format = date => date.toISOString().slice(0, 16);
+      let format = (date) => date.toISOString().slice(0, 16);
 
       let new_evaluation = {
         name: "Nombre",
@@ -154,9 +164,9 @@ export default {
           {
             question: "Pregunta",
             alternatives: ["Alternativa 1", "Alternativa 2"],
-            correct: 0
-          }
-        ]
+            correct: 0,
+          },
+        ],
       };
       try {
         let evaluation_id = await addEvaluation(
@@ -178,7 +188,7 @@ export default {
       try {
         await deleteEvaluation(this.evaluation_to_remove._id.$oid);
         this.evaluations = this.evaluations.filter(
-          e => e._id.$oid !== this.evaluation_to_remove._id.$oid
+          (e) => e._id.$oid !== this.evaluation_to_remove._id.$oid
         );
       } catch (error) {
         this.$root.$children[0].showMessage("", error.msg);
@@ -196,13 +206,13 @@ export default {
     results(evaluation) {
       this.edit = false;
       this.evaluation = copy(evaluation);
-    }
+    },
   },
   components: {
     loading,
     EvaluationEditor,
-    Results
-  }
+    Results,
+  },
 };
 </script>
 

@@ -169,7 +169,7 @@ import { scrollDown } from "@/services/scroll";
 import {
   updateEvaluation,
   publicEvaluation,
-  deleteEvaluation
+  deleteEvaluation,
 } from "@/services/evaluationService";
 
 export default {
@@ -178,8 +178,10 @@ export default {
     loading: false,
     loading_msg: "",
     dialog_delete: false,
-    dialog_public: false
+    dialog_public: false,
   }),
+  mounted() {
+  },
   methods: {
     async save() {
       this.loading = true;
@@ -219,7 +221,7 @@ export default {
       questions.push({
         question: "Pregunta",
         alternatives: ["Alternativa 1", "Alternativa 2"],
-        correct: 0
+        correct: 0,
       });
       setTimeout(() => {
         scrollDown();
@@ -233,11 +235,11 @@ export default {
     },
     removeAlternative(alternatives, alternative_idx) {
       alternatives.splice(alternative_idx, 1);
-    }
+    },
   },
   components: {
-    loading
-  }
+    loading,
+  },
 };
 </script>
 

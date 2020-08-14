@@ -85,7 +85,7 @@ import Evaluation from "./Evaluation";
 import {
   getEvaluationsBySessionStudent,
   getEvaluationByStudent,
-  getResultByStudent
+  getResultByStudent,
 } from "@/services/evaluationService";
 import { getParam } from "@/services/router.js";
 import { copy } from "@/services/object.js";
@@ -106,7 +106,7 @@ export default {
     loading: true,
     loading_msg: "",
     dialog_start: false,
-    dialog_score: false
+    dialog_score: false,
   }),
   async mounted() {
     this.session_id = getParam("session_id");
@@ -120,13 +120,21 @@ export default {
       this.loading_msg = "Cargando Evaluaciones";
       this.evaluations = await getEvaluationsBySessionStudent(this.session_id);
       this.loading_msg = "Cargando Puntajes";
-      for (let evaluation of this.evaluations) {
-        evaluation.result = await getResultByStudent(evaluation._id.$oid);
+      for (let e of this.evaluations) {
+        if (typeof e.time_start === "object")
+          e.time_start = new Date(e.time_start.$date)
+            .toISOString()
+            .substring(0, 16);
+        if (typeof e.time_end === "object")
+          e.time_end = new Date(e.time_end.$date)
+            .toISOString()
+            .substring(0, 16);
+        e.result = await getResultByStudent(e._id.$oid);
       }
       this.loading = false;
     },
     async select(evaluation) {
-      if (this.user_role === 'STU') {
+      if (this.user_role === "STU") {
         this.loading = true;
         this.loading_msg = "Cargando Evaluación";
         try {
@@ -156,16 +164,16 @@ export default {
       this.result_messages = [`Obtuviste un puntaje de ${this.score_f}.`];
     },
     showDialogStart(evaluation) {
-      if ((evaluation.result || {}).score == null && this.user_role === 'STU') {
+      if ((evaluation.result || {}).score == null && this.user_role === "STU") {
         this.evaluation_to_start = evaluation;
         this.dialog_start = true;
       }
-    }
+    },
   },
   components: {
     loading,
-    Evaluation
-  }
+    Evaluation,
+  },
 };
 </script>
 

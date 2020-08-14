@@ -94,7 +94,7 @@ export default {
     //
     loading: true,
     loading_message: "",
-    dialog_delete: false
+    dialog_delete: false,
   }),
   async mounted() {
     let session_id = getParam("session_id");
@@ -102,9 +102,10 @@ export default {
     this.evaluation = await getEvaluation(this.evaluation_id);
     this.loading_message = "Cargando Alumnos";
     this.students = await getStudentsBySession(session_id);
-    this.students.forEach(student => {
-      let { score } = (this.evaluation.results || [])[student._id.$oid] || {};
-      student.score = score != null ? this.format(score) : null;
+    this.students.forEach((student) => {
+      let { score } =
+        this.evaluation.results.find((r) => r._id.$oid == student._id.$oid) || {};
+      student.score = score == null ? null : this.format(score);
     });
     //
     var ctx = document.getElementById("myChart").getContext("2d");
@@ -117,13 +118,13 @@ export default {
             label: ["Alumnos"],
             backgroundColor: "rgba(255, 99, 132, 0.2)",
             borderColor: "rgba(255, 99, 132, 1)",
-            borderWidth: 1
-          }
-        ]
+            borderWidth: 1,
+          },
+        ],
       },
       options: {
         legend: {
-          display: false
+          display: false,
         },
         scales: {
           yAxes: [
@@ -131,12 +132,12 @@ export default {
               ticks: {
                 beginAtZero: true,
                 max: this.students.length,
-                stepSize: 1
-              }
-            }
-          ]
-        }
-      }
+                stepSize: 1,
+              },
+            },
+          ],
+        },
+      },
     });
     this.updateDashboard();
     this.loading = false;
@@ -174,11 +175,11 @@ export default {
       let score = Math.round(result * 20);
       score = format_two_digits(score);
       return score;
-    }
+    },
   },
   components: {
-    loading
-  }
+    loading,
+  },
 };
 </script>
 
