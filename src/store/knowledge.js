@@ -17,6 +17,24 @@ const knowledge_editor = [
     ],
   },
   {
+    questions: ["¿Cómo modifico el nombre de una unidad?"],
+    answers: [
+      'En la pestaña <strong>"Material"</strong> en las opciones de la unidad, haga click en <strong>"Editar Nombre"</strong>.',
+    ],
+  },
+  {
+    questions: ["¿Cómo modifico el orden de los materiales en una unidad?"],
+    answers: [
+      'En la pestaña <strong>"Material"</strong> en las opciones de la unidad, haga click en <strong>"Editar Orden"</strong>.',
+    ],
+  },
+  {
+    questions: ["¿Cómo elimino una unidad?"],
+    answers: [
+      'En la pestaña <strong>"Material"</strong> en las opciones de la unidad, haga click en <strong>"Eliminar"</strong>.',
+    ],
+  },
+  {
     questions: ["¿Cómo creo un nuevo material?"],
     answers: [
       'En la pestaña <strong>"Material"</strong> en las opciones de la unidad, haga click en <strong>"Crear Material"</strong>.',
@@ -32,7 +50,19 @@ const knowledge_editor = [
   {
     questions: ["¿Cómo agrego más conocimiento?"],
     answers: [
-      'En la pestaña <strong>"Conocimiento"</strong> haga click en el ícono de <strong>"mensaje"</strong> (Agregar Conocimiento).',
+      'En la pestaña <strong>"Conocimiento"</strong> haga click en el ícono de <strong>"Agregar Conocimiento"</strong>.',
+    ],
+  },
+  {
+    questions: ["¿Cómo borro los cambios hechos en conocimiento?"],
+    answers: [
+      'En la pestaña <strong>"Conocimiento"</strong> haga click en el ícono de <strong>"Restaurar Cambios"</strong>.',
+    ],
+  },
+  {
+    questions: ["¿Cómo guardo los cambios hechos en conocimiento?"],
+    answers: [
+      'En la pestaña <strong>"Conocimiento"</strong> haga click en el ícono de <strong>"Guardar Cambios"</strong>.',
     ],
   },
   // Course - Preview
