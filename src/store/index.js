@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import { knowledge_editor } from "./knowledge";
 
 Vue.use(Vuex);
 
@@ -38,16 +39,7 @@ export default new Vuex.Store({
       state.knowledge = knowledge;
     },
     knowledge_editor(state) {
-      state.knowledge = [
-        {
-          questions: ["Hola"],
-          answers: ["Hola @usuario@nombres."],
-        },
-        {
-          questions: ["Gracias"],
-          answers: ["Aquí estoy para ayudarte."],
-        },
-      ];
+      state.knowledge = knowledge_editor;
     },
   },
   actions: {},

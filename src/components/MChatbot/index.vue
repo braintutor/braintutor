@@ -15,7 +15,7 @@
         class="message"
         :class="`message--${message.type}`"
       >
-        <span class="message__text">{{message.text}}</span>
+        <span class="message__text" v-html="message.text"></span>
         <div
           v-for="(action, idx) in message.actions"
           :key="idx"
@@ -108,12 +108,13 @@ export default {
           if (res) {
             let { answers, actions } = res;
             answer = answers[Math.floor(Math.random() * answers.length)];
+            this.addMessage(answer, "bot", actions);
 
+            answer = answer.replace(/<[/]*[a-zA-z]+>/g, "");
             this.$refs.avatar.startAnimationTalk();
             this.chatbot.talk(answer, () =>
               this.$refs.avatar.startAnimationNormal()
             );
-            this.addMessage(answer, "bot", actions);
           }
           this.allow_new_message = true;
           this.writing = false;
