@@ -87,6 +87,7 @@ export default {
         let entities = {
           usuario: {
             nombre: this.$store.state.user.first_name.split(/\s+/g)[0],
+            nombres: this.$store.state.user.first_name,
           },
         };
         this.chatbot.train(this.knowledge, entities);

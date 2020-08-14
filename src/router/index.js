@@ -172,6 +172,7 @@ router.beforeEach(async (to, from, next) => {
   //Chatbot
   if (["course-editor", "material-editor"].includes(to_name)) {
     store.commit("show_chatbot", true);
+    store.commit("knowledge_editor");
   } else {
     store.commit("show_chatbot", false);
   }

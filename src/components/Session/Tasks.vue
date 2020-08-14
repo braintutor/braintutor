@@ -78,6 +78,7 @@ export default {
     loading_msg: ""
   }),
   async created() {
+    this.$store.state.show_chatbot = false;
     this.session_id = getParam("session_id");
     this.restore();
   },

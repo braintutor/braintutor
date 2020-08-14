@@ -121,6 +121,7 @@ export default {
     loading_message: "",
   }),
   async mounted() {
+    this.$store.commit("knowledge_editor");
     await this.restoreKnowledge();
   },
   methods: {

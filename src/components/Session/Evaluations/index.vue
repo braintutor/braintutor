@@ -109,6 +109,7 @@ export default {
     dialog_score: false,
   }),
   async mounted() {
+    this.$store.state.show_chatbot = false;
     this.session_id = getParam("session_id");
     this.user_role = this.$store.state.user.role;
     this.getEvaluations();

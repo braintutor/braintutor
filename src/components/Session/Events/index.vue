@@ -100,6 +100,7 @@ export default {
     }
   },
   async mounted() {
+    this.$store.state.show_chatbot = false;
     this.session_id = getParam("session_id");
     this.calendar = this.$refs.calendar.getApi();
     this.updateCalendarDate();

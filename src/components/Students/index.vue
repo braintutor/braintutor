@@ -61,6 +61,7 @@ export default {
     loading_message: ""
   }),
   async mounted() {
+    this.$store.state.show_chatbot = false;
     await this.update();
   },
   methods: {

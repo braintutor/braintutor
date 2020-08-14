@@ -37,6 +37,18 @@ export default new Vuex.Store({
     knowledge(state, knowledge) {
       state.knowledge = knowledge;
     },
+    knowledge_editor(state) {
+      state.knowledge = [
+        {
+          questions: ["Hola"],
+          answers: ["Hola @usuario@nombres."],
+        },
+        {
+          questions: ["Gracias"],
+          answers: ["Aquí estoy para ayudarte."],
+        },
+      ];
+    },
   },
   actions: {},
   modules: {},
