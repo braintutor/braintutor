@@ -86,7 +86,7 @@ import {
   getEventsBySession,
   addEvent,
   updateEvent,
-  removeEvent
+  removeEvent,
 } from "@/services/eventService";
 import { getTasksBySessionTeacher } from "@/services/taskService";
 import { getParam } from "@/services/router.js";
@@ -114,12 +114,12 @@ export default {
     //
     calendar: null,
     locale: esLocale,
-    calendarPlugins: [dayGridPlugin, interactionPlugin]
+    calendarPlugins: [dayGridPlugin, interactionPlugin],
   }),
   computed: {
     events_selected() {
-      return this.events.filter(event => event.date === this.event_date);
-    }
+      return this.events.filter((event) => event.date === this.event_date);
+    },
   },
   async mounted() {
     this.session_id = getParam("session_id");
@@ -138,7 +138,10 @@ export default {
       this.restoreEvents();
     },
     async createEvent(new_event) {
-      new_event.date = this.event_date;
+      new_event.time_start = new Date(this.event_date)
+        .toISOString()
+        .substring(0, 16);
+      new_event.date = this.dateFormat(new_event.time_start);
       this.loading_events = true;
       this.loading_message = "Creando";
 
@@ -156,7 +159,17 @@ export default {
     async saveEvent(event) {
       this.loading_events = true;
       this.loading_message = "Guardando";
-      await updateEvent(event);
+
+      try {
+        event.id = event._id.$oid;
+        await updateEvent(event);
+      } catch (error) {
+        this.$root.$children[0].showMessage(
+          "",
+          error.msg || "Ha ocurrido un error."
+        );
+      }
+
       this.loading_events = false;
     },
     deleteEvent(event_id) {
@@ -169,7 +182,7 @@ export default {
       this.loading_message = "Eliminando";
       await removeEvent(this.event_delete_id);
       this.events = this.events.filter(
-        event => event._id.$oid != this.event_delete_id
+        (event) => event._id.$oid != this.event_delete_id
       );
       this.loading_events = false;
     },
@@ -177,12 +190,19 @@ export default {
       this.loading_events = true;
       this.loading_message = "Cargando Eventos";
       let events = await getEventsBySession(this.session_id);
-      events.forEach(i => {
+      events.forEach((i) => {
+        i.time_start = new Date(i.time_start.$date)
+          .toISOString()
+          .substring(0, 16);
+        i.date = this.dateFormat(i.time_start);
         i.color = "#5252ff";
         i.type = "event";
       });
       let tasks = await getTasksBySessionTeacher(this.session_id);
-      tasks.forEach(i => {
+      tasks.forEach((i) => {
+        i.time_start = new Date(i.time_start.$date)
+          .toISOString()
+          .substring(0, 16);
         i.date = this.dateFormat(i.time_start);
         i.color = "#00af3d";
         i.type = "task";
@@ -227,16 +247,16 @@ export default {
       let date = formatDate(this.getCalendarDate(), {
         month: "long",
         year: "numeric",
-        locale: "es"
+        locale: "es",
       });
       this.calendar_date = date.charAt(0).toUpperCase() + date.slice(1);
-    }
+    },
   },
   components: {
     EventEditor,
     FullCalendar,
-    loading
-  }
+    loading,
+  },
 };
 </script>
 

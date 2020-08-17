@@ -12,6 +12,7 @@ function getEventsBySessionStudent(session_id) {
   })
 }
 
+// TODO Remove
 function getEventsByStudent() {
   return fetch_get('getEventsByStudent')
 }

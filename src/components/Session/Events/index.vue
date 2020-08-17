@@ -92,12 +92,12 @@ export default {
     //
     calendar: null,
     locale: esLocale,
-    calendarPlugins: [dayGridPlugin, interactionPlugin]
+    calendarPlugins: [dayGridPlugin, interactionPlugin],
   }),
   computed: {
     events_selected() {
-      return this.events.filter(event => event.date === this.event_date);
-    }
+      return this.events.filter((event) => event.date === this.event_date);
+    },
   },
   async mounted() {
     this.$store.state.show_chatbot = false;
@@ -119,12 +119,19 @@ export default {
       this.loading_events = true;
       this.loading_message = "Cargando Eventos";
       let events = await getEventsBySessionStudent(this.session_id);
-      events.forEach(i => {
+      events.forEach((i) => {
+        i.time_start = new Date(i.time_start.$date)
+          .toISOString()
+          .substring(0, 16);
+        i.date = this.dateFormat(i.time_start);
         i.color = "#5252ff";
         i.type = "event";
       });
       let tasks = await getTasksBySessionStudent(this.session_id);
-      tasks.forEach(i => {
+      tasks.forEach((i) => {
+        i.time_start = new Date(i.time_start.$date)
+          .toISOString()
+          .substring(0, 16);
         i.date = this.dateFormat(i.time_start);
         i.color = "#00af3d";
         i.type = "task";
@@ -169,16 +176,16 @@ export default {
       let date = formatDate(this.getCalendarDate(), {
         month: "long",
         year: "numeric",
-        locale: "es"
+        locale: "es",
       });
       this.calendar_date = date.charAt(0).toUpperCase() + date.slice(1);
-    }
+    },
   },
   components: {
     Event,
     FullCalendar,
-    loading
-  }
+    loading,
+  },
 };
 </script>
 

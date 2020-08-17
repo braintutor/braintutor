@@ -40,7 +40,7 @@ import { mapMutations } from "vuex";
 
 export default {
   data: () => ({
-    sessions: []
+    sessions: [],
   }),
   async mounted() {
     // GOOGLE
@@ -72,9 +72,9 @@ export default {
     ...mapMutations(["loading", "loading_msg"]),
     selectSession(session) {
       redirect("session", { session_id: session._id.$oid });
-    }
+    },
   },
-  components: {}
+  components: {},
 };
 </script>
 

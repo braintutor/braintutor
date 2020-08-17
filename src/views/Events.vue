@@ -72,8 +72,7 @@
 import Event from "@/components/Session/Events/Event";
 import loading from "@/components/loading";
 
-import { getSessionsByStudent } from "@/services/sessionService";
-import { getEventsByStudent } from "@/services/eventService";
+import { getSessionsEventsAndTaksByStudent } from "@/services/sessionService";
 
 import FullCalendar from "@fullcalendar/vue";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -83,12 +82,10 @@ import interactionPlugin from "@fullcalendar/interaction";
 
 export default {
   data: () => ({
-    events: [],
     sessions: [],
+    events: [],
     filters: ["task", "event"],
     event_date: "",
-    event_delete_id: "",
-    dialog_delete: false,
     //
     show_events_selected: false,
     calendar_date: null,
@@ -97,19 +94,17 @@ export default {
     // CALENDAR
     calendar: null,
     locale: esLocale,
-    calendarPlugins: [dayGridPlugin, interactionPlugin]
+    calendarPlugins: [dayGridPlugin, interactionPlugin],
   }),
   computed: {
     events_f() {
-      return this.events.filter(event => this.filters.includes(event.type));
+      return this.events.filter((event) => this.filters.includes(event.type));
     },
     events_selected() {
-      return this.events_f.filter(event => event.date === this.event_date);
-    }
+      return this.events_f.filter((event) => event.date === this.event_date);
+    },
   },
   async mounted() {
-    this.loading_message = "Cargando Cursos";
-    this.sessions = await getSessionsByStudent();
     this.calendar = this.$refs.calendar.getApi();
     this.updateCalendarDate();
     await this.restoreEvents();
@@ -126,31 +121,54 @@ export default {
     async restoreEvents() {
       this.loading = true;
       this.loading_message = "Cargando Eventos";
-      let events = await getEventsByStudent();
-      this.events = Object.entries(events).reduce(
-        (arr, [session_id, event_arr]) => {
-          if (event_arr) {
-            // let color = "#" + (((1 << 24) * Math.random()) | 0).toString(16);
-            let color = "hsl(" + 360 * Math.random() + ", 50%, 50%)";
-            let session = this.sessions.find(
-              session => session._id.$oid == session_id
-            );
-            session.color = color;
-            event_arr.map(event => {
-              if (event.type === "event") {
-                event.title = `${event.title}`;
-              } else if (event.type === "task") {
-                event.title = `${event.title}`;
-                event.date = this.dateFormat(event.time_start);
-              }
-              event.color = color;
-            });
-            arr = arr.concat(event_arr);
-          }
-          return arr;
-        },
-        []
-      );
+      try {
+        let sessions = await getSessionsEventsAndTaksByStudent();
+        let events = [];
+
+        sessions.forEach((session) => {
+          let color = "hsl(" + 360 * Math.random() + ", 50%, 50%)";
+          // let color = "#" + (((1 << 24) * Math.random()) | 0).toString(16);
+          session.color = color;
+
+          events = events.concat(
+            session.events.map((i) => {
+              let time_start = new Date(i.time_start.$date)
+                .toISOString()
+                .substring(0, 16);
+              let date = this.dateFormat(time_start);
+              return {
+                time_start,
+                date,
+                type: "event",
+                color,
+                ...i,
+              };
+            })
+          );
+          events = events.concat(
+            session.tasks.map((i) => {
+              let time_start = new Date(i.time_start.$date)
+                .toISOString()
+                .substring(0, 16);
+              let date = this.dateFormat(time_start);
+              return {
+                time_start,
+                date,
+                type: "task",
+                color,
+                ...i,
+              };
+            })
+          );
+        });
+        this.sessions = sessions;
+        this.events = events;
+      } catch (error) {
+        this.$root.$children[0].showMessage(
+          "",
+          error.msg || "Ha ocurrido un error."
+        );
+      }
       this.loading = false;
     },
     dateFormat(date) {
@@ -190,16 +208,16 @@ export default {
       let date = formatDate(this.getCalendarDate(), {
         month: "long",
         year: "numeric",
-        locale: "es"
+        locale: "es",
       });
       this.calendar_date = date.charAt(0).toUpperCase() + date.slice(1);
-    }
+    },
   },
   components: {
     Event,
     FullCalendar,
-    loading
-  }
+    loading,
+  },
 };
 </script>
 
