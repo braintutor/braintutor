@@ -1,15 +1,16 @@
-@import url('https://fonts.googleapis.com/css?family=Comfortaa:300,400,700&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Comfortaa:300,400,700&display=swap");
 // @import url('https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,700&display=swap');
 
-@import './animation.scss';
-@import './aspect-ratio.scss';
-@import './layout.scss';
-@import './m-card.scss';
-@import './m-cardd.scss';
-@import './m-cardx.scss';
-@import './m-table.scss';
+@import "./animation.scss";
+@import "./aspect-ratio.scss";
+@import "./layout.scss";
+@import "./m-card.scss";
+@import "./m-cardd.scss";
+@import "./m-cardx.scss";
+@import "./m-table.scss";
 
-body, body * {
+body,
+body * {
   font-family: Comfortaa, Arial, Helvetica, sans-serif;
   // font-family: 'Nunito Sans', Arial, Helvetica, sans-serif;
 }
@@ -17,6 +18,12 @@ body, body * {
 .m-container {
   width: 100%;
   max-width: 950px;
+  margin: 0 auto;
+}
+
+.m-container-plus {
+  width: 100%;
+  max-width: 1100px;
   margin: 0 auto;
 }
 
@@ -37,7 +44,7 @@ body, body * {
   &__name {
     padding: 4px 10px;
     border-radius: 4px;
-    transition: .3s;
+    transition: 0.3s;
 
     &--link {
       font-weight: bold;
@@ -62,26 +69,26 @@ body, body * {
 }
 
 // Medium devices (tablets, 768px and up)
-@media (max-width: 1200px) { 
+@media (max-width: 1200px) {
   html {
-    font-size: 100%
+    font-size: 100%;
   }
 }
 // Medium devices (tablets, 768px and up)
-@media (max-width: 992px) { 
+@media (max-width: 992px) {
   html {
-    font-size: 91%
+    font-size: 91%;
   }
 }
 // Medium devices (tablets, 768px and up)
-@media (max-width: 768px) { 
+@media (max-width: 768px) {
   html {
-    font-size: 83%
+    font-size: 83%;
   }
 }
 // Small devices (landscape phones, 576px and up)
 @media (max-width: 576px) {
   html {
-    font-size: 75%
+    font-size: 75%;
   }
 }

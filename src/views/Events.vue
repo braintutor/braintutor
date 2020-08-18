@@ -1,5 +1,5 @@
 <template>
-  <div class="container pt-0">
+  <div class="m-container pt-0">
     <loading :active="loading" :message="loading_message" />
     <div class="filter">
       <span class="filter__text">Mostrar:</span>
@@ -166,7 +166,7 @@ export default {
       } catch (error) {
         this.$root.$children[0].showMessage(
           "",
-          error.msg || "Ha ocurrido un error."
+          error.msg || error || "Ha ocurrido un error."
         );
       }
       this.loading = false;

@@ -1,6 +1,6 @@
 <template>
-  <div class="m-container pa-3">
-    <div v-if="!task_selected">
+  <div class="pa-3">
+    <div v-if="!task_selected" class="m-container">
       <loading :active="loading" :message="loading_msg" />
       <!-- MENU -->
       <div class="tasks__menu">
@@ -13,7 +13,7 @@
       <div class="task m-card" v-for="(task, idx) in tasks_formatted" :key="idx">
         <div class="task__menu">
           <div>
-            <p class="task__time_start">{{task.time_start_f}}</p>
+            <p class="task__time_start">{{dateFormatShort(task.time_start_f)}}</p>
             <p class="task__title">{{task.title}}</p>
           </div>
           <v-menu offset-y left>
@@ -68,6 +68,7 @@
 
     <!-- TASK -->
     <Task
+      class="m-container-plus"
       v-else
       :task="task_selected"
       :students="students"
@@ -80,6 +81,7 @@
 <script>
 import loading from "@/components/loading";
 import Task from "./Task";
+import { dateFormatShort } from "@/services/date.js";
 
 import {
   getTasksBySessionTeacher,
@@ -112,7 +114,8 @@ export default {
       let tasks = this.tasks.map((t) => {
         let time_start_f = new Date(t.time_start.$date)
           .toISOString()
-          .substring(0, 10);
+          .substring(0, 16);
+
         return {
           ...t,
           time_start_f,
@@ -125,6 +128,7 @@ export default {
     },
   },
   methods: {
+    dateFormatShort,
     showCreate() {
       this.action = "create";
       this.task = {};
@@ -149,7 +153,7 @@ export default {
       this.loading_msg = "";
       if (this.action === "create") {
         try {
-          this.task.time_start = new Date();
+          this.task.time_start = { $date: this.getNow().toISOString() };
           let _id = await addTask(this.session_id, this.task);
           this.task._id = _id;
           this.tasks.push(this.task);
@@ -197,6 +201,11 @@ export default {
     },
     unselect() {
       this.task_selected = null;
+    },
+    getNow() {
+      let date = new Date();
+      date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+      return date;
     },
   },
   components: {

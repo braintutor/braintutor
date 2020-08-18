@@ -11,7 +11,7 @@
     <div class="task m-card">
       <div class="task__menu">
         <div>
-          <p class="task__time_start">{{task.time_start_f}}</p>
+          <p class="task__time_start">{{dateFormatShort(task.time_start_f)}}</p>
           <p class="task__title">{{task.title}}</p>
         </div>
       </div>
@@ -40,7 +40,7 @@
             <p
               v-if="answer.text || (answer.data && answer.data.length > 0)"
               class="response__time"
-            >{{answer.time_f}}</p>
+            >{{dateFormat(answer.time_end_f)}}</p>
           </div>
           <div
             v-if="answer.text || (answer.data && answer.data.length > 0)"
@@ -77,29 +77,38 @@
 </template>
 
 <script>
+import { dateFormat, dateFormatShort } from "@/services/date.js";
+
 export default {
   props: ["task", "students", "unselect", "restore"],
   data: () => ({
     session_id: "",
-    student: null
+    student: null,
   }),
-  mounted() {
+  created() {
     this.student = this.students[0];
   },
   computed: {
     answer() {
       let answer = {};
       try {
-        answer = this.task.answers[this.student._id.$oid] || {};
-        if (answer.time)
-          answer.time_f = new Date(answer.time).toLocaleString("es-ES");
+        answer =
+          this.task.answers.find(
+            (answer) => answer._id.$oid === this.student._id.$oid
+          ) || {};
+        answer.time_end_f = new Date(answer.time_end.$date)
+          .toISOString()
+          .substring(0, 16);
       } catch (error) {
         //
       }
       return answer;
-    }
+    },
   },
-  methods: {}
+  methods: {
+    dateFormat,
+    dateFormatShort,
+  },
 };
 </script>
 
@@ -163,7 +172,7 @@ export default {
     justify-content: space-between;
   }
   &__student {
-    font-size: .9rem;
+    font-size: 0.9rem;
     margin-bottom: 0;
     font-weight: bold;
   }

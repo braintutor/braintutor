@@ -42,7 +42,7 @@ export default {
     sessions: [],
     students: [],
     loading: true,
-    loading_message: ""
+    loading_message: "",
   }),
   mounted() {
     this.update();
@@ -50,7 +50,7 @@ export default {
   watch: {
     async classroom_id() {
       this.update();
-    }
+    },
   },
   methods: {
     async update() {
@@ -71,8 +71,10 @@ export default {
         session.evaluations.forEach((evaluation, e_idx) => {
           let scores = [];
           if (evaluation.results) {
-            this.students.forEach(student => {
-              let result = evaluation.results[student._id.$oid];
+            this.students.forEach((student) => {
+              let result = evaluation.results.find(
+                (r) => r._id.$oid == student._id.$oid
+              );
               if (result && result.score)
                 scores.push(this.calculate(result.score));
             });
@@ -106,13 +108,13 @@ export default {
                 data,
                 backgroundColor: "rgba(255, 99, 132, 0.2)",
                 borderColor: "rgba(255, 99, 132, 1)",
-                borderWidth: 1
-              }
-            ]
+                borderWidth: 1,
+              },
+            ],
           },
           options: {
             legend: {
-              display: false
+              display: false,
             },
             scales: {
               yAxes: [
@@ -120,19 +122,19 @@ export default {
                   ticks: {
                     beginAtZero: true,
                     max: this.students.length,
-                    stepSize: 1
-                  }
-                }
-              ]
-            }
-          }
+                    stepSize: 1,
+                  },
+                },
+              ],
+            },
+          },
         });
       }
-    }
+    },
   },
   components: {
-    loading
-  }
+    loading,
+  },
 };
 </script>
 

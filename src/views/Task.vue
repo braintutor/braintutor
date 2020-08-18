@@ -110,7 +110,6 @@
               <img class="linkFile__image" :src="item.image" alt />
               <p class="linkFile__title">{{item.title}}</p>
             </a>
-
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn v-bind="attrs" v-on="on" class="ml-1" small icon @click="update(item, idx)">
@@ -235,9 +234,10 @@ export default {
       this.task_id = getParam("task_id");
       this.task = await getTaskByStudent(this.task_id);
 
+      let { text, data } = this.task.answer;
       this.answer = {
-        ...this.task.answer,
-        data: this.task.answer.data || [],
+        text: text || "",
+        data: data || [],
       };
       this.task.time_start_f = new Date(this.task.time_start.$date)
         .toISOString()
@@ -305,7 +305,7 @@ export default {
       if (id) {
         let { iconLink, name, webViewLink } = await this.get(id);
         // await this.createPermission(id, "mitsuoysharag@gmail.com");
-        await this.addFileDrive({ iconLink, name, webViewLink });
+        await this.addFileDrive({ id, iconLink, name, webViewLink });
       }
       this.loading = false;
     },
@@ -313,9 +313,6 @@ export default {
       this.loading = true;
       this.loading_msg = "Añadiendo Vínculo";
       try {
-        // let res = await fetch(
-        //   `https://api.linkpreview.net/?key=2b589ffa30e00a45f2b349fff781eb99&q=${this.link}`
-        // );
         let res = await fetch(
           `https://braintutor-service-v2.herokuapp.com/getLinkPreview?url=${this.link}`
         );
@@ -342,7 +339,6 @@ export default {
       this.loading = true;
       this.loading_msg = "Guardando Respuesta";
       try {
-        this.answer.time = new Date();
         await updateTaskAnswer(this.task._id.$oid, this.answer);
       } catch (error) {
         this.$root.$children[0].showMessage("Error al Guardar", error.msg);

@@ -1,6 +1,6 @@
 <template>
   <div class="footer-container">
-    <div class="footer-content container">
+    <div class="footer-content m-container-plus">
       <span>Diseñado por</span>
       <span class="footer-author">Mitsuo</span>
     </div>

@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="background">
-      <v-container>
+      <div class="m-container-plus">
         <!-- Principal -->
         <div class="principal-container row">
-          <div class="principal-content col-sm-6">
+          <div class="principal-content col-md-6">
             <h1 class="principal-title mt-1 mb-2">BrainTutor</h1>
             <div
               class="principal-description"
@@ -18,14 +18,14 @@
               @click="redirect('login', {school_user: 'maria-prado-de-bellido'})"
             >Empezar</v-btn>
           </div>
-          <div class="principal-image col-sm-6">
+          <div class="principal-image col-md-6">
             <img src="@/assets/avatar/normal.png" alt />
           </div>
         </div>
-      </v-container>
+      </div>
     </div>
     <!-- Services -->
-    <v-container>
+    <div class="m-container-plus">
       <div class="services-container">
         <span class="services-title">Servicios</span>
         <div class="row">
@@ -42,9 +42,9 @@
           </div>
         </div>
       </div>
-    </v-container>
+    </div>
     <!-- Secondary -->
-    <v-container>
+    <div class="m-container-plus">
       <div class="secondary-container row" v-for="(post, p_idx) in posts" :key="p_idx">
         <div class="secondary-content col-sm-4">
           <h1 class="secondary-title">{{post.title}}</h1>
@@ -54,7 +54,7 @@
           <img class="transform-scale elevation-3" :src="post.image" alt />
         </div>
       </div>
-    </v-container>
+    </div>
     <!-- Footer -->
     <Footer />
   </div>
@@ -71,35 +71,35 @@ export default {
       {
         title: "Clases",
         description: "Creación de clases virtuales",
-        image: require("@/assets/braintutor/icon-material.png")
+        image: require("@/assets/braintutor/icon-material.png"),
       },
       {
         title: "Evaluaciones",
         description: "Creación de evaluaciones constantes",
-        image: require("@/assets/braintutor/icon-quiz.png")
+        image: require("@/assets/braintutor/icon-quiz.png"),
       },
       {
         title: "Eventos",
         description: "Creación de eventos",
-        image: require("@/assets/braintutor/icon-event.png")
+        image: require("@/assets/braintutor/icon-event.png"),
       },
       {
         title: "Chatbot",
         description: "Chatbot como agente de apoyo",
-        image: "https://www.synaptive.com/img/chatbot.png"
+        image: "https://www.synaptive.com/img/chatbot.png",
       },
       {
         title: "Monitoreo",
         description: "Monitorear el rendimiento",
         image:
-          "https://www.searchpng.com/wp-content/uploads/2018/12/ic-search.png"
+          "https://www.searchpng.com/wp-content/uploads/2018/12/ic-search.png",
       },
       {
         title: "Acceso",
         description: "Accesible desde cualquier dispositivo",
         image:
-          "https://images.vexels.com/media/users/3/136857/isolated/preview/a9e86748f463c75ad1a6a58e06abf25d-icono-plana-smartphone-by-vexels.png"
-      }
+          "https://images.vexels.com/media/users/3/136857/isolated/preview/a9e86748f463c75ad1a6a58e06abf25d-icono-plana-smartphone-by-vexels.png",
+      },
     ],
     posts: [
       // {
@@ -112,34 +112,34 @@ export default {
         title: "Clases Virtuales",
         description:
           "Con BrainTutor podrás crear tus clases de manera rápida y sencilla.",
-        image: require("@/assets/ui/material-editor.png")
+        image: require("@/assets/ui/material-editor.png"),
       },
       {
         title: "Evaluaciones",
         description:
           "Con BrainTutor podrás crear evaluaciones, para poner a prueba a tus estudiantes.",
-        image: require("@/assets/ui/quiz.jpg")
+        image: require("@/assets/ui/quiz.jpg"),
       },
       {
         title: "Docente Virtual",
         description:
           "Tendrás tu propio bot virtual, el cual responderá las dudas de los estudiantes en base al contenido ingresado por el docente.",
-        image: require("@/assets/ui/chat.jpg")
+        image: require("@/assets/ui/chat.jpg"),
       },
       {
         title: "Tareas",
         description:
           "Puedes crear y revisar tareas, las cuales serán notificadas a los estudiantes.",
-        image: require("@/assets/ui/task.png")
-      }
-    ]
+        image: require("@/assets/ui/task.png"),
+      },
+    ],
   }),
   methods: {
-    redirect
+    redirect,
   },
   components: {
-    Footer
-  }
+    Footer,
+  },
 };
 </script>
 
