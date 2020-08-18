@@ -25,16 +25,16 @@ export default {
   props: {
     id: {
       type: String,
-      default: "editor"
+      default: "editor",
     },
     data: {
-      type: [String, Object]
+      type: [String, Object],
     },
     hideControls: Boolean,
-    readonly: Boolean
+    readonly: Boolean,
   },
   data: () => ({
-    editor: null
+    editor: null,
   }),
   mounted() {
     this.create();
@@ -57,16 +57,16 @@ export default {
           embed: Embed,
           delimiter: Delimiter,
           table: {
-            class: Table
+            class: Table,
           },
           linkTool: {
             class: LinkTool,
             config: {
               // endpoint: "http://localhost:5000/getLinkPreview"
               endpoint:
-                "https://braintutor-service-v2.herokuapp.com/getLinkPreview"
-            }
-          }
+                "https://braintutor-service-v2.herokuapp.com/getLinkPreview",
+            },
+          },
         },
         data,
         onReady: () => {
@@ -74,18 +74,18 @@ export default {
             let editable_elements = document.querySelectorAll(
               "[contenteditable=true]"
             );
-            editable_elements.forEach(el =>
+            editable_elements.forEach((el) =>
               el.removeAttribute("contenteditable")
             );
             let icon_settings = document.querySelectorAll(".ce-toolbar");
-            icon_settings.forEach(el => el.remove());
+            icon_settings.forEach((el) => el.remove());
 
             let box = document.querySelectorAll(".codex-editor__redactor");
-            box.forEach(el => {
+            box.forEach((el) => {
               el.style.paddingBottom = "0px !important";
             });
           }
-        }
+        },
       });
     },
     async getData() {
@@ -96,8 +96,8 @@ export default {
     async submit() {
       let data = await this.getData();
       this.$emit("submit", data);
-    }
-  }
+    },
+  },
 };
 </script>
 

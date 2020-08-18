@@ -34,7 +34,7 @@
           rows="1"
           auto-grow
         />
-        <div class="mt-3" style="font-size: .9rem" v-else>{{d.answer}}</div>
+        <div class="mt-3" style="font-size: .9rem; white-space: pre-wrap" v-else>{{d.answer}}</div>
       </div>
       <v-menu v-if="show_edit" offset-y>
         <template v-slot:activator="{ on, attrs }">
