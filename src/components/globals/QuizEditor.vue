@@ -25,7 +25,7 @@
           dense
           hide-details
         ></v-textarea>
-        <p v-else class="mb-3">{{d.question}}</p>
+        <p v-else class="mb-3" style="white-space: pre-wrap">{{d.question}}</p>
         <!-- ALTERNATIVE -->
         <div v-for="(alternative, a_idx) in d.alternatives" :key="a_idx" class="alternative mt-2">
           <input type="radio" v-model="d.correct" :value="a_idx" :disabled="!edit" class="mr-2" />
