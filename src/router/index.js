@@ -171,11 +171,16 @@ router.beforeEach(async (to, from, next) => {
   }
 
   //Chatbot
+  store.commit("show_chatbot", false);
   if (["course-editor", "material-editor"].includes(to_name)) {
     store.commit("show_chatbot", true);
-    store.commit("knowledge_editor");
-  } else {
-    store.commit("show_chatbot", false);
+    store.commit("knowledge_default", "CE");
+  }
+
+  let path_child = to.fullPath.split("/")[1];
+  if (["session-editor"].includes(path_child)) {
+    store.commit("show_chatbot", true);
+    store.commit("knowledge_default", "SE");
   }
 
   // Router Authorization

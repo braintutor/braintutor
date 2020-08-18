@@ -139,7 +139,7 @@ export default {
     loading_msg: "",
   }),
   async created() {
-    this.$store.commit("knowledge_editor");
+    this.$store.commit("knowledge_default", "CE"); // TODO remove
     this.loading = true;
     this.loading_msg = "Cargando Contenido";
     this.course_id = getParam("course_id");

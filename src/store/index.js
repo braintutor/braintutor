@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { knowledge_editor } from "./knowledge";
+import { knowledge_course_editor, knowledge_session_editor } from "./knowledge";
 
 Vue.use(Vuex);
 
@@ -38,8 +38,12 @@ export default new Vuex.Store({
     knowledge(state, knowledge) {
       state.knowledge = knowledge;
     },
-    knowledge_editor(state) {
-      state.knowledge = knowledge_editor;
+    knowledge_default(state, key) {
+      let new_knowledge = {
+        CE: knowledge_course_editor,
+        SE: knowledge_session_editor,
+      }[key];
+      state.knowledge = new_knowledge;
     },
   },
   actions: {},

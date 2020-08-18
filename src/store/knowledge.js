@@ -1,14 +1,25 @@
 // import router from "../router";
-
-const knowledge_editor = [
+const Knowledge_personal = [
   {
     questions: ["Hola"],
     answers: ["Hola @usuario@nombres."],
   },
   {
+    questions: ["Chau"],
+    answers: ["Adiós, nos vemos pronto."],
+  },
+  {
     questions: ["Gracias"],
     answers: ["Aquí estoy para ayudarte."],
   },
+  {
+    questions: ["¿Qué eres?", "¿Qué haces?"],
+    answers: ["Soy un bot programado para ayudarte."],
+  },
+];
+
+const knowledge_course_editor = [
+  ...Knowledge_personal,
   // Course - Material
   {
     questions: ["¿Cómo creo una nueva unidad?"],
@@ -81,5 +92,66 @@ const knowledge_editor = [
     // ],
   },
 ];
+const knowledge_session_editor = [
+  ...Knowledge_personal,
+  //Task
+  {
+    questions: [
+      ...question_template_create("tarea"),
+      ...question_template_create("trabajo"),
+    ],
+    answers: [
+      'En la pestaña <strong>"Tareas"</strong> haga click en <strong>"Crear +"</strong>.',
+    ],
+  },
+  {
+    questions: [
+      ...question_template_show("las respuestas de una tarea"),
+      ...question_template_show("las respuestas de un trabajo"),
+      ...question_template_show("los resultados de una tarea"),
+      ...question_template_show("los resultados de un trabajo"),
+    ],
+    answers: [
+      'En la pestaña <strong>"Tareas"</strong> haga click en el ícono de <strong>"Ver Respuestas"</strong>.',
+    ],
+  },
+  //Evaluation
+  {
+    questions: [
+      ...question_template_create("evaluacion"),
+      ...question_template_create("examen"),
+    ],
+    answers: [
+      'En la pestaña <strong>"Evaluaciones"</strong> haga click en el ícono de <strong>"Crear"</strong>.',
+    ],
+  },
+  {
+    questions: [
+      ...question_template_show("los resultados de una evaluación"),
+      ...question_template_show("los resultados de un examen"),
+      ...question_template_show("las notas de un evaluación"),
+      ...question_template_show("las notas de un examen"),
+    ],
+    answers: [
+      'En la pestaña <strong>"Evaluaciones"</strong> haga click en el ícono de <strong>"Resultados"</strong>.',
+    ],
+  },
+];
 
-export { knowledge_editor };
+function question_template_create(text) {
+  return [
+    "Donde creo una @?",
+    "¿Cómo creo una @?",
+    "Quiero crear una @",
+    "¿Cómo agrego más tareas?",
+  ].map((t) => t.replace("@", text));
+}
+function question_template_show(text) {
+  return [
+    "¿Dónde puedo ver @?",
+    "Quiero ver @",
+    "¿Cómo visualizo @?",
+  ].map((t) => t.replace("@", text));
+}
+
+export { knowledge_course_editor, knowledge_session_editor };
