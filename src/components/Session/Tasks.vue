@@ -75,7 +75,7 @@ export default {
     show_pending: true,
     //
     loading: true,
-    loading_msg: ""
+    loading_msg: "",
   }),
   async created() {
     this.$store.state.show_chatbot = false;
@@ -92,18 +92,20 @@ export default {
       return tasks;
     },
     tasks_formated() {
-      let tasks = this.tasks.map(t => {
-        let time_start_f = new Date(t.time_start).toLocaleString("es-ES");
+      let tasks = this.tasks.map((t) => {
+        let time_start_f = new Date(t.time_start.$date)
+          .toISOString()
+          .substring(0, 10);
         return {
           ...t,
-          time_start_f
+          time_start_f,
         };
       });
-      tasks.sort(function(a, b) {
+      tasks.sort(function (a, b) {
         return new Date(b.time_start) - new Date(a.time_start);
       });
       return tasks;
-    }
+    },
   },
   methods: {
     async restore() {
@@ -117,16 +119,16 @@ export default {
       this.loading = false;
     },
     select(task) {
-      redirect('task', { task_id: task._id.$oid })
+      redirect("task", { task_id: task._id.$oid });
       // this.task = task;
     },
     unselect() {
       this.task = null;
-    }
+    },
   },
   components: {
-    loading
-  }
+    loading,
+  },
 };
 </script>
 

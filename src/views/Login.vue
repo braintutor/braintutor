@@ -39,7 +39,7 @@
 <script>
 import loading from "@/components/loading";
 
-import { getSchoolByUser } from "@/services/schoolService";
+import { getSchoolByURL } from "@/services/schoolService";
 import { login } from "@/services/loginService";
 import { redirect, getParam } from "@/services/router.js";
 
@@ -59,7 +59,7 @@ export default {
   async mounted() {
     let school_user = getParam("school_user");
     try {
-      this.school = await getSchoolByUser(school_user);
+      this.school = await getSchoolByURL(school_user);
     } catch (error) {
       this.$root.$children[0].showMessage("Error", error.msg);
     }

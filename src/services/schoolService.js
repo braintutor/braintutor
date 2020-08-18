@@ -4,9 +4,9 @@ function getSchool() {
   return fetch_get('getSchool')
 }
 
-function getSchoolByUser(school_user) {
-  return fetch_post('getSchoolByUser', {
-    school_user
+function getSchoolByURL(url) {
+  return fetch_post('getSchoolByURL', {
+    url
   })
 }
 
@@ -16,4 +16,4 @@ function updateSchool(school) {
   })
 }
 
-export { getSchool, getSchoolByUser, updateSchool }
+export { getSchool, getSchoolByURL, updateSchool }

@@ -161,6 +161,7 @@ router.beforeEach(async (to, from, next) => {
     store.state.loading_msg = "";
     try {
       user = await getUser();
+      user.name = user.last_name + ", " + user.first_name;
       store.commit("setUser", user);
     } catch (error) {
       localStorage.removeItem("token");

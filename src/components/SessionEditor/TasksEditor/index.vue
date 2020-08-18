@@ -85,7 +85,7 @@ import {
   getTasksBySessionTeacher,
   addTask,
   updateTask,
-  removeTask
+  removeTask,
 } from "@/services/taskService";
 import { getStudentsBySession } from "@/services/studentService";
 import { getParam } from "@/services/router.js";
@@ -101,7 +101,7 @@ export default {
     loading: true,
     loading_msg: "",
     dialog_new: false,
-    dialog_remove: false
+    dialog_remove: false,
   }),
   async created() {
     this.session_id = getParam("session_id");
@@ -109,18 +109,20 @@ export default {
   },
   computed: {
     tasks_formatted() {
-      let tasks = this.tasks.map(t => {
-        let time_start_f = new Date(t.time_start).toLocaleString("es-ES");
+      let tasks = this.tasks.map((t) => {
+        let time_start_f = new Date(t.time_start.$date)
+          .toISOString()
+          .substring(0, 10);
         return {
           ...t,
-          time_start_f
+          time_start_f,
         };
       });
-      tasks.sort(function(a, b) {
+      tasks.sort(function (a, b) {
         return new Date(b.time_start) - new Date(a.time_start);
       });
       return tasks;
-    }
+    },
   },
   methods: {
     showCreate() {
@@ -159,7 +161,7 @@ export default {
         try {
           await updateTask(this.task);
           let task_idx = this.tasks.findIndex(
-            tasks => tasks._id.$oid === this.task.id
+            (tasks) => tasks._id.$oid === this.task.id
           );
           this.tasks[task_idx] = Object.assign({}, this.task);
           this.tasks.splice();
@@ -176,7 +178,7 @@ export default {
       try {
         let task_id_to_remove = this.task._id.$oid;
         await removeTask(task_id_to_remove);
-        this.tasks = this.tasks.filter(t => t._id.$oid !== task_id_to_remove);
+        this.tasks = this.tasks.filter((t) => t._id.$oid !== task_id_to_remove);
       } catch (error) {
         this.$root.$children[0].showMessage("Error al Eliminar", error.msg);
       }
@@ -195,12 +197,12 @@ export default {
     },
     unselect() {
       this.task_selected = null;
-    }
+    },
   },
   components: {
     loading,
-    Task
-  }
+    Task,
+  },
 };
 </script>
 

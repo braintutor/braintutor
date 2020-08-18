@@ -227,7 +227,7 @@ export default {
       "777825196939-qm3a36q1v66f65cn5s627p71da3rgpsq.apps.googleusercontent.com",
     // client_secret: "eqKgUl-Lx4pCs0RcozuUUbPa",
     api_key: "AIzaSyAGFPLGWa0IFKZ7AP2Zk2aZsAi0Xxx7Hr8",
-    scope: "https://www.googleapis.com/auth/drive"
+    scope: "https://www.googleapis.com/auth/drive",
   }),
   async created() {
     this.loading_msg = "Cargando Tarea";
@@ -237,11 +237,11 @@ export default {
 
       this.answer = {
         ...this.task.answer,
-        data: this.task.answer.data || []
+        data: this.task.answer.data || [],
       };
-      this.task.time_start_f = new Date(this.task.time_start).toLocaleString(
-        "es-ES"
-      );
+      this.task.time_start_f = new Date(this.task.time_start.$date)
+        .toISOString()
+        .substring(0, 10);
     } catch (error) {
       redirect("sessions-student");
     }
@@ -249,11 +249,11 @@ export default {
   },
   computed: {
     files_filtered() {
-      let files = this.files.filter(f =>
+      let files = this.files.filter((f) =>
         f.name.toLowerCase().includes(this.file_search.toLowerCase())
       );
       return files;
-    }
+    },
   },
   methods: {
     redirectSession() {
@@ -284,7 +284,7 @@ export default {
         type: "file",
         url: webViewLink,
         image: iconLink,
-        title: name
+        title: name,
       };
       this.answer.data.push(data);
 
@@ -327,7 +327,7 @@ export default {
           url: this.link,
           image: meta.image.url,
           title: meta.title,
-          description: meta.description
+          description: meta.description,
         };
         this.answer.data.push(data);
 
@@ -367,14 +367,15 @@ export default {
           {
             headers: {
               Authorization: `Bearer ${access_token}`,
-              Accept: "application/json"
-            }
+              Accept: "application/json",
+            },
           }
         );
         if (res.status >= 400 && res.status < 600) throw "Token inválido.";
         let { files } = await res.json();
         files = files.filter(
-          f => !f.trashed && f.mimeType !== "application/vnd.google-apps.folder"
+          (f) =>
+            !f.trashed && f.mimeType !== "application/vnd.google-apps.folder"
         );
         return files;
       } catch (error) {
@@ -385,7 +386,7 @@ export default {
       let url = [
         "https://docs.googleapis.com/v1/documents",
         "https://slides.googleapis.com/v1/presentations",
-        "https://sheets.googleapis.com/v4/spreadsheets"
+        "https://sheets.googleapis.com/v4/spreadsheets",
       ][type];
       let body = [{ title: "Título" }, { title: "Título" }, {}][type];
       let access_token = localStorage.getItem("access_token");
@@ -396,8 +397,8 @@ export default {
           headers: {
             Authorization: `Bearer ${access_token}`,
             Accept: "application/json",
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         });
         if (res.status >= 400 && res.status < 600) throw "Token inválido.";
         let data = await res.json();
@@ -416,13 +417,13 @@ export default {
             body: JSON.stringify({
               role: "reader",
               type: "user",
-              emailAddress
+              emailAddress,
             }),
             headers: {
               Authorization: `Bearer ${access_token}`,
               Accept: "application/json",
-              "Content-Type": "application/json"
-            }
+              "Content-Type": "application/json",
+            },
           }
         );
         let data = await res.json();
@@ -439,8 +440,8 @@ export default {
           {
             headers: {
               Authorization: `Bearer ${access_token}`,
-              Accept: "application/json"
-            }
+              Accept: "application/json",
+            },
           }
         );
         if (res.status >= 400 && res.status < 600) throw "Token inválido.";
@@ -465,11 +466,11 @@ export default {
       await this.save();
 
       this.loading = false;
-    }
+    },
   },
   components: {
-    loading
-  }
+    loading,
+  },
 };
 </script>
 
