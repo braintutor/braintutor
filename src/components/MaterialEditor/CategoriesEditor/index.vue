@@ -55,41 +55,41 @@ export default {
     categories: {
       overview: {
         name: "Resumen",
-        image: require("@/assets/material/overview.png")
+        image: require("@/assets/material/overview.png"),
       },
       explanation: {
         name: "Explicación",
-        image: require("@/assets/material/explanation.png")
+        image: require("@/assets/material/explanation.png"),
       },
       movies: {
         name: "Videos",
-        image: require("@/assets/material/movies.png")
+        image: require("@/assets/material/movies.png"),
       },
       images: {
         name: "Imágenes",
-        image: require("@/assets/material/images.png")
+        image: require("@/assets/material/images.png"),
       },
       examples: {
         name: "Ejemplos",
-        image: require("@/assets/material/examples.png")
+        image: require("@/assets/material/examples.png"),
       },
       exercises: {
         name: "Ejercicios",
-        image: require("@/assets/material/exercises.png")
+        image: require("@/assets/material/exercises.png"),
       },
       faq: {
         name: "Preguntas Frecuentes",
-        image: require("@/assets/material/faq.png")
+        image: require("@/assets/material/faq.png"),
       },
       hyperlinks: {
         name: "Enlaces",
-        image: require("@/assets/material/hyperlinks.png")
-      }
+        image: require("@/assets/material/hyperlinks.png"),
+      },
       // https://iconos8.es/icons
     },
     //
     loading: false,
-    loading_msg: ""
+    loading_msg: "",
   }),
   methods: {
     selectCategory(category) {
@@ -103,8 +103,9 @@ export default {
       let category = this.category;
 
       try {
-        if ((data.length * 2) / 1000 > 500)
-          throw { msg: "Ha sobrepasado el tamaño permitido." };
+        // let size = (data.length * 2) / 1000
+        let size = data.length / 1000;
+        if (size > 500) throw { msg: "Ha sobrepasado el tamaño permitido." };
         await updateMaterialCategory(material_id, category, data);
         this.material[category] = data;
       } catch (error) {
@@ -112,15 +113,15 @@ export default {
       }
 
       this.loading = false;
-    }
+    },
   },
   components: {
     loading,
     TextEditor,
     QuizEditor,
     FAQEditor,
-    DocumentEditor
-  }
+    DocumentEditor,
+  },
 };
 </script>
 

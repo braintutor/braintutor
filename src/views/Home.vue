@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="background">
-      <div class="m-container-plus">
+      <v-container class="m-container-plus">
         <!-- Principal -->
         <div class="principal-container row">
           <div class="principal-content col-md-6">
@@ -22,7 +22,7 @@
             <img src="@/assets/avatar/normal.png" alt />
           </div>
         </div>
-      </div>
+      </v-container>
     </div>
     <!-- Services -->
     <div class="m-container-plus">
