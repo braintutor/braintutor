@@ -121,7 +121,6 @@ export default {
     loading_message: "",
   }),
   async mounted() {
-    this.$store.commit("knowledge_default", "CE"); // TODO remove
     await this.restoreKnowledge();
   },
   methods: {

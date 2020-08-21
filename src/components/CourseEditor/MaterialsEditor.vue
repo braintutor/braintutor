@@ -79,8 +79,14 @@
                 <template v-slot:activator="{ on, attrs }">
                   <!-- <v-btn icon v-bind="attrs" v-on="on" class="calendar-action" @click="prev()">
                     <v-icon>mdi-chevron-left</v-icon>
-                  </v-btn> -->
-                  <v-btn icon v-bind="attrs" v-on="on" small @click="selectMaterial(material._id.$oid)">
+                  </v-btn>-->
+                  <v-btn
+                    icon
+                    v-bind="attrs"
+                    v-on="on"
+                    small
+                    @click="selectMaterial(material._id.$oid)"
+                  >
                     <v-icon style="color: #999; font-size: 1.3rem">mdi-pencil</v-icon>
                   </v-btn>
                 </template>
@@ -139,7 +145,6 @@ export default {
     loading_msg: "",
   }),
   async created() {
-    this.$store.commit("knowledge_default", "CE"); // TODO remove
     this.loading = true;
     this.loading_msg = "Cargando Contenido";
     this.course_id = getParam("course_id");
