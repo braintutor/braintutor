@@ -58,10 +58,9 @@ export default {
     student: null,
     //
     loading: true,
-    loading_message: ""
+    loading_message: "",
   }),
   async mounted() {
-    this.$store.state.show_chatbot = false;
     await this.update();
   },
   methods: {
@@ -93,10 +92,10 @@ export default {
           verbal: 0,
           visual: 0,
           secuencial: 0,
-          global: 0
+          global: 0,
         }
       );
-      Object.keys(data).forEach(key => {
+      Object.keys(data).forEach((key) => {
         data[key] /= students_length;
       });
       var ctx_ = document.getElementById("chartAll").getContext("2d");
@@ -111,7 +110,7 @@ export default {
             "verbal",
             "visual",
             "secuencial",
-            "global"
+            "global",
           ],
           datasets: [
             {
@@ -125,7 +124,7 @@ export default {
                 "rgba(255, 206, 86, 0.2)",
                 "rgba(255, 206, 86, 0.2)",
                 "rgba(75, 192, 192, 0.2)",
-                "rgba(75, 192, 192, 0.2)"
+                "rgba(75, 192, 192, 0.2)",
               ],
               borderColor: [
                 "rgba(255, 99, 132, 1)",
@@ -135,15 +134,15 @@ export default {
                 "rgba(255, 206, 86, 1)",
                 "rgba(255, 206, 86, 1)",
                 "rgba(75, 192, 192, 1)",
-                "rgba(75, 192, 192, 1)"
+                "rgba(75, 192, 192, 1)",
               ],
-              borderWidth: 1
-            }
-          ]
+              borderWidth: 1,
+            },
+          ],
         },
         options: {
           legend: {
-            display: false
+            display: false,
           },
           scales: {
             yAxes: [
@@ -151,12 +150,12 @@ export default {
                 ticks: {
                   beginAtZero: true,
                   max: 11,
-                  stepSize: 1
-                }
-              }
-            ]
-          }
-        }
+                  stepSize: 1,
+                },
+              },
+            ],
+          },
+        },
       });
     },
     async update() {
@@ -166,12 +165,12 @@ export default {
       this.student = null;
       this.showDashboardAll();
       this.loading = false;
-    }
+    },
   },
   components: {
     loading,
-    Student
-  }
+    Student,
+  },
 };
 </script>
 

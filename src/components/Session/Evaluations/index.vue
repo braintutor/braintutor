@@ -1,81 +1,83 @@
 <template>
-  <div v-if="!evaluation">
-    <loading :active="loading" :message="loading_msg" />
-    <div class="row no-gutters">
-      <div
-        class="col-12 col-sm-6 col-md-4 px-2 pb-4"
-        v-for="(evaluation, c_idx) in evaluations"
-        :key="c_idx"
-      >
+  <div class="m-container pa-3">
+    <div v-if="!evaluation">
+      <loading :active="loading" :message="loading_msg" />
+      <div class="row no-gutters">
         <div
-          class="m-cardd transform-scale"
-          style="cursor: pointer"
-          @click="showDialogStart(evaluation)"
+          class="col-12 col-sm-6 col-md-4 px-2 pb-4"
+          v-for="(evaluation, c_idx) in evaluations"
+          :key="c_idx"
         >
-          <p class="m-cardd__name">{{evaluation.name}}</p>
-          <div class="m-cardd__body">
-            <span class="m-cardd__item">Inicio:</span>
-            <span class="m-cardd__value">{{dateFormat(evaluation.time_start)}}</span>
-            <span class="m-cardd__item">Fin:</span>
-            <span class="m-cardd__value">{{dateFormat(evaluation.time_end)}}</span>
-            <span
-              class="m-cardd__item"
-              v-if="evaluation.result && evaluation.result.score != null"
-            >Puntaje:</span>
-            <span
-              class="m-cardd__result"
-              v-if="evaluation.result && evaluation.result.score != null"
-            >{{format(evaluation.result.score)}}</span>
+          <div
+            class="m-cardd transform-scale"
+            style="cursor: pointer"
+            @click="showDialogStart(evaluation)"
+          >
+            <p class="m-cardd__name">{{evaluation.name}}</p>
+            <div class="m-cardd__body">
+              <span class="m-cardd__item">Inicio:</span>
+              <span class="m-cardd__value">{{dateFormat(evaluation.time_start)}}</span>
+              <span class="m-cardd__item">Fin:</span>
+              <span class="m-cardd__value">{{dateFormat(evaluation.time_end)}}</span>
+              <span
+                class="m-cardd__item"
+                v-if="evaluation.result && evaluation.result.score != null"
+              >Puntaje:</span>
+              <span
+                class="m-cardd__result"
+                v-if="evaluation.result && evaluation.result.score != null"
+              >{{format(evaluation.result.score)}}</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <p class="text-center mt-2" v-show="evaluations.length === 0">No hay evaluaciones.</p>
-    <!-- Dialog Start Evaluation -->
-    <v-dialog v-model="dialog_start" max-width="400">
-      <v-card>
-        <v-card-title>Iniciar Evaluación</v-card-title>
-        <v-card-text
-          class="pb-2"
-        >Una vez que inicias una evaluación, solo tendrás una oportunidad para responderla.</v-card-text>
-        <v-card-text>No cierres la pestaña o cambies de página.</v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn small text @click="dialog_start = false">Cerrar</v-btn>
-          <v-btn
-            small
+      <p class="text-center mt-2" v-show="evaluations.length === 0">No hay evaluaciones.</p>
+      <!-- Dialog Start Evaluation -->
+      <v-dialog v-model="dialog_start" max-width="400">
+        <v-card>
+          <v-card-title>Iniciar Evaluación</v-card-title>
+          <v-card-text
+            class="pb-2"
+          >Una vez que inicias una evaluación, solo tendrás una oportunidad para responderla.</v-card-text>
+          <v-card-text>No cierres la pestaña o cambies de página.</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn small text @click="dialog_start = false">Cerrar</v-btn>
+            <v-btn
+              small
+              color="primary"
+              @click="dialog_start = false; select(evaluation_to_start)"
+            >Iniciar</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <!-- Dialog Result -->
+      <v-dialog v-model="dialog_score" max-width="400">
+        <v-card class="result">
+          <v-progress-circular
+            class="result__diagram"
+            :rotate="270"
+            :size="120"
+            :width="8"
+            :value="score"
             color="primary"
-            @click="dialog_start = false; select(evaluation_to_start)"
-          >Iniciar</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <!-- Dialog Result -->
-    <v-dialog v-model="dialog_score" max-width="400">
-      <v-card class="result">
-        <v-progress-circular
-          class="result__diagram"
-          :rotate="270"
-          :size="120"
-          :width="8"
-          :value="score"
-          color="primary"
-        >{{score_f}}</v-progress-circular>
-        <span
-          v-for="(message, m_idx) in result_messages"
-          :key="m_idx"
-          class="result__message"
-        >{{message}}</span>
-      </v-card>
-    </v-dialog>
+          >{{score_f}}</v-progress-circular>
+          <span
+            v-for="(message, m_idx) in result_messages"
+            :key="m_idx"
+            class="result__message"
+          >{{message}}</span>
+        </v-card>
+      </v-dialog>
+    </div>
+    <Evaluation
+      v-else
+      :evaluation="evaluation"
+      :getEvaluations="getEvaluations"
+      :unselect="unselect"
+      :showResult="showResult"
+    />
   </div>
-  <Evaluation
-    v-else
-    :evaluation="evaluation"
-    :getEvaluations="getEvaluations"
-    :unselect="unselect"
-    :showResult="showResult"
-  />
 </template>
 
 <script>
@@ -109,7 +111,6 @@ export default {
     dialog_score: false,
   }),
   async mounted() {
-    this.$store.state.show_chatbot = false;
     this.session_id = getParam("session_id");
     this.user_role = this.$store.state.user.role;
     this.getEvaluations();

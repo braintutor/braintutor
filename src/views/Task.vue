@@ -258,7 +258,7 @@ export default {
   methods: {
     redirectSession() {
       this.$router
-        .push(`/session/${this.task.session_id.$oid}`)
+        .push(`/session/${this.task.session_id.$oid}/tasks`)
         .catch(() => {});
     },
     async showAll() {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="m-container pa-3">
     <loading :active="loading_events" :message="loading_message" />
     <div v-show="!show_events_selected" class="calendar-container m-card">
       <div class="calendar-control">
@@ -100,7 +100,6 @@ export default {
     },
   },
   async mounted() {
-    this.$store.state.show_chatbot = false;
     this.session_id = getParam("session_id");
     this.calendar = this.$refs.calendar.getApi();
     this.updateCalendarDate();

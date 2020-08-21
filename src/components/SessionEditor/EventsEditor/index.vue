@@ -138,18 +138,22 @@ export default {
       this.restoreEvents();
     },
     async createEvent(new_event) {
+      this.loading_events = true;
+      this.loading_message = "Creando";
       new_event.time_start = new Date(this.event_date)
         .toISOString()
         .substring(0, 16);
       new_event.date = this.dateFormat(new_event.time_start);
-      this.loading_events = true;
-      this.loading_message = "Creando";
 
-      let event_id = await addEvent(this.session_id, new_event);
-      new_event._id = event_id;
-      new_event.type = "event";
-      new_event.color = "#5252ff";
-      this.events.push(new_event);
+      try {
+        let event_id = await addEvent(this.session_id, new_event);
+        new_event._id = event_id;
+        new_event.type = "event";
+        new_event.color = "#5252ff";
+        this.events.push(new_event);
+      } catch (error) {
+        this.$root.$children[0].showMessage("", error.msg || error);
+      }
 
       this.loading_events = false;
       setTimeout(() => {

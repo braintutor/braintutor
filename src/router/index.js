@@ -53,8 +53,30 @@ const routes = [
   },
   {
     path: "/session/:session_id",
-    name: "session",
     component: () => import("../views/Session.vue"),
+    children: [
+      {
+        path: "",
+        name: "session",
+        component: () => import("../components/Materials/index"),
+      },
+      {
+        path: "tasks",
+        component: () => import("../components/Session/Tasks"),
+      },
+      {
+        path: "events",
+        component: () => import("../components/Session/Events/index"),
+      },
+      {
+        path: "evaluations",
+        component: () => import("../components/Session/Evaluations/index"),
+      },
+      {
+        path: "students",
+        component: () => import("../components/Students/index"),
+      },
+    ],
   },
   {
     path: "/courses-editor",
@@ -76,14 +98,14 @@ const routes = [
           import("../components/SessionEditor/TasksEditor/index"),
       },
       {
-        path: "evaluations",
-        component: () =>
-          import("../components/SessionEditor/EvaluationsEditor/index"),
-      },
-      {
         path: "events",
         component: () =>
           import("../components/SessionEditor/EventsEditor/index"),
+      },
+      {
+        path: "evaluations",
+        component: () =>
+          import("../components/SessionEditor/EvaluationsEditor/index"),
       },
       {
         path: "students",

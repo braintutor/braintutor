@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div v-if="!task" class="tasks">
+  <div class="pa-3">
+    <div v-if="!task" class="tasks m-container">
       <loading :active="loading" :message="loading_msg" />
       <!-- MENU -->
       <div class="tasks__menu">
@@ -78,7 +78,6 @@ export default {
     loading_msg: "",
   }),
   async created() {
-    this.$store.state.show_chatbot = false;
     this.session_id = getParam("session_id");
     this.restore();
   },

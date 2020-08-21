@@ -12,7 +12,7 @@
             :key="m_idx"
             @click="selectMaterial(m)"
             class="link"
-            :class="{'link--active': m === material}"
+            :class="{'link--active': m && material && m._id.$oid === material._id.$oid}"
           >{{m.name}}</section>
         </div>
       </section>
@@ -119,13 +119,13 @@ export default {
             "examples",
             "exercises",
             "hyperlinks",
-            "faq"
+            "faq",
           ];
           if (this.user.role === "STU") {
             let res = await getCategoriesByLearningStyle();
             categories = categories.filter((c) => res[c] && res[c].show);
           }
-          this.categories = categories.concat(['quizzes']);
+          this.categories = categories.concat(["quizzes"]);
 
           //Materials
           if (this.materials[0]) this.selectMaterial(this.materials[0]);
