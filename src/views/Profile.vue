@@ -19,11 +19,11 @@
         <span class="profile__value">{{profile.username}}</span>
       </div>
       <div class="profile__actions">
-        <v-btn
+        <m-btn
           color="primary"
           small
           @click="current_password = ''; new_password = ''; confirm_new_password = ''; dialog_password = true"
-        >Cambiar Contraseña</v-btn>
+        >Cambiar Contraseña</m-btn>
       </div>
     </div>
 
@@ -140,13 +140,13 @@ class PreguntaTest {
 export default {
   data: () => ({
     profile: {
-      _id: {}
+      _id: {},
     },
     questions: [
       /* 1 - 11 */
       new PreguntaTest("Entiendo mejor algo", [
         "si lo practico",
-        "si pienso en ello"
+        "si pienso en ello",
       ]),
       new PreguntaTest("Me considero", ["realista", "innovador"]),
       new PreguntaTest(
@@ -155,23 +155,23 @@ export default {
       ),
       new PreguntaTest("Tengo tendencia a", [
         "entender los detalles de un tema pero no ver claramente su estructura completa",
-        "entender la estructura completa pero no ver claramente los detalles"
+        "entender la estructura completa pero no ver claramente los detalles",
       ]),
       new PreguntaTest("Cuando estoy aprendiendo algo nuevo, me ayuda", [
         "hablar de ello",
-        "pensar en ello"
+        "pensar en ello",
       ]),
       new PreguntaTest("Si yo fuera profesor, yo preferiría dar un curso", [
         "que trate sobre hechos y situaciones reales de la vida",
-        "que trate con ideas y teorías"
+        "que trate con ideas y teorías",
       ]),
       new PreguntaTest("Prefiero obtener información nueva de", [
         "imágenes, diagramas, gráficas o mapas",
-        "instrucciones escritas o información verbal"
+        "instrucciones escritas o información verbal",
       ]),
       new PreguntaTest("Una vez que entiendo", [
         "todas las partes, entiendo el total",
-        "el total de algo, entiendo como encajan sus partes"
+        "el total de algo, entiendo como encajan sus partes",
       ]),
       new PreguntaTest(
         "En un grupo de estudio que trabaja con un material difícil, es más probable que",
@@ -179,53 +179,53 @@ export default {
       ),
       new PreguntaTest("Es más fácil para mí", [
         "aprender hechos",
-        "aprender conceptos"
+        "aprender conceptos",
       ]),
       new PreguntaTest(
         "En un libro con muchas imágenes y gráficas es más probable que",
         [
           "revise cuidadosamente las imágenes y las gráficas",
-          "me concentre en el texto escrito"
+          "me concentre en el texto escrito",
         ]
       ),
       /* 12 - 22 */
       new PreguntaTest("Cuando resuelvo problemas de matemáticas", [
         "generalmente trabajo sobre las soluciones con un paso a la vez",
-        "frecuentemente sé cuales son las soluciones, pero luego tengo dificultad para imaginarme los pasos para llegar a ellas"
+        "frecuentemente sé cuales son las soluciones, pero luego tengo dificultad para imaginarme los pasos para llegar a ellas",
       ]),
       new PreguntaTest("En las clases a las que he asistido", [
         "he llegado a saber como son muchos de los estudiantes",
-        "raramente he llegado a saber como son muchos estudiantes"
+        "raramente he llegado a saber como son muchos estudiantes",
       ]),
       new PreguntaTest("Cuando leo temas que no son de ficción, prefiero", [
         "algo que me enseñe nuevos hechos o me diga como hacer algo",
-        "algo que me dé nuevas ideas en que pensar"
+        "algo que me dé nuevas ideas en que pensar",
       ]),
       new PreguntaTest("Me gustan los maestros", [
         "que utilizan muchos esquemas en el pizarrón",
-        "que toman mucho tiempo para explicar"
+        "que toman mucho tiempo para explicar",
       ]),
       new PreguntaTest("Cuando estoy analizando un cuento o una novela", [
         "pienso en los incidentes y trato de acomodarlos para configurar los temas",
-        "me doy cuenta de cuáles son los temas cuando termino de leer y luego tengo que regresar y encontrar los incidentes que los demuestran"
+        "me doy cuenta de cuáles son los temas cuando termino de leer y luego tengo que regresar y encontrar los incidentes que los demuestran",
       ]),
       new PreguntaTest(
         "Cuando comienzo a resolver un problema de tarea, es más probable que",
         [
           "comience a trabajar en su solución inmediatamente",
-          "primero trate de entender completamente el problema"
+          "primero trate de entender completamente el problema",
         ]
       ),
       new PreguntaTest("Prefiero la idea de", ["certeza", "teoría"]),
       new PreguntaTest("Recuerdo mejor", ["lo que veo", "lo que oigo"]),
       new PreguntaTest("Es más importante para mí que un profesor", [
         "exponga el material en pasos secuenciales claros",
-        "me dé un panorama general y relacione el material con otros temas"
+        "me dé un panorama general y relacione el material con otros temas",
       ]),
       new PreguntaTest("Prefiero estudiar", ["en un grupo de estudio", "solo"]),
       new PreguntaTest("Me considero", [
         "cuidadoso en los detalles de mi trabajo",
-        "creativo en la forma en la que hago mi trabajo"
+        "creativo en la forma en la que hago mi trabajo",
       ]),
       /* 23 - 33 */
       new PreguntaTest(
@@ -234,17 +234,17 @@ export default {
       ),
       new PreguntaTest("Aprendo", [
         "a un paso constante. Si estudio con ahínco consigo lo que deseo",
-        "en inicios y pausas. Me llego a confundir y súbitamente lo entiendo"
+        "en inicios y pausas. Me llego a confundir y súbitamente lo entiendo",
       ]),
       new PreguntaTest("Prefiero primero", [
         "hacer algo y ver que sucede",
-        "pensar como voy a hacer algo"
+        "pensar como voy a hacer algo",
       ]),
       new PreguntaTest(
         "Cuando leo por diversión, me gustan los escritores que",
         [
           "dicen claramente los que desean dar a entender",
-          "dicen las cosas en forma creativa e interesante"
+          "dicen las cosas en forma creativa e interesante",
         ]
       ),
       new PreguntaTest(
@@ -253,35 +253,35 @@ export default {
       ),
       new PreguntaTest("Cuando me enfrento a un cuerpo de información", [
         "me concentro en los detalles y pierdo de vista el total de la misma",
-        "trato de entender el todo antes de ir a los detalles"
+        "trato de entender el todo antes de ir a los detalles",
       ]),
       new PreguntaTest("Recuerdo más fácilmente", [
         "algo que he hecho",
-        "algo en lo que he pensado mucho"
+        "algo en lo que he pensado mucho",
       ]),
       new PreguntaTest("Cuando tengo que hacer un trabajo, prefiero", [
         "dominar una forma de hacerlo",
-        "intentar nuevas formas de hacerlo"
+        "intentar nuevas formas de hacerlo",
       ]),
       new PreguntaTest("Cuando alguien me enseña datos, prefiero", [
         "gráficas",
-        "resúmenes con texto"
+        "resúmenes con texto",
       ]),
       new PreguntaTest("Cuando escribo un trabajo, es más probable que", [
         "lo haga (piense o escriba) desde el principio y avance",
-        "lo haga (piense o escriba) en diferentes partes y luego las ordene"
+        "lo haga (piense o escriba) en diferentes partes y luego las ordene",
       ]),
       new PreguntaTest(
         "Cuando tengo que trabajar en un proyecto de grupo, primero quiero",
         [
           'realizar una "tormenta de ideas" donde cada uno contribuye con ideas',
-          'realizar la "tormenta de ideas" en forma personal y luego juntarme con el grupo para comparar las ideas'
+          'realizar la "tormenta de ideas" en forma personal y luego juntarme con el grupo para comparar las ideas',
         ]
       ),
       /* 34 - 44 */
       new PreguntaTest("Considero que es mejor elogio llamar a alguien", [
         "sensible",
-        "imaginativo"
+        "imaginativo",
       ]),
       new PreguntaTest(
         "Cuando conozco gente en una fiesta, es más probable que recuerde",
@@ -289,16 +289,16 @@ export default {
       ),
       new PreguntaTest("Cuando estoy aprendiendo un tema, prefiero", [
         "mantenerme concentrado en ese tema, aprendiendo lo más que pueda de él",
-        "hacer conexiones entre ese tema y temas relacionados"
+        "hacer conexiones entre ese tema y temas relacionados",
       ]),
       new PreguntaTest("Me considero", ["abierto", "reservado"]),
       new PreguntaTest("Prefiero cursos que dan más importancia a", [
         "material concreto (hechos, datos)",
-        "material abstracto (conceptos, teorías)"
+        "material abstracto (conceptos, teorías)",
       ]),
       new PreguntaTest("Para divertirme, prefiero", [
         "ver televisión",
-        "leer un libro"
+        "leer un libro",
       ]),
       new PreguntaTest(
         "Algunos profesores inician sus clases haciendo un bosquejo de lo que enseñarán. Esos bosquejos son",
@@ -310,19 +310,19 @@ export default {
       ),
       new PreguntaTest("Cuando hago grandes cálculos", [
         "tiendo a repetir todos mis pasos y revisar cuidadosamente mi trabajo",
-        "me cansa hacer su revisión y tengo que esforzarme para hacerlo"
+        "me cansa hacer su revisión y tengo que esforzarme para hacerlo",
       ]),
       new PreguntaTest("Tiendo a recordar lugares en los que he estado", [
         "fácilmente y con bastante exactitud",
-        "con dificultad y sin mucho detalle"
+        "con dificultad y sin mucho detalle",
       ]),
       new PreguntaTest(
         "Cuando resuelvo problemas en grupo, es más probable que yo",
         [
           "piense en los pasos para la solución de los problemas",
-          "piense en las posibles consecuencias o aplicaciones de la solución en un amplio rango de campos"
+          "piense en las posibles consecuencias o aplicaciones de la solución en un amplio rango de campos",
         ]
-      )
+      ),
     ],
     questions_page: 0,
     questions_size: 11,
@@ -336,7 +336,7 @@ export default {
     current_password: "",
     new_password: "",
     confirm_new_password: "",
-    dialog_password: false
+    dialog_password: false,
   }),
   computed: {
     _questions() {
@@ -345,7 +345,7 @@ export default {
         this.questions_page * this.questions_size + this.questions_size
       );
       return questions;
-    }
+    },
   },
   async mounted() {
     this.loading_msg = "Cargando Datos";
@@ -360,7 +360,7 @@ export default {
         type: "bar",
         options: {
           legend: {
-            display: false
+            display: false,
           },
           scales: {
             yAxes: [
@@ -368,19 +368,19 @@ export default {
                 ticks: {
                   beginAtZero: true,
                   max: 11,
-                  stepSize: 1
-                }
-              }
-            ]
-          }
-        }
+                  stepSize: 1,
+                },
+              },
+            ],
+          },
+        },
       });
       this.updateDashboard();
     }
   },
   methods: {
     async saveTest() {
-      let answers = this.questions.map(q => q.answer);
+      let answers = this.questions.map((q) => q.answer);
       if (!answers.includes(null)) {
         this.dialog_test = false;
         this.loading = true;
@@ -520,7 +520,7 @@ export default {
         entrada: entrada,
         entrada_valor: entrada_valor,
         comprension: comprension,
-        comprension_valor: comprension_valor
+        comprension_valor: comprension_valor,
       };
       return perfil;
     },
@@ -534,7 +534,7 @@ export default {
           entrada,
           entrada_valor,
           comprension,
-          comprension_valor
+          comprension_valor,
         } = this.profile.learning_style;
         this.myChart.data = {
           labels: [procesamiento, percepcion, entrada, comprension],
@@ -545,7 +545,7 @@ export default {
                 procesamiento_valor,
                 percepcion_valor,
                 entrada_valor,
-                comprension_valor
+                comprension_valor,
               ],
               backgroundColor: [
                 "rgba(255, 99, 132, 0.2)",
@@ -553,7 +553,7 @@ export default {
                 "rgba(255, 206, 86, 0.2)",
                 "rgba(75, 192, 192, 0.2)",
                 "rgba(153, 102, 255, 0.2)",
-                "rgba(255, 159, 64, 0.2)"
+                "rgba(255, 159, 64, 0.2)",
               ],
               borderColor: [
                 "rgba(255, 99, 132, 1)",
@@ -561,25 +561,25 @@ export default {
                 "rgba(255, 206, 86, 1)",
                 "rgba(75, 192, 192, 1)",
                 "rgba(153, 102, 255, 1)",
-                "rgba(255, 159, 64, 1)"
+                "rgba(255, 159, 64, 1)",
               ],
-              borderWidth: 1
-            }
-          ]
+              borderWidth: 1,
+            },
+          ],
         };
         this.myChart.update();
       }
     },
     newTest() {
       this.questions_page = 0;
-      this.questions.forEach(q => {
+      this.questions.forEach((q) => {
         q.answer = null;
         // q.answer = Math.round(Math.random());
       });
       this.dialog_test = true;
     },
     changePage(n) {
-      let answers = this._questions.map(q => q.answer);
+      let answers = this._questions.map((q) => q.answer);
       if (n === -1 || !answers.includes(null)) {
         scrollTop("test");
         this.questions_page += n;
@@ -589,11 +589,11 @@ export default {
           "No dejes preguntas sin responder."
         );
       }
-    }
+    },
   },
   components: {
-    loading
-  }
+    loading,
+  },
 };
 </script>
 

@@ -29,7 +29,7 @@
           ></v-text-field>
         </v-card-text>
         <v-card-actions class="pt-0">
-          <v-btn :loading="loading_login" block color="primary" type="submit">Iniciar Sesión</v-btn>
+          <m-btn color="primary" :loading="loading_login" block>Iniciar Sesión</m-btn>
         </v-card-actions>
       </v-form>
     </v-card>
@@ -49,12 +49,12 @@ export default {
     // FORM
     username: "",
     password: "",
-    usernameRules: [v => !!v || "Usuario es requerido"],
-    passwordRules: [v => !!v || "Contraseña es requerida"],
+    usernameRules: [(v) => !!v || "Usuario es requerido"],
+    passwordRules: [(v) => !!v || "Contraseña es requerida"],
     //
     loading: true,
     alert_error: false,
-    loading_login: false
+    loading_login: false,
   }),
   async mounted() {
     let school_user = getParam("school_user");
@@ -79,11 +79,11 @@ export default {
         this.alert_error = true;
         this.loading_login = false;
       }
-    }
+    },
   },
   components: {
-    loading
-  }
+    loading,
+  },
 };
 </script>
 

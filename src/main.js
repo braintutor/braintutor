@@ -5,6 +5,7 @@ import store from './store'
 import vuetify from './plugins/vuetify'
 import './styles/main.scss'
 import 'normalize.css'
+import './mcss/index.js'
 // import firebase from 'firebase/app'
 
 Vue.config.productionTip = false
