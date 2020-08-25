@@ -103,7 +103,7 @@ import {
 import { getStudentsBySession } from "@/services/studentService";
 import { getParam } from "@/services/router.js";
 
-import TaskModel from "@/models/Task";
+import { TaskModel } from "@/models/Task";
 
 export default {
   data: () => ({

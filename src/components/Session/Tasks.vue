@@ -174,11 +174,13 @@ export default {
     margin-bottom: 0;
     font-size: 1.3rem;
     font-weight: bold;
+    word-wrap: break-word;
   }
   &__description {
     padding: 12px 18px 16px 18px;
     margin-bottom: 0;
     font-size: 0.95rem;
+    word-wrap: break-word;
   }
   &__actions {
     padding: 12px;

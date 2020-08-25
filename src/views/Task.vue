@@ -76,9 +76,10 @@
         <v-textarea
           class="response__text mb-3"
           v-model="answer.text"
+          :maxlength="AnswerModel.text.max_length"
+          :counter="AnswerModel.text.max_length"
           rows="1"
           auto-grow
-          hide-details
         ></v-textarea>
         <div class="mb-3" v-for="(item, idx) in answer.data" :key="idx">
           <!-- LINK -->
@@ -206,6 +207,8 @@ import loading from "@/components/loading";
 import { getTaskByStudent, updateTaskAnswer } from "@/services/taskService";
 import { getParam, redirect } from "@/services/router.js";
 
+import { AnswerModel } from "@/models/Task";
+
 export default {
   data: () => ({
     task_id: "",
@@ -227,6 +230,7 @@ export default {
     // client_secret: "eqKgUl-Lx4pCs0RcozuUUbPa",
     api_key: "AIzaSyAGFPLGWa0IFKZ7AP2Zk2aZsAi0Xxx7Hr8",
     scope: "https://www.googleapis.com/auth/drive",
+    AnswerModel,
   }),
   async created() {
     this.loading_msg = "Cargando Tarea";
@@ -488,11 +492,13 @@ export default {
     margin-bottom: 0;
     font-size: 1.3rem;
     font-weight: bold;
+    word-wrap: break-word;
   }
   &__description {
     padding: 12px 18px 16px 18px;
     margin-bottom: 0;
     font-size: 0.95rem;
+    word-wrap: break-word;
   }
 }
 .response {
