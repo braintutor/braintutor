@@ -212,7 +212,7 @@ export default {
     text-decoration: none;
     //
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: auto 1fr;
     grid-template-rows: auto auto;
     column-gap: 12px;
     row-gap: 6px;

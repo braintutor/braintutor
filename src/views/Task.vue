@@ -212,7 +212,7 @@ import loading from "@/components/loading";
 import { getTaskByStudent, updateTaskAnswer } from "@/services/taskService";
 import { getParam, redirect } from "@/services/router.js";
 
-import { AnswerModel } from "@/models/Task";
+import { AnswerModel, LinkModel } from "@/models/Task";
 
 export default {
   data: () => ({
@@ -288,13 +288,13 @@ export default {
       // this.loading = false;
 
       this.dialog_files = false;
-      let data = {
+      let data = this.formatLink({
         id,
         type: "file",
         url: webViewLink,
         image: iconLink,
         title: name,
-      };
+      });
       this.answer.data.push(data);
 
       await this.save();
@@ -328,13 +328,13 @@ export default {
         if (res.status >= 400 && res.status < 600) throw "Vínculo inválido.";
 
         let { meta } = await res.json();
-        let data = {
+        let data = this.formatLink({
           type: "link",
           url: this.link,
           image: meta.image.url,
           title: meta.title,
           description: meta.description,
-        };
+        });
         this.answer.data.push(data);
 
         await this.save();
@@ -472,6 +472,21 @@ export default {
 
       this.loading = false;
     },
+    //
+    formatLink({ type, id, url, title, description, image }) {
+      let link = {
+        type,
+        id,
+        url,
+        title: title && title.trim().substring(0, LinkModel.title.max_length),
+        description:
+          description &&
+          description.trim().substring(0, LinkModel.description.max_length),
+        image:
+          image && image.length <= LinkModel.image.max_length ? image : null,
+      };
+      return link;
+    },
   },
   components: {
     loading,
@@ -547,7 +562,7 @@ export default {
     text-decoration: none;
     //
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: auto 1fr;
     grid-template-rows: auto auto;
     column-gap: 12px;
     row-gap: 6px;
