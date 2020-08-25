@@ -22,7 +22,12 @@
       <div class="response__menu">
         <v-menu offset-y left>
           <template v-slot:activator="{ on }">
-            <v-btn color="success" small v-on="on">
+            <v-btn
+              color="success"
+              small
+              v-on="on"
+              :disabled="answer.data && answer.data.length >= AnswerModel.data.max_length"
+            >
               <v-icon small class="mr-1">mdi-plus</v-icon>Agregar
             </v-btn>
           </template>
