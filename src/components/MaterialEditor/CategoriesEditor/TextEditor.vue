@@ -6,19 +6,27 @@
       </v-btn>
     </div>
 
-    <v-textarea class="editor__text" v-model="data" rows="3" solo auto-grow></v-textarea>
+    <v-textarea
+      class="editor__text"
+      v-model="data"
+      :maxlength="maxlength"
+      :counter="maxlength"
+      rows="3"
+      solo
+      auto-grow
+    ></v-textarea>
   </section>
 </template>
 
 <script>
 export default {
-  props: ["text"],
+  props: ["text", "maxlength"],
   data: () => ({
-    data: ""
+    data: "",
   }),
   mounted() {
     this.data = JSON.parse(JSON.stringify(this.text));
-  }
+  },
 };
 </script>
 

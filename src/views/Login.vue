@@ -20,10 +20,16 @@
             text
             dismissible
           >Datos incorrectos.</v-alert>
-          <v-text-field v-model="username" :rules="usernameRules" label="Usuario"></v-text-field>
+          <v-text-field
+            v-model="username"
+            :rules="usernameRules"
+            :maxlength="UserModel.username.max_length"
+            label="Usuario"
+          ></v-text-field>
           <v-text-field
             v-model="password"
             :rules="passwordRules"
+            :maxlength="UserModel.password.max_length"
             label="Contraseña"
             type="password"
           ></v-text-field>
@@ -43,6 +49,8 @@ import { getSchoolByURL } from "@/services/schoolService";
 import { login } from "@/services/loginService";
 import { redirect, getParam } from "@/services/router.js";
 
+import UserModel from "@/models/User";
+
 export default {
   data: () => ({
     school: {},
@@ -55,6 +63,7 @@ export default {
     loading: true,
     alert_error: false,
     loading_login: false,
+    UserModel,
   }),
   async mounted() {
     let school_user = getParam("school_user");

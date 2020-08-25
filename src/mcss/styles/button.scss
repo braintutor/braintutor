@@ -4,7 +4,7 @@
   padding: 14px 24px 12px;
   font-size: 0.8rem;
   text-transform: uppercase;
-  letter-spacing: 0.1rem;
+  letter-spacing: 0.09rem;
   border-radius: 4px;
 
   transition: all 0.3s;
@@ -33,10 +33,10 @@
     &::before {
       content: "";
       display: block;
-      height: 24px;
-      width: 24px;
+      height: 20px;
+      width: 20px;
       border-radius: 100%;
-      border: 3px solid #fff;
+      border: 2px solid #fff;
       border-top-color: transparent !important;
       border-left-color: transparent !important;
       animation: rotate infinite 0.75s linear;
@@ -44,14 +44,15 @@
   }
 
   &--small {
-    padding: 8px 16px;
+    padding: 8px 16px 6px;
     font-size: 0.75rem;
-    letter-spacing: 0.08rem;
   }
 
   &--loading {
     position: relative;
     pointer-events: none;
+    // box-shadow: none !important;
+    // transform: translateY(4px);
   }
 
   &--block {
@@ -60,15 +61,19 @@
 
   @each $key, $value in $colors {
     &--#{$key} {
-      color: #fff;
       background: nth($value, 1);
       color: nth($value, 4);
+      // box-shadow: 0 4px 0 nth($value, 2);
 
       &:hover {
         background: nth($value, 2);
+        // box-shadow: 0 0 0 nth($value, 2);
+        // transform: translateY(4px);
       }
       &:active {
         background: nth($value, 3);
+        // box-shadow: 0 0 0 nth($value, 2);
+        // transform: translateY(4px);
       }
       & .m-btn__loader::before {
         border-color: nth($value, 1);

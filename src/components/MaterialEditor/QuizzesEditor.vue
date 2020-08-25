@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding-bottom: 120px">
     <loading :active="loading" :message="loading_msg" />
     <section class="quizzes mb-4">
       <v-btn
@@ -32,13 +32,25 @@
     </section>
 
     <section v-show="show_type === 'BAS'" class="quiz">
-      <QuizEditor :quiz="getQuiz('BAS')" @submit="save" />
+      <QuizEditor
+        :quiz="getQuiz('BAS')"
+        :maxlength="MaterialModel.quizzes.max_length"
+        @submit="save"
+      />
     </section>
     <section v-show="show_type === 'INT'" class="quiz">
-      <QuizEditor :quiz="getQuiz('INT')" @submit="save" />
+      <QuizEditor
+        :quiz="getQuiz('INT')"
+        :maxlength="MaterialModel.quizzes.max_length"
+        @submit="save"
+      />
     </section>
     <section v-show="show_type === 'ADV'" class="quiz">
-      <QuizEditor :quiz="getQuiz('ADV')" @submit="save" />
+      <QuizEditor
+        :quiz="getQuiz('ADV')"
+        :maxlength="MaterialModel.quizzes.max_length"
+        @submit="save"
+      />
     </section>
   </div>
 </template>
@@ -49,12 +61,15 @@ import QuizEditor from "@/components/globals/QuizEditor";
 
 import { updateMaterialQuiz } from "@/services/materialService";
 
+import MaterialModel from "@/models/Material";
+
 export default {
   props: ["material"],
   data: () => ({
     show_type: "BAS",
     loading: false,
-    loading_msg: ""
+    loading_msg: "",
+    MaterialModel
   }),
   methods: {
     getQuiz(type) {
@@ -74,12 +89,12 @@ export default {
         this.$root.$children[0].showMessage("Error", error.msg);
       }
       this.loading = false;
-    }
+    },
   },
   components: {
     loading,
-    QuizEditor
-  }
+    QuizEditor,
+  },
 };
 </script>
 

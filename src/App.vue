@@ -5,7 +5,7 @@
       <loading :active="loading" :message="loading_msg" />
       <router-view></router-view>
     </v-main>
-    <Chatbot v-if="show_chatbot" :knowledge="knowledge" :loading='loading_knowledge' />
+    <Chatbot v-if="show_chatbot" :knowledge="knowledge" :loading="loading_knowledge" />
     <!-- Message -->
     <v-dialog v-model="dlg_message" max-width="320" persistent>
       <div class="m-msg">
@@ -199,14 +199,8 @@ textarea {
 .v-input {
   margin: 0 !important;
 }
-.v-input__slot {
-  margin: 0 !important;
-}
 .v-input--selection-controls__input {
   margin: 0 !important;
-}
-.v-messages {
-  display: none !important;
 }
 
 .v-input--radio-group__input {

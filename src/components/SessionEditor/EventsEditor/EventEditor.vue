@@ -48,10 +48,11 @@
             v-if="event.edit"
             class="event__title"
             v-model="event.title"
+            :maxlength="EventModel.title.max_length"
+            :counter="EventModel.title.max_length"
             placeholder="Título"
             autoGrow
             dense
-            hide-details
             autocomplete="off"
           ></v-text-field>
           <p v-else class="event__title">{{event.title}}</p>
@@ -59,11 +60,12 @@
             v-if="event.edit"
             class="event__description mt-3"
             v-model="event.description"
+            :maxlength="EventModel.description.max_length"
+            :counter="EventModel.description.max_length"
             placeholder="Descripción"
             :rows="1"
             autoGrow
             dense
-            hide-details
             autocomplete="off"
           ></v-textarea>
           <p v-else class="event__description">{{event.description}}</p>
@@ -84,8 +86,19 @@
     <v-dialog v-model="dialog_new" persistent max-width="750">
       <v-card class="pt-4 pa-2">
         <v-card-text>
-          <v-text-field v-model="new_event.title" label="Título"></v-text-field>
-          <v-textarea v-model="new_event.description" label="Descripición" value></v-textarea>
+          <v-text-field
+            v-model="new_event.title"
+            :maxlength="EventModel.title.max_length"
+            :counter="EventModel.title.max_length"
+            label="Título"
+          ></v-text-field>
+          <v-textarea
+            v-model="new_event.description"
+            :maxlength="EventModel.description.max_length"
+            :counter="EventModel.description.max_length"
+            label="Descripición"
+            value
+          ></v-textarea>
         </v-card-text>
         <v-card-actions style="width: min-content; margin: 0 auto">
           <v-btn small text class="mr-1" @click="dialog_new = false">Cerrar</v-btn>
@@ -99,6 +112,8 @@
 <script>
 import { formatDate } from "@fullcalendar/core";
 
+import EventModel from "@/models/Event";
+
 export default {
   props: [
     "event_date",
@@ -107,11 +122,12 @@ export default {
     "createEvent",
     "saveEvent",
     "deleteEvent",
-    "restoreEvents"
+    "restoreEvents",
   ],
   data: () => ({
     new_event: {},
-    dialog_new: false
+    dialog_new: false,
+    EventModel,
   }),
   methods: {
     format(date) {
@@ -119,10 +135,10 @@ export default {
         day: "numeric",
         month: "long",
         year: "numeric",
-        locale: "es"
+        locale: "es",
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

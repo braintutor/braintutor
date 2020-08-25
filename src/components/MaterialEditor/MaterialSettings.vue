@@ -11,6 +11,8 @@
           v-if="show_edit"
           style="font-size: .9rem"
           v-model="material_aux.name"
+          :maxlength="MaterialModel.name.max_length"
+          :counter="MaterialModel.name.max_length"
           hide-details
           dense
         ></v-text-field>
@@ -124,6 +126,8 @@ import {
   removeMaterial,
 } from "@/services/materialService";
 
+import MaterialModel from "@/models/Material";
+
 export default {
   props: ["material", "course"],
   data: () => ({
@@ -136,6 +140,7 @@ export default {
     loading: false,
     loading_msg: "",
     dlg_remove: false,
+    MaterialModel,
   }),
   methods: {
     async save() {

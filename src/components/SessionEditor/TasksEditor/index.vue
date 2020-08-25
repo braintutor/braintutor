@@ -42,8 +42,19 @@
       <v-dialog v-model="dialog_new" persistent max-width="750">
         <v-card class="pt-4 pa-2">
           <v-card-text>
-            <v-text-field v-model="task.title" label="Título"></v-text-field>
-            <v-textarea v-model="task.description" label="Descripición" value></v-textarea>
+            <v-text-field
+              v-model="task.title"
+              :maxlength="TaskModel.title.max_length"
+              :counter="TaskModel.title.max_length"
+              label="Título"
+            ></v-text-field>
+            <v-textarea
+              v-model="task.description"
+              :maxlength="TaskModel.description.max_length"
+              :counter="TaskModel.description.max_length"
+              label="Descripción"
+              value
+            ></v-textarea>
           </v-card-text>
           <v-card-actions style="width: min-content; margin: 0 auto">
             <v-btn small text class="mr-1" v-show="!loading" @click="dialog_new = false">Cerrar</v-btn>
@@ -92,6 +103,8 @@ import {
 import { getStudentsBySession } from "@/services/studentService";
 import { getParam } from "@/services/router.js";
 
+import TaskModel from "@/models/Task";
+
 export default {
   data: () => ({
     session_id: "",
@@ -104,6 +117,7 @@ export default {
     loading_msg: "",
     dialog_new: false,
     dialog_remove: false,
+    TaskModel,
   }),
   async created() {
     this.session_id = getParam("session_id");
@@ -245,6 +259,7 @@ export default {
     padding: 12px 18px 16px 18px;
     margin-bottom: 0;
     font-size: 0.95rem;
+    word-wrap: break-word;
   }
   &__actions {
     padding: 12px;

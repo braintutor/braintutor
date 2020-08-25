@@ -60,7 +60,6 @@ export default {
 
     let paths = window.location.href.split("/");
     let path = paths[paths.length - 1];
-    console.log(path);
     this.link_idx = { tasks: 1, events: 2, evaluations: 3, students: 4 }[path];
     if (this.link_idx == null) this.link_idx = 0;
 

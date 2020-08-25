@@ -19,11 +19,12 @@
         <v-textarea
           v-if="edit"
           v-model="d.question"
+          :maxlength="QuestionModel.question.max_length"
+          :counter="QuestionModel.question.max_length"
           class="mb-3"
           rows="1"
           auto-grow
           dense
-          hide-details
         ></v-textarea>
         <p v-else class="mb-3" style="white-space: pre-wrap">{{d.question}}</p>
         <!-- ALTERNATIVE -->
@@ -32,13 +33,15 @@
           <v-textarea
             v-model="d.alternatives[a_idx]"
             :disabled="!edit"
+            :maxlength="QuestionModel.alternative.max_length"
+            :counter="QuestionModel.alternative.max_length"
+            hide-details
             rows="1"
             append.click
             auto-grow
             filled
             rounded
             dense
-            hide-details
           ></v-textarea>
           <v-btn
             v-if="edit && d.alternatives.length > 2"
@@ -51,7 +54,10 @@
           </v-btn>
         </div>
         <!-- ALTERNATIVE ADD -->
-        <div v-if="edit" class="alternative">
+        <div
+          v-if="edit && d.alternatives.length < QuestionModel.alternatives.max_length"
+          class="alternative"
+        >
           <input type="radio" style="pointer-events: none; opacity: 0" class="mr-2" />
           <div @click="addAlternative(d.alternatives)" class="alternative--add mt-2">+</div>
           <v-btn
@@ -80,7 +86,7 @@
             <v-list-item @click="moveDown(data, d_idx)">
               <v-list-item-title>Mover Abajo</v-list-item-title>
             </v-list-item>
-            <v-list-item @click="remove(data, d_idx)">
+            <v-list-item @click="remove(data, d_idx)" :disabled="data.length <= 1">
               <v-list-item-title>Eliminar</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -88,7 +94,7 @@
       </div>
     </div>
     <!-- QUESTION ADD -->
-    <div v-if="edit" class="question">
+    <div v-if="edit && data.length < maxlength" class="question">
       <div @click="addQuestion(data)" class="question--add mt-4">+</div>
       <v-btn class="ml-2" style="pointer-events: none; opacity: 0" small icon>
         <v-icon small>mdi-dots-vertical</v-icon>
@@ -98,16 +104,19 @@
 </template>
 
 <script>
+import QuestionModel from "@/models/Question";
+
 export default {
-  props: ["quiz"],
+  props: ["quiz", "maxlength"],
   data: () => ({
     data: [],
-    edit: false
+    edit: false,
+    QuestionModel,
   }),
   watch: {
     quiz() {
       this.create();
-    }
+    },
   },
   mounted() {
     this.create();
@@ -124,7 +133,7 @@ export default {
       arr.push({
         question: "Pregunta",
         alternatives: ["Alternativa", "Alternativa"],
-        correct: 0
+        correct: 0,
       });
       this.$forceUpdate();
     },
@@ -151,8 +160,8 @@ export default {
         arr[idx + 1] = aux;
         this.$forceUpdate();
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

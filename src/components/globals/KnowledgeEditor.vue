@@ -1,5 +1,5 @@
 <template>
-  <div class="editor-container m-fullscreen">
+  <div class="editor-container">
     <loading :active="loading" :message="loading_message" />
     <div class="menu">
       <!-- <span class="menu-title">Conocimiento</span> -->
@@ -7,7 +7,13 @@
       <div class="menu-action">
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn icon v-bind="attrs" v-on="on" @click="addKnowledge()">
+            <v-btn
+              icon
+              v-bind="attrs"
+              v-on="on"
+              @click="addKnowledge()"
+              :disabled="knowledge.length >= CourseModel.knowledge.max_length"
+            >
               <v-icon>mdi-comment-plus-outline</v-icon>
             </v-btn>
           </template>
@@ -33,7 +39,7 @@
         </v-tooltip>
       </div>
     </div>
-    <div id="knowledge-scroll" class="editor-content m-fullscreen-content">
+    <div id="knowledge-scroll" class="editor-content">
       <p v-if="knowledge.length <= 0" class="editor-empty">No hay conocimientos.</p>
       <div class="editor-knowledge" v-for="(k, k_idx) in knowledge" :key="k_idx">
         <div class="editor-knowledge-row row no-gutters">
@@ -48,11 +54,16 @@
                   <v-text-field
                     class="editor-input"
                     v-model="k[type][q_idx]"
+                    :maxlength="KnowledgeModel.question.max_length"
+                    :counter="KnowledgeModel.question.max_length"
                     dense
-                    hide-details
                     autocomplete="off"
                   ></v-text-field>
-                  <v-btn icon @click="add(k, k[type])">
+                  <v-btn
+                    icon
+                    @click="add(k, k[type])"
+                    :disabled="k[type].length >= KnowledgeModel.questions.max_length"
+                  >
                     <v-icon>mdi-plus</v-icon>
                   </v-btn>
                 </div>
@@ -60,8 +71,9 @@
                   <v-text-field
                     class="editor-input"
                     v-model="k[type][q_idx]"
+                    :maxlength="KnowledgeModel.question.max_length"
+                    :counter="KnowledgeModel.question.max_length"
                     dense
-                    hide-details
                     autocomplete="off"
                   ></v-text-field>
                   <v-btn icon @click="remove(k[type], q_idx)">
@@ -112,6 +124,9 @@ import loading from "@/components/loading";
 
 import { scrollDown } from "@/services/scroll";
 
+import KnowledgeModel from "@/models/Knowledge";
+import CourseModel from "@/models/Course";
+
 export default {
   props: ["get", "update"],
   data: () => ({
@@ -119,6 +134,8 @@ export default {
     //
     loading: false,
     loading_message: "",
+    KnowledgeModel,
+    CourseModel,
   }),
   async mounted() {
     await this.restoreKnowledge();
@@ -141,7 +158,14 @@ export default {
         questions: k.questions,
         answers: k.answers,
       }));
-      await this.update(knowledge);
+      try {
+        await this.update(knowledge);
+      } catch (error) {
+        this.$root.$children[0].showMessage(
+          "",
+          error.msg || "Ha ocurrido un error."
+        );
+      }
       this.loading = false;
     },
     async restoreKnowledge() {
@@ -194,6 +218,7 @@ export default {
 
 .editor-container {
   flex-direction: column;
+  padding-bottom: 220px;
   .menu {
     padding: 0 10px;
     display: flex;

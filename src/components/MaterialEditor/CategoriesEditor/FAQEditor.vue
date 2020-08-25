@@ -18,8 +18,10 @@
           v-if="show_edit"
           style="font-size: 1rem; font-weight: bold"
           v-model="d.question"
-          placeholder="Pregunta"
+          :maxlength="FAQModel.question.max_length"
+          :counter="FAQModel.question.max_length"
           hide-details
+          placeholder="Pregunta"
           dense
         />
         <div style="font-size: 1rem; font-weight: bold" v-else>{{d.question}}</div>
@@ -28,8 +30,9 @@
           class="mt-3"
           style="font-size: .9rem"
           v-model="d.answer"
+          :maxlength="FAQModel.answer.max_length"
+          :counter="FAQModel.answer.max_length"
           placeholder="Respuesta"
-          hide-details
           dense
           rows="1"
           auto-grow
@@ -49,14 +52,14 @@
           <v-list-item @click="moveDown(data, idx)">
             <v-list-item-title>Mover Abajo</v-list-item-title>
           </v-list-item>
-          <v-list-item @click="removeQuestion(data, idx)">
+          <v-list-item @click="removeQuestion(data, idx)" :disabled="data.length <= 1">
             <v-list-item-title>Eliminar</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
     </section>
     <!-- Question Add -->
-    <section v-if="show_edit" class="question">
+    <section v-if="show_edit && data.length < maxlength" class="question">
       <div class="question--add" @click="addQuestion()">+</div>
       <v-btn style="pointer-events: none; opacity: 0" class="ml-2" icon small>
         <v-icon style="font-size: 1.5rem">mdi-plus</v-icon>
@@ -66,11 +69,14 @@
 </template>
 
 <script>
+import FAQModel from "@/models/FAQ";
+
 export default {
-  props: ["faq"],
+  props: ["faq", "maxlength"],
   data: () => ({
-    data: "",
-    show_edit: false
+    data: [],
+    show_edit: false,
+    FAQModel,
   }),
   mounted() {
     this.data = JSON.parse(JSON.stringify(this.faq));
@@ -79,7 +85,7 @@ export default {
     addQuestion() {
       this.data.push({
         question: "Pregunta",
-        answer: "Respuesta"
+        answer: "Respuesta",
       });
     },
     moveUp(arr, idx) {
@@ -100,8 +106,8 @@ export default {
     },
     removeQuestion(arr, idx) {
       arr.splice(idx, 1);
-    }
-  }
+    },
+  },
 };
 </script>
 

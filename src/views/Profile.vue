@@ -87,6 +87,7 @@
               type="password"
               class="text-field"
               v-model="current_password"
+              :maxlength="User.password.max_length"
               dense
               hide-details
             ></v-text-field>
@@ -97,6 +98,7 @@
               type="password"
               class="text-field"
               v-model="new_password"
+              :maxlength="User.password.max_length"
               dense
               hide-details
             ></v-text-field>
@@ -107,6 +109,7 @@
               type="password"
               class="text-field"
               v-model="confirm_new_password"
+              :maxlength="User.password.max_length"
               dense
               hide-details
             ></v-text-field>
@@ -128,6 +131,8 @@ import Chart from "chart.js";
 import { updateLearningStyle } from "@/services/studentService";
 import { getUser, updatePassword } from "@/services/userService";
 import { scrollTop } from "@/services/scroll";
+
+import User from "@/models/User";
 
 class PreguntaTest {
   constructor(enunciado, alternatives) {
@@ -337,6 +342,7 @@ export default {
     new_password: "",
     confirm_new_password: "",
     dialog_password: false,
+    User,
   }),
   computed: {
     _questions() {

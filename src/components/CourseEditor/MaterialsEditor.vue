@@ -1,18 +1,32 @@
 <template>
-  <div class="m-container pa-2">
+  <div class="m-container pa-2" style="padding-bottom: 240px !important">
     <loading :active="loading" :message="loading_msg" />
     <div class="options">
-      <v-btn @click="createChatbot()" class="ml-2" small text rounded>
+      <v-btn
+        @click="createChatbot()"
+        :disabled="chatbots.length >= Variables.max_chatbots_per_course"
+        class="ml-2"
+        small
+        text
+        rounded
+      >
         <v-icon class="mr-2" small>mdi-plus</v-icon>Crear Unidad
       </v-btn>
     </div>
-
     <!-- Chatbot -->
     <section class="chatbot" v-for="(chatbot, idx) in chatbots" :key="idx">
       <!-- <div class="chatbot__menu" @click="chatbot.show = !chatbot.show; $forceUpdate()"> -->
       <div class="chatbot__menu">
         <p v-if="!chatbot.edit_name" class="chatbot__name">{{chatbot.name}}</p>
-        <v-text-field v-else class="chatbot__name" v-model="chatbot.name" hide-details dense></v-text-field>
+        <v-text-field
+          v-else
+          class="chatbot__name"
+          v-model="chatbot.name"
+          :maxlength="ChatbotModel.name.max_length"
+          :counter="ChatbotModel.name.max_length"
+          hide-details
+          dense
+        ></v-text-field>
         <div class="chatbot__options">
           <!-- <v-btn v-if="chatbot.show" icon small>
                 <v-icon>mdi-chevron-up</v-icon>
@@ -33,7 +47,10 @@
               <v-list-item @click="chatbot.edit_order = true; $forceUpdate()">
                 <v-list-item-title>Editar Orden</v-list-item-title>
               </v-list-item>
-              <v-list-item @click="createMaterial(chatbot)">
+              <v-list-item
+                @click="createMaterial(chatbot)"
+                :disabled="materialsCount >= Variables.max_materials_per_course"
+              >
                 <v-list-item-title>Crear Material</v-list-item-title>
               </v-list-item>
               <v-list-item @click="removeChatbot(chatbot._id.$oid)">
@@ -135,6 +152,9 @@ import {
 } from "@/services/chatbotService.js";
 import { addMaterial } from "@/services/materialService.js";
 
+import ChatbotModel from "@/models/Chatbot";
+import Variables from "@/models/variables";
+
 export default {
   data: () => ({
     course_id: "",
@@ -143,7 +163,18 @@ export default {
     //
     loading: false,
     loading_msg: "",
+    ChatbotModel,
+    Variables,
   }),
+  computed: {
+    materialsCount() {
+      let count = this.chatbots.reduce(
+        (sum, chatbot) => sum + chatbot.materials.length,
+        0
+      );
+      return count;
+    },
+  },
   async created() {
     this.loading = true;
     this.loading_msg = "Cargando Contenido";
@@ -291,7 +322,10 @@ export default {
         await updateChatbot(chatbot);
         chatbot.edit_name = false;
       } catch (error) {
-        this.$root.$children[0].showMessage("", "Error al Guardar");
+        this.$root.$children[0].showMessage(
+          "",
+          error.msg || "Error al Guardar"
+        );
       }
       this.loading = false;
     },

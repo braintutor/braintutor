@@ -28,11 +28,26 @@
         <span class="editor__title">{{categories[category].name}}</span>
       </div>
       <!-- Overview -->
-      <TextEditor v-if="category === 'overview'" :text="material[category]" @submit="save" />
+      <TextEditor
+        v-if="category === 'overview'"
+        :text="material[category]"
+        :maxlength="MaterialModel.overview.max_length"
+        @submit="save"
+      />
       <!-- Exercises -->
-      <QuizEditor v-else-if="category === 'exercises'" :quiz="material[category]" @submit="save" />
+      <QuizEditor
+        v-else-if="category === 'exercises'"
+        :quiz="material[category]"
+        :maxlength="MaterialModel.exercises.max_length"
+        @submit="save"
+      />
       <!-- FAQ -->
-      <FAQEditor v-else-if="category === 'faq'" :faq="material[category]" @submit="save" />
+      <FAQEditor
+        v-else-if="category === 'faq'"
+        :faq="material[category]"
+        :maxlength="MaterialModel.faq.max_length"
+        @submit="save"
+      />
       <!-- Default -->
       <DocumentEditor v-else :data="material[category]" @submit="save" />
     </section>
@@ -47,6 +62,8 @@ import FAQEditor from "./FAQEditor";
 import DocumentEditor from "@/components/globals/DocumentEditor";
 
 import { updateMaterialCategory } from "@/services/materialService";
+
+import MaterialModel from "@/models/Material";
 
 export default {
   props: ["material"],
@@ -90,6 +107,7 @@ export default {
     //
     loading: false,
     loading_msg: "",
+    MaterialModel,
   }),
   methods: {
     selectCategory(category) {
@@ -103,9 +121,8 @@ export default {
       let category = this.category;
 
       try {
-        // let size = (data.length * 2) / 1000
-        let size = data.length / 1000;
-        if (size > 500) throw { msg: "Ha sobrepasado el tamaño permitido." };
+        if (data.length > MaterialModel.document.max_length)
+          throw { msg: "Ha sobrepasado el tamaño permitido." };
         await updateMaterialCategory(material_id, category, data);
         this.material[category] = data;
       } catch (error) {
@@ -154,6 +171,7 @@ export default {
 }
 
 .editor {
+  padding-bottom: 120px;
   &__menu {
     margin-bottom: 10px;
     display: flex;

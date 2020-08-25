@@ -10,8 +10,9 @@
           v-if="!evaluation.started"
           class="menu-title"
           v-model="evaluation.name"
+          :maxlength="EvaluationModel.name.max_length"
+          :counter="EvaluationModel.name.max_length"
           dense
-          hide-details
           autocomplete="off"
         ></v-text-field>
         <span v-else class="menu-title">{{evaluation.name}}</span>
@@ -19,7 +20,13 @@
       <div v-if="!evaluation.started" class="menu-right">
         <v-tooltip top>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn icon v-bind="attrs" v-on="on" @click="addQuestion(evaluation.content)">
+            <v-btn
+              icon
+              v-bind="attrs"
+              v-on="on"
+              @click="addQuestion(evaluation.content)"
+              :disabled="evaluation.content.length >= EvaluationModel.content.max_length"
+            >
               <v-icon>mdi-plus</v-icon>
             </v-btn>
           </template>
@@ -64,9 +71,10 @@
             v-if="!evaluation.started"
             v-model="c.question"
             :rows="1"
+            :maxlength="QuestionModel.question.max_length"
+            :counter="QuestionModel.question.max_length"
             autoGrow
             dense
-            hide-details
           ></v-textarea>
           <span v-else>{{c.question}}</span>
           <v-btn
@@ -80,7 +88,7 @@
         <v-radio-group v-model="c.correct">
           <div class="row no-gutters">
             <div
-              class="question-editor-alternative-container col-12 col-md-6"
+              class="question-editor-alternative-container col-12"
               v-for="(alternative, a_idx) in c.alternatives"
               :key="a_idx"
             >
@@ -90,9 +98,10 @@
                   style="width: 0"
                   v-model="c.alternatives[a_idx]"
                   :rows="1"
+                  :maxlength="QuestionModel.alternative.max_length"
+                  :counter="QuestionModel.alternative.max_length"
                   autoGrow
                   dense
-                  hide-details
                 ></v-textarea>
                 <span v-else>{{c.alternatives[a_idx]}}</span>
                 <v-btn
@@ -106,8 +115,8 @@
               <v-radio :disabled="evaluation.started" :value="a_idx"></v-radio>
             </div>
             <div
-              v-if="!evaluation.started"
-              class="question-editor-alternative-container col-12 col-md-6"
+              v-if="!evaluation.started && c.alternatives.length < QuestionModel.alternatives.max_length"
+              class="question-editor-alternative-container col-12"
             >
               <div
                 class="question-editor-alternative-add m-fullcenter"
@@ -172,6 +181,9 @@ import {
   deleteEvaluation,
 } from "@/services/evaluationService";
 
+import EvaluationModel from "@/models/Evaluation";
+import QuestionModel from "@/models/Question";
+
 export default {
   props: ["evaluation", "getEvaluations", "unselect"],
   data: () => ({
@@ -179,9 +191,10 @@ export default {
     loading_msg: "",
     dialog_delete: false,
     dialog_public: false,
+    EvaluationModel,
+    QuestionModel,
   }),
-  mounted() {
-  },
+  mounted() {},
   methods: {
     async save() {
       this.loading = true;

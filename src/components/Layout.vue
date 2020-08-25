@@ -33,11 +33,11 @@
 export default {
   props: {
     links: Array,
-    fluid: Boolean
+    fluid: Boolean,
   },
   data: () => ({
-    link_idx: 0
-  })
+    link_idx: 0,
+  }),
 };
 </script>
 
