@@ -29,7 +29,7 @@
           class="header__action"
           v-else
           text
-          @click="redirect('login', {school_user: 'maria-prado-de-bellido'})"
+          @click="redirect('login', {school_url: 'maria-prado-de-bellido'})"
         >Iniciar Sesión</v-btn>
       </div>
       <v-app-bar-nav-icon class="nav-icon" @click="drawer = true"></v-app-bar-nav-icon>
@@ -75,7 +75,7 @@
           </v-list-item>
           <v-list-item
             v-else
-            @click="redirect('login', {school_user: 'maria-prado-de-bellido'}); drawer=false"
+            @click="redirect('login', {school_url: 'maria-prado-de-bellido'}); drawer=false"
           >
             <v-list-item-icon>
               <v-icon>mdi-power</v-icon>

@@ -1,116 +1,123 @@
 <template>
-  <div class="m-fullcenter">
-    <loading :active="loading" />
-    <v-card class="login_container" elevation="6">
-      <!-- <div class="login_icon">
-        <img src="@/assets/braintutor/icon.png" width="100%" />
-      </div>
-      <div class="login_name">
-        <img src="@/assets/braintutor/name.png" width="100%" />
-      </div>-->
-      <div class="login_icon">
+  <v-form ref="form_login" @submit.prevent="login" class="login m-card">
+    <div class="m-card__body">
+      <div class="login__img">
         <img :src="school.image" width="100%" />
       </div>
-      <v-form ref="form_login" @submit.prevent="login">
-        <v-card-text class="login_content">
-          <v-alert
-            v-model="alert_error"
-            type="error"
-            icon="mdi-cloud-alert"
-            text
-            dismissible
-          >Datos incorrectos.</v-alert>
-          <v-text-field
-            v-model="username"
-            :rules="usernameRules"
-            :maxlength="UserModel.username.max_length"
-            label="Usuario"
-          ></v-text-field>
-          <v-text-field
-            v-model="password"
-            :rules="passwordRules"
-            :maxlength="UserModel.password.max_length"
-            label="Contraseña"
-            type="password"
-          ></v-text-field>
-        </v-card-text>
-        <v-card-actions class="pt-0">
-          <m-btn color="primary" :loading="loading_login" block>Iniciar Sesión</m-btn>
-        </v-card-actions>
-      </v-form>
-    </v-card>
-  </div>
+
+      <div v-if="show_error" class="alert">
+        <span>Datos incorrectos.</span>
+        <v-icon @click="show_error = false" class="alert__icon">mdi-close</v-icon>
+      </div>
+
+      <v-text-field
+        v-model="username"
+        :rules="usernameRules"
+        :maxlength="UserModel.username.max_length"
+        placeholder="Usuario"
+        filled
+        rounded
+        dense
+      ></v-text-field>
+      <v-text-field
+        v-model="password"
+        :rules="passwordRules"
+        :maxlength="UserModel.password.max_length"
+        placeholder="Contraseña"
+        type="password"
+        filled
+        rounded
+        dense
+      ></v-text-field>
+      <m-btn :loading="loading_login" color="primary" block>Iniciar Sesión</m-btn>
+    </div>
+  </v-form>
 </template>
 
 <script>
-import loading from "@/components/loading";
-
 import { getSchoolByURL } from "@/services/schoolService";
 import { login } from "@/services/loginService";
-import { redirect, getParam } from "@/services/router.js";
+import { getParam, redirect } from "@/services/router.js";
+
+import { mapMutations } from "vuex";
 
 import UserModel from "@/models/User";
 
 export default {
   data: () => ({
     school: {},
-    // FORM
+    //
+    UserModel,
     username: "",
     password: "",
     usernameRules: [(v) => !!v || "Usuario es requerido"],
     passwordRules: [(v) => !!v || "Contraseña es requerida"],
     //
-    loading: true,
-    alert_error: false,
     loading_login: false,
-    UserModel,
+    show_error: false,
   }),
-  async mounted() {
-    let school_user = getParam("school_user");
+  async created() {
+    this.loading(true);
+    this.loading_msg("Cargando");
+    let school_url = getParam("school_url");
+
     try {
-      this.school = await getSchoolByURL(school_user);
+      this.school = await getSchoolByURL(school_url);
     } catch (error) {
-      this.$root.$children[0].showMessage("Error", error.msg);
+      this.$root.$children[0].showMessage("", error.msg || error);
     }
-    this.loading = false;
+
+    this.loading(false);
   },
   methods: {
+    ...mapMutations(["loading", "loading_msg"]),
     async login() {
       try {
         if (this.$refs.form_login.validate()) {
           this.loading_login = true;
+          this.show_error = false;
+
           let school_id = this.school._id.$oid;
           let { token } = await login(school_id, this.username, this.password);
           localStorage.setItem("token", token);
           redirect("home");
         }
       } catch (error) {
-        this.alert_error = true;
         this.loading_login = false;
+        this.show_error = true;
       }
     },
-  },
-  components: {
-    loading,
   },
 };
 </script>
 
 <style lang='scss' scoped>
-.login_container {
-  width: 340px;
-  padding: 24px 0 0;
+.login {
+  max-width: 320px;
+  margin: 20px auto;
 
-  .login_icon {
-    max-width: 100px;
-    margin: 5px auto;
+  &__img {
+    max-width: 120px;
+    margin: 20px auto;
   }
-  .login_name {
-    max-width: 150px;
-    margin: 0 auto;
-  }
-  .login_content {
-    padding: 14px 20px;
+}
+
+.alert {
+  padding: 10px 20px;
+  margin-bottom: 24px !important;
+  color: #fff;
+  background: rgb(255, 138, 138);
+  font-size: 0.9rem;
+  border-radius: 20px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &__icon {
+    color: #fff;
+    font-size: 1.1rem;
+    cursor: pointer;
   }
 }
 </style>

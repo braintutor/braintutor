@@ -196,6 +196,9 @@ textarea {
 }
 
 //Vuetify
+.v-text-field {
+  font-size: 0.9rem !important;
+}
 .v-input {
   margin: 0 !important;
 }
