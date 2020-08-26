@@ -34,7 +34,7 @@
         class="no-style"
       >Realiza un test para obtener tu estilo de aprendizaje</div>
       <div class="diagram__actions">
-        <v-btn @click="newTest()" small color="primary">Nuevo Test</v-btn>
+        <m-btn @click="newTest()" small color="primary">Nuevo Test</m-btn>
       </div>
     </div>
 
@@ -117,7 +117,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" small @click="updatePassword()">Guardar</v-btn>
+          <m-btn color="primary" small @click="updatePassword()">Guardar</m-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -606,10 +606,8 @@ export default {
 <style lang='scss' scoped>
 .profile {
   max-width: 500px;
-  margin: 0 auto;
-  margin-bottom: 24px;
+  margin: 24px auto;
   padding: 20px 28px;
-  border-radius: 0;
   // border-top: 4px solid #7b6dff;
   &__title {
     font-size: 1.8rem;
@@ -634,10 +632,10 @@ export default {
   }
   &__value {
     margin-left: 14px;
-    padding: 6px 12px;
+    padding: 6px 18px;
     background: #eeeeee;
     font-size: 0.9rem;
-    border-radius: 6px;
+    border-radius: 20px;
   }
   &__actions {
     margin-top: 20px;
@@ -652,7 +650,6 @@ export default {
   margin-bottom: 24px;
   padding: 4%;
   padding-bottom: 0;
-  border-radius: 0;
 
   &__actions {
     padding: 20px 0;

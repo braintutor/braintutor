@@ -177,7 +177,7 @@ export default {
 <style lang='scss' scoped>
 .students {
   padding: 16px 24px;
-  margin: 0 0 10px 0;
+  margin: 20px 0;
   &__title {
     margin: 0;
     margin-bottom: 6px;

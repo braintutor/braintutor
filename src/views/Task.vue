@@ -144,9 +144,9 @@
         </div>
       </div>
       <div class="response__actions">
-        <v-btn color="primary" small @click="save()">
-          <v-icon small class="mr-1">mdi-content-save</v-icon>Guardar
-        </v-btn>
+        <m-btn color="primary" small @click="save()">
+          <v-icon small class="mr-1" style="color: #fff">mdi-content-save</v-icon>Guardar
+        </m-btn>
       </div>
     </div>
     <!-- DIALOG FILES -->

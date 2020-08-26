@@ -75,7 +75,6 @@ export default {
       try {
         if (this.$refs.form_login.validate()) {
           this.loading_login = true;
-          this.show_error = false;
 
           let school_id = this.school._id.$oid;
           let { token } = await login(school_id, this.username, this.password);
@@ -105,8 +104,8 @@ export default {
 .alert {
   padding: 10px 20px;
   margin-bottom: 24px !important;
-  color: #fff;
-  background: rgb(255, 138, 138);
+  color: rgb(255, 130, 130);
+  border: 1px solid rgba(255, 130, 130);
   font-size: 0.9rem;
   border-radius: 20px;
 
@@ -115,8 +114,8 @@ export default {
   align-items: center;
 
   &__icon {
-    color: #fff;
-    font-size: 1.1rem;
+    color: rgb(255, 130, 130);
+    font-size: 1.2rem;
     cursor: pointer;
   }
 }
