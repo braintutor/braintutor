@@ -3,26 +3,28 @@
     <loading :active="loading" :message="loading_msg" />
 
     <div class="profile m-card">
-      <h2 class="profile__title">Mis Datos</h2>
-      <div class="profile__content">
-        <!--  -->
-        <v-icon class="profile__icon">mdi-card-account-details</v-icon>
-        <span class="profile__item">Nombres:</span>
-        <span class="profile__value">{{profile.first_name}}</span>
-        <!--  -->
-        <v-icon class="profile__icon">mdi-card-account-details</v-icon>
-        <span class="profile__item">Apellidos:</span>
-        <span class="profile__value">{{profile.last_name}}</span>
-        <!--  -->
-        <v-icon class="profile__icon">mdi-account</v-icon>
-        <span class="profile__item">Usuario:</span>
-        <span class="profile__value">{{profile.username}}</span>
+      <div class="m-card__body">
+        <h2 class="profile__title">Mis Datos</h2>
+        <div class="profile__content">
+          <!--  -->
+          <v-icon class="profile__icon">mdi-card-account-details</v-icon>
+          <span class="profile__item">Nombres:</span>
+          <span class="profile__value">{{profile.first_name}}</span>
+          <!--  -->
+          <v-icon class="profile__icon">mdi-card-account-details</v-icon>
+          <span class="profile__item">Apellidos:</span>
+          <span class="profile__value">{{profile.last_name}}</span>
+          <!--  -->
+          <v-icon class="profile__icon">mdi-account</v-icon>
+          <span class="profile__item">Usuario:</span>
+          <span class="profile__value">{{profile.username}}</span>
+        </div>
       </div>
-      <div class="profile__actions">
+      <div class="m-card__actions">
         <m-btn
+          @click="current_password = ''; new_password = ''; confirm_new_password = ''; dialog_password = true"
           color="primary"
           small
-          @click="current_password = ''; new_password = ''; confirm_new_password = ''; dialog_password = true"
         >Cambiar Contraseña</m-btn>
       </div>
     </div>
@@ -117,7 +119,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <m-btn color="primary" small @click="updatePassword()">Guardar</m-btn>
+          <m-btn @click="updatePassword()" color="primary" small>Guardar</m-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -607,19 +609,21 @@ export default {
 .profile {
   max-width: 500px;
   margin: 24px auto;
-  padding: 20px 28px;
-  // border-top: 4px solid #7b6dff;
+
   &__title {
-    font-size: 1.8rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: var(--color-subtitle);
   }
   &__content {
-    margin: 24px 0 32px 0;
+    margin-top: 16px;
     font-size: 1rem;
     font-weight: lighter;
     display: grid;
     grid-template-columns: auto auto 1fr;
     grid-column-gap: 12px;
-    grid-row-gap: 24px;
+    grid-row-gap: 12px;
     align-items: center;
   }
   &__icon {
@@ -631,14 +635,13 @@ export default {
     font-weight: bold;
   }
   &__value {
-    margin-left: 14px;
+    margin-left: 12px;
     padding: 6px 18px;
     background: #eeeeee;
     font-size: 0.9rem;
     border-radius: 20px;
   }
   &__actions {
-    margin-top: 20px;
     display: flex;
     justify-content: flex-end;
   }
@@ -684,10 +687,6 @@ export default {
     &-title {
       padding-bottom: 5px;
     }
-  }
-  &__actions {
-    display: flex;
-    justify-content: center;
   }
 }
 

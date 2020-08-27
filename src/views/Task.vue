@@ -9,24 +9,29 @@
         <span class="menu-title">Volver</span>
       </div>
     </div>
+    <!-- TASK -->
     <div class="task m-card">
-      <div class="task__menu">
-        <div>
-          <p class="task__time_start">{{task.time_start_f}}</p>
-          <p class="task__title">{{task.title}}</p>
+      <div class="m-card__body">
+        <div class="task__menu">
+          <div>
+            <p class="task__time_start">{{task.time_start_f}}</p>
+            <p class="task__title">{{task.title}}</p>
+          </div>
         </div>
+        <p class="task__description">{{task.description}}</p>
       </div>
-      <p class="task__description">{{task.description}}</p>
     </div>
     <div class="response m-card">
       <div class="response__menu">
         <v-menu offset-y left>
           <template v-slot:activator="{ on }">
             <v-btn
-              color="success"
-              small
               v-on="on"
               :disabled="answer.data && answer.data.length >= AnswerModel.data.max_length"
+              color="success"
+              small
+              rounded
+              depressed
             >
               <v-icon small class="mr-1">mdi-plus</v-icon>Agregar
             </v-btn>
@@ -145,7 +150,7 @@
       </div>
       <div class="response__actions">
         <m-btn color="primary" small @click="save()">
-          <v-icon small class="mr-1" style="color: #fff">mdi-content-save</v-icon>Guardar
+          <v-icon small class="mr-1">mdi-content-save</v-icon>Guardar
         </m-btn>
       </div>
     </div>
@@ -498,7 +503,6 @@ export default {
 .task {
   margin-bottom: 16px;
   &__menu {
-    padding: 12px 10px 0 18px;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -515,7 +519,7 @@ export default {
     word-wrap: break-word;
   }
   &__description {
-    padding: 12px 18px 16px 18px;
+    margin-top: 12px;
     margin-bottom: 0;
     font-size: 0.95rem;
     word-wrap: break-word;

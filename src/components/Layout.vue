@@ -58,8 +58,7 @@ export default {
 .header {
   grid-column-start: 1;
   grid-column-end: 3;
-  // box-shadow: 0 2px 3px #ccc;
-  border-bottom: 1px solid #ccc;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.15);
   z-index: 1;
 }
 

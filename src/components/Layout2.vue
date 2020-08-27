@@ -31,8 +31,8 @@ export default {
   props: {
     value: Number,
     links: Array,
-    fluid: Boolean
-  }
+    fluid: Boolean,
+  },
 };
 </script>
 
@@ -53,14 +53,14 @@ export default {
 .header {
   grid-column-start: 1;
   grid-column-end: 3;
-  // box-shadow: 0 2px 3px #ccc;
-  border-bottom: 1px solid #ccc;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.15);
   z-index: 1;
 }
 
 .sidebar {
-  width: 110px;
-  border-right: 1px solid #ccc;
+  padding: 8px;
+  width: 120px;
+  // border-right: 1px solid #ccc;
 }
 
 .content {
@@ -71,9 +71,11 @@ export default {
 
 .link {
   padding: 13px 8px 10px 8px;
+  margin-bottom: 8px;
   color: #707070;
   font-size: 0.75rem;
   font-weight: bold;
+  border-radius: 12px;
   opacity: 0.5;
   transition: 0.3s;
   cursor: pointer;
@@ -95,10 +97,10 @@ export default {
   }
 
   &--active {
-    background: #e0eaff;
+    background: #e8efff;
     opacity: 1;
     &:hover {
-      background: #e0eaff;
+      background: #e8efff;
       opacity: 1;
     }
   }
@@ -126,16 +128,12 @@ export default {
 
   .link {
     width: 48px;
+    margin-bottom: 0;
     &__image {
       margin: 0;
     }
     &__name {
       display: none;
-    }
-
-    &--active {
-      background: none;
-      border-bottom: 3px solid #5553ff;
     }
   }
 }

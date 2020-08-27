@@ -48,6 +48,12 @@
     font-size: 0.75rem;
   }
 
+  &--disabled {
+    background: #dddddd !important;
+    color: #818181 !important;
+    pointer-events: none;
+  }
+
   &--loading {
     position: relative;
     pointer-events: none;
@@ -62,8 +68,11 @@
   @each $key, $value in $colors {
     &--#{$key} {
       background: nth($value, 1);
-      color: nth($value, 4);
       // box-shadow: 0 4px 0 nth($value, 2);
+
+      & * {
+        color: nth($value, 4) !important;
+      }
 
       &:hover {
         background: nth($value, 2);

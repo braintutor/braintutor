@@ -24,18 +24,21 @@
       </div>
       <!-- TASKS -->
       <div
-        class="task m-card"
-        :style="{'border-left': show_pending? '4px solid #3968eb': '4px solid #aaa'}"
+        class="task m-card levitation"
         v-for="(task, idx) in tasks_filtered"
         :key="idx"
         @click="select(task)"
       >
-        <div class="task__menu">
-          <div>
-            <p class="task__time_start">{{task.time_start_f}}</p>
-            <p class="task__title">{{task.title}}</p>
-          </div>
-          <!-- <v-menu bottom left>
+        <div class="m-card__body">
+          <div class="task__menu">
+            <div>
+              <p class="task__time_start">
+                <v-icon class="mr-2" style="font-size: .9rem">mdi-calendar</v-icon>
+                <span>{{task.time_start_f}}</span>
+              </p>
+              <p class="task__title">{{task.title}}</p>
+            </div>
+            <!-- <v-menu bottom left>
           <template v-slot:activator="{ on }">
             <v-btn icon small v-on="on">
               <v-icon>mdi-dots-vertical</v-icon>
@@ -49,12 +52,13 @@
               <v-list-item-title>Eliminar</v-list-item-title>
             </v-list-item>
           </v-list>
-          </v-menu>-->
-        </div>
-        <p class="task__description">{{task.description}}</p>
-        <!-- <div class="task__actions">
+            </v-menu>-->
+          </div>
+          <p class="task__description">{{task.description}}</p>
+          <!-- <div class="task__actions">
         <v-btn color="primary" small>Responder</v-btn>
-        </div>-->
+          </div>-->
+        </div>
       </div>
       <div class="text-center" v-show="tasks_filtered.length === 0">No hay tareas.</div>
     </div>
@@ -155,20 +159,22 @@ export default {
 .task {
   margin-bottom: 16px;
   transition: all 0.3s;
-  &:hover {
-    cursor: pointer;
-    transform: scale(1.01);
-  }
+  
   &__menu {
-    padding: 12px 10px 0 18px;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
   }
   &__time_start {
-    margin-bottom: 2px;
-    color: #a0a0a0;
-    font-size: 0.75rem;
+    margin-bottom: 12px;
+    color: var(--color-subtitle);
+    font-size: 0.85rem;
+    font-weight: bold;
+    display: flex;
+
+    & * {
+      color: var(--color-subtitle);
+    }
   }
   &__title {
     margin-bottom: 0;
@@ -177,7 +183,7 @@ export default {
     word-wrap: break-word;
   }
   &__description {
-    padding: 12px 18px 16px 18px;
+    margin-top: 12px;
     margin-bottom: 0;
     font-size: 0.95rem;
     word-wrap: break-word;
