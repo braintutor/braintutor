@@ -1,4 +1,5 @@
 .levitation {
+  transition: all .3s;
   cursor: pointer;
   &:hover {
     transform: translateY(-8px);

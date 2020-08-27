@@ -8,15 +8,14 @@
         <span class="menu-title">Ver Tareas</span>
       </div>
     </div>
-    <div class="task m-card">
-      <div class="task__menu">
-        <div>
-          <p class="task__time_start">{{toDateTimeString(task.time_start)}}</p>
-          <p class="task__title">{{task.title}}</p>
-        </div>
-      </div>
-      <p class="task__description">{{task.description}}</p>
-    </div>
+
+    <TaskCard
+      :time_start="task.time_start"
+      :title="task.title"
+      :description="task.description"
+      disabled
+    />
+
     <!-- ANSWERS -->
     <p style="font-weight: bold; font-size: 1.2rem" class="ml-2 mt-6 mb-3">Respuestas</p>
     <div class="row no-gutters">
@@ -77,7 +76,9 @@
 </template>
 
 <script>
-import { toDateTimeString } from "@/services/date.js";
+import TaskCard from "@/components/globals/Task/TaskCard";
+
+import { toDateTimeString } from "@/services/date";
 
 export default {
   props: ["task", "students", "unselect", "restore"],
@@ -107,35 +108,13 @@ export default {
   methods: {
     toDateTimeString,
   },
+  components: {
+    TaskCard,
+  },
 };
 </script>
 
 <style lang='scss' scoped>
-.task {
-  margin-bottom: 16px;
-  &__menu {
-    padding: 12px 10px 0 18px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-  &__time_start {
-    margin-bottom: 2px;
-    color: #a0a0a0;
-    font-size: 0.75rem;
-  }
-  &__title {
-    margin-bottom: 0;
-    font-size: 1.3rem;
-    font-weight: bold;
-  }
-  &__description {
-    padding: 12px 18px 16px 18px;
-    margin-bottom: 0;
-    font-size: 0.95rem;
-  }
-}
-
 .students {
   border-radius: 0;
   overflow: hidden;

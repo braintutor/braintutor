@@ -1,6 +1,5 @@
 <template>
   <div class="m-container pa-2">
-    <loading :active="loading" :message="loading_msg" />
     <div class="menu pa-0 pb-2">
       <div class="menu-left">
         <v-btn icon @click="redirectSession()">
@@ -10,17 +9,12 @@
       </div>
     </div>
     <!-- TASK -->
-    <div class="task m-card">
-      <div class="m-card__body">
-        <div class="task__menu">
-          <div>
-            <p class="task__time_start">{{task.time_start_f}}</p>
-            <p class="task__title">{{task.title}}</p>
-          </div>
-        </div>
-        <p class="task__description">{{task.description}}</p>
-      </div>
-    </div>
+    <TaskCard
+      :time_start="task.time_start || new Date()"
+      :title="task.title"
+      :description="task.description"
+      disabled
+    />
     <div class="response m-card">
       <div class="response__menu">
         <v-menu offset-y left>
@@ -212,12 +206,14 @@
 </template>
 
 <script>
-import loading from "@/components/loading";
+import TaskCard from "@/components/globals/Task/TaskCard";
 
 import { getTaskByStudent, updateTaskAnswer } from "@/services/taskService";
 import { getParam, redirect } from "@/services/router.js";
 
 import { AnswerModel, LinkModel } from "@/models/Task";
+
+import { mapMutations } from "vuex";
 
 export default {
   data: () => ({
@@ -229,8 +225,6 @@ export default {
     link: "",
     idx_to_remove: -1,
     //
-    loading: true,
-    loading_msg: "",
     dialog_files: false,
     dialog_link: false,
     dialog_remove: false,
@@ -243,7 +237,8 @@ export default {
     AnswerModel,
   }),
   async created() {
-    this.loading_msg = "Cargando Tarea";
+    this.loading(true);
+    this.loading_msg("Cargando Tarea");
     try {
       this.task_id = getParam("task_id");
       this.task = await getTaskByStudent(this.task_id);
@@ -253,13 +248,11 @@ export default {
         text: text || "",
         data: data || [],
       };
-      this.task.time_start_f = new Date(this.task.time_start.$date)
-        .toISOString()
-        .substring(0, 10);
+      this.task.time_start = new Date(this.task.time_start.$date);
     } catch (error) {
       redirect("sessions-student");
     }
-    this.loading = false;
+    this.loading(false);
   },
   computed: {
     files_filtered() {
@@ -270,18 +263,19 @@ export default {
     },
   },
   methods: {
+    ...mapMutations(["loading", "loading_msg"]),
     redirectSession() {
       this.$router
         .push(`/session/${this.task.session_id.$oid}/tasks`)
         .catch(() => {});
     },
     async showAll() {
-      this.loading = true;
-      this.loading_msg = "Cargando Archivos";
+      this.loading(true);
+      this.loading_msg("Cargando Archivos");
       this.file_search = "";
       this.files = await this.getAll();
       this.dialog_files = true;
-      this.loading = false;
+      this.loading(false);
     },
     async addFileDrive({ /*exportLinks*/ id, iconLink, name, webViewLink }) {
       // this.loading = true;
@@ -310,8 +304,8 @@ export default {
         this.login();
         return;
       }
-      this.loading = true;
-      this.loading_msg = "Creando Archivo";
+      this.loading(true);
+      this.loading_msg("Creando Archivo");
       let { documentId, presentationId, spreadsheetId } = await this.create(
         type
       );
@@ -321,11 +315,11 @@ export default {
         // await this.createPermission(id, "mitsuoysharag@gmail.com");
         await this.addFileDrive({ id, iconLink, name, webViewLink });
       }
-      this.loading = false;
+      this.loading(false);
     },
     async addLink() {
-      this.loading = true;
-      this.loading_msg = "Añadiendo Vínculo";
+      this.loading(true);
+      this.loading_msg("Añadiendo Vínculo");
       try {
         let res = await fetch(
           `https://braintutor-service-v2.herokuapp.com/getLinkPreview?url=${this.link}`
@@ -347,17 +341,17 @@ export default {
         this.$root.$children[0].showMessage("Error", error);
       }
       this.link = "";
-      this.loading = false;
+      this.loading(false);
     },
     async save() {
-      this.loading = true;
-      this.loading_msg = "Guardando Respuesta";
+      this.loading(true);
+      this.loading_msg("Guardando Respuesta");
       try {
         await updateTaskAnswer(this.task._id.$oid, this.answer);
       } catch (error) {
         this.$root.$children[0].showMessage("Error al Guardar", error.msg);
       }
-      this.loading = false;
+      this.loading(false);
     },
     remove() {
       this.answer.data.splice(this.idx_to_remove, 1);
@@ -468,14 +462,14 @@ export default {
         return;
       }
 
-      this.loading = true;
-      this.loading_msg = "Actualizando Archivo";
+      this.loading(true);
+      this.loading_msg("Actualizando Archivo");
 
       let { name } = await this.get(id);
       this.answer.data[idx].title = name;
       await this.save();
 
-      this.loading = false;
+      this.loading(false);
     },
     //
     formatLink({ type, id, url, title, description, image }) {
@@ -494,39 +488,14 @@ export default {
     },
   },
   components: {
-    loading,
+    TaskCard,
   },
 };
 </script>
 
 <style lang='scss' scoped>
-.task {
-  margin-bottom: 16px;
-  &__menu {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-  &__time_start {
-    margin-bottom: 2px;
-    color: #a0a0a0;
-    font-size: 0.75rem;
-  }
-  &__title {
-    margin-bottom: 0;
-    font-size: 1.3rem;
-    font-weight: bold;
-    word-wrap: break-word;
-  }
-  &__description {
-    margin-top: 12px;
-    margin-bottom: 0;
-    font-size: 0.95rem;
-    word-wrap: break-word;
-  }
-}
 .response {
-  margin-bottom: 20px;
+  margin: 20px 0;
   padding: 12px;
   &__menu {
     display: flex;

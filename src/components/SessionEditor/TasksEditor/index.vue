@@ -1,7 +1,6 @@
 <template>
   <div class="pa-3">
     <div v-if="!task_selected" class="m-container">
-      <loading :active="loading" :message="loading_msg" />
       <!-- MENU -->
       <div class="tasks__menu">
         <v-btn small rounded color="success" @click="showCreate()">
@@ -10,33 +9,27 @@
         </v-btn>
       </div>
       <!-- TASKS -->
-      <div class="task m-card" v-for="(task, idx) in tasks_formatted" :key="idx">
-        <div class="task__menu">
-          <div>
-            <p class="task__time_start">{{toDateTimeString(task.time_start)}}</p>
-            <p class="task__title">{{task.title}}</p>
-          </div>
-          <v-menu offset-y left>
-            <template v-slot:activator="{ on }">
-              <v-btn icon small v-on="on">
-                <v-icon>mdi-dots-vertical</v-icon>
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-item @click="showEdit(task)">
-                <v-list-item-title>Editar</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="showRemove(task)">
-                <v-list-item-title>Eliminar</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </div>
-        <p class="task__description">{{task.description}}</p>
-        <div class="task__actions">
-          <v-btn text small @click="showAnswers(task)">Ver Respuestas</v-btn>
-        </div>
-      </div>
+      <TaskCard
+        v-for="(task, idx) in tasks_formatted"
+        :key="idx"
+        :time_start="task.time_start || new Date()"
+        :title="task.title"
+        :description="task.description"
+        :options="[{
+            text: 'Editar',
+            action: () => {showEdit(task)}
+          },{
+            text: 'Eliminar',
+            action: () => {showRemove(task)}
+          }]"
+        :buttons="[{
+            text: 'Ver Respuestas',
+            action: () => {showAnswers(task)}
+          }]"
+        disabled
+        class="mb-4"
+      />
+
       <div class="text-center" v-show="tasks.length === 0">No hay tareas.</div>
       <!-- DIALOG NEW -->
       <v-dialog v-model="dialog_new" persistent max-width="750">
@@ -57,8 +50,8 @@
             ></v-textarea>
           </v-card-text>
           <v-card-actions style="width: min-content; margin: 0 auto">
-            <v-btn small text class="mr-1" v-show="!loading" @click="dialog_new = false">Cerrar</v-btn>
-            <v-btn small color="primary" :loading="loading" @click="create()">Guardar</v-btn>
+            <v-btn small text class="mr-1" v-show="!loading_save" @click="dialog_new = false">Cerrar</v-btn>
+            <v-btn small color="primary" :loading="loading_save" @click="create()">Guardar</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -90,9 +83,8 @@
 </template>
 
 <script>
-import loading from "@/components/loading";
+import TaskCard from "@/components/globals/Task/TaskCard";
 import Task from "./Task";
-import { toDateTimeString } from "@/services/date.js";
 
 import {
   getTasksBySessionTeacher,
@@ -102,6 +94,8 @@ import {
 } from "@/services/taskService";
 import { getStudentsBySession } from "@/services/studentService";
 import { getParam } from "@/services/router.js";
+
+import { mapMutations } from "vuex";
 
 import { TaskModel } from "@/models/Task";
 
@@ -113,8 +107,7 @@ export default {
     task_selected: null,
     action: "",
     //
-    loading: true,
-    loading_msg: "",
+    loading_save: false,
     dialog_new: false,
     dialog_remove: false,
     TaskModel,
@@ -140,7 +133,7 @@ export default {
     },
   },
   methods: {
-    toDateTimeString,
+    ...mapMutations(["loading", "loading_msg"]),
     showCreate() {
       this.action = "create";
       this.task = {};
@@ -161,8 +154,7 @@ export default {
       this.task_selected = Object.assign({}, task);
     },
     async create() {
-      this.loading = true;
-      this.loading_msg = "";
+      this.loading_save = true;
       if (this.action === "create") {
         try {
           this.task.time_start = new Date();
@@ -186,11 +178,11 @@ export default {
           this.$root.$children[0].showMessage("Error al Guardar", error.msg);
         }
       }
-      this.loading = false;
+      this.loading_save = false;
     },
     async remove() {
-      this.loading = true;
-      this.loading_msg = "Eliminando Tarea";
+      this.loading(true);
+      this.loading_msg("Eliminando Tarea");
       try {
         let task_id_to_remove = this.task._id.$oid;
         await removeTask(task_id_to_remove);
@@ -198,68 +190,35 @@ export default {
       } catch (error) {
         this.$root.$children[0].showMessage("Error al Eliminar", error.msg);
       }
-      this.loading = false;
+      this.loading(false);
     },
     async restore() {
-      this.loading = true;
-      this.loading_msg = "Cargando Tareas";
+      this.loading(true);
+      this.loading_msg("Cargando Tareas");
       try {
         this.students = await getStudentsBySession(this.session_id);
         this.tasks = await getTasksBySessionTeacher(this.session_id);
       } catch (error) {
         this.$root.$children[0].showMessage("Error", error.msg);
       }
-      this.loading = false;
+      this.loading(false);
     },
     unselect() {
       this.task_selected = null;
     },
   },
   components: {
-    loading,
     Task,
+    TaskCard,
   },
 };
 </script>
 
 <style lang='scss' scoped>
 .tasks__menu {
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   //
   display: flex;
   justify-content: flex-end;
-}
-
-.task {
-  margin-bottom: 16px;
-  &__menu {
-    padding: 12px 10px 0 18px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-  &__time_start {
-    margin-bottom: 2px;
-    color: #a0a0a0;
-    font-size: 0.75rem;
-  }
-  &__title {
-    margin-bottom: 0;
-    font-size: 1.3rem;
-    font-weight: bold;
-  }
-  &__description {
-    padding: 12px 18px 16px 18px;
-    margin-bottom: 0;
-    font-size: 0.95rem;
-    word-wrap: break-word;
-  }
-  &__actions {
-    padding: 12px;
-    padding-top: 0;
-    //
-    display: flex;
-    justify-content: flex-end;
-  }
 }
 </style>

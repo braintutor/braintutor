@@ -1,87 +1,52 @@
 <template>
-  <div class="pa-3">
-    <div v-if="!task" class="tasks m-container">
-      <loading :active="loading" :message="loading_msg" />
-      <!-- MENU -->
-      <div class="tasks__menu">
-        <span
-          class="tasks__menu-option"
-          :class="{'active': show_pending}"
-          small
-          rounded
-          color="success"
-          @click="show_pending = true"
-        >Pendientes</span>
-        <span class="mx-2">|</span>
-        <span
-          class="tasks__menu-option"
-          :class="{'active': !show_pending}"
-          small
-          rounded
-          color="success"
-          @click="show_pending = false"
-        >Respondidos</span>
-      </div>
-      <!-- TASKS -->
-      <div
-        class="task m-card levitation"
-        v-for="(task, idx) in tasks_filtered"
-        :key="idx"
-        @click="select(task)"
-      >
-        <div class="m-card__body">
-          <div class="task__menu">
-            <div>
-              <p class="task__time_start">
-                <v-icon class="mr-2" style="font-size: .9rem">mdi-calendar</v-icon>
-                <span>{{toDateTimeString(task.time_start_f)}}</span>
-              </p>
-              <p class="task__title">{{task.title}}</p>
-            </div>
-            <!-- <v-menu bottom left>
-          <template v-slot:activator="{ on }">
-            <v-btn icon small v-on="on">
-              <v-icon>mdi-dots-vertical</v-icon>
-            </v-btn>
-          </template>
-          <v-list>
-            <v-list-item @click="showEdit(task)">
-              <v-list-item-title>Editar</v-list-item-title>
-            </v-list-item>
-            <v-list-item @click="task_to_remove = task; remove()">
-              <v-list-item-title>Eliminar</v-list-item-title>
-            </v-list-item>
-          </v-list>
-            </v-menu>-->
-          </div>
-          <p class="task__description">{{task.description}}</p>
-          <!-- <div class="task__actions">
-        <v-btn color="primary" small>Responder</v-btn>
-          </div>-->
-        </div>
-      </div>
-      <div class="text-center" v-show="tasks_filtered.length === 0">No hay tareas.</div>
+  <div class="tasks m-container mt-4">
+    <!-- MENU -->
+    <div class="tasks__menu">
+      <span
+        class="tasks__menu-option"
+        :class="{'active': show_pending}"
+        small
+        rounded
+        color="success"
+        @click="show_pending = true"
+      >Pendientes</span>
+      <span class="mx-2">|</span>
+      <span
+        class="tasks__menu-option"
+        :class="{'active': !show_pending}"
+        small
+        rounded
+        color="success"
+        @click="show_pending = false"
+      >Respondidos</span>
     </div>
+    <!-- TASKS -->
+    <TaskCard
+      v-for="(task, idx) in tasks_filtered"
+      :key="idx"
+      @click="select(task)"
+      :time_start="task.time_start"
+      :title="task.title"
+      :description="task.description"
+      class="mt-4"
+    />
+    <div class="text-center mt-4" v-show="tasks_filtered.length === 0">No hay tareas.</div>
   </div>
 </template>
 
 <script>
-import loading from "@/components/loading";
+import TaskCard from "@/components/globals/Task/TaskCard";
 
 import { getTasksBySessionStudent } from "@/services/taskService";
 import { getParam, redirect } from "@/services/router.js";
 
-import { toDateTimeString } from "@/services/date";
+import { mapMutations } from "vuex";
 
 export default {
   data: () => ({
     session_id: "",
     tasks: [],
-    task: null,
     show_pending: true,
-    //
-    loading: true,
-    loading_msg: "",
   }),
   async created() {
     this.session_id = getParam("session_id");
@@ -98,47 +63,43 @@ export default {
     },
     tasks_formated() {
       let tasks = this.tasks.map((t) => {
-        let time_start_f = new Date(t.time_start.$date);
-        return {
+        let task = {
           ...t,
-          time_start_f,
         };
+        if (task.time_start.$date)
+          task.time_start = new Date(t.time_start.$date);
+        return task;
       });
       tasks.sort(function (a, b) {
-        return new Date(b.time_start) - new Date(a.time_start);
+        return b.time_start - a.time_start;
       });
       return tasks;
     },
   },
   methods: {
-    toDateTimeString,
+    ...mapMutations(["loading", "loading_msg"]),
     async restore() {
-      this.loading = true;
-      this.loading_msg = "Cargando Tareas";
+      this.loading(true);
+      this.loading_msg("Cargando Tareas");
       try {
         this.tasks = await getTasksBySessionStudent(this.session_id);
       } catch (error) {
         this.$root.$children[0].showMessage("Error", error.msg);
       }
-      this.loading = false;
+      this.loading(false);
     },
     select(task) {
       redirect("task", { task_id: task._id.$oid });
-      // this.task = task;
-    },
-    unselect() {
-      this.task = null;
     },
   },
   components: {
-    loading,
+    TaskCard,
   },
 };
 </script>
 
 <style lang='scss' scoped>
 .tasks__menu {
-  margin-bottom: 12px;
   font-size: 1.1rem;
   //
   display: flex;
@@ -154,49 +115,6 @@ export default {
     &:hover {
       color: #000;
     }
-  }
-}
-
-.task {
-  margin-bottom: 16px;
-  transition: all 0.3s;
-
-  &__menu {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-  &__time_start {
-    margin-bottom: 12px;
-    color: var(--color-subtitle);
-    font-size: 0.9rem;
-    font-weight: bold;
-
-    display: flex;
-    align-items: center;
-
-    & * {
-      color: var(--color-subtitle);
-    }
-  }
-  &__title {
-    margin-bottom: 0;
-    font-size: 1.3rem;
-    font-weight: bold;
-    word-wrap: break-word;
-  }
-  &__description {
-    margin-top: 12px;
-    margin-bottom: 0;
-    font-size: 0.95rem;
-    word-wrap: break-word;
-  }
-  &__actions {
-    padding: 12px;
-    padding-top: 0;
-    //
-    display: flex;
-    justify-content: flex-end;
   }
 }
 </style>
