@@ -104,8 +104,8 @@ export default {
 .alert {
   padding: 10px 20px;
   margin-bottom: 24px !important;
+  background: #ffe8e8;
   color: rgb(255, 130, 130);
-  border: 1px solid rgba(255, 130, 130);
   font-size: 0.9rem;
   border-radius: 20px;
 

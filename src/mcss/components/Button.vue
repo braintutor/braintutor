@@ -12,6 +12,7 @@ export default {
   props: {
     color: String,
     small: Boolean,
+    text: Boolean,
     loading: Boolean,
     disabled: Boolean,
     block: Boolean,
@@ -22,6 +23,7 @@ export default {
         "m-btn": true,
         [`m-btn--${this.color}`]: true,
         "m-btn--small": this.small,
+        "m-btn--text": this.text,
         "m-btn--loading": this.loading,
         "m-btn--disabled": this.disabled,
         "m-btn--block": this.block,

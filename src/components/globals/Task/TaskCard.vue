@@ -12,7 +12,7 @@
               <v-icon>mdi-dots-vertical</v-icon>
             </v-btn>
           </template>
-          <v-list>
+          <v-list dense>
             <v-list-item v-for="(option, idx) in options" :key="idx" @click="option.action">
               <v-list-item-title>{{option.text}}</v-list-item-title>
             </v-list-item>
@@ -30,6 +30,7 @@
         @click="button.action"
         color="primary"
         small
+        text
       >{{button.text}}</m-btn>
     </div>
   </section>
@@ -62,7 +63,7 @@ export default {
 <style lang='scss' scoped>
 .task {
   &__header {
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     display: flex;
     justify-content: space-between;
   }

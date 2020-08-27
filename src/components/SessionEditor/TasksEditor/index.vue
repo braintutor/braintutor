@@ -1,12 +1,11 @@
 <template>
-  <div class="pa-3">
+  <div class="pa-4">
     <div v-if="!task_selected" class="m-container">
       <!-- MENU -->
       <div class="tasks__menu">
-        <v-btn small rounded color="success" @click="showCreate()">
-          Crear
-          <v-icon right>mdi-plus</v-icon>
-        </v-btn>
+        <m-btn @click="showCreate()" color="primary" small>
+          <v-icon left style="font-size: .9rem">mdi-plus</v-icon>Crear Tarea
+        </m-btn>
       </div>
       <!-- TASKS -->
       <TaskCard
@@ -27,14 +26,14 @@
             action: () => {showAnswers(task)}
           }]"
         disabled
-        class="mb-4"
+        class="mt-4"
       />
 
       <div class="text-center" v-show="tasks.length === 0">No hay tareas.</div>
       <!-- DIALOG NEW -->
       <v-dialog v-model="dialog_new" persistent max-width="750">
-        <v-card class="pt-4 pa-2">
-          <v-card-text>
+        <div class="m-card">
+          <div class="m-card__body">
             <v-text-field
               v-model="task.title"
               :maxlength="TaskModel.title.max_length"
@@ -48,25 +47,37 @@
               label="Descripción"
               value
             ></v-textarea>
-          </v-card-text>
-          <v-card-actions style="width: min-content; margin: 0 auto">
-            <v-btn small text class="mr-1" v-show="!loading_save" @click="dialog_new = false">Cerrar</v-btn>
-            <v-btn small color="primary" :loading="loading_save" @click="create()">Guardar</v-btn>
-          </v-card-actions>
-        </v-card>
+          </div>
+          <div class="m-card__actions">
+            <m-btn
+              small
+              text
+              color="primary"
+              class="mr-2"
+              v-show="!loading_save"
+              @click="dialog_new = false"
+            >Cerrar</m-btn>
+            <m-btn small color="primary" :loading="loading_save" @click="create()">Guardar</m-btn>
+          </div>
+        </div>
       </v-dialog>
       <!-- DIALOG REMOVE -->
       <v-dialog v-model="dialog_remove" max-width="400">
-        <v-card>
-          <v-card-title>¿Eliminar la Tarea?</v-card-title>
-          <v-card-text
-            class="pb-3"
-          >También se borrarán las respuestas y calificaciones de los alumnos.</v-card-text>
-          <v-card-actions class="pb-3" style="width: min-content; margin: 0 auto">
-            <v-btn small text class="mr-1" @click="dialog_remove = false">Cancelar</v-btn>
-            <v-btn small color="error" @click="dialog_remove = false; remove()">Eliminar</v-btn>
-          </v-card-actions>
-        </v-card>
+        <div class="m-card">
+          <div class="m-card__body">
+            <h4>¿Eliminar la Tarea?</h4>
+            <p class="mt-4">También se borrarán las respuestas y calificaciones de los alumnos.</p>
+          </div>
+          <div class="m-card__actions">
+            <m-btn @click="dialog_remove = false" color="primary" small>Cancelar</m-btn>
+            <m-btn
+              @click="dialog_remove = false; remove()"
+              color="error"
+              small
+              class="ml-2"
+            >Eliminar</m-btn>
+          </div>
+        </div>
       </v-dialog>
     </div>
 
@@ -216,8 +227,6 @@ export default {
 
 <style lang='scss' scoped>
 .tasks__menu {
-  margin-bottom: 16px;
-  //
   display: flex;
   justify-content: flex-end;
 }

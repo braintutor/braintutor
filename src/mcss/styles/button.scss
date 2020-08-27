@@ -57,8 +57,7 @@
   &--loading {
     position: relative;
     pointer-events: none;
-    // box-shadow: none !important;
-    // transform: translateY(4px);
+    box-shadow: none !important;
   }
 
   &--block {
@@ -67,25 +66,37 @@
 
   @each $key, $value in $colors {
     &--#{$key} {
-      background: nth($value, 1);
-      // box-shadow: 0 4px 0 nth($value, 2);
-
+      background: nth($value, 3);
+      color: nth($value, 6);
       & * {
-        color: nth($value, 4) !important;
+        color: nth($value, 6) !important;
       }
+      box-shadow: 0 3px 14px -4px nth($value, 4);
 
       &:hover {
-        background: nth($value, 2);
-        // box-shadow: 0 0 0 nth($value, 2);
-        // transform: translateY(4px);
+        background: nth($value, 4);
       }
       &:active {
-        background: nth($value, 3);
-        // box-shadow: 0 0 0 nth($value, 2);
-        // transform: translateY(4px);
+        background: nth($value, 5);
       }
       & .m-btn__loader::before {
-        border-color: nth($value, 1);
+        border-color: nth($value, 3);
+      }
+      &.m-btn--text {
+        background: transparent;
+        color: nth($value, 3);
+        font-weight: bold;
+        box-shadow: none;
+        & * {
+          color: nth($value, 3) !important;
+        }
+
+        &:hover {
+          background: nth($value, 1);
+        }
+        &:active {
+          background: nth($value, 2);
+        }
       }
     }
   }
