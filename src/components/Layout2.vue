@@ -75,7 +75,7 @@ export default {
   color: #707070;
   font-size: 0.75rem;
   font-weight: bold;
-  border-radius: 12px;
+  border-radius: 8px;
   opacity: 0.5;
   transition: 0.3s;
   cursor: pointer;

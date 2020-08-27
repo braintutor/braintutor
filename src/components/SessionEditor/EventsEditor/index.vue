@@ -1,7 +1,7 @@
 <template>
   <div class="m-container pa-3">
     <loading :active="loading_events" :message="loading_message" />
-    <div v-show="!show_events_selected" class="calendar-container m-card">
+    <div v-show="!show_events_selected" class="calendar-container">
       <div class="calendar-control">
         <span class="calendar-date">{{calendar_date}}</span>
         <div class="calendar-actions">
