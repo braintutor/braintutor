@@ -13,7 +13,7 @@
       <div class="task m-card" v-for="(task, idx) in tasks_formatted" :key="idx">
         <div class="task__menu">
           <div>
-            <p class="task__time_start">{{dateFormatShort(task.time_start_f)}}</p>
+            <p class="task__time_start">{{toDateTimeString(task.time_start)}}</p>
             <p class="task__title">{{task.title}}</p>
           </div>
           <v-menu offset-y left>
@@ -92,7 +92,7 @@
 <script>
 import loading from "@/components/loading";
 import Task from "./Task";
-import { dateFormatShort } from "@/services/date.js";
+import { toDateTimeString } from "@/services/date.js";
 
 import {
   getTasksBySessionTeacher,
@@ -126,23 +126,21 @@ export default {
   computed: {
     tasks_formatted() {
       let tasks = this.tasks.map((t) => {
-        let time_start_f = new Date(t.time_start.$date)
-          .toISOString()
-          .substring(0, 16);
-
-        return {
+        let task = {
           ...t,
-          time_start_f,
         };
+        if (task.time_start.$date)
+          task.time_start = new Date(t.time_start.$date);
+        return task;
       });
       tasks.sort(function (a, b) {
-        return new Date(b.time_start) - new Date(a.time_start);
+        return b.time_start - a.time_start;
       });
       return tasks;
     },
   },
   methods: {
-    dateFormatShort,
+    toDateTimeString,
     showCreate() {
       this.action = "create";
       this.task = {};
@@ -167,7 +165,7 @@ export default {
       this.loading_msg = "";
       if (this.action === "create") {
         try {
-          this.task.time_start = { $date: this.getNow().toISOString() };
+          this.task.time_start = new Date();
           let _id = await addTask(this.session_id, this.task);
           this.task._id = _id;
           this.tasks.push(this.task);
@@ -215,11 +213,6 @@ export default {
     },
     unselect() {
       this.task_selected = null;
-    },
-    getNow() {
-      let date = new Date();
-      date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-      return date;
     },
   },
   components: {

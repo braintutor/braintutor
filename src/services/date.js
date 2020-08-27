@@ -1,3 +1,4 @@
+// [DEPRECATED]
 function dateFormat(date) {
   date = new Date(date);
   let day = format_two_digits(date.getDate());
@@ -9,6 +10,7 @@ function dateFormat(date) {
   return date;
 }
 
+// [DEPRECATED]
 function dateFormatShort(date) {
   date = new Date(date);
   let day = format_two_digits(date.getDate());
@@ -22,4 +24,30 @@ function format_two_digits(n) {
   return n < 10 ? "0" + n : n;
 }
 
-export { dateFormat, dateFormatShort, format_two_digits };
+function toDateString(date) {
+  return date.toLocaleString("es-ES", {
+    // weekday: 'short', // "Sat"
+    day: "2-digit", // "15"
+    month: "long", // "junio"
+    year: "numeric", // "1997"
+  });
+}
+
+function toDateTimeString(date) {
+  return date.toLocaleString("es-ES", {
+    // weekday: 'short', // "Sat"
+    day: "2-digit", // "15"
+    month: "long", // "junio"
+    year: "numeric", // "1997"
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+export {
+  dateFormat,
+  dateFormatShort,
+  format_two_digits,
+  toDateString,
+  toDateTimeString,
+};

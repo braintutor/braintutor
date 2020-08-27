@@ -11,7 +11,7 @@
     <div class="task m-card">
       <div class="task__menu">
         <div>
-          <p class="task__time_start">{{dateFormatShort(task.time_start_f)}}</p>
+          <p class="task__time_start">{{toDateTimeString(task.time_start)}}</p>
           <p class="task__title">{{task.title}}</p>
         </div>
       </div>
@@ -34,13 +34,13 @@
       </div>
       <!-- ANSWER -->
       <div v-if="student" class="col-12 col-sm-10">
-        <div class="response m-card mb-4 ml-sm-5" style="border-radius: 0">
+        <div class="response m-card mb-4 ml-sm-5">
           <div class="response__menu">
             <p class="response__student">{{`${student.last_name}, ${student.first_name}`}}</p>
             <p
               v-if="answer.text || (answer.data && answer.data.length > 0)"
               class="response__time"
-            >{{dateFormat(answer.time_end_f)}}</p>
+            >{{toDateTimeString(answer.time_end)}}</p>
           </div>
           <div
             v-if="answer.text || (answer.data && answer.data.length > 0)"
@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import { dateFormat, dateFormatShort } from "@/services/date.js";
+import { toDateTimeString } from "@/services/date.js";
 
 export default {
   props: ["task", "students", "unselect", "restore"],
@@ -96,9 +96,8 @@ export default {
           this.task.answers.find(
             (answer) => answer._id.$oid === this.student._id.$oid
           ) || {};
-        answer.time_end_f = new Date(answer.time_end.$date)
-          .toISOString()
-          .substring(0, 16);
+        if (answer.time_end.$date)
+          answer.time_end = new Date(answer.time_end.$date);
       } catch (error) {
         //
       }
@@ -106,8 +105,7 @@ export default {
     },
   },
   methods: {
-    dateFormat,
-    dateFormatShort,
+    toDateTimeString,
   },
 };
 </script>
@@ -115,7 +113,6 @@ export default {
 <style lang='scss' scoped>
 .task {
   margin-bottom: 16px;
-  border-radius: 0;
   &__menu {
     padding: 12px 10px 0 18px;
     display: flex;

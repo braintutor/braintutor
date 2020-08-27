@@ -34,7 +34,7 @@
             <div>
               <p class="task__time_start">
                 <v-icon class="mr-2" style="font-size: .9rem">mdi-calendar</v-icon>
-                <span>{{task.time_start_f}}</span>
+                <span>{{toDateTimeString(task.time_start_f)}}</span>
               </p>
               <p class="task__title">{{task.title}}</p>
             </div>
@@ -71,6 +71,8 @@ import loading from "@/components/loading";
 import { getTasksBySessionStudent } from "@/services/taskService";
 import { getParam, redirect } from "@/services/router.js";
 
+import { toDateTimeString } from "@/services/date";
+
 export default {
   data: () => ({
     session_id: "",
@@ -96,9 +98,7 @@ export default {
     },
     tasks_formated() {
       let tasks = this.tasks.map((t) => {
-        let time_start_f = new Date(t.time_start.$date)
-          .toISOString()
-          .substring(0, 10);
+        let time_start_f = new Date(t.time_start.$date);
         return {
           ...t,
           time_start_f,
@@ -111,6 +111,7 @@ export default {
     },
   },
   methods: {
+    toDateTimeString,
     async restore() {
       this.loading = true;
       this.loading_msg = "Cargando Tareas";
@@ -159,7 +160,7 @@ export default {
 .task {
   margin-bottom: 16px;
   transition: all 0.3s;
-  
+
   &__menu {
     display: flex;
     justify-content: space-between;
@@ -168,9 +169,11 @@ export default {
   &__time_start {
     margin-bottom: 12px;
     color: var(--color-subtitle);
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: bold;
+
     display: flex;
+    align-items: center;
 
     & * {
       color: var(--color-subtitle);
