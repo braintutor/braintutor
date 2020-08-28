@@ -97,6 +97,11 @@
         &:active {
           background: nth($value, 2);
         }
+
+        &.m-btn--disabled {
+          background: transparent !important;
+          opacity: 0.3;
+        }
       }
     }
   }

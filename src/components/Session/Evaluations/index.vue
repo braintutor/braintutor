@@ -1,56 +1,44 @@
 <template>
   <div class="m-container pa-3">
     <div v-if="!evaluation">
-      <loading :active="loading" :message="loading_msg" />
-      <div class="row no-gutters">
-        <div
-          class="col-12 col-sm-6 col-md-4 px-2 pb-4"
-          v-for="(evaluation, c_idx) in evaluations"
-          :key="c_idx"
-        >
-          <div
-            class="m-cardd transform-scale"
-            style="cursor: pointer"
-            @click="showDialogStart(evaluation)"
-          >
-            <p class="m-cardd__name">{{evaluation.name}}</p>
-            <div class="m-cardd__body">
-              <span class="m-cardd__item">Inicio:</span>
-              <span class="m-cardd__value">{{dateFormat(evaluation.time_start)}}</span>
-              <span class="m-cardd__item">Fin:</span>
-              <span class="m-cardd__value">{{dateFormat(evaluation.time_end)}}</span>
-              <span
-                class="m-cardd__item"
-                v-if="evaluation.result && evaluation.result.score != null"
-              >Puntaje:</span>
-              <span
-                class="m-cardd__result"
-                v-if="evaluation.result && evaluation.result.score != null"
-              >{{format(evaluation.result.score)}}</span>
-            </div>
+      <!-- EVALUATIONS -->
+      <EvaluationCard
+        v-for="(evaluation, c_idx) in evaluations"
+        :key="c_idx"
+        :name="evaluation.name"
+        :time_start="evaluation.time_start"
+        :time_end="evaluation.time_end"
+        :score="evaluation.result && evaluation.result.score"
+        :disabled="(evaluation.result || {}).score != null"
+        student
+        @click="showDialogStart(evaluation)"
+        class="mt-4"
+      />
+
+      <p class="text-center mt-2" v-show="evaluations.length === 0">No hay evaluaciones.</p>
+
+      <!-- Dialog Start Evaluation -->
+      <v-dialog v-model="dialog_start" persistent max-width="400">
+        <div class="m-card">
+          <div class="m-card__body">
+            <h4>Iniciar Evaluación</h4>
+            <p
+              class="mt-4"
+            >Una vez que inicias una evaluación, solo tendrás una oportunidad para responderla.</p>
+            <p class="mt-4">No cierres la pestaña o cambies de página.</p>
+          </div>
+          <div class="m-card__actions">
+            <m-btn @click="dialog_start = false" color="primary" small text>Cerrar</m-btn>
+            <m-btn
+              @click="dialog_start = false; select(evaluation_to_start)"
+              color="primary"
+              small
+              class="ml-2"
+            >Iniciar</m-btn>
           </div>
         </div>
-      </div>
-      <p class="text-center mt-2" v-show="evaluations.length === 0">No hay evaluaciones.</p>
-      <!-- Dialog Start Evaluation -->
-      <v-dialog v-model="dialog_start" max-width="400">
-        <v-card>
-          <v-card-title>Iniciar Evaluación</v-card-title>
-          <v-card-text
-            class="pb-2"
-          >Una vez que inicias una evaluación, solo tendrás una oportunidad para responderla.</v-card-text>
-          <v-card-text>No cierres la pestaña o cambies de página.</v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn small text @click="dialog_start = false">Cerrar</v-btn>
-            <v-btn
-              small
-              color="primary"
-              @click="dialog_start = false; select(evaluation_to_start)"
-            >Iniciar</v-btn>
-          </v-card-actions>
-        </v-card>
       </v-dialog>
+
       <!-- Dialog Result -->
       <v-dialog v-model="dialog_score" max-width="400">
         <v-card class="result">
@@ -81,7 +69,7 @@
 </template>
 
 <script>
-import loading from "@/components/loading";
+import EvaluationCard from "@/components/globals/Evaluation/EvaluationCard";
 import Evaluation from "./Evaluation";
 
 import {
@@ -92,6 +80,8 @@ import {
 import { getParam } from "@/services/router.js";
 import { copy } from "@/services/object.js";
 import { dateFormat, format_two_digits } from "@/services/date.js";
+
+import { mapMutations } from "vuex";
 
 export default {
   data: () => ({
@@ -105,8 +95,6 @@ export default {
     score_f: 0,
     result_messages: [],
     //
-    loading: true,
-    loading_msg: "",
     dialog_start: false,
     dialog_score: false,
   }),
@@ -116,12 +104,14 @@ export default {
     this.getEvaluations();
   },
   methods: {
+    ...mapMutations(["loading", "loading_msg"]),
     dateFormat,
     async getEvaluations() {
-      this.loading = true;
-      this.loading_msg = "Cargando Evaluaciones";
+      this.loading(true);
+      this.loading_msg("Cargando Evaluaciones");
       this.evaluations = await getEvaluationsBySessionStudent(this.session_id);
-      this.loading_msg = "Cargando Puntajes";
+
+      this.loading_msg("Cargando Puntajes");
       for (let e of this.evaluations) {
         if (typeof e.time_start === "object")
           e.time_start = new Date(e.time_start.$date)
@@ -133,19 +123,19 @@ export default {
             .substring(0, 16);
         e.result = await getResultByStudent(e._id.$oid);
       }
-      this.loading = false;
+      this.loading(false);
     },
     async select(evaluation) {
       if (this.user_role === "STU") {
-        this.loading = true;
-        this.loading_msg = "Cargando Evaluación";
+        this.loading(true);
+        this.loading_msg("Cargando Evaluación");
         try {
           evaluation = await getEvaluationByStudent(evaluation._id.$oid);
           this.evaluation = copy(evaluation);
         } catch (error) {
           this.$root.$children[0].showMessage("", error.msg);
         }
-        this.loading = false;
+        this.loading(false);
       }
     },
     unselect() {
@@ -173,7 +163,7 @@ export default {
     },
   },
   components: {
-    loading,
+    EvaluationCard,
     Evaluation,
   },
 };

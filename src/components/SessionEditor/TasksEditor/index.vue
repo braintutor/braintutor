@@ -1,96 +1,90 @@
 <template>
-  <div class="pa-4">
-    <div v-if="!task_selected" class="m-container">
-      <!-- MENU -->
-      <div class="tasks__menu">
-        <m-btn @click="showCreate()" color="primary" small>
-          <v-icon left style="font-size: .9rem">mdi-plus</v-icon>Crear Tarea
-        </m-btn>
-      </div>
-      <!-- TASKS -->
-      <TaskCard
-        v-for="(task, idx) in tasks_formatted"
-        :key="idx"
-        :time_start="task.time_start || new Date()"
-        :title="task.title"
-        :description="task.description"
-        :options="[{
+  <div v-if="!task_selected" class="m-container pa-4">
+    <!-- MENU -->
+    <div class="tasks__menu">
+      <m-btn @click="showCreate()" color="primary" small>
+        <v-icon left style="font-size: .9rem">mdi-plus</v-icon>Crear Tarea
+      </m-btn>
+    </div>
+    <!-- TASKS -->
+    <TaskCard
+      v-for="(task, idx) in tasks_formatted"
+      :key="idx"
+      :time_start="task.time_start || new Date()"
+      :title="task.title"
+      :description="task.description"
+      :options="[{
             text: 'Editar',
             action: () => {showEdit(task)}
           },{
             text: 'Eliminar',
             action: () => {showRemove(task)}
           }]"
-        :buttons="[{
+      :buttons="[{
             text: 'Ver Respuestas',
             action: () => {showAnswers(task)}
           }]"
-        disabled
-        class="mt-4"
-      />
-
-      <div class="text-center" v-show="tasks.length === 0">No hay tareas.</div>
-      <!-- DIALOG NEW -->
-      <v-dialog v-model="dialog_new" persistent max-width="750">
-        <div class="m-card">
-          <div class="m-card__body">
-            <v-text-field
-              v-model="task.title"
-              :maxlength="TaskModel.title.max_length"
-              :counter="TaskModel.title.max_length"
-              label="Título"
-            ></v-text-field>
-            <v-textarea
-              v-model="task.description"
-              :maxlength="TaskModel.description.max_length"
-              :counter="TaskModel.description.max_length"
-              label="Descripción"
-              value
-            ></v-textarea>
-          </div>
-          <div class="m-card__actions">
-            <m-btn
-              small
-              text
-              color="primary"
-              class="mr-2"
-              v-show="!loading_save"
-              @click="dialog_new = false"
-            >Cerrar</m-btn>
-            <m-btn small color="primary" :loading="loading_save" @click="create()">Guardar</m-btn>
-          </div>
-        </div>
-      </v-dialog>
-      <!-- DIALOG REMOVE -->
-      <v-dialog v-model="dialog_remove" max-width="400">
-        <div class="m-card">
-          <div class="m-card__body">
-            <h4>¿Eliminar la Tarea?</h4>
-            <p class="mt-4">También se borrarán las respuestas y calificaciones de los alumnos.</p>
-          </div>
-          <div class="m-card__actions">
-            <m-btn @click="dialog_remove = false" color="primary" small>Cancelar</m-btn>
-            <m-btn
-              @click="dialog_remove = false; remove()"
-              color="error"
-              small
-              class="ml-2"
-            >Eliminar</m-btn>
-          </div>
-        </div>
-      </v-dialog>
-    </div>
-
-    <!-- TASK -->
-    <Task
-      class="m-container-plus"
-      v-else
-      :task="task_selected"
-      :students="students"
-      :unselect="unselect"
-      :restore="restore"
+      disabled
+      class="mt-4"
     />
+
+    <div class="text-center mt-4" v-show="tasks.length === 0">No hay tareas.</div>
+
+    <!-- DIALOG NEW -->
+    <v-dialog v-model="dialog_new" persistent max-width="750">
+      <div class="m-card">
+        <div class="m-card__body">
+          <v-text-field
+            v-model="task.title"
+            :maxlength="TaskModel.title.max_length"
+            :counter="TaskModel.title.max_length"
+            label="Título"
+          ></v-text-field>
+          <v-textarea
+            v-model="task.description"
+            :maxlength="TaskModel.description.max_length"
+            :counter="TaskModel.description.max_length"
+            label="Descripción"
+            value
+          ></v-textarea>
+        </div>
+        <div class="m-card__actions">
+          <m-btn
+            small
+            text
+            color="primary"
+            class="mr-2"
+            v-show="!loading_save"
+            @click="dialog_new = false"
+          >Cerrar</m-btn>
+          <m-btn small color="primary" :loading="loading_save" @click="create()">Guardar</m-btn>
+        </div>
+      </div>
+    </v-dialog>
+    <!-- DIALOG REMOVE -->
+    <v-dialog v-model="dialog_remove" max-width="400">
+      <div class="m-card">
+        <div class="m-card__body">
+          <h4>¿Eliminar la Tarea?</h4>
+          <p class="mt-4">También se borrarán las respuestas y calificaciones de los alumnos.</p>
+        </div>
+        <div class="m-card__actions">
+          <m-btn @click="dialog_remove = false" color="primary" small>Cancelar</m-btn>
+          <m-btn @click="dialog_remove = false; remove()" color="error" small class="ml-2">Eliminar</m-btn>
+        </div>
+      </div>
+    </v-dialog>
   </div>
+
+  <!-- TASK -->
+  <Task
+    class="m-container-plus"
+    v-else
+    :task="task_selected"
+    :students="students"
+    :unselect="unselect"
+    :restore="restore"
+  />
 </template>
 
 <script>
