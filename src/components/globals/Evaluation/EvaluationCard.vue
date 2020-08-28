@@ -13,8 +13,8 @@
         <span class="evaluation__label">Tiempo Fin</span>
         <span v-if="student" class="evaluation__label">Estado</span>
         <span v-else class="evaluation__label">N° de preguntas</span>
-        <p class="evaluation__time">{{toDateTimeString(new Date(time_start), false)}}</p>
-        <p class="evaluation__time">{{toDateTimeString(new Date(time_end), false)}}</p>
+        <p class="evaluation__time">{{toDateTimeString(time_start, false)}}</p>
+        <p class="evaluation__time">{{toDateTimeString(time_end, false)}}</p>
         <p v-if="student" class="evaluation__time">
           <span v-if="state" class="evaluation__state1">Completado</span>
           <span v-else class="evaluation__state0">Sin Realizar</span>
@@ -50,8 +50,8 @@ import { toDateTimeString } from "@/services/date";
 export default {
   props: {
     name: String,
-    time_start: null,
-    time_end: null,
+    time_start: Date,
+    time_end: Date,
     size: Number,
     buttons: Array,
     state: Boolean,
@@ -69,11 +69,8 @@ export default {
   }),
   computed: {
     progress() {
-      let time_start = new Date(this.time_start);
-      let time_end = new Date(this.time_end);
-
-      var dif_total = time_end.getTime() - time_start.getTime();
-      var dif_current = this.now.getTime() - time_start.getTime();
+      var dif_total = this.time_end.getTime() - this.time_start.getTime();
+      var dif_current = this.now.getTime() - this.time_start.getTime();
 
       if (dif_current < 0) return 0;
       if (dif_current > dif_total) return 100;

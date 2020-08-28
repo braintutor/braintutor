@@ -57,9 +57,13 @@
     <div id="quiz-scroll" class="quiz-editor-content m-fullscreen-content">
       <div class="time-editor">
         <span>Tiempo de Inicio:</span>
-        <input type="datetime-local" v-model="evaluation.time_start" :disabled="evaluation.started" />
+        <input
+          type="datetime-local"
+          v-model="evaluation.time_start_f"
+          :disabled="evaluation.started"
+        />
         <span>Tiempo de Fin:</span>
-        <input type="datetime-local" v-model="evaluation.time_end" :disabled="evaluation.started" />
+        <input type="datetime-local" v-model="evaluation.time_end_f" :disabled="evaluation.started" />
       </div>
       <div
         v-for="(c, c_idx) in evaluation.content"
@@ -180,6 +184,7 @@ import {
   publicEvaluation,
   deleteEvaluation,
 } from "@/services/evaluationService";
+// import { toDateTimeString } from "@/services/date";
 
 import EvaluationModel from "@/models/Evaluation";
 import QuestionModel from "@/models/Question";
@@ -194,12 +199,28 @@ export default {
     EvaluationModel,
     QuestionModel,
   }),
-  mounted() {},
+  created() {
+    let formatDate = (date) => {
+      let date_f = new Date();
+      date_f.setTime(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
+      date_f = date_f.toISOString().substring(0, 16);
+      return date_f;
+    };
+
+    let { time_start, time_end } = this.evaluation;
+    this.evaluation.time_start_f = formatDate(time_start);
+    this.evaluation.time_end_f = formatDate(time_end);
+    this.$forceUpdate();
+  },
   methods: {
     async save() {
       this.loading = true;
       this.loading_msg = "Guardando";
+
       this.evaluation.id = this.evaluation._id.$oid;
+      this.evaluation.time_start = new Date(this.evaluation.time_start_f);
+      this.evaluation.time_end = new Date(this.evaluation.time_end_f);
+
       try {
         await updateEvaluation(this.evaluation);
         this.loading = false;

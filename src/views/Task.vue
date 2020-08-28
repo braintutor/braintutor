@@ -150,10 +150,12 @@
     </div>
     <!-- DIALOG FILES -->
     <v-dialog v-model="dialog_files" max-width="1200" persistent>
-      <v-card class="files">
+      <div class="files m-card">
         <h3 class="files__title">
           Archivos en Google Drive
-          <v-icon @click="dialog_files = false">mdi-close</v-icon>
+          <m-btn @click="dialog_files = false" text small>
+            <v-icon>mdi-close</v-icon>
+          </m-btn>
         </h3>
         <div class="files__search">
           <input type="text" placeholder="Buscar" v-model="file_search" />
@@ -173,22 +175,22 @@
             </div>
           </div>
         </div>
-        <div class="files__actions">
-          <v-btn text small @click="dialog_files = false">Cancelar</v-btn>
-        </div>
-      </v-card>
+        <!-- <div class="files__actions">
+          <m-btn @click="dialog_files = false" color="primary" text small>Cancelar</m-btn>
+        </div>-->
+      </div>
     </v-dialog>
     <!-- DIALOG LINK -->
     <v-dialog v-model="dialog_link" max-width="500" persistent>
-      <v-card>
-        <v-card-text class="pt-2 pb-3">
+      <div class="m-card">
+        <div class="m-card__body">
           <v-text-field v-model="link" label="Vínculo"></v-text-field>
-          <div style="width: max-content; margin: 0 auto">
-            <v-btn @click="dialog_link = false" class="mr-2" small text>Cerrar</v-btn>
-            <v-btn @click="dialog_link = false; addLink()" color="primary" small depressed>Agregar</v-btn>
-          </div>
-        </v-card-text>
-      </v-card>
+        </div>
+        <div class="m-card__actions">
+          <m-btn @click="dialog_link = false" color="primary" small text>Cerrar</m-btn>
+          <m-btn @click="dialog_link = false; addLink()" color="primary" small class="ml-2">Agregar</m-btn>
+        </div>
+      </div>
     </v-dialog>
     <!-- DIALOG REMOVE -->
     <v-dialog v-model="dialog_remove" max-width="280">
@@ -600,11 +602,13 @@ export default {
   display: flex;
   flex-direction: column;
   &__title {
-    padding: 16px 20px;
+    padding: 10px 20px;
+    padding-right: 10px;
     font-size: 1.4rem;
     box-shadow: 0 1px 4px #ccc;
     display: flex;
     justify-content: space-between;
+    align-items: center;
   }
   &__search {
     padding: 14px 16px;

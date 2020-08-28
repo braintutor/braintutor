@@ -38,25 +38,6 @@
           </div>
         </div>
       </v-dialog>
-
-      <!-- Dialog Result -->
-      <!-- <v-dialog v-model="dialog_score" max-width="400">
-        <v-card class="result">
-          <v-progress-circular
-            class="result__diagram"
-            :rotate="270"
-            :size="120"
-            :width="8"
-            :value="score"
-            color="primary"
-          >{{score_f}}</v-progress-circular>
-          <span
-            v-for="(message, m_idx) in result_messages"
-            :key="m_idx"
-            class="result__message"
-          >{{message}}</span>
-        </v-card>
-      </v-dialog>-->
     </div>
 
     <Evaluation v-else :evaluation="evaluation" :unselect="unselect" />
@@ -73,7 +54,6 @@ import {
 } from "@/services/evaluationService";
 import { getParam } from "@/services/router.js";
 import { copy } from "@/services/object.js";
-import { dateFormat } from "@/services/date.js";
 
 import { mapMutations } from "vuex";
 
@@ -85,12 +65,7 @@ export default {
     evaluations: [],
     //
     user_role: -1,
-    // score: 0,
-    // score_f: 0,
-    // result_messages: [],
-    //
     dialog_start: false,
-    // dialog_score: false,
   }),
   async mounted() {
     this.session_id = getParam("session_id");
@@ -99,23 +74,14 @@ export default {
   },
   methods: {
     ...mapMutations(["loading", "loading_msg"]),
-    dateFormat,
     async getEvaluations() {
       this.loading(true);
       this.loading_msg("Cargando Evaluaciones");
       this.evaluations = await getEvaluationsBySessionStudent(this.session_id);
 
-      // this.loading_msg("Cargando Puntajes");
       for (let e of this.evaluations) {
-        if (typeof e.time_start === "object")
-          e.time_start = new Date(e.time_start.$date)
-            .toISOString()
-            .substring(0, 16);
-        if (typeof e.time_end === "object")
-          e.time_end = new Date(e.time_end.$date)
-            .toISOString()
-            .substring(0, 16);
-        // e.result = await getResultByStudent(e._id.$oid);
+        if (e.time_start.$date) e.time_start = new Date(e.time_start.$date);
+        if (e.time_end.$date) e.time_end = new Date(e.time_end.$date);
       }
       this.loading(false);
     },
@@ -136,20 +102,6 @@ export default {
       this.evaluation = null;
       await this.getEvaluations();
     },
-    // format(result) {
-    //   let score = Math.round(result * 20);
-    //   score = format_two_digits(score);
-    //   return score;
-    // },
-    // showResult(score) {
-    //   this.dialog_score = true;
-    //   this.score = 0;
-    //   setTimeout(() => {
-    //     this.score = score * 100;
-    //   }, 500);
-    //   this.score_f = this.format(score);
-    //   this.result_messages = [`Obtuviste un puntaje de ${this.score_f}.`];
-    // },
     showDialogStart(evaluation) {
       if (!evaluation.result && this.user_role === "STU") {
         this.evaluation_to_start = evaluation;

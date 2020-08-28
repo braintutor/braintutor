@@ -103,14 +103,8 @@ export default {
       this.evaluations = await getEvaluationsBySession(this.session_id);
 
       this.evaluations.forEach((e) => {
-        if (typeof e.time_start === "object")
-          e.time_start = new Date(e.time_start.$date)
-            .toISOString()
-            .substring(0, 16);
-        if (typeof e.time_end === "object")
-          e.time_end = new Date(e.time_end.$date)
-            .toISOString()
-            .substring(0, 16);
+        if (e.time_start.$date) e.time_start = new Date(e.time_start.$date);
+        if (e.time_end.$date) e.time_end = new Date(e.time_end.$date);
       });
       this.loading(false);
     },
@@ -120,15 +114,14 @@ export default {
 
       let now = () => {
         let date = new Date();
-        date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+        date.setSeconds(0, 0);
         return date;
       };
-      let format = (date) => date.toISOString().slice(0, 16);
 
       let new_evaluation = {
         name: "Nombre",
-        time_start: format(now().addHours(1)),
-        time_end: format(now().addHours(2)),
+        time_start: now().addHours(1),
+        time_end: now().addHours(2),
         content: [
           {
             question: "Pregunta",
@@ -167,7 +160,7 @@ export default {
     },
     select(evaluation) {
       this.edit = true;
-      this.evaluation = copy(evaluation);
+      this.evaluation = Object.assign({}, evaluation);
     },
     unselect() {
       this.evaluation = null;

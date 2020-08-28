@@ -85,11 +85,10 @@ export default {
 
       try {
         await finishEvaluation(evaluation_id);
-        this.unselect();
       } catch (error) {
         this.$root.$children[0].showMessage("", error.msg);
-        this.unselect();
       }
+      this.unselect();
 
       this.loading = false;
     },
