@@ -65,7 +65,7 @@
     <v-dialog v-model="dialog_remove" max-width="400">
       <div class="m-card">
         <div class="m-card__body">
-          <h4>¿Eliminar la Tarea?</h4>
+          <h3>¿Eliminar la Tarea?</h3>
           <p class="mt-4">También se borrarán las respuestas y calificaciones de los alumnos.</p>
         </div>
         <div class="m-card__actions">

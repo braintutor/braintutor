@@ -4,16 +4,21 @@
     :class="{'levitation': !disabled}"
     @click="$emit('click', $event)"
   >
+    <v-progress-linear :value="progress" :height="4" color="var(--color-subtitle)"></v-progress-linear>
+
     <div class="m-card__body">
       <p class="evaluation__name">{{name}}</p>
       <div class="evaluation__body">
         <span class="evaluation__label">Tiempo Inicio</span>
         <span class="evaluation__label">Tiempo Fin</span>
-        <span v-if="student" class="evaluation__label">Puntaje</span>
+        <span v-if="student" class="evaluation__label">Estado</span>
         <span v-else class="evaluation__label">N° de preguntas</span>
         <p class="evaluation__time">{{toDateTimeString(new Date(time_start), false)}}</p>
         <p class="evaluation__time">{{toDateTimeString(new Date(time_end), false)}}</p>
-        <p v-if="student" class="evaluation__time">{{score != null ? score: 'Sin realizar'}}</p>
+        <p v-if="student" class="evaluation__time">
+          <span v-if="state" class="evaluation__state1">Completado</span>
+          <span v-else class="evaluation__state0">Sin Realizar</span>
+        </p>
         <p v-else class="evaluation__time">{{size}} pregunta(s)</p>
       </div>
     </div>
@@ -49,7 +54,7 @@ export default {
     time_end: null,
     size: Number,
     buttons: Array,
-    score: null,
+    state: Boolean,
     disabled: {
       type: Boolean,
       default: false,
@@ -59,6 +64,32 @@ export default {
       default: false,
     },
   },
+  data: () => ({
+    now: new Date(),
+  }),
+  computed: {
+    progress() {
+      let time_start = new Date(this.time_start);
+      let time_end = new Date(this.time_end);
+
+      var dif_total = time_end.getTime() - time_start.getTime();
+      var dif_current = this.now.getTime() - time_start.getTime();
+
+      if (dif_current < 0) return 0;
+      if (dif_current > dif_total) return 100;
+
+      return (dif_current * 100) / dif_total;
+    },
+  },
+  // Resource: https://itnext.io/how-not-to-vue-18f16fe620b5
+  created() {
+    this.$options.interval = setInterval(() => {
+      this.now = new Date();
+    }, 1000);
+  },
+  beforeDestroy() {
+    clearInterval(this.$options.interval);
+  },
   methods: {
     toDateTimeString,
   },
@@ -67,6 +98,7 @@ export default {
 
 <style lang='scss' scoped>
 .evaluation {
+  overflow: hidden;
   &__name {
     font-size: 1.3rem;
     font-weight: bold;
@@ -99,6 +131,15 @@ export default {
     font-size: 1rem;
     font-weight: bold;
     text-align: center;
+  }
+  &__state0 {
+    color: var(--color-font-disable);
+  }
+  &__state1 {
+    padding: 6px 18px;
+    background: var(--color-subtitle);
+    color: #fff;
+    border-radius: 12px;
   }
 }
 </style>

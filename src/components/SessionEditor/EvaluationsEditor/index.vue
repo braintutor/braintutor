@@ -42,7 +42,7 @@
       <v-dialog v-model="dlg_remove" persistent max-width="400">
         <div class="m-card">
           <div class="m-card__body">
-            <h4>¿Desea eliminar?</h4>
+            <h3>¿Desea eliminar?</h3>
             <p class="mt-4">Se borrarán también los resultados de los alumnos.</p>
           </div>
           <div class="m-card__actions">

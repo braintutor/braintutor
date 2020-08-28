@@ -43,11 +43,11 @@ import loading from "@/components/loading";
 
 import {
   updateEvaluationAnswers,
-  finishEvaluation
+  finishEvaluation,
 } from "@/services/evaluationService";
 
 export default {
-  props: ["evaluation", "getEvaluations", "unselect", "showResult"],
+  props: ["evaluation", "unselect"],
   data: () => ({
     time_remaining: 0,
     time_total: 0,
@@ -55,14 +55,17 @@ export default {
     loading: false,
     loading_msg: "",
     dlg_save: false,
-    dlg_save_msg: ""
+    dlg_save_msg: "",
   }),
   methods: {
     async save() {
       this.loading = true;
       this.loading_msg = "Guardando Respuestas";
+
       let evaluation_id = this.evaluation._id.$oid;
-      let answers = this.evaluation.content.map(c => c.answer);
+      let answers = this.evaluation.content.map((c) => {
+        return c.answer != null ? c.answer : -1;
+      });
 
       try {
         await updateEvaluationAnswers(evaluation_id, answers);
@@ -81,10 +84,8 @@ export default {
       let evaluation_id = this.evaluation._id.$oid;
 
       try {
-        let { score } = await finishEvaluation(evaluation_id);
+        await finishEvaluation(evaluation_id);
         this.unselect();
-        await this.getEvaluations();
-        await this.showResult(score);
       } catch (error) {
         this.$root.$children[0].showMessage("", error.msg);
         this.unselect();
@@ -93,16 +94,16 @@ export default {
       this.loading = false;
     },
     saveAction() {
-      let answer = this.evaluation.content.map(c => c.answer);
-      this.dlg_save_msg = answer.every(a => a == null)
+      let answer = this.evaluation.content.map((c) => c.answer);
+      this.dlg_save_msg = answer.every((a) => a == null)
         ? "No hay respuestas seleccionadas. ¿Desea continuar?"
         : "No podrá cambiar sus respuestas posteriormente.";
       this.dlg_save = true;
-    }
+    },
   },
   components: {
-    loading
-  }
+    loading,
+  },
 };
 </script>
 

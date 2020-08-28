@@ -55,21 +55,22 @@
     </div>
 
     <!-- Dialog Delete -->
-    <v-dialog v-model="dialog_delete" max-width="300">
-      <v-card>
-        <v-card-title>Confirmar eliminación</v-card-title>
-        <v-card-text>Si elimina la nota actual, el alumno podrá realizar el examen otra vez.</v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn small text @click="dialog_delete = false">Cancelar</v-btn>
-          <v-btn
-            small
-            depressed
-            color="error"
+    <v-dialog v-model="dialog_delete" max-width="400">
+      <div class="m-card">
+        <div class="m-card__body">
+          <h3>Confirmar eliminación</h3>
+          <p class="mt-4">Si elimina la nota actual, el alumno podrá realizar el examen otra vez.</p>
+        </div>
+        <div class="m-card__actions">
+          <m-btn @click="dialog_delete = false" color="primary" small>Cancelar</m-btn>
+          <m-btn
             @click="dialog_delete = false; removeResult()"
-          >Eliminar</v-btn>
-        </v-card-actions>
-      </v-card>
+            color="error"
+            small
+            class="ml-2"
+          >Eliminar</m-btn>
+        </div>
+      </div>
     </v-dialog>
   </div>
 </template>
@@ -81,7 +82,6 @@ import loading from "@/components/loading";
 import { getParam } from "@/services/router.js";
 import { getStudentsBySession } from "@/services/studentService";
 import { getEvaluation, removeResult } from "@/services/evaluationService";
-import { format_two_digits } from "@/services/date.js";
 
 export default {
   props: ["evaluation_id", "getEvaluations", "unselect"],
@@ -98,15 +98,21 @@ export default {
   }),
   async mounted() {
     let session_id = getParam("session_id");
+
     this.loading_message = "Cargando Resultados";
     this.evaluation = await getEvaluation(this.evaluation_id);
+
     this.loading_message = "Cargando Alumnos";
     this.students = await getStudentsBySession(session_id);
     this.students.forEach((student) => {
-      let { score } =
-        this.evaluation.results.find((r) => r._id.$oid == student._id.$oid) || {};
-      student.score = score == null ? null : this.format(score);
+      let result =
+        this.evaluation.results.find((r) => r._id.$oid == student._id.$oid) ||
+        {};
+
+      if (result.answers)
+        student.score = this.getScore(result.answers, this.evaluation);
     });
+
     //
     var ctx = document.getElementById("myChart").getContext("2d");
     this.myChart = new Chart(ctx, {
@@ -171,10 +177,13 @@ export default {
       this.myChart.data.datasets[0].data = data;
       this.myChart.update();
     },
-    format(result) {
-      let score = Math.round(result * 20);
-      score = format_two_digits(score);
-      return score;
+    getScore(answers, evaluation) {
+      let corrects = 0;
+      evaluation.content.forEach((c, idx) => {
+        if (answers[idx] === c.correct) corrects++;
+      });
+
+      return `${corrects}/${evaluation.content.length}`;
     },
   },
   components: {

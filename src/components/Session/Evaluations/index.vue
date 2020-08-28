@@ -8,8 +8,8 @@
         :name="evaluation.name"
         :time_start="evaluation.time_start"
         :time_end="evaluation.time_end"
-        :score="evaluation.result && evaluation.result.score"
-        :disabled="(evaluation.result || {}).score != null"
+        :disabled="!!evaluation.result"
+        :state="!!evaluation.result"
         student
         @click="showDialogStart(evaluation)"
         class="mt-4"
@@ -21,7 +21,7 @@
       <v-dialog v-model="dialog_start" persistent max-width="400">
         <div class="m-card">
           <div class="m-card__body">
-            <h4>Iniciar Evaluación</h4>
+            <h3>Iniciar Evaluación</h3>
             <p
               class="mt-4"
             >Una vez que inicias una evaluación, solo tendrás una oportunidad para responderla.</p>
@@ -40,7 +40,7 @@
       </v-dialog>
 
       <!-- Dialog Result -->
-      <v-dialog v-model="dialog_score" max-width="400">
+      <!-- <v-dialog v-model="dialog_score" max-width="400">
         <v-card class="result">
           <v-progress-circular
             class="result__diagram"
@@ -56,15 +56,10 @@
             class="result__message"
           >{{message}}</span>
         </v-card>
-      </v-dialog>
+      </v-dialog>-->
     </div>
-    <Evaluation
-      v-else
-      :evaluation="evaluation"
-      :getEvaluations="getEvaluations"
-      :unselect="unselect"
-      :showResult="showResult"
-    />
+
+    <Evaluation v-else :evaluation="evaluation" :unselect="unselect" />
   </div>
 </template>
 
@@ -75,11 +70,10 @@ import Evaluation from "./Evaluation";
 import {
   getEvaluationsBySessionStudent,
   getEvaluationByStudent,
-  getResultByStudent,
 } from "@/services/evaluationService";
 import { getParam } from "@/services/router.js";
 import { copy } from "@/services/object.js";
-import { dateFormat, format_two_digits } from "@/services/date.js";
+import { dateFormat } from "@/services/date.js";
 
 import { mapMutations } from "vuex";
 
@@ -91,12 +85,12 @@ export default {
     evaluations: [],
     //
     user_role: -1,
-    score: 0,
-    score_f: 0,
-    result_messages: [],
+    // score: 0,
+    // score_f: 0,
+    // result_messages: [],
     //
     dialog_start: false,
-    dialog_score: false,
+    // dialog_score: false,
   }),
   async mounted() {
     this.session_id = getParam("session_id");
@@ -111,7 +105,7 @@ export default {
       this.loading_msg("Cargando Evaluaciones");
       this.evaluations = await getEvaluationsBySessionStudent(this.session_id);
 
-      this.loading_msg("Cargando Puntajes");
+      // this.loading_msg("Cargando Puntajes");
       for (let e of this.evaluations) {
         if (typeof e.time_start === "object")
           e.time_start = new Date(e.time_start.$date)
@@ -121,7 +115,7 @@ export default {
           e.time_end = new Date(e.time_end.$date)
             .toISOString()
             .substring(0, 16);
-        e.result = await getResultByStudent(e._id.$oid);
+        // e.result = await getResultByStudent(e._id.$oid);
       }
       this.loading(false);
     },
@@ -138,25 +132,26 @@ export default {
         this.loading(false);
       }
     },
-    unselect() {
+    async unselect() {
       this.evaluation = null;
+      await this.getEvaluations();
     },
-    format(result) {
-      let score = Math.round(result * 20);
-      score = format_two_digits(score);
-      return score;
-    },
-    showResult(score) {
-      this.dialog_score = true;
-      this.score = 0;
-      setTimeout(() => {
-        this.score = score * 100;
-      }, 500);
-      this.score_f = this.format(score);
-      this.result_messages = [`Obtuviste un puntaje de ${this.score_f}.`];
-    },
+    // format(result) {
+    //   let score = Math.round(result * 20);
+    //   score = format_two_digits(score);
+    //   return score;
+    // },
+    // showResult(score) {
+    //   this.dialog_score = true;
+    //   this.score = 0;
+    //   setTimeout(() => {
+    //     this.score = score * 100;
+    //   }, 500);
+    //   this.score_f = this.format(score);
+    //   this.result_messages = [`Obtuviste un puntaje de ${this.score_f}.`];
+    // },
     showDialogStart(evaluation) {
-      if ((evaluation.result || {}).score == null && this.user_role === "STU") {
+      if (!evaluation.result && this.user_role === "STU") {
         this.evaluation_to_start = evaluation;
         this.dialog_start = true;
       }
