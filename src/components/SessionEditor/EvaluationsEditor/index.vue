@@ -54,7 +54,6 @@
   <EvaluationEditor
     v-else-if="edit"
     :evaluation="evaluation"
-    :getEvaluations="getEvaluations"
     :unselect="unselect"
     class="m-container pa-4"
   />

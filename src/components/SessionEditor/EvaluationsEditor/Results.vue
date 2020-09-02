@@ -88,7 +88,6 @@
 </template>
 
 <script>
-/*eslint-disable*/
 import { getParam } from "@/services/router.js";
 import { getStudentsBySession } from "@/services/studentService";
 import { getEvaluation, removeResult } from "@/services/evaluationService";

@@ -3,7 +3,7 @@
     <loading :active="loading" :message="loading_msg" />
     <div class="menu">
       <div class="menu-left">
-        <v-btn icon @click="unselect(); getEvaluations()">
+        <v-btn icon @click="unselect()">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
         <v-text-field
@@ -133,44 +133,41 @@
         </v-radio-group>
       </div>
       <div class="public">
-        <v-btn
-          color="primary"
+        <m-btn
           v-if="!evaluation.started"
           @click="dialog_public = true"
+          color="primary"
           small
-        >Publicar</v-btn>
+        >Publicar</m-btn>
       </div>
     </div>
 
     <!-- Dialog Public -->
-    <v-dialog v-model="dialog_public" max-width="300">
-      <v-card>
-        <v-card-title>Confirmar publicación</v-card-title>
-        <v-card-text>Una vez publicada la evaluación, no podrá modificar su contenido.</v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn small text @click="dialog_public = false">Cancelar</v-btn>
-          <v-btn
-            small
-            depressed
-            color="primary"
-            @click="dialog_public = false; publicEvaluation()"
-          >Publicar</v-btn>
-        </v-card-actions>
-      </v-card>
+    <v-dialog v-model="dialog_public" max-width="400">
+      <div class="m-card">
+        <div class="m-card__body">
+          <h3>Confirmar publicación</h3>
+          <p class="mt-4">Una vez publicada la evaluación, no podrá modificar su contenido.</p>
+        </div>
+        <div class="m-card__actions">
+          <m-btn @click="dialog_public = false" color="primary" small text class="mr-2">Cancelar</m-btn>
+          <m-btn @click="dialog_public = false; publicEvaluation()" color="primary" small>Publicar</m-btn>
+        </div>
+      </div>
     </v-dialog>
 
     <!-- Dialog Delete -->
-    <v-dialog v-model="dialog_delete" max-width="300">
-      <v-card>
-        <v-card-title>Confirmar eliminación</v-card-title>
-        <v-card-text>Si elimina este contenido, no podrá revertir los cambios.</v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn small text @click="dialog_delete = false">Cancelar</v-btn>
-          <v-btn small depressed color="error" @click="dialog_delete = false; remove()">Eliminar</v-btn>
-        </v-card-actions>
-      </v-card>
+    <v-dialog v-model="dialog_delete" max-width="400">
+      <div class="m-card">
+        <div class="m-card__body">
+          <h3>Confirmar eliminación</h3>
+          <p class="mt-4">Si elimina este contenido, no podrá revertir los cambios.</p>
+        </div>
+        <div class="m-card__actions">
+          <m-btn @click="dialog_delete = false" color="primary" small class="mr-2">Cancelar</m-btn>
+          <m-btn @click="dialog_delete = false; remove()" color="error" small>Eliminar</m-btn>
+        </div>
+      </div>
     </v-dialog>
   </div>
 </template>
@@ -190,7 +187,7 @@ import EvaluationModel from "@/models/Evaluation";
 import QuestionModel from "@/models/Question";
 
 export default {
-  props: ["evaluation", "getEvaluations", "unselect"],
+  props: ["evaluation", "unselect"],
   data: () => ({
     loading: false,
     loading_msg: "",
@@ -247,7 +244,6 @@ export default {
       this.loading_msg = "Eliminando";
       let evaluation_id = this.evaluation._id.$oid;
       await deleteEvaluation(evaluation_id);
-      this.getEvaluations();
       this.unselect();
       this.loading = false;
     },
@@ -322,6 +318,7 @@ export default {
     }
   }
   .public {
+    margin-top: 20px;
     display: flex;
     justify-content: center;
   }
