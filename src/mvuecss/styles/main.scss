@@ -1,0 +1,47 @@
+// @import "./_normalize.scss";
+@import "./_breakpoints.scss";
+// @import "./_layout.scss";
+// @import "./_scroll.scss";
+@import "./_animations.scss";
+@import "./_colors.scss";
+@import "./_variables.scss";
+
+@import "./m-btn.scss";
+@import "./m-card.scss";
+@import "./m-dialog.scss";
+@import "./m-alert.scss";
+
+// @import url("https://fonts.googleapis.com/css2?family=Alata&family=Comfortaa:wght@300;400;500;600;700&display=swap");
+@import url("https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
+
+// body {
+//   margin: 0;
+//   padding: 0;
+// }
+
+// * {
+//   font-family: Comfortaa, Arial, Helvetica, sans-serif;
+//   box-sizing: border-box;
+//   color: var(--color-font);
+// }
+
+// @include media-breakpoint(lg) {
+//   html {
+//     font-size: 100%;
+//   }
+// }
+// @include media-breakpoint(md) {
+//   html {
+//     font-size: 90%;
+//   }
+// }
+// @include media-breakpoint(sm) {
+//   html {
+//     font-size: 80%;
+//   }
+// }
+// @include media-breakpoint(xs) {
+//   html {
+//     font-size: 70%;
+//   }
+// }

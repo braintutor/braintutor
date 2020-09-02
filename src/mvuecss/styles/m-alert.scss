@@ -1,0 +1,48 @@
+.m-alert {
+  overflow: hidden;
+  width: 100%;
+  padding: 16px 20px;
+  border-radius: var(--border-radius-low);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  transition: var(--time-transition);
+
+  &__icon {
+    flex-shrink: 0;
+    width: 12px;
+    height: 12px;
+    margin-left: 16px;
+    stroke-width: 6;
+    stroke: #fff;
+    cursor: pointer;
+  }
+
+  &--disabled {
+    height: 0;
+    margin: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    // transform: translateY(-80px);
+    transform: scale(0.5);
+
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  @each $key, $value in $colors {
+    &--#{$key} {
+      background: nth($value, 3);
+      box-shadow: 0 3px 14px -4px nth($value, 4);
+      & * {
+        color: nth($value, 6);
+      }
+
+      .m-alert__icon {
+        stroke: nth($value, 6);
+      }
+    }
+  }
+}

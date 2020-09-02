@@ -22,7 +22,7 @@ export default {
   background: rgba(255, 255, 255, 0);
   pointer-events: none;
   opacity: 0;
-  z-index: 2;
+  z-index: 1000;
   transition: all 0.3s;
   //
   display: flex;

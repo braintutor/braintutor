@@ -1,0 +1,56 @@
+$colors: (
+  primary: (
+    // lwr TODO: convert to rgba
+      #e2f2ff,
+    // low TODO: convert to rgba
+      #bfe3ff,
+    // med
+      #178ae2,
+    // hig
+      #097ad1,
+    // hgr
+      #045ea3,
+    // fnt
+      #fff,
+  ),
+  success: (
+    #d4ffd3,
+    #b8f7b7,
+    #4fc14d,
+    #3eb13c,
+    #31992f,
+    #fff,
+  ),
+  warning: (
+    #fff2d6,
+    #ffeabc,
+    #ebb339,
+    #dfa019,
+    #b8820e,
+    #fff,
+  ),
+  error: (
+    #fff2f2,
+    #ffdcdc,
+    #f64e4e,
+    #dd3a3a,
+    #b61e1e,
+    #fff,
+  ),
+  dark: (
+    #dfdfdf,
+    #bbbbbb,
+    #474747,
+    #363636,
+    #1b1b1b,
+    #fff,
+  ),
+  light: (
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.2),
+    #fff,
+    #d8d8d8,
+    #b9b9b9,
+    #3f3f3f,
+  ),
+);

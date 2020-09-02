@@ -1,4 +1,4 @@
 git add .
-git commit -m 'Evaluations: mejora en funcionamiento e interfaz'
+git commit -m "$*"
 git push origin master
 # git push origin master:test

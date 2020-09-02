@@ -96,7 +96,7 @@
             v-model="new_event.description"
             :maxlength="EventModel.description.max_length"
             :counter="EventModel.description.max_length"
-            label="Descripición"
+            label="Descripción"
             value
           ></v-textarea>
         </v-card-text>

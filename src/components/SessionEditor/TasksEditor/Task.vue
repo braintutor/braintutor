@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="menu pa-0 pb-1">
+  <div class="pa-2">
+    <div class="menu pa-0 pb-2">
       <div class="menu-left">
         <v-btn icon @click="unselect(); restore()">
           <v-icon>mdi-arrow-left</v-icon>

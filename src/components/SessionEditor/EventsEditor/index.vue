@@ -1,269 +1,169 @@
 <template>
-  <div class="m-container pa-3">
-    <loading :active="loading_events" :message="loading_message" />
-    <div v-show="!show_events_selected" class="calendar-container">
-      <div class="calendar-control">
-        <span class="calendar-date">{{calendar_date}}</span>
-        <div class="calendar-actions">
-          <v-tooltip top>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn icon v-bind="attrs" v-on="on" class="calendar-action" @click="today()">
-                <v-icon>mdi-calendar-today</v-icon>
-              </v-btn>
-            </template>
-            <span style="font-size: .75rem">Hoy</span>
-          </v-tooltip>
-          <v-tooltip top>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn icon v-bind="attrs" v-on="on" class="calendar-action" @click="prev()">
-                <v-icon>mdi-chevron-left</v-icon>
-              </v-btn>
-            </template>
-            <span style="font-size: .75rem">Mes Anterior</span>
-          </v-tooltip>
-          <v-tooltip top>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn icon v-bind="attrs" v-on="on" class="calendar-action" @click="next()">
-                <v-icon>mdi-chevron-right</v-icon>
-              </v-btn>
-            </template>
-            <span style="font-size: .75rem">Mes Siguiente</span>
-          </v-tooltip>
+  <div class="m-container my-3">
+    <m-calendar :events="events" class="calendar" @on-date-click="showCreate">
+      <template v-slot:event_info="{ event }">
+        <div class="mt-5">
+          <p>{{event.description}}</p>
+          <m-btn color="primary" small @click="showEdit(event)" class="mr-2">Editar</m-btn>
+          <m-btn color="error" small @click="dlg_delete = true; event_selected = event">Eliminar</m-btn>
+        </div>
+      </template>
+    </m-calendar>
+
+    <!-- DLG CREATE -->
+    <v-dialog v-model="dlg_create" max-width="800">
+      <div class="m-card">
+        <div class="m-card__body">
+          <h2 v-if="action === 'create'">Nuevo Evento</h2>
+          <h2 v-else>Editar Evento</h2>
+          <div class="mt-5">
+            <strong class="mr-4">Fecha:</strong>
+            <input type="datetime-local" v-model="date_selected" />
+          </div>
+          <div class="mt-4">
+            <v-text-field
+              v-model="new_event.title"
+              :maxlength="EventModel.title.max_length"
+              :counter="EventModel.title.max_length"
+              label="Título"
+            ></v-text-field>
+            <v-textarea
+              v-model="new_event.description"
+              :maxlength="EventModel.description.max_length"
+              :counter="EventModel.description.max_length"
+              label="Descripción"
+            ></v-textarea>
+          </div>
+        </div>
+        <div class="m-card__actions">
+          <m-btn color="primary" small @click="dlg_create = false" text class="mr-2">Cancelar</m-btn>
+          <m-btn color="primary" small @click="dlg_create = false; saveEvent()">Guardar</m-btn>
         </div>
       </div>
-      <FullCalendar
-        class="fullcalendar"
-        ref="calendar"
-        :locale="locale"
-        :plugins="calendarPlugins"
-        :events="events"
-        @dateClick="dateClick"
-        @eventClick="eventClick"
-        eventTextColor="#fff"
-      />
-      <div class="legend">
-        <div class="legend__item">
-          <div class="legend__name">Eventos</div>
-          <div class="legend__color" style="background-color: #5252ff"></div>
+    </v-dialog>
+
+    <!-- DLG DELETE -->
+    <v-dialog v-model="dlg_delete" max-width="400">
+      <div class="m-card">
+        <div class="m-card__body">
+          <h3>Confirmar eliminación</h3>
+          <p class="mt-4">Si elimina este contenido, no podrá revertir los cambios.</p>
         </div>
-        <div class="legend__item">
-          <div class="legend__name">Tareas</div>
-          <div class="legend__color" style="background-color: #00af3d"></div>
+        <div class="m-card__actions">
+          <m-btn color="primary" small @click="dlg_delete = false" class="mr-2">Cancelar</m-btn>
+          <m-btn color="error" small @click="dlg_delete = false; removeEvent()">Eliminar</m-btn>
         </div>
       </div>
-    </div>
-    <!-- Events Selected -->
-    <EventEditor
-      v-show="show_events_selected"
-      :event_date="event_date"
-      :events="events_selected"
-      :unselectEvents="unselectEvents"
-      :createEvent="createEvent"
-      :saveEvent="saveEvent"
-      :deleteEvent="deleteEvent"
-      :restoreEvents="restoreEvents"
-    />
-    <!-- Dialog -->
-    <v-dialog v-model="dialog_delete" max-width="300">
-      <v-card>
-        <v-card-title>Confirmar eliminación</v-card-title>
-        <v-card-text>Si elimina este contenido, no podrá revertir los cambios.</v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn small text @click="dialog_delete = false">Cancelar</v-btn>
-          <v-btn small depressed color="error" @click="deleteEventAction()">Eliminar</v-btn>
-        </v-card-actions>
-      </v-card>
     </v-dialog>
   </div>
 </template>
 
 <script>
-import EventEditor from "./EventEditor";
-import loading from "@/components/loading";
-
+import { getParam } from "@/services/router.js";
 import {
   getEventsBySession,
   addEvent,
   updateEvent,
   removeEvent,
 } from "@/services/eventService";
-import { getTasksBySessionTeacher } from "@/services/taskService";
-import { getParam } from "@/services/router.js";
-// import { copy } from "@/services/object";
-import { scrollDown } from "@/services/scroll";
 
-import FullCalendar from "@fullcalendar/vue";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import esLocale from "@fullcalendar/core/locales/es";
-import { formatDate } from "@fullcalendar/core";
-import interactionPlugin from "@fullcalendar/interaction";
+import { mapMutations } from "vuex";
+
+import EventModel from "@/models/Event";
 
 export default {
   data: () => ({
-    session_id: "",
-    event_date: "",
     events: [],
-    event_delete_id: "",
-    dialog_delete: false,
+    event_selected: null,
+    date_selected: null,
+    new_event: {},
     //
-    show_events_selected: false,
-    calendar_date: null,
-    loading_events: true,
-    loading_message: "",
-    //
-    calendar: null,
-    locale: esLocale,
-    calendarPlugins: [dayGridPlugin, interactionPlugin],
+    action: "",
+    dlg_create: false,
+    dlg_delete: false,
+    EventModel,
   }),
-  computed: {
-    events_selected() {
-      return this.events.filter((event) => event.date === this.event_date);
-    },
-  },
-  async mounted() {
-    this.session_id = getParam("session_id");
-    this.calendar = this.$refs.calendar.getApi();
-    this.updateCalendarDate();
-    await this.restoreEvents();
+  async created() {
+    this.init();
   },
   methods: {
-    dateClick({ dateStr }) {
-      this.event_date = dateStr;
-      this.show_events_selected = true;
-    },
-    eventClick() {},
-    unselectEvents() {
-      this.show_events_selected = false;
-      this.restoreEvents();
-    },
-    async createEvent(new_event) {
-      this.loading_events = true;
-      this.loading_message = "Creando";
-      new_event.time_start = new Date(this.event_date)
-        .toISOString()
-        .substring(0, 16);
-      new_event.date = this.dateFormat(new_event.time_start);
-
+    ...mapMutations(["loading", "loading_msg"]),
+    async init() {
+      this.loading(true);
+      this.loading_msg("Cargando Eventos");
+      this.session_id = getParam("session_id");
       try {
-        let event_id = await addEvent(this.session_id, new_event);
-        new_event._id = event_id;
-        new_event.type = "event";
-        new_event.color = "#5252ff";
-        this.events.push(new_event);
+        let events = await getEventsBySession(this.session_id);
+        events.forEach((event) => {
+          event.date = new Date(event.time_start.$date);
+          event.color = "#178ae2";
+        });
+        this.events = events;
       } catch (error) {
         this.$root.$children[0].showMessage("", error.msg || error);
       }
-
-      this.loading_events = false;
-      setTimeout(() => {
-        scrollDown("events-scroll");
-      }, 100);
+      this.loading(false);
     },
-    async saveEvent(event) {
-      this.loading_events = true;
-      this.loading_message = "Guardando";
+    async saveEvent() {
+      this.loading(true);
+      this.loading_msg("Creando Evento");
+
+      let new_event = this.new_event;
+      new_event.time_start = new Date(this.date_selected);
 
       try {
-        event.id = event._id.$oid;
-        await updateEvent(event);
-      } catch (error) {
-        this.$root.$children[0].showMessage(
-          "",
-          error.msg || "Ha ocurrido un error."
-        );
-      }
+        if (this.action === "create")
+          await addEvent(this.session_id, new_event);
+        else {
+          new_event.id = new_event._id.$oid;
+          await updateEvent(new_event);
+        }
 
-      this.loading_events = false;
+        await this.init();
+      } catch (error) {
+        this.$root.$children[0].showMessage("", error.msg || error);
+      }
+      this.loading(false);
     },
-    deleteEvent(event_id) {
-      this.dialog_delete = true;
-      this.event_delete_id = event_id;
+    async removeEvent() {
+      this.loading(true);
+      this.loading_msg("Eliminando Evento");
+      try {
+        await removeEvent(this.event_selected._id.$oid);
+        this.events = this.events.filter(
+          (event) => event._id.$oid != this.event_selected._id.$oid
+        );
+      } catch (error) {
+        this.$root.$children[0].showMessage("", error.msg || error);
+      }
+      this.loading(false);
     },
-    async deleteEventAction() {
-      this.dialog_delete = false;
-      this.loading_events = true;
-      this.loading_message = "Eliminando";
-      await removeEvent(this.event_delete_id);
-      this.events = this.events.filter(
-        (event) => event._id.$oid != this.event_delete_id
-      );
-      this.loading_events = false;
+    showEdit(event) {
+      this.action = "edit";
+      this.dlg_create = true;
+      this.new_event = { ...event };
+
+      let date = new Date(event.date.getTime()); // create a copy
+      this.date_selected = this.toLocalISOString(date);
     },
-    async restoreEvents() {
-      this.loading_events = true;
-      this.loading_message = "Cargando Eventos";
-      let events = await getEventsBySession(this.session_id);
-      events.forEach((i) => {
-        i.time_start = new Date(i.time_start.$date)
-          .toISOString()
-          .substring(0, 16);
-        i.date = this.dateFormat(i.time_start);
-        i.color = "#5252ff";
-        i.type = "event";
-      });
-      let tasks = await getTasksBySessionTeacher(this.session_id);
-      tasks.forEach((i) => {
-        i.time_start = new Date(i.time_start.$date)
-          .toISOString()
-          .substring(0, 16);
-        i.date = this.dateFormat(i.time_start);
-        i.color = "#00af3d";
-        i.type = "task";
-      });
-      this.events = events.concat(tasks);
-      this.loading_events = false;
+    showCreate(year, month, day) {
+      this.action = "create";
+      this.dlg_create = true;
+      this.new_event = {};
+
+      let date = new Date(year, month, day);
+      this.date_selected = this.toLocalISOString(date);
     },
-    dateFormat(date) {
-      date = new Date(date);
-      let day = this.format_two_digits(date.getDate());
-      let month = this.format_two_digits(date.getMonth() + 1);
-      let year = date.getFullYear();
-      // let hours = this.format_two_digits(date.getHours());
-      // let minutes = this.format_two_digits(date.getMinutes());
-      date = `${year}-${month}-${day}`;
-      return date;
+    toLocalISOString(date) {
+      date.setTime(date.getTime() - date.getTimezoneOffset() * 60 * 1000); // remove 5 hours
+      return date.toISOString().substring(0, 16);
     },
-    format_two_digits(n) {
-      return n < 10 ? "0" + n : n;
-    },
-    // Calendar
-    today() {
-      this.calendar.today();
-      this.updateCalendarDate();
-    },
-    prev() {
-      this.calendar.prev();
-      this.updateCalendarDate();
-    },
-    next() {
-      this.calendar.next();
-      this.updateCalendarDate();
-    },
-    gotoDate(date) {
-      this.calendar.gotoDate(date);
-      this.updateCalendarDate();
-    },
-    getCalendarDate() {
-      return this.calendar.getDate();
-    },
-    updateCalendarDate() {
-      let date = formatDate(this.getCalendarDate(), {
-        month: "long",
-        year: "numeric",
-        locale: "es",
-      });
-      this.calendar_date = date.charAt(0).toUpperCase() + date.slice(1);
-    },
-  },
-  components: {
-    EventEditor,
-    FullCalendar,
-    loading,
   },
 };
 </script>
 
-<style lang="scss">
-@import "@/styles/events";
+<style lang='scss' scoped>
+.calendar {
+  box-shadow: none !important;
+}
 </style>
