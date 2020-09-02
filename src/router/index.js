@@ -28,8 +28,18 @@ const routes = [
   },
   {
     path: "/director",
-    name: "director",
     component: () => import("../views/Director.vue"),
+    children: [
+      {
+        path: "",
+        name: "director",
+        component: () => import("../components/Director/Classrooms/index"),
+      },
+      {
+        path: "students",
+        component: () => import("../components/Director/Students"),
+      },
+    ],
   },
   {
     path: "/sessions-student",
@@ -99,8 +109,7 @@ const routes = [
       },
       {
         path: "events",
-        component: () =>
-          import("../components/SessionEditor/EventsEditor"),
+        component: () => import("../components/SessionEditor/EventsEditor"),
       },
       {
         path: "evaluations",

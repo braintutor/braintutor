@@ -336,12 +336,13 @@ export default {
   transition: var(--time-transition);
 
   &__menu {
-    padding: 10px;
+    background: transparent;
+    padding: 4px;
   }
   &__body {
-    max-height: 350px;
     padding-top: 0;
     overflow-y: auto;
+    max-height: 35vh;
   }
   &__actions {
     padding-top: 20px;

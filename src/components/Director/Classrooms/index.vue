@@ -25,10 +25,10 @@
           dense
           solo
         ></v-select>
-      </div> -->
+      </div>-->
     </div>
-    <Classroom v-if="classroom_id" :classroom_id="classroom_id.$oid" />
-    <div v-else class="no-classroom">Seleccione un Aula.</div>
+    <Classroom ref="classroom_component" v-if="classroom_id" :classroom_id="classroom_id.$oid" />
+    <div v-else class="text-center mt-4">Seleccione un Aula</div>
   </div>
 </template>
 
@@ -46,8 +46,14 @@ export default {
     loading: true,
     loading_message: "",
     period: "Día",
-    periods: ["Día", "Mes", "Año"]
+    periods: ["Día", "Mes", "Año"],
   }),
+  watch: {
+    classroom_id() {
+      if (this.$refs.classroom_component)
+        this.$refs.classroom_component.reset();
+    },
+  },
   mounted() {
     this.getClassrooms();
   },
@@ -55,26 +61,22 @@ export default {
     async getClassrooms() {
       this.loading = true;
       this.loading_message = "Cargando Aulas";
-      this.classrooms = await getClassroomsBySchoolDirector();
-      this.classrooms.sort((a, b) => a.name.localeCompare(b.name));
+      try {
+        this.classrooms = await getClassroomsBySchoolDirector();
+        this.classrooms.sort((a, b) => a.name.localeCompare(b.name));
+      } catch (error) {
+        this.$root.$children[0].showMessage("", error.msg || error);
+      }
       this.loading = false;
-    }
+    },
   },
   components: {
     loading,
-    Classroom
-  }
+    Classroom,
+  },
 };
 </script>
 
 <style lang='scss' scoped>
-@import '@/styles/filters';
-
-.no-classroom {
-  margin: 20px 0;
-  color: #646464;
-  text-align: center;
-  font-size: 1.1rem;
-  font-weight: lighter;
-}
+@import "@/styles/filters";
 </style>

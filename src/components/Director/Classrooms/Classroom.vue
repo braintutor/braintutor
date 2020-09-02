@@ -1,175 +1,95 @@
 <template>
-  <div>
-    <loading :active="loading" :message="loading_message" />
-    <div class="no-session" v-if="sessions.length <= 0">No hay cursos asignados.</div>
-    <div class="session m-card" v-for="(session, s_idx) in sessions" :key="s_idx">
-      <p class="session__item">Curso</p>
-      <p class="session__value">{{session.course.name}}</p>
-      <p class="session__item">Profesor</p>
-      <p class="session__value">{{`${session.teacher.first_name} ${session.teacher.last_name}`}}</p>
-      <p
-        v-if="session.evaluations && session.evaluations.length > 0"
-        class="session__item"
-      >Evaluaciones</p>
-      <div class="session__chart" v-show="session.loading">Cargando...</div>
-      <div
-        class="session__chart"
-        v-show="!session.loading"
-        v-for="(evaluation, e_idx) in session.evaluations"
-        :key="e_idx"
-      >
-        <p>{{evaluation.name}}</p>
-        <div class="session__chart-canvas">
-          <canvas :id="evaluation._id.$oid + e_idx" />
-        </div>
+  <div v-if="!session_selected" class="m-container">
+    <h1 v-if="sessions.length > 0" class="m-title ml-3">Cursos</h1>
+
+    <div
+      v-for="(session, idx) in sessions"
+      :key="idx"
+      @click="session_selected = session"
+      class="session m-card levitation mb-5"
+    >
+      <div class="m-card__body session__body">
+        <span class="session__label">Curso:</span>
+        <span class="session__value">{{session.course.name}}</span>
+        <span class="session__label">Profesor:</span>
+        <span
+          class="session__value"
+        >{{`${session.teacher.last_name}, ${session.teacher.first_name}`}}</span>
       </div>
     </div>
+    <p v-if="sessions.length <= 0" class="text-center mt-4">No hay Cursos</p>
   </div>
+  <Results v-else v-model="session_selected" :students="students" class="ma-3" />
 </template>
 
 <script>
-import loading from "@/components/loading";
-
 import { getSessionsByClassroom } from "@/services/sessionService";
-import { getEvaluationsBySessionDirector } from "@/services/evaluationService";
 import { getStudentsByClassroomDirector } from "@/services/studentService";
-import { format_two_digits } from "@/services/date.js";
-import Chart from "chart.js";
+
+import Results from "./Results";
+
+import { mapMutations } from "vuex";
 
 export default {
-  props: ["classroom_id"],
+  props: {
+    classroom_id: String,
+  },
   data: () => ({
     sessions: [],
     students: [],
-    loading: true,
-    loading_message: "",
+    session_selected: null,
   }),
-  mounted() {
-    this.update();
-  },
   watch: {
     async classroom_id() {
-      this.update();
+      await this.init();
     },
   },
+  async created() {
+    await this.init();
+  },
   methods: {
-    async update() {
-      this.loading = true;
-      this.loading_message = "Cargando Cursos";
-      this.sessions = await getSessionsByClassroom(this.classroom_id);
-      this.students = await getStudentsByClassroomDirector(this.classroom_id);
-      this.loading = false;
-
-      for (let session of this.sessions) {
-        session.loading = true;
-        session.evaluations = await getEvaluationsBySessionDirector(
-          session._id.$oid
-        );
-        session.loading = false;
-        this.sessions.splice();
-        //
-        session.evaluations.forEach((evaluation, e_idx) => {
-          let scores = [];
-          if (evaluation.results) {
-            this.students.forEach((student) => {
-              let result = evaluation.results.find(
-                (r) => r._id.$oid == student._id.$oid
-              );
-              if (result && result.score)
-                scores.push(this.calculate(result.score));
-            });
-          }
-          let data = scores.reduce((arr, score) => {
-            arr[score] += 1;
-            return arr;
-          }, Array(21).fill(0));
-          setTimeout(() => {
-            this.showDashboard(evaluation._id.$oid + e_idx, data);
-          }, 1000);
-        });
+    ...mapMutations(["loading", "loading_msg"]),
+    async init() {
+      this.loading(true);
+      this.loading_msg("Cargando Cursos");
+      try {
+        this.sessions = await getSessionsByClassroom(this.classroom_id);
+        this.students = await getStudentsByClassroomDirector(this.classroom_id);
+      } catch (error) {
+        this.$root.$children[0].showMessage("", error.msg || error);
       }
+      this.loading(false);
     },
-    calculate(result) {
-      let score = Math.round(result * 20);
-      score = format_two_digits(score);
-      return score;
-    },
-    showDashboard(id, data) {
-      let ctx = document.getElementById(id);
-      if (ctx) {
-        ctx = ctx.getContext("2d");
-        new Chart(ctx, {
-          type: "bar",
-          data: {
-            labels: [...Array(21).keys()],
-            datasets: [
-              {
-                label: ["Alumnos"],
-                data,
-                backgroundColor: "rgba(255, 99, 132, 0.2)",
-                borderColor: "rgba(255, 99, 132, 1)",
-                borderWidth: 1,
-              },
-            ],
-          },
-          options: {
-            legend: {
-              display: false,
-            },
-            scales: {
-              yAxes: [
-                {
-                  ticks: {
-                    beginAtZero: true,
-                    max: this.students.length,
-                    stepSize: 1,
-                  },
-                },
-              ],
-            },
-          },
-        });
-      }
+    reset() {
+      this.session_selected = null;
     },
   },
   components: {
-    loading,
+    Results,
   },
 };
 </script>
 
 <style lang='scss' scoped>
+.m-title {
+  font-size: 1.5rem;
+}
+
 .session {
-  padding: 2%;
-  margin: 0 10px 14px;
-  &__item {
-    margin: 8px;
-    margin-top: 0;
+  &__body {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 20px;
+    row-gap: 10px;
+  }
+  &__label {
+    color: rgb(66, 66, 66);
+    // color: var(--color-subtitle);
     font-weight: bold;
   }
   &__value {
-    margin-bottom: 20px;
-    padding: 6px 12px;
-    background: #f3f3f3;
+    color: rgb(66, 66, 66);
     font-weight: lighter;
-    border-radius: 10px;
   }
-  &__chart {
-    padding: 2%;
-    margin-bottom: 2%;
-    border: 2px solid #e9e9e9;
-    text-align: center;
-    font-weight: bold;
-    border-radius: 10px;
-    &-canvas {
-      margin: 0 auto;
-      max-width: 700px;
-    }
-  }
-}
-.no-session {
-  margin: 20px 0;
-  color: #acacac;
-  text-align: center;
 }
 </style>

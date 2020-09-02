@@ -1,44 +1,43 @@
 <template>
   <div>
-    <loading :active="loading" :message="loading_message" />
     <div class="menu">
       <div class="menu-left">
-        <v-btn icon @click="unselect(); getEvaluations()">
+        <v-btn @click="unselect()" icon>
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
         <p class="menu-title">{{evaluation.name}}</p>
       </div>
     </div>
-    <div class="results m-card">
+
+    <div v-if="evaluation" class="mt-3" style="overflow-x: auto">
       <table class="m-table">
         <thead>
           <tr>
-            <th class="text-left">Nombres</th>
-            <th class="text-left">Apellidos</th>
-            <th class="text-left">Usuario</th>
-            <th class="text-left">Puntaje</th>
-            <th class="text-center">Acciones</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th class="text-center">C</th>
+            <th class="text-center">I</th>
+            <th class="text-center">B</th>
+            <th></th>
+            <th v-for="(c, idx) in evaluation.content" :key="idx" class="evaluation">{{idx + 1}}</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(student, s_idx) in students" :key="s_idx">
-            <td>{{student.first_name}}</td>
-            <td>{{student.last_name}}</td>
-            <td>{{student.username}}</td>
-            <td v-if="student.score != null">{{student.score}}</td>
-            <td v-else>
-              <span class="no-result">Sin realizar</span>
-            </td>
-            <td class="text-center">
+          <tr
+            v-for="(student, idx) in students"
+            :key="idx"
+            :set="values = getStats(student, evaluation)"
+          >
+            <td v-if="values.has_answer" class="text-center">
               <v-tooltip bottom>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
-                    :disabled="!student.score"
                     small
                     icon
                     v-bind="attrs"
                     v-on="on"
-                    @click="dialog_delete = true; student_result_delete = student"
+                    @click="dialog_dlt = true; student_dlt = student"
                   >
                     <v-icon>mdi-playlist-remove</v-icon>
                   </v-btn>
@@ -46,25 +45,38 @@
                 <span style="font-size: .75rem">Eliminar Nota</span>
               </v-tooltip>
             </td>
+            <td v-else></td>
+            <td class="student">{{`${student.last_name}, ${student.first_name}`}}</td>
+            <td></td>
+            <td class="text-center">{{values.corrects}}</td>
+            <td class="text-center">{{values.incorrects}}</td>
+            <td class="text-center">{{values.empty}}</td>
+            <td></td>
+            <td v-for="(item, idx) in values.answers_state" :key="idx">
+              <div class="score" :class="`score--${item}`">
+                <template v-if="item !== -1">
+                  <v-icon v-if="item">mdi-check</v-icon>
+                  <v-icon v-else>mdi-close</v-icon>
+                </template>
+                <template v-else>-</template>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <div class="results-chart m-card">
-      <canvas id="myChart"></canvas>
-    </div>
 
     <!-- Dialog Delete -->
-    <v-dialog v-model="dialog_delete" max-width="400">
+    <v-dialog v-model="dialog_dlt" max-width="400">
       <div class="m-card">
         <div class="m-card__body">
           <h3>Confirmar eliminación</h3>
           <p class="mt-4">Si elimina la nota actual, el alumno podrá realizar el examen otra vez.</p>
         </div>
         <div class="m-card__actions">
-          <m-btn @click="dialog_delete = false" color="primary" small>Cancelar</m-btn>
+          <m-btn @click="dialog_dlt = false" color="primary" small>Cancelar</m-btn>
           <m-btn
-            @click="dialog_delete = false; removeResult()"
+            @click="dialog_dlt = false; removeResult()"
             color="error"
             small
             class="ml-2"
@@ -76,144 +88,126 @@
 </template>
 
 <script>
-import Chart from "chart.js";
-import loading from "@/components/loading";
-
+/*eslint-disable*/
 import { getParam } from "@/services/router.js";
 import { getStudentsBySession } from "@/services/studentService";
 import { getEvaluation, removeResult } from "@/services/evaluationService";
+import { mapMutations } from "vuex";
 
 export default {
-  props: ["evaluation_id", "getEvaluations", "unselect"],
+  props: {
+    evaluation_id: String,
+    unselect: Function,
+  },
   data: () => ({
     evaluation: {},
-    results: {},
     students: [],
-    student_result_delete: null,
-    myChart: null,
     //
-    loading: true,
-    loading_message: "",
-    dialog_delete: false,
+    student_dlt: null,
+    dialog_dlt: false,
   }),
-  async mounted() {
+  async created() {
+    this.loading(true);
+    this.loading_msg("Cargando Resultados");
     let session_id = getParam("session_id");
-
-    this.loading_message = "Cargando Resultados";
-    this.evaluation = await getEvaluation(this.evaluation_id);
-
-    this.loading_message = "Cargando Alumnos";
-    this.students = await getStudentsBySession(session_id);
-    this.students.forEach((student) => {
-      let result =
-        this.evaluation.results.find((r) => r._id.$oid == student._id.$oid) ||
-        {};
-
-      if (result.answers)
-        student.score = this.getScore(result.answers, this.evaluation);
-    });
-
-    //
-    var ctx = document.getElementById("myChart").getContext("2d");
-    this.myChart = new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: [...Array(21).keys()],
-        datasets: [
-          {
-            label: ["Alumnos"],
-            backgroundColor: "rgba(255, 99, 132, 0.2)",
-            borderColor: "rgba(255, 99, 132, 1)",
-            borderWidth: 1,
-          },
-        ],
-      },
-      options: {
-        legend: {
-          display: false,
-        },
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true,
-                max: this.students.length,
-                stepSize: 1,
-              },
-            },
-          ],
-        },
-      },
-    });
-    this.updateDashboard();
-    this.loading = false;
+    try {
+      this.evaluation = await getEvaluation(this.evaluation_id);
+      this.students = await getStudentsBySession(session_id);
+    } catch (error) {
+      this.$root.$children[0].showMessage("", error.msg || error);
+    }
+    this.loading(false);
   },
   methods: {
-    calculate(result) {
-      let score = Math.round((20 * result.corrects) / result.total) || 0;
-      score = ("0" + score).slice(-2);
-      return score;
+    ...mapMutations(["loading", "loading_msg"]),
+    getStats(student, evaluation) {
+      let corrects = 0;
+      let incorrects = 0;
+      let empty = evaluation.content.length;
+      let answers_state = Array(evaluation.content.length).fill(-1);
+      let has_answer = false;
+
+      let student_answer = evaluation.results.find(
+        (result) => result._id.$oid === student._id.$oid
+      );
+
+      if (student_answer) {
+        has_answer = true;
+        evaluation.content.forEach((c, idx) => {
+          if (student_answer.answers[idx] !== -1)
+            if (c.correct === student_answer.answers[idx]) {
+              answers_state[idx] = 1;
+              corrects++;
+            } else {
+              answers_state[idx] = 0;
+              incorrects++;
+            }
+        });
+        empty -= corrects + incorrects;
+      }
+
+      return { corrects, incorrects, empty, answers_state, has_answer };
     },
     async removeResult() {
-      this.loading = true;
-      this.loading_message = "Eliminando Resultado";
-      await removeResult(
-        this.evaluation._id.$oid,
-        this.student_result_delete._id.$oid
-      );
-      this.student_result_delete.score = null;
-      this.students.splice();
-      this.updateDashboard();
-      this.loading = false;
-    },
-    updateDashboard() {
-      let data = this.students.reduce((arr, student) => {
-        if (student.score) {
-          let score = parseInt(student.score);
-          arr[score] += 1;
-        }
-        return arr;
-      }, Array(21).fill(0));
-      this.myChart.data.datasets[0].data = data;
-      this.myChart.update();
-    },
-    getScore(answers, evaluation) {
-      let corrects = 0;
-      evaluation.content.forEach((c, idx) => {
-        if (answers[idx] === c.correct) corrects++;
-      });
+      this.loading(true);
+      this.loading_msg("Eliminando Resultado");
+      let student_dlt_id = this.student_dlt._id.$oid;
 
-      return `${corrects}/${evaluation.content.length}`;
+      try {
+        await removeResult(this.evaluation._id.$oid, student_dlt_id);
+        this.evaluation.results = this.evaluation.results.filter(
+          (result) => result._id.$oid !== student_dlt_id
+        );
+      } catch (error) {
+        this.$root.$children[0].showMessage("", error.msg || error);
+      }
+
+      this.loading(false);
     },
-  },
-  components: {
-    loading,
   },
 };
 </script>
 
 <style lang='scss' scoped>
-.results {
-  margin: 0 10px;
-  padding: 16px 20px;
-}
-.results-chart {
-  margin: 20px 10px;
-  padding: 2%;
-  canvas {
-    margin: 0 auto;
-    max-width: 800px;
-  }
-}
+$cell-min-width: 36px;
+$cell-max-width: 148px;
 
-//
-.result {
-  font-size: 1.1rem;
-  font-weight: bold;
-  border-radius: 50%;
-}
-.no-result {
-  color: #acacac;
-  border-radius: 10px;
+.m-table {
+  margin: 0 auto;
+  width: max-content;
+  padding: 10px;
+  th {
+    min-width: $cell-min-width;
+    max-width: $cell-max-width;
+    word-wrap: break-word;
+    padding: 3px;
+  }
+  td {
+    min-width: $cell-min-width;
+    max-width: $cell-max-width;
+    word-wrap: break-word;
+    padding: 6px 2px;
+  }
+  .score {
+    padding: 8px;
+    color: rgb(128, 128, 128);
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: bold;
+    border-radius: 6px;
+
+    &--0 {
+      background: rgb(255, 103, 116);
+      * {
+        color: #fff;
+      }
+    }
+    &--1 {
+      background: rgb(67, 204, 73);
+      * {
+        color: #fff;
+      }
+    }
+  }
 }
 </style>

@@ -1,21 +1,20 @@
 <template>
-  <div class="m-container pa-4">
-    <div v-if="!evaluation">
-      <!-- MENU -->
-      <div class="evaluations__menu">
-        <m-btn @click="create()" color="primary" small>
-          <v-icon left style="font-size: .9rem">mdi-plus</v-icon>Crear Evaluación
-        </m-btn>
-      </div>
-      <!-- EVALUATIONS -->
-      <EvaluationCard
-        v-for="(evaluation, c_idx) in evaluations"
-        :key="c_idx"
-        :name="evaluation.name"
-        :time_start="evaluation.time_start"
-        :time_end="evaluation.time_end"
-        :size="evaluation.content.length"
-        :buttons="[{
+  <div v-if="!evaluation" class="m-container pa-4">
+    <!-- MENU -->
+    <div class="evaluations__menu">
+      <m-btn @click="create()" color="primary" small>
+        <v-icon left style="font-size: .9rem">mdi-plus</v-icon>Crear Evaluación
+      </m-btn>
+    </div>
+    <!-- EVALUATIONS -->
+    <EvaluationCard
+      v-for="(evaluation, c_idx) in evaluations"
+      :key="c_idx"
+      :name="evaluation.name"
+      :time_start="evaluation.time_start"
+      :time_end="evaluation.time_end"
+      :size="evaluation.content.length"
+      :buttons="[{
             text: evaluation.started? 'Ver Evaluación': 'Editar',
             icon: evaluation.started? 'mdi-eye': 'mdi-pencil',
             color: 'primary',
@@ -32,39 +31,34 @@
             color: 'error',
             action: () => {dlg_remove = true; evaluation_to_remove = evaluation}
           }]"
-        disabled
-        class="mt-4"
-      />
+      disabled
+      class="mt-4"
+    />
 
-      <div class="text-center mt-4" v-show="evaluations.length === 0">No hay evaluaciones.</div>
+    <div class="text-center mt-4" v-show="evaluations.length === 0">No hay evaluaciones.</div>
 
-      <!-- Dialog Remove -->
-      <v-dialog v-model="dlg_remove" persistent max-width="400">
-        <div class="m-card">
-          <div class="m-card__body">
-            <h3>¿Desea eliminar?</h3>
-            <p class="mt-4">Se borrarán también los resultados de los alumnos.</p>
-          </div>
-          <div class="m-card__actions">
-            <m-btn @click="dlg_remove = false" color="primary" small>Cancelar</m-btn>
-            <m-btn @click=" dlg_remove = false; remove()" color="error" small class="ml-2">Eliminar</m-btn>
-          </div>
+    <!-- Dialog Remove -->
+    <v-dialog v-model="dlg_remove" persistent max-width="400">
+      <div class="m-card">
+        <div class="m-card__body">
+          <h3>¿Desea eliminar?</h3>
+          <p class="mt-4">Se borrarán también los resultados de los alumnos.</p>
         </div>
-      </v-dialog>
-    </div>
-    <EvaluationEditor
-      v-else-if="edit"
-      :evaluation="evaluation"
-      :getEvaluations="getEvaluations"
-      :unselect="unselect"
-    />
-    <Results
-      v-else
-      :evaluation_id="evaluation._id.$oid"
-      :getEvaluations="getEvaluations"
-      :unselect="unselect"
-    />
+        <div class="m-card__actions">
+          <m-btn @click="dlg_remove = false" color="primary" small>Cancelar</m-btn>
+          <m-btn @click=" dlg_remove = false; remove()" color="error" small class="ml-2">Eliminar</m-btn>
+        </div>
+      </div>
+    </v-dialog>
   </div>
+  <EvaluationEditor
+    v-else-if="edit"
+    :evaluation="evaluation"
+    :getEvaluations="getEvaluations"
+    :unselect="unselect"
+    class="m-container pa-4"
+  />
+  <Results v-else :evaluation_id="evaluation._id.$oid" :unselect="unselect" class="pa-4" />
 </template>
 
 <script>
@@ -164,6 +158,7 @@ export default {
     },
     unselect() {
       this.evaluation = null;
+      this.getEvaluations();
     },
     results(evaluation) {
       this.edit = false;
