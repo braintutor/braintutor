@@ -87,6 +87,7 @@ import EventModel from "@/models/Event";
 
 export default {
   data: () => ({
+    session_id: "",
     events: [],
     event_selected: null,
     date_selected: null,
@@ -98,7 +99,7 @@ export default {
     EventModel,
   }),
   async created() {
-    this.init();
+    await this.init();
   },
   methods: {
     ...mapMutations(["loading", "loading_msg"]),

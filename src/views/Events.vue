@@ -1,6 +1,5 @@
 <template>
-  <div class="m-container pt-0">
-    <loading :active="loading" :message="loading_message" />
+  <div class="m-container my-3">
     <div class="filter">
       <span class="filter__text">Mostrar:</span>
       <label class="filter__item">
@@ -10,117 +9,58 @@
         <input class="mr-1" type="checkbox" value="task" v-model="filters" />Tareas
       </label>
     </div>
-    <div v-show="!show_events_selected" class="calendar-container m-card">
-      <div class="calendar-control">
-        <span class="calendar-date">{{calendar_date}}</span>
-        <div class="calendar-actions">
-          <v-tooltip top>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn icon v-bind="attrs" v-on="on" class="calendar-action" @click="today()">
-                <v-icon>mdi-calendar-today</v-icon>
-              </v-btn>
-            </template>
-            <span style="font-size: .75rem">Hoy</span>
-          </v-tooltip>
-          <v-tooltip top>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn icon v-bind="attrs" v-on="on" class="calendar-action" @click="prev()">
-                <v-icon>mdi-chevron-left</v-icon>
-              </v-btn>
-            </template>
-            <span style="font-size: .75rem">Mes Anterior</span>
-          </v-tooltip>
-          <v-tooltip top>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn icon v-bind="attrs" v-on="on" class="calendar-action" @click="next()">
-                <v-icon>mdi-chevron-right</v-icon>
-              </v-btn>
-            </template>
-            <span style="font-size: .75rem">Mes Siguiente</span>
-          </v-tooltip>
+
+    <m-calendar :events="events_f" class="calendar">
+      <template v-slot:event_info="{ event }">
+        <div>
+          <p class="mt-5">{{event.description}}</p>
         </div>
-      </div>
-      <FullCalendar
-        class="fullcalendar"
-        ref="calendar"
-        :locale="locale"
-        :plugins="calendarPlugins"
-        :events="events_f"
-        @dateClick="dateClick"
-        @eventClick="eventClick"
-        eventTextColor="#fff"
-      />
-      <div class="legend">
-        <div class="legend__item" v-for="(session, s_idx) in sessions" :key="s_idx">
-          <div class="legend__name">{{session.course.name}}</div>
-          <div class="legend__color" :style="{'background-color': session.color}"></div>
+        <div v-if="event.type === 'task'" class="m-card__actions pa-0 pt-3">
+          <m-btn
+            @click="redirect('task', {task_id: event._id.$oid})"
+            color="primary"
+            small
+          >Ver Respuesta</m-btn>
         </div>
+      </template>
+    </m-calendar>
+
+    <div class="legend">
+      <div class="legend__item" v-for="(session, s_idx) in sessions" :key="s_idx">
+        <div class="legend__name">{{session.course.name}}</div>
+        <div class="legend__color" :style="{'background-color': session.color}"></div>
       </div>
     </div>
-    <!-- Events Selected -->
-    <Event
-      v-show="show_events_selected"
-      :event_date="event_date"
-      :events="events_selected"
-      :unselectEvents="unselectEvents"
-      :restoreEvents="restoreEvents"
-    />
   </div>
 </template>
 
 <script>
-import Event from "@/components/Session/Events/Event";
-import loading from "@/components/loading";
-
+import { redirect } from "@/services/router.js";
 import { getSessionsEventsAndTaksByStudent } from "@/services/sessionService";
 
-import FullCalendar from "@fullcalendar/vue";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import esLocale from "@fullcalendar/core/locales/es";
-import { formatDate } from "@fullcalendar/core";
-import interactionPlugin from "@fullcalendar/interaction";
+import { mapMutations } from "vuex";
 
 export default {
   data: () => ({
     sessions: [],
     events: [],
     filters: ["task", "event"],
-    event_date: "",
-    //
-    show_events_selected: false,
-    calendar_date: null,
-    loading: true,
-    loading_message: "",
-    // CALENDAR
-    calendar: null,
-    locale: esLocale,
-    calendarPlugins: [dayGridPlugin, interactionPlugin],
   }),
   computed: {
     events_f() {
       return this.events.filter((event) => this.filters.includes(event.type));
     },
-    events_selected() {
-      return this.events_f.filter((event) => event.date === this.event_date);
-    },
   },
-  async mounted() {
-    this.calendar = this.$refs.calendar.getApi();
-    this.updateCalendarDate();
-    await this.restoreEvents();
+  async created() {
+    await this.init();
   },
   methods: {
-    dateClick({ dateStr }) {
-      this.event_date = dateStr;
-      this.show_events_selected = true;
-    },
-    eventClick() {},
-    async unselectEvents() {
-      this.show_events_selected = false;
-    },
-    async restoreEvents() {
-      this.loading = true;
-      this.loading_message = "Cargando Eventos";
+    redirect,
+    ...mapMutations(["loading", "loading_msg"]),
+    async init() {
+      this.loading(true);
+      this.loading_msg("Cargando Eventos");
+
       try {
         let sessions = await getSessionsEventsAndTaksByStudent();
         let events = [];
@@ -132,12 +72,8 @@ export default {
 
           events = events.concat(
             session.events.map((i) => {
-              let time_start = new Date(i.time_start.$date)
-                .toISOString()
-                .substring(0, 16);
-              let date = this.dateFormat(time_start);
+              let date = new Date(i.time_start.$date);
               return {
-                time_start,
                 date,
                 type: "event",
                 color,
@@ -147,12 +83,8 @@ export default {
           );
           events = events.concat(
             session.tasks.map((i) => {
-              let time_start = new Date(i.time_start.$date)
-                .toISOString()
-                .substring(0, 16);
-              let date = this.dateFormat(time_start);
+              let date = new Date(i.time_start.$date);
               return {
-                time_start,
                 date,
                 type: "task",
                 color,
@@ -164,65 +96,16 @@ export default {
         this.sessions = sessions;
         this.events = events;
       } catch (error) {
-        this.$root.$children[0].showMessage(
-          "",
-          error.msg || error || "Ha ocurrido un error."
-        );
+        this.$root.$children[0].showMessage("", error.msg || error);
       }
-      this.loading = false;
+      this.loading(false);
     },
-    dateFormat(date) {
-      date = new Date(date);
-      let day = this.format_two_digits(date.getDate());
-      let month = this.format_two_digits(date.getMonth() + 1);
-      let year = date.getFullYear();
-      // let hours = this.format_two_digits(date.getHours());
-      // let minutes = this.format_two_digits(date.getMinutes());
-      date = `${year}-${month}-${day}`;
-      return date;
-    },
-    format_two_digits(n) {
-      return n < 10 ? "0" + n : n;
-    },
-    // Calendar
-    today() {
-      this.calendar.today();
-      this.updateCalendarDate();
-    },
-    prev() {
-      this.calendar.prev();
-      this.updateCalendarDate();
-    },
-    next() {
-      this.calendar.next();
-      this.updateCalendarDate();
-    },
-    gotoDate(date) {
-      this.calendar.gotoDate(date);
-      this.updateCalendarDate();
-    },
-    getCalendarDate() {
-      return this.calendar.getDate();
-    },
-    updateCalendarDate() {
-      let date = formatDate(this.getCalendarDate(), {
-        month: "long",
-        year: "numeric",
-        locale: "es",
-      });
-      this.calendar_date = date.charAt(0).toUpperCase() + date.slice(1);
-    },
-  },
-  components: {
-    Event,
-    FullCalendar,
-    loading,
   },
 };
 </script>
 
-<style lang="scss">
-@import "@/styles/events";
+
+<style lang='scss' scoped>
 .filter {
   width: max-content;
   margin: 0 auto 12px;
@@ -236,6 +119,27 @@ export default {
     margin-left: 0.75rem;
     font-size: 0.9rem;
     cursor: pointer;
+  }
+}
+.calendar {
+  box-shadow: none !important;
+}
+.legend {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  &__item {
+    margin: 10px 14px;
+    display: flex;
+    align-items: center;
+  }
+  &__name {
+    font-size: 0.8rem;
+  }
+  &__color {
+    height: 10px;
+    width: 40px;
+    margin-left: 10px;
   }
 }
 </style>

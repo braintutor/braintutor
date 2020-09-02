@@ -66,7 +66,7 @@ const routes = [
       },
       {
         path: "events",
-        component: () => import("../components/Session/Events/index"),
+        component: () => import("../components/Session/Events"),
       },
       {
         path: "evaluations",
@@ -100,7 +100,7 @@ const routes = [
       {
         path: "events",
         component: () =>
-          import("../components/SessionEditor/EventsEditor/index"),
+          import("../components/SessionEditor/EventsEditor"),
       },
       {
         path: "evaluations",
