@@ -1,6 +1,13 @@
 <template>
   <div>
-    <Menu :title="student.name" :back="unselect" />
+    <div class="m-menu">
+      <div class="m-menu__left">
+        <v-btn small icon @click="unselect()">
+          <v-icon style="font-size: 1.5rem">mdi-arrow-left</v-icon>
+        </v-btn>
+        <span class="m-menu__title">{{student.name}}</span>
+      </div>
+    </div>
 
     <div class="m-card mt-3 pa-3">
       <p class="text-center">Estilo de Aprendizaje</p>
@@ -25,18 +32,14 @@
 </template>
 
 <script>
-import Menu from "@/components/Menu";
 import Chart from "chart.js";
 
 export default {
   props: ["student", "unselect"],
   data: () => ({
     crtLs: null,
-    crtT: null
+    crtT: null,
   }),
-  components: {
-    Menu
-  },
   created() {
     this.student.name = `${this.student.last_name}, ${this.student.first_name}`;
   },
@@ -54,7 +57,7 @@ export default {
           type: "bar",
           options: {
             legend: {
-              display: false
+              display: false,
             },
             scales: {
               yAxes: [
@@ -62,12 +65,12 @@ export default {
                   ticks: {
                     beginAtZero: true,
                     max: 11,
-                    stepSize: 1
-                  }
-                }
-              ]
-            }
-          }
+                    stepSize: 1,
+                  },
+                },
+              ],
+            },
+          },
         });
 
         // UPDATING
@@ -79,7 +82,7 @@ export default {
           entrada,
           entrada_valor,
           comprension,
-          comprension_valor
+          comprension_valor,
         } = learning_style;
         this.crtLs.data = {
           labels: [procesamiento, percepcion, entrada, comprension],
@@ -90,23 +93,23 @@ export default {
                 procesamiento_valor,
                 percepcion_valor,
                 entrada_valor,
-                comprension_valor
+                comprension_valor,
               ],
               backgroundColor: [
                 "rgba(255, 99, 132, 0.2)",
                 "rgba(54, 162, 235, 0.2)",
                 "rgba(255, 206, 86, 0.2)",
-                "rgba(75, 192, 192, 0.2)"
+                "rgba(75, 192, 192, 0.2)",
               ],
               borderColor: [
                 "rgba(255, 99, 132, 1)",
                 "rgba(54, 162, 235, 1)",
                 "rgba(255, 206, 86, 1)",
-                "rgba(75, 192, 192, 1)"
+                "rgba(75, 192, 192, 1)",
               ],
-              borderWidth: 1
-            }
-          ]
+              borderWidth: 1,
+            },
+          ],
         };
         this.crtLs.update();
       }
@@ -122,25 +125,25 @@ export default {
           type: "bar",
           options: {
             legend: {
-              display: false
+              display: false,
             },
             scales: {
               yAxes: [
                 {
                   ticks: {
                     beginAtZero: true,
-                    stepSize: 1
-                  }
-                }
-              ]
-            }
-          }
+                    stepSize: 1,
+                  },
+                },
+              ],
+            },
+          },
         });
 
         // UPDATING
         let limit = 5;
         let keys = Object.keys(time);
-        let values = Object.values(time).map(t => t / 60);
+        let values = Object.values(time).map((t) => t / 60);
         keys = keys.slice(Math.max(keys.length - limit, 0), keys.length);
         values = values.slice(
           Math.max(values.length - limit, 0),
@@ -155,14 +158,14 @@ export default {
               data: values,
               backgroundColor: "rgba(54, 162, 235, 0.2)",
               borderColor: "rgba(54, 162, 235, 1)",
-              borderWidth: 1
-            }
-          ]
+              borderWidth: 1,
+            },
+          ],
         };
         this.crtT.update();
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
