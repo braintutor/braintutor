@@ -2,10 +2,12 @@
   <div class="m-container my-3">
     <m-calendar :events="events" class="calendar" @on-date-click="showCreate">
       <template v-slot:event_info="{ event }">
-        <div class="mt-5">
-          <p>{{event.description}}</p>
-          <m-btn color="primary" small @click="showEdit(event)" class="mr-2">Editar</m-btn>
-          <m-btn color="error" small @click="dlg_delete = true; event_selected = event">Eliminar</m-btn>
+        <div>
+          <p class="mt-5">{{event.description}}</p>
+          <div v-if="event.type === 'event'" class="m-card__actions pa-0 pt-3">
+            <m-btn color="primary" small @click="showEdit(event)" class="mr-2">Editar</m-btn>
+            <m-btn color="error" small @click="dlg_delete = true; event_selected = event">Eliminar</m-btn>
+          </div>
         </div>
       </template>
     </m-calendar>
@@ -17,7 +19,7 @@
           <h2 v-if="action === 'create'">Nuevo Evento</h2>
           <h2 v-else>Editar Evento</h2>
           <div class="mt-5">
-            <strong class="mr-4">Fecha:</strong>
+            <strong class="mr-3">Fecha:</strong>
             <input type="datetime-local" v-model="date_selected" />
           </div>
           <div class="mt-4">
@@ -66,6 +68,7 @@ import {
   updateEvent,
   removeEvent,
 } from "@/services/eventService";
+import { getTasksBySessionTeacher } from "@/services/taskService";
 
 import { mapMutations } from "vuex";
 
@@ -94,11 +97,20 @@ export default {
       this.session_id = getParam("session_id");
       try {
         let events = await getEventsBySession(this.session_id);
-        events.forEach((event) => {
-          event.date = new Date(event.time_start.$date);
-          event.color = "#178ae2";
+        events.forEach((i) => {
+          i.date = new Date(i.time_start.$date);
+          i.color = "#178ae2";
+          i.type = "event";
         });
-        this.events = events;
+
+        let tasks = await getTasksBySessionTeacher(this.session_id);
+        tasks.forEach((i) => {
+          i.date = new Date(i.time_start.$date);
+          i.color = "#00af3d";
+          i.type = "task";
+        });
+
+        this.events = events.concat(tasks);
       } catch (error) {
         this.$root.$children[0].showMessage("", error.msg || error);
       }
@@ -106,7 +118,7 @@ export default {
     },
     async saveEvent() {
       this.loading(true);
-      this.loading_msg("Creando Evento");
+      this.loading_msg("Guardando Cambios");
 
       let new_event = this.new_event;
       new_event.time_start = new Date(this.date_selected);
