@@ -194,7 +194,7 @@ export default {
   justify-content: center;
   flex-wrap: wrap;
   &__item {
-    margin: 10px 14px 0 14px;
+    margin: 10px 14px;
     display: flex;
     align-items: center;
   }
