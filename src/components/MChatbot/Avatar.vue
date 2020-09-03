@@ -41,13 +41,13 @@ export default {
       "normal",
       "sad",
       "talk",
-      "wink"
+      "wink",
     ],
     time_emotion: 700,
     time_maximum: 2147483647,
     //
     fab_emotions: false,
-    timeout_animation: null
+    timeout_animation: null,
   }),
   mounted() {
     this.startAnimationNormal();
@@ -118,8 +118,8 @@ export default {
     stopTalk() {
       stopSpeech();
       this.startAnimationNormal();
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -135,8 +135,8 @@ export default {
 // }
 
 $time: 0.2s;
-$icon-height: 90px;
-$icon-width: 90px;
+$icon-height: 75px;
+$icon-width: 75px;
 
 .avatar {
   background: #7a7aff;
@@ -154,6 +154,18 @@ $icon-width: 90px;
     img {
       width: 140px;
       height: 140px;
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  $icon-height: 50px;
+  $icon-width: 50px;
+
+  .avatar {
+    img {
+      height: $icon-height;
+      width: $icon-width;
     }
   }
 }

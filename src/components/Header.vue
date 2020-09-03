@@ -1,5 +1,5 @@
 <template>
-  <div style="z-index: 100 !important">
+  <div style="z-index: var(--z-header) !important">
     <header class="header">
       <div class="header__logo" @click="redirect('home')">
         <v-img alt="BrainTutor Logo" src="@/assets/braintutor/logo.png" width="120" />
@@ -35,7 +35,7 @@
       <v-app-bar-nav-icon class="nav-icon" @click="drawer = true"></v-app-bar-nav-icon>
     </header>
 
-    <v-navigation-drawer style="z-index: 100 !important" v-model="drawer" fixed temporary>
+    <v-navigation-drawer style="z-index: var(--z-nav) !important" v-model="drawer" fixed temporary>
       <div class="nav-logo">
         <v-img alt="BrainTutor Logo" src="@/assets/braintutor/icon.png" width="25" />
       </div>

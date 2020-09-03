@@ -128,6 +128,7 @@ export default {
 
   .link {
     width: 48px;
+    padding: 8px;
     margin-bottom: 0;
     &__image {
       margin: 0;

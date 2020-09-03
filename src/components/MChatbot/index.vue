@@ -163,8 +163,9 @@ export default {
 
 <style lang='scss' scoped>
 $time: 0.2s;
-$icon-height: 90px;
-$icon-width: 90px;
+
+$icon-height: 75px;
+$icon-width: 75px;
 
 $color-blue: #0078ff;
 
@@ -176,21 +177,21 @@ $color-blue: #0078ff;
   overflow: hidden;
 
   background: #fff;
-  border-radius: 50%;
+  border-radius: 20% 20% 0 0;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   transition: $time;
-  z-index: 100;
+  z-index: var(--z-chatbot) !important;
   cursor: pointer;
 
   position: fixed;
   right: 20px;
-  bottom: 20px;
+  bottom: -5px;
 
   display: flex;
   flex-direction: column;
 
   &:hover {
-    transform: translateY(-10px);
+    transform: translateY(-5px);
     box-shadow: 0 10px 10px rgba(0, 0, 0, 0.3);
   }
 
@@ -234,9 +235,11 @@ $color-blue: #0078ff;
   }
 
   &--active {
+    bottom: 0;
+
     width: 350px;
     height: 550px;
-    border-radius: 4px;
+    border-radius: 8px 8px 0 0;
     cursor: initial;
 
     &:hover {
@@ -260,8 +263,8 @@ $color-blue: #0078ff;
 
   img {
     display: block;
-    width: $icon-width;
     height: $icon-height;
+    width: $icon-width;
     margin: 0 auto;
     transition: $time;
   }
@@ -388,13 +391,21 @@ $color-blue: #0078ff;
 }
 
 @media only screen and (max-width: 768px) {
+  $icon-height: 50px;
+  $icon-width: 50px;
+
   .chatbot {
+    height: $icon-height;
+    width: $icon-width;
+    top: calc(100vh - #{$icon-height} + 5px);
+    right: 10px;
+
     &--active {
-      height: 100%;
+      height: calc(100vh - 56px);
       width: 100%;
       max-height: initial;
       max-width: initial;
-      bottom: 0;
+      top: 56px;
       right: 0;
       border-radius: 0;
     }

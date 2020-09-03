@@ -14,7 +14,7 @@ export default {
 <style lang='scss' scoped>
 .loading {
   position: fixed;
-  top: 0;
+  top: 56px;
   left: 0;
   height: 100vh;
   width: 100vw;
@@ -22,7 +22,7 @@ export default {
   background: rgba(255, 255, 255, 0);
   pointer-events: none;
   opacity: 0;
-  z-index: 1000;
+  z-index: var(--z-loading) !important;
   transition: all 0.3s;
   //
   display: flex;

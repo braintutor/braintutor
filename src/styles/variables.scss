@@ -4,6 +4,13 @@
   --color-font-disable: rgb(155, 155, 155);
 
   --margin-spacer: 20px;
+
+  // z-index
+  --z-nav: 100;
+  --z-header: 100;
+  --z-loading: 90;
+  --z-event: 80;
+  --z-chatbot: 70;
 }
 
 // .v-application * {

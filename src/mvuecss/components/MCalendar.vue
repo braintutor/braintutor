@@ -251,6 +251,11 @@ export default {
   &__body {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
+
+    & > * {
+      // important: prevent grid resize
+      overflow: hidden;
+    }
   }
   &__actions {
     display: flex;
@@ -303,7 +308,7 @@ export default {
   }
   &__event {
     overflow: hidden;
-    max-height: 24px;
+    max-height: 26px;
     padding: 5px;
     margin-top: 4px;
     cursor: pointer;
@@ -328,7 +333,7 @@ export default {
 
 .event {
   width: 100%;
-  z-index: 100;
+  z-index: var(--z-event); // important from Braintutor
 
   position: fixed;
   top: 50%;
@@ -384,6 +389,7 @@ export default {
       width: 20px;
     }
     &__event {
+      max-height: 18px; // important
       margin-top: 1px;
       padding: 1px;
     }
@@ -392,10 +398,16 @@ export default {
     height: 100vh !important;
     width: 100vw !important;
 
-    top: 0 !important;
+    top: 56px !important; // important from Braintutor
+    // top: 0 !important;
     left: 0 !important;
 
     border-radius: 0;
+
+    &__body {
+      // important
+      max-height: 100%;
+    }
   }
 }
 </style>

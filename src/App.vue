@@ -2,9 +2,9 @@
   <v-app class="m-app" id="braintutor">
     <Header />
     <v-main class="m-app__body">
-      <loading :active="loading" :message="loading_msg" />
       <router-view></router-view>
     </v-main>
+    <loading :active="loading" :message="loading_msg" />
     <Chatbot v-if="show_chatbot" :knowledge="knowledge" :loading="loading_knowledge" />
     <!-- Message -->
     <v-dialog v-model="dlg_message" max-width="320" persistent>
