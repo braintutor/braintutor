@@ -62,7 +62,8 @@
         <h2 class="event__title">{{event_selected.title}}</h2>
         <p class="event__date">{{_formatDate(event_selected.date || new Date())}}</p>
         <!-- CUSTOM INFO -->
-        <slot name="event_info" :event="event_selected"></slot>
+        <!-- TODO Add to MVUECSS (methods) -->
+        <slot name="event_info" :event="event_selected" :methods="{ hideEvent }"></slot>
       </div>
       <div v-if="false" class="event__actions m-card__actions">
         <m-btn color="primary" small>Ver Más</m-btn>
@@ -147,6 +148,11 @@ export default {
       }, 100);
 
       e.stopPropagation();
+    },
+    hideEvent() {
+      // TODO Add to MVUECSS
+      this.event_selected = {};
+      this.show_event = false;
     },
     showDate(date) {
       let { year, month, first_day, total_days } = this.getDateValues(date);

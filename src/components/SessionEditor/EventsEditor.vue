@@ -12,12 +12,21 @@
     </div>
 
     <m-calendar :events="events" class="calendar" @on-date-click="showCreate">
-      <template v-slot:event_info="{ event }">
+      <template v-slot:event_info="{ event, methods }">
         <div>
           <p class="mt-5">{{event.description}}</p>
           <div v-if="event.type === 'event'" class="m-card__actions pa-0 pt-3">
-            <m-btn color="primary" small @click="showEdit(event)" class="mr-2">Editar</m-btn>
-            <m-btn color="error" small @click="dlg_delete = true; event_selected = event">Eliminar</m-btn>
+            <m-btn
+              color="primary"
+              small
+              @click="showEdit(event); methods.hideEvent()"
+              class="mr-2"
+            >Editar</m-btn>
+            <m-btn
+              color="error"
+              small
+              @click="dlg_delete = true; event_selected = event; methods.hideEvent()"
+            >Eliminar</m-btn>
           </div>
         </div>
       </template>
