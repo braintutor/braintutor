@@ -80,48 +80,35 @@
 
     <!-- DIALOG PASSWORD -->
     <v-dialog v-model="dialog_password" max-width="400">
-      <v-card>
-        <v-card-title>Cambiar Contraseña</v-card-title>
-        <v-card-text>
-          <div class="mt-3">
-            <span>Contraseña actual</span>
-            <v-text-field
-              type="password"
-              class="text-field"
-              v-model="current_password"
-              :maxlength="User.password.max_length"
-              dense
-              hide-details
-            ></v-text-field>
-          </div>
-          <div class="mt-10">
-            <span>Nueva contraseña</span>
-            <v-text-field
-              type="password"
-              class="text-field"
-              v-model="new_password"
-              :maxlength="User.password.max_length"
-              dense
-              hide-details
-            ></v-text-field>
-          </div>
-          <div class="mt-5">
-            <span>Confirmar nueva contraseña</span>
-            <v-text-field
-              type="password"
-              class="text-field"
-              v-model="confirm_new_password"
-              :maxlength="User.password.max_length"
-              dense
-              hide-details
-            ></v-text-field>
-          </div>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
+      <div class="m-card">
+        <div class="m-card__body">
+          <h3>Cambiar Contraseña</h3>
+          <v-text-field
+            class="mt-4 text-field"
+            type="password"
+            v-model="current_password"
+            :maxlength="User.password.max_length"
+            label="Contraseña actual"
+          ></v-text-field>
+          <v-text-field
+            type="password"
+            class="text-field"
+            v-model="new_password"
+            :maxlength="User.password.max_length"
+            label="Nueva contraseña"
+          ></v-text-field>
+          <v-text-field
+            type="password"
+            class="text-field"
+            v-model="confirm_new_password"
+            :maxlength="User.password.max_length"
+            label="Confirmar nueva contraseña"
+          ></v-text-field>
+        </div>
+        <div class="m-card__actions">
           <m-btn @click="updatePassword()" color="primary" small>Guardar</m-btn>
-        </v-card-actions>
-      </v-card>
+        </div>
+      </div>
     </v-dialog>
   </div>
 </template>

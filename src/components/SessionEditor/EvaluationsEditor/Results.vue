@@ -14,7 +14,7 @@
         <thead>
           <tr>
             <th></th>
-            <th></th>
+            <!-- <th></th> -->
             <th></th>
             <th class="text-center">C</th>
             <th class="text-center">I</th>
@@ -38,6 +38,7 @@
                     v-bind="attrs"
                     v-on="on"
                     @click="dialog_dlt = true; student_dlt = student"
+                    class="mb-1"
                   >
                     <v-icon>mdi-playlist-remove</v-icon>
                   </v-btn>
@@ -47,7 +48,7 @@
             </td>
             <td v-else></td>
             <td class="student">{{`${student.last_name}, ${student.first_name}`}}</td>
-            <td></td>
+            <!-- <td></td> -->
             <td class="text-center">{{values.corrects}}</td>
             <td class="text-center">{{values.incorrects}}</td>
             <td class="text-center">{{values.empty}}</td>
@@ -174,7 +175,7 @@ $cell-max-width: 148px;
 .m-table {
   margin: 0 auto;
   width: max-content;
-  padding: 10px;
+  // padding: 10px;
   th {
     min-width: $cell-min-width;
     max-width: $cell-max-width;

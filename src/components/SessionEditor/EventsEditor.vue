@@ -33,7 +33,7 @@
     </m-calendar>
 
     <!-- DLG CREATE -->
-    <v-dialog v-model="dlg_create" max-width="800">
+    <v-dialog v-model="dlg_create" max-width="800" :persistent="action !== 'create'">
       <div class="m-card">
         <div class="m-card__body">
           <h2 v-if="action === 'create'">Nuevo Evento</h2>

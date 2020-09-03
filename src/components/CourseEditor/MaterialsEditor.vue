@@ -1,20 +1,19 @@
 <template>
-  <div class="m-container pa-2" style="padding-bottom: 240px !important">
+  <div class="m-container pa-2" style="padding-bottom: 80px !important">
     <loading :active="loading" :message="loading_msg" />
-    <div class="options">
-      <v-btn
+    <div class="options mt-2">
+      <m-btn
         @click="createChatbot()"
         :disabled="chatbots.length >= Variables.max_chatbots_per_course"
         class="ml-2"
+        color="primary"
         small
-        text
-        rounded
       >
         <v-icon class="mr-2" small>mdi-plus</v-icon>Crear Unidad
-      </v-btn>
+      </m-btn>
     </div>
     <!-- Chatbot -->
-    <section class="chatbot" v-for="(chatbot, idx) in chatbots" :key="idx">
+    <section class="chatbot mt-4" v-for="(chatbot, idx) in chatbots" :key="idx">
       <!-- <div class="chatbot__menu" @click="chatbot.show = !chatbot.show; $forceUpdate()"> -->
       <div class="chatbot__menu">
         <p v-if="!chatbot.edit_name" class="chatbot__name">{{chatbot.name}}</p>
@@ -416,12 +415,12 @@ export default {
     font-size: 1rem;
   }
   &__options {
-    opacity: 0;
-    transition: 0.3s;
+    // opacity: 0;
+    // transition: 0.3s;
 
-    .material:hover & {
-      opacity: 1;
-    }
+    // .material:hover & {
+    //   opacity: 1;
+    // }
   }
   &__menu {
     display: flex;

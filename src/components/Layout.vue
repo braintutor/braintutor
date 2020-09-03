@@ -63,8 +63,9 @@ export default {
 }
 
 .sidebar {
-  width: 110px;
-  border-right: 1px solid #ccc;
+  padding: 8px;
+  width: 120px;
+  // border-right: 1px solid #ccc;
 }
 
 .content {
@@ -75,9 +76,11 @@ export default {
 
 .link {
   padding: 13px 8px 10px 8px;
+  margin-bottom: 8px;
   color: #707070;
   font-size: 0.75rem;
   font-weight: bold;
+  border-radius: 8px;
   opacity: 0.5;
   transition: 0.3s;
   cursor: pointer;
@@ -99,10 +102,10 @@ export default {
   }
 
   &--active {
-    background: #e0eaff;
+    background: #e8efff;
     opacity: 1;
     &:hover {
-      background: #e0eaff;
+      background: #e8efff;
       opacity: 1;
     }
   }
@@ -130,16 +133,13 @@ export default {
 
   .link {
     width: 48px;
+    padding: 8px;
+    margin-bottom: 0;
     &__image {
       margin: 0;
     }
     &__name {
       display: none;
-    }
-
-    &--active {
-      background: none;
-      border-bottom: 3px solid #5553ff;
     }
   }
 }

@@ -3,8 +3,8 @@
     <loading :active="loading" :message="loading_msg" />
 
     <h1 class="m-title">Configuración</h1>
-    <section class="form m-card py-2 px-3">
-      <section class="form__body">
+    <section class="form m-card">
+      <section class="form__body m-card__body">
         <!-- Name -->
         <strong class="mt-1">Nombre:</strong>
         <v-text-field
@@ -35,7 +35,7 @@
         >{{material.description}}</span>-->
       </section>
       <!-- Actions -->
-      <div class="form__actions">
+      <div class="form__actions m-card__actions">
         <v-btn v-if="show_edit" @click="show_edit = false" small text outlined rounded>
           <v-icon class="mr-2" small>mdi-close</v-icon>Cancelar
         </v-btn>
@@ -73,8 +73,8 @@
     </div>-->
 
     <!-- Actions -->
-    <div class="options my-3">
-      <v-btn @click="dlg_remove = true" color="error" small>Eliminar Material</v-btn>
+    <div class="options my-4">
+      <m-btn @click="dlg_remove = true" color="error" small>Eliminar Material</m-btn>
     </div>
 
     <!-- dlg url -->
@@ -97,21 +97,17 @@
     </v-dialog>
 
     <!-- dlg remove -->
-    <v-dialog v-model="dlg_remove" max-width="300">
-      <v-card>
-        <v-card-title>Confirmar eliminación</v-card-title>
-        <v-card-text>Si elimina este contenido, no podrá revertir los cambios.</v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn small text @click="dlg_remove = false">Cancelar</v-btn>
-          <v-btn
-            small
-            depressed
-            color="error"
-            @click="dlg_remove = false; removeMaterial()"
-          >Eliminar</v-btn>
-        </v-card-actions>
-      </v-card>
+    <v-dialog v-model="dlg_remove" max-width="400">
+      <div class="m-card">
+        <div class="m-card__body">
+          <h3>Confirmar eliminación</h3>
+          <p class="mt-4">Si elimina este contenido, no podrá revertir los cambios.</p>
+        </div>
+        <div class="m-card__actions">
+          <m-btn @click="dlg_remove = false" color="primary" small class="mr-2">Cancelar</m-btn>
+          <m-btn @click="dlg_remove = false; removeMaterial()" color="error" small>Eliminar</m-btn>
+        </div>
+      </div>
     </v-dialog>
   </div>
 </template>
@@ -252,11 +248,6 @@ export default {
     row-gap: 6px;
     column-gap: 16px;
     align-items: flex-start;
-  }
-  &__actions {
-    margin-top: 10px;
-    display: flex;
-    justify-content: flex-end;
   }
 }
 

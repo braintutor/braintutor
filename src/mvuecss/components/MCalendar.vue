@@ -151,7 +151,7 @@ export default {
     },
     hideEvent() {
       // TODO Add to MVUECSS
-      this.event_selected = {};
+      // this.event_selected = {};
       this.show_event = false;
     },
     showDate(date) {
