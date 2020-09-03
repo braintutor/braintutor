@@ -9,7 +9,7 @@
         <div
           v-for="([category, value], idx) in Object.entries(categories)"
           :key="idx"
-          class="col-6 col-sm-3 px-1"
+          class="col-6 col-sm-3"
         >
           <section class="category" @click="selectCategory(category)">
             <img class="category__image" :src="value.image" alt />
@@ -144,10 +144,11 @@ export default {
 
 <style lang='scss' scoped>
 .category {
-  padding: 10px;
-  border-radius: 20px;
+  margin: 8px;
+  padding: 16px;
   text-align: center;
   transition: 0.5s;
+  border-radius: 6px;
   cursor: pointer;
 
   display: flex;
@@ -155,9 +156,10 @@ export default {
   align-items: center;
 
   &:hover {
-    transform: scale(1.01);
-    box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2),
-      0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12) !important;
+    background: #e4eeff;
+    transform: translateY(-10px);
+    // box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2),
+    //   0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12) !important;
   }
 
   &__image {
