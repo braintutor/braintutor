@@ -28,7 +28,7 @@
         class="mt-4"
       />
 
-      <p class="text-center mt-2" v-show="evaluations.length === 0">No hay evaluaciones.</p>
+      <p class="text-center my-4" v-show="evaluations.length === 0">No hay evaluaciones.</p>
 
       <!-- Dialog Start Evaluation -->
       <v-dialog v-model="dialog_start" persistent max-width="400">
@@ -89,11 +89,16 @@ export default {
     async getEvaluations() {
       this.loading(true);
       this.loading_msg("Cargando Evaluaciones");
-      this.evaluations = await getEvaluationsBySessionStudent(this.session_id);
-
-      for (let e of this.evaluations) {
-        if (e.time_start.$date) e.time_start = new Date(e.time_start.$date);
-        if (e.time_end.$date) e.time_end = new Date(e.time_end.$date);
+      try {
+        this.evaluations = await getEvaluationsBySessionStudent(
+          this.session_id
+        );
+        for (let e of this.evaluations) {
+          if (e.time_start.$date) e.time_start = new Date(e.time_start.$date);
+          if (e.time_end.$date) e.time_end = new Date(e.time_end.$date);
+        }
+      } catch (error) {
+        this.$root.$children[0].showMessage("", error.msg || error);
       }
       this.loading(false);
     },
