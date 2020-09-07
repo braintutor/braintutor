@@ -16,7 +16,7 @@
       <EvaluationCard
         v-for="(evaluation, c_idx) in evaluations"
         v-model="evaluation.dateState"
-        v-show="showAvailable === isAccesible(evaluation)"
+        v-show="showAvailable === isAvailable(evaluation)"
         :key="c_idx"
         :name="evaluation.name"
         :time_start="evaluation.time_start"
@@ -24,7 +24,7 @@
         :hasResult="!!evaluation.result"
         student
         @click="showDialogStart(evaluation)"
-        :class="[isAccesible(evaluation)? 'levitation': 'evaluation--disabled']"
+        :class="[isAvailable(evaluation)? 'levitation': 'evaluation--disabled']"
         class="mt-4"
       />
 
@@ -121,7 +121,7 @@ export default {
       this.evaluation_to_start = evaluation;
       this.dialog_start = true;
     },
-    isAccesible(evaluation) {
+    isAvailable(evaluation) {
       return !evaluation.result && evaluation.dateState !== -1; // -1:past 0:current 1:future
     },
   },
