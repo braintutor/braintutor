@@ -14,21 +14,20 @@
       </div>
       <!-- EVALUATIONS -->
       <EvaluationCard
-        v-for="(evaluation, c_idx) in evaluations"
+        v-for="evaluation in evaluations_filtered"
         v-model="evaluation.dateState"
-        v-show="showAvailable === isAvailable(evaluation)"
-        :key="c_idx"
+        :key="evaluation._id.$oid"
         :name="evaluation.name"
         :time_start="evaluation.time_start"
         :time_end="evaluation.time_end"
         :hasResult="!!evaluation.result"
         student
         @click="showDialogStart(evaluation)"
-        :class="[isAvailable(evaluation)? 'levitation': 'evaluation--disabled']"
+        :class="[showAvailable? 'levitation': 'evaluation--disabled']"
         class="evaluation mt-4"
       />
 
-      <p class="text-center my-4" v-show="evaluations.length === 0">No hay evaluaciones.</p>
+      <p class="text-center my-4" v-show="evaluations_filtered.length === 0">No hay evaluaciones.</p>
 
       <!-- Dialog Start Evaluation -->
       <v-dialog v-model="dialog_start" persistent max-width="400">
@@ -80,6 +79,13 @@ export default {
     showAvailable: true,
     dialog_start: false,
   }),
+  computed: {
+    evaluations_filtered() {
+      return this.evaluations.filter(
+        (e) => this.isAvailable(e) === this.showAvailable
+      );
+    },
+  },
   async mounted() {
     this.session_id = getParam("session_id");
     this.getEvaluations();

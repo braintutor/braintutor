@@ -2,23 +2,14 @@
   <div class="tasks m-container mt-4">
     <!-- MENU -->
     <div class="tasks__menu">
-      <span
-        class="tasks__menu-option"
-        :class="{'active': show_pending}"
-        small
-        rounded
-        color="success"
+      <m-btn
         @click="show_pending = true"
-      >Pendientes</span>
-      <span class="mx-2">|</span>
-      <span
-        class="tasks__menu-option"
-        :class="{'active': !show_pending}"
+        :text="!show_pending"
+        color="primary"
         small
-        rounded
-        color="success"
-        @click="show_pending = false"
-      >Respondidos</span>
+        class="mr-2"
+      >Pendientes</m-btn>
+      <m-btn @click="show_pending = false" :text="show_pending" color="dark" small>Respondidos</m-btn>
     </div>
     <!-- TASKS -->
     <TaskCard
@@ -99,22 +90,10 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.tasks__menu {
-  font-size: 1.1rem;
-  //
-  display: flex;
-  justify-content: center;
-  .tasks__menu-option {
-    color: #ccc;
-    transition: all 0.3s;
-    cursor: pointer;
-    &.active {
-      color: #000;
-      font-weight: bold;
-    }
-    &:hover {
-      color: #000;
-    }
+.tasks {
+  &__menu {
+    width: max-content;
+    margin: 10px auto;
   }
 }
 </style>
