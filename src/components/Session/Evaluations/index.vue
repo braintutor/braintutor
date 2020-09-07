@@ -9,14 +9,20 @@
           color="primary"
           small
           class="mr-2"
-        >Nuevos</m-btn>
-        <m-btn @click="showAvailable = false" :text="showAvailable" color="dark" small>Otros</m-btn>
+        >Por Realizar</m-btn>
+        <m-btn
+          @click="showAvailable = false"
+          :text="showAvailable"
+          color="dark"
+          small
+        >Otros</m-btn>
       </div>
       <!-- EVALUATIONS -->
       <EvaluationCard
-        v-for="evaluation in evaluations_filtered"
+        v-for="(evaluation, c_idx) in evaluations"
         v-model="evaluation.dateState"
-        :key="evaluation._id.$oid"
+        v-show="showAvailable === isAvailable(evaluation)"
+        :key="c_idx"
         :name="evaluation.name"
         :time_start="evaluation.time_start"
         :time_end="evaluation.time_end"
@@ -27,7 +33,7 @@
         class="evaluation mt-4"
       />
 
-      <p class="text-center my-4" v-show="evaluations_filtered.length === 0">No hay evaluaciones.</p>
+      <p class="text-center my-4" v-show="evaluations.length === 0">No hay evaluaciones.</p>
 
       <!-- Dialog Start Evaluation -->
       <v-dialog v-model="dialog_start" persistent max-width="400">
@@ -79,14 +85,6 @@ export default {
     showAvailable: true,
     dialog_start: false,
   }),
-  computed: {
-    evaluations_filtered() {
-      return this.evaluations.filter((e) => {
-        let is_vailable = !e.result && e.dateState !== -1; // -1:past 0:current 1:future
-        return is_vailable === this.showAvailable;
-      });
-    },
-  },
   async mounted() {
     this.session_id = getParam("session_id");
     this.getEvaluations();
@@ -128,6 +126,9 @@ export default {
       this.evaluation_to_start = evaluation;
       this.dialog_start = true;
     },
+    isAvailable(evaluation) {
+      return !evaluation.result && evaluation.dateState !== -1; // -1:past 0:current 1:future
+    },
   },
   components: {
     EvaluationCard,
@@ -146,7 +147,7 @@ export default {
 .evaluation {
   &--disabled {
     pointer-events: none;
-    opacity: 0.6;
+    opacity: 0.75;
   }
 }
 </style>
