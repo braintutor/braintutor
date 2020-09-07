@@ -1,17 +1,30 @@
 <template>
   <div class="m-container pa-3">
     <div v-if="!evaluation">
+      <!-- MENU -->
+      <div class="evaluation-menu">
+        <m-btn
+          @click="showAvailable = true"
+          :text="!showAvailable"
+          color="primary"
+          small
+          class="mr-2"
+        >Nuevos</m-btn>
+        <m-btn @click="showAvailable = false" :text="showAvailable" color="dark" small>Otros</m-btn>
+      </div>
       <!-- EVALUATIONS -->
       <EvaluationCard
         v-for="(evaluation, c_idx) in evaluations"
+        v-model="evaluation.dateState"
+        v-show="showAvailable === isAccesible(evaluation)"
         :key="c_idx"
         :name="evaluation.name"
         :time_start="evaluation.time_start"
         :time_end="evaluation.time_end"
-        :disabled="!!evaluation.result"
-        :state="!!evaluation.result"
+        :hasResult="!!evaluation.result"
         student
         @click="showDialogStart(evaluation)"
+        :class="[isAccesible(evaluation)? 'levitation': 'evaluation--disabled']"
         class="mt-4"
       />
 
@@ -64,12 +77,11 @@ export default {
     evaluation: null,
     evaluations: [],
     //
-    user_role: -1,
+    showAvailable: true,
     dialog_start: false,
   }),
   async mounted() {
     this.session_id = getParam("session_id");
-    this.user_role = this.$store.state.user.role;
     this.getEvaluations();
   },
   methods: {
@@ -86,27 +98,26 @@ export default {
       this.loading(false);
     },
     async select(evaluation) {
-      if (this.user_role === "STU") {
-        this.loading(true);
-        this.loading_msg("Cargando Evaluación");
-        try {
-          evaluation = await getEvaluationByStudent(evaluation._id.$oid);
-          this.evaluation = copy(evaluation);
-        } catch (error) {
-          this.$root.$children[0].showMessage("", error.msg);
-        }
-        this.loading(false);
+      this.loading(true);
+      this.loading_msg("Cargando Evaluación");
+      try {
+        evaluation = await getEvaluationByStudent(evaluation._id.$oid);
+        this.evaluation = copy(evaluation);
+      } catch (error) {
+        this.$root.$children[0].showMessage("", error.msg);
       }
+      this.loading(false);
     },
     async unselect() {
       this.evaluation = null;
       await this.getEvaluations();
     },
     showDialogStart(evaluation) {
-      if (!evaluation.result && this.user_role === "STU") {
-        this.evaluation_to_start = evaluation;
-        this.dialog_start = true;
-      }
+      this.evaluation_to_start = evaluation;
+      this.dialog_start = true;
+    },
+    isAccesible(evaluation) {
+      return !evaluation.result && evaluation.dateState !== -1; // -1:past 0:current 1:future
     },
   },
   components: {
@@ -117,22 +128,14 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-$color-evaluation: #e5c280;
-
-.result {
-  padding: 40px;
-  padding-bottom: 20px;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  &__diagram {
-    margin-bottom: 30px;
-    font-size: 2rem;
-  }
-  &__message {
-    text-align: center;
-    font-size: 1.1rem;
-    margin-bottom: 16px;
+.evaluation-menu {
+  width: max-content;
+  margin: 10px auto;
+}
+.evaluation {
+  &--disabled {
+    pointer-events: none;
+    opacity: 0.6;
   }
 }
 </style>

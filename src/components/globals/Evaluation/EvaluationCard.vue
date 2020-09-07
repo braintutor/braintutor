@@ -1,9 +1,5 @@
 <template>
-  <section
-    class="evaluation m-card"
-    :class="{'levitation': !disabled}"
-    @click="$emit('click', $event)"
-  >
+  <section class="evaluation m-card" @click="$emit('click', $event)">
     <v-progress-linear :value="progress" :height="4" color="var(--color-subtitle)"></v-progress-linear>
 
     <div class="m-card__body">
@@ -16,7 +12,7 @@
         <p class="evaluation__time">{{toDateTimeString(time_start, false)}}</p>
         <p class="evaluation__time">{{toDateTimeString(time_end, false)}}</p>
         <p v-if="student" class="evaluation__time">
-          <span v-if="state" class="evaluation__state1">Completado</span>
+          <span v-if="hasResult" class="evaluation__state1">Completado</span>
           <span v-else class="evaluation__state0">Sin Realizar</span>
         </p>
         <p v-else class="evaluation__time">{{size}} pregunta(s)</p>
@@ -49,16 +45,13 @@ import { toDateTimeString } from "@/services/date";
 
 export default {
   props: {
+    value: Number,
     name: String,
     time_start: Date,
     time_end: Date,
     size: Number,
     buttons: Array,
-    state: Boolean,
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
+    hasResult: Boolean,
     student: {
       type: Boolean,
       default: false,
@@ -72,8 +65,16 @@ export default {
       var dif_total = this.time_end.getTime() - this.time_start.getTime();
       var dif_current = this.now.getTime() - this.time_start.getTime();
 
-      if (dif_current < 0) return 0;
-      if (dif_current > dif_total) return 100;
+      if (dif_current < 0) {
+        this.$emit("input", 1); // -1:past 0:current 1:future
+        return 0;
+      }
+      if (dif_current > dif_total) {
+        this.$emit("input", -1); // -1:past 0:current 1:future
+        return 100;
+      }
+
+      this.$emit("input", 0); // -1:past 0:current 1:future
 
       return (dif_current * 100) / dif_total;
     },

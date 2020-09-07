@@ -15,11 +15,10 @@
           <tr>
             <th></th>
             <!-- <th></th> -->
-            <th></th>
+            <th class="student"></th>
             <th class="text-center">C</th>
             <th class="text-center">I</th>
             <th class="text-center">B</th>
-            <th></th>
             <th v-for="(c, idx) in evaluation.content" :key="idx" class="evaluation">{{idx + 1}}</th>
           </tr>
         </thead>
@@ -29,30 +28,28 @@
             :key="idx"
             :set="values = getStats(student, evaluation)"
           >
-            <td v-if="values.has_answer" class="text-center">
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    small
-                    icon
-                    v-bind="attrs"
-                    v-on="on"
-                    @click="dialog_dlt = true; student_dlt = student"
-                    class="mb-1"
-                  >
-                    <v-icon>mdi-playlist-remove</v-icon>
+            <td>
+              <v-menu offset-y>
+                <template v-slot:activator="{ on }">
+                  <v-btn icon v-on="on">
+                    <v-icon>mdi-dots-vertical</v-icon>
                   </v-btn>
                 </template>
-                <span style="font-size: .75rem">Eliminar Nota</span>
-              </v-tooltip>
+                <v-list dense>
+                  <v-list-item
+                    @click="dialog_dlt = true; student_dlt = student"
+                    :disabled="!values.has_answer"
+                  >
+                    <v-list-item-title>Eliminar Nota</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
             </td>
-            <td v-else></td>
             <td class="student">{{`${student.last_name}, ${student.first_name}`}}</td>
             <!-- <td></td> -->
             <td class="text-center">{{values.corrects}}</td>
             <td class="text-center">{{values.incorrects}}</td>
             <td class="text-center">{{values.empty}}</td>
-            <td></td>
             <td v-for="(item, idx) in values.answers_state" :key="idx">
               <div class="score" :class="`score--${item}`">
                 <template v-if="item !== -1">
@@ -169,8 +166,9 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-$cell-min-width: 36px;
-$cell-max-width: 148px;
+$cell-min-width: 42px;
+$cell-max-width: 42px;
+$cell-student: 200px;
 
 .m-table {
   margin: 0 auto;
@@ -186,15 +184,28 @@ $cell-max-width: 148px;
     min-width: $cell-min-width;
     max-width: $cell-max-width;
     word-wrap: break-word;
-    padding: 6px 2px;
+    padding: 6px 0;
+  }
+  .student {
+    min-width: $cell-student;
   }
   .score {
-    padding: 8px;
+    width: 2.2rem;
+    height: 2.2rem;
+    margin: 0 auto;
+
     color: rgb(128, 128, 128);
     text-align: center;
-    font-size: 0.85rem;
     font-weight: bold;
     border-radius: 6px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    * {
+      font-size: 1.2rem;
+    }
 
     &--0 {
       background: rgb(255, 103, 116);
