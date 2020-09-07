@@ -18,6 +18,7 @@
     <StudentsEditor :slot="4" />
     <SessionsEditor :slot="5" />
     <DirectorEditor :slot="6" />
+    <ParentsEditor :slot="7" />
   </Layout>
 </template>
 
@@ -30,6 +31,7 @@ import StudentsEditor from "@/components/SchoolEditor/StudentsEditor";
 import CoursesEditor from "@/components/SchoolEditor/CoursesEditor";
 import SessionsEditor from "@/components/SchoolEditor/SessionsEditor";
 import DirectorEditor from "@/components/SchoolEditor/DirectorEditor";
+import ParentsEditor from "@/components/SchoolEditor/ParentsEditor";
 
 import { getSchool, updateSchool } from "@/services/schoolService";
 
@@ -39,43 +41,47 @@ export default {
     school: {},
     //
     loading: true,
-    loading_msg: ""
+    loading_msg: "",
   }),
   async mounted() {
     this.links = [
       {
         image: require(`@/assets/braintutor/icon-settings.png`),
-        name: "Configuración"
+        name: "Configuración",
       },
       {
         image:
           "https://cdn0.iconfinder.com/data/icons/back-to-school/90/school-learn-study-teacher-teaching-512.png",
-        name: "Docentes"
+        name: "Docentes",
       },
       {
         image:
           "https://images.squarespace-cdn.com/content/v1/55d1e076e4b0be96a30dc726/1477412415649-WW90BD77ALIB9U99VTIA/ke17ZwdGBToddI8pDm48kDmvgM2_GYudIur22MWWiLdZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZamWLI2zvYWH8K3-s_4yszcp2ryTI0HqTOaaUohrI8PIvFa2r33EMaMk7hlBJBei4G1FTiqzsF6lpp3EXtW1YCk/image-asset.png",
-        name: "Cursos"
+        name: "Cursos",
       },
       {
         image:
           "https://iconsetc.com/icons-watermarks/flat-circle-white-on-red/iconathon/iconathon_flipped-classroom/iconathon_flipped-classroom_flat-circle-white-on-red_512x512.png",
-        name: "Aulas"
+        name: "Aulas",
       },
       {
         image:
           "https://icons.iconarchive.com/icons/graphicloads/100-flat/256/student-icon.png",
-        name: "Alumnos"
+        name: "Alumnos",
       },
       {
         image: require("@/assets/avatar/normal.png"),
-        name: "Sesiones"
+        name: "Sesiones",
       },
       {
         image:
           "https://www.kindpng.com/picc/m/475-4750705_school-administrator-icon-png-transparent-png.png",
-        name: "Director"
-      }
+        name: "Director",
+      },
+      // {
+      //   image: require(`@/assets/braintutor/icon-settings.png`),
+      //   name: "Padres"
+      // },
     ];
     this.school = await getSchool();
     this.loading = false;
@@ -90,7 +96,7 @@ export default {
         this.$root.$children[0].showMessage("Error", error.msg);
       }
       this.loading = false;
-    }
+    },
   },
   components: {
     Layout,
@@ -100,8 +106,9 @@ export default {
     ClassroomsEditor,
     SessionsEditor,
     DirectorEditor,
-    loading
-  }
+    ParentsEditor,
+    loading,
+  },
 };
 </script>
 

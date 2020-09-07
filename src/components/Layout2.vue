@@ -19,7 +19,7 @@
     </nav>
     <!-- Body -->
     <div id="app__body" class="app__body">
-      <div class="content" :class="{'m-container': !fluid}">
+      <div class="content" :class="{'m-container pa-3': !fluid}">
         <slot name="default"></slot>
       </div>
     </div>
