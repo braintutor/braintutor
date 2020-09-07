@@ -10,12 +10,7 @@
           small
           class="mr-2"
         >Por Realizar</m-btn>
-        <m-btn
-          @click="showAvailable = false"
-          :text="showAvailable"
-          color="dark"
-          small
-        >Otros</m-btn>
+        <m-btn @click="showAvailable = false" :text="showAvailable" color="dark" small>Otros</m-btn>
       </div>
       <!-- EVALUATIONS -->
       <EvaluationCard
