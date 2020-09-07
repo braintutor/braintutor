@@ -81,9 +81,10 @@ export default {
   }),
   computed: {
     evaluations_filtered() {
-      return this.evaluations.filter(
-        (e) => this.isAvailable(e) === this.showAvailable
-      );
+      return this.evaluations.filter((e) => {
+        let is_vailable = !e.result && e.dateState !== -1; // -1:past 0:current 1:future
+        return is_vailable === this.showAvailable;
+      });
     },
   },
   async mounted() {
@@ -126,9 +127,6 @@ export default {
     showDialogStart(evaluation) {
       this.evaluation_to_start = evaluation;
       this.dialog_start = true;
-    },
-    isAvailable(evaluation) {
-      return !evaluation.result && evaluation.dateState !== -1; // -1:past 0:current 1:future
     },
   },
   components: {
