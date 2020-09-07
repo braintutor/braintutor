@@ -1,8 +1,8 @@
 <template>
   <div class="m-container pa-3">
-    <div v-if="!evaluation">
+    <div v-if="!evaluation" class="evaluations">
       <!-- MENU -->
-      <div class="evaluation-menu">
+      <div class="evaluations__menu">
         <m-btn
           @click="showAvailable = true"
           :text="!showAvailable"
@@ -25,7 +25,7 @@
         student
         @click="showDialogStart(evaluation)"
         :class="[isAvailable(evaluation)? 'levitation': 'evaluation--disabled']"
-        class="mt-4"
+        class="evaluation mt-4"
       />
 
       <p class="text-center my-4" v-show="evaluations.length === 0">No hay evaluaciones.</p>
@@ -133,9 +133,11 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.evaluation-menu {
-  width: max-content;
-  margin: 10px auto;
+.evaluations {
+  &__menu {
+    width: max-content;
+    margin: 10px auto;
+  }
 }
 .evaluation {
   &--disabled {
