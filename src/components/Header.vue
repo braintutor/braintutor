@@ -94,32 +94,29 @@ import { redirect } from "@/services/router.js";
 export default {
   data: () => ({
     links: [
-      // 0
       {
         title: "Colegio",
         name: "school-editor",
         icon: "mdi-school",
-        session_roles: ["ADM"]
+        session_roles: ["ADM"],
       },
-      // 1
       {
         title: "Cursos",
         name: "sessions-teacher",
         icon: "mdi-book",
-        session_roles: ["TEA"]
+        session_roles: ["TEA"],
       },
       {
         title: "Editar",
         name: "courses-editor",
         icon: "mdi-file-edit",
-        session_roles: ["TEA"]
+        session_roles: ["TEA"],
       },
-      // 2, 4
       {
         title: "Cursos",
         name: "sessions-student",
         icon: "mdi-book",
-        session_roles: ["STU", "PAR"]
+        session_roles: ["STU"],
       },
       // {
       //   title: "Tareas",
@@ -131,28 +128,33 @@ export default {
         title: "Agenda",
         name: "events",
         icon: "mdi-calendar",
-        session_roles: ["STU", "PAR"]
+        session_roles: ["STU"],
       },
-      // 3
       {
         title: "Colegio",
         name: "director",
         icon: "mdi-school",
-        session_roles: ["DIR"]
-      }
+        session_roles: ["DIR"],
+      },
+      {
+        title: "Colegio",
+        name: "parent",
+        icon: "mdi-school",
+        session_roles: ["PAR"],
+      },
     ],
     roles: {
       ADM: "ADMINISTRADOR",
       TEA: "PROFESOR",
       STU: "ESTUDIANTE",
       DIR: "DIRECTOR",
-      PAR: "PADRE"
+      PAR: "PADRE",
     },
     user_options: false,
-    drawer: false
+    drawer: false,
   }),
   mounted() {
-    window.addEventListener("click", e => {
+    window.addEventListener("click", (e) => {
       let user = document.getElementById("user");
       if (user && user.contains(e.target)) {
         // Clicked in box
@@ -164,12 +166,12 @@ export default {
   computed: {
     links_filtered() {
       return this.links.filter(
-        l => this.user && l.session_roles.includes(this.user.role)
+        (l) => this.user && l.session_roles.includes(this.user.role)
       );
     },
     user() {
       return this.$store.state.user;
-    }
+    },
   },
   methods: {
     redirect,
@@ -181,8 +183,8 @@ export default {
     enableFullscreen() {
       let container = document.getElementById("braintutor");
       container.requestFullscreen();
-    }
-  }
+    },
+  },
 };
 </script>
 

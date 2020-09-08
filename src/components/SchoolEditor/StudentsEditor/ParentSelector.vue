@@ -12,8 +12,7 @@
         </div>
         <div class="current--empty subtitle" v-else>No Asignado</div>
         <!-- NEW PARENT -->
-        <div class="subtitle mt-6 mb-3">Nuevo Padre</div>
-        <v-text-field v-model="search_parent" hide-details dense placeholder="Buscar"></v-text-field>
+        <v-text-field v-model="search_parent" label="Buscar" class="mt-4"></v-text-field>
       </div>
       <div class="m-card__body parents__body">
         <div v-for="(parent, idx) in parents_filtered" :key="idx" class="parent m-card mt-4">

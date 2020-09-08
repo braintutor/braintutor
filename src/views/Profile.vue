@@ -80,7 +80,7 @@
 
     <!-- DIALOG PASSWORD -->
     <v-dialog v-model="dialog_password" max-width="400">
-      <div class="m-card">
+      <form @submit.prevent="updatePassword()" class="m-card">
         <div class="m-card__body">
           <h3>Cambiar Contraseña</h3>
           <v-text-field
@@ -89,6 +89,7 @@
             v-model="current_password"
             :maxlength="User.password.max_length"
             label="Contraseña actual"
+            required
           ></v-text-field>
           <v-text-field
             type="password"
@@ -96,6 +97,7 @@
             v-model="new_password"
             :maxlength="User.password.max_length"
             label="Nueva contraseña"
+            required
           ></v-text-field>
           <v-text-field
             type="password"
@@ -103,12 +105,13 @@
             v-model="confirm_new_password"
             :maxlength="User.password.max_length"
             label="Confirmar nueva contraseña"
+            required
           ></v-text-field>
         </div>
         <div class="m-card__actions">
-          <m-btn @click="updatePassword()" color="primary" small>Guardar</m-btn>
+          <m-btn color="primary" small>Guardar</m-btn>
         </div>
-      </div>
+      </form>
     </v-dialog>
   </div>
 </template>

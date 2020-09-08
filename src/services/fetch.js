@@ -1,8 +1,8 @@
 import router from "../router";
 import store from "../store";
 
-const service = "http://localhost:5000";
-// const service = "https://braintutor-service-v2.herokuapp.com";
+// const service = "http://localhost:5000";
+const service = "https://braintutor-service-v2.herokuapp.com";
 
 function getHeaders() {
   let token = localStorage.getItem("token");

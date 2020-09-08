@@ -142,6 +142,11 @@ const routes = [
     name: "task",
     component: () => import("../views/Task.vue"),
   },
+  {
+    path: "/parent",
+    name: "parent",
+    component: () => import("../views/Parent.vue"),
+  },
 ];
 
 const router = new VueRouter({
@@ -170,10 +175,7 @@ router.beforeEach(async (to, from, next) => {
   ]; // Require Teacher
   const require_director = ["director", "profile"]; // Require Director
   const require_parent = [
-    "sessions-student",
-    "session",
-    "tasks",
-    "events",
+    "parent",
     "profile",
   ]; // Require Director
   let to_name = to.name;
@@ -182,7 +184,7 @@ router.beforeEach(async (to, from, next) => {
     TEA: "sessions-teacher",
     STU: "sessions-student",
     DIR: "director",
-    PAR: "sessions-student",
+    PAR: "parent",
   };
 
   let user = null;
