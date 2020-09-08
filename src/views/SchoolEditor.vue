@@ -27,7 +27,7 @@ import loading from "@/components/loading";
 import Layout from "@/components/Layout";
 import TeachersEditor from "@/components/SchoolEditor/TeachersEditor";
 import ClassroomsEditor from "@/components/SchoolEditor/ClassroomsEditor";
-import StudentsEditor from "@/components/SchoolEditor/StudentsEditor";
+import StudentsEditor from "@/components/SchoolEditor/StudentsEditor/index";
 import CoursesEditor from "@/components/SchoolEditor/CoursesEditor";
 import SessionsEditor from "@/components/SchoolEditor/SessionsEditor";
 import DirectorEditor from "@/components/SchoolEditor/DirectorEditor";
@@ -78,10 +78,11 @@ export default {
           "https://www.kindpng.com/picc/m/475-4750705_school-administrator-icon-png-transparent-png.png",
         name: "Director",
       },
-      // {
-      //   image: require(`@/assets/braintutor/icon-settings.png`),
-      //   name: "Padres"
-      // },
+      {
+        image:
+          "https://www.kindpng.com/picc/m/475-4750705_school-administrator-icon-png-transparent-png.png",
+        name: "Padres",
+      },
     ];
     this.school = await getSchool();
     this.loading = false;

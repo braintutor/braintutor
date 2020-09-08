@@ -65,6 +65,9 @@
                   >
                     <v-list-item-title>Cambiar Contraseña</v-list-item-title>
                   </v-list-item>
+                  <v-list-item @click="showParent(e)">
+                    <v-list-item-title>Asignar Padre</v-list-item-title>
+                  </v-list-item>
                   <v-list-item
                     @click="entity = e; entity_username_remove = ''; dialog_remove = true"
                   >
@@ -289,18 +292,27 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <!-- DIALOG PARENT -->
+    <ParentSelector
+      v-if="dlg_parent && entity"
+      v-model="dlg_parent"
+      :student="entity"
+      :parents="parents"
+    />
   </div>
 </template>
 
 <script>
 import loading from "@/components/loading";
+import ParentSelector from "./ParentSelector";
 
 import {
   getStudents,
   addStudent,
   updateStudent,
-  removeStudent
+  removeStudent,
 } from "@/services/studentService";
+import { getParents } from "@/services/parentService";
 // import { generatePassword } from "@/services/userService";
 import { getClassroomsBySchool } from "@/services/classroomService";
 import { updatePasswordByAdmin } from "@/services/userService";
@@ -311,6 +323,7 @@ export default {
   data: () => ({
     entities: [],
     entity: {},
+    parents: [],
     classrooms: [],
     classroom_id: "",
     classroom_id_import: "",
@@ -318,6 +331,7 @@ export default {
     new_data: [],
     //
     dlg_edit: false,
+    dlg_parent: false,
     dialog_import: false,
     loading: true,
     loading_save: false,
@@ -328,7 +342,7 @@ export default {
     // Change Password
     new_password: "",
     confirm_new_password: "",
-    dlg_password: false
+    dlg_password: false,
   }),
   async mounted() {
     this.loading_msg = "Cagando Alumnos";
@@ -345,15 +359,16 @@ export default {
         "No puede crear alumnos sino hay aulas existentes."
       );
     }
+    this.parents = await getParents();
     this.loading = false;
   },
   computed: {
     entities_filtered() {
       let entities = this.entities.filter(
-        e => e.classroom_id.$oid === this.classroom_id.$oid
+        (e) => e.classroom_id.$oid === this.classroom_id.$oid
       );
       return entities;
-    }
+    },
   },
   methods: {
     toogleShowPassword(entity) {
@@ -386,7 +401,7 @@ export default {
         try {
           await updateStudent(this.entity);
           let entity_idx = this.entities.findIndex(
-            entity => entity._id.$oid === this.entity.id
+            (entity) => entity._id.$oid === this.entity.id
           );
           this.entities[entity_idx] = Object.assign({}, this.entity);
           this.entities.splice();
@@ -427,7 +442,7 @@ export default {
       try {
         await removeStudent(this.entity._id.$oid, this.entity_username_remove);
         this.entities = this.entities.filter(
-          e => e._id.$oid !== this.entity._id.$oid
+          (e) => e._id.$oid !== this.entity._id.$oid
         );
       } catch (error) {
         this.$root.$children[0].showMessage("", error.msg);
@@ -438,14 +453,14 @@ export default {
       let file = e.target.files[0];
       if (file) {
         let reader = new FileReader();
-        reader.onload = e => {
+        reader.onload = (e) => {
           let file_data = e.target.result;
           let excel = XLSX.read(file_data, { type: "binary" });
           let names = excel.SheetNames;
           let data = XLSX.utils.sheet_to_json(excel.Sheets[names[0]]);
           //
           if (data.length <= 1000) {
-            this.new_data = data.map(d => {
+            this.new_data = data.map((d) => {
               let {
                 nombres,
                 apellidos,
@@ -454,13 +469,13 @@ export default {
                 Nombres,
                 Apellidos,
                 Usuario,
-                Correo
+                Correo,
               } = d;
               return {
                 first_name: nombres || Nombres || "",
                 last_name: apellidos || Apellidos || "",
                 email: correo || Correo || "",
-                username: usuario || Usuario || ""
+                username: usuario || Usuario || "",
               };
             });
             this.dialog_import = true;
@@ -490,11 +505,17 @@ export default {
       }
       if (this.new_data.length <= 0) this.dialog_import = false;
       this.loading_save = false;
-    }
+    },
+    // Parent
+    showParent(entity) {
+      this.entity = entity;
+      this.dlg_parent = true;
+    },
   },
   components: {
-    loading
-  }
+    loading,
+    ParentSelector,
+  },
 };
 </script>
 
