@@ -176,7 +176,7 @@ $color-btn-hover: rgba(86, 83, 255, 0.1);
 
   &--special {
     $color-font: #d4891a;
-    $color-btn: #ffdfb0;
+    $color-btn: #ffe9c7;
     background: $color-btn;
     color: $color-font;
     & * {
