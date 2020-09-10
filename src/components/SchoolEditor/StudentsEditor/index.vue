@@ -92,6 +92,7 @@
           <v-text-field
             class="text-field"
             v-model="entity.first_name"
+            :maxlength="UserModel.first_name.max_length"
             dense
             hide-details
             autocomplete="off"
@@ -100,6 +101,7 @@
           <v-text-field
             class="text-field"
             v-model="entity.last_name"
+            :maxlength="UserModel.last_name.max_length"
             dense
             hide-details
             autocomplete="off"
@@ -108,6 +110,7 @@
           <v-text-field
             class="text-field"
             v-model="entity.email"
+            :maxlength="UserModel.email.max_length"
             dense
             hide-details
             autocomplete="off"
@@ -125,6 +128,7 @@
           <v-text-field
             class="text-field"
             v-model="entity.username"
+            :maxlength="UserModel.username.max_length"
             dense
             hide-details
             autocomplete="off"
@@ -135,6 +139,7 @@
             class="text-field"
             :type="entity.showPassword? 'text': 'password'"
             v-model="entity.password"
+            :maxlength="UserModel.password.max_length"
             dense
             hide-details
             autocomplete="off"
@@ -199,6 +204,7 @@
                 <v-text-field
                   class="text-field"
                   v-model="entity.first_name"
+                  :maxlength="UserModel.first_name.max_length"
                   dense
                   hide-details
                   autocomplete="off"
@@ -208,6 +214,7 @@
                 <v-text-field
                   class="text-field"
                   v-model="entity.last_name"
+                  :maxlength="UserModel.last_name.max_length"
                   dense
                   hide-details
                   autocomplete="off"
@@ -217,6 +224,7 @@
                 <v-text-field
                   class="text-field"
                   v-model="entity.email"
+                  :maxlength="UserModel.email.max_length"
                   dense
                   hide-details
                   autocomplete="off"
@@ -226,6 +234,7 @@
                 <v-text-field
                   class="text-field"
                   v-model="entity.username"
+                  :maxlength="UserModel.username.max_length"
                   dense
                   hide-details
                   autocomplete="off"
@@ -236,6 +245,7 @@
                   class="text-field"
                   :type="entity.showPassword? 'text': 'password'"
                   v-model="entity.password"
+                  :maxlength="UserModel.password.max_length"
                   dense
                   hide-details
                   autocomplete="off"
@@ -270,6 +280,7 @@
               type="password"
               class="text-field"
               v-model="new_password"
+              :maxlength="UserModel.password.max_length"
               dense
               hide-details
             ></v-text-field>
@@ -280,6 +291,7 @@
               type="password"
               class="text-field"
               v-model="confirm_new_password"
+              :maxlength="UserModel.password.max_length"
               dense
               hide-details
             ></v-text-field>
@@ -317,6 +329,8 @@ import { getParents } from "@/services/parentService";
 import { getClassroomsBySchool } from "@/services/classroomService";
 import { updatePasswordByAdmin } from "@/services/userService";
 
+import UserModel from "@/models/User";
+
 import * as XLSX from "xlsx";
 
 export default {
@@ -343,6 +357,7 @@ export default {
     new_password: "",
     confirm_new_password: "",
     dlg_password: false,
+    UserModel,
   }),
   async mounted() {
     this.loading_msg = "Cagando Alumnos";

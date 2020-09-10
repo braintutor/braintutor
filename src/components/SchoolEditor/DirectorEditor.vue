@@ -5,13 +5,31 @@
     <h1 class="form__title">Director</h1>
     <form class="form__body">
       <span class="form__item">Nombres:</span>
-      <v-text-field v-if="show_edit" v-model="director.first_name" hide-details dense />
+      <v-text-field
+        v-if="show_edit"
+        v-model="director.first_name"
+        :maxlength="UserModel.first_name.max_length"
+        hide-details
+        dense
+      />
       <span v-else class="form__value">{{director.first_name}}</span>
       <span class="form__item">Apellidos:</span>
-      <v-text-field v-if="show_edit" v-model="director.last_name" hide-details dense />
+      <v-text-field
+        v-if="show_edit"
+        v-model="director.last_name"
+        :maxlength="UserModel.last_name.max_length"
+        hide-details
+        dense
+      />
       <span v-else class="form__value">{{director.last_name}}</span>
       <span class="form__item">Usuario:</span>
-      <v-text-field v-if="show_edit" v-model="director.username" hide-details dense />
+      <v-text-field
+        v-if="show_edit"
+        v-model="director.username"
+        :maxlength="UserModel.username.max_length"
+        hide-details
+        dense
+      />
       <span v-else class="form__value">{{director.username}}</span>
     </form>
 
@@ -44,6 +62,7 @@
               type="password"
               class="text-field"
               v-model="new_password"
+              :maxlength="UserModel.password.max_length"
               dense
               hide-details
             ></v-text-field>
@@ -54,6 +73,7 @@
               type="password"
               class="text-field"
               v-model="confirm_new_password"
+              :maxlength="UserModel.password.max_length"
               dense
               hide-details
             ></v-text-field>
@@ -75,6 +95,8 @@ import loading from "@/components/loading";
 import { getDirector, updateDirector } from "@/services/directorService";
 import { updatePasswordByAdmin } from "@/services/userService";
 
+import UserModel from "@/models/User";
+
 export default {
   data: () => ({
     director: {},
@@ -85,7 +107,8 @@ export default {
     dlg_password: false,
     //
     loading: false,
-    loading_msg: ""
+    loading_msg: "",
+    UserModel,
   }),
   async created() {
     this.loading = true;
@@ -131,11 +154,11 @@ export default {
       }
 
       this.loading = false;
-    }
+    },
   },
   components: {
-    loading
-  }
+    loading,
+  },
 };
 </script>
 

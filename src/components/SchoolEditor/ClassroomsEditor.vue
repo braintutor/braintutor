@@ -42,6 +42,7 @@
           <v-text-field
             class="text-field"
             v-model="entity.name"
+            :maxlength="ClassroomModel.name.max_length"
             dense
             hide-details
             autocomplete="off"
@@ -76,11 +77,13 @@
 <script>
 import loading from "@/components/loading";
 
+import ClassroomModel from "@/models/Classroom";
+
 import {
   addClassroom,
   getClassroomsBySchool,
   updateClassroom,
-  removeClassroom
+  removeClassroom,
 } from "@/services/classroomService";
 
 export default {
@@ -93,7 +96,8 @@ export default {
     dialog_remove: false,
     loading: true,
     loading_msg: "",
-    loading_save: false
+    loading_save: false,
+    ClassroomModel,
   }),
   async mounted() {
     this.loading_msg = "Cargando Aulas";
@@ -128,7 +132,7 @@ export default {
         try {
           await updateClassroom(this.entity);
           let entity_idx = this.entities.findIndex(
-            entity => entity._id.$oid === this.entity.id
+            (entity) => entity._id.$oid === this.entity.id
           );
           this.entities[entity_idx] = JSON.parse(JSON.stringify(this.entity));
           this.entities.splice(); // updates the array without modifying it
@@ -146,17 +150,17 @@ export default {
       try {
         await removeClassroom(this.entity._id.$oid);
         this.entities = this.entities.filter(
-          e => e._id.$oid !== this.entity._id.$oid
+          (e) => e._id.$oid !== this.entity._id.$oid
         );
       } catch (error) {
         this.$root.$children[0].showMessage("Error al Eliminar", error.msg);
       }
       this.loading = false;
-    }
+    },
   },
   components: {
-    loading
-  }
+    loading,
+  },
 };
 </script>
 

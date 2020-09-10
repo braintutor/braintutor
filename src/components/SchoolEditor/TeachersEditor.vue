@@ -74,6 +74,7 @@
           <v-text-field
             class="text-field"
             v-model="entity.first_name"
+            :maxlength="UserModel.first_name.max_length"
             dense
             hide-details
             autocomplete="off"
@@ -82,6 +83,7 @@
           <v-text-field
             class="text-field"
             v-model="entity.last_name"
+            :maxlength="UserModel.last_name.max_length"
             dense
             hide-details
             autocomplete="off"
@@ -90,6 +92,7 @@
           <v-text-field
             class="text-field"
             v-model="entity.email"
+            :maxlength="UserModel.email.max_length"
             dense
             hide-details
             autocomplete="off"
@@ -98,6 +101,7 @@
           <v-text-field
             class="text-field"
             v-model="entity.username"
+            :maxlength="UserModel.username.max_length"
             dense
             hide-details
             autocomplete="off"
@@ -108,6 +112,7 @@
             class="text-field"
             :type="entity.showPassword? 'text': 'password'"
             v-model="entity.password"
+            :maxlength="UserModel.password.max_length"
             dense
             hide-details
             autocomplete="off"
@@ -140,6 +145,7 @@
                 <v-text-field
                   class="text-field"
                   v-model="entity.first_name"
+                  :maxlength="UserModel.first_name.max_length"
                   dense
                   hide-details
                   autocomplete="off"
@@ -149,6 +155,7 @@
                 <v-text-field
                   class="text-field"
                   v-model="entity.last_name"
+                  :maxlength="UserModel.last_name.max_length"
                   dense
                   hide-details
                   autocomplete="off"
@@ -158,6 +165,7 @@
                 <v-text-field
                   class="text-field"
                   v-model="entity.email"
+                  :maxlength="UserModel.email.max_length"
                   dense
                   hide-details
                   autocomplete="off"
@@ -167,6 +175,7 @@
                 <v-text-field
                   class="text-field"
                   v-model="entity.username"
+                  :maxlength="UserModel.username.max_length"
                   dense
                   hide-details
                   autocomplete="off"
@@ -177,6 +186,7 @@
                   class="text-field"
                   :type="entity.showPassword? 'text': 'password'"
                   v-model="entity.password"
+                  :maxlength="UserModel.password.max_length"
                   dense
                   hide-details
                   autocomplete="off"
@@ -215,6 +225,7 @@
               type="password"
               class="text-field"
               v-model="new_password"
+              :maxlength="UserModel.password.max_length"
               dense
               hide-details
             ></v-text-field>
@@ -225,6 +236,7 @@
               type="password"
               class="text-field"
               v-model="confirm_new_password"
+              :maxlength="UserModel.password.max_length"
               dense
               hide-details
             ></v-text-field>
@@ -243,11 +255,13 @@
 <script>
 import loading from "@/components/loading";
 
+import UserModel from "@/models/User";
+
 import {
   getTeachersBySchool,
   addTeacher,
   updateTeacher,
-  removeTeacher
+  removeTeacher,
 } from "@/services/teacherService";
 import { updatePasswordByAdmin } from "@/services/userService";
 
@@ -270,7 +284,8 @@ export default {
     //
     loading: true,
     loading_msg: "",
-    loading_save: false
+    loading_save: false,
+    UserModel,
   }),
   async mounted() {
     this.loading_msg = "Cargando Docentes";
@@ -308,7 +323,7 @@ export default {
         try {
           await updateTeacher(this.entity);
           let entity_idx = this.entities.findIndex(
-            entity => entity._id.$oid === this.entity.id
+            (entity) => entity._id.$oid === this.entity.id
           );
           this.entities[entity_idx] = Object.assign({}, this.entity);
           this.dlg_edit = false;
@@ -325,7 +340,7 @@ export default {
       try {
         await removeTeacher(this.entity._id.$oid);
         this.entities = this.entities.filter(
-          e => e._id.$oid !== this.entity._id.$oid
+          (e) => e._id.$oid !== this.entity._id.$oid
         );
       } catch (error) {
         this.$root.$children[0].showMessage("Error al Eliminar", error.msg);
@@ -358,14 +373,14 @@ export default {
       let file = e.target.files[0];
       if (file) {
         let reader = new FileReader();
-        reader.onload = e => {
+        reader.onload = (e) => {
           let file_data = e.target.result;
           let excel = XLSX.read(file_data, { type: "binary" });
           let names = excel.SheetNames;
           let data = XLSX.utils.sheet_to_json(excel.Sheets[names[0]]);
           //
           if (data.length <= 1000) {
-            this.new_data = data.map(d => {
+            this.new_data = data.map((d) => {
               let {
                 nombres,
                 apellidos,
@@ -374,13 +389,13 @@ export default {
                 Nombres,
                 Apellidos,
                 Usuario,
-                Correo
+                Correo,
               } = d;
               return {
                 first_name: nombres || Nombres || "",
                 last_name: apellidos || Apellidos || "",
                 email: correo || Correo || "",
-                user: usuario || Usuario || ""
+                user: usuario || Usuario || "",
               };
             });
             this.dlg_import = true;
@@ -409,11 +424,11 @@ export default {
       }
       if (this.new_data.length <= 0) this.dlg_import = false;
       this.loading_save = false;
-    }
+    },
   },
   components: {
-    loading
-  }
+    loading,
+  },
 };
 </script>
 

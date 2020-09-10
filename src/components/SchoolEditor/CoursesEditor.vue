@@ -41,6 +41,7 @@
           <v-text-field
             class="text-field"
             v-model="entity.name"
+            :maxlength="CourseModel.name.max_length"
             dense
             hide-details
             autocomplete="off"
@@ -84,11 +85,13 @@
 <script>
 import loading from "@/components/loading";
 
+import CourseModel from "@/models/Course";
+
 import {
   getCoursesBySchool,
   addCourse,
   updateCourse,
-  removeCourse
+  removeCourse,
 } from "@/services/courseService";
 import { getTeachersBySchool } from "@/services/teacherService";
 
@@ -103,7 +106,8 @@ export default {
     dialog_remove: false,
     loading: true,
     loading_msg: "",
-    loading_save: false
+    loading_save: false,
+    CourseModel,
   }),
   async mounted() {
     this.loading_msg = "Cargando Cursos";
@@ -113,25 +117,25 @@ export default {
   },
   computed: {
     teachers_aux() {
-      let teachers = this.teachers.map(t => ({
+      let teachers = this.teachers.map((t) => ({
         ...t,
-        name: `${t.first_name} ${t.last_name}`
+        name: `${t.first_name} ${t.last_name}`,
       }));
       return teachers;
     },
     entities_aux() {
-      let entities = this.entities.map(e => {
+      let entities = this.entities.map((e) => {
         let teacher_id = e.teacher_id;
         if (teacher_id) {
           let teacher = this.teachers_aux.find(
-            t => t._id.$oid === teacher_id.$oid
+            (t) => t._id.$oid === teacher_id.$oid
           );
           if (teacher) e.teacher = teacher.name;
         }
         return e;
       });
       return entities;
-    }
+    },
   },
   methods: {
     add() {
@@ -161,7 +165,7 @@ export default {
         try {
           await updateCourse(this.entity);
           let entity_idx = this.entities.findIndex(
-            entity => entity._id.$oid === this.entity.id
+            (entity) => entity._id.$oid === this.entity.id
           );
           this.entities[entity_idx] = JSON.parse(JSON.stringify(this.entity));
           this.entities.splice(); // updates the array without modifying it
@@ -179,17 +183,17 @@ export default {
       try {
         await removeCourse(this.entity._id.$oid);
         this.entities = this.entities.filter(
-          e => e._id.$oid !== this.entity._id.$oid
+          (e) => e._id.$oid !== this.entity._id.$oid
         );
       } catch (error) {
         this.$root.$children[0].showMessage("Error al Eliminar", error.msg);
       }
       this.loading = false;
-    }
+    },
   },
   components: {
-    loading
-  }
+    loading,
+  },
 };
 </script>
 
