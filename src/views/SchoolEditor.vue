@@ -7,7 +7,13 @@
         <h2 class="editor__title">Configuración</h2>
         <div class="editor__block">
           <span class="mt-1 mr-3">Nombre:</span>
-          <v-text-field v-model="school.name" dense hide-details autocomplete="off"></v-text-field>
+          <v-text-field
+            v-model="school.name"
+            :maxlength="SchoolModel.name.max_length"
+            dense
+            hide-details
+            autocomplete="off"
+          ></v-text-field>
         </div>
         <v-btn color="primary" class="editor__action" @click="save()">Guardar</v-btn>
       </div>
@@ -35,6 +41,8 @@ import ParentsEditor from "@/components/SchoolEditor/ParentsEditor";
 
 import { getSchool, updateSchool } from "@/services/schoolService";
 
+import SchoolModel from "@/models/School";
+
 export default {
   data: () => ({
     links: [],
@@ -42,6 +50,7 @@ export default {
     //
     loading: true,
     loading_msg: "",
+    SchoolModel,
   }),
   async mounted() {
     this.links = [
