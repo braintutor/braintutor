@@ -1,97 +1,84 @@
 <template>
-  <div class="form m-card">
-    <loading :active="loading" :message="loading_msg" />
-
-    <h1 class="form__title">Director</h1>
-    <form class="form__body">
-      <span class="form__item">Nombres:</span>
-      <v-text-field
-        v-if="show_edit"
-        v-model="director.first_name"
-        :maxlength="UserModel.first_name.max_length"
-        hide-details
-        dense
-      />
-      <span v-else class="form__value">{{director.first_name}}</span>
-      <span class="form__item">Apellidos:</span>
-      <v-text-field
-        v-if="show_edit"
-        v-model="director.last_name"
-        :maxlength="UserModel.last_name.max_length"
-        hide-details
-        dense
-      />
-      <span v-else class="form__value">{{director.last_name}}</span>
-      <span class="form__item">Usuario:</span>
-      <v-text-field
-        v-if="show_edit"
-        v-model="director.username"
-        :maxlength="UserModel.username.max_length"
-        hide-details
-        dense
-      />
-      <span v-else class="form__value">{{director.username}}</span>
+  <div>
+    <form @submit.prevent="save()" class="director m-card">
+      <div class="m-card__body">
+        <h3>Director</h3>
+        <v-text-field
+          v-model="director.first_name"
+          :maxlength="UserModel.first_name.max_length"
+          label="Nombres"
+          autocomplete="off"
+          required
+          class="mt-4"
+        />
+        <v-text-field
+          v-model="director.last_name"
+          :maxlength="UserModel.last_name.max_length"
+          label="Apellidos"
+          autocomplete="off"
+          required
+        />
+        <v-text-field
+          v-model="director.username"
+          :maxlength="UserModel.username.max_length"
+          label="Usuario"
+          autocomplete="off"
+          required
+        />
+      </div>
+      <div class="m-card__actions">
+        <m-btn
+          v-if="director._id"
+          @click="new_password = ''; confirm_new_password = ''; dlg_password = true"
+          type="button"
+          color="dark"
+          small
+          class="mr-2"
+        >Cambiar Contraseña</m-btn>
+        <m-btn type="submit" color="primary" small>Guardar</m-btn>
+      </div>
     </form>
-
-    <div class="form__actions">
-      <v-btn v-if="show_edit" @click="save()" small rounded outlined text>
-        <v-icon class="mr-2" style="font-size: 1.2rem">mdi-close</v-icon>Finalizar
-      </v-btn>
-      <v-btn
-        v-if="!show_edit && director._id"
-        @click="new_password = ''; confirm_new_password = ''; dlg_password = true"
-        class="mr-2"
-        small
-        rounded
-        outlined
-        text
-      >Cambiar Contraseña</v-btn>
-      <v-btn v-if="!show_edit" @click="show_edit= true" small rounded outlined text>
-        <v-icon class="mr-2" style="font-size: 1.2rem">mdi-pencil</v-icon>Editar
-      </v-btn>
-    </div>
 
     <!-- DIALOG PASSWORD -->
     <v-dialog v-model="dlg_password" max-width="400" persistent>
-      <v-card>
-        <v-card-title>Cambiar Contraseña</v-card-title>
-        <v-card-text>
-          <div class="mt-3">
-            <span>Nueva contraseña</span>
-            <v-text-field
-              type="password"
-              class="text-field"
-              v-model="new_password"
-              :maxlength="UserModel.password.max_length"
-              dense
-              hide-details
-            ></v-text-field>
-          </div>
-          <div class="mt-5">
-            <span>Confirmar nueva contraseña</span>
-            <v-text-field
-              type="password"
-              class="text-field"
-              v-model="confirm_new_password"
-              :maxlength="UserModel.password.max_length"
-              dense
-              hide-details
-            ></v-text-field>
-          </div>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn @click="dlg_password = false" small text>Cerrar</v-btn>
-          <v-btn @click="savePassword()" color="primary" small depressed>Guardar</v-btn>
-        </v-card-actions>
-      </v-card>
+      <form @submit.prevent="savePassword()" class="m-card">
+        <div class="m-card__body">
+          <h3>Crear Contraseña</h3>
+          <v-text-field
+            type="password"
+            v-model="new_password"
+            :maxlength="UserModel.password.max_length"
+            label="Nueva contraseña"
+            autocomplete="off"
+            required
+            class="mt-4"
+          ></v-text-field>
+          <v-text-field
+            type="password"
+            v-model="confirm_new_password"
+            :maxlength="UserModel.password.max_length"
+            label="Confirmar contraseña"
+            autocomplete="off"
+            required
+          ></v-text-field>
+        </div>
+        <div class="m-card__actions">
+          <m-btn
+            @click="dlg_password = false"
+            type="button"
+            color="primary"
+            small
+            text
+            class="mr-2"
+          >Cerrar</m-btn>
+          <m-btn type="submit" color="primary" small>Guardar</m-btn>
+        </div>
+      </form>
     </v-dialog>
   </div>
 </template>
 
 <script>
-import loading from "@/components/loading";
-
 import { getDirector, updateDirector } from "@/services/directorService";
 import { updatePasswordByAdmin } from "@/services/userService";
 
@@ -100,100 +87,57 @@ import UserModel from "@/models/User";
 export default {
   data: () => ({
     director: {},
-    show_edit: false,
     //
     new_password: "",
     confirm_new_password: "",
     dlg_password: false,
     //
-    loading: false,
-    loading_msg: "",
     UserModel,
   }),
   async created() {
-    this.loading = true;
-    this.loading_msg = "Cargando Datos";
+    this.showLoading("Cargando Datos");
     try {
       this.director = (await getDirector()) || {};
     } catch (error) {
-      this.$root.$children[0].showMessage("", error.msg);
+      this.showMessage("", error.msg || error);
     }
-    this.loading = false;
+    this.hideLoading();
   },
   methods: {
     async save() {
-      this.loading = true;
-      this.loading_msg = "Guardando";
+      this.showLoading("Guardando");
       try {
         let _id = await updateDirector(this.director);
         if (_id) this.director._id = _id;
-        this.show_edit = false;
+        this.$forceUpdate();
       } catch (error) {
-        this.$root.$children[0].showMessage("", error.msg);
+        this.showMessage("", error.msg || error);
       }
-      this.loading = false;
+      this.hideLoading();
     },
     async savePassword() {
       if (this.new_password !== this.confirm_new_password) {
-        this.$root.$children[0].showMessage(
-          "",
-          "Las contraseñas no coinciden."
-        );
+        this.showMessage("", "Las contraseñas no coinciden.");
         return;
       }
 
       this.dlg_password = false;
-      this.loading = true;
-      this.loading_msg = "Cambiando Contraseña";
-
+      this.showLoading("Cambiando Contraseña");
       try {
         await updatePasswordByAdmin(this.director._id.$oid, this.new_password);
-        this.$root.$children[0].showMessage("", "Contraseña modificada.");
+        this.showMessage("", "Contraseña modificada.");
       } catch (error) {
-        this.$root.$children[0].showMessage("", error.msg);
+        this.showMessage("", error.msg || error);
       }
-
-      this.loading = false;
+      this.hideLoading();
     },
-  },
-  components: {
-    loading,
   },
 };
 </script>
 
 <style lang='scss' scoped>
-.form {
-  max-width: 450px;
+.director {
+  max-width: 600px;
   margin: 0 auto;
-  padding: 18px 24px;
-  border-radius: 0;
-  border-left: 6px solid #578cd1;
-
-  &__title {
-    margin: 0;
-    font-size: 1.6rem;
-  }
-  &__body {
-    margin-top: 20px;
-    padding: 0 2px;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    column-gap: 22px;
-    row-gap: 12px;
-    align-items: flex-end;
-  }
-  &__actions {
-    margin-top: 24px;
-    display: flex;
-    justify-content: flex-end;
-  }
-  //
-  &__item {
-    font-weight: bold;
-  }
-  &__value {
-    color: #575757;
-  }
 }
 </style>

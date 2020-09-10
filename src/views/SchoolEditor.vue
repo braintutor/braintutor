@@ -1,22 +1,22 @@
 <template>
   <Layout :links="links">
-    <loading :active="loading" :message="loading_msg" />
-
     <div :slot="0">
-      <div class="editor">
-        <h2 class="editor__title">Configuración</h2>
-        <div class="editor__block">
-          <span class="mt-1 mr-3">Nombre:</span>
+      <form @submit.prevent="save()" class="school m-card">
+        <div class="m-card__body">
+          <h3>Configuración</h3>
           <v-text-field
             v-model="school.name"
             :maxlength="SchoolModel.name.max_length"
-            dense
-            hide-details
+            label="Nombre"
             autocomplete="off"
+            required
+            class="mt-4"
           ></v-text-field>
         </div>
-        <v-btn color="primary" class="editor__action" @click="save()">Guardar</v-btn>
-      </div>
+        <div class="m-card__actions">
+          <m-btn color="primary" small>Guardar</m-btn>
+        </div>
+      </form>
     </div>
     <TeachersEditor :slot="1" />
     <CoursesEditor :slot="2" />
@@ -29,7 +29,6 @@
 </template>
 
 <script>
-import loading from "@/components/loading";
 import Layout from "@/components/Layout";
 import TeachersEditor from "@/components/SchoolEditor/TeachersEditor";
 import ClassroomsEditor from "@/components/SchoolEditor/ClassroomsEditor";
@@ -48,8 +47,6 @@ export default {
     links: [],
     school: {},
     //
-    loading: true,
-    loading_msg: "",
     SchoolModel,
   }),
   async mounted() {
@@ -93,19 +90,24 @@ export default {
         name: "Padres",
       },
     ];
-    this.school = await getSchool();
-    this.loading = false;
+
+    this.showLoading("Cargando Datos");
+    try {
+      this.school = await getSchool();
+    } catch (error) {
+      this.showMessage("Cargando Datos");
+    }
+    this.hideLoading();
   },
   methods: {
     async save() {
-      this.loading = true;
-      this.loading_msg = "Guardando Cambios";
+      this.showLoading("Guardando");
       try {
         await updateSchool(this.school);
       } catch (error) {
-        this.$root.$children[0].showMessage("Error", error.msg);
+        this.showMessage("", error.msg || error);
       }
-      this.loading = false;
+      this.hideLoading();
     },
   },
   components: {
@@ -117,28 +119,13 @@ export default {
     SessionsEditor,
     DirectorEditor,
     ParentsEditor,
-    loading,
   },
 };
 </script>
 
 <style lang='scss' scoped>
-.editor {
-  padding: 10px 14px;
-  &__title {
-    margin-bottom: 14px;
-  }
-  &__block {
-    margin-bottom: 18px;
-    display: flex;
-    align-items: center;
-    * {
-      font-size: 1.1rem;
-    }
-  }
-  &__action {
-    display: block;
-    margin: 0 auto;
-  }
+.school {
+  max-width: 600px;
+  margin: 0 auto;
 }
 </style>

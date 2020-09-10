@@ -1,12 +1,10 @@
 <template>
   <div class="editor">
-    <loading :active="loading" :message="loading_msg" />
     <div class="editor__menu">
       <h2 class="editor__title">Cursos</h2>
-      <v-btn rounded small color="success" @click="dialog_edit = true; add()">
-        Añadir
-        <v-icon right>mdi-plus</v-icon>
-      </v-btn>
+      <m-btn @click="dialog_edit = true; add()" color="primary" small>
+        <v-icon small class="mr-2">mdi-plus</v-icon>Crear
+      </m-btn>
     </div>
     <div class="editor__content">
       <table class="m-table">
@@ -18,13 +16,25 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(entity, e_idx) in entities_aux" :key="e_idx">
-            <td>{{ entity.name }}</td>
-            <td>{{ entity.teacher }}</td>
+          <tr v-for="(e, e_idx) in entities_aux" :key="e_idx">
+            <td>{{ e.name }}</td>
+            <td>{{ e.teacher }}</td>
             <td class="text-center">
-              <v-btn small icon @click="dialog_edit = true; edit(entity)">
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
+              <v-menu offset-y>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn v-bind="attrs" v-on="on" small icon>
+                    <v-icon>mdi-dots-vertical</v-icon>
+                  </v-btn>
+                </template>
+                <v-list class="pa-0" dense>
+                  <v-list-item @click="dialog_edit = true; edit(e)">
+                    <v-list-item-title>Editar Curso</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item @click="dialog_remove = true; entity = e">
+                    <v-list-item-title>Eliminar Curso</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
             </td>
           </tr>
         </tbody>
@@ -32,59 +42,59 @@
       <p class="text-center mt-2" v-show="entities_aux.length === 0">No hay cursos.</p>
     </div>
 
-    <v-dialog v-model="dialog_edit" class="container" max-width="500">
-      <v-card class="edit">
-        <v-card-title v-if="action === 'create'" class="py-5">Crear</v-card-title>
-        <v-card-title v-else-if="action === 'edit'" class="py-5">Editar</v-card-title>
-        <v-card-text class="edit__content">
-          <span class="mt-1 mr-4">Nombre:</span>
+    <!-- DIALOG CREATE|EDIT -->
+    <v-dialog v-model="dialog_edit" max-width="600" persistent>
+      <form @submit.prevent="save()" class="m-card">
+        <div class="m-card__body">
+          <h3 v-if="action === 'create'">Crear</h3>
+          <h3 v-else>Editar</h3>
           <v-text-field
-            class="text-field"
             v-model="entity.name"
             :maxlength="CourseModel.name.max_length"
-            dense
-            hide-details
+            label="Nombre"
             autocomplete="off"
+            required
+            class="mt-4"
           ></v-text-field>
-          <span class="mt-1 mr-4">Encargado:</span>
           <v-select
             v-model="entity.teacher_id"
             :items="teachers_aux"
             item-text="name"
             item-value="_id"
-            dense
-            solo
+            label="Encargado"
           ></v-select>
-        </v-card-text>
-        <v-card-actions class="edit__actions">
-          <v-btn
-            v-if="action === 'edit'"
-            color="error"
-            :loading="loading_save"
-            @click="dialog_remove = true"
+        </div>
+        <div class="m-card__actions">
+          <m-btn
+            v-if="!loading_save"
+            @click="dialog_edit = false"
+            color="primary"
+            type="button"
             small
-          >Eliminar</v-btn>
-          <v-btn color="primary" :loading="loading_save" @click="save()" small>Guardar</v-btn>
-        </v-card-actions>
-      </v-card>
+            text
+            class="mr-2"
+          >Cerrar</m-btn>
+          <m-btn color="primary" type="submit" :loading="loading_save" small>Guardar</m-btn>
+        </div>
+      </form>
     </v-dialog>
 
-    <!-- Dialog Remove -->
-    <v-dialog v-model="dialog_remove" persistent max-width="300">
-      <v-card class="edit">
-        <div class="py-5 text-center">¿Desea eliminar?</div>
-        <v-card-actions class="edit__actions">
-          <v-btn @click="dialog_remove = false" small text>Cancelar</v-btn>
-          <v-btn @click="remove(); dialog_remove = false" color="error" small>Eliminar</v-btn>
-        </v-card-actions>
-      </v-card>
+    <!-- DIALOG REMOVE -->
+    <v-dialog v-model="dialog_remove" max-width="400">
+      <div class="m-card">
+        <div class="m-card__body">
+          <h3>¿Desea eliminar?</h3>
+        </div>
+        <div class="m-card__actions">
+          <m-btn @click="dialog_remove = false" color="primary" small class="mr-2">Cancelar</m-btn>
+          <m-btn @click="remove(); dialog_remove = false" color="error" small>Eliminar</m-btn>
+        </div>
+      </div>
     </v-dialog>
   </div>
 </template>
 
 <script>
-import loading from "@/components/loading";
-
 import CourseModel from "@/models/Course";
 
 import {
@@ -104,16 +114,18 @@ export default {
     action: "",
     dialog_edit: false,
     dialog_remove: false,
-    loading: true,
-    loading_msg: "",
     loading_save: false,
     CourseModel,
   }),
   async mounted() {
-    this.loading_msg = "Cargando Cursos";
-    this.teachers = await getTeachersBySchool();
-    this.entities = await getCoursesBySchool();
-    this.loading = false;
+    this.showLoading("Cargando Cursos");
+    try {
+      this.teachers = await getTeachersBySchool();
+      this.entities = await getCoursesBySchool();
+    } catch (error) {
+      this.showMessage("", error.msg || error);
+    }
+    this.hideLoading();
   },
   computed: {
     teachers_aux() {
@@ -158,7 +170,7 @@ export default {
           this.entities.push(this.entity);
           this.dialog_edit = false;
         } catch (error) {
-          this.$root.$children[0].showMessage("Error al Guardar", error.msg);
+          this.showMessage("", error.msg || error);
         }
       } else if (this.action === "edit") {
         // Update
@@ -171,14 +183,13 @@ export default {
           this.entities.splice(); // updates the array without modifying it
           this.dialog_edit = false;
         } catch (error) {
-          this.$root.$children[0].showMessage("Error al Guardar", error.msg);
+          this.showMessage("", error.msg || error);
         }
       }
       this.loading_save = false;
     },
     async remove() {
-      this.loading = true;
-      this.loading_msg = "Eliminando Curso";
+      this.showLoading("Eliminando Curso");
       this.dialog_edit = false;
       try {
         await removeCourse(this.entity._id.$oid);
@@ -186,13 +197,10 @@ export default {
           (e) => e._id.$oid !== this.entity._id.$oid
         );
       } catch (error) {
-        this.$root.$children[0].showMessage("Error al Eliminar", error.msg);
+        this.showMessage("", error.msg || error);
       }
-      this.loading = false;
+      this.hideLoading();
     },
-  },
-  components: {
-    loading,
   },
 };
 </script>
@@ -203,30 +211,13 @@ export default {
   &__menu {
     display: flex;
     justify-content: space-between;
+    align-items: center;
   }
   &__title {
     margin-bottom: 10px;
   }
   &__content {
     overflow-x: auto;
-  }
-}
-
-.edit {
-  &__content {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-row-gap: 20px;
-    align-items: center;
-    & * {
-      font-size: 1rem;
-    }
-  }
-  &__actions {
-    padding: 20px;
-    padding-top: 0;
-    display: flex;
-    justify-content: center;
   }
 }
 </style>
