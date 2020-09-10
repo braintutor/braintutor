@@ -267,12 +267,17 @@ export default {
   height: 100%;
 }
 
+$color-list: #fff;
+$color-hover: #f5f5f5b7;
+$color-active: #ededff;
+$color-active-font: #5553ff;
+
 .list {
   overflow-y: auto;
   flex-shrink: 0;
   height: 100%;
   width: 300px;
-  background: #fafafa;
+  background: $color-list;
 
   &__title {
     font-weight: bold;
@@ -326,27 +331,32 @@ export default {
 }
 
 .link {
+  margin: 8px;
   padding: 10px 12px;
   padding-left: 32px;
+  color: #414141;
+  border-radius: 6px;
   font-size: 0.85rem;
-  transition: 0.3s;
+  transition: 0.2s;
   cursor: pointer;
 
   &:hover {
-    background: #f0f0f0;
+    background: $color-hover;
   }
 
   &--active {
-    background: #e5e5e5;
+    color: $color-active-font;
+    background: $color-active;
+    // font-weight: bold;
     &:hover {
-      background: #e5e5e5;
+      background: $color-active;
     }
   }
 }
 
 .material {
-  margin: 0 auto 120px;
-  max-width: 650px;
+  margin: 0 auto 80px;
+  max-width: 800px;
 
   // &__menu {
   //   display: flex;

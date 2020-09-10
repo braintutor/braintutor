@@ -1,6 +1,23 @@
 <template>
   <div>
     <div class="material">
+      <!-- Actions -->
+      <div v-show="false" class="material__actions mt-3 mb-8">
+        <button v-show="category_idx > 0" @click="move(-1)" class="button">
+          <v-icon style="color: #fff; font-size: 1.3rem">mdi-arrow-left</v-icon>
+        </button>
+        <div></div>
+        <button v-show="category_idx < categories.length - 2" @click="move(1)" class="button">
+          <v-icon style="color: #fff; font-size: 1.3rem">mdi-arrow-right</v-icon>
+        </button>
+        <button
+          v-show="category_idx === categories.length - 2"
+          @click="move(1)"
+          class="button button--special"
+        >
+          <v-icon style="color: #fff; font-size: 1.3rem">mdi-arrow-right</v-icon>
+        </button>
+      </div>
       <!-- Body -->
       <DocumentEditor
         v-show="category === 'explanation'"
@@ -40,27 +57,27 @@
       <Exercises
         v-show="category === 'exercises'"
         :exercises="material['exercises']"
-        class="mcontainer"
+        class="material mt-2"
       />
-      <div v-show="category === 'faq'" class="mcontainer">
+      <div v-show="category === 'faq'" class="material mt-2">
         <h2 class="faq__title">Preguntas Frecuentes</h2>
         <div v-for="(faq, idx) in material['faq']" :key="idx" class="faq">
           <p class="faq__question">{{faq.question}}</p>
           <p class="faq__answer">{{faq.answer}}</p>
         </div>
       </div>
-      <Quizzes v-show="category === 'quizzes'" :quizzes="material['quizzes']" class="mcontainer" />
+      <Quizzes
+        v-show="category === 'quizzes'"
+        :quizzes="material['quizzes']"
+        class="material mt-2"
+      />
       <!-- Actions -->
-      <div class="material__actions">
-        <button v-show="category_idx > 0" @click="move(-1)" class="button button--secondary">
+      <div class="material__actions mb-3 mt-8">
+        <button v-show="category_idx > 0" @click="move(-1)" class="button">
           <v-icon class="mr-2" style="color: #fff; font-size: 1.3rem">mdi-arrow-left</v-icon>Anterior
         </button>
         <div></div>
-        <button
-          v-show="category_idx < categories.length - 2"
-          @click="move(1)"
-          class="button button--secondary"
-        >
+        <button v-show="category_idx < categories.length - 2" @click="move(1)" class="button">
           Siguiente
           <v-icon class="ml-1" style="color: #fff; font-size: 1.3rem">mdi-arrow-right</v-icon>
         </button>
@@ -126,12 +143,6 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.mcontainer {
-  max-width: 650px;
-  margin: 0 auto;
-  margin-top: 20px;
-}
-
 .material {
   &__actions {
     display: flex;
@@ -139,34 +150,40 @@ export default {
   }
 }
 
+$color-font: rgb(85, 83, 255);
+$color-btn: rgba(86, 83, 255, 0.05);
+$color-btn-hover: rgba(86, 83, 255, 0.1);
+
 .button {
-  padding: 10px 12px;
+  padding: 10px 16px;
+  color: $color-font;
+  background: $color-btn;
   font-weight: bold;
   font-size: 0.9rem;
   border-radius: 4px;
   transition: 0.4s;
 
+  & * {
+    color: $color-font !important;
+  }
+
   &:hover {
-    background: #e4e4e4;
+    background: $color-btn-hover !important;
   }
   &:focus {
     outline: none;
   }
 
-  &--secondary {
-    background: #5553ff;
-    color: #fff;
-
-    &:hover {
-      background: #3735b3;
-    }
-  }
   &--special {
-    background: #ff8e31;
-    color: #fff;
-
+    $color-font: #d4891a;
+    $color-btn: #ffdfb0;
+    background: $color-btn;
+    color: $color-font;
+    & * {
+      color: $color-font !important;
+    }
     &:hover {
-      background: #db7018;
+      background: $color-btn !important;
     }
   }
 }

@@ -37,7 +37,7 @@ export default {
     document_idx: 0,
     //
     loading: false,
-    loading_msg: ""
+    loading_msg: "",
   }),
   mounted() {
     this.documents =
@@ -67,12 +67,12 @@ export default {
         this.$root.$children[0].showMessage("Error", error.msg);
       }
       this.loading = false;
-    }
+    },
   },
   components: {
     loading,
-    DocumentEditor
-  }
+    DocumentEditor,
+  },
 };
 </script>
 

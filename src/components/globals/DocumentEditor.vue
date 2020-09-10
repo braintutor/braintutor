@@ -21,6 +21,8 @@ import LinkTool from "@editorjs/link";
 import Delimiter from "@editorjs/delimiter";
 import Table from "@editorjs/table";
 
+import { convertToHMTL } from "@/services/editor";
+
 export default {
   props: {
     id: {
@@ -46,6 +48,11 @@ export default {
         data = JSON.parse(this.data);
       } catch (error) {
         //
+      }
+      if (this.readonly) {
+        let html = convertToHMTL(data.blocks || []);
+        document.getElementById(this.id).innerHTML = html;
+        return;
       }
       this.editor = new EditorJS({
         holderId: this.id,
