@@ -37,6 +37,14 @@ function updateStudent(user) {
     user,
   });
 }
+
+function updateStudentProgress(course_id, materials) {
+  return fetch_post("updateStudentProgress", {
+    course_id,
+    materials,
+  });
+}
+
 function updateStudentParent(id, parent_id) {
   return fetch_post("updateStudentParent", {
     id,
@@ -73,6 +81,7 @@ export {
   getStudentsByParent,
   addStudent,
   updateStudent,
+  updateStudentProgress,
   updateStudentParent,
   updateStudentTime,
   removeStudent,

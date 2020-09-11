@@ -83,7 +83,7 @@
         </button>
         <button
           v-show="category_idx === categories.length - 2"
-          @click="move(1)"
+          @click="move(1); $emit('finish', material)"
           class="button button--special"
         >
           Examen

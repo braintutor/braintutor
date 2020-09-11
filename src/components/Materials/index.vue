@@ -13,7 +13,18 @@
             @click="selectMaterial(m)"
             class="link"
             :class="{'link--active': m && material && m._id.$oid === material._id.$oid}"
-          >{{m.name}}</section>
+          >
+            <div
+              class="progress"
+              :class="{'progress--complete': progress_materials.includes(m._id.$oid)}"
+            >
+              <v-icon
+                v-if="progress_materials.includes(m._id.$oid)"
+                style="font-size: 1.3rem"
+              >mdi-check</v-icon>
+            </div>
+            <span>{{m.name}}</span>
+          </section>
         </div>
       </section>
     </section>
@@ -45,7 +56,12 @@
         <!-- <div class="material__menu">
           <span class="material__name">{{material.name}}</span>
         </div>-->
-        <MaterialCategories v-if="course.adaptive" :material="material" :categories="categories" />
+        <MaterialCategories
+          v-if="course.adaptive"
+          :material="material"
+          :categories="categories"
+          @finish="saveProgress"
+        />
         <MaterialDocuments v-else :material="material" />
       </div>
     </div>
@@ -65,7 +81,10 @@ import {
   getMaterialsByCourseStudent,
 } from "@/services/materialService";
 import { getQuestionTemplate } from "@/services/chatService";
-import { getCategoriesByLearningStyle } from "@/services/studentService";
+import {
+  getCategoriesByLearningStyle,
+  updateStudentProgress,
+} from "@/services/studentService";
 
 import { mapState, mapMutations } from "vuex";
 
@@ -75,8 +94,9 @@ export default {
   },
   data: () => ({
     chatbots: [],
-    materials: [],
+    progress_materials: [],
     categories: [],
+    progress: [],
     //
     show: false,
   }),
@@ -110,6 +130,16 @@ export default {
           this.materials = await (this.user.role === "TEA"
             ? getMaterialsByCourseTeacher(course_id)
             : getMaterialsByCourseStudent(course_id));
+
+          // Validate Materials
+          let progress_materials = (
+            (this.user.progress.find((p) => p._id.$oid === course_id) || {})
+              .materials || []
+          ).map((p) => p.$oid); // get progress by course
+          progress_materials = progress_materials.filter((pm) =>
+            this.materials.map((m) => m._id.$oid).includes(pm)
+          ); // map to only ids
+          this.progress_materials = [...new Set(progress_materials)]; // remove duplicates
 
           // Categories by Style
           let categories = [
@@ -221,9 +251,25 @@ export default {
           this.knowledge(knowledge);
           this.loading_knowledge(false);
         } catch (error) {
-          this.$root.$children[0].showMessage("Error", error.msg);
+          this.showMessage("", error.msg || error);
         }
         this.loading(false);
+      }
+    },
+    async saveProgress(material) {
+      if (this.user.role === "STU") {
+        let course_id = this.course._id.$oid;
+        let new_material_id = material._id.$oid;
+        let materials = this.progress_materials;
+
+        if (!materials.includes(new_material_id)) {
+          materials.push(new_material_id);
+          try {
+            await updateStudentProgress(course_id, materials);
+          } catch (error) {
+            this.showMessage("", error.msg || error);
+          }
+        }
       }
     },
     selectMaterial(material) {
@@ -333,12 +379,15 @@ $color-active-font: #5553ff;
 .link {
   margin: 8px;
   padding: 10px 12px;
-  padding-left: 32px;
+  padding-left: 18px;
   color: #414141;
   border-radius: 6px;
   font-size: 0.85rem;
   transition: 0.2s;
   cursor: pointer;
+
+  display: flex;
+  align-items: center;
 
   &:hover {
     background: $color-hover;
@@ -351,6 +400,31 @@ $color-active-font: #5553ff;
     &:hover {
       background: $color-active;
     }
+
+    & * {
+      color: $color-active-font;
+    }
+  }
+}
+
+$color-progress: rgb(172, 191, 255);
+
+.progress {
+  position: relative;
+  flex-shrink: 0;
+  margin-right: 16px;
+  margin-bottom: 4px;
+  height: 1rem;
+  width: 1rem;
+  // border: 1px solid $color-progress;
+  border-radius: 50%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &--complete {
+    border: none;
   }
 }
 
