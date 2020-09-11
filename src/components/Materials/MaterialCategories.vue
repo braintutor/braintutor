@@ -66,11 +66,23 @@
           <p class="faq__answer">{{faq.answer}}</p>
         </div>
       </div>
-      <Quizzes
+      <!-- <Quizzes
         v-show="category === 'quizzes'"
         :quizzes="material['quizzes']"
         class="material mt-2"
-      />
+      />-->
+      <Quizzes v-show="false" />
+      <div v-show="category === 'quizzes'" class="m-card complete">
+        <div class="m-card__body">
+          <h3>Material Completado</h3>
+          <m-btn
+            @click="$emit('next', material)"
+            color="primary"
+            small
+            class="mt-4"
+          >Ir al siguiente material</m-btn>
+        </div>
+      </div>
       <!-- Actions -->
       <div class="material__actions mb-3 mt-8">
         <button v-show="category_idx > 0" @click="move(-1)" class="button">
@@ -86,7 +98,7 @@
           @click="move(1); $emit('finish', material)"
           class="button button--special"
         >
-          Examen
+          Finalizar
           <v-icon class="ml-1" style="color: #fff; font-size: 1.3rem">mdi-arrow-right</v-icon>
         </button>
       </div>
@@ -210,5 +222,11 @@ $color-btn-hover: rgba(86, 83, 255, 0.1);
     font-size: 0.9rem;
     white-space: pre-wrap;
   }
+}
+
+.complete {
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: center;
 }
 </style>

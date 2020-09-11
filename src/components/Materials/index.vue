@@ -61,6 +61,7 @@
           :material="material"
           :categories="categories"
           @finish="saveProgress"
+          @next="showNextMaterial"
         />
         <MaterialDocuments v-else :material="material" />
       </div>
@@ -262,14 +263,33 @@ export default {
         let new_material_id = material._id.$oid;
         let materials = this.progress_materials;
 
-        if (!materials.includes(new_material_id)) {
+        if (!materials.includes(new_material_id))
           materials.push(new_material_id);
-          try {
-            await updateStudentProgress(course_id, materials);
-          } catch (error) {
-            this.showMessage("", error.msg || error);
-          }
+
+        try {
+          await updateStudentProgress(course_id, materials);
+        } catch (error) {
+          this.showMessage("", error.msg || error);
         }
+      }
+    },
+    showNextMaterial(material) {
+      let chatbot_idx = this.chatbots.findIndex(
+        (c) => c._id.$oid === material.chatbot_id.$oid
+      );
+      let { materials } = this.chatbots[chatbot_idx];
+      let material_idx = materials.findIndex(
+        (m) => m._id.$oid === material._id.$oid
+      );
+
+      if (materials.length > material_idx + 1)
+        this.selectMaterial(materials[material_idx + 1]);
+      else if (this.chatbots.length > chatbot_idx + 1) {
+        console.log(this.chatbots[chatbot_idx + 1]);
+        materials = this.chatbots[chatbot_idx + 1].materials;
+        if (materials && materials[0]) this.selectMaterial(materials[0]);
+      } else {
+        this.unselectMaterial();
       }
     },
     selectMaterial(material) {
@@ -413,7 +433,6 @@ $color-progress: rgb(172, 191, 255);
   position: relative;
   flex-shrink: 0;
   margin-right: 16px;
-  margin-bottom: 4px;
   height: 1rem;
   width: 1rem;
   // border: 1px solid $color-progress;

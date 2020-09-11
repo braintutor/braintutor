@@ -1,30 +1,9 @@
 <template>
   <div>
     <section v-if="!quiz" class="quizzes mb-4">
-      <v-btn
-        class="quizzes__type"
-        @click="selectQuiz('BAS')"
-        color="warning"
-        dark
-        small
-        rounded
-      >Básico</v-btn>
-      <v-btn
-        class="quizzes__type"
-        @click="selectQuiz('INT')"
-        color="warning"
-        dark
-        small
-        rounded
-      >Intermedio</v-btn>
-      <v-btn
-        class="quizzes__type"
-        @click="selectQuiz('ADV')"
-        color="warning"
-        dark
-        small
-        rounded
-      >Avanzado</v-btn>
+      <m-btn class="quizzes__type" @click="selectQuiz('BAS')" color="warning" small>Básico</m-btn>
+      <m-btn class="quizzes__type" @click="selectQuiz('INT')" color="warning" small>Intermedio</m-btn>
+      <m-btn class="quizzes__type" @click="selectQuiz('ADV')" color="warning" small>Avanzado</m-btn>
     </section>
 
     <!-- QUIZ -->
@@ -72,12 +51,12 @@ export default {
   props: ["quizzes"],
   data: () => ({
     quiz: null,
-    question_idx: 0
+    question_idx: 0,
   }),
   computed: {
     question() {
       return this.quiz[this.question_idx];
-    }
+    },
   },
   methods: {
     selectQuiz(type) {
@@ -99,8 +78,8 @@ export default {
         0,
         Math.min(this.quiz.length - 1, this.question_idx + dir)
       );
-    }
-  }
+    },
+  },
 };
 </script>
 
