@@ -282,13 +282,17 @@ export default {
         (m) => m._id.$oid === material._id.$oid
       );
 
-      if (materials.length > material_idx + 1)
+      if (materials.length > material_idx + 1) {
         this.selectMaterial(materials[material_idx + 1]);
-      else if (this.chatbots.length > chatbot_idx + 1) {
-        console.log(this.chatbots[chatbot_idx + 1]);
+        return;
+      } else if (this.chatbots.length > chatbot_idx + 1) {
         materials = this.chatbots[chatbot_idx + 1].materials;
-        if (materials && materials[0]) this.selectMaterial(materials[0]);
-      } else if (this.materials[0]) this.selectMaterial(this.materials[0]);
+        if (materials && materials[0]) {
+          this.selectMaterial(materials[0]);
+          return;
+        }
+      }
+      if (this.materials[0]) this.selectMaterial(this.materials[0]);
       // this.unselectMaterial();
     },
     selectMaterial(material) {
