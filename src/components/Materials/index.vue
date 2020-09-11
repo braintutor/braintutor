@@ -175,6 +175,7 @@ export default {
             });
             c.materials = materials;
           });
+          this.chatbots = this.chatbots.filter((c) => c.materials.length > 0); // Only show chatbots with materials
 
           //Knowledge
           this.loading_msg("Cargando Conocimiento");
@@ -284,16 +285,10 @@ export default {
 
       if (materials.length > material_idx + 1) {
         this.selectMaterial(materials[material_idx + 1]);
-        return;
       } else if (this.chatbots.length > chatbot_idx + 1) {
         materials = this.chatbots[chatbot_idx + 1].materials;
-        if (materials && materials[0]) {
-          this.selectMaterial(materials[0]);
-          return;
-        }
-      }
-      if (this.materials[0]) this.selectMaterial(this.materials[0]);
-      // this.unselectMaterial();
+        this.selectMaterial(materials[0]);
+      } else if (this.materials[0]) this.selectMaterial(this.materials[0]);
     },
     selectMaterial(material) {
       this.setMaterial(null);
