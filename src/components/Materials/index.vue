@@ -288,9 +288,8 @@ export default {
         console.log(this.chatbots[chatbot_idx + 1]);
         materials = this.chatbots[chatbot_idx + 1].materials;
         if (materials && materials[0]) this.selectMaterial(materials[0]);
-      } else {
-        this.unselectMaterial();
-      }
+      } else if (this.materials[0]) this.selectMaterial(this.materials[0]);
+      // this.unselectMaterial();
     },
     selectMaterial(material) {
       this.setMaterial(null);
