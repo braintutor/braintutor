@@ -16,9 +16,9 @@ function updateTeacher(user) {
   })
 }
 
-function removeTeacher(id) {
+function removeTeacher(_id) {
   return fetch_post('removeTeacher', {
-    id
+    _id
   })
 }
 

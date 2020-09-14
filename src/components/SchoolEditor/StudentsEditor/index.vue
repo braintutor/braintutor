@@ -16,7 +16,7 @@
           <v-icon left small>mdi-file-excel</v-icon>Importar
         </m-btn>
         <m-btn @click="showCreate()" color="primary" small>
-          <v-icon left small>mdi-plus</v-icon>Añadir
+          <v-icon left small>mdi-plus</v-icon>Crear
         </m-btn>
       </div>
     </div>
@@ -59,9 +59,7 @@
                   <v-list-item @click="showEdit(e)">
                     <v-list-item-title>Editar Alumno</v-list-item-title>
                   </v-list-item>
-                  <v-list-item
-                    @click="new_password = ''; confirm_new_password = ''; dlg_password = true; entity = e"
-                  >
+                  <v-list-item @click="showPassword(e)">
                     <v-list-item-title>Cambiar Contraseña</v-list-item-title>
                   </v-list-item>
                   <v-list-item @click="showParent(e)">
@@ -121,8 +119,10 @@
             v-model="entity.password"
             :maxlength="UserModel.username.max_length"
             label="Contraseña"
-            type="password"
+            :type="entity.showPassword? 'text': 'password'"
             required
+            :append-icon="entity.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            @click:append="toogleShowPassword(entity)"
           ></v-text-field>
         </div>
         <div class="m-card__actions">
@@ -205,7 +205,7 @@
       </form>
     </v-dialog>
 
-    <v-dialog v-model="dlg_import" width="1000" persistent>
+    <v-dialog v-model="dlg_import" width="1200" persistent>
       <div class="import m-card">
         <div class="m-card__body">
           <v-select
@@ -340,9 +340,9 @@ export default {
     username: "",
     dlg_remove: false,
     // password
-    dlg_password: false,
     new_password: "",
     confirm_new_password: "",
+    dlg_password: false,
     // import
     new_data: [],
     classroom_id_import: "",

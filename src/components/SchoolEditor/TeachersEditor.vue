@@ -1,27 +1,27 @@
 <template>
   <div class="editor">
-    <loading :active="loading" :message="loading_msg" />
+    <!-- EDITOR Menu -->
     <input
       style="display: none"
       id="ipt_file"
       type="file"
       onclick="this.value=null"
+      accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
       @change="onLoadFile($event)"
     />
     <div class="editor__menu">
-      <h2 class="editor__title">Docentes</h2>
-      <div class="editor__actions">
-        <v-btn class="mr-3" rounded small color="warning" onclick="ipt_file.click()">
-          Importar
-          <v-icon right>mdi-file-excel</v-icon>
-        </v-btn>
-        <v-btn rounded small color="success" @click="dlg_edit = true; add()">
-          Añadir
-          <v-icon right>mdi-plus</v-icon>
-        </v-btn>
+      <h1 class="editor__title">Docentes</h1>
+      <div>
+        <m-btn onclick="ipt_file.click()" color="dark" small class="mr-2">
+          <v-icon left small>mdi-file-excel</v-icon>Importar
+        </m-btn>
+        <m-btn @click="showCreate()" color="primary" small>
+          <v-icon left small>mdi-plus</v-icon>Crear
+        </m-btn>
       </div>
     </div>
-    <div class="editor__content">
+    <!-- EDITOR Table -->
+    <div class="editor__table mt-4">
       <table class="m-table">
         <thead>
           <tr>
@@ -29,6 +29,7 @@
             <th class="text-left">Apellidos</th>
             <th class="text-left">Correo</th>
             <th class="text-left">Usuario</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -45,15 +46,13 @@
                   </v-btn>
                 </template>
                 <v-list class="pa-0" dense>
-                  <v-list-item @click="dlg_edit = true; edit(e)">
+                  <v-list-item @click="showEdit(e)">
                     <v-list-item-title>Editar Docente</v-list-item-title>
                   </v-list-item>
-                  <v-list-item
-                    @click="new_password = ''; confirm_new_password = ''; dlg_password = true; entity = e"
-                  >
+                  <v-list-item @click="showPassword(e)">
                     <v-list-item-title>Cambiar Contraseña</v-list-item-title>
                   </v-list-item>
-                  <v-list-item @click="dlg_remove = true; entity = e">
+                  <v-list-item @click="showRemove(e)">
                     <v-list-item-title>Eliminar Docente</v-list-item-title>
                   </v-list-item>
                 </v-list>
@@ -62,201 +61,204 @@
           </tr>
         </tbody>
       </table>
-      <p class="text-center mt-2" v-show="entities.length === 0">No hay docentes.</p>
+      <p class="text-center mt-4" v-show="entities.length === 0">No hay docentes</p>
     </div>
-    <!-- CREATE || EDIT -->
-    <v-dialog v-model="dlg_edit" class="container" max-width="500" persistent>
-      <v-card class="edit">
-        <v-card-title v-if="action === 'create'" class="py-5">Crear</v-card-title>
-        <v-card-title v-else-if="action === 'edit'" class="py-5">Editar</v-card-title>
-        <v-card-text class="edit__content">
-          <span class="mt-1 mr-4">Nombres:</span>
+
+    <!-- DIALOG -->
+    <v-dialog v-model="dlg_edit" max-width="600" persistent>
+      <form @submit.prevent="save()" class="m-card">
+        <div class="m-card__body">
           <v-text-field
-            class="text-field"
             v-model="entity.first_name"
             :maxlength="UserModel.first_name.max_length"
-            dense
-            hide-details
-            autocomplete="off"
+            label="Nombres"
+            required
           ></v-text-field>
-          <span class="mt-1 mr-4">Apellidos:</span>
           <v-text-field
-            class="text-field"
             v-model="entity.last_name"
             :maxlength="UserModel.last_name.max_length"
-            dense
-            hide-details
-            autocomplete="off"
+            label="Apellidos"
+            required
           ></v-text-field>
-          <span class="mt-1 mr-4">Correo:</span>
           <v-text-field
-            class="text-field"
             v-model="entity.email"
             :maxlength="UserModel.email.max_length"
-            dense
-            hide-details
-            autocomplete="off"
+            label="Correo"
+            type="email"
+            required
           ></v-text-field>
-          <span class="mt-1 mr-4">Usuario:</span>
           <v-text-field
-            class="text-field"
             v-model="entity.username"
             :maxlength="UserModel.username.max_length"
-            dense
-            hide-details
-            autocomplete="off"
+            label="Usuario"
+            required
           ></v-text-field>
-          <span v-if="action === 'create'" class="mt-1 mr-4">Contraseña:</span>
           <v-text-field
-            v-if="action === 'create'"
-            class="text-field"
-            :type="entity.showPassword? 'text': 'password'"
+            v-if="action === 'CREATE'"
             v-model="entity.password"
-            :maxlength="UserModel.password.max_length"
-            dense
-            hide-details
-            autocomplete="off"
+            :maxlength="UserModel.username.max_length"
+            label="Contraseña"
+            :type="entity.showPassword? 'text': 'password'"
+            required
             :append-icon="entity.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             @click:append="toogleShowPassword(entity)"
           ></v-text-field>
-        </v-card-text>
-        <v-card-actions class="edit__actions">
-          <v-btn v-if="!loading_save" @click="dlg_edit = false" small text>Cerrar</v-btn>
-          <v-btn color="primary" :loading="loading_save" @click="save()" small depressed>Guardar</v-btn>
-        </v-card-actions>
-      </v-card>
+        </div>
+        <div class="m-card__actions">
+          <m-btn
+            v-if="!loading_btn"
+            @click="dlg_edit = false"
+            color="primary"
+            type="button"
+            small
+            text
+            class="mr-2"
+          >Cerrar</m-btn>
+          <m-btn :loading="loading_btn" color="primary" type="submit" small>Guardar</m-btn>
+        </div>
+      </form>
     </v-dialog>
-    <!-- Dialog Import -->
-    <v-dialog v-model="dlg_import" persistent max-width="900">
-      <v-card class="py-2 px-4">
-        <table class="m-table">
-          <thead>
-            <tr>
-              <th>Nombres</th>
-              <th>Apellidos</th>
-              <th>Correo</th>
-              <th>Usuario</th>
-              <th>Contraseña</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(entity, idx) in new_data" :key="idx">
-              <td>
-                <v-text-field
-                  class="text-field"
-                  v-model="entity.first_name"
-                  :maxlength="UserModel.first_name.max_length"
-                  dense
-                  hide-details
-                  autocomplete="off"
-                ></v-text-field>
-              </td>
-              <td>
-                <v-text-field
-                  class="text-field"
-                  v-model="entity.last_name"
-                  :maxlength="UserModel.last_name.max_length"
-                  dense
-                  hide-details
-                  autocomplete="off"
-                ></v-text-field>
-              </td>
-              <td>
-                <v-text-field
-                  class="text-field"
-                  v-model="entity.email"
-                  :maxlength="UserModel.email.max_length"
-                  dense
-                  hide-details
-                  autocomplete="off"
-                ></v-text-field>
-              </td>
-              <td>
-                <v-text-field
-                  class="text-field"
-                  v-model="entity.username"
-                  :maxlength="UserModel.username.max_length"
-                  dense
-                  hide-details
-                  autocomplete="off"
-                ></v-text-field>
-              </td>
-              <td>
-                <v-text-field
-                  class="text-field"
-                  :type="entity.showPassword? 'text': 'password'"
-                  v-model="entity.password"
-                  :maxlength="UserModel.password.max_length"
-                  dense
-                  hide-details
-                  autocomplete="off"
-                  :append-icon="entity.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                  @click:append="toogleShowPassword(entity)"
-                ></v-text-field>
-              </td>
-              <td style="color: red; font-size: 0.8rem">{{ entity.response }}</td>
-            </tr>
-          </tbody>
-        </table>
-        <v-card-actions class="pt-3" style="width: min-content; margin: 0 auto">
-          <v-btn small text class="mr-3" :loading="loading_save" @click="dlg_import = false">Cerrar</v-btn>
-          <v-btn small color="primary" :loading="loading_save" @click="saveAll()">Guardar</v-btn>
-        </v-card-actions>
-      </v-card>
+
+    <v-dialog v-model="dlg_remove" width="400">
+      <div class="m-card">
+        <div class="m-card__body">
+          <h3>¿Desea eliminar?</h3>
+        </div>
+        <div class="m-card__actions">
+          <m-btn @click="dlg_remove = false" type="button" color="primary" small class="mr-2">Cerrar</m-btn>
+          <m-btn @click="remove()" color="error" small>Eliminar</m-btn>
+        </div>
+      </div>
     </v-dialog>
-    <!-- Dialog Remove -->
-    <v-dialog v-model="dlg_remove" persistent max-width="300">
-      <v-card class="edit">
-        <div class="py-5 text-center">¿Desea eliminar?</div>
-        <v-card-actions class="edit__actions">
-          <v-btn @click="dlg_remove = false" small text>Cancelar</v-btn>
-          <v-btn @click="remove(); dlg_remove = false" color="error" small depressed>Eliminar</v-btn>
-        </v-card-actions>
-      </v-card>
+
+    <v-dialog v-model="dlg_password" width="400" persistent>
+      <form @submit.prevent="savePassword()" class="m-card">
+        <div class="m-card__body">
+          <v-text-field
+            type="password"
+            class="text-field"
+            v-model="new_password"
+            :maxlength="UserModel.password.max_length"
+            label="Nueva contraseña"
+            required
+          ></v-text-field>
+          <v-text-field
+            type="password"
+            class="text-field"
+            v-model="confirm_new_password"
+            :maxlength="UserModel.password.max_length"
+            label="Confirmar nueva contraseña"
+            required
+          ></v-text-field>
+        </div>
+        <div class="m-card__actions">
+          <m-btn
+            v-if="!loading_btn"
+            @click="dlg_password = false"
+            color="primary"
+            type="button"
+            small
+            text
+            class="mr-2"
+          >Cerrar</m-btn>
+          <m-btn
+            :loading="loading_btn"
+            :disabled="!(new_password.length > 0 && confirm_new_password.length > 0 && new_password === confirm_new_password)"
+            color="primary"
+            type="submit"
+            small
+          >Guardar</m-btn>
+        </div>
+      </form>
     </v-dialog>
-    <!-- Dialog Password -->
-    <v-dialog v-model="dlg_password" max-width="400" persistent>
-      <v-card>
-        <v-card-title>Cambiar Contraseña</v-card-title>
-        <v-card-text>
-          <div class="mt-3">
-            <span>Nueva contraseña</span>
-            <v-text-field
-              type="password"
-              class="text-field"
-              v-model="new_password"
-              :maxlength="UserModel.password.max_length"
-              dense
-              hide-details
-            ></v-text-field>
+
+    <v-dialog v-model="dlg_import" width="1200" persistent>
+      <div class="import m-card">
+        <div class="import__body m-card__body">
+          <div class="mt-4">
+            <table class="m-table">
+              <thead>
+                <tr>
+                  <th>Nombres</th>
+                  <th>Apellidos</th>
+                  <th>Correo</th>
+                  <th>Usuario</th>
+                  <th>Contraseña</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(entity, idx) in new_data" :key="idx">
+                  <td>
+                    <v-text-field
+                      v-model="entity.first_name"
+                      :maxlength="UserModel.first_name.max_length"
+                      dense
+                      hide-details
+                      autocomplete="off"
+                    ></v-text-field>
+                  </td>
+                  <td>
+                    <v-text-field
+                      v-model="entity.last_name"
+                      :maxlength="UserModel.last_name.max_length"
+                      dense
+                      hide-details
+                      autocomplete="off"
+                    ></v-text-field>
+                  </td>
+                  <td>
+                    <v-text-field
+                      v-model="entity.email"
+                      :maxlength="UserModel.email.max_length"
+                      dense
+                      hide-details
+                      autocomplete="off"
+                    ></v-text-field>
+                  </td>
+                  <td>
+                    <v-text-field
+                      v-model="entity.username"
+                      :maxlength="UserModel.username.max_length"
+                      dense
+                      hide-details
+                      autocomplete="off"
+                    ></v-text-field>
+                  </td>
+                  <td>
+                    <v-text-field
+                      :type="entity.showPassword? 'text': 'password'"
+                      v-model="entity.password"
+                      :maxlength="UserModel.password.max_length"
+                      dense
+                      hide-details
+                      autocomplete="off"
+                      :append-icon="entity.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                      @click:append="toogleShowPassword(entity)"
+                    ></v-text-field>
+                  </td>
+                  <td style="color: red; font-size: 0.8rem">{{ entity.response }}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <div class="mt-5">
-            <span>Confirmar nueva contraseña</span>
-            <v-text-field
-              type="password"
-              class="text-field"
-              v-model="confirm_new_password"
-              :maxlength="UserModel.password.max_length"
-              dense
-              hide-details
-            ></v-text-field>
-          </div>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn @click="dlg_password = false" small text>Cerrar</v-btn>
-          <v-btn @click="savePassword()" color="primary" small depressed>Guardar</v-btn>
-        </v-card-actions>
-      </v-card>
+        </div>
+        <div class="m-card__actions">
+          <m-btn
+            v-if="!loading_btn"
+            @click="dlg_import = false"
+            color="primary"
+            small
+            text
+            class="mr-2"
+          >Cerrar</m-btn>
+          <m-btn @click="saveAll()" :loading="loading_btn" color="primary" small>Guardar</m-btn>
+        </div>
+      </div>
     </v-dialog>
   </div>
 </template>
 
 <script>
-import loading from "@/components/loading";
-
-import UserModel from "@/models/User";
-
 import {
   getTeachersBySchool,
   addTeacher,
@@ -267,107 +269,102 @@ import { updatePasswordByAdmin } from "@/services/userService";
 
 import * as XLSX from "xlsx";
 
+import UserModel from "@/models/User";
+
 export default {
   data: () => ({
     entities: [],
     entity: {},
+    UserModel,
+    //
     action: "",
-    new_data: [],
-    //
     dlg_edit: false,
-    dlg_import: false,
+    loading_btn: false,
+    // remove
+    username: "",
     dlg_remove: false,
-    //
+    // password
     new_password: "",
     confirm_new_password: "",
     dlg_password: false,
-    //
-    loading: true,
-    loading_msg: "",
-    loading_save: false,
-    UserModel,
+    // import
+    new_data: [],
+    dlg_import: false,
   }),
-  async mounted() {
-    this.loading_msg = "Cargando Docentes";
-    this.entities = await getTeachersBySchool();
-    this.loading = false;
+  async created() {
+    this.showLoading("Cargando Datos");
+    try {
+      this.entities = this.formatObjects(await getTeachersBySchool());
+    } catch (error) {
+      this.showMessage("", error.msg || error);
+    }
+    this.hideLoading();
   },
   methods: {
-    toogleShowPassword(entity) {
-      entity.showPassword = !entity.showPassword;
-      this.$forceUpdate();
-    },
-    add() {
-      this.action = "create";
-      this.entity = {};
-    },
-    edit(entity) {
-      this.action = "edit";
-      this.entity = Object.assign({}, entity);
-      this.entity.id = this.entity._id.$oid;
-      this.entity.showPassword = false;
-    },
     async save() {
-      this.loading_save = true;
-      if (this.action === "create") {
-        try {
-          // this.entity.pass = generatePassword();
-          let entity_id = await addTeacher(this.entity);
-          this.entity._id = entity_id;
+      this.loading_btn = true;
+      try {
+        if (this.action === "CREATE") {
+          let { _id } = await addTeacher(this.entity);
+          this.entity._id = _id;
           this.entities.push(this.entity);
-          this.dlg_edit = false;
-        } catch (error) {
-          this.$root.$children[0].showMessage("Error al Guardar", error.msg);
-        }
-      } else if (this.action === "edit") {
-        try {
+        } else {
           await updateTeacher(this.entity);
           let entity_idx = this.entities.findIndex(
-            (entity) => entity._id.$oid === this.entity.id
+            (entity) => entity._id === this.entity._id
           );
           this.entities[entity_idx] = Object.assign({}, this.entity);
-          this.dlg_edit = false;
-        } catch (error) {
-          this.$root.$children[0].showMessage("Error al Guardar", error.msg);
         }
+        this.dlg_edit = false;
+      } catch (error) {
+        this.showMessage("", error.msg || error);
       }
-      this.loading_save = false;
+      this.loading_btn = false;
     },
     async remove() {
-      this.loading = true;
-      this.loading_msg = "Eliminando Docente";
-      this.dlg_edit = false;
+      this.showLoading("Eliminando");
+      this.dlg_remove = false;
       try {
-        await removeTeacher(this.entity._id.$oid);
-        this.entities = this.entities.filter(
-          (e) => e._id.$oid !== this.entity._id.$oid
-        );
+        await removeTeacher(this.entity._id);
+        this.entities = this.entities.filter((e) => e._id !== this.entity._id);
       } catch (error) {
-        this.$root.$children[0].showMessage("Error al Eliminar", error.msg);
+        this.showMessage("", error.msg || error);
       }
-      this.loading = false;
+      this.hideLoading();
     },
     async savePassword() {
-      if (this.new_password !== this.confirm_new_password) {
-        this.$root.$children[0].showMessage(
-          "",
-          "Las contraseñas no coinciden."
-        );
-        return;
-      }
+      if (this.new_password !== this.confirm_new_password) return;
 
-      this.dlg_password = false;
-      this.loading = true;
-      this.loading_msg = "Cambiando Contraseña";
-
+      this.loading_btn = true;
       try {
-        await updatePasswordByAdmin(this.entity._id.$oid, this.new_password);
-        this.$root.$children[0].showMessage("", "Contraseña modificada.");
+        await updatePasswordByAdmin(this.entity._id, this.new_password);
+        this.dlg_password = false;
+        this.showMessage("", "Contraseña modificada.");
       } catch (error) {
-        this.$root.$children[0].showMessage("", error.msg);
+        this.showMessage("", error.msg || error);
       }
-
-      this.loading = false;
+      this.loading_btn = false;
+    },
+    // Import
+    async saveAll() {
+      this.loading_btn = true;
+      let i = 0;
+      while (i < this.new_data.length) {
+        let entity = this.new_data[i];
+        entity.classroom_id = this.classroom_id_import;
+        // entity.pass = generatePassword();
+        try {
+          let { _id } = await addTeacher(entity);
+          entity._id = _id;
+          this.entities.push(entity);
+          this.new_data.splice(i, 1);
+        } catch (error) {
+          entity.response = error.msg || error;
+          i++;
+        }
+      }
+      if (this.new_data.length <= 0) this.dlg_import = false;
+      this.loading_btn = false;
     },
     onLoadFile(e) {
       let file = e.target.files[0];
@@ -395,75 +392,72 @@ export default {
                 first_name: nombres || Nombres || "",
                 last_name: apellidos || Apellidos || "",
                 email: correo || Correo || "",
-                user: usuario || Usuario || "",
+                username: usuario || Usuario || "",
               };
             });
-            this.dlg_import = true;
+            this.showImport();
           } else {
-            this.$root.$children[0].showMessage("Error al Importar", "");
+            this.showMessage("", "Error al Importar");
           }
         };
         reader.readAsBinaryString(file);
       }
     },
-    async saveAll() {
-      this.loading_save = true;
-      let i = 0;
-      while (i < this.new_data.length) {
-        let entity = this.new_data[i];
-        // entity.pass = generatePassword();
-        try {
-          let entity_id = await addTeacher(entity);
-          entity._id = entity_id;
-          this.entities.push(entity);
-          this.new_data.splice(i, 1);
-        } catch (error) {
-          entity.response = error.msg;
-          i++;
-        }
-      }
-      if (this.new_data.length <= 0) this.dlg_import = false;
-      this.loading_save = false;
+    //
+    toogleShowPassword(e) {
+      e.showPassword = !e.showPassword;
+      this.$forceUpdate();
     },
-  },
-  components: {
-    loading,
+    showCreate() {
+      this.entity = {};
+      this.action = "CREATE";
+      this.dlg_edit = true;
+    },
+    showEdit(e) {
+      this.entity = Object.assign({}, e);
+      this.action = "EDIT";
+      this.dlg_edit = true;
+    },
+    showRemove(e) {
+      this.entity = Object.assign({}, e);
+      this.username = "";
+      this.dlg_remove = true;
+    },
+    showPassword(e) {
+      this.entity = Object.assign({}, e);
+      this.new_password = "";
+      this.confirm_new_password = "";
+      this.dlg_password = true;
+    },
+    showImport() {
+      this.classroom_id_import = this.classroom_id;
+      this.dlg_import = true;
+    },
   },
 };
 </script>
 
 <style lang='scss' scoped>
 .editor {
-  padding: 10px 16px;
+  &__title {
+    margin: 0;
+  }
   &__menu {
-    margin-bottom: 10px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-  }
-  &__title {
-    margin-bottom: 6px;
-  }
-  &__content {
-    overflow-x: auto;
+    align-items: center;
   }
 }
 
-.edit {
-  &__content {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-row-gap: 20px;
-    align-items: center;
-    & * {
-      font-size: 1rem;
-    }
-  }
-  &__actions {
-    padding: 20px;
+.import {
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  &__body {
+    flex-grow: 1;
+    overflow-y: auto;
     padding-top: 0;
-    display: flex;
-    justify-content: center;
   }
 }
 </style>
