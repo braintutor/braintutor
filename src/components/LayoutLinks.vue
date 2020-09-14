@@ -20,7 +20,7 @@
     <!-- Body -->
     <div id="app__body" class="app__body">
       <div class="content" :class="{'m-container pa-3': !fluid}">
-        <router-view />
+        <slot></slot>
       </div>
     </div>
   </div>

@@ -1,5 +1,7 @@
 <template>
-  <Layout :links="links" :base="base" />
+  <Layout :links="links" :base="base">
+    <router-view />
+  </Layout>
 </template>
 
 <script>
