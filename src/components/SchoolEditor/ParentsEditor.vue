@@ -50,11 +50,14 @@
     <v-dialog v-model="dlg_new" width="400" persistent>
       <form @submit.prevent="save()" class="m-card">
         <div class="m-card__body">
+          <h3 v-if="action === 'CREATE'">Crear</h3>
+          <h3 v-else>Editar</h3>
           <v-text-field
             v-model="entity.first_name"
             :maxlength="UserModel.first_name.max_length"
             label="Nombres"
             required
+            class="mt-4"
           ></v-text-field>
           <v-text-field
             v-model="entity.last_name"

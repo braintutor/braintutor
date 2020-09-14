@@ -56,8 +56,8 @@
     <v-dialog v-model="dialog_edit" max-width="600" persistent>
       <div class="m-card">
         <div class="m-card__body">
-          <h3 v-if="action === 'create'">Crear Sesión</h3>
-          <h3 v-else>Editar Sesión</h3>
+          <h3 v-if="action === 'create'">Crear</h3>
+          <h3 v-else>Editar</h3>
           <v-alert
             v-model="show_error"
             type="error"
