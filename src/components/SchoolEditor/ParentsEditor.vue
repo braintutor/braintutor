@@ -10,11 +10,11 @@
     <table class="m-table">
       <thead>
         <tr>
-          <th>Nombres</th>
-          <th>Apellidos</th>
-          <th>Correo</th>
-          <th>Usuario</th>
-          <th>Actions</th>
+          <th class="text-left">Nombres</th>
+          <th class="text-left">Apellidos</th>
+          <th class="text-left">Correo</th>
+          <th class="text-left">Usuario</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>

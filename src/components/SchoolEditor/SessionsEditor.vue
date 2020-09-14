@@ -32,10 +32,20 @@
             <td>{{entity.classroom}}</td>
             <td>{{entity.course}}</td>
             <td>{{`${entity.teacher? entity.teacher.name: ''}`}}</td>
+
             <td class="text-center">
-              <v-btn small icon @click="dialog_edit = true; edit(entity)">
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
+              <v-menu offset-y>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn v-bind="attrs" v-on="on" small icon>
+                    <v-icon>mdi-dots-vertical</v-icon>
+                  </v-btn>
+                </template>
+                <v-list class="pa-0" dense>
+                  <v-list-item @click="dialog_edit = true; edit(entity)">
+                    <v-list-item-title>Editar Sesión</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
             </td>
           </tr>
         </tbody>

@@ -12,7 +12,7 @@
           <tr>
             <th class="text-left">Nombre</th>
             <th class="text-left">Encargado</th>
-            <th class="text-center">Acción</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
