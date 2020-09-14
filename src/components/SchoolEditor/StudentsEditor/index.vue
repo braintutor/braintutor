@@ -21,15 +21,13 @@
       </div>
     </div>
     <!-- EDITOR Filter -->
-    <div class="editor__filter">
-      <v-select
-        v-model="classroom_id"
-        :items="classrooms"
-        item-text="name"
-        item-value="_id"
-        label="Aula"
-      ></v-select>
-    </div>
+    <v-select
+      v-model="classroom_id"
+      :items="classrooms"
+      item-text="name"
+      item-value="_id"
+      label="Aula"
+    ></v-select>
     <!-- EDITOR Table -->
     <div class="editor__table mt-4">
       <table class="m-table">

@@ -1,33 +1,30 @@
 <template>
   <div class="editor">
     <loading :active="loading" :message="loading_msg" />
+    <!-- EDITOR Menu -->
     <div class="editor__menu">
-      <h2 class="editor__title">Sesión</h2>
-      <v-btn rounded small color="success" @click="dialog_edit = true; add()">
-        Añadir
-        <v-icon right>mdi-plus</v-icon>
-      </v-btn>
+      <h1 class="editor__title">Sesiones</h1>
+      <m-btn @click="dialog_edit = true; add()" color="primary" small>
+        <v-icon left small>mdi-plus</v-icon>Crear
+      </m-btn>
     </div>
-    <div class="editor__filter">
-      <h3 class="mr-5">Aula:</h3>
-      <v-select
-        v-model="classroom_id"
-        :items="classrooms"
-        item-text="name"
-        item-value="_id"
-        dense
-        solo
-      ></v-select>
-    </div>
-    <v-divider class="mt-5 mb-4"></v-divider>
-    <div class="editor__content">
+    <!-- EDITOR Filter -->
+    <v-select
+      v-model="classroom_id"
+      :items="classrooms"
+      item-text="name"
+      item-value="_id"
+      label="Aula"
+    ></v-select>
+    <!-- EDITOR Table -->
+    <div class="editor__table mt-4">
       <table class="m-table">
         <thead>
           <tr>
             <th class="text-left">Aula</th>
             <th class="text-left">Curso</th>
             <th class="text-left">Profesor</th>
-            <th class="text-center">Acción</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -46,46 +43,58 @@
       <p class="text-center mt-2" v-show="entities_f.length === 0">No hay sesiones</p>
     </div>
 
-    <v-dialog v-model="dialog_edit" class="container" max-width="500">
-      <v-card class="edit">
-        <v-card-title v-if="action === 'create'" class="py-5">Crear Sesión</v-card-title>
-        <v-card-title v-else-if="action === 'edit'" class="py-5">Editar Sesión</v-card-title>
-        <v-alert v-model="show_error" type="error" icon="mdi-cloud-alert" text dismissible>{{error}}</v-alert>
-        <v-card-text class="edit__content">
-          <span class="mt-1 mr-4">Aula:</span>
+    <v-dialog v-model="dialog_edit" max-width="600" persistent>
+      <div class="m-card">
+        <div class="m-card__body">
+          <h3 v-if="action === 'create'">Crear Sesión</h3>
+          <h3 v-else>Editar Sesión</h3>
+          <v-alert
+            v-model="show_error"
+            type="error"
+            icon="mdi-cloud-alert"
+            text
+            dismissible
+            class="mt-4"
+          >{{error}}</v-alert>
           <v-select
             v-model="entity.classroom_id"
             :disabled="action === 'edit'"
             :items="classrooms"
             item-text="name"
             item-value="_id"
-            dense
-            solo
+            label="Aula"
+            class="mt-4"
           ></v-select>
-          <span class="mt-1 mr-4">Curso:</span>
           <v-select
             v-model="entity.course_id"
             :disabled="action === 'edit'"
             :items="courses"
             item-text="name"
             item-value="_id"
-            dense
-            solo
+            label="Curso"
+            class="mt-4"
           ></v-select>
-          <span class="mt-1 mr-4">Profesor:</span>
           <v-select
             v-model="entity.teacher_id"
             :items="teachers"
             item-text="name"
             item-value="_id"
-            dense
-            solo
+            label="Profesor"
+            class="mt-4"
           ></v-select>
-        </v-card-text>
-        <v-card-actions class="edit__actions">
-          <v-btn color="primary" :loading="loading_save" @click="save()" small>Guardar</v-btn>
-        </v-card-actions>
-      </v-card>
+        </div>
+        <div class="m-card__actions">
+          <m-btn
+            v-if="!loading_save"
+            @click="dialog_edit = false"
+            color="primary"
+            text
+            small
+            class="mr-2"
+          >Cerrar</m-btn>
+          <m-btn @click="save()" :loading="loading_save" color="primary" small>Guardar</m-btn>
+        </div>
+      </div>
     </v-dialog>
   </div>
 </template>
@@ -99,7 +108,7 @@ import { getTeachersBySchool } from "@/services/teacherService";
 import {
   getSessionsBySchool,
   addSession,
-  updateSession
+  updateSession,
 } from "@/services/sessionService";
 
 export default {
@@ -117,7 +126,7 @@ export default {
     dialog_edit: false,
     loading: true,
     loading_save: false,
-    loading_msg: ""
+    loading_msg: "",
   }),
   async created() {
     this.loading_msg = "Cargando Sesiones";
@@ -130,9 +139,9 @@ export default {
       this.classroom_id = this.classrooms[0]._id;
 
     let teachers = await getTeachersBySchool();
-    this.teachers = teachers.map(t => ({
+    this.teachers = teachers.map((t) => ({
       ...t,
-      name: `${t.last_name}, ${t.first_name}`
+      name: `${t.last_name}, ${t.first_name}`,
     }));
 
     this.entities = await getSessionsBySchool();
@@ -141,20 +150,22 @@ export default {
   },
   computed: {
     entities_f() {
-      let entities = this.entities.map(e => {
-        e.course = this.courses.find(c => c._id.$oid === e.course_id.$oid).name;
-        e.classroom = this.classrooms.find(
-          c => c._id.$oid === e.classroom_id.$oid
+      let entities = this.entities.map((e) => {
+        e.course = this.courses.find(
+          (c) => c._id.$oid === e.course_id.$oid
         ).name;
-        e.teacher = this.teachers.find(c => c._id.$oid === e.teacher_id.$oid);
+        e.classroom = this.classrooms.find(
+          (c) => c._id.$oid === e.classroom_id.$oid
+        ).name;
+        e.teacher = this.teachers.find((c) => c._id.$oid === e.teacher_id.$oid);
 
         return e;
       });
       entities = entities.filter(
-        e => e.classroom_id.$oid === this.classroom_id.$oid
+        (e) => e.classroom_id.$oid === this.classroom_id.$oid
       );
       return entities;
-    }
+    },
   },
   methods: {
     add() {
@@ -187,7 +198,7 @@ export default {
           try {
             await updateSession(this.entity);
             let entity_idx = this.entities.findIndex(
-              entity => entity._id.$oid === this.entity.id
+              (entity) => entity._id.$oid === this.entity.id
             );
             this.entities[entity_idx] = JSON.parse(JSON.stringify(this.entity));
             this.entities.splice(); // updates the array without modifying it
@@ -205,54 +216,24 @@ export default {
     validate() {
       let { classroom_id, course_id, teacher_id } = this.entity;
       return classroom_id && course_id && teacher_id;
-    }
+    },
   },
   components: {
-    loading
-  }
+    loading,
+  },
 };
 </script>
 
 <style lang='scss' scoped>
 .editor {
-  padding: 10px 16px;
+  &__title {
+    margin: 0;
+  }
   &__menu {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
-  }
-  &__filter {
-    display: flex;
     align-items: center;
-  }
-  &__title {
-    margin-bottom: 10px;
-  }
-  &__content {
-    overflow-x: auto;
-  }
-  &__message {
-    margin: 18px 0 10px;
-    font-weight: lighter;
-    font-size: 1.1rem;
-    text-align: center;
-  }
-}
-
-.edit {
-  &__content {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-row-gap: 20px;
-    align-items: center;
-    & * {
-      font-size: 1rem;
-    }
-  }
-  &__actions {
-    padding: 20px;
-    padding-top: 0;
-    display: flex;
-    justify-content: center;
   }
 }
 </style>
