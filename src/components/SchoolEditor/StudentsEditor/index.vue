@@ -206,7 +206,7 @@
     </v-dialog>
 
     <v-dialog v-model="dlg_import" width="1000" persistent>
-      <div class="m-card">
+      <div class="import m-card">
         <div class="m-card__body">
           <v-select
             v-model="classroom_id_import"
@@ -215,6 +215,8 @@
             item-value="_id"
             label="Aula"
           ></v-select>
+        </div>
+        <div class="import__body m-card__body">
           <div class="mt-4">
             <table class="m-table">
               <thead>
@@ -538,6 +540,17 @@ export default {
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+  }
+}
+
+.import {
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  &__body {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-top: 0;
   }
 }
 </style>
