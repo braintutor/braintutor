@@ -60,8 +60,7 @@ export default {
             p.last_name.includes(this.search_parent) ||
             p.username.includes(this.search_parent) ||
             p.email.includes(this.search_parent)) &&
-          (this.parent_selected == null ||
-            this.parent_selected._id.$oid !== p._id.$oid)
+          (this.parent_selected == null || this.parent_selected._id !== p._id)
       );
       return parents;
     },
@@ -71,7 +70,7 @@ export default {
     try {
       if (this.student.parent_id)
         this.parent_selected = this.parents.find(
-          (p) => p._id.$oid === this.student.parent_id.$oid
+          (p) => p._id === this.student.parent_id
         );
     } catch (error) {
       this.showMessage("", error.msg || error);
@@ -84,10 +83,10 @@ export default {
     },
     async save() {
       this.loading_save = true;
-      let parent_id = this.parent_selected && this.parent_selected._id.$oid; // null or id
+      let parent_id = this.parent_selected && this.parent_selected._id; // null or id
       try {
-        await updateStudentParent(this.student._id.$oid, parent_id);
-        this.student.parent_id = parent_id ? { $oid: parent_id } : null; // null or id
+        await updateStudentParent(this.student._id, parent_id);
+        this.student.parent_id = parent_id; // null or id
         this.$forceUpdate();
         this.$emit("input", false);
       } catch (error) {

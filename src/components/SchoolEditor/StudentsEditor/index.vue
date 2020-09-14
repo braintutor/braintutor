@@ -1,39 +1,37 @@
 <template>
-  <div class="editor">
-    <loading :active="loading" :message="loading_msg" />
+  <div v-if="this.classrooms.length > 0" class="editor">
+    <!-- EDITOR Menu -->
     <input
       style="display: none"
       id="ipt_file"
       type="file"
       onclick="this.value=null"
+      accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
       @change="onLoadFile($event)"
     />
     <div class="editor__menu">
-      <h2 class="editor__title">Alumnos</h2>
-      <div class="editor__actions">
-        <v-btn class="mr-3" rounded small color="warning" onclick="ipt_file.click()">
-          Importar
-          <v-icon right>mdi-file-excel</v-icon>
-        </v-btn>
-        <v-btn rounded small color="success" @click="dlg_edit = true; add()">
-          Añadir
-          <v-icon right>mdi-plus</v-icon>
-        </v-btn>
+      <h1 class="editor__title">Alumnos</h1>
+      <div>
+        <m-btn onclick="ipt_file.click()" color="dark" small class="mr-2">
+          <v-icon left small>mdi-file-excel</v-icon>Importar
+        </m-btn>
+        <m-btn @click="showCreate()" color="primary" small>
+          <v-icon left small>mdi-plus</v-icon>Añadir
+        </m-btn>
       </div>
     </div>
+    <!-- EDITOR Filter -->
     <div class="editor__filter">
-      <h3 class="mr-5">Aula:</h3>
       <v-select
         v-model="classroom_id"
         :items="classrooms"
         item-text="name"
         item-value="_id"
-        dense
-        solo
+        label="Aula"
       ></v-select>
     </div>
-    <v-divider class="mt-5 mb-4"></v-divider>
-    <div class="editor__content">
+    <!-- EDITOR Table -->
+    <div class="editor__table mt-4">
       <table class="m-table">
         <thead>
           <tr>
@@ -41,10 +39,11 @@
             <th class="text-left">Apellidos</th>
             <th class="text-left">Correo</th>
             <th class="text-left">Usuario</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(e, e_idx) in entities_filtered" :key="e_idx">
+          <tr v-for="(e, idx) in entities" :key="idx">
             <td>{{ e.first_name }}</td>
             <td>{{ e.last_name }}</td>
             <td>{{ e.email }}</td>
@@ -57,7 +56,7 @@
                   </v-btn>
                 </template>
                 <v-list class="pa-0" dense>
-                  <v-list-item @click="dlg_edit = true; edit(e)">
+                  <v-list-item @click="showEdit(e)">
                     <v-list-item-title>Editar Alumno</v-list-item-title>
                   </v-list-item>
                   <v-list-item
@@ -68,9 +67,7 @@
                   <v-list-item @click="showParent(e)">
                     <v-list-item-title>Asignar Padre</v-list-item-title>
                   </v-list-item>
-                  <v-list-item
-                    @click="entity = e; entity_username_remove = ''; dialog_remove = true"
-                  >
+                  <v-list-item @click="showRemove(e)">
                     <v-list-item-title>Eliminar Alumno</v-list-item-title>
                   </v-list-item>
                 </v-list>
@@ -79,232 +76,226 @@
           </tr>
         </tbody>
       </table>
-      <p class="text-center mt-2" v-show="entities_filtered.length === 0">No hay alumnos</p>
+      <p class="text-center mt-4" v-show="entities.length === 0">No hay alumnos asignados</p>
     </div>
 
-    <!-- CREATE | EDIT -->
-    <v-dialog v-model="dlg_edit" class="container" max-width="500" persistent>
-      <v-card class="edit">
-        <v-card-title v-if="action === 'create'" class="py-5">Crear Alumno</v-card-title>
-        <v-card-title v-else-if="action === 'edit'" class="py-5">Editar Alumno</v-card-title>
-        <v-card-text class="edit__content">
-          <span class="mt-1 mr-4">Nombres:</span>
+    <!-- DIALOG -->
+    <v-dialog v-model="dlg_edit" max-width="600" persistent>
+      <form @submit.prevent="save()" class="m-card">
+        <div class="m-card__body">
           <v-text-field
-            class="text-field"
             v-model="entity.first_name"
             :maxlength="UserModel.first_name.max_length"
-            dense
-            hide-details
-            autocomplete="off"
+            label="Nombres"
+            required
           ></v-text-field>
-          <span class="mt-1 mr-4">Apellidos:</span>
           <v-text-field
-            class="text-field"
             v-model="entity.last_name"
             :maxlength="UserModel.last_name.max_length"
-            dense
-            hide-details
-            autocomplete="off"
+            label="Apellidos"
+            required
           ></v-text-field>
-          <span class="mt-1 mr-4">Correo:</span>
           <v-text-field
-            class="text-field"
             v-model="entity.email"
             :maxlength="UserModel.email.max_length"
-            dense
-            hide-details
-            autocomplete="off"
+            label="Correo"
+            type="email"
+            required
           ></v-text-field>
-          <span class="mt-1 mr-4">Aula:</span>
           <v-select
             v-model="entity.classroom_id"
             :items="classrooms"
             item-text="name"
             item-value="_id"
-            dense
-            solo
+            label="Aula"
           ></v-select>
-          <span class="mt-1 mr-4">Usuario:</span>
           <v-text-field
-            class="text-field"
             v-model="entity.username"
             :maxlength="UserModel.username.max_length"
-            dense
-            hide-details
-            autocomplete="off"
+            label="Usuario"
+            required
+            class="mt-4"
           ></v-text-field>
-          <span class="mt-1 mr-4" v-if="action === 'create'">Contraseña:</span>
           <v-text-field
-            v-if="action === 'create'"
-            class="text-field"
-            :type="entity.showPassword? 'text': 'password'"
+            v-if="action === 'CREATE'"
             v-model="entity.password"
-            :maxlength="UserModel.password.max_length"
-            dense
-            hide-details
-            autocomplete="off"
-            :append-icon="entity.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-            @click:append="toogleShowPassword(entity)"
+            :maxlength="UserModel.username.max_length"
+            label="Contraseña"
+            type="password"
+            required
           ></v-text-field>
-        </v-card-text>
-        <v-card-actions class="edit__actions">
-          <v-btn v-if="!loading_save" @click="dlg_edit = false" small text>Cerrar</v-btn>
-          <v-btn color="primary" :loading="loading_save" @click="save()" small depressed>Guardar</v-btn>
-        </v-card-actions>
-      </v-card>
+        </div>
+        <div class="m-card__actions">
+          <m-btn
+            v-if="!loading_btn"
+            @click="dlg_edit = false"
+            color="primary"
+            type="button"
+            small
+            text
+            class="mr-2"
+          >Cerrar</m-btn>
+          <m-btn :loading="loading_btn" color="primary" type="submit" small>Guardar</m-btn>
+        </div>
+      </form>
     </v-dialog>
-    <!-- DIALOG REMOVE -->
-    <v-dialog v-model="dialog_remove" class="container" max-width="500">
-      <v-card class="edit">
-        <v-card-title class="py-5">Eliminar</v-card-title>
-        <v-card-text>
-          <p>Es posible que el alumno tenga evaluaciones guardadas. ¿Desea Continuar?</p>
-          <p>Escriba el usuario a eliminar:</p>
+
+    <v-dialog v-model="dlg_remove" width="400">
+      <form @submit.prevent="remove()" class="m-card">
+        <div class="m-card__body">
+          <h3>¿Desea eliminar?</h3>
+          <p class="mt-4">Es posible que el alumno tenga evaluaciones guardadas. ¿Desea Continuar?</p>
+          <p>
+            Escriba
+            <strong>{{entity.username}}</strong> para continuar:
+          </p>
           <v-text-field
-            class="text-field"
-            v-model="entity_username_remove"
-            dense
-            hide-details
-            autocomplete="off"
+            v-model.trim="username"
+            :maxlength="UserModel.username.max_length"
+            label="Usuario"
+            required
+            class="mt-4"
           ></v-text-field>
-        </v-card-text>
-        <v-card-actions class="edit__actions">
-          <v-btn text @click="dialog_remove = false" small>Cancelar</v-btn>
-          <v-btn color="error" :loading="loading_save" @click="remove()" small>Eliminar</v-btn>
-        </v-card-actions>
-      </v-card>
+        </div>
+        <div class="m-card__actions">
+          <m-btn @click="dlg_remove = false" type="button" color="primary" small class="mr-2">Cerrar</m-btn>
+          <m-btn :disabled="entity.username !== username" type="submit" color="error" small>Eliminar</m-btn>
+        </div>
+      </form>
     </v-dialog>
-    <!-- DIALOG IMPORT -->
-    <v-dialog v-model="dialog_import" persistent max-width="900">
-      <v-card class="py-2 px-4">
-        <div class="editor__filter mt-1 mb-5">
-          <h3 class="mr-5">Aula:</h3>
+
+    <v-dialog v-model="dlg_password" width="400" persistent>
+      <form @submit.prevent="savePassword()" class="m-card">
+        <div class="m-card__body">
+          <v-text-field
+            type="password"
+            class="text-field"
+            v-model="new_password"
+            :maxlength="UserModel.password.max_length"
+            label="Nueva contraseña"
+            required
+          ></v-text-field>
+          <v-text-field
+            type="password"
+            class="text-field"
+            v-model="confirm_new_password"
+            :maxlength="UserModel.password.max_length"
+            label="Confirmar nueva contraseña"
+            required
+          ></v-text-field>
+        </div>
+        <div class="m-card__actions">
+          <m-btn
+            v-if="!loading_btn"
+            @click="dlg_password = false"
+            color="primary"
+            type="button"
+            small
+            text
+            class="mr-2"
+          >Cerrar</m-btn>
+          <m-btn
+            :loading="loading_btn"
+            :disabled="!(new_password.length > 0 && confirm_new_password.length > 0 && new_password === confirm_new_password)"
+            color="primary"
+            type="submit"
+            small
+          >Guardar</m-btn>
+        </div>
+      </form>
+    </v-dialog>
+
+    <v-dialog v-model="dlg_import" width="1000" persistent>
+      <div class="m-card">
+        <div class="m-card__body">
           <v-select
             v-model="classroom_id_import"
             :items="classrooms"
             item-text="name"
             item-value="_id"
-            dense
-            solo
+            label="Aula"
           ></v-select>
+          <div class="mt-4">
+            <table class="m-table">
+              <thead>
+                <tr>
+                  <th>Nombres</th>
+                  <th>Apellidos</th>
+                  <th>Correo</th>
+                  <th>Usuario</th>
+                  <th>Contraseña</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(entity, idx) in new_data" :key="idx">
+                  <td>
+                    <v-text-field
+                      v-model="entity.first_name"
+                      :maxlength="UserModel.first_name.max_length"
+                      dense
+                      hide-details
+                      autocomplete="off"
+                    ></v-text-field>
+                  </td>
+                  <td>
+                    <v-text-field
+                      v-model="entity.last_name"
+                      :maxlength="UserModel.last_name.max_length"
+                      dense
+                      hide-details
+                      autocomplete="off"
+                    ></v-text-field>
+                  </td>
+                  <td>
+                    <v-text-field
+                      v-model="entity.email"
+                      :maxlength="UserModel.email.max_length"
+                      dense
+                      hide-details
+                      autocomplete="off"
+                    ></v-text-field>
+                  </td>
+                  <td>
+                    <v-text-field
+                      v-model="entity.username"
+                      :maxlength="UserModel.username.max_length"
+                      dense
+                      hide-details
+                      autocomplete="off"
+                    ></v-text-field>
+                  </td>
+                  <td>
+                    <v-text-field
+                      :type="entity.showPassword? 'text': 'password'"
+                      v-model="entity.password"
+                      :maxlength="UserModel.password.max_length"
+                      dense
+                      hide-details
+                      autocomplete="off"
+                      :append-icon="entity.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                      @click:append="toogleShowPassword(entity)"
+                    ></v-text-field>
+                  </td>
+                  <td style="color: red; font-size: 0.8rem">{{ entity.response }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-        <table class="m-table">
-          <thead>
-            <tr>
-              <th>Nombres</th>
-              <th>Apellidos</th>
-              <th>Correo</th>
-              <th>Usuario</th>
-              <th>Contraseña</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(entity, idx) in new_data" :key="idx">
-              <td>
-                <v-text-field
-                  class="text-field"
-                  v-model="entity.first_name"
-                  :maxlength="UserModel.first_name.max_length"
-                  dense
-                  hide-details
-                  autocomplete="off"
-                ></v-text-field>
-              </td>
-              <td>
-                <v-text-field
-                  class="text-field"
-                  v-model="entity.last_name"
-                  :maxlength="UserModel.last_name.max_length"
-                  dense
-                  hide-details
-                  autocomplete="off"
-                ></v-text-field>
-              </td>
-              <td>
-                <v-text-field
-                  class="text-field"
-                  v-model="entity.email"
-                  :maxlength="UserModel.email.max_length"
-                  dense
-                  hide-details
-                  autocomplete="off"
-                ></v-text-field>
-              </td>
-              <td>
-                <v-text-field
-                  class="text-field"
-                  v-model="entity.username"
-                  :maxlength="UserModel.username.max_length"
-                  dense
-                  hide-details
-                  autocomplete="off"
-                ></v-text-field>
-              </td>
-              <td>
-                <v-text-field
-                  class="text-field"
-                  :type="entity.showPassword? 'text': 'password'"
-                  v-model="entity.password"
-                  :maxlength="UserModel.password.max_length"
-                  dense
-                  hide-details
-                  autocomplete="off"
-                  :append-icon="entity.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                  @click:append="toogleShowPassword(entity)"
-                ></v-text-field>
-              </td>
-              <td style="color: red; font-size: 0.8rem">{{ entity.response }}</td>
-            </tr>
-          </tbody>
-        </table>
-        <v-card-actions class="pt-3" style="width: min-content; margin: 0 auto">
-          <v-btn
+        <div class="m-card__actions">
+          <m-btn
+            v-if="!loading_btn"
+            @click="dlg_import = false"
+            color="primary"
             small
             text
-            class="mr-3"
-            :loading="loading_save"
-            @click="dialog_import = false"
-          >Cerrar</v-btn>
-          <v-btn small color="primary" :loading="loading_save" @click="saveAll()">Guardar</v-btn>
-        </v-card-actions>
-      </v-card>
+            class="mr-2"
+          >Cerrar</m-btn>
+          <m-btn @click="saveAll()" :loading="loading_btn" color="primary" small>Guardar</m-btn>
+        </div>
+      </div>
     </v-dialog>
-    <!-- Dialog Password -->
-    <v-dialog v-model="dlg_password" max-width="400" persistent>
-      <v-card>
-        <v-card-title>Cambiar Contraseña</v-card-title>
-        <v-card-text>
-          <div class="mt-3">
-            <span>Nueva contraseña</span>
-            <v-text-field
-              type="password"
-              class="text-field"
-              v-model="new_password"
-              :maxlength="UserModel.password.max_length"
-              dense
-              hide-details
-            ></v-text-field>
-          </div>
-          <div class="mt-5">
-            <span>Confirmar nueva contraseña</span>
-            <v-text-field
-              type="password"
-              class="text-field"
-              v-model="confirm_new_password"
-              :maxlength="UserModel.password.max_length"
-              dense
-              hide-details
-            ></v-text-field>
-          </div>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn @click="dlg_password = false" small text>Cerrar</v-btn>
-          <v-btn @click="savePassword()" color="primary" small depressed>Guardar</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <!-- DIALOG PARENT -->
+
     <ParentSelector
       v-if="dlg_parent && entity"
       v-model="dlg_parent"
@@ -315,154 +306,149 @@
 </template>
 
 <script>
-import loading from "@/components/loading";
 import ParentSelector from "./ParentSelector";
 
+import { getClassroomsBySchool } from "@/services/classroomService";
 import {
-  getStudents,
+  getStudentsByClassroom,
   addStudent,
   updateStudent,
   removeStudent,
 } from "@/services/studentService";
-import { getParents } from "@/services/parentService";
-// import { generatePassword } from "@/services/userService";
-import { getClassroomsBySchool } from "@/services/classroomService";
 import { updatePasswordByAdmin } from "@/services/userService";
-
-import UserModel from "@/models/User";
+import { getParents } from "@/services/parentService";
 
 import * as XLSX from "xlsx";
+
+import UserModel from "@/models/User";
 
 export default {
   data: () => ({
     entities: [],
     entity: {},
-    parents: [],
     classrooms: [],
     classroom_id: "",
-    classroom_id_import: "",
-    action: "",
-    new_data: [],
+    parents: [],
+    UserModel,
     //
+    action: "",
     dlg_edit: false,
-    dlg_parent: false,
-    dialog_import: false,
-    loading: true,
-    loading_save: false,
-    loading_msg: "",
-    // Remove
-    entity_username_remove: "",
-    dialog_remove: false,
-    // Change Password
+    loading_btn: false,
+    // remove
+    username: "",
+    dlg_remove: false,
+    // password
+    dlg_password: false,
     new_password: "",
     confirm_new_password: "",
-    dlg_password: false,
-    UserModel,
+    // import
+    new_data: [],
+    classroom_id_import: "",
+    dlg_import: false,
+    // parent
+    dlg_parent: false,
   }),
-  async mounted() {
-    this.loading_msg = "Cagando Alumnos";
-    this.entities = await getStudents();
-    this.loading_msg = "Cargando Aulas";
-    this.classrooms = await getClassroomsBySchool();
-    if (this.classrooms.length !== 0) {
-      this.classrooms.sort((a, b) => a.name.localeCompare(b.name));
-      this.classroom_id = this.classrooms[0]._id;
-      this.classroom_id_import = this.classrooms[0]._id;
-    } else {
-      this.$root.$children[0].showMessage(
-        "Alerta",
-        "No puede crear alumnos sino hay aulas existentes."
-      );
-    }
-    this.parents = await getParents();
-    this.loading = false;
-  },
-  computed: {
-    entities_filtered() {
-      let entities = this.entities.filter(
-        (e) => e.classroom_id.$oid === this.classroom_id.$oid
-      );
-      return entities;
+  watch: {
+    async classroom_id() {
+      this.showLoading("Cargando Datos");
+      try {
+        this.entities = this.formatObjects(
+          await getStudentsByClassroom(this.classroom_id)
+        );
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
     },
+  },
+  async created() {
+    this.showLoading("Cargando Datos");
+    try {
+      this.classrooms = this.formatObjects(await getClassroomsBySchool());
+
+      if (this.classrooms.length > 0) {
+        this.parents = this.formatObjects(await getParents());
+        this.classroom_id = this.classrooms[0]._id;
+      }
+    } catch (error) {
+      this.showMessage("", error.msg || error);
+    }
+    this.hideLoading();
   },
   methods: {
-    toogleShowPassword(entity) {
-      entity.showPassword = !entity.showPassword;
-      this.$forceUpdate();
-    },
-    add() {
-      this.action = "create";
-      this.entity = {};
-    },
-    edit(entity) {
-      this.action = "edit";
-      this.entity = Object.assign({}, entity);
-      this.entity.id = this.entity._id.$oid;
-      this.entity.showPassword = false;
-    },
     async save() {
-      this.loading_save = true;
-      if (this.action === "create") {
-        try {
-          // this.entity.pass = generatePassword();
-          let entity_id = await addStudent(this.entity);
-          this.entity._id = entity_id;
-          this.entities.push(this.entity);
-          this.dlg_edit = false;
-        } catch (error) {
-          this.$root.$children[0].showMessage("Error al Guardar", error.msg);
-        }
-      } else if (this.action === "edit") {
-        try {
+      this.loading_btn = true;
+      try {
+        if (this.action === "CREATE") {
+          let { _id } = await addStudent(this.entity);
+          this.entity._id = _id;
+          if (this.entity.classroom_id === this.classroom_id)
+            this.entities.push(this.entity);
+        } else {
           await updateStudent(this.entity);
           let entity_idx = this.entities.findIndex(
-            (entity) => entity._id.$oid === this.entity.id
+            (entity) => entity._id === this.entity._id
           );
-          this.entities[entity_idx] = Object.assign({}, this.entity);
-          this.entities.splice();
-          this.dlg_edit = false;
-        } catch (error) {
-          this.$root.$children[0].showMessage("Error al Guardar", error.msg);
+          if (this.entity.classroom_id === this.classroom_id)
+            this.entities[entity_idx] = Object.assign({}, this.entity);
+          else this.entities.splice(entity_idx, 1);
         }
-      }
-      this.loading_save = false;
-    },
-    async savePassword() {
-      if (this.new_password !== this.confirm_new_password) {
-        this.$root.$children[0].showMessage(
-          "",
-          "Las contraseñas no coinciden."
-        );
-        return;
-      }
-
-      this.dlg_password = false;
-      this.loading = true;
-      this.loading_msg = "Cambiando Contraseña";
-
-      try {
-        await updatePasswordByAdmin(this.entity._id.$oid, this.new_password);
-        this.$root.$children[0].showMessage("", "Contraseña modificada.");
+        this.dlg_edit = false;
       } catch (error) {
-        this.$root.$children[0].showMessage("", error.msg);
+        this.showMessage("", error.msg || error);
       }
-
-      this.loading = false;
+      this.loading_btn = false;
     },
     async remove() {
-      this.loading = true;
-      this.loading_msg = "Eliminando Alumno";
-      this.dialog_remove = false;
+      if (this.entity.username !== this.username) return;
 
+      this.showLoading("Eliminando");
+      this.dlg_remove = false;
       try {
-        await removeStudent(this.entity._id.$oid, this.entity_username_remove);
-        this.entities = this.entities.filter(
-          (e) => e._id.$oid !== this.entity._id.$oid
-        );
+        await removeStudent(this.entity._id);
+        if (this.entity.classroom_id === this.classroom_id)
+          this.entities = this.entities.filter(
+            (e) => e._id !== this.entity._id
+          );
       } catch (error) {
-        this.$root.$children[0].showMessage("", error.msg);
+        this.showMessage("", error.msg || error);
       }
-      this.loading = false;
+      this.hideLoading();
+    },
+    async savePassword() {
+      if (this.new_password !== this.confirm_new_password) return;
+
+      this.loading_btn = true;
+      try {
+        await updatePasswordByAdmin(this.entity._id, this.new_password);
+        this.dlg_password = false;
+        this.showMessage("", "Contraseña modificada.");
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.loading_btn = false;
+    },
+    // Import
+    async saveAll() {
+      this.loading_btn = true;
+      let i = 0;
+      while (i < this.new_data.length) {
+        let entity = this.new_data[i];
+        entity.classroom_id = this.classroom_id_import;
+        // entity.pass = generatePassword();
+        try {
+          let { _id } = await addStudent(entity);
+          entity._id = _id;
+          if (entity.classroom_id === this.classroom_id)
+            this.entities.push(entity);
+          this.new_data.splice(i, 1);
+        } catch (error) {
+          entity.response = error.msg || error;
+          i++;
+        }
+      }
+      if (this.new_data.length <= 0) this.dlg_import = false;
+      this.loading_btn = false;
     },
     onLoadFile(e) {
       let file = e.target.files[0];
@@ -493,42 +479,50 @@ export default {
                 username: usuario || Usuario || "",
               };
             });
-            this.dialog_import = true;
+            this.showImport();
           } else {
-            this.$root.$children[0].showMessage("Error al Importar", "");
+            this.showMessage("", "Error al Importar");
           }
         };
         reader.readAsBinaryString(file);
       }
     },
-    async saveAll() {
-      this.loading_save = true;
-      let i = 0;
-      while (i < this.new_data.length) {
-        let entity = this.new_data[i];
-        entity.classroom_id = this.classroom_id_import;
-        // entity.pass = generatePassword();
-        try {
-          let entity_id = await addStudent(entity);
-          entity._id = entity_id;
-          this.entities.push(entity);
-          this.new_data.splice(i, 1);
-        } catch (error) {
-          entity.response = error.msg;
-          i++;
-        }
-      }
-      if (this.new_data.length <= 0) this.dialog_import = false;
-      this.loading_save = false;
+    //
+    toogleShowPassword(e) {
+      e.showPassword = !e.showPassword;
+      this.$forceUpdate();
     },
-    // Parent
-    showParent(entity) {
-      this.entity = entity;
+    showCreate() {
+      this.entity = {};
+      this.action = "CREATE";
+      this.dlg_edit = true;
+    },
+    showEdit(e) {
+      this.entity = Object.assign({}, e);
+      this.action = "EDIT";
+      this.dlg_edit = true;
+    },
+    showRemove(e) {
+      this.entity = Object.assign({}, e);
+      this.username = "";
+      this.dlg_remove = true;
+    },
+    showPassword(e) {
+      this.entity = Object.assign({}, e);
+      this.new_password = "";
+      this.confirm_new_password = "";
+      this.dlg_password = true;
+    },
+    showParent(e) {
+      this.entity = e;
       this.dlg_parent = true;
+    },
+    showImport() {
+      this.classroom_id_import = this.classroom_id;
+      this.dlg_import = true;
     },
   },
   components: {
-    loading,
     ParentSelector,
   },
 };
@@ -536,46 +530,14 @@ export default {
 
 <style lang='scss' scoped>
 .editor {
-  padding: 10px 16px;
+  &__title {
+    margin: 0;
+  }
   &__menu {
-    margin-bottom: 12px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-  }
-  &__filter {
-    display: flex;
     align-items: center;
-  }
-  &__title {
-    margin-bottom: 6px;
-  }
-  &__content {
-    overflow-x: auto;
-  }
-  &__message {
-    margin: 10px 0;
-    font-weight: lighter;
-    font-size: 1.1rem;
-    text-align: center;
-  }
-}
-
-.edit {
-  &__content {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-row-gap: 20px;
-    align-items: center;
-    & * {
-      font-size: 1rem;
-    }
-  }
-  &__actions {
-    padding: 20px;
-    padding-top: 0;
-    display: flex;
-    justify-content: center;
   }
 }
 </style>
