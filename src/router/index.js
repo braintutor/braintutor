@@ -23,8 +23,42 @@ const routes = [
   },
   {
     path: "/school-editor",
-    name: "school-editor",
     component: () => import("../views/SchoolEditor.vue"),
+    children: [
+      {
+        path: "",
+        name: "school-editor",
+        component: () => import("../components/SchoolEditor/SchoolSettings"),
+      },
+      {
+        path: "teachers",
+        component: () => import("../components/SchoolEditor/TeachersEditor"),
+      },
+      {
+        path: "courses",
+        component: () => import("../components/SchoolEditor/CoursesEditor"),
+      },
+      {
+        path: "classrooms",
+        component: () => import("../components/SchoolEditor/ClassroomsEditor"),
+      },
+      {
+        path: "students",
+        component: () => import("../components/SchoolEditor/StudentsEditor"),
+      },
+      {
+        path: "sessions",
+        component: () => import("../components/SchoolEditor/SessionsEditor"),
+      },
+      {
+        path: "director",
+        component: () => import("../components/SchoolEditor/DirectorEditor"),
+      },
+      {
+        path: "parents",
+        component: () => import("../components/SchoolEditor/ParentsEditor"),
+      },
+    ],
   },
   {
     path: "/director",
@@ -174,10 +208,7 @@ router.beforeEach(async (to, from, next) => {
     "profile",
   ]; // Require Teacher
   const require_director = ["director", "profile"]; // Require Director
-  const require_parent = [
-    "parent",
-    "profile",
-  ]; // Require Director
+  const require_parent = ["parent", "profile"]; // Require Director
   let to_name = to.name;
   let redirects = {
     ADM: "school-editor",

@@ -180,9 +180,8 @@ export default {
 
       try {
         let res = await fetch(
-          "https://braintutor-service-v2.herokuapp.com/uploadMaterialImage",
+          `${process.env.VUE_APP_API_URL}/uploadMaterialImage`,
           {
-            // let res = await fetch("http://localhost:5000/uploadMaterialImage", {
             method: "POST",
             body: data,
             headers: {

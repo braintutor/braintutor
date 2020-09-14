@@ -45,21 +45,10 @@ export default {
   },
   computed: {
     tasks_filtered() {
-      let tasks = this.tasks_formated.filter(({ answer }) => {
+      let tasks = this.tasks.filter(({ answer }) => {
         if (answer.text || (answer.data && answer.data.length > 0))
           return !this.show_pending;
         else return this.show_pending;
-      });
-      return tasks;
-    },
-    tasks_formated() {
-      let tasks = this.tasks.map((t) => {
-        let task = {
-          ...t,
-        };
-        if (task.time_start.$date)
-          task.time_start = new Date(t.time_start.$date);
-        return task;
       });
       tasks.sort(function (a, b) {
         return b.time_start - a.time_start;
@@ -73,14 +62,16 @@ export default {
       this.loading(true);
       this.loading_msg("Cargando Tareas");
       try {
-        this.tasks = await getTasksBySessionStudent(this.session_id);
+        this.tasks = this.formatObjects(
+          await getTasksBySessionStudent(this.session_id)
+        );
       } catch (error) {
         this.$root.$children[0].showMessage("Error", error.msg);
       }
       this.loading(false);
     },
     select(task) {
-      redirect("task", { task_id: task._id.$oid });
+      redirect("task", { task_id: task._id });
     },
   },
   components: {
