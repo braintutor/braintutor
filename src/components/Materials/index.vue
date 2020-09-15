@@ -1,17 +1,25 @@
 <template>
   <div class="layout">
     <section class="list">
+      <!-- Progress -->
       <div class="m-progress">
-        <v-progress-circular
-          :value="this.progress_materials.length/this.materials.length*100"
-          :size="30"
-          :width="4"
-          color="#5b37ff"
-          class="mr-4"
-        ></v-progress-circular>
-        <span class="mr-3">Tu progreso</span>
-        <v-icon @click="dlg_remove = true" style="font-size: 1.2rem">mdi-sync</v-icon>
+        <div>
+          <v-progress-circular
+            :value="this.progress_materials.length/this.materials.length*100"
+            :size="24"
+            :width="3"
+            color="#556aff"
+            class="mr-3"
+            rotate="270"
+          >
+            <!-- <v-icon small>mdi-trophy</v-icon> -->
+          </v-progress-circular>
+          <span v-if="this.progress_materials.length!==this.materials.length">Tu progreso</span>
+          <span v-else>Completado</span>
+        </div>
+        <v-icon @click="dlg_remove = true" style="opacity: .6">mdi-sync</v-icon>
       </div>
+      <!-- Chatbots -->
       <section v-for="(c, c_idx) in chatbots" :key="c_idx">
         <div @click="c.show = !c.show; $forceUpdate()" class="list__title">
           <span>{{c.name}}</span>
@@ -468,15 +476,15 @@ $color-active-font: #5553ff;
 $color-progress: rgb(172, 191, 255);
 
 .m-progress {
-  margin-top: 10px;
-  padding: 10px;
+  margin-top: 8px;
+  padding: 10px 12px;
   background: $color-active;
-  font-size: 1rem;
+  font-size: 0.95rem;
   border-radius: 6px;
 
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
 
   * {
     color: $color-active-font;
