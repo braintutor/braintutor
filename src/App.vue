@@ -197,7 +197,12 @@ textarea {
 
 //Vuetify
 .v-text-field {
-  font-size: 0.9rem !important;
+  * {
+    font-size: 0.95rem !important;
+  }
+  & .v-counter {
+    font-size: 0.75rem !important;
+  }
 }
 .v-input {
   margin: 0 !important;

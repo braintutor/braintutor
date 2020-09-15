@@ -1,6 +1,17 @@
 <template>
   <div class="layout">
     <section class="list">
+      <div class="m-progress">
+        <v-progress-circular
+          :value="this.progress_materials.length/this.materials.length*100"
+          :size="30"
+          :width="4"
+          color="#5b37ff"
+          class="mr-4"
+        ></v-progress-circular>
+        <span class="mr-3">Tu progreso</span>
+        <v-icon @click="dlg_remove = true" style="font-size: 1.2rem">mdi-sync</v-icon>
+      </div>
       <section v-for="(c, c_idx) in chatbots" :key="c_idx">
         <div @click="c.show = !c.show; $forceUpdate()" class="list__title">
           <span>{{c.name}}</span>
@@ -66,6 +77,20 @@
         <MaterialDocuments v-else :material="material" />
       </div>
     </div>
+
+    <!-- Remove Progress -->
+    <v-dialog v-model="dlg_remove" max-width="400">
+      <div class="m-card">
+        <div class="m-card__body">
+          <h3>¿Quieres reiniciar el progreso?</h3>
+          <p class="mt-4">El progreso de este curso se reiniciará. ¿Quieres continuar?</p>
+        </div>
+        <div class="m-card__actions">
+          <m-btn @click="dlg_remove = false" color="primary" small text class="mr-2">Cancelar</m-btn>
+          <m-btn @click="dlg_remove = false; removeProgress()" color="primary" small>Continuar</m-btn>
+        </div>
+      </div>
+    </v-dialog>
   </div>
 </template>
 
@@ -94,11 +119,13 @@ export default {
     course: Object,
   },
   data: () => ({
+    materials: [],
     chatbots: [],
     progress_materials: [],
     categories: [],
     progress: [],
     //
+    dlg_remove: false,
     show: false,
   }),
   computed: {
@@ -274,6 +301,19 @@ export default {
         }
       }
     },
+    async removeProgress() {
+      if (this.user.role === "STU") {
+        this.showLoading("");
+        let course_id = this.course._id.$oid;
+        try {
+          await updateStudentProgress(course_id, []);
+          this.progress_materials = [];
+        } catch (error) {
+          this.showMessage("", error.msg || error);
+        }
+        this.hideLoading("");
+      }
+    },
     showNextMaterial(material) {
       let chatbot_idx = this.chatbots.findIndex(
         (c) => c._id.$oid === material.chatbot_id.$oid
@@ -426,6 +466,22 @@ $color-active-font: #5553ff;
 }
 
 $color-progress: rgb(172, 191, 255);
+
+.m-progress {
+  margin-top: 10px;
+  padding: 10px;
+  background: $color-active;
+  font-size: 1rem;
+  border-radius: 6px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  * {
+    color: $color-active-font;
+  }
+}
 
 .progress {
   position: relative;
