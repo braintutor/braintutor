@@ -2,7 +2,16 @@
   <div v-if="!evaluation" class="m-container pa-4">
     <!-- MENU -->
     <div class="evaluations__menu">
-      <m-btn @click="create()" color="primary" small>
+      <strong
+        class="mt-1"
+        style="opacity: 0.5"
+      >{{`${evaluations.length}/${variables.max_evaluations_per_session}`}}</strong>
+      <m-btn
+        @click="create()"
+        :disabled="evaluations.length >= variables.max_evaluations_per_session"
+        color="primary"
+        small
+      >
         <v-icon left style="font-size: .9rem">mdi-plus</v-icon>Crear Evaluación
       </m-btn>
     </div>
@@ -73,6 +82,7 @@ import {
 import { getParam } from "@/services/router.js";
 import { copy } from "@/services/object.js";
 
+import variables from "@/models/variables";
 import { mapMutations } from "vuex";
 
 export default {
@@ -83,6 +93,7 @@ export default {
     evaluations: [],
     edit: false,
     dlg_remove: false,
+    variables,
   }),
   async mounted() {
     this.session_id = getParam("session_id");
@@ -175,6 +186,7 @@ export default {
 <style lang='scss' scoped>
 .evaluations__menu {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>

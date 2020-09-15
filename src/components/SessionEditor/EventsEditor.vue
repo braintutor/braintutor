@@ -2,7 +2,13 @@
   <div class="m-container my-3">
     <div class="legend">
       <div class="legend__item">
-        <div class="legend__name">Eventos</div>
+        <div class="legend__name">
+          <strong
+            class="mr-2"
+            style="opacity: 0.5"
+          >({{`${events.filter(e => e.type === 'event').length}/${variables.max_events_per_session}`}})</strong>
+          <span>Eventos</span>
+        </div>
         <div class="legend__color" style="background-color: #178ae2"></div>
       </div>
       <div class="legend__item">
@@ -93,6 +99,7 @@ import { getTasksBySessionTeacher } from "@/services/taskService";
 import { mapMutations } from "vuex";
 
 import EventModel from "@/models/Event";
+import variables from "@/models/variables";
 
 export default {
   data: () => ({
@@ -106,6 +113,7 @@ export default {
     dlg_create: false,
     dlg_delete: false,
     EventModel,
+    variables,
   }),
   async created() {
     await this.init();
@@ -210,6 +218,8 @@ export default {
   }
   &__name {
     font-size: 0.8rem;
+    display: flex;
+    align-items: center;
   }
   &__color {
     height: 10px;

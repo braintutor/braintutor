@@ -2,7 +2,10 @@
   <div class="layout">
     <section class="list">
       <!-- Progress -->
-      <div class="m-progress">
+      <div
+        v-if="this.materials.length > 0 && this.progress_materials.length > 0"
+        class="m-progress"
+      >
         <div>
           <v-progress-circular
             :value="this.progress_materials.length/this.materials.length*100"
@@ -14,10 +17,10 @@
           >
             <!-- <v-icon small>mdi-trophy</v-icon> -->
           </v-progress-circular>
-          <span v-if="this.progress_materials.length!==this.materials.length">Tu progreso</span>
+          <span v-if="this.progress_materials.length !== this.materials.length">Tu progreso</span>
           <span v-else>Completado</span>
         </div>
-        <v-icon @click="dlg_remove = true" style="opacity: .6">mdi-sync</v-icon>
+        <v-icon @click="dlg_remove = true" style="opacity: .7">mdi-sync</v-icon>
       </div>
       <!-- Chatbots -->
       <section v-for="(c, c_idx) in chatbots" :key="c_idx">
@@ -160,7 +163,7 @@ export default {
 
         let course_id = this.course._id.$oid;
         try {
-          this.chatbots = await (this.user.role === "TEA"
+          let chatbots = await (this.user.role === "TEA"
             ? getChatbotsByCourseTeacher(course_id)
             : getChatbotsByCourseStudent(course_id));
           this.materials = await (this.user.role === "TEA"
@@ -195,7 +198,7 @@ export default {
 
           //Materials
           if (this.materials[0]) this.selectMaterial(this.materials[0]);
-          this.chatbots.forEach((c) => {
+          chatbots.forEach((c) => {
             c.show = true;
             // Find Materials
             let materials = this.materials.filter((m) => {
@@ -210,7 +213,7 @@ export default {
             });
             c.materials = materials;
           });
-          this.chatbots = this.chatbots.filter((c) => c.materials.length > 0); // Only show chatbots with materials
+          this.chatbots = chatbots.filter((c) => c.materials.length > 0); // Only show chatbots with materials
 
           //Knowledge
           this.loading_msg("Cargando Conocimiento");

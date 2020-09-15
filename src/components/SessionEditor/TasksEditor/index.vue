@@ -2,7 +2,16 @@
   <div v-if="!task_selected" class="m-container pa-4">
     <!-- MENU -->
     <div class="tasks__menu">
-      <m-btn @click="showCreate()" color="primary" small>
+      <strong
+        class="mt-1"
+        style="opacity: 0.5"
+      >{{`${tasks.length}/${variables.max_tasks_per_session}`}}</strong>
+      <m-btn
+        @click="showCreate()"
+        :disabled="tasks.length >= variables.max_tasks_per_session"
+        color="primary"
+        small
+      >
         <v-icon left style="font-size: .9rem">mdi-plus</v-icon>Crear Tarea
       </m-btn>
     </div>
@@ -103,6 +112,7 @@ import { getParam } from "@/services/router.js";
 import { mapMutations } from "vuex";
 
 import { TaskModel } from "@/models/Task";
+import variables from "@/models/variables";
 
 export default {
   data: () => ({
@@ -116,6 +126,7 @@ export default {
     dialog_new: false,
     dialog_remove: false,
     TaskModel,
+    variables,
   }),
   async created() {
     this.session_id = getParam("session_id");
@@ -222,6 +233,7 @@ export default {
 <style lang='scss' scoped>
 .tasks__menu {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>
