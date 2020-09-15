@@ -188,6 +188,12 @@ export default {
       this.date_selected = this.toLocalISOString(date);
     },
     showCreate(year, month, day) {
+      if (
+        this.events.filter((e) => e.type === "event").length >=
+        this.variables.max_events_per_session
+      )
+        return;
+
       this.action = "create";
       this.dlg_create = true;
       this.new_event = {};

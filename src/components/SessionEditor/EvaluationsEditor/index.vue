@@ -5,7 +5,7 @@
       <strong
         class="mt-1"
         style="opacity: 0.5"
-      >{{`${evaluations.length}/${variables.max_evaluations_per_session}`}}</strong>
+      >({{`${evaluations.length}/${variables.max_evaluations_per_session}`}})</strong>
       <m-btn
         @click="create()"
         :disabled="evaluations.length >= variables.max_evaluations_per_session"

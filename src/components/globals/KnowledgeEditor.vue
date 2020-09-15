@@ -2,8 +2,10 @@
   <div class="editor-container">
     <loading :active="loading" :message="loading_message" />
     <div class="menu">
-      <!-- <span class="menu-title">Conocimiento</span> -->
-      <div></div>
+      <strong
+        class="mt-1"
+        style="opacity: 0.5"
+      >({{`${knowledge.length}/${CourseModel.knowledge.max_length}`}})</strong>
       <div class="menu-action">
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">

@@ -5,7 +5,7 @@
       <strong
         class="mt-1"
         style="opacity: 0.5"
-      >{{`${tasks.length}/${variables.max_tasks_per_session}`}}</strong>
+      >({{`${tasks.length}/${variables.max_tasks_per_session}`}})</strong>
       <m-btn
         @click="showCreate()"
         :disabled="tasks.length >= variables.max_tasks_per_session"

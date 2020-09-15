@@ -3,15 +3,18 @@
   <section class="quiz">
     <!-- QUIZ MENU -->
     <div class="quiz__menu">
-      <v-btn v-if="edit" @click="$emit('submit', data)" text small rounded>
-        <v-icon class="mr-2" small>mdi-content-save</v-icon>Guardar
-      </v-btn>
-      <v-btn v-if="edit" @click="edit = false; $emit('submit', data)" text small rounded>
-        <v-icon class="mr-2" small>mdi-close</v-icon>Finalizar
-      </v-btn>
-      <v-btn v-else @click="edit = true" text small rounded>
-        <v-icon class="mr-2" small>mdi-pencil</v-icon>Editar
-      </v-btn>
+      <strong class="mt-1" style="opacity: 0.5">({{`${data.length}/${maxlength}`}})</strong>
+      <div class="quiz__actions">
+        <v-btn v-if="edit" @click="$emit('submit', data)" text small rounded>
+          <v-icon class="mr-2" small>mdi-content-save</v-icon>Guardar
+        </v-btn>
+        <v-btn v-if="edit" @click="edit = false; $emit('submit', data)" text small rounded>
+          <v-icon class="mr-2" small>mdi-close</v-icon>Finalizar
+        </v-btn>
+        <v-btn v-else @click="edit = true" text small rounded>
+          <v-icon class="mr-2" small>mdi-pencil</v-icon>Editar
+        </v-btn>
+      </div>
     </div>
     <!-- QUESTION -->
     <div v-for="(d, d_idx) in data" :key="d_idx" class="question mt-3">
@@ -169,7 +172,8 @@ export default {
 .quiz {
   &__menu {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
   }
 }
 

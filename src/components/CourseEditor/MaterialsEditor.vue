@@ -2,6 +2,10 @@
   <div class="m-container pa-2" style="padding-bottom: 80px !important">
     <loading :active="loading" :message="loading_msg" />
     <div class="options mt-2">
+      <strong
+        class="mt-1"
+        style="opacity: 0.5"
+      >({{`${chatbots.length}/${Variables.max_chatbots_per_course}`}})</strong>
       <m-btn
         @click="createChatbot()"
         :disabled="chatbots.length >= Variables.max_chatbots_per_course"
@@ -368,7 +372,8 @@ export default {
 .options {
   margin-bottom: 10px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .chatbot {
