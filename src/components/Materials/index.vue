@@ -152,14 +152,12 @@ export default {
       "loading_msg",
       "setMaterial",
       "show_chatbot",
-      "loading_knowledge",
       "knowledge",
     ]),
     async init() {
       if (this.course._id) {
         this.loading(true);
         this.loading_msg("Cargando Material");
-        this.loading_knowledge(true);
 
         let course_id = this.course._id.$oid;
         try {
@@ -289,7 +287,6 @@ export default {
             });
           }
           this.knowledge(knowledge);
-          this.loading_knowledge(false);
         } catch (error) {
           this.showMessage("", error.msg || error);
         }

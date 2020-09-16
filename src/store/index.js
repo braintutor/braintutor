@@ -12,7 +12,6 @@ export default new Vuex.Store({
     material: null,
     // Chatbot
     show_chatbot: false,
-    loading_knowledge: false,
     knowledge: [],
   },
   mutations: {
@@ -31,9 +30,6 @@ export default new Vuex.Store({
     // Chatbot
     show_chatbot(state, show_chatbot) {
       state.show_chatbot = show_chatbot;
-    },
-    loading_knowledge(state, loading_knowledge) {
-      state.loading_knowledge = loading_knowledge;
     },
     knowledge(state, knowledge) {
       state.knowledge = knowledge;

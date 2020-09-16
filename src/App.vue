@@ -5,7 +5,7 @@
       <router-view></router-view>
     </v-main>
     <loading :active="loading" :message="loading_msg" />
-    <Chatbot v-if="show_chatbot" :knowledge="knowledge" :loading="loading_knowledge" />
+    <Chatbot v-if="show_chatbot" :knowledge="knowledge" />
     <!-- Message -->
     <v-dialog v-model="dlg_message" max-width="320" persistent>
       <div class="m-msg">
@@ -41,7 +41,6 @@ export default {
       "loading",
       "loading_msg",
       "show_chatbot",
-      "loading_knowledge",
       "knowledge",
     ]),
   },

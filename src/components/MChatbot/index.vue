@@ -1,10 +1,14 @@
 <template>
   <div style="z-index: var(--z-chatbot) !important">
-    <div class="m-chatbot" :class="{'m-chatbot--disabled': show}" @click="showChatbot()">
+    <div
+      class="m-chatbot"
+      :class="{'m-chatbot--loading': loading, 'm-chatbot--disabled': show && !loading}"
+      @click="showChatbot()"
+    >
       <img :src="require(`@/assets/avatar/normal.png`)" class="m-chatbot__img" />
     </div>
 
-    <div class="chatbot" :class="{'chatbot--disabled': !show}">
+    <div class="chatbot" :class="{'chatbot--disabled': !(show && !loading)}">
       <!-- Avatar -->
       <div class="chatbot__avatar">
         <Avatar ref="avatar" />
@@ -59,10 +63,6 @@ import Chatbot from "@/services/chatbot";
 
 export default {
   props: {
-    loading: {
-      type: Boolean,
-      default: false,
-    },
     knowledge: Array,
   },
   watch: {
@@ -85,6 +85,7 @@ export default {
     new_message: "",
     allow_new_message: true,
     writing: false,
+    loading: false,
   }),
   methods: {
     init() {
@@ -95,7 +96,9 @@ export default {
             nombres: this.$store.state.user.first_name,
           },
         };
+        this.loading = true;
         this.chatbot.train(this.knowledge, entities);
+        this.loading = false;
       }
     },
     addMessage(text, type, actions = []) {
@@ -181,7 +184,6 @@ $color-message-user: #0078ff;
   }
 
   &:hover {
-    // transform: translateY(-7px);
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
   }
 
@@ -189,6 +191,23 @@ $color-message-user: #0078ff;
     transform: translateX(24px);
     opacity: 0;
     pointer-events: none;
+  }
+  &--loading {
+    &::after {
+      content: "";
+      background: rgba(255, 255, 255, 0.555);
+      border-radius: 50%;
+      border: 4px solid var(--color-active);
+      border-top: 4px solid transparent;
+
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+
+      animation: rotating 1s ease infinite;
+    }
   }
 }
 
@@ -314,6 +333,14 @@ $color-message-user: #0078ff;
   }
 }
 
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 @keyframes blink {
   0% {
     opacity: 0;
