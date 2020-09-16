@@ -5,7 +5,6 @@
     </div>
 
     <div class="chatbot" :class="{'chatbot--disabled': !show}">
-      <v-icon @click="show = false" class="chatbot__close">mdi-close</v-icon>
       <!-- Avatar -->
       <div class="chatbot__avatar">
         <Avatar ref="avatar" />
@@ -41,8 +40,11 @@
           placeholder="Escribe un mensaje"
           autocomplete="off"
         />
-        <v-btn @click="talk()" class="ml-1" icon>
+        <v-btn @click="talk()" icon>
           <v-icon>mdi-microphone</v-icon>
+        </v-btn>
+        <v-btn @click="show = false" icon>
+          <v-icon>mdi-chevron-down</v-icon>
         </v-btn>
       </form>
     </div>
@@ -72,9 +74,14 @@ export default {
     this.init();
   },
   data: () => ({
-    show: true,
+    show: false,
     chatbot: new Chatbot(),
-    messages: [],
+    messages: [
+      {
+        text: "Hola.\n¿En qué puedo ayudarte?",
+        type: "bot",
+      },
+    ],
     new_message: "",
     allow_new_message: true,
     writing: false,
@@ -199,16 +206,9 @@ $color-message-user: #0078ff;
   bottom: 10px;
   right: 10px;
   border-radius: 8px;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5);
   overflow: hidden;
   transition: $animation-time;
-
-  &__close {
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    color: #fff;
-    z-index: 1;
-  }
 
   &--disabled {
     transform: translateX(24px);
