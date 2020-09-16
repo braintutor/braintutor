@@ -1,53 +1,56 @@
 <template>
-  <div
-    class="chatbot"
-    :class="{'chatbot--loading': loading, 'chatbot--active': show && !loading}"
-    @click="showChatbot()"
-  >
-    <v-icon @click="hideChatbot($event)" class="chatbot__close">mdi-close</v-icon>
-    <!-- Avatar -->
-    <Avatar ref="avatar" />
-    <!-- Messages -->
-    <div id="messages" class="messages messages--active">
-      <div
-        v-for="(message, idx) in messages"
-        :key="idx"
-        class="message"
-        :class="`message--${message.type}`"
-      >
-        <span class="message__text" v-html="message.text"></span>
-        <div
-          v-for="(action, idx) in message.actions"
-          :key="idx"
-          @click="actionChatbot($event, action.action)"
-          class="message__action"
-        >{{action.text}}</div>
-      </div>
-      <div v-if="writing" class="message message--bot message--writing">
-        <div class="message--writing__dot" style="--offset: 0s"></div>
-        <div class="message--writing__dot" style="--offset: .2s"></div>
-        <div class="message--writing__dot" style="--offset: .4s"></div>
-      </div>
+  <div>
+    <div class="m-chatbot" :class="{'m-chatbot--disabled': show}" @click="showChatbot()">
+      <img :src="require(`@/assets/avatar/normal.png`)" class="m-chatbot__img" />
     </div>
-    <!-- Input -->
-    <form @submit.prevent="newMessage(new_message)" class="input">
-      <input
-        id="input"
-        type="text"
-        v-model="new_message"
-        placeholder="Escribe un mensaje"
-        autocomplete="off"
-      />
-      <v-btn @click="talk()" class="ml-1" icon>
-        <v-icon>mdi-microphone</v-icon>
-      </v-btn>
-    </form>
+
+    <div class="chatbot" :class="{'chatbot--disabled': !show}">
+      <v-icon @click="show = false" class="chatbot__close">mdi-close</v-icon>
+      <!-- Avatar -->
+      <div class="chatbot__avatar">
+        <Avatar ref="avatar" />
+      </div>
+      <!-- Messages -->
+      <div id="messages" class="messages messages--active">
+        <div
+          v-for="(message, idx) in messages"
+          :key="idx"
+          class="message"
+          :class="`message--${message.type}`"
+        >
+          <span class="message__text" v-html="message.text"></span>
+          <div
+            v-for="(action, idx) in message.actions"
+            :key="idx"
+            @click="actionChatbot(action.action)"
+            class="message__action"
+          >{{action.text}}</div>
+        </div>
+        <div v-if="writing" class="message message--bot message--writing">
+          <div class="message--writing__dot" style="--offset: 0s"></div>
+          <div class="message--writing__dot" style="--offset: .2s"></div>
+          <div class="message--writing__dot" style="--offset: .4s"></div>
+        </div>
+      </div>
+      <!-- Input -->
+      <form @submit.prevent="newMessage(new_message)" class="input">
+        <input
+          id="input"
+          type="text"
+          v-model="new_message"
+          placeholder="Escribe un mensaje"
+          autocomplete="off"
+        />
+        <v-btn @click="talk()" class="ml-1" icon>
+          <v-icon>mdi-microphone</v-icon>
+        </v-btn>
+      </form>
+    </div>
   </div>
 </template>
 
 <script>
 import Avatar from "./Avatar";
-
 import { SpeechToText } from "@/services/speech";
 import { scrollDown } from "@/services/scroll";
 import Chatbot from "@/services/chatbot";
@@ -60,19 +63,6 @@ export default {
     },
     knowledge: Array,
   },
-  data: () => ({
-    chatbot: new Chatbot(),
-    messages: [
-      {
-        text: "Hola.\n¿En qué puedo ayudarte?",
-        type: "bot",
-      },
-    ],
-    new_message: "",
-    allow_new_message: true,
-    writing: false,
-    show: false,
-  }),
   watch: {
     knowledge() {
       this.init();
@@ -81,6 +71,71 @@ export default {
   mounted() {
     this.init();
   },
+  data: () => ({
+    show: true,
+    chatbot: new Chatbot(),
+    messages: [
+      {
+        text: "Hola.\n¿En qué puedo ayudarte?",
+        type: "bot",
+        actions: [
+          {
+            text: "Action",
+            action: () => {},
+          },
+          {
+            text: "Action",
+            action: () => {},
+          },
+        ],
+      },
+      {
+        text: "Hola.\n¿En qué puedo ayudarte?",
+        type: "user",
+        actions: [
+          {
+            text: "Action",
+            action: () => {},
+          },
+          {
+            text: "Action",
+            action: () => {},
+          },
+        ],
+      },
+      {
+        text: "Hola.\n¿En qué puedo ayudarte?",
+        type: "bot",
+        actions: [
+          {
+            text: "Action",
+            action: () => {},
+          },
+          {
+            text: "Action",
+            action: () => {},
+          },
+        ],
+      },
+      {
+        text: "Hola.\n¿En qué puedo ayudarte?",
+        type: "user",
+        actions: [
+          {
+            text: "Action",
+            action: () => {},
+          },
+          {
+            text: "Action",
+            action: () => {},
+          },
+        ],
+      },
+    ],
+    new_message: "",
+    allow_new_message: true,
+    writing: false,
+  }),
   methods: {
     init() {
       if (this.knowledge.length > 1) {
@@ -92,6 +147,16 @@ export default {
         };
         this.chatbot.train(this.knowledge, entities);
       }
+    },
+    addMessage(text, type, actions = []) {
+      this.messages.push({
+        text,
+        type,
+        actions,
+      });
+      setTimeout(() => {
+        scrollDown("messages");
+      }, 20);
     },
     newMessage(new_message) {
       let answer = new_message.trim();
@@ -121,38 +186,17 @@ export default {
         }, 1500);
       }
     },
+
     talk() {
       SpeechToText((text) => this.newMessage(text));
     },
-    addMessage(text, type, actions = []) {
-      this.messages.push({
-        text,
-        type,
-        actions,
-      });
-      setTimeout(() => {
-        scrollDown("messages");
-      }, 20);
-    },
-    //
-    actionChatbot(e, action) {
-      this.hideChatbot(e);
-      setTimeout(action, 200);
-    },
     showChatbot() {
-      if (!this.show) {
-        this.show = true;
-        document.getElementById("input").focus();
-        setTimeout(() => {
-          scrollDown("messages");
-        }, 500);
-      }
+      this.show = true;
+      document.getElementById("input").focus();
     },
-    hideChatbot(e) {
-      if (this.show) {
-        e.stopPropagation();
-        this.show = false;
-      }
+    actionChatbot(action) {
+      this.show = false;
+      setTimeout(action, 200);
     },
   },
   components: {
@@ -162,131 +206,83 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-$time: 0.2s;
+$icon-size: 64px;
+$avatar-size: 96px;
+$chatbot-height: 480px;
+$chatbot-width: 320px;
+$animation-time: 0.5s;
+$color-message-user: #0078ff;
 
-$icon-height: 75px;
-$icon-width: 75px;
-
-$color-blue: #0078ff;
-
-.chatbot {
-  height: $icon-height;
-  width: $icon-width;
-  max-height: 90vh;
-  max-width: 90vw;
+.m-chatbot {
   overflow: hidden;
-
-  background: #fff;
-  border-radius: 20% 20% 0 0;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  transition: $time;
-  z-index: var(--z-chatbot) !important;
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  background: var(--color-active);
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  transition: $animation-time;
   cursor: pointer;
 
-  position: fixed;
-  right: 20px;
-  bottom: -5px;
+  &__img {
+    height: $icon-size;
+    width: $icon-size;
+    vertical-align: bottom;
+  }
+
+  &:hover {
+    // transform: translateY(-7px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
+  }
+
+  &--disabled {
+    transform: translateX(24px);
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+.chatbot {
+  height: $chatbot-height;
+  width: $chatbot-width;
+  max-height: 90vh;
+  max-width: 90vw;
+  background: #fff;
 
   display: flex;
   flex-direction: column;
 
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.3);
-  }
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: $animation-time;
+  z-index: var(--z-chatbot) !important;
 
   &__close {
     position: absolute;
     top: 4px;
     right: 4px;
-    opacity: 0;
-    transition: $time;
-    z-index: 1;
-
     color: #fff;
+    z-index: 1;
+  }
+
+  &--disabled {
+    transform: translateX(24px);
+    opacity: 0;
     pointer-events: none;
-
-    &:focus {
-      outline: none;
-    }
-
-    .chatbot--active & {
-      opacity: 1;
-      pointer-events: initial;
-    }
-  }
-
-  &--loading {
-    &::after {
-      content: "";
-      background: rgba(255, 255, 255, 0.555);
-      border-radius: 50%;
-      border: 4px solid #6b6bff;
-      border-top: 4px solid transparent;
-
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-
-      animation: rotating 1s ease infinite;
-    }
-  }
-
-  &--active {
-    bottom: 0;
-
-    width: 350px;
-    height: 550px;
-    border-radius: 8px 8px 0 0;
-    cursor: initial;
-
-    &:hover {
-      transform: none;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    }
-  }
-}
-@keyframes rotating {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
   }
 }
 
 .avatar {
-  background: #7a7aff;
-  transition: $time;
-
-  img {
-    display: block;
-    height: $icon-height;
-    width: $icon-width;
-    margin: 0 auto;
-    transition: $time;
-  }
-
-  .chatbot--active & {
-    img {
-      width: 140px;
-      height: 140px;
-    }
-  }
+  height: $avatar-size;
+  background: var(--color-active);
 }
 
 .messages {
   padding: 8px;
   overflow-y: auto;
-  opacity: 0;
-  transition: $time;
-
-  .chatbot--active & {
-    flex-grow: 1;
-    opacity: 1;
-  }
 }
 
 .message {
@@ -310,7 +306,7 @@ $color-blue: #0078ff;
   &__action {
     padding: 4px 10px;
     background: #fff;
-    color: $color-blue;
+    color: $color-message-user;
     font-weight: bold;
     text-align: center;
 
@@ -327,12 +323,12 @@ $color-blue: #0078ff;
   }
   &--user {
     margin-left: auto;
-    background: $color-blue;
-    border: 1px solid $color-blue;
+    background: $color-message-user;
+    border: 1px solid $color-message-user;
     color: #fff;
 
     .message__action {
-      border-top: 1px solid $color-blue;
+      border-top: 1px solid $color-message-user;
     }
   }
   &--writing {
@@ -353,6 +349,28 @@ $color-blue: #0078ff;
   }
 }
 
+.input {
+  padding: 6px;
+  display: flex;
+
+  input[type="text"] {
+    flex-grow: 1;
+    padding: 8px 14px;
+
+    background: #ececec;
+    font-size: 0.95rem;
+    border-radius: 20px;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .chatbot--active & {
+    opacity: 1;
+  }
+}
+
 @keyframes blink {
   0% {
     opacity: 0;
@@ -365,49 +383,24 @@ $color-blue: #0078ff;
   }
 }
 
-.input {
-  padding: 6px;
-  transition: $time;
-  opacity: 0;
-  display: flex;
+@media only screen and (max-width: 768px) {
+  $icon-size: 48px;
 
-  input[type="text"] {
-    flex-grow: 1;
-    padding: 8px 14px;
-
-    background: #ececec;
-    font-size: 0.95rem;
-    border-radius: 20px;
-    transition: $time;
-
-    &:focus {
-      outline: none;
+  .m-chatbot {
+    &__img {
+      height: $icon-size;
+      width: $icon-size;
     }
   }
 
-  .chatbot--active & {
-    opacity: 1;
-  }
-}
-
-@media only screen and (max-width: 768px) {
-  $icon-height: 50px;
-  $icon-width: 50px;
-
   .chatbot {
-    height: $icon-height;
-    width: $icon-width;
-    top: calc(100vh - #{$icon-height} + 5px);
-    right: 10px;
+    max-width: 100vw;
+    width: 100%;
+    bottom: 0;
+    right: 0;
+    border-radius: 0;
 
     &--active {
-      height: calc(100vh - 56px);
-      width: 100%;
-      max-height: initial;
-      max-width: initial;
-      top: 56px;
-      right: 0;
-      border-radius: 0;
     }
   }
 }

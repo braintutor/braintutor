@@ -162,21 +162,19 @@ export default {
   }
 }
 
-$color-font: rgb(85, 83, 255);
-$color-btn: rgba(86, 83, 255, 0.05);
-$color-btn-hover: rgba(86, 83, 255, 0.1);
+$color-btn-hover: rgb(218, 230, 255);
 
 .button {
   padding: 10px 16px;
-  color: $color-font;
-  background: $color-btn;
+  color: var(--color-active);
+  background: var(--background-active);
   font-weight: bold;
   font-size: 0.9rem;
   border-radius: 4px;
   transition: 0.4s;
 
   & * {
-    color: $color-font !important;
+    color: var(--color-active) !important;
   }
 
   &:hover {

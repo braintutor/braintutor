@@ -11,7 +11,7 @@
             :value="this.progress_materials.length/this.materials.length*100"
             :size="24"
             :width="3"
-            color="#556aff"
+            color="var(--color-active)"
             class="mr-3"
             rotate="270"
           >
@@ -42,7 +42,7 @@
             >
               <v-icon
                 v-if="progress_materials.includes(m._id.$oid)"
-                style="font-size: 1.3rem"
+                style="font-size: 1.25rem; opacity: .7"
               >mdi-check</v-icon>
             </div>
             <span>{{m.name}}</span>
@@ -382,17 +382,11 @@ export default {
   height: 100%;
 }
 
-$color-list: #fff;
-$color-hover: #f5f5f5b7;
-$color-active: #ededff;
-$color-active-font: #5553ff;
-
 .list {
   overflow-y: auto;
   flex-shrink: 0;
   height: 100%;
   width: 300px;
-  background: $color-list;
 
   &__title {
     font-weight: bold;
@@ -446,7 +440,7 @@ $color-active-font: #5553ff;
 }
 
 .link {
-  margin: 8px;
+  margin: 6px;
   padding: 10px 12px;
   padding-left: 18px;
   color: #414141;
@@ -459,29 +453,27 @@ $color-active-font: #5553ff;
   align-items: center;
 
   &:hover {
-    background: $color-hover;
+    background: var(--background-hover);
   }
 
   &--active {
-    color: $color-active-font;
-    background: $color-active;
+    color: var(--color-active);
+    background: var(--background-active);
     // font-weight: bold;
     &:hover {
-      background: $color-active;
+      background: var(--background-active);
     }
 
     & * {
-      color: $color-active-font;
+      color: var(--color-active);
     }
   }
 }
 
-$color-progress: rgb(172, 191, 255);
-
 .m-progress {
-  margin-top: 8px;
+  margin-top: 6px;
   padding: 10px 12px;
-  background: $color-active;
+  background: var(--background-active);
   font-size: 0.95rem;
   border-radius: 6px;
 
@@ -490,7 +482,7 @@ $color-progress: rgb(172, 191, 255);
   align-items: center;
 
   * {
-    color: $color-active-font;
+    color: var(--color-active);
   }
 }
 
@@ -500,7 +492,6 @@ $color-progress: rgb(172, 191, 255);
   margin-right: 16px;
   height: 1rem;
   width: 1rem;
-  // border: 1px solid $color-progress;
   border-radius: 50%;
 
   display: flex;

@@ -15,9 +15,9 @@
       >
         <div
           class="link__image"
-          :style="{'-webkit-mask': `url('${link.image}') no-repeat center`, 'mask': `url(${link.image}) no-repeat center`}"
+          :style="{'background': `${link.color}`, '-webkit-mask': `url('${link.image}') no-repeat center`, 'mask': `url(${link.image}) no-repeat center`}"
         ></div>
-        <div class="link__name">{{link.text}}</div>
+        <div class="link__name" :style="{'color': `${link.color}`}">{{link.text}}</div>
       </div>
     </nav>
     <!-- Body -->
@@ -61,7 +61,6 @@ export default {
 
 <style lang='scss' scoped>
 $sidebar-spacing: 6px;
-$color-active: #176fe2;
 
 .app {
   height: calc(100vh - 56px);
@@ -104,7 +103,7 @@ $color-active: #176fe2;
   font-size: 0.75rem;
   font-weight: bold;
   border-radius: 8px;
-  opacity: 0.5;
+  opacity: 0.4;
   transition: 0.3s;
   cursor: pointer;
 
@@ -113,8 +112,8 @@ $color-active: #176fe2;
   align-items: center;
 
   &:hover {
-    background: #ebf1ff;
-    opacity: 0.75;
+    background: var(--background-hover);
+    opacity: 0.6;
   }
 
   &__image {
@@ -127,17 +126,17 @@ $color-active: #176fe2;
   }
 
   &--active {
-    background: #e8f1ff;
+    background: var(--background-active);
     opacity: 1;
     &:hover {
-      background: #e8f1ff;
+      background: var(--background-active);
       opacity: 1;
     }
     .link__image {
-      background-color: $color-active;
+      background-color: var(--color-active);
     }
     .link__name {
-      color: $color-active;
+      color: var(--color-active);
     }
   }
 }

@@ -1,12 +1,12 @@
 <template>
   <v-card tile elevation="0" class="avatar">
-    <div v-for="(emotion, e_idx) in emotions" :key="e_idx">
-      <img
-        v-show="emotion === emotion_selected"
-        class="avatar__image"
-        :src="require(`@/assets/avatar/${emotion}.png`)"
-      />
-    </div>
+    <img
+      v-for="(emotion, e_idx) in emotions"
+      :key="e_idx"
+      v-show="emotion === emotion_selected"
+      class="avatar__image"
+      :src="require(`@/assets/avatar/${emotion}.png`)"
+    />
     <!-- <v-speed-dial v-model="fab_emotions" absolute bottom right direction="left">
       <template v-slot:activator>
         <v-btn v-model="fab_emotions" color="blue darken-2" small dark fab>
@@ -124,49 +124,13 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-// .avatar {
-//   background: #94bfea !important;
-
-//   &__image {
-//     display: block;
-//     margin: 0 auto;
-//     height: 20vh;
-//   }
-// }
-
-$time: 0.2s;
-$icon-height: 75px;
-$icon-width: 75px;
+$time: 0.3s;
 
 .avatar {
-  background: #7a7aff;
-  transition: $time;
-
   img {
     display: block;
-    width: $icon-width;
-    height: $icon-height;
+    height: 100%;
     margin: 0 auto;
-    transition: $time;
-  }
-
-  .chatbot--active & {
-    img {
-      width: 140px;
-      height: 140px;
-    }
-  }
-}
-
-@media only screen and (max-width: 768px) {
-  $icon-height: 50px;
-  $icon-width: 50px;
-
-  .avatar {
-    img {
-      height: $icon-height;
-      width: $icon-width;
-    }
   }
 }
 </style>
