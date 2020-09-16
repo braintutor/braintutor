@@ -13,7 +13,10 @@
         class="link"
         :class="{'link--active': link.name === name}"
       >
-        <img :src="link.image" class="link__image" />
+        <div
+          class="link__image"
+          :style="{'-webkit-mask': `url('${link.image}') no-repeat center`, 'mask': `url(${link.image}) no-repeat center`}"
+        ></div>
         <div class="link__name">{{link.text}}</div>
       </div>
     </nav>
@@ -57,6 +60,9 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+$sidebar-spacing: 6px;
+$color-active: #176fe2;
+
 .app {
   height: calc(100vh - 56px);
   display: grid;
@@ -78,8 +84,9 @@ export default {
 }
 
 .sidebar {
-  padding: 8px;
+  padding: $sidebar-spacing;
   width: 120px;
+  overflow-y: auto;
   // border-right: 1px solid #ccc;
 }
 
@@ -90,9 +97,10 @@ export default {
 }
 
 .link {
-  padding: 13px 8px 10px 8px;
-  margin-bottom: 8px;
-  color: #707070;
+  padding: 8px;
+  padding-top: 10px;
+  margin-bottom: $sidebar-spacing;
+  color: #000;
   font-size: 0.75rem;
   font-weight: bold;
   border-radius: 8px;
@@ -111,17 +119,25 @@ export default {
 
   &__image {
     display: block;
-    width: 26px;
-    height: 26px;
-    margin-bottom: 10px;
+    width: 36px;
+    height: 36px;
+    margin-bottom: 8px;
+    mask-size: cover !important;
+    background: #000;
   }
 
   &--active {
-    background: #e8efff;
+    background: #e8f1ff;
     opacity: 1;
     &:hover {
-      background: #e8efff;
+      background: #e8f1ff;
       opacity: 1;
+    }
+    .link__image {
+      background-color: $color-active;
+    }
+    .link__name {
+      color: $color-active;
     }
   }
 }
@@ -152,6 +168,8 @@ export default {
     margin-bottom: 0;
     &__image {
       margin: 0;
+      width: 28px;
+      height: 28px;
     }
     &__name {
       display: none;

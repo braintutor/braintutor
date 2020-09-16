@@ -23,40 +23,37 @@ export default {
       name: "...",
     },
     base: "",
-    links: [],
-  }),
-  async created() {
-    let session_id = getParam("session_id");
-    this.base = `session/${session_id}`;
-    this.links = [
+    links: [
       {
-        image:
-          "https://images.squarespace-cdn.com/content/v1/55d1e076e4b0be96a30dc726/1477412415649-WW90BD77ALIB9U99VTIA/ke17ZwdGBToddI8pDm48kDmvgM2_GYudIur22MWWiLdZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZamWLI2zvYWH8K3-s_4yszcp2ryTI0HqTOaaUohrI8PIvFa2r33EMaMk7hlBJBei4G1FTiqzsF6lpp3EXtW1YCk/image-asset.png",
+        image: require(`@/assets/icons/icon-course.svg`),
         text: "Aprender",
         name: "",
       },
       {
-        image:
-          "https://limpiasol.com.ar/sitio/wp-content/uploads/2016/09/task-done-flat.png",
+        image: require(`@/assets/icons/icon-task.svg`),
         text: "Tareas",
         name: "tasks",
       },
       {
-        image: require("@/assets/braintutor/icon-event.png"),
-        text: "Agenda",
-        name: "events",
-      },
-      {
-        image: require("@/assets/braintutor/icon-exam.png"),
+        image: require("@/assets/icons/icon-evaluation.svg"),
         text: "Evaluaciones",
         name: "evaluations",
       },
       {
-        image: require("@/assets/braintutor/icon-students.png"),
+        image: require("@/assets/icons/icon-calendar.svg"),
+        text: "Agenda",
+        name: "events",
+      },
+      {
+        image: require("@/assets/icons/icon-student.svg"),
         text: "Alumnos",
         name: "students",
       },
-    ];
+    ],
+  }),
+  async created() {
+    let session_id = getParam("session_id");
+    this.base = `session/${session_id}`;
 
     // Loading Session
     this.showLoading("Cargando");
