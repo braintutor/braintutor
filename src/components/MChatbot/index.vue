@@ -214,7 +214,7 @@ $color-message-user: #0078ff;
 .chatbot {
   height: $chatbot-height;
   width: $chatbot-width;
-  max-height: 90vh;
+  max-height: calc(100vh - 56px);
   max-width: 90vw;
   background: #fff;
 
@@ -365,7 +365,6 @@ $color-message-user: #0078ff;
 
   .chatbot {
     max-width: 100vw;
-    max-height: calc(100vh - 56px);
     width: 100%;
     height: 100%;
     bottom: 0;
