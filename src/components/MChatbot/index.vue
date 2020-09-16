@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="z-index: var(--z-chatbot) !important">
     <div class="m-chatbot" :class="{'m-chatbot--disabled': show}" @click="showChatbot()">
       <img :src="require(`@/assets/avatar/normal.png`)" class="m-chatbot__img" />
     </div>
@@ -74,64 +74,7 @@ export default {
   data: () => ({
     show: true,
     chatbot: new Chatbot(),
-    messages: [
-      {
-        text: "Hola.\n¿En qué puedo ayudarte?",
-        type: "bot",
-        actions: [
-          {
-            text: "Action",
-            action: () => {},
-          },
-          {
-            text: "Action",
-            action: () => {},
-          },
-        ],
-      },
-      {
-        text: "Hola.\n¿En qué puedo ayudarte?",
-        type: "user",
-        actions: [
-          {
-            text: "Action",
-            action: () => {},
-          },
-          {
-            text: "Action",
-            action: () => {},
-          },
-        ],
-      },
-      {
-        text: "Hola.\n¿En qué puedo ayudarte?",
-        type: "bot",
-        actions: [
-          {
-            text: "Action",
-            action: () => {},
-          },
-          {
-            text: "Action",
-            action: () => {},
-          },
-        ],
-      },
-      {
-        text: "Hola.\n¿En qué puedo ayudarte?",
-        type: "user",
-        actions: [
-          {
-            text: "Action",
-            action: () => {},
-          },
-          {
-            text: "Action",
-            action: () => {},
-          },
-        ],
-      },
-    ],
+    messages: [],
     new_message: "",
     allow_new_message: true,
     writing: false,
@@ -258,7 +201,6 @@ $color-message-user: #0078ff;
   border-radius: 8px;
   overflow: hidden;
   transition: $animation-time;
-  z-index: var(--z-chatbot) !important;
 
   &__close {
     position: absolute;
@@ -281,8 +223,9 @@ $color-message-user: #0078ff;
 }
 
 .messages {
-  padding: 8px;
   overflow-y: auto;
+  flex-grow: 1;
+  padding: 8px;
 }
 
 .message {
@@ -395,13 +338,12 @@ $color-message-user: #0078ff;
 
   .chatbot {
     max-width: 100vw;
+    max-height: calc(100vh - 56px);
     width: 100%;
+    height: 100%;
     bottom: 0;
     right: 0;
     border-radius: 0;
-
-    &--active {
-    }
   }
 }
 </style>
