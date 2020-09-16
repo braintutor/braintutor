@@ -1,7 +1,7 @@
 <template>
   <div class="entities">
     <div class="entities__menu">
-      <h1 class="entities__title">Padres</h1>
+      <h2 class="entities__title">Padres</h2>
       <m-btn @click="showCreate()" color="primary" small>
         <v-icon small class="mr-2">mdi-plus</v-icon>Crear
       </m-btn>

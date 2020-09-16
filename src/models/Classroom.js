@@ -1,6 +1,6 @@
 const Classroom = {
   name: {
-    max_length: 30,
+    max_length: 50,
   },
 };
 

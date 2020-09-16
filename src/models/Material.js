@@ -1,4 +1,4 @@
-const max_questions_per_material = 10;
+import variables from "./variables";
 
 const Material = {
   name: {
@@ -11,15 +11,15 @@ const Material = {
     max_length: 300,
   },
   exercises: {
-    max_length: max_questions_per_material,
+    max_length: variables.max_questions_per_material,
     type: Array,
   },
   faq: {
-    max_length: max_questions_per_material,
+    max_length: variables.max_questions_per_material,
     type: Array,
   },
   quizzes: {
-    max_length: max_questions_per_material,
+    max_length: variables.max_questions_per_material,
     type: Array,
   },
 };

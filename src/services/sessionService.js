@@ -46,6 +46,12 @@ function updateSession(session) {
   });
 }
 
+function removeSession(id) {
+  return fetch_post("removeSession", {
+    id,
+  });
+}
+
 export {
   getSessionByTeacher,
   getSessionByStudent,
@@ -56,4 +62,5 @@ export {
   getSessionsEventsAndTaksByStudent,
   addSession,
   updateSession,
+  removeSession,
 };

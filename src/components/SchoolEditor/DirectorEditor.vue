@@ -43,7 +43,6 @@
     <v-dialog v-model="dlg_password" max-width="400" persistent>
       <form @submit.prevent="savePassword()" class="m-card">
         <div class="m-card__body">
-          <h3>Crear Contraseña</h3>
           <v-text-field
             type="password"
             v-model="new_password"
@@ -51,7 +50,6 @@
             label="Nueva contraseña"
             autocomplete="off"
             required
-            class="mt-4"
           ></v-text-field>
           <v-text-field
             type="password"

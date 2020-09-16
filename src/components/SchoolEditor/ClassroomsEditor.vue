@@ -1,12 +1,23 @@
 <template>
   <div class="editor">
     <div class="editor__menu">
-      <h2 class="editor__title">Aulas</h2>
-      <m-btn @click="dialog_edit = true; add()" color="primary" small>
+      <div class="editor__title">
+        <h2>Aulas</h2>
+        <strong
+          class="ml-2 mt-1"
+          style="opacity: 0.5"
+        >({{`${entities.length}/${variables.max_classrooms_per_school}`}})</strong>
+      </div>
+      <m-btn
+        @click="dialog_edit = true; add()"
+        :disabled="entities.length >= variables.max_classrooms_per_school"
+        color="primary"
+        small
+      >
         <v-icon small class="mr-2">mdi-plus</v-icon>Crear
       </m-btn>
     </div>
-    <div class="editor__content">
+    <div class="editor__content mt-4">
       <table class="m-table">
         <thead>
           <tr>
@@ -98,6 +109,8 @@ import {
   removeClassroom,
 } from "@/services/classroomService";
 
+import variables from "@/models/variables";
+
 export default {
   data: () => ({
     entities: [],
@@ -108,6 +121,7 @@ export default {
     dialog_remove: false,
     loading_save: false,
     ClassroomModel,
+    variables,
   }),
   async mounted() {
     this.showLoading("Cargando Aulas");
@@ -183,7 +197,8 @@ export default {
     align-items: center;
   }
   &__title {
-    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
   }
   &__content {
     overflow-x: auto;

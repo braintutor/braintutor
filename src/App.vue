@@ -11,7 +11,7 @@
       <div class="m-msg">
         <div class="m-msg__body">
           <p v-if="show_title" class="m-msg__title">{{show_title}}</p>
-          <p class="m-msg__description">{{show_message}}</p>
+          <p v-for="(m, idx) in show_messages" :key="idx" class="m-msg__description">{{m}}</p>
         </div>
         <button @click="dlg_message = false" class="m-msg__btn">Cerrar</button>
       </div>
@@ -33,7 +33,7 @@ export default {
   data: () => ({
     dlg_message: false,
     show_title: "",
-    show_message: "",
+    show_messages: "",
   }),
   computed: {
     ...mapState([
@@ -67,7 +67,7 @@ export default {
     showMessage(title, message) {
       this.dlg_message = true;
       this.show_title = title;
-      this.show_message = message;
+      this.show_messages = message.split("&&");
     },
   },
   components: {
@@ -110,7 +110,7 @@ export default {
   }
 
   &__description {
-    margin-bottom: 0 !important;
+    // margin-bottom: 0 !important;
     color: rgb(109, 109, 109);
     text-align: center;
     font-size: 0.9rem;
@@ -119,7 +119,6 @@ export default {
   &__btn {
     width: 100%;
     padding: 10px;
-    margin-top: 10px;
     color: rgb(109, 109, 109);
     font-size: 0.8rem;
     text-transform: uppercase;

@@ -10,7 +10,7 @@
       @change="onLoadFile($event)"
     />
     <div class="editor__menu">
-      <h1 class="editor__title">Docentes</h1>
+      <h2 class="editor__title">Docentes</h2>
       <div>
         <m-btn onclick="ipt_file.click()" color="dark" small class="mr-2">
           <v-icon left small>mdi-file-excel</v-icon>Importar

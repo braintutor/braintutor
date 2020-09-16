@@ -1,11 +1,11 @@
-const max_questions_per_evaluation = 50;
+import variables from "./variables";
 
 const Evaluation = {
   name: {
-    max_length: 30,
+    max_length: 50,
   },
   content: {
-    max_length: max_questions_per_evaluation,
+    max_length: variables.max_questions_per_evaluation,
     type: Array,
   },
 };

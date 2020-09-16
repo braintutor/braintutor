@@ -1,11 +1,11 @@
-const max_alternatives_per_question = 10;
+import variables from "./variables";
 
 const Question = {
   question: {
     max_length: 300,
   },
   alternatives: {
-    max_length: max_alternatives_per_question,
+    max_length: variables.max_alternatives_per_question,
     type: Array,
   },
   alternative: {

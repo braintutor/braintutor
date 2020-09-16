@@ -3,8 +3,19 @@
     <loading :active="loading" :message="loading_msg" />
     <!-- EDITOR Menu -->
     <div class="editor__menu">
-      <h1 class="editor__title">Sesiones</h1>
-      <m-btn @click="dialog_edit = true; add()" color="primary" small>
+      <div class="editor__title">
+        <h2>Sesiones</h2>
+        <strong
+          class="ml-2 mt-1"
+          style="opacity: 0.5"
+        >({{`${entities.length}/${variables.max_sessions_per_school}`}})</strong>
+      </div>
+      <m-btn
+        @click="dialog_edit = true; add()"
+        :disabled="entities.length >= variables.max_sessions_per_school"
+        color="primary"
+        small
+      >
         <v-icon left small>mdi-plus</v-icon>Crear
       </m-btn>
     </div>
@@ -44,6 +55,9 @@
                   <v-list-item @click="dialog_edit = true; edit(entity)">
                     <v-list-item-title>Editar Sesión</v-list-item-title>
                   </v-list-item>
+                  <v-list-item @click="showRemove(entity)">
+                    <v-list-item-title>Eliminar Sesión</v-list-item-title>
+                  </v-list-item>
                 </v-list>
               </v-menu>
             </td>
@@ -53,6 +67,7 @@
       <p class="text-center mt-2" v-show="entities_f.length === 0">No hay sesiones</p>
     </div>
 
+    <!-- DIALOG -->
     <v-dialog v-model="dialog_edit" max-width="600" persistent>
       <div class="m-card">
         <div class="m-card__body">
@@ -106,6 +121,22 @@
         </div>
       </div>
     </v-dialog>
+
+    <v-dialog v-model="dlg_remove" max-width="400">
+      <div class="m-card">
+        <div class="m-card__body">
+          <h3>¿Desea eliminar?</h3>
+          <p
+            class="mt-4"
+          >La sesión no debe tener evaluaciones ni tareas asignadas para continuar con la eliminación.</p>
+          <p>Los eventos creados dentro de la sesión serán eliminados.</p>
+        </div>
+        <div class="m-card__actions">
+          <m-btn @click="dlg_remove = false" color="primary" small class="mr-2">Cancelar</m-btn>
+          <m-btn @click="remove(); dlg_remove = false" color="error" small>Eliminar</m-btn>
+        </div>
+      </div>
+    </v-dialog>
   </div>
 </template>
 
@@ -119,7 +150,10 @@ import {
   getSessionsBySchool,
   addSession,
   updateSession,
+  removeSession,
 } from "@/services/sessionService";
+
+import variables from "@/models/variables";
 
 export default {
   data: () => ({
@@ -134,9 +168,11 @@ export default {
     //
     show_error: false,
     dialog_edit: false,
+    dlg_remove: false,
     loading: true,
     loading_save: false,
     loading_msg: "",
+    variables,
   }),
   async created() {
     this.loading_msg = "Cargando Sesiones";
@@ -223,9 +259,25 @@ export default {
         this.error = "Completa todos los datos.";
       }
     },
+    async remove() {
+      this.showLoading("Eliminando");
+      let entity_id = this.entity._id.$oid;
+      try {
+        await removeSession(entity_id);
+        this.entities = this.entities.filter((e) => e._id.$oid !== entity_id);
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
+    },
     validate() {
       let { classroom_id, course_id, teacher_id } = this.entity;
       return classroom_id && course_id && teacher_id;
+    },
+    //
+    async showRemove(e) {
+      this.entity = e;
+      this.dlg_remove = true;
     },
   },
   components: {
@@ -237,7 +289,8 @@ export default {
 <style lang='scss' scoped>
 .editor {
   &__title {
-    margin: 0;
+    display: flex;
+    align-items: center;
   }
   &__menu {
     display: flex;
