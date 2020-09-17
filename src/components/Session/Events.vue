@@ -1,5 +1,5 @@
 <template>
-  <div class="m-container my-3">
+  <div class="m-container py-3">
     <div class="legend">
       <div class="legend__item">
         <div class="legend__name">Eventos</div>
@@ -11,7 +11,7 @@
       </div>
     </div>
 
-    <m-calendar :events="events" class="calendar">
+    <m-calendar :events="events">
       <template v-slot:event_info="{ event }">
         <div>
           <p class="mt-5">{{event.description}}</p>
@@ -77,9 +77,6 @@ export default {
 
 
 <style lang='scss' scoped>
-.calendar {
-  box-shadow: none !important;
-}
 .legend {
   display: flex;
   justify-content: center;

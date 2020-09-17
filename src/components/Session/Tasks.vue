@@ -1,5 +1,5 @@
 <template>
-  <div class="tasks m-container mt-4">
+  <div class="tasks m-container py-3">
     <!-- MENU -->
     <div class="tasks__menu">
       <m-btn

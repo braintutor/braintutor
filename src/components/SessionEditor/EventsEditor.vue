@@ -1,6 +1,6 @@
 <template>
-  <div class="m-container">
-    <div class="legend pt-4">
+  <div class="m-container py-3">
+    <div class="legend">
       <div class="legend__item">
         <div class="legend__name">
           <strong

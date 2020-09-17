@@ -153,7 +153,7 @@ export default {
     ],
     now: new Date(),
     date: new Date(),
-    mode_calendar: false,
+    mode_calendar: true,
     // Event
     show_event: false,
     event_selected: {},

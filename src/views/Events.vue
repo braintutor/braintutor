@@ -1,5 +1,5 @@
 <template>
-  <div class="m-container my-3">
+  <div class="m-container py-3">
     <div class="filter">
       <span class="filter__text">Mostrar:</span>
       <label class="filter__item">
@@ -10,7 +10,14 @@
       </label>
     </div>
 
-    <m-calendar :events="events_f" class="calendar">
+    <div class="legend">
+      <div class="legend__item" v-for="(session, s_idx) in sessions" :key="s_idx">
+        <div class="legend__name">{{session.course.name}}</div>
+        <div class="legend__color" :style="{'background-color': session.color}"></div>
+      </div>
+    </div>
+
+    <m-calendar :events="events_f">
       <template v-slot:event_info="{ event }">
         <div>
           <p class="mt-5">{{event.description}}</p>
@@ -24,13 +31,6 @@
         </div>
       </template>
     </m-calendar>
-
-    <div class="legend">
-      <div class="legend__item" v-for="(session, s_idx) in sessions" :key="s_idx">
-        <div class="legend__name">{{session.course.name}}</div>
-        <div class="legend__color" :style="{'background-color': session.color}"></div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -120,9 +120,6 @@ export default {
     font-size: 0.9rem;
     cursor: pointer;
   }
-}
-.calendar {
-  box-shadow: none !important;
 }
 .legend {
   display: flex;
