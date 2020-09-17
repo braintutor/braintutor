@@ -1,6 +1,6 @@
 <template>
-  <div class="m-container my-3">
-    <div class="legend">
+  <div class="m-container">
+    <div class="legend pt-4">
       <div class="legend__item">
         <div class="legend__name">
           <strong
@@ -17,7 +17,19 @@
       </div>
     </div>
 
-    <m-calendar :events="events" class="calendar" @on-date-click="showCreate">
+    <m-calendar
+      :events="events"
+      :show_options="event => event.type === 'event'"
+      :options="[{
+            text: 'Editar',
+            action: showEdit
+          },{
+            text: 'Eliminar',
+            action: showRemove
+          }]"
+      @on-date-click="showCreate"
+      class="my-3"
+    >
       <template v-slot:event_info="{ event, methods }">
         <div>
           <p class="mt-5">{{event.description}}</p>
@@ -25,14 +37,10 @@
             <m-btn
               color="primary"
               small
-              @click="showEdit(event); methods.hideEvent()"
+              @click="showEdit(event, methods.hideEvent)"
               class="mr-2"
             >Editar</m-btn>
-            <m-btn
-              color="error"
-              small
-              @click="dlg_delete = true; event_selected = event; methods.hideEvent()"
-            >Eliminar</m-btn>
+            <m-btn color="error" small @click="showRemove(event, methods.hideEvent)">Eliminar</m-btn>
           </div>
         </div>
       </template>
@@ -188,13 +196,14 @@ export default {
       }
       this.loading(false);
     },
-    showEdit(event) {
+    showEdit(event, next) {
       this.action = "edit";
       this.dlg_create = true;
       this.new_event = { ...event };
 
       let date = new Date(event.date.getTime()); // create a copy
       this.date_selected = this.toLocalISOString(date);
+      if (next) next();
     },
     showCreate(year, month, day) {
       if (
@@ -210,6 +219,11 @@ export default {
       let date = new Date(year, month, day);
       this.date_selected = this.toLocalISOString(date);
     },
+    showRemove(event, next) {
+      this.event_selected = event;
+      this.dlg_delete = true;
+      if (next) next();
+    },
     toLocalISOString(date) {
       date.setTime(date.getTime() - date.getTimezoneOffset() * 60 * 1000); // remove 5 hours
       return date.toISOString().substring(0, 16);
@@ -219,9 +233,6 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.calendar {
-  box-shadow: none !important;
-}
 .legend {
   display: flex;
   justify-content: center;

@@ -160,7 +160,7 @@ export default {
 
 <style lang='scss' scoped>
 $icon-size: 64px;
-$avatar-size: 96px;
+$avatar-size: 100px;
 $chatbot-height: 480px;
 $chatbot-width: 320px;
 $animation-time: 0.5s;

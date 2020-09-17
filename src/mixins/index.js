@@ -38,5 +38,10 @@ Vue.mixin({
       });
       return new_obj;
     },
+    // Date
+    orderObjectsByDate(arr, key = "date", desc = true) {
+      arr.sort((a, b) => (b[key] - a[key]) * (desc ? 1 : -1));
+      return arr;
+    },
   },
 });

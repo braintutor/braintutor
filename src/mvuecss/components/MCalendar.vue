@@ -1,11 +1,16 @@
 <template>
   <div>
-    <section class="calendar">
+    <div class="m-menu mb-3">
+      <div></div>
+      <m-btn @click="mode_calendar = !mode_calendar" text small color="dark">Cambiar vista</m-btn>
+    </div>
+
+    <section v-show="mode_calendar" class="calendar">
       <div class="calendar__control">
         <span class="calendar__month">{{`${months[month]} de ${year}`}}</span>
         <div class="calendar__actions">
           <m-btn @click="today()" icon class="mr-1">
-            <i class="fa fa-calendar-o"></i>
+            <i class="fa fa-calendar"></i>
           </m-btn>
           <m-btn @click="prev()" icon class="mr-1">
             <i class="fa fa-angle-left"></i>
@@ -44,8 +49,40 @@
       </div>
     </section>
 
+    <section v-show="!mode_calendar">
+      <div v-for="(e, idx) in events_ordered" :key="idx" class="hevent m-card mt-3">
+        <div class="hevent__options">
+          <v-menu v-if="options && show_options(e)" offset-y left>
+            <template v-slot:activator="{ on }">
+              <v-btn icon v-on="on">
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
+            <v-list dense>
+              <v-list-item v-for="(option, idx) in options" :key="idx" @click="option.action(e)">
+                <v-list-item-title>{{option.text}}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </div>
+        <div class="hevent__dateinfo" :style="{'background': e.color}">
+          <p class="hevent__date">{{e.date.getDate()}}</p>
+          <p
+            class="hevent__month"
+          >{{`${months[e.date.getMonth()].substring(0, 3)}, ${days[e.date.getDay()]}`}}</p>
+          <p class="hevent__year">{{e.date.getFullYear()}}</p>
+        </div>
+        <div class="hevent__body">
+          <p class="hevent__time">{{_getTime(e.date)}}</p>
+          <p class="hevent__title">{{e.title}}</p>
+          <p class="hevent__description">{{e.description}}</p>
+        </div>
+      </div>
+    </section>
+
     <!-- EVENT SELECTED -->
     <div
+      v-if="mode_calendar"
       ref="m-event"
       class="event m-card"
       :class="{'event--disabled': !show_event}"
@@ -80,6 +117,12 @@ export default {
       type: Array,
       default: () => [],
     },
+    show_options: {
+      type: Function,
+    },
+    options: {
+      type: Array,
+    },
   },
   data: () => ({
     days: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
@@ -99,6 +142,7 @@ export default {
     ],
     now: new Date(),
     date: new Date(),
+    mode_calendar: false,
     // Event
     show_event: false,
     event_selected: {},
@@ -110,6 +154,11 @@ export default {
     day_first: 0,
     days_in_month: 0,
   }),
+  computed: {
+    events_ordered() {
+      return this.orderObjectsByDate(this.events, "date");
+    },
+  },
   watch: {
     date() {
       this.showDate(this.date);
@@ -221,6 +270,13 @@ export default {
       date_format = date_format.charAt(0).toUpperCase() + date_format.slice(1);
       return date_format;
     },
+    _getTime(date) {
+      let hours = date.getHours();
+      let minutes = date.getMinutes();
+      hours += hours < 10 ? "0" : "";
+      minutes += minutes < 10 ? "0" : "";
+      return `${hours}:${minutes}`;
+    },
     // CALENDAR CONTROL
     today() {
       this.date = this.now;
@@ -269,7 +325,7 @@ export default {
 
   &__month {
     padding-left: 10px;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: bold;
   }
   &__day-week {
@@ -414,6 +470,59 @@ export default {
       // important
       max-height: 100%;
     }
+  }
+}
+
+//
+.hevent {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  &__options {
+    position: absolute;
+    top: 8px;
+    right: 4px;
+    z-index: 1;
+  }
+  &__dateinfo {
+    width: 110px;
+    margin: 0;
+    padding: 20px;
+    color: #fff;
+    text-align: center;
+  }
+  &__date {
+    margin: 0;
+    font-weight: bold;
+    font-size: 2.5rem;
+  }
+  &__month {
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+  }
+  &__year {
+    margin: 0;
+    font-size: 0.8rem;
+    opacity: 0.5;
+  }
+  //
+  &__body {
+    padding: 20px;
+    flex-grow: 1;
+  }
+  &__time {
+    margin-bottom: 8px;
+    opacity: 0.75;
+  }
+  &__title {
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+  &__description {
+    margin: 0;
   }
 }
 </style>
