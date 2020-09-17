@@ -1,7 +1,15 @@
 <template>
   <div>
     <div class="m-menu mb-3">
-      <div></div>
+      <m-btn
+        v-for="(item, idx) in menu"
+        :key="idx"
+        @click="item.action()"
+        text
+        small
+        color="dark"
+        class="mr-2"
+      >{{item.text}}</m-btn>
       <m-btn @click="mode_calendar = !mode_calendar" text small color="dark">Cambiar vista</m-btn>
     </div>
 
@@ -116,6 +124,9 @@ export default {
     events: {
       type: Array,
       default: () => [],
+    },
+    menu: {
+      type: Array,
     },
     show_options: {
       type: Function,
@@ -297,6 +308,12 @@ export default {
 
 <style lang='scss' scoped>
 @import "../styles/_breakpoints.scss";
+
+.m-menu {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
 
 .calendar {
   overflow: hidden;

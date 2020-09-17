@@ -27,6 +27,10 @@
             text: 'Eliminar',
             action: showRemove
           }]"
+      :menu="[{
+            text: 'Crear',
+            action: () => showCreateByDate(new Date())
+          }]"
       @on-date-click="showCreate"
       class="my-3"
     >
@@ -204,6 +208,12 @@ export default {
       let date = new Date(event.date.getTime()); // create a copy
       this.date_selected = this.toLocalISOString(date);
       if (next) next();
+    },
+    showCreateByDate(date) {
+      this.action = "create";
+      this.dlg_create = true;
+      this.new_event = {};
+      this.date_selected = this.toLocalISOString(date);
     },
     showCreate(year, month, day) {
       if (
