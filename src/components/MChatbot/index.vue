@@ -367,6 +367,7 @@ $color-message-user: #0078ff;
     max-width: 100vw;
     width: 100%;
     height: 100%;
+    top: 56px;
     bottom: 0;
     right: 0;
     border-radius: 0;
