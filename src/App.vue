@@ -66,7 +66,7 @@ export default {
     showMessage(title, message) {
       this.dlg_message = true;
       this.show_title = title;
-      this.show_messages = message.split("&&");
+      this.show_messages = (message + "").split("&&");
     },
   },
   components: {

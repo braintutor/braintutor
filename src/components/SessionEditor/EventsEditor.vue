@@ -40,13 +40,13 @@
 
     <!-- DLG CREATE -->
     <v-dialog v-model="dlg_create" max-width="800" :persistent="action !== 'create'">
-      <div class="m-card">
+      <form @submit.prevent="dlg_create = false; saveEvent()" class="m-card">
         <div class="m-card__body">
           <h2 v-if="action === 'create'">Nuevo Evento</h2>
           <h2 v-else>Editar Evento</h2>
           <div class="mt-5">
             <strong class="mr-3">Fecha:</strong>
-            <input type="datetime-local" v-model="date_selected" />
+            <input type="datetime-local" v-model="date_selected" required />
           </div>
           <div class="mt-4">
             <v-text-field
@@ -54,20 +54,29 @@
               :maxlength="EventModel.title.max_length"
               :counter="EventModel.title.max_length"
               label="Título"
+              required
             ></v-text-field>
             <v-textarea
               v-model="new_event.description"
               :maxlength="EventModel.description.max_length"
               :counter="EventModel.description.max_length"
               label="Descripción"
+              required
             ></v-textarea>
           </div>
         </div>
         <div class="m-card__actions">
-          <m-btn color="primary" small @click="dlg_create = false" text class="mr-2">Cancelar</m-btn>
-          <m-btn color="primary" small @click="dlg_create = false; saveEvent()">Guardar</m-btn>
+          <m-btn
+            color="primary"
+            small
+            type="button"
+            @click="dlg_create = false"
+            text
+            class="mr-2"
+          >Cancelar</m-btn>
+          <m-btn color="primary" small type="submit">Guardar</m-btn>
         </div>
-      </div>
+      </form>
     </v-dialog>
 
     <!-- DLG DELETE -->
