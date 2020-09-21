@@ -1,5 +1,5 @@
 <template>
-  <div class="editor-container">
+  <div class="editor-container m-container">
     <loading :active="loading" :message="loading_message" />
     <div class="menu">
       <strong

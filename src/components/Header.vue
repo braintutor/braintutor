@@ -2,7 +2,7 @@
   <div style="z-index: var(--z-header) !important">
     <header class="header">
       <div class="header__logo" @click="redirect('home')">
-        <v-img alt="BrainTutor Logo" src="@/assets/braintutor/logo.png" width="120" />
+        <v-img alt="BrainTutor Logo" src="@/assets/logo/logo-small.jpg" width="140" />
       </div>
       <v-spacer></v-spacer>
       <div class="header__actions">
@@ -191,7 +191,7 @@ export default {
 <style lang='scss' scoped>
 .header {
   height: 56px;
-  padding: 0 20px;
+  padding: 0 14px;
   padding-right: 10px;
 
   display: flex;

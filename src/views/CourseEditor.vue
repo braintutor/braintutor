@@ -1,70 +1,58 @@
 <template>
-  <Layout :links="links" fluid>
-    <loading :active="loading" :message="loading_msg" />
-
+  <Layout :links="links" :base="base" fluid>
     <section slot="header" class="m-path">
       <span @click="redirectCourses()" class="m-path__name m-path__name--link">Editar Cursos</span>
       <span class="m-path__icon">></span>
       <span class="m-path__name">{{course.name}}</span>
     </section>
 
-    <MaterialsEditor :slot="0" />
-    <KnowledgeEditor :slot="1" :get="getKnowledge" :update="updateKnowledge" class="m-container" />
-    <MaterialsPreview :slot="2" />
-    <!-- <CourseSettings :slot="2" :course="course" class="m-container" /> -->
+    <router-view :get="getKnowledge" :update="updateKnowledge" />
   </Layout>
 </template>
 
 <script>
-import loading from "@/components/loading";
-import Layout from "@/components/Layout";
-import MaterialsEditor from "@/components/CourseEditor/MaterialsEditor";
-import KnowledgeEditor from "@/components/globals/KnowledgeEditor";
-import MaterialsPreview from "@/components/CourseEditor/MaterialsPreview";
-// import CourseSettings from "@/components/CourseEditor/CourseSettings";
+import Layout from "@/components/LayoutLinks";
 
 import { getParam, redirect } from "@/services/router.js";
 import {
   getCourseByTeacher,
-  updateCourseKnowledge
+  updateCourseKnowledge,
 } from "@/services/courseService";
 
 export default {
   data: () => ({
+    base: "",
     links: [
       {
         image: require("@/assets/braintutor/icon-material.png"),
-        name: "Material"
+        text: "Material",
+        name: "",
       },
       {
         image: require("@/assets/braintutor/icon-knowledge.png"),
-        name: "Conocimiento"
+        text: "Conocimiento",
+        name: "knowledge",
       },
       {
         image: require("@/assets/avatar/normal.png"),
-        name: "Vista previa"
-      }
-      // {
-      //   image: require("@/assets/braintutor/icon-settings.png"),
-      //   name: "Configuración"
-      // }
+        text: "Vista previa",
+        name: "preview",
+      },
     ],
     course_id: "",
     course: {},
-    //
-    loading: false,
-    loading_msg: ""
   }),
   async created() {
-    this.loading = true;
-    this.loading_msg = "Cargando Contenido";
     this.course_id = getParam("course_id");
+    this.base = `course-editor/${this.course_id}`;
+
+    this.showLoading("Cargando Contenido");
     try {
       this.course = await getCourseByTeacher(this.course_id);
     } catch (error) {
-      this.$root.$children[0].showMessage("Error", error.msg);
+      this.showMessage("Error", error.msg);
     }
-    this.loading = false;
+    this.hideLoading(false);
   },
   methods: {
     redirectCourses() {
@@ -76,18 +64,10 @@ export default {
     },
     async updateKnowledge(knowledge) {
       return await updateCourseKnowledge(this.course_id, knowledge);
-    }
+    },
   },
   components: {
-    loading,
     Layout,
-    MaterialsEditor,
-    KnowledgeEditor,
-    MaterialsPreview
-    // CourseSettings
-  }
+  },
 };
 </script>
-
-<style lang='scss' scoped>
-</style>

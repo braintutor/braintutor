@@ -6,6 +6,7 @@ import Home from "../views/Home.vue";
 import store from "../store";
 import { redirect } from "@/services/router";
 import { getUser } from "@/services/userService";
+import { onRouterChange } from "../knowledge";
 
 Vue.use(VueRouter);
 
@@ -138,28 +139,45 @@ const routes = [
       },
       {
         path: "tasks",
+        name: "session-editor-tasks",
         component: () =>
           import("../components/SessionEditor/TasksEditor/index"),
       },
       {
         path: "events",
+        name: "session-editor-events",
         component: () => import("../components/SessionEditor/EventsEditor"),
       },
       {
         path: "evaluations",
+        name: "session-editor-evaluations",
         component: () =>
           import("../components/SessionEditor/EvaluationsEditor/index"),
       },
       {
         path: "students",
+        name: "session-editor-students",
         component: () => import("../components/Students/index"),
       },
     ],
   },
   {
     path: "/course-editor/:course_id",
-    name: "course-editor",
     component: () => import("../views/CourseEditor.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("../components/CourseEditor/MaterialsEditor"),
+      },
+      {
+        path: "knowledge",
+        component: () => import("../components/globals/KnowledgeEditor"),
+      },
+      {
+        path: "preview",
+        component: () => import("../components/CourseEditor/MaterialsPreview"),
+      },
+    ],
   },
   {
     path: "/material-editor/:material_id",
@@ -189,7 +207,6 @@ const router = new VueRouter({
   routes,
 });
 router.beforeEach(async (to, from, next) => {
-  reset();
   const require_student = [
     "sessions-student",
     "session",
@@ -234,18 +251,8 @@ router.beforeEach(async (to, from, next) => {
     store.state.loading = false;
   }
 
-  //Chatbot
-  store.commit("show_chatbot", false);
-  if (["course-editor", "material-editor"].includes(to_name)) {
-    store.commit("show_chatbot", true);
-    store.commit("knowledge_default", "CE");
-  }
-
-  let path_child = to.fullPath.split("/")[1];
-  if (["session-editor"].includes(path_child)) {
-    store.commit("show_chatbot", true);
-    store.commit("knowledge_default", "SE");
-  }
+  // Chatbot
+  onRouterChange(to.fullPath.split("/")[1]);
 
   // Router Authorization
   if (
@@ -267,10 +274,5 @@ router.beforeEach(async (to, from, next) => {
     redirect(redirects[user.role]);
   else next();
 });
-
-function reset() {
-  let component_avatar = store.state.component_avatar;
-  if (component_avatar) component_avatar.startTalk("");
-}
 
 export default router;
