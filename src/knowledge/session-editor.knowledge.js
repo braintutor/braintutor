@@ -27,7 +27,7 @@ export default [
   //Evaluation
   {
     questions: [
-      ...question_template_create("evaluacion"),
+      ...question_template_create("evaluación"),
       ...question_template_create("examen"),
     ],
     answers: [

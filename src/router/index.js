@@ -167,14 +167,17 @@ const routes = [
     children: [
       {
         path: "",
+        name: "course-editor",
         component: () => import("../components/CourseEditor/MaterialsEditor"),
       },
       {
         path: "knowledge",
+        name: "course-editor-knowledge",
         component: () => import("../components/globals/KnowledgeEditor"),
       },
       {
         path: "preview",
+        name: "course-editor-preview",
         component: () => import("../components/CourseEditor/MaterialsPreview"),
       },
     ],

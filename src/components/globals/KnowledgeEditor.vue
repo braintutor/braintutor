@@ -220,7 +220,7 @@ export default {
 
 .editor-container {
   flex-direction: column;
-  padding-bottom: 220px;
+  padding-bottom: 64px;
   .menu {
     padding: 0 10px;
     display: flex;

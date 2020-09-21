@@ -1,7 +1,10 @@
 <template>
   <Layout :links="links" :base="base" fluid>
     <section slot="header" class="m-path">
-      <span @click="redirectCourses()" class="m-path__name m-path__name--link">Editar Cursos</span>
+      <span
+        @click="redirect('courses-editor')"
+        class="m-path__name m-path__name--link"
+      >Editar Cursos</span>
       <span class="m-path__icon">></span>
       <span class="m-path__name">{{course.name}}</span>
     </section>
@@ -24,17 +27,17 @@ export default {
     base: "",
     links: [
       {
-        image: require("@/assets/braintutor/icon-material.png"),
+        image: require("@/assets/icons/icon-course.svg"),
         text: "Material",
         name: "",
       },
       {
-        image: require("@/assets/braintutor/icon-knowledge.png"),
+        image: require("@/assets/icons/icon-knowledge.svg"),
         text: "Conocimiento",
         name: "knowledge",
       },
       {
-        image: require("@/assets/avatar/normal.png"),
+        image: require("@/assets/icons/icon-preview.svg"),
         text: "Vista previa",
         name: "preview",
       },
@@ -55,9 +58,7 @@ export default {
     this.hideLoading(false);
   },
   methods: {
-    redirectCourses() {
-      redirect("courses-editor");
-    },
+    redirect,
     async getKnowledge() {
       let { knowledge } = await getCourseByTeacher(this.course_id);
       return knowledge || [];
