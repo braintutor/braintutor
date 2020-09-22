@@ -147,18 +147,10 @@ export default {
     await this.init();
   },
   methods: {
-    ...mapMutations([
-      "loading",
-      "loading_msg",
-      "setMaterial",
-      "show_chatbot",
-      "knowledge",
-    ]),
+    ...mapMutations(["setMaterial", "show_chatbot", "knowledge"]),
     async init() {
       if (this.course._id) {
-        this.loading(true);
-        this.loading_msg("Cargando Material");
-
+        this.showLoading("Cargando Material");
         let course_id = this.course._id.$oid;
         try {
           let units = await (this.user.role === "TEA"
@@ -214,7 +206,7 @@ export default {
           this.units = units.filter((u) => u.materials.length > 0); // Only show units with materials
 
           //Knowledge
-          this.loading_msg("Cargando Conocimiento");
+          this.showLoading("Cargando Conocimiento");
           let knowledge = this.course.knowledge || [];
 
           // Knowledge Material
@@ -290,7 +282,7 @@ export default {
         } catch (error) {
           this.showMessage("", error.msg || error);
         }
-        this.loading(false);
+        this.hideLoading();
       }
     },
     async saveProgress(material) {

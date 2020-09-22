@@ -109,8 +109,6 @@ import {
 import { getStudentsBySession } from "@/services/studentService";
 import { getParam } from "@/services/router.js";
 
-import { mapMutations } from "vuex";
-
 import { TaskModel } from "@/models/Task";
 import variables from "@/models/variables";
 
@@ -149,7 +147,6 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(["loading", "loading_msg"]),
     showCreate() {
       this.action = "create";
       this.task = {};
@@ -197,8 +194,7 @@ export default {
       this.loading_save = false;
     },
     async remove() {
-      this.loading(true);
-      this.loading_msg("Eliminando Tarea");
+      this.showLoading("Eliminando Tarea");
       try {
         let task_id_to_remove = this.task._id.$oid;
         await removeTask(task_id_to_remove);
@@ -206,18 +202,17 @@ export default {
       } catch (error) {
         this.showMessage("Error al Eliminar", error.msg);
       }
-      this.loading(false);
+      this.hideLoading();
     },
     async restore() {
-      this.loading(true);
-      this.loading_msg("Cargando Tareas");
+      this.showLoading("Cargando Tareas");
       try {
         this.students = await getStudentsBySession(this.session_id);
         this.tasks = await getTasksBySessionTeacher(this.session_id);
       } catch (error) {
         this.showMessage("Error", error.msg);
       }
-      this.loading(false);
+      this.hideLoading();
     },
     unselect() {
       this.task_selected = null;

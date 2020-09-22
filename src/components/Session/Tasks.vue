@@ -31,8 +31,6 @@ import TaskCard from "@/components/globals/Task/TaskCard";
 import { getTasksBySessionStudent } from "@/services/taskService";
 import { getParam, redirect } from "@/services/router.js";
 
-import { mapMutations } from "vuex";
-
 export default {
   data: () => ({
     session_id: "",
@@ -57,10 +55,8 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(["loading", "loading_msg"]),
     async restore() {
-      this.loading(true);
-      this.loading_msg("Cargando Tareas");
+      this.showLoading("Cargando Tareas");
       try {
         this.tasks = this.formatObjects(
           await getTasksBySessionStudent(this.session_id)
@@ -68,7 +64,7 @@ export default {
       } catch (error) {
         this.showMessage("Error", error.msg);
       }
-      this.loading(false);
+      this.hideLoading();
     },
     select(task) {
       redirect("task", { task_id: task._id });

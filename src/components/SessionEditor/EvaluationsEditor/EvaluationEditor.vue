@@ -1,6 +1,5 @@
 <template>
   <div class="quiz-editor-container m-fullscreen">
-    <loading :active="loading" :message="loading_msg" />
     <div class="menu">
       <div class="menu-left">
         <v-btn icon @click="unselect()">
@@ -173,8 +172,6 @@
 </template>
 
 <script>
-import loading from "@/components/loading";
-
 import { scrollDown } from "@/services/scroll";
 import {
   updateEvaluation,
@@ -189,8 +186,6 @@ import QuestionModel from "@/models/Question";
 export default {
   props: ["evaluation", "unselect"],
   data: () => ({
-    loading: false,
-    loading_msg: "",
     dialog_delete: false,
     dialog_public: false,
     EvaluationModel,
@@ -211,41 +206,44 @@ export default {
   },
   methods: {
     async save() {
-      this.loading = true;
-      this.loading_msg = "Guardando";
-
+      this.showLoading("Guardando");
       this.evaluation.id = this.evaluation._id.$oid;
       this.evaluation.time_start = new Date(this.evaluation.time_start_f);
       this.evaluation.time_end = new Date(this.evaluation.time_end_f);
-
       try {
         await updateEvaluation(this.evaluation);
-        this.loading = false;
+        this.hideLoading();
         return true;
       } catch (error) {
-        this.showMessage("Error al Guardar", error.msg);
-        this.loading = false;
+        this.showMessage("", error.msg || error);
+        this.hideLoading();
         return false;
       }
     },
     async publicEvaluation() {
       let success = await this.save();
       if (success) {
-        this.loading = true;
-        this.loading_msg = "Publicando";
+        this.showLoading("Publicando");
         let evaluation_id = this.evaluation._id.$oid;
-        await publicEvaluation(evaluation_id);
+        try {
+          await publicEvaluation(evaluation_id);
+        } catch (error) {
+          this.showMessage("", error.msg || error);
+        }
         this.evaluation.started = true;
-        this.loading = false;
+        this.hideLoading();
       }
     },
     async remove() {
-      this.loading = true;
-      this.loading_msg = "Eliminando";
+      this.showLoading("Eliminando");
       let evaluation_id = this.evaluation._id.$oid;
-      await deleteEvaluation(evaluation_id);
-      this.unselect();
-      this.loading = false;
+      try {
+        await deleteEvaluation(evaluation_id);
+        this.unselect();
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
     },
     addQuestion(questions) {
       questions.push({
@@ -266,9 +264,6 @@ export default {
     removeAlternative(alternatives, alternative_idx) {
       alternatives.splice(alternative_idx, 1);
     },
-  },
-  components: {
-    loading,
   },
 };
 </script>

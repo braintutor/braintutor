@@ -1,7 +1,5 @@
 <template>
   <div class="container pa-0 pt-2">
-    <loading :active="loading" :message="loading_msg" />
-
     <!-- Documents -->
     <!-- <div>
       <v-btn v-for="(document, idx) in documents" :key="idx" small rounded outlined>{{idx + 1}}</v-btn>
@@ -25,7 +23,6 @@
 </template>
 
 <script>
-import loading from "@/components/loading";
 import DocumentEditor from "@/components/globals/DocumentEditor";
 
 import { updateMaterialDocuments } from "@/services/materialService";
@@ -35,9 +32,6 @@ export default {
   data: () => ({
     documents: [],
     document_idx: 0,
-    //
-    loading: false,
-    loading_msg: "",
   }),
   mounted() {
     this.documents =
@@ -51,9 +45,7 @@ export default {
       this.document_idx = idx;
     },
     async save() {
-      this.loading = true;
-      this.loading_msg = "Guardando";
-
+      this.showLoading("Guardando");
       let documents = [];
       for (let i = 0; i < this.documents.length; i++) {
         let editor = this.$refs[`editor${i}`][0];
@@ -64,13 +56,12 @@ export default {
         await updateMaterialDocuments(this.material._id.$oid, documents);
         this.material.documents = documents;
       } catch (error) {
-        this.showMessage("Error", error.msg);
+        this.showMessage("", error || error.msg);
       }
-      this.loading = false;
+      this.hideLoading();
     },
   },
   components: {
-    loading,
     DocumentEditor,
   },
 };

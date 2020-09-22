@@ -1,7 +1,5 @@
 <template>
   <div>
-    <loading :active="loading" :message="loading_msg" />
-
     <!-- Categories -->
     <div v-show="!category" class="container">
       <div class="row no-gutters">
@@ -55,7 +53,6 @@
 </template>
 
 <script>
-import loading from "@/components/loading";
 import TextEditor from "./TextEditor";
 import QuizEditor from "@/components/globals/QuizEditor";
 import FAQEditor from "./FAQEditor";
@@ -105,8 +102,6 @@ export default {
       // https://iconos8.es/icons
     },
     //
-    loading: false,
-    loading_msg: "",
     MaterialModel,
   }),
   methods: {
@@ -114,12 +109,9 @@ export default {
       this.category = category;
     },
     async save(data) {
-      this.loading = true;
-      this.loading_msg = "Guardando";
-
+      this.showLoading("Guardando");
       let material_id = this.material._id.$oid;
       let category = this.category;
-
       try {
         if (data.length > MaterialModel.document.max_length)
           throw { msg: "Ha sobrepasado el tamaño permitido." };
@@ -128,12 +120,10 @@ export default {
       } catch (error) {
         this.showMessage("", error.msg);
       }
-
-      this.loading = false;
+      this.hideLoading();
     },
   },
   components: {
-    loading,
     TextEditor,
     QuizEditor,
     FAQEditor,

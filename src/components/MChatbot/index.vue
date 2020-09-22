@@ -96,9 +96,9 @@ export default {
             nombres: this.$store.state.user.first_name,
           },
         };
-        this.loading = true;
+        this.showLoading("");
         this.chatbot.train(this.knowledge, entities);
-        this.loading = false;
+        this.hideLoading();
       }
     },
     addMessage(text, type, actions = []) {

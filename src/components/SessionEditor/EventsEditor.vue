@@ -117,8 +117,6 @@ import {
 } from "@/services/eventService";
 import { getTasksBySessionTeacher } from "@/services/taskService";
 
-import { mapMutations } from "vuex";
-
 import EventModel from "@/models/Event";
 import variables from "@/models/variables";
 
@@ -140,10 +138,8 @@ export default {
     await this.init();
   },
   methods: {
-    ...mapMutations(["loading", "loading_msg"]),
     async init() {
-      this.loading(true);
-      this.loading_msg("Cargando Eventos");
+      this.showLoading("Cargando Eventos");
       this.session_id = getParam("session_id");
       try {
         let events = await getEventsBySession(this.session_id);
@@ -164,15 +160,12 @@ export default {
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
-      this.loading(false);
+      this.hideLoading();
     },
     async saveEvent() {
-      this.loading(true);
-      this.loading_msg("Guardando Cambios");
-
+      this.showLoading("Guardando Cambios");
       let new_event = this.new_event;
       new_event.time_start = new Date(this.date_selected);
-
       try {
         if (this.action === "create")
           await addEvent(this.session_id, new_event);
@@ -185,11 +178,10 @@ export default {
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
-      this.loading(false);
+      this.hideLoading();
     },
     async removeEvent() {
-      this.loading(true);
-      this.loading_msg("Eliminando Evento");
+      this.showLoading("Eliminando Evento");
       try {
         await removeEvent(this.event_selected._id.$oid);
         this.events = this.events.filter(
@@ -198,7 +190,7 @@ export default {
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
-      this.loading(false);
+      this.hideLoading();
     },
     showEdit(event, next) {
       this.action = "edit";

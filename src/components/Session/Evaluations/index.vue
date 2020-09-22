@@ -68,8 +68,6 @@ import {
 import { getParam } from "@/services/router.js";
 import { copy } from "@/services/object.js";
 
-import { mapMutations } from "vuex";
-
 export default {
   data: () => ({
     session_id: "",
@@ -85,10 +83,8 @@ export default {
     this.getEvaluations();
   },
   methods: {
-    ...mapMutations(["loading", "loading_msg"]),
     async getEvaluations() {
-      this.loading(true);
-      this.loading_msg("Cargando Evaluaciones");
+      this.showLoading("Cargando Evaluaciones");
       try {
         this.evaluations = await getEvaluationsBySessionStudent(
           this.session_id
@@ -100,18 +96,17 @@ export default {
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
-      this.loading(false);
+      this.hideLoading();
     },
     async select(evaluation) {
-      this.loading(true);
-      this.loading_msg("Cargando Evaluación");
+      this.showLoading("Cargando Evaluación");
       try {
         evaluation = await getEvaluationByStudent(evaluation._id.$oid);
         this.evaluation = copy(evaluation);
       } catch (error) {
         this.showMessage("", error.msg);
       }
-      this.loading(false);
+      this.hideLoading();
     },
     async unselect() {
       this.evaluation = null;

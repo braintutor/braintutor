@@ -83,7 +83,6 @@ import { getParam } from "@/services/router.js";
 import { copy } from "@/services/object.js";
 
 import variables from "@/models/variables";
-import { mapMutations } from "vuex";
 
 export default {
   data: () => ({
@@ -100,21 +99,18 @@ export default {
     this.getEvaluations();
   },
   methods: {
-    ...mapMutations(["loading", "loading_msg"]),
     async getEvaluations() {
-      this.loading(true);
-      this.loading_msg("Cargando Evaluaciones");
+      this.showLoading("Cargando Evaluaciones");
       this.evaluations = await getEvaluationsBySession(this.session_id);
 
       this.evaluations.forEach((e) => {
         if (e.time_start.$date) e.time_start = new Date(e.time_start.$date);
         if (e.time_end.$date) e.time_end = new Date(e.time_end.$date);
       });
-      this.loading(false);
+      this.hideLoading();
     },
     async create() {
-      this.loading(true);
-      this.loading_msg("Creando Evaluación");
+      this.showLoading("Creando Evaluación");
 
       let now = () => {
         let date = new Date();
@@ -145,12 +141,10 @@ export default {
       } catch (error) {
         this.showMessage("Error al Guardar", error.msg);
       }
-      this.loading(false);
+      this.hideLoading();
     },
     async remove() {
-      this.loading(true);
-      this.loading_msg("Eliminando");
-
+      this.showLoading("Eliminando");
       try {
         await deleteEvaluation(this.evaluation_to_remove._id.$oid);
         this.evaluations = this.evaluations.filter(
@@ -159,8 +153,7 @@ export default {
       } catch (error) {
         this.showMessage("", error.msg);
       }
-
-      this.loading(false);
+      this.hideLoading();
     },
     select(evaluation) {
       this.edit = true;

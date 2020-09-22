@@ -1,6 +1,5 @@
 <template>
   <div class="editor">
-    <loading :active="loading" :message="loading_msg" />
     <!-- EDITOR Menu -->
     <div class="editor__menu">
       <div class="editor__title">
@@ -141,8 +140,6 @@
 </template>
 
 <script>
-import loading from "@/components/loading";
-
 import { getCoursesBySchool } from "@/services/courseService";
 import { getClassroomsBySchool } from "@/services/classroomService";
 import { getTeachersBySchool } from "@/services/teacherService";
@@ -169,30 +166,29 @@ export default {
     show_error: false,
     dialog_edit: false,
     dlg_remove: false,
-    loading: true,
     loading_save: false,
-    loading_msg: "",
     variables,
   }),
   async created() {
-    this.loading_msg = "Cargando Sesiones";
+    this.showLoading("Cargando Sesiones");
+    try {
+      this.courses = await getCoursesBySchool();
 
-    this.courses = await getCoursesBySchool();
+      this.classrooms = await getClassroomsBySchool();
+      this.classrooms.sort((a, b) => a.name.localeCompare(b.name));
+      if (this.classrooms.length !== 0)
+        this.classroom_id = this.classrooms[0]._id;
 
-    this.classrooms = await getClassroomsBySchool();
-    this.classrooms.sort((a, b) => a.name.localeCompare(b.name));
-    if (this.classrooms.length !== 0)
-      this.classroom_id = this.classrooms[0]._id;
-
-    let teachers = await getTeachersBySchool();
-    this.teachers = teachers.map((t) => ({
-      ...t,
-      name: `${t.last_name}, ${t.first_name}`,
-    }));
-
-    this.entities = await getSessionsBySchool();
-
-    this.loading = false;
+      let teachers = await getTeachersBySchool();
+      this.teachers = teachers.map((t) => ({
+        ...t,
+        name: `${t.last_name}, ${t.first_name}`,
+      }));
+      this.entities = await getSessionsBySchool();
+    } catch (error) {
+      this.showMessage("", error.msg || error);
+    }
+    this.hideLoading();
   },
   computed: {
     entities_f() {
@@ -237,7 +233,7 @@ export default {
             this.entities.push(this.entity);
             this.dialog_edit = false;
           } catch (error) {
-            this.showMessage("Error al Guardar", error.msg);
+            this.showMessage("", error.msg || error);
           }
         } else if (this.action === "edit") {
           // Update
@@ -250,7 +246,7 @@ export default {
             this.entities.splice(); // updates the array without modifying it
             this.dialog_edit = false;
           } catch (error) {
-            this.showMessage("Error al Guardar", error.msg);
+            this.showMessage("", error.msg || error);
           }
         }
         this.loading_save = false;
@@ -279,9 +275,6 @@ export default {
       this.entity = e;
       this.dlg_remove = true;
     },
-  },
-  components: {
-    loading,
   },
 };
 </script>

@@ -37,7 +37,7 @@
 import { getCoursesByTeacher } from "@/services/courseService";
 import { redirect } from "@/services/router.js";
 
-import { mapState, mapMutations } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   data: () => ({
@@ -47,18 +47,15 @@ export default {
     ...mapState(["user"]),
   },
   async created() {
-    this.loading(true);
-    this.loading_msg("Cargando Cursos");
-
+    this.showLoading("Cargando Cursos");
     try {
       this.courses = await getCoursesByTeacher();
     } catch (error) {
       this.showMessage("Error", error.msg);
     }
-    this.loading(false);
+    this.hideLoading();
   },
   methods: {
-    ...mapMutations(["loading", "loading_msg"]),
     selectCourse(course) {
       redirect("course-editor", { course_id: course._id.$oid });
     },

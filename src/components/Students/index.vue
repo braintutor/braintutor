@@ -1,6 +1,5 @@
 <template>
   <div class="m-container pa-3">
-    <loading :active="loading" :message="loading_message" />
     <div v-show="!student">
       <div class="students m-card">
         <h1 class="students__title">Alumnos</h1>
@@ -44,7 +43,6 @@
 </template>
 
 <script>
-import loading from "@/components/loading";
 import Student from "./Student";
 import Chart from "chart.js";
 
@@ -56,9 +54,6 @@ export default {
     session_id: "",
     students: [],
     student: null,
-    //
-    loading: true,
-    loading_message: "",
   }),
   async mounted() {
     await this.update();
@@ -159,16 +154,18 @@ export default {
       });
     },
     async update() {
-      this.loading = true;
-      this.loading_message = "Cargando Alumnos";
-      this.students = await this.get();
-      this.student = null;
-      this.showDashboardAll();
-      this.loading = false;
+      this.showLoading("Cargando Alumnos");
+      try {
+        this.students = await this.get();
+        this.student = null;
+        this.showDashboardAll();
+      } catch (error) {
+        this.showMessage("Error al Eliminar", error.msg);
+      }
+      this.hideLoading();
     },
   },
   components: {
-    loading,
     Student,
   },
 };

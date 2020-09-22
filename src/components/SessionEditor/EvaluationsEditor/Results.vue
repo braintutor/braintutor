@@ -89,7 +89,6 @@
 import { getParam } from "@/services/router.js";
 import { getStudentsBySession } from "@/services/studentService";
 import { getEvaluation, removeResult } from "@/services/evaluationService";
-import { mapMutations } from "vuex";
 
 export default {
   props: {
@@ -104,8 +103,7 @@ export default {
     dialog_dlt: false,
   }),
   async created() {
-    this.loading(true);
-    this.loading_msg("Cargando Resultados");
+    this.showLoading("Cargando Resultados");
     let session_id = getParam("session_id");
     try {
       this.evaluation = await getEvaluation(this.evaluation_id);
@@ -113,10 +111,9 @@ export default {
     } catch (error) {
       this.showMessage("", error.msg || error);
     }
-    this.loading(false);
+    this.hideLoading();
   },
   methods: {
-    ...mapMutations(["loading", "loading_msg"]),
     getStats(student, evaluation) {
       let corrects = 0;
       let incorrects = 0;
@@ -146,10 +143,8 @@ export default {
       return { corrects, incorrects, empty, answers_state, has_answer };
     },
     async removeResult() {
-      this.loading(true);
-      this.loading_msg("Eliminando Resultado");
+      this.showLoading("Eliminando Resultado");
       let student_dlt_id = this.student_dlt._id.$oid;
-
       try {
         await removeResult(this.evaluation._id.$oid, student_dlt_id);
         this.evaluation.results = this.evaluation.results.filter(
@@ -158,8 +153,7 @@ export default {
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
-
-      this.loading(false);
+      this.hideLoading();
     },
   },
 };

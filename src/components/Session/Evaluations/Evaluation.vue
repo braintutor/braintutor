@@ -1,6 +1,5 @@
 <template>
   <div>
-    <loading :active="loading" :message="loading_msg" />
     <!-- Evaluation Content -->
     <div class="evaluation m-card">
       <!-- <div class="time">
@@ -39,8 +38,6 @@
 </template>
 
 <script>
-import loading from "@/components/loading";
-
 import {
   updateEvaluationAnswers,
   finishEvaluation,
@@ -52,45 +49,35 @@ export default {
     time_remaining: 0,
     time_total: 0,
     //
-    loading: false,
-    loading_msg: "",
     dlg_save: false,
     dlg_save_msg: "",
   }),
   methods: {
     async save() {
-      this.loading = true;
-      this.loading_msg = "Guardando Respuestas";
-
+      this.showLoading("Guardando Respuestas");
       let evaluation_id = this.evaluation._id.$oid;
       let answers = this.evaluation.content.map((c) => {
         return c.answer != null ? c.answer : -1;
       });
-
       try {
         await updateEvaluationAnswers(evaluation_id, answers);
       } catch (error) {
         this.showMessage("", error.msg);
         this.unselect();
       }
-
-      this.loading = false;
+      this.hideLoading();
     },
     async finish() {
       await this.save();
-
-      this.loading = true;
-      this.loading_msg = "Finalizando Evaluación";
+      this.showLoading("Finalizando Evaluación");
       let evaluation_id = this.evaluation._id.$oid;
-
       try {
         await finishEvaluation(evaluation_id);
       } catch (error) {
         this.showMessage("", error.msg);
       }
       this.unselect();
-
-      this.loading = false;
+      this.hideLoading();
     },
     saveAction() {
       let answer = this.evaluation.content.map((c) => c.answer);
@@ -99,9 +86,6 @@ export default {
         : "No podrá cambiar sus respuestas posteriormente.";
       this.dlg_save = true;
     },
-  },
-  components: {
-    loading,
   },
 };
 </script>
