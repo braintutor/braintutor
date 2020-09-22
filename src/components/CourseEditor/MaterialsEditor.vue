@@ -197,10 +197,7 @@ export default {
         });
       }
     } catch (error) {
-      this.$root.$children[0].showMessage(
-        "",
-        error.msg || "Ha ocurrido un error."
-      );
+      this.showMessage("", error.msg || "Ha ocurrido un error.");
     }
 
     this.loading = false;
@@ -221,7 +218,7 @@ export default {
         this.units.push(new_unit);
         setTimeout(() => scrollDown("app__body"), 100);
       } catch (error) {
-        this.$root.$children[0].showMessage("", error.msg);
+        this.showMessage("", error.msg);
       }
 
       this.loading = false;
@@ -234,7 +231,7 @@ export default {
         await removeUnit(unit_id);
         this.units = this.units.filter((unit) => unit._id.$oid !== unit_id);
       } catch (error) {
-        this.$root.$children[0].showMessage("", error.msg);
+        this.showMessage("", error.msg);
       }
 
       this.loading = false;
@@ -311,7 +308,7 @@ export default {
         unit.materials.push(new_material);
         // this.selectMaterial(material_id.$oid);
       } catch (error) {
-        this.$root.$children[0].showMessage("Error", error.msg);
+        this.showMessage("Error", error.msg);
       }
       this.loading = false;
     },
@@ -323,10 +320,7 @@ export default {
         await updateUnit(unit);
         unit.edit_name = false;
       } catch (error) {
-        this.$root.$children[0].showMessage(
-          "",
-          error.msg || "Error al Guardar"
-        );
+        this.showMessage("", error.msg || "Error al Guardar");
       }
       this.loading = false;
     },
@@ -339,7 +333,7 @@ export default {
         await updateUnitOrder(unit._id.$oid, order);
         unit.edit_order = false;
       } catch (error) {
-        this.$root.$children[0].showMessage("", "Error al Guardar");
+        this.showMessage("", "Error al Guardar");
       }
       this.loading = false;
     },

@@ -98,7 +98,7 @@ export default {
           if (e.time_end.$date) e.time_end = new Date(e.time_end.$date);
         }
       } catch (error) {
-        this.$root.$children[0].showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
       this.loading(false);
     },
@@ -109,7 +109,7 @@ export default {
         evaluation = await getEvaluationByStudent(evaluation._id.$oid);
         this.evaluation = copy(evaluation);
       } catch (error) {
-        this.$root.$children[0].showMessage("", error.msg);
+        this.showMessage("", error.msg);
       }
       this.loading(false);
     },

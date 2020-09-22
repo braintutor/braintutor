@@ -67,7 +67,7 @@ export default {
 
         this.events = events.concat(tasks);
       } catch (error) {
-        this.$root.$children[0].showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
       this.loading(false);
     },

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <loading :active="loading" :message="loading_message" />
     <div class="filters">
       <div class="filter">
         <span class="filter__name">Aula:</span>
@@ -33,7 +32,6 @@
 </template>
 
 <script>
-import loading from "@/components/loading";
 import Classroom from "./Classroom";
 
 import { getClassroomsBySchoolDirector } from "@/services/classroomService";
@@ -43,8 +41,6 @@ export default {
     classroom_id: null,
     classrooms: [],
     //
-    loading: true,
-    loading_message: "",
     period: "Día",
     periods: ["Día", "Mes", "Año"],
   }),
@@ -59,19 +55,17 @@ export default {
   },
   methods: {
     async getClassrooms() {
-      this.loading = true;
-      this.loading_message = "Cargando Aulas";
+      this.showLoading("Cargando Aulas");
       try {
         this.classrooms = await getClassroomsBySchoolDirector();
         this.classrooms.sort((a, b) => a.name.localeCompare(b.name));
       } catch (error) {
-        this.$root.$children[0].showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
-      this.loading = false;
+      this.hideLoading();
     },
   },
   components: {
-    loading,
     Classroom,
   },
 };

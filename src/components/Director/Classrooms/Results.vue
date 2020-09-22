@@ -52,8 +52,6 @@
 <script>
 import { getEvaluationsBySessionDirector } from "@/services/evaluationService";
 
-import { mapMutations } from "vuex";
-
 export default {
   props: {
     value: Object, // session
@@ -72,18 +70,16 @@ export default {
     await this.init();
   },
   methods: {
-    ...mapMutations(["loading", "loading_msg"]),
     async init() {
-      this.loading(true);
-      this.loading_msg("Cargando Evaluaciones");
+      this.showLoading("Cargando Evaluaciones");
       try {
         this.evaluations = await getEvaluationsBySessionDirector(
           this.value._id.$oid
         );
       } catch (error) {
-        this.$root.$children[0].showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
-      this.loading(false);
+      this.hideLoading();
     },
     getScore(student, evaluation) {
       if (!evaluation.results)

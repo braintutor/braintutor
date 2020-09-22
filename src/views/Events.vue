@@ -96,7 +96,7 @@ export default {
         this.sessions = sessions;
         this.events = events;
       } catch (error) {
-        this.$root.$children[0].showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
       this.loading(false);
     },

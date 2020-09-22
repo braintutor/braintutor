@@ -36,8 +36,6 @@
 import { getSessionsByStudent } from "@/services/sessionService";
 import { redirect } from "@/services/router.js";
 
-import { mapMutations } from "vuex";
-
 export default {
   data: () => ({
     sessions: [],
@@ -58,18 +56,15 @@ export default {
     if (state) redirect("task", { task_id: state });
 
     //
-    this.loading(true);
-    this.loading_msg("Cargando Cursos");
-
+    this.showLoading("Cargando Cursos");
     try {
       this.sessions = await getSessionsByStudent();
     } catch (error) {
-      this.$root.$children[0].showMessage("Error", error.msg);
+      this.showMessage("Error", error.msg);
     }
-    this.loading(false);
+    this.hideLoading(false);
   },
   methods: {
-    ...mapMutations(["loading", "loading_msg"]),
     selectSession(session) {
       redirect("session", { session_id: session._id.$oid });
     },

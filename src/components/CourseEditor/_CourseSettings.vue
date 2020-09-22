@@ -1,7 +1,5 @@
 <template>
   <div>
-    <loading :active="loading" :message="loading_msg" />
-
     <h1 class="m-title">Configuración</h1>
     <div class="form">
       <div class="form__body">
@@ -18,42 +16,30 @@
 </template>
 
 <script>
-import loading from "@/components/loading";
-
 import { updateCourseAdaptive } from "@/services/courseService";
 
 export default {
   props: ["course"],
   data: () => ({
     adaptive: false,
-    //
-    loading: false,
-    loading_msg: ""
   }),
   mounted() {
     this.adaptive = this.course.adaptive;
   },
   methods: {
     async save() {
-      this.loading = true;
-      this.loading_msg = "Guardando";
-
+      this.showLoading("Guardando");
       let course_id = this.course._id.$oid;
-
       try {
         await updateCourseAdaptive(course_id, this.adaptive);
         this.course.adaptive = this.adaptive;
-        // this.$root.$children[0].showMessage("", "Guardado correctamente.");
+        // this.showMessage("", "Guardado correctamente.");
       } catch (error) {
-        this.$root.$children[0].showMessage("Error", error.msg);
+        this.showMessage("Error", error.msg);
       }
-
-      this.loading = false;
-    }
+      this.hideLoading();
+    },
   },
-  components: {
-    loading
-  }
 };
 </script>
 

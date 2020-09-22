@@ -111,7 +111,7 @@ export default {
       this.evaluation = await getEvaluation(this.evaluation_id);
       this.students = await getStudentsBySession(session_id);
     } catch (error) {
-      this.$root.$children[0].showMessage("", error.msg || error);
+      this.showMessage("", error.msg || error);
     }
     this.loading(false);
   },
@@ -156,7 +156,7 @@ export default {
           (result) => result._id.$oid !== student_dlt_id
         );
       } catch (error) {
-        this.$root.$children[0].showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
 
       this.loading(false);

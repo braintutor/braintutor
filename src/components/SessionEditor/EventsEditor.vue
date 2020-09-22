@@ -162,7 +162,7 @@ export default {
 
         this.events = events.concat(tasks);
       } catch (error) {
-        this.$root.$children[0].showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
       this.loading(false);
     },
@@ -183,7 +183,7 @@ export default {
 
         await this.init();
       } catch (error) {
-        this.$root.$children[0].showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
       this.loading(false);
     },
@@ -196,7 +196,7 @@ export default {
           (event) => event._id.$oid != this.event_selected._id.$oid
         );
       } catch (error) {
-        this.$root.$children[0].showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
       this.loading(false);
     },

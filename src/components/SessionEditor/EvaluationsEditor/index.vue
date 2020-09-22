@@ -143,7 +143,7 @@ export default {
         this.evaluations.push(new_evaluation);
         this.select(new_evaluation);
       } catch (error) {
-        this.$root.$children[0].showMessage("Error al Guardar", error.msg);
+        this.showMessage("Error al Guardar", error.msg);
       }
       this.loading(false);
     },
@@ -157,7 +157,7 @@ export default {
           (e) => e._id.$oid !== this.evaluation_to_remove._id.$oid
         );
       } catch (error) {
-        this.$root.$children[0].showMessage("", error.msg);
+        this.showMessage("", error.msg);
       }
 
       this.loading(false);

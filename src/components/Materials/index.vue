@@ -383,7 +383,7 @@ export default {
   overflow-y: auto;
   flex-shrink: 0;
   height: 100%;
-  width: 300px;
+  width: 280px;
 
   &__title {
     font-weight: bold;

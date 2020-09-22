@@ -1,6 +1,5 @@
 <template>
   <div class="editor-container m-container">
-    <loading :active="loading" :message="loading_message" />
     <div class="menu">
       <strong
         class="mt-1"
@@ -122,8 +121,6 @@
 </template>
 
 <script>
-import loading from "@/components/loading";
-
 import { scrollDown } from "@/services/scroll";
 
 import KnowledgeModel from "@/models/Knowledge";
@@ -154,8 +151,7 @@ export default {
       }, 100);
     },
     async saveKnowledge() {
-      this.loading = true;
-      this.loading_message = "Guardando Conocimiento";
+      this.showLoading("Guardando Conocimiento");
       let knowledge = this.knowledge.map((k) => ({
         questions: k.questions,
         answers: k.answers,
@@ -163,18 +159,18 @@ export default {
       try {
         await this.update(knowledge);
       } catch (error) {
-        this.$root.$children[0].showMessage(
-          "",
-          error.msg || "Ha ocurrido un error."
-        );
+        this.showMessage("", error.msg || "Ha ocurrido un error.");
       }
-      this.loading = false;
+      this.hideLoading();
     },
     async restoreKnowledge() {
-      this.loading = true;
-      this.loading_message = "Cargando Conocimiento";
-      this.knowledge = await this.get();
-      this.loading = false;
+      this.showLoading("Cargando Conocimiento");
+      try {
+        this.knowledge = await this.get();
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
     },
     //
     add(knowledge, arr) {
@@ -208,9 +204,6 @@ export default {
     removeKnowledge(knowledge_idx) {
       this.knowledge.splice(knowledge_idx, 1);
     },
-  },
-  components: {
-    loading,
   },
 };
 </script>

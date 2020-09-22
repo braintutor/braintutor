@@ -27,8 +27,6 @@ import Students from "@/components/Students/index";
 import { getClassroomsBySchoolDirector } from "@/services/classroomService";
 import { getStudentsByClassroomDirector } from "@/services/studentService";
 
-import { mapMutations } from "vuex";
-
 export default {
   data: () => ({
     classroom_id: null,
@@ -43,17 +41,15 @@ export default {
     this.getClassrooms();
   },
   methods: {
-    ...mapMutations(["loading", "loading_msg"]),
     async getClassrooms() {
-      this.loading(true);
-      this.loading_msg("Cargando Aulas");
+      this.showLoading("Cargando Aulas");
       try {
         this.classrooms = await getClassroomsBySchoolDirector();
         this.classrooms.sort((a, b) => a.name.localeCompare(b.name));
       } catch (error) {
-        this.$root.$children[0].showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
-      this.loading(false);
+      this.hideLoading();
     },
     async getStudents() {
       if (this.classroom_id)

@@ -28,8 +28,6 @@ import { getStudentsByClassroomDirector } from "@/services/studentService";
 
 import Results from "./Results";
 
-import { mapMutations } from "vuex";
-
 export default {
   props: {
     classroom_id: String,
@@ -48,17 +46,15 @@ export default {
     await this.init();
   },
   methods: {
-    ...mapMutations(["loading", "loading_msg"]),
     async init() {
-      this.loading(true);
-      this.loading_msg("Cargando Cursos");
+      this.showLoading("Cargando Cursos");
       try {
         this.sessions = await getSessionsByClassroom(this.classroom_id);
         this.students = await getStudentsByClassroomDirector(this.classroom_id);
       } catch (error) {
-        this.$root.$children[0].showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
-      this.loading(false);
+      this.hideLoading();
     },
     reset() {
       this.session_selected = null;

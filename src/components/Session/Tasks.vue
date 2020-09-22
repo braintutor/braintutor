@@ -66,7 +66,7 @@ export default {
           await getTasksBySessionStudent(this.session_id)
         );
       } catch (error) {
-        this.$root.$children[0].showMessage("Error", error.msg);
+        this.showMessage("Error", error.msg);
       }
       this.loading(false);
     },

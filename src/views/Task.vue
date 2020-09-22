@@ -340,7 +340,7 @@ export default {
 
         await this.save();
       } catch (error) {
-        this.$root.$children[0].showMessage("Error", error);
+        this.showMessage("Error", error);
       }
       this.link = "";
       this.loading(false);
@@ -351,7 +351,7 @@ export default {
       try {
         await updateTaskAnswer(this.task._id.$oid, this.answer);
       } catch (error) {
-        this.$root.$children[0].showMessage("Error al Guardar", error.msg);
+        this.showMessage("Error al Guardar", error.msg);
       }
       this.loading(false);
     },

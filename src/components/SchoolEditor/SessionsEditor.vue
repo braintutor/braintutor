@@ -237,7 +237,7 @@ export default {
             this.entities.push(this.entity);
             this.dialog_edit = false;
           } catch (error) {
-            this.$root.$children[0].showMessage("Error al Guardar", error.msg);
+            this.showMessage("Error al Guardar", error.msg);
           }
         } else if (this.action === "edit") {
           // Update
@@ -250,7 +250,7 @@ export default {
             this.entities.splice(); // updates the array without modifying it
             this.dialog_edit = false;
           } catch (error) {
-            this.$root.$children[0].showMessage("Error al Guardar", error.msg);
+            this.showMessage("Error al Guardar", error.msg);
           }
         }
         this.loading_save = false;

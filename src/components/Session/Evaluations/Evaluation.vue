@@ -70,7 +70,7 @@ export default {
       try {
         await updateEvaluationAnswers(evaluation_id, answers);
       } catch (error) {
-        this.$root.$children[0].showMessage("", error.msg);
+        this.showMessage("", error.msg);
         this.unselect();
       }
 
@@ -86,7 +86,7 @@ export default {
       try {
         await finishEvaluation(evaluation_id);
       } catch (error) {
-        this.$root.$children[0].showMessage("", error.msg);
+        this.showMessage("", error.msg);
       }
       this.unselect();
 

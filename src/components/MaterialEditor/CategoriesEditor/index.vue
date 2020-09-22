@@ -126,7 +126,7 @@ export default {
         await updateMaterialCategory(material_id, category, data);
         this.material[category] = data;
       } catch (error) {
-        this.$root.$children[0].showMessage("", error.msg);
+        this.showMessage("", error.msg);
       }
 
       this.loading = false;

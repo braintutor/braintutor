@@ -1,7 +1,5 @@
 <template>
   <div>
-    <loading :active="loading" :message="loading_msg" />
-
     <h1 class="m-title">Configuración</h1>
     <section class="form m-card">
       <section class="form__body m-card__body">
@@ -113,8 +111,6 @@
 </template>
 
 <script>
-import loading from "@/components/loading";
-
 import { redirect } from "@/services/router.js";
 import {
   updateMaterial,
@@ -133,16 +129,12 @@ export default {
     dlg_url: false,
     show_edit: false,
     //
-    loading: false,
-    loading_msg: "",
     dlg_remove: false,
     MaterialModel,
   }),
   methods: {
     async save() {
-      this.loading = true;
-      this.loading_msg = "Guardando";
-
+      this.showLoading("Guardando");
       let material_id = this.material._id.$oid;
       let { name /*, description*/ } = this.material_aux;
       try {
@@ -151,33 +143,26 @@ export default {
         // this.material.description = description;
         this.show_edit = false;
       } catch (error) {
-        this.$root.$children[0].showMessage("Error", error.msg);
+        this.showMessage("Error", error.msg);
       }
-
-      this.loading = false;
+      this.hideLoading();
     },
     async saveImage() {
-      this.loading = true;
-      this.loading_msg = "Guardando Imagen";
-
+      this.showLoading("Guardando Imagen");
       let material_id = this.material._id.$oid;
       try {
         await updateMaterialImage(material_id, this.image_url);
         this.material.image = this.image_url;
       } catch (error) {
-        this.$root.$children[0].showMessage("Error", error.msg);
+        this.showMessage("Error", error.msg);
       }
-
-      this.loading = false;
+      this.hideLoading();
     },
     async onFileSelected() {
-      this.loading = true;
-      this.loading_msg = "Subiendo Archivo";
-
+      this.showLoading("Subiendo Archivo");
       var data = new FormData();
       data.append("file", this.image_file);
       data.append("material_id", this.material._id.$oid);
-
       try {
         let res = await fetch(
           `${process.env.VUE_APP_API_URL}/uploadMaterialImage`,
@@ -197,37 +182,27 @@ export default {
         this.image_url = url;
         await this.saveImage();
       } catch (error) {
-        this.$root.$children[0].showMessage(
-          "",
-          error.msg || "Ha ocurrido un error."
-        );
+        this.showMessage("", error.msg || error);
       }
-
-      this.loading = false;
+      this.hideLoading();
     },
     async removeMaterial() {
-      this.loading = true;
-      this.loading_msg = "Eliminando";
-
+      this.showLoading("Eliminando");
       let material_id = this.material._id.$oid;
       let course_id = this.course._id.$oid;
       try {
         await removeMaterial(material_id);
         redirect("course-editor", { course_id });
       } catch (error) {
-        this.$root.$children[0].showMessage("Error", error.msg);
+        this.showMessage("Error", error.msg);
       }
-
-      this.loading = false;
+      this.hideLoading();
     },
     //
     showEdit() {
       this.material_aux = Object.assign({}, this.material);
       this.show_edit = true;
     },
-  },
-  components: {
-    loading,
   },
 };
 </script>

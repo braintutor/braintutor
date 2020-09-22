@@ -64,7 +64,7 @@ export default {
       let session = await getSessionByTeacher(session_id);
       this.course = session.course;
     } catch (error) {
-      this.$root.$children[0].showMessage(
+      this.showMessage(
         "",
         error.msg || "Ha ocurrido un error."
       );

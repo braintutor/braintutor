@@ -1,6 +1,5 @@
 <template>
   <div style="padding-bottom: 120px">
-    <loading :active="loading" :message="loading_msg" />
     <section class="quizzes mb-4">
       <v-btn
         class="quizzes__type"
@@ -56,7 +55,6 @@
 </template>
 
 <script>
-import loading from "@/components/loading";
 import QuizEditor from "@/components/globals/QuizEditor";
 
 import { updateMaterialQuiz } from "@/services/materialService";
@@ -67,9 +65,7 @@ export default {
   props: ["material"],
   data: () => ({
     show_type: "BAS",
-    loading: false,
-    loading_msg: "",
-    MaterialModel
+    MaterialModel,
   }),
   methods: {
     getQuiz(type) {
@@ -77,22 +73,19 @@ export default {
       return quiz;
     },
     async save(data) {
-      this.loading = true;
-      this.loading_msg = "Guardando";
-
+      this.showLoading("Guardando");
       let material_id = this.material._id.$oid;
       let type = this.show_type;
       try {
         await updateMaterialQuiz(material_id, data, type);
         this.material.quizzes[type] = data;
       } catch (error) {
-        this.$root.$children[0].showMessage("Error", error.msg);
+        this.showMessage("Error", error.msg);
       }
-      this.loading = false;
+      this.hideLoading();
     },
   },
   components: {
-    loading,
     QuizEditor,
   },
 };

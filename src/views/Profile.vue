@@ -391,7 +391,7 @@ export default {
 
         this.loading = false;
       } else {
-        this.$root.$children[0].showMessage(
+        this.showMessage(
           "Alerta",
           "No dejes preguntas sin responder."
         );
@@ -399,7 +399,7 @@ export default {
     },
     async updatePassword() {
       if (this.new_password !== this.confirm_new_password) {
-        this.$root.$children[0].showMessage(
+        this.showMessage(
           "",
           "Las contraseñas no coinciden."
         );
@@ -412,9 +412,9 @@ export default {
 
       try {
         await updatePassword(this.current_password, this.new_password);
-        this.$root.$children[0].showMessage("", "Contraseña modificada.");
+        this.showMessage("", "Contraseña modificada.");
       } catch (error) {
-        this.$root.$children[0].showMessage("Error al Guardar", error.msg);
+        this.showMessage("Error al Guardar", error.msg);
       }
       this.loading = false;
     },
@@ -582,7 +582,7 @@ export default {
         scrollTop("test");
         this.questions_page += n;
       } else {
-        this.$root.$children[0].showMessage(
+        this.showMessage(
           "Alerta",
           "No dejes preguntas sin responder."
         );

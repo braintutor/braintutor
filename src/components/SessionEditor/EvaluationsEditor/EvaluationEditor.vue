@@ -223,7 +223,7 @@ export default {
         this.loading = false;
         return true;
       } catch (error) {
-        this.$root.$children[0].showMessage("Error al Guardar", error.msg);
+        this.showMessage("Error al Guardar", error.msg);
         this.loading = false;
         return false;
       }
