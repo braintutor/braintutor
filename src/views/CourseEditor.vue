@@ -43,19 +43,19 @@ export default {
       },
     ],
     course_id: "",
-    course: {},
+    course: {
+      name: "...",
+    },
   }),
   async created() {
     this.course_id = getParam("course_id");
     this.base = `course-editor/${this.course_id}`;
 
-    this.showLoading("Cargando Contenido");
     try {
       this.course = await getCourseByTeacher(this.course_id);
     } catch (error) {
       this.showMessage("", error.msg || error);
     }
-    this.hideLoading(false);
   },
   methods: {
     redirect,

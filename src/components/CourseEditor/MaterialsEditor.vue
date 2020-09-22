@@ -216,7 +216,7 @@ export default {
         await removeUnit(unit_id);
         this.units = this.units.filter((unit) => unit._id.$oid !== unit_id);
       } catch (error) {
-      this.showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
@@ -291,18 +291,19 @@ export default {
         unit.materials.push(new_material);
         // this.selectMaterial(material_id.$oid);
       } catch (error) {
-      this.showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
     async updateUnitName(unit) {
       this.showLoading("Guardando Cambios");
+      unit.id = unit._id.$oid;
       try {
-        unit.id = unit._id.$oid;
         await updateUnit(unit);
         unit.edit_name = false;
+        this.$forceUpdate();
       } catch (error) {
-      this.showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
@@ -313,6 +314,7 @@ export default {
       try {
         await updateUnitOrder(unit._id.$oid, order);
         unit.edit_order = false;
+        this.$forceUpdate();
       } catch (error) {
         this.showMessage("", "Error al Guardar");
       }
