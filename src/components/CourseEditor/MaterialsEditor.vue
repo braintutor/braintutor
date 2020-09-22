@@ -179,7 +179,6 @@ export default {
     try {
       // this.course = await getCourseByTeacher(this.course_id);
       this.units = await getUnitsAndMaterials(this.course_id);
-
       // Materials
       for (let unit of this.units) {
         let order = (unit.order || []).reverse();
