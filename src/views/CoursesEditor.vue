@@ -9,7 +9,7 @@
         <section @click="selectCourse(course)" class="course">
           <div
             class="course__image"
-            :style="{ backgroundImage: `url('${course.image || 'https://images.clipartlogo.com/files/istock/previews/1074/107415123-back-to-school-themed-doodle-background-school-doodles-vector-set.jpg'}')` }"
+            :style="{ backgroundImage: `url('${require('@/assets/backgrounds/banner2.jpg')}')`}"
           />
           <section class="course__body">
             <div class="course__classroom">
@@ -22,7 +22,7 @@
                 Editar
                 <v-icon
                   class="ml-1"
-                  style="color: rgb(85, 83, 255); font-size: 1.4rem"
+                  style="color: var(--color-active); font-size: 1.4rem"
                 >mdi-arrow-right</v-icon>
               </button>
             </div>
@@ -41,10 +41,10 @@ import { mapState, mapMutations } from "vuex";
 
 export default {
   data: () => ({
-    courses: []
+    courses: [],
   }),
   computed: {
-    ...mapState(["user"])
+    ...mapState(["user"]),
   },
   async created() {
     this.loading(true);
@@ -61,8 +61,8 @@ export default {
     ...mapMutations(["loading", "loading_msg"]),
     selectCourse(course) {
       redirect("course-editor", { course_id: course._id.$oid });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -123,10 +123,10 @@ export default {
 
   &__avatar {
     flex-shrink: 0;
-    height: 30px;
-    width: 30px;
+    height: 28px;
+    width: 28px;
     margin-right: 10px;
-    background: #5553ff;
+    background: var(--color-active);
     color: #fff;
     font-size: 1rem;
     border-radius: 50%;

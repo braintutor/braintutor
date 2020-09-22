@@ -18,7 +18,7 @@
           <span class="user__name">{{user.name}}</span>
           <span class="user__role">{{roles[user.role]}}</span>
           <div class="user__avatar">
-            <img src="https://i.ya-webdesign.com/images/avatar-png-1.png" alt />
+            <img src="@/assets/icons/icon-user.svg" alt />
           </div>
           <div v-show="user_options" class="user__options">
             <v-btn small text @click="redirect('profile')">Perfil</v-btn>
@@ -247,7 +247,7 @@ export default {
     font-weight: bold;
   }
   &__role {
-    color: #5856da;
+    color: var(--color-active);
     text-align: right;
     font-size: 0.65rem;
     font-weight: bold;

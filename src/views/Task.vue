@@ -324,7 +324,7 @@ export default {
       this.loading_msg("Añadiendo Vínculo");
       try {
         let res = await fetch(
-          `https://braintutor-service-v2.herokuapp.com/getLinkPreview?url=${this.link}`
+          `${process.env.VUE_APP_API_URL}/getLinkPreview?url=${this.link}`
         );
         if (res.status >= 400 && res.status < 600) throw "Vínculo inválido.";
 

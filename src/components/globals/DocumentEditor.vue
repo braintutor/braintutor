@@ -69,9 +69,7 @@ export default {
           linkTool: {
             class: LinkTool,
             config: {
-              // endpoint: "http://localhost:5000/getLinkPreview"
-              endpoint:
-                "https://braintutor-service-v2.herokuapp.com/getLinkPreview",
+              endpoint: `${process.env.VUE_APP_API_URL}/getLinkPreview`,
             },
           },
         },
