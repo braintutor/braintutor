@@ -1,6 +1,5 @@
 <template>
   <div class="m-container pa-2" style="padding-bottom: 80px !important">
-    <loading :active="loading" :message="loading_msg" />
     <div class="options mt-2">
       <strong
         class="mt-1"
@@ -142,8 +141,6 @@
 </template>
 
 <script>
-import loading from "@/components/loading";
-
 import { getParam, redirect } from "@/services/router.js";
 import { scrollDown } from "@/services/scroll";
 import {
@@ -164,8 +161,6 @@ export default {
     course: "",
     units: [],
     //
-    loading: false,
-    loading_msg: "",
     UnitModel,
     Variables,
   }),
@@ -179,10 +174,8 @@ export default {
     },
   },
   async created() {
-    this.loading = true;
-    this.loading_msg = "Cargando Contenido";
+    this.showLoading("Cargando Contenido");
     this.course_id = getParam("course_id");
-
     try {
       // this.course = await getCourseByTeacher(this.course_id);
       this.units = await getUnitsAndMaterials(this.course_id);
@@ -199,18 +192,14 @@ export default {
     } catch (error) {
       this.showMessage("", error.msg || "Ha ocurrido un error.");
     }
-
-    this.loading = false;
+    this.hideLoading();
   },
   methods: {
     async createUnit() {
-      this.loading = true;
-      this.loading_msg = "Creando Unidad";
-
+      this.showLoading("Creando Unidad");
       let new_unit = {
         name: "Nombre",
       };
-
       try {
         let unit_id = await addUnit(this.course_id, new_unit);
         new_unit._id = unit_id;
@@ -218,23 +207,19 @@ export default {
         this.units.push(new_unit);
         setTimeout(() => scrollDown("app__body"), 100);
       } catch (error) {
-        this.showMessage("", error.msg);
+        this.showMessage("", error.msg || error);
       }
-
-      this.loading = false;
+      this.hideLoading();
     },
     async removeUnit(unit_id) {
-      this.loading = true;
-      this.loading_msg = "Eliminando Unidad";
-
+      this.showLoading("Eliminando Unidad");
       try {
         await removeUnit(unit_id);
         this.units = this.units.filter((unit) => unit._id.$oid !== unit_id);
       } catch (error) {
         this.showMessage("", error.msg);
       }
-
-      this.loading = false;
+      this.hideLoading();
     },
     selectMaterial(material_id) {
       redirect("material-editor", { material_id });
@@ -300,8 +285,7 @@ export default {
         documents,
       };
 
-      this.loading = true;
-      this.loading_msg = "Creando Material";
+      this.showLoading("Creando Material");
       try {
         let material_id = await addMaterial(unit._id.$oid, new_material);
         new_material._id = material_id;
@@ -310,11 +294,10 @@ export default {
       } catch (error) {
         this.showMessage("Error", error.msg);
       }
-      this.loading = false;
+      this.hideLoading();
     },
     async updateUnitName(unit) {
-      this.loading = true;
-      this.loading_msg = "Guardando Cambios";
+      this.showLoading("Guardando Cambios");
       try {
         unit.id = unit._id.$oid;
         await updateUnit(unit);
@@ -322,20 +305,19 @@ export default {
       } catch (error) {
         this.showMessage("", error.msg || "Error al Guardar");
       }
-      this.loading = false;
+      this.hideLoading();
     },
     // Unit Order
     async updateUnitOrder(unit) {
+      this.showLoading("Guardando Cambios");
       let order = unit.materials.map((material) => material._id.$oid);
-      this.loading = true;
-      this.loading_msg = "Guardando Cambios";
       try {
         await updateUnitOrder(unit._id.$oid, order);
         unit.edit_order = false;
       } catch (error) {
         this.showMessage("", "Error al Guardar");
       }
-      this.loading = false;
+      this.hideLoading();
     },
     moveUp(arr, idx) {
       if (idx > 0) {
@@ -353,9 +335,6 @@ export default {
         this.$forceUpdate();
       }
     },
-  },
-  components: {
-    loading,
   },
 };
 </script>

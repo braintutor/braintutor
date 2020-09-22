@@ -275,13 +275,12 @@ export default {
       this.hideLoading();
     },
     async addFileDrive({ /*exportLinks*/ id, iconLink, name, webViewLink }) {
-      // this.loading = true;
-      // this.loading_msg = "Compartiendo Archivo";
+      // this.showLoading("Compartiendo Archivo";
       // this.dialog_files = false;
       // await this.createPermission(id, "mitsuoysharag@gmail.com");
       // this.link = webViewLink;
       // await this.addLink();
-      // this.loading = false;
+      // this.hideLoading();
 
       this.dialog_files = false;
       let data = this.formatLink({
