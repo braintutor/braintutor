@@ -4,7 +4,7 @@ const variables = {
   max_courses_per_school: 100, // addCourse
   max_sessions_per_school: 100, // addSession
 
-  max_chatbots_per_course: 20, // addChatbot
+  max_units_per_course: 20, // addUnit
   max_materials_per_course: 100, // addMaterial
 
   max_evaluations_per_session: 100, // addEvaluation

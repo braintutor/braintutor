@@ -22,15 +22,15 @@
         </div>
         <v-icon @click="dlg_remove = true" style="opacity: .7">mdi-sync</v-icon>
       </div>
-      <!-- Chatbots -->
-      <section v-for="(c, c_idx) in chatbots" :key="c_idx">
-        <div @click="c.show = !c.show; $forceUpdate()" class="list__title">
-          <span>{{c.name}}</span>
-          <v-icon class="list__show" :class="{'list__show--active': c.show}">mdi-chevron-down</v-icon>
+      <!-- Units -->
+      <section v-for="(u, u_idx) in units" :key="u_idx">
+        <div @click="u.show = !u.show; $forceUpdate()" class="list__title">
+          <span>{{u.name}}</span>
+          <v-icon class="list__show" :class="{'list__show--active': u.show}">mdi-chevron-down</v-icon>
         </div>
-        <div v-show="c.show">
+        <div v-show="u.show">
           <section
-            v-for="(m, m_idx) in c.materials"
+            v-for="(m, m_idx) in u.materials"
             :key="m_idx"
             @click="selectMaterial(m)"
             class="link"
@@ -57,12 +57,12 @@
         <v-icon class="list__show" :class="{'list__show--active': show}">mdi-chevron-down</v-icon>
       </div>
       <div v-show="show">
-        <section v-for="(c, c_idx) in chatbots" :key="c_idx">
+        <section v-for="(u, u_idx) in units" :key="u_idx">
           <div class="list2__title">
-            <span>{{c.name}}</span>
+            <span>{{u.name}}</span>
           </div>
           <section
-            v-for="(m, m_idx) in c.materials"
+            v-for="(m, m_idx) in u.materials"
             :key="m_idx"
             @click="selectMaterial(m)"
             class="link"
@@ -110,9 +110,9 @@ import MaterialCategories from "./MaterialCategories";
 import MaterialDocuments from "./MaterialDocuments";
 
 import {
-  getChatbotsByCourseTeacher,
-  getChatbotsByCourseStudent,
-} from "@/services/chatbotService";
+  getUnitsByCourseTeacher,
+  getUnitsByCourseStudent,
+} from "@/services/unitService";
 import {
   getMaterialsByCourseTeacher,
   getMaterialsByCourseStudent,
@@ -131,7 +131,7 @@ export default {
   },
   data: () => ({
     materials: [],
-    chatbots: [],
+    units: [],
     progress_materials: [],
     categories: [],
     progress: [],
@@ -161,9 +161,9 @@ export default {
 
         let course_id = this.course._id.$oid;
         try {
-          let chatbots = await (this.user.role === "TEA"
-            ? getChatbotsByCourseTeacher(course_id)
-            : getChatbotsByCourseStudent(course_id));
+          let units = await (this.user.role === "TEA"
+            ? getUnitsByCourseTeacher(course_id)
+            : getUnitsByCourseStudent(course_id));
           this.materials = await (this.user.role === "TEA"
             ? getMaterialsByCourseTeacher(course_id)
             : getMaterialsByCourseStudent(course_id));
@@ -196,22 +196,22 @@ export default {
 
           //Materials
           if (this.materials[0]) this.selectMaterial(this.materials[0]);
-          chatbots.forEach((c) => {
-            c.show = true;
+          units.forEach((u) => {
+            u.show = true;
             // Find Materials
             let materials = this.materials.filter((m) => {
-              return m.chatbot_id.$oid === c._id.$oid;
+              return m.chatbot_id.$oid === u._id.$oid;
             });
             // Sorting Materials
-            let order = (c.order || []).reverse();
+            let order = (u.order || []).reverse();
             materials.sort((a, b) => {
               let a_order = order.indexOf(a._id.$oid);
               let b_order = order.indexOf(b._id.$oid);
               return b_order - a_order;
             });
-            c.materials = materials;
+            u.materials = materials;
           });
-          this.chatbots = chatbots.filter((c) => c.materials.length > 0); // Only show chatbots with materials
+          this.units = units.filter((u) => u.materials.length > 0); // Only show units with materials
 
           //Knowledge
           this.loading_msg("Cargando Conocimiento");
@@ -323,18 +323,18 @@ export default {
       }
     },
     showNextMaterial(material) {
-      let chatbot_idx = this.chatbots.findIndex(
+      let unit_idx = this.units.findIndex(
         (c) => c._id.$oid === material.chatbot_id.$oid
       );
-      let { materials } = this.chatbots[chatbot_idx];
+      let { materials } = this.units[unit_idx];
       let material_idx = materials.findIndex(
         (m) => m._id.$oid === material._id.$oid
       );
 
       if (materials.length > material_idx + 1) {
         this.selectMaterial(materials[material_idx + 1]);
-      } else if (this.chatbots.length > chatbot_idx + 1) {
-        materials = this.chatbots[chatbot_idx + 1].materials;
+      } else if (this.units.length > unit_idx + 1) {
+        materials = this.units[unit_idx + 1].materials;
         this.selectMaterial(materials[0]);
       } else if (this.materials[0]) this.selectMaterial(this.materials[0]);
     },

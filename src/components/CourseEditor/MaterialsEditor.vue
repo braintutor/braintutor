@@ -5,10 +5,10 @@
       <strong
         class="mt-1"
         style="opacity: 0.5"
-      >({{`${chatbots.length}/${Variables.max_chatbots_per_course}`}})</strong>
+      >({{`${units.length}/${Variables.max_units_per_course}`}})</strong>
       <m-btn
-        @click="createChatbot()"
-        :disabled="chatbots.length >= Variables.max_chatbots_per_course"
+        @click="createUnit()"
+        :disabled="units.length >= Variables.max_units_per_course"
         class="ml-2"
         color="primary"
         small
@@ -16,55 +16,55 @@
         <v-icon class="mr-2" small>mdi-plus</v-icon>Crear Unidad
       </m-btn>
     </div>
-    <!-- Chatbot -->
-    <section class="chatbot mt-4" v-for="(chatbot, idx) in chatbots" :key="idx">
-      <!-- <div class="chatbot__menu" @click="chatbot.show = !chatbot.show; $forceUpdate()"> -->
-      <div class="chatbot__menu">
-        <p v-if="!chatbot.edit_name" class="chatbot__name">{{chatbot.name}}</p>
+    <!-- Unit -->
+    <section class="unit mt-4" v-for="(unit, idx) in units" :key="idx">
+      <!-- <div class="unit__menu" @click="unit.show = !unit.show; $forceUpdate()"> -->
+      <div class="unit__menu">
+        <p v-if="!unit.edit_name" class="unit__name">{{unit.name}}</p>
         <v-text-field
           v-else
-          class="chatbot__name"
-          v-model="chatbot.name"
-          :maxlength="ChatbotModel.name.max_length"
-          :counter="ChatbotModel.name.max_length"
+          class="unit__name"
+          v-model="unit.name"
+          :maxlength="UnitModel.name.max_length"
+          :counter="UnitModel.name.max_length"
           hide-details
           dense
         ></v-text-field>
-        <div class="chatbot__options">
-          <!-- <v-btn v-if="chatbot.show" icon small>
+        <div class="unit__options">
+          <!-- <v-btn v-if="unit.show" icon small>
                 <v-icon>mdi-chevron-up</v-icon>
               </v-btn>
               <v-btn v-else icon small>
                 <v-icon>mdi-chevron-down</v-icon>
           </v-btn>-->
-          <v-menu v-if="!chatbot.edit_name && !chatbot.edit_order" offset-y>
+          <v-menu v-if="!unit.edit_name && !unit.edit_order" offset-y>
             <template v-slot:activator="{ on }">
               <v-btn class="ml-2" icon small v-on="on">
                 <v-icon>mdi-dots-vertical</v-icon>
               </v-btn>
             </template>
             <v-list class="pa-0" dense>
-              <v-list-item @click="chatbot.edit_name = true; $forceUpdate()">
+              <v-list-item @click="unit.edit_name = true; $forceUpdate()">
                 <v-list-item-title>Editar Nombre</v-list-item-title>
               </v-list-item>
-              <v-list-item @click="chatbot.edit_order = true; $forceUpdate()">
+              <v-list-item @click="unit.edit_order = true; $forceUpdate()">
                 <v-list-item-title>Editar Orden</v-list-item-title>
               </v-list-item>
               <v-list-item
-                @click="createMaterial(chatbot)"
+                @click="createMaterial(unit)"
                 :disabled="materialsCount >= Variables.max_materials_per_course"
               >
                 <v-list-item-title>Crear Material</v-list-item-title>
               </v-list-item>
-              <v-list-item @click="removeChatbot(chatbot._id.$oid)">
+              <v-list-item @click="removeUnit(unit._id.$oid)">
                 <v-list-item-title>Eliminar</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-menu>
           <v-btn
             class="ml-2"
-            v-show="chatbot.edit_name"
-            @click="updateChatbotName(chatbot)"
+            v-show="unit.edit_name"
+            @click="updateUnitName(unit)"
             small
             text
             rounded
@@ -75,8 +75,8 @@
           </v-btn>
           <v-btn
             class="ml-2"
-            v-show="chatbot.edit_order"
-            @click="updateChatbotOrder(chatbot)"
+            v-show="unit.edit_order"
+            @click="updateUnitOrder(unit)"
             small
             text
             rounded
@@ -89,12 +89,12 @@
       </div>
 
       <!-- Materials -->
-      <div v-show="!chatbot.show" class="materials">
-        <div v-for="(material, m_idx) in chatbot.materials" :key="m_idx">
+      <div v-show="!unit.show" class="materials">
+        <div v-for="(material, m_idx) in unit.materials" :key="m_idx">
           <!-- Material -->
           <div class="material">
             <p class="material__name">{{material.name}}</p>
-            <div v-show="!chatbot.edit_order" class="material__options">
+            <div v-show="!unit.edit_order" class="material__options">
               <v-tooltip top>
                 <template v-slot:activator="{ on, attrs }">
                   <!-- <v-btn icon v-bind="attrs" v-on="on" class="calendar-action" @click="prev()">
@@ -114,15 +114,15 @@
               </v-tooltip>
             </div>
             <!-- Material Menu -->
-            <div v-show="chatbot.edit_order" class="material__menu">
-              <v-btn icon small @click="moveUp(chatbot.materials, m_idx)" :disabled="m_idx === 0">
+            <div v-show="unit.edit_order" class="material__menu">
+              <v-btn icon small @click="moveUp(unit.materials, m_idx)" :disabled="m_idx === 0">
                 <v-icon>mdi-chevron-up</v-icon>
               </v-btn>
               <v-btn
                 icon
                 small
-                @click="moveDown(chatbot.materials, m_idx)"
-                :disabled="m_idx === chatbot.materials.length - 1"
+                @click="moveDown(unit.materials, m_idx)"
+                :disabled="m_idx === unit.materials.length - 1"
               >
                 <v-icon>mdi-chevron-down</v-icon>
               </v-btn>
@@ -132,8 +132,8 @@
 
         <!-- Material Create -->
         <!-- <div
-              v-show="!chatbot.edit_name && !chatbot.edit_order"
-              @click="createMaterial(chatbot)"
+              v-show="!unit.edit_name && !unit.edit_order"
+              @click="createMaterial(unit)"
               class="material--create"
         >+</div>-->
       </div>
@@ -147,32 +147,32 @@ import loading from "@/components/loading";
 import { getParam, redirect } from "@/services/router.js";
 import { scrollDown } from "@/services/scroll";
 import {
-  addChatbot,
-  getChatbotsAndMaterials,
-  updateChatbot,
-  updateChatbotOrder,
-  removeChatbot,
-} from "@/services/chatbotService.js";
+  addUnit,
+  getUnitsAndMaterials,
+  updateUnit,
+  updateUnitOrder,
+  removeUnit,
+} from "@/services/unitService.js";
 import { addMaterial } from "@/services/materialService.js";
 
-import ChatbotModel from "@/models/Chatbot";
+import UnitModel from "@/models/Unit";
 import Variables from "@/models/variables";
 
 export default {
   data: () => ({
     course_id: "",
     course: "",
-    chatbots: [],
+    units: [],
     //
     loading: false,
     loading_msg: "",
-    ChatbotModel,
+    UnitModel,
     Variables,
   }),
   computed: {
     materialsCount() {
-      let count = this.chatbots.reduce(
-        (sum, chatbot) => sum + chatbot.materials.length,
+      let count = this.units.reduce(
+        (sum, unit) => sum + unit.materials.length,
         0
       );
       return count;
@@ -185,12 +185,12 @@ export default {
 
     try {
       // this.course = await getCourseByTeacher(this.course_id);
-      this.chatbots = await getChatbotsAndMaterials(this.course_id);
+      this.units = await getUnitsAndMaterials(this.course_id);
 
       // Materials
-      for (let chatbot of this.chatbots) {
-        let order = (chatbot.order || []).reverse();
-        chatbot.materials.sort((a, b) => {
+      for (let unit of this.units) {
+        let order = (unit.order || []).reverse();
+        unit.materials.sort((a, b) => {
           let a_order = order.indexOf(a._id.$oid);
           let b_order = order.indexOf(b._id.$oid);
           return b_order - a_order;
@@ -206,19 +206,19 @@ export default {
     this.loading = false;
   },
   methods: {
-    async createChatbot() {
+    async createUnit() {
       this.loading = true;
       this.loading_msg = "Creando Unidad";
 
-      let new_chatbot = {
+      let new_unit = {
         name: "Nombre",
       };
 
       try {
-        let chatbot_id = await addChatbot(this.course_id, new_chatbot);
-        new_chatbot._id = chatbot_id;
-        new_chatbot.materials = [];
-        this.chatbots.push(new_chatbot);
+        let unit_id = await addUnit(this.course_id, new_unit);
+        new_unit._id = unit_id;
+        new_unit.materials = [];
+        this.units.push(new_unit);
         setTimeout(() => scrollDown("app__body"), 100);
       } catch (error) {
         this.$root.$children[0].showMessage("", error.msg);
@@ -226,15 +226,13 @@ export default {
 
       this.loading = false;
     },
-    async removeChatbot(chatbot_id) {
+    async removeUnit(unit_id) {
       this.loading = true;
       this.loading_msg = "Eliminando Unidad";
 
       try {
-        await removeChatbot(chatbot_id);
-        this.chatbots = this.chatbots.filter(
-          (chatbot) => chatbot._id.$oid !== chatbot_id
-        );
+        await removeUnit(unit_id);
+        this.units = this.units.filter((unit) => unit._id.$oid !== unit_id);
       } catch (error) {
         this.$root.$children[0].showMessage("", error.msg);
       }
@@ -244,7 +242,7 @@ export default {
     selectMaterial(material_id) {
       redirect("material-editor", { material_id });
     },
-    async createMaterial(chatbot) {
+    async createMaterial(unit) {
       let explanation = JSON.stringify({
         blocks: [
           { type: "header", data: { text: "Título", level: 2 } },
@@ -308,22 +306,22 @@ export default {
       this.loading = true;
       this.loading_msg = "Creando Material";
       try {
-        let material_id = await addMaterial(chatbot._id.$oid, new_material);
+        let material_id = await addMaterial(unit._id.$oid, new_material);
         new_material._id = material_id;
-        chatbot.materials.push(new_material);
+        unit.materials.push(new_material);
         // this.selectMaterial(material_id.$oid);
       } catch (error) {
         this.$root.$children[0].showMessage("Error", error.msg);
       }
       this.loading = false;
     },
-    async updateChatbotName(chatbot) {
+    async updateUnitName(unit) {
       this.loading = true;
       this.loading_msg = "Guardando Cambios";
       try {
-        chatbot.id = chatbot._id.$oid;
-        await updateChatbot(chatbot);
-        chatbot.edit_name = false;
+        unit.id = unit._id.$oid;
+        await updateUnit(unit);
+        unit.edit_name = false;
       } catch (error) {
         this.$root.$children[0].showMessage(
           "",
@@ -332,14 +330,14 @@ export default {
       }
       this.loading = false;
     },
-    // Chatbot Order
-    async updateChatbotOrder(chatbot) {
-      let order = chatbot.materials.map((material) => material._id.$oid);
+    // Unit Order
+    async updateUnitOrder(unit) {
+      let order = unit.materials.map((material) => material._id.$oid);
       this.loading = true;
       this.loading_msg = "Guardando Cambios";
       try {
-        await updateChatbotOrder(chatbot._id.$oid, order);
-        chatbot.edit_order = false;
+        await updateUnitOrder(unit._id.$oid, order);
+        unit.edit_order = false;
       } catch (error) {
         this.$root.$children[0].showMessage("", "Error al Guardar");
       }
@@ -376,7 +374,7 @@ export default {
   align-items: center;
 }
 
-.chatbot {
+.unit {
   margin-bottom: 16px;
   border-radius: 12px;
   transition: 0.3s;
