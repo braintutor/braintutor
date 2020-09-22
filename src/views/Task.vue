@@ -342,7 +342,7 @@ export default {
       try {
         await updateTaskAnswer(this.task._id.$oid, this.answer);
       } catch (error) {
-        this.showMessage("Error al Guardar", error.msg);
+        this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },

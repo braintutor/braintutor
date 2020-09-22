@@ -104,7 +104,7 @@ export default {
         evaluation = await getEvaluationByStudent(evaluation._id.$oid);
         this.evaluation = copy(evaluation);
       } catch (error) {
-        this.showMessage("", error.msg);
+      this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },

@@ -53,7 +53,7 @@ export default {
     try {
       this.course = await getCourseByTeacher(this.course_id);
     } catch (error) {
-      this.showMessage("Error", error.msg);
+      this.showMessage("", error.msg || error);
     }
     this.hideLoading(false);
   },

@@ -52,7 +52,7 @@ export default {
         this.sessions = await getSessionsByClassroom(this.classroom_id);
         this.students = await getStudentsByClassroomDirector(this.classroom_id);
       } catch (error) {
-        this.showMessage("", error.msg || error);
+      this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },

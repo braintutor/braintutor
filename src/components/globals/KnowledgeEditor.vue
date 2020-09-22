@@ -159,7 +159,7 @@ export default {
       try {
         await this.update(knowledge);
       } catch (error) {
-        this.showMessage("", error.msg || "Ha ocurrido un error.");
+      this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
@@ -168,7 +168,7 @@ export default {
       try {
         this.knowledge = await this.get();
       } catch (error) {
-        this.showMessage("", error.msg || error);
+      this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },

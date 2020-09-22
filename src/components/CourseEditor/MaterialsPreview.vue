@@ -18,7 +18,7 @@ export default {
     try {
       this.course = await getCourseByTeacher(course_id);
     } catch (error) {
-      this.showMessage("", error.msg || "Ha ocurrido un error.");
+      this.showMessage("", error.msg || error);
     }
     this.hideLoading();
   },

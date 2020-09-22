@@ -56,7 +56,7 @@ export default {
         await updateMaterialDocuments(this.material._id.$oid, documents);
         this.material.documents = documents;
       } catch (error) {
-        this.showMessage("", error || error.msg);
+      this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },

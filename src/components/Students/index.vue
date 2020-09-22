@@ -160,7 +160,7 @@ export default {
         this.student = null;
         this.showDashboardAll();
       } catch (error) {
-        this.showMessage("Error al Eliminar", error.msg);
+      this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },

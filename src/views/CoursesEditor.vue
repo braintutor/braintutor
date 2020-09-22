@@ -51,7 +51,7 @@ export default {
     try {
       this.courses = await getCoursesByTeacher();
     } catch (error) {
-      this.showMessage("Error", error.msg);
+      this.showMessage("", error.msg || error);
     }
     this.hideLoading();
   },

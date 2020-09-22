@@ -62,7 +62,7 @@ export default {
       try {
         await updateEvaluationAnswers(evaluation_id, answers);
       } catch (error) {
-        this.showMessage("", error.msg);
+      this.showMessage("", error.msg || error);
         this.unselect();
       }
       this.hideLoading();
@@ -74,7 +74,7 @@ export default {
       try {
         await finishEvaluation(evaluation_id);
       } catch (error) {
-        this.showMessage("", error.msg);
+      this.showMessage("", error.msg || error);
       }
       this.unselect();
       this.hideLoading();

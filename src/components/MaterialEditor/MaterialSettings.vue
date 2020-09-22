@@ -143,7 +143,7 @@ export default {
         // this.material.description = description;
         this.show_edit = false;
       } catch (error) {
-        this.showMessage("Error", error.msg);
+      this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
@@ -154,7 +154,7 @@ export default {
         await updateMaterialImage(material_id, this.image_url);
         this.material.image = this.image_url;
       } catch (error) {
-        this.showMessage("Error", error.msg);
+      this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
@@ -182,7 +182,7 @@ export default {
         this.image_url = url;
         await this.saveImage();
       } catch (error) {
-        this.showMessage("", error.msg || error);
+      this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
@@ -194,7 +194,7 @@ export default {
         await removeMaterial(material_id);
         redirect("course-editor", { course_id });
       } catch (error) {
-        this.showMessage("Error", error.msg);
+      this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },

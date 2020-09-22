@@ -189,7 +189,7 @@ export default {
         });
       }
     } catch (error) {
-      this.showMessage("", error.msg || "Ha ocurrido un error.");
+      this.showMessage("", error.msg || error);
     }
     this.hideLoading();
   },
@@ -216,7 +216,7 @@ export default {
         await removeUnit(unit_id);
         this.units = this.units.filter((unit) => unit._id.$oid !== unit_id);
       } catch (error) {
-        this.showMessage("", error.msg);
+      this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
@@ -291,7 +291,7 @@ export default {
         unit.materials.push(new_material);
         // this.selectMaterial(material_id.$oid);
       } catch (error) {
-        this.showMessage("Error", error.msg);
+      this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
@@ -302,7 +302,7 @@ export default {
         await updateUnit(unit);
         unit.edit_name = false;
       } catch (error) {
-        this.showMessage("", error.msg || "Error al Guardar");
+      this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },

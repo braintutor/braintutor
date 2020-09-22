@@ -280,7 +280,7 @@ export default {
           }
           this.knowledge(knowledge);
         } catch (error) {
-          this.showMessage("", error.msg || error);
+      this.showMessage("", error.msg || error);
         }
         this.hideLoading();
       }

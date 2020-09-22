@@ -35,7 +35,7 @@ export default {
         this.course.adaptive = this.adaptive;
         // this.showMessage("", "Guardado correctamente.");
       } catch (error) {
-        this.showMessage("Error", error.msg);
+      this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },

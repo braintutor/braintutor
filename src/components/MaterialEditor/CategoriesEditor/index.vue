@@ -118,7 +118,7 @@ export default {
         await updateMaterialCategory(material_id, category, data);
         this.material[category] = data;
       } catch (error) {
-        this.showMessage("", error.msg);
+      this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },

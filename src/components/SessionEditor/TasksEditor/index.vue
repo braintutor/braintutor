@@ -176,7 +176,7 @@ export default {
           this.tasks.push(this.task);
           this.dialog_new = false;
         } catch (error) {
-          this.showMessage("Error al Guardar", error.msg);
+      this.showMessage("", error.msg || error);
         }
       } else if (this.action === "edit") {
         try {
@@ -188,7 +188,7 @@ export default {
           this.tasks.splice();
           this.dialog_new = false;
         } catch (error) {
-          this.showMessage("Error al Guardar", error.msg);
+      this.showMessage("", error.msg || error);
         }
       }
       this.loading_save = false;
@@ -200,7 +200,7 @@ export default {
         await removeTask(task_id_to_remove);
         this.tasks = this.tasks.filter((t) => t._id.$oid !== task_id_to_remove);
       } catch (error) {
-        this.showMessage("Error al Eliminar", error.msg);
+      this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
@@ -210,7 +210,7 @@ export default {
         this.students = await getStudentsBySession(this.session_id);
         this.tasks = await getTasksBySessionTeacher(this.session_id);
       } catch (error) {
-        this.showMessage("Error", error.msg);
+      this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },

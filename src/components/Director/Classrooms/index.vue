@@ -60,7 +60,7 @@ export default {
         this.classrooms = await getClassroomsBySchoolDirector();
         this.classrooms.sort((a, b) => a.name.localeCompare(b.name));
       } catch (error) {
-        this.showMessage("", error.msg || error);
+      this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },

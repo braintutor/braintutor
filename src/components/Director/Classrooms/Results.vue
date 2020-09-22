@@ -77,7 +77,7 @@ export default {
           this.value._id.$oid
         );
       } catch (error) {
-        this.showMessage("", error.msg || error);
+      this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },

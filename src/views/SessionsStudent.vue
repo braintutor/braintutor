@@ -60,7 +60,7 @@ export default {
     try {
       this.sessions = await getSessionsByStudent();
     } catch (error) {
-      this.showMessage("Error", error.msg);
+      this.showMessage("", error.msg || error);
     }
     this.hideLoading(false);
   },

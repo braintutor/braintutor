@@ -80,7 +80,7 @@ export default {
         await updateMaterialQuiz(material_id, data, type);
         this.material.quizzes[type] = data;
       } catch (error) {
-        this.showMessage("Error", error.msg);
+      this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },

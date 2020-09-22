@@ -400,7 +400,7 @@ export default {
         await updatePassword(this.current_password, this.new_password);
         this.showMessage("", "Contraseña modificada.");
       } catch (error) {
-        this.showMessage("Error al Guardar", error.msg);
+      this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },

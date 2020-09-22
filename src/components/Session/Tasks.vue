@@ -62,7 +62,7 @@ export default {
           await getTasksBySessionStudent(this.session_id)
         );
       } catch (error) {
-        this.showMessage("Error", error.msg);
+      this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
