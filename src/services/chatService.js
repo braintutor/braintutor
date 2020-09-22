@@ -1,20 +1,20 @@
 import { fetch_get, fetch_post } from "./fetch";
 
-function train(chatbot_id) {
-  return fetch_post('train', {
-    chatbot_id
-  })
+function train(unit_id) {
+  return fetch_post("train", {
+    unit_id,
+  });
 }
 
-function getAnswer(chatbot_id, question) {
-  return fetch_post('getAnswer', {
-    chatbot_id,
-    question
-  })
+function getAnswer(unit_id, question) {
+  return fetch_post("getAnswer", {
+    unit_id,
+    question,
+  });
 }
 
 function getQuestionTemplate() {
-  return fetch_get('getQuestionTemplate')
+  return fetch_get("getQuestionTemplate");
 }
 
-export { train, getAnswer, getQuestionTemplate }
+export { train, getAnswer, getQuestionTemplate };

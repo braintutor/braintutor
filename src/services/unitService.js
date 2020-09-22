@@ -1,45 +1,45 @@
 import { fetch_post } from "./fetch";
 
 function getUnitsByCourseTeacher(course_id) {
-  return fetch_post("getChatbotsByCourseTeacher", {
+  return fetch_post("getUnitsByCourseTeacher", {
     course_id,
   });
 }
 
 function getUnitsByCourseStudent(course_id) {
-  return fetch_post("getChatbotsByCourseStudent", {
+  return fetch_post("getUnitsByCourseStudent", {
     course_id,
   });
 }
 
 function getUnitsAndMaterials(course_id) {
-  return fetch_post("getChatbotsAndMaterials", {
+  return fetch_post("getUnitsAndMaterials", {
     course_id,
   });
 }
 
-function addUnit(course_id, chatbot) {
-  return fetch_post("addChatbot", {
+function addUnit(course_id, unit) {
+  return fetch_post("addUnit", {
     course_id,
-    chatbot,
+    unit,
   });
 }
 
-function updateUnit(chatbot) {
-  return fetch_post("updateChatbot", {
-    chatbot,
+function updateUnit(unit) {
+  return fetch_post("updateUnit", {
+    unit,
   });
 }
 
 function updateUnitOrder(id, order) {
-  return fetch_post("updateChatbotOrder", {
+  return fetch_post("updateUnitOrder", {
     id,
     order,
   });
 }
 
 function removeUnit(id) {
-  return fetch_post("removeChatbot", {
+  return fetch_post("removeUnit", {
     id,
   });
 }

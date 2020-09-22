@@ -17,9 +17,9 @@ function getMaterialsByCourseStudent(course_id) {
   })
 }
 
-function addMaterial(chatbot_id, material) {
+function addMaterial(unit_id, material) {
   return fetch_post('addMaterial', {
-    chatbot_id,
+    unit_id,
     material
   })
 }

@@ -200,7 +200,7 @@ export default {
             u.show = true;
             // Find Materials
             let materials = this.materials.filter((m) => {
-              return m.chatbot_id.$oid === u._id.$oid;
+              return m.unit_id.$oid === u._id.$oid;
             });
             // Sorting Materials
             let order = (u.order || []).reverse();
@@ -324,7 +324,7 @@ export default {
     },
     showNextMaterial(material) {
       let unit_idx = this.units.findIndex(
-        (c) => c._id.$oid === material.chatbot_id.$oid
+        (c) => c._id.$oid === material.unit_id.$oid
       );
       let { materials } = this.units[unit_idx];
       let material_idx = materials.findIndex(
