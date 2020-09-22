@@ -17,8 +17,6 @@ import { redirect, getParam } from "@/services/router";
 import { getSessionByTeacher } from "@/services/sessionService";
 import { getStudentsBySession } from "@/services/studentService";
 
-import { mapMutations } from "vuex";
-
 export default {
   data: () => ({
     course: {
@@ -58,21 +56,16 @@ export default {
     this.base = `session-editor/${session_id}`;
 
     //
-    this.loading(true);
-    this.loading_msg("Cargando");
+    this.showLoading("Cargando");
     try {
       let session = await getSessionByTeacher(session_id);
       this.course = session.course;
     } catch (error) {
-      this.showMessage(
-        "",
-        error.msg || "Ha ocurrido un error."
-      );
+      this.showMessage("", error.msg || error);
     }
-    this.loading(false);
+    this.hideLoading();
   },
   methods: {
-    ...mapMutations(["loading", "loading_msg"]),
     redirectCourses() {
       redirect("sessions-teacher");
     },

@@ -1,7 +1,5 @@
 <template>
   <div class="container py-0 px-3">
-    <loading :active="loading" :message="loading_msg" />
-
     <div class="profile m-card">
       <div class="m-card__body">
         <h2 class="profile__title">Mis Datos</h2>
@@ -67,13 +65,7 @@
             class="mr-3"
           >Anterior</v-btn>
           <v-btn v-if="questions_page !== 3" color="primary" @click="changePage(1)" small>Siguiente</v-btn>
-          <v-btn
-            v-if="questions_page === 3"
-            color="success"
-            :loading="loading"
-            @click="saveTest()"
-            small
-          >Guardar</v-btn>
+          <v-btn v-if="questions_page === 3" color="success" @click="saveTest()" small>Guardar</v-btn>
         </div>
       </div>
     </v-dialog>
@@ -117,7 +109,6 @@
 </template>
 
 <script>
-import loading from "@/components/loading";
 import Chart from "chart.js";
 
 import { updateLearningStyle } from "@/services/studentService";
@@ -326,8 +317,6 @@ export default {
     //
     user_role: -1,
     myChart: null,
-    loading: true,
-    loading_msg: "",
     dialog_test: false,
     //
     current_password: "",
@@ -346,10 +335,14 @@ export default {
     },
   },
   async mounted() {
-    this.loading_msg = "Cargando Datos";
+    this.showLoading("Cargando Datos");
     this.user_role = this.$store.state.user.role;
-    this.profile = await getUser();
-    this.loading = false;
+    try {
+      this.profile = await getUser();
+    } catch (error) {
+      this.showMessage("", error.msg || error);
+    }
+    this.hideLoading();
 
     // Chart
     if (this.user_role === "STU") {
@@ -380,43 +373,36 @@ export default {
     async saveTest() {
       let answers = this.questions.map((q) => q.answer);
       if (!answers.includes(null)) {
+        this.showLoading("Guardando");
         this.dialog_test = false;
-        this.loading = true;
-
         let learning_style = this.calculate(answers);
         this.profile.learning_style = learning_style;
-        this.loading_msg = "Guardando";
-        await updateLearningStyle(learning_style);
-        this.updateDashboard();
-
-        this.loading = false;
+        try {
+          await updateLearningStyle(learning_style);
+          this.updateDashboard();
+        } catch (error) {
+          this.showMessage("", error.msg || error);
+        }
+        this.hideLoading();
       } else {
-        this.showMessage(
-          "Alerta",
-          "No dejes preguntas sin responder."
-        );
+        this.showMessage("Alerta", "No dejes preguntas sin responder.");
       }
     },
     async updatePassword() {
       if (this.new_password !== this.confirm_new_password) {
-        this.showMessage(
-          "",
-          "Las contraseñas no coinciden."
-        );
+        this.showMessage("", "Las contraseñas no coinciden.");
         return;
       }
 
+      this.showLoading("Cambiando Contraseña");
       this.dialog_password = false;
-      this.loading = true;
-      this.loading_msg = "Cambiando Contraseña";
-
       try {
         await updatePassword(this.current_password, this.new_password);
         this.showMessage("", "Contraseña modificada.");
       } catch (error) {
         this.showMessage("Error al Guardar", error.msg);
       }
-      this.loading = false;
+      this.hideLoading();
     },
     calculate(respuestas) {
       //Dimension Procesamiento
@@ -582,15 +568,9 @@ export default {
         scrollTop("test");
         this.questions_page += n;
       } else {
-        this.showMessage(
-          "Alerta",
-          "No dejes preguntas sin responder."
-        );
+        this.showMessage("Alerta", "No dejes preguntas sin responder.");
       }
     },
-  },
-  components: {
-    loading,
   },
 };
 </script>

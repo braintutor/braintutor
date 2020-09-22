@@ -38,8 +38,6 @@
 import { redirect } from "@/services/router.js";
 import { getSessionsEventsAndTaksByStudent } from "@/services/sessionService";
 
-import { mapMutations } from "vuex";
-
 export default {
   data: () => ({
     sessions: [],
@@ -56,11 +54,8 @@ export default {
   },
   methods: {
     redirect,
-    ...mapMutations(["loading", "loading_msg"]),
     async init() {
-      this.loading(true);
-      this.loading_msg("Cargando Eventos");
-
+      this.showLoading("Cargando Eventos");
       try {
         let sessions = await getSessionsEventsAndTaksByStudent();
         let events = [];
@@ -98,7 +93,7 @@ export default {
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
-      this.loading(false);
+      this.hideLoading();
     },
   },
 };

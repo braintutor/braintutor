@@ -215,8 +215,6 @@ import { getParam, redirect } from "@/services/router.js";
 
 import { AnswerModel, LinkModel } from "@/models/Task";
 
-import { mapMutations } from "vuex";
-
 export default {
   data: () => ({
     task_id: "",
@@ -239,8 +237,7 @@ export default {
     AnswerModel,
   }),
   async created() {
-    this.loading(true);
-    this.loading_msg("Cargando Tarea");
+    this.showLoading("Cargando Tarea");
     try {
       this.task_id = getParam("task_id");
       this.task = await getTaskByStudent(this.task_id);
@@ -254,7 +251,7 @@ export default {
     } catch (error) {
       redirect("sessions-student");
     }
-    this.loading(false);
+    this.hideLoading();
   },
   computed: {
     files_filtered() {
@@ -265,19 +262,17 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(["loading", "loading_msg"]),
     redirectSession() {
       this.$router
         .push(`/session/${this.task.session_id.$oid}/tasks`)
         .catch(() => {});
     },
     async showAll() {
-      this.loading(true);
-      this.loading_msg("Cargando Archivos");
+      this.showLoading("Cargando Archivos");
       this.file_search = "";
       this.files = await this.getAll();
       this.dialog_files = true;
-      this.loading(false);
+      this.hideLoading();
     },
     async addFileDrive({ /*exportLinks*/ id, iconLink, name, webViewLink }) {
       // this.loading = true;
@@ -306,8 +301,7 @@ export default {
         this.login();
         return;
       }
-      this.loading(true);
-      this.loading_msg("Creando Archivo");
+      this.showLoading("Creando Archivo");
       let { documentId, presentationId, spreadsheetId } = await this.create(
         type
       );
@@ -317,11 +311,10 @@ export default {
         // await this.createPermission(id, "mitsuoysharag@gmail.com");
         await this.addFileDrive({ id, iconLink, name, webViewLink });
       }
-      this.loading(false);
+      this.hideLoading();
     },
     async addLink() {
-      this.loading(true);
-      this.loading_msg("Añadiendo Vínculo");
+      this.showLoading("Añadiendo Vínculo");
       try {
         let res = await fetch(
           `${process.env.VUE_APP_API_URL}/getLinkPreview?url=${this.link}`
@@ -343,17 +336,16 @@ export default {
         this.showMessage("Error", error);
       }
       this.link = "";
-      this.loading(false);
+      this.hideLoading();
     },
     async save() {
-      this.loading(true);
-      this.loading_msg("Guardando Respuesta");
+      this.showLoading("Guardando Respuesta");
       try {
         await updateTaskAnswer(this.task._id.$oid, this.answer);
       } catch (error) {
         this.showMessage("Error al Guardar", error.msg);
       }
-      this.loading(false);
+      this.hideLoading();
     },
     remove() {
       this.answer.data.splice(this.idx_to_remove, 1);
@@ -464,14 +456,13 @@ export default {
         return;
       }
 
-      this.loading(true);
-      this.loading_msg("Actualizando Archivo");
+      this.showLoading("Actualizando Archivo");
 
       let { name } = await this.get(id);
       this.answer.data[idx].title = name;
       await this.save();
 
-      this.loading(false);
+      this.hideLoading();
     },
     //
     formatLink({ type, id, url, title, description, image }) {

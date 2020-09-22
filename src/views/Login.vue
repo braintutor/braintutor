@@ -39,8 +39,6 @@ import { getSchoolByURL } from "@/services/schoolService";
 import { login } from "@/services/loginService";
 import { getParam, redirect } from "@/services/router.js";
 
-import { mapMutations } from "vuex";
-
 import UserModel from "@/models/User";
 
 export default {
@@ -57,20 +55,16 @@ export default {
     show_error: false,
   }),
   async created() {
-    this.loading(true);
-    this.loading_msg("Cargando");
+    this.showLoading("Cargando");
     let school_url = getParam("school_url");
-
     try {
       this.school = await getSchoolByURL(school_url);
     } catch (error) {
       this.showMessage("", error.msg || error);
     }
-
-    this.loading(false);
+    this.hideLoading();
   },
   methods: {
-    ...mapMutations(["loading", "loading_msg"]),
     async login() {
       try {
         if (this.$refs.form_login.validate()) {

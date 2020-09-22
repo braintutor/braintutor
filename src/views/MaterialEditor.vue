@@ -1,7 +1,5 @@
 <template>
   <Layout :links="links">
-    <loading :active="loading" :message="loading_msg" />
-
     <section slot="header" class="m-path">
       <span @click="redirectCourses()" class="m-path__name m-path__name--link">Editar Cursos</span>
       <span class="m-path__icon">></span>
@@ -17,7 +15,6 @@
 </template>
 
 <script>
-import loading from "@/components/loading";
 import Layout from "@/components/Layout";
 import MaterialSettings from "@/components/MaterialEditor/MaterialSettings";
 import ContentEditor from "@/components/MaterialEditor/ContentEditor";
@@ -32,41 +29,35 @@ export default {
     links: [
       {
         image: require("@/assets/braintutor/icon-material.png"),
-        name: "Material"
+        name: "Material",
       },
       {
         image: require("@/assets/braintutor/icon-quiz.png"),
-        name: "Pruebas"
+        name: "Pruebas",
       },
       {
         image: require("@/assets/braintutor/icon-settings.png"),
-        name: "Configuración"
-      }
+        name: "Configuración",
+      },
     ],
     material: {
-      name: "..."
+      name: "...",
     },
     course: {
-      name: "..."
+      name: "...",
     },
-    //
-    loading: false,
-    loading_msg: ""
   }),
   async created() {
-    this.loading = true;
-    this.loading_msg = "Cargando Material";
-
+    this.showLoading("Cargando Material");
     let material_id = getParam("material_id");
     try {
       this.material = await getMaterial(material_id);
       let course_id = this.material.course_id.$oid;
       this.course = await getCourseByTeacher(course_id);
     } catch (error) {
-      this.showMessage("Error", error.msg);
+      this.showMessage("", error.msg || error);
     }
-
-    this.loading = false;
+    this.hideLoading();
   },
   methods: {
     redirectCourse() {
@@ -74,15 +65,14 @@ export default {
     },
     redirectCourses() {
       redirect("courses-editor");
-    }
+    },
   },
   components: {
-    loading,
     Layout,
     MaterialSettings,
     ContentEditor,
-    QuizzesEditor
-  }
+    QuizzesEditor,
+  },
 };
 </script>
 
