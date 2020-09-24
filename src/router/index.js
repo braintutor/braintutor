@@ -241,8 +241,7 @@ router.beforeEach(async (to, from, next) => {
   let user = null;
   let token = localStorage.getItem("token");
   if (token) {
-    store.state.loading = true;
-    store.state.loading_msg = "";
+    store.state.loading_user = true;
     try {
       user = await getUser();
       user.name = user.last_name + ", " + user.first_name;
@@ -251,7 +250,7 @@ router.beforeEach(async (to, from, next) => {
       localStorage.removeItem("token");
       store.commit("setUser", null);
     }
-    store.state.loading = false;
+    store.state.loading_user = false;
   }
 
   // Chatbot

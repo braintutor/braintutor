@@ -5,13 +5,20 @@
       <router-view></router-view>
     </v-main>
     <loading :active="loading" :message="loading_msg" />
+    <loading :active="loading_user" />
     <Chatbot v-if="show_chatbot" :knowledge="knowledge" />
     <!-- Message -->
     <v-dialog v-model="dlg_message" max-width="320" persistent>
       <div class="m-msg">
         <div class="m-msg__body">
-          <p v-if="show_title" class="m-msg__title">{{show_title}}</p>
-          <p v-for="(m, idx) in show_messages" :key="idx" class="m-msg__description">{{m}}</p>
+          <p v-if="show_title" class="m-msg__title">{{ show_title }}</p>
+          <p
+            v-for="(m, idx) in show_messages"
+            :key="idx"
+            class="m-msg__description"
+          >
+            {{ m }}
+          </p>
         </div>
         <button @click="dlg_message = false" class="m-msg__btn">Cerrar</button>
       </div>
@@ -40,6 +47,7 @@ export default {
       "user",
       "loading",
       "loading_msg",
+      "loading_user",
       "show_chatbot",
       "knowledge",
     ]),

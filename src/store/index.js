@@ -8,6 +8,7 @@ export default new Vuex.Store({
     user: null,
     loading: false,
     loading_msg: "",
+    loading_user: false,
     material: null,
     // Chatbot
     show_chatbot: false,
