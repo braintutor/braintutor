@@ -110,25 +110,36 @@
           <div class="material">
             <p class="material__name">{{ material.name }}</p>
             <div v-show="!unit.edit_order" class="material__options">
-              <v-tooltip top>
-                <template v-slot:activator="{ on, attrs }">
-                  <!-- <v-btn icon v-bind="attrs" v-on="on" class="calendar-action" @click="prev()">
-                    <v-icon>mdi-chevron-left</v-icon>
-                  </v-btn>-->
-                  <v-btn
-                    icon
-                    v-bind="attrs"
-                    v-on="on"
-                    small
-                    @click="selectMaterial(material._id.$oid)"
-                  >
-                    <v-icon style="color: #999; font-size: 1.3rem"
-                      >mdi-pencil</v-icon
-                    >
+              <v-menu offset-y>
+                <template v-slot:activator="{ on }">
+                  <v-btn class="ml-2" icon small v-on="on">
+                    <v-icon>mdi-dots-vertical</v-icon>
                   </v-btn>
                 </template>
-                <span style="font-size: 0.75rem">Editar Material</span>
-              </v-tooltip>
+                <v-list class="pa-0" dense>
+                  <v-list-item @click="selectMaterial(material._id.$oid)">
+                    <v-list-item-title>Editar Material</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item
+                    @click="
+                      dlg_update_material_unit = true;
+                      unit_selected = null;
+                      material_selected = material;
+                    "
+                  >
+                    <v-list-item-title>Cambiar Unidad</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item
+                    @click="
+                      dlg_remove_material = true;
+                      unit_selected = unit;
+                      material_selected = material;
+                    "
+                  >
+                    <v-list-item-title>Eliminar Material</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
             </div>
             <!-- Material Menu -->
             <div v-show="unit.edit_order" class="material__menu">
@@ -217,6 +228,68 @@
         </div>
       </form>
     </v-dialog>
+    <!-- DIALOG REMOVE MATERIAL -->
+    <v-dialog v-model="dlg_remove_material" max-width="400">
+      <div class="m-card">
+        <div class="m-card__body">
+          <h3>Confirmar eliminación</h3>
+          <p class="mt-4">
+            Si elimina este contenido, no podrá revertir los cambios.
+          </p>
+        </div>
+        <div class="m-card__actions">
+          <m-btn
+            v-if="!loading_btn"
+            @click="dlg_remove_material = false"
+            color="primary"
+            small
+            class="mr-2"
+            >Cancelar</m-btn
+          >
+          <m-btn
+            @click="removeMaterial()"
+            color="error"
+            :loading="loading_btn"
+            small
+            >Eliminar</m-btn
+          >
+        </div>
+      </div>
+    </v-dialog>
+    <!-- DIALOG UPDATE MATERIAL UNIT -->
+    <v-dialog v-model="dlg_update_material_unit" width="400" persistent>
+      <div class="m-card">
+        <div class="m-card__body">
+          <v-select
+            v-model="unit_selected"
+            :items="units"
+            item-value="_id"
+            item-text="name"
+            label="Unidad"
+          ></v-select>
+        </div>
+        <div class="m-card__actions">
+          <m-btn
+            v-if="!loading_btn"
+            type="button"
+            @click="dlg_update_material_unit = false"
+            color="primary"
+            text
+            small
+            class="mr-2"
+            >Cancelar</m-btn
+          >
+          <m-btn
+            @click="updateMaterialUnit()"
+            type="submit"
+            color="primary"
+            :loading="loading_btn"
+            small
+            >Guardar</m-btn
+          >
+        </div>
+      </div>
+    </v-dialog>
   </div>
 </template>
 
@@ -230,7 +303,11 @@ import {
   updateUnitOrder,
   removeUnit,
 } from "@/services/unitService.js";
-import { addMaterial } from "@/services/materialService.js";
+import {
+  addMaterial,
+  updateMaterialUnit,
+  removeMaterial,
+} from "@/services/materialService.js";
 
 import UnitModel from "@/models/Unit";
 import MaterialModel from "@/models/Material";
@@ -241,6 +318,7 @@ export default {
     course_id: "",
     course: "",
     units: [],
+    material_selected: null,
     loading_btn: false,
     // New Unit
     unit_name: "",
@@ -249,6 +327,8 @@ export default {
     unit_selected: null,
     material_name: "",
     dlg_material: false,
+    dlg_remove_material: false,
+    dlg_update_material_unit: false,
     //
     UnitModel,
     MaterialModel,
@@ -264,26 +344,29 @@ export default {
     },
   },
   async created() {
-    this.showLoading("Cargando Contenido");
     this.course_id = getParam("course_id");
-    try {
-      // this.course = await getCourseByTeacher(this.course_id);
-      this.units = await getUnitsAndMaterials(this.course_id);
-      // Materials
-      for (let unit of this.units) {
-        let order = (unit.order || []).reverse();
-        unit.materials.sort((a, b) => {
-          let a_order = order.indexOf(a._id.$oid);
-          let b_order = order.indexOf(b._id.$oid);
-          return b_order - a_order;
-        });
-      }
-    } catch (error) {
-      this.showMessage("", error.msg || error);
-    }
-    this.hideLoading();
+    await this.init();
   },
   methods: {
+    async init() {
+      this.showLoading("Cargando Contenido");
+      try {
+        // this.course = await getCourseByTeacher(this.course_id);
+        this.units = await getUnitsAndMaterials(this.course_id);
+        // Materials
+        for (let unit of this.units) {
+          let order = (unit.order || []).reverse();
+          unit.materials.sort((a, b) => {
+            let a_order = order.indexOf(a._id.$oid);
+            let b_order = order.indexOf(b._id.$oid);
+            return b_order - a_order;
+          });
+        }
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
+    },
     async createUnit() {
       if (!this.unit_name) return;
 
@@ -385,6 +468,35 @@ export default {
         unit.materials.push(new_material);
         // this.selectMaterial(material_id.$oid);
         this.dlg_material = false;
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.loading_btn = false;
+    },
+    async updateMaterialUnit() {
+      if (!this.material_selected || !this.unit_selected) return;
+
+      this.loading_btn = true;
+      let material_id = this.material_selected._id.$oid;
+      let unit_id = this.unit_selected.$oid; // v-select result
+      try {
+        await updateMaterialUnit(material_id, unit_id);
+        this.dlg_update_material_unit = false;
+        await this.init();
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.loading_btn = false;
+    },
+    async removeMaterial() {
+      this.loading_btn = true;
+      let material_id = this.material_selected._id.$oid;
+      try {
+        await removeMaterial(material_id);
+        this.unit_selected.materials = this.unit_selected.materials.filter(
+          (m) => m._id.$oid !== material_id
+        );
+        this.dlg_remove_material = false;
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
