@@ -68,11 +68,19 @@ const routes = [
       {
         path: "",
         name: "director",
-        component: () => import("../components/Director/Classrooms/index"),
+        component: () => import("../components/Director/Sessions/index"),
+      },
+      {
+        path: "student/:student_id",
+        component: () => import("../components/Director/Student/index"),
       },
       {
         path: "students",
-        component: () => import("../components/Director/Students"),
+        component: () => import("../components/Director/Students/index"),
+      },
+      {
+        path: "session/:session_id",
+        component: () => import("../components/Director/Session/index"),
       },
     ],
   },

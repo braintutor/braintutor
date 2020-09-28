@@ -1,25 +1,28 @@
 <template>
   <div v-if="!session_selected" class="m-container">
-    <h1 v-if="sessions.length > 0" class="m-title ml-3">Cursos</h1>
-
     <div
       v-for="(session, idx) in sessions"
       :key="idx"
-      @click="session_selected = session"
-      class="session m-card levitation mb-5"
+      @click="selectSession(session)"
+      class="session m-card levitation mt-5"
     >
       <div class="m-card__body session__body">
         <span class="session__label">Curso:</span>
-        <span class="session__value">{{session.course.name}}</span>
+        <span class="session__value">{{ session.course.name }}</span>
         <span class="session__label">Profesor:</span>
-        <span
-          class="session__value"
-        >{{`${session.teacher.last_name}, ${session.teacher.first_name}`}}</span>
+        <span class="session__value">{{
+          `${session.teacher.last_name}, ${session.teacher.first_name}`
+        }}</span>
       </div>
     </div>
     <p v-if="sessions.length <= 0" class="text-center mt-4">No hay Cursos</p>
   </div>
-  <Results v-else v-model="session_selected" :students="students" class="ma-3" />
+  <Results
+    v-else
+    v-model="session_selected"
+    :students="students"
+    class="ma-3"
+  />
 </template>
 
 <script>
@@ -52,12 +55,15 @@ export default {
         this.sessions = await getSessionsByClassroom(this.classroom_id);
         this.students = await getStudentsByClassroomDirector(this.classroom_id);
       } catch (error) {
-      this.showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
-    reset() {
-      this.session_selected = null;
+    selectSession(session) {
+      // this.session_selected = session;
+      this.$router
+        .push(`/director/session/${session._id.$oid}`)
+        .catch(() => {});
     },
   },
   components: {

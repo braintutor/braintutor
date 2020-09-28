@@ -12,7 +12,13 @@ Vue.mixin({
     showMessage(title, description) {
       this.$root.$children[0].showMessage(title, description);
     },
-    // Format objects
+    // Format objects from Mongo
+    mongo(obj) {
+      return this.formatObject(obj);
+    },
+    mongoArr(arr) {
+      return arr.map((obj) => this.formatObject(obj));
+    },
     formatObjects(arr) {
       return arr.map((obj) => this.formatObject(obj));
     },

@@ -26,7 +26,11 @@
         ></v-select>
       </div>-->
     </div>
-    <Classroom ref="classroom_component" v-if="classroom_id" :classroom_id="classroom_id.$oid" />
+    <Classroom
+      ref="classroom_component"
+      v-if="classroom_id"
+      :classroom_id="classroom_id.$oid"
+    />
     <div v-else class="text-center mt-4">Seleccione un Aula</div>
   </div>
 </template>
@@ -34,7 +38,7 @@
 <script>
 import Classroom from "./Classroom";
 
-import { getClassroomsBySchoolDirector } from "@/services/classroomService";
+// import { getClassroomsBySchoolDirector } from "@/services/classroomService";
 
 export default {
   data: () => ({
@@ -51,16 +55,16 @@ export default {
     },
   },
   mounted() {
-    this.getClassrooms();
+    this.init();
   },
   methods: {
-    async getClassrooms() {
+    async init() {
       this.showLoading("Cargando Aulas");
       try {
-        this.classrooms = await getClassroomsBySchoolDirector();
+        this.classrooms = await this.$api.classroom.getAll();
         this.classrooms.sort((a, b) => a.name.localeCompare(b.name));
       } catch (error) {
-      this.showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },

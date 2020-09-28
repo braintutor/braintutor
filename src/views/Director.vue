@@ -12,8 +12,8 @@ export default {
     base: "director",
     links: [
       {
-        image: require(`@/assets/icons/icon-classroom.svg`),
-        text: "Aulas",
+        image: require(`@/assets/icons/icon-course.svg`),
+        text: "Cursos",
         name: "",
       },
       {

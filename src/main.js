@@ -1,15 +1,16 @@
-import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-import store from './store'
-import vuetify from './plugins/vuetify'
-import './mixins'
-import './styles/main.scss'
-import 'normalize.css'
-import './mvuecss/index.js'
+import Vue from "vue";
+import App from "./App.vue";
+import router from "./router";
+import store from "./store";
+import vuetify from "./plugins/vuetify";
+import "./plugins/api";
+import "./mixins";
+import "./styles/main.scss";
+import "normalize.css";
+import "./mvuecss/index.js";
 // import firebase from 'firebase/app'
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 // firebase.initializeApp({
 //   "apiKey": "AIzaSyBQgYiw2hhDBABjv35g6M7JDthTt6c7xjM",
@@ -27,5 +28,5 @@ new Vue({
   router,
   store,
   vuetify,
-  render: h => h(App)
-}).$mount('#app')
+  render: (h) => h(App),
+}).$mount("#app");

@@ -1,20 +1,26 @@
 .m-table {
   width: 100%;
-  thead {
-    tr {
-      th {
-        padding: 6px 10px 6px 0;
-        font-size: 1.05rem;
+  overflow-x: auto;
+  table {
+    width: 100%;
+    thead {
+      tr {
+        th {
+          padding: 6px 8px;
+          font-size: 1.05rem;
+          text-align: left;
+        }
       }
     }
-  }
-  tbody {
-    tr {
-      td {
-        padding: 3px 10px 3px 0;
-        color: #505050;
-        font-size: .9rem;
-        font-weight: lighter;
+    tbody {
+      tr {
+        td {
+          color: #505050;
+          padding: 3px 8px;
+          font-size: 0.9rem;
+          text-align: left;
+          font-weight: lighter;
+        }
       }
     }
   }
