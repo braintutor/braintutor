@@ -1,14 +1,23 @@
 <template>
   <Layout :links="links">
     <section slot="header" class="m-path">
-      <span @click="redirectCourses()" class="m-path__name m-path__name--link">Editar Cursos</span>
+      <span @click="redirectCourses()" class="m-path__name m-path__name--link"
+        >Editar Cursos</span
+      >
       <span class="m-path__icon">></span>
-      <span @click="redirectCourse()" class="m-path__name m-path__name--link">{{course.name}}</span>
+      <span @click="redirectCourse()" class="m-path__name m-path__name--link">{{
+        course.name
+      }}</span>
       <span class="m-path__icon">></span>
-      <span class="m-path__name">{{material.name}}</span>
+      <span class="m-path__name">{{ material.name }}</span>
     </section>
 
-    <ContentEditor :slot="0" v-if="material._id" :material="material" :course="course" />
+    <ContentEditor
+      :slot="0"
+      v-if="material._id"
+      :material="material"
+      :course="course"
+    />
     <QuizzesEditor :slot="1" :material="material" />
     <MaterialSettings :slot="2" :material="material" :course="course" />
   </Layout>

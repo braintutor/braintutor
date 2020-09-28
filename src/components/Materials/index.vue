@@ -8,7 +8,9 @@
       >
         <div>
           <v-progress-circular
-            :value="this.progress_materials.length/this.materials.length*100"
+            :value="
+              (this.progress_materials.length / this.materials.length) * 100
+            "
             :size="24"
             :width="3"
             color="var(--color-active)"
@@ -17,16 +19,28 @@
           >
             <!-- <v-icon small>mdi-trophy</v-icon> -->
           </v-progress-circular>
-          <span v-if="this.progress_materials.length !== this.materials.length">Tu progreso</span>
+          <span v-if="this.progress_materials.length !== this.materials.length"
+            >Tu progreso</span
+          >
           <span v-else>Completado</span>
         </div>
-        <v-icon @click="dlg_remove = true" style="opacity: .7">mdi-sync</v-icon>
+        <v-icon @click="dlg_remove = true" style="opacity: 0.7"
+          >mdi-sync</v-icon
+        >
       </div>
       <!-- Units -->
       <section v-for="(u, u_idx) in units" :key="u_idx">
-        <div @click="u.show = !u.show; $forceUpdate()" class="list__title">
-          <span>{{u.name}}</span>
-          <v-icon class="list__show" :class="{'list__show--active': u.show}">mdi-chevron-down</v-icon>
+        <div
+          @click="
+            u.show = !u.show;
+            $forceUpdate();
+          "
+          class="list__title"
+        >
+          <span>{{ u.name }}</span>
+          <v-icon class="list__show" :class="{ 'list__show--active': u.show }"
+            >mdi-chevron-down</v-icon
+          >
         </div>
         <div v-show="u.show">
           <section
@@ -34,18 +48,23 @@
             :key="m_idx"
             @click="selectMaterial(m)"
             class="link"
-            :class="{'link--active': m && material && m._id.$oid === material._id.$oid}"
+            :class="{
+              'link--active': m && material && m._id.$oid === material._id.$oid,
+            }"
           >
             <div
               class="progress"
-              :class="{'progress--complete': progress_materials.includes(m._id.$oid)}"
+              :class="{
+                'progress--complete': progress_materials.includes(m._id.$oid),
+              }"
             >
               <v-icon
                 v-if="progress_materials.includes(m._id.$oid)"
-                style="font-size: 1.25rem; opacity: .7"
-              >mdi-check</v-icon>
+                style="font-size: 1.25rem; opacity: 0.7"
+                >mdi-check</v-icon
+              >
             </div>
-            <span>{{m.name}}</span>
+            <span>{{ m.name }}</span>
           </section>
         </div>
       </section>
@@ -53,21 +72,25 @@
 
     <section class="list2">
       <div v-if="material" @click="show = !show" class="list2__menu">
-        <span>{{material.name}}</span>
-        <v-icon class="list__show" :class="{'list__show--active': show}">mdi-chevron-down</v-icon>
+        <span>{{ material.name }}</span>
+        <v-icon class="list__show" :class="{ 'list__show--active': show }"
+          >mdi-chevron-down</v-icon
+        >
       </div>
       <div v-show="show">
         <section v-for="(u, u_idx) in units" :key="u_idx">
           <div class="list2__title">
-            <span>{{u.name}}</span>
+            <span>{{ u.name }}</span>
           </div>
           <section
             v-for="(m, m_idx) in u.materials"
             :key="m_idx"
             @click="selectMaterial(m)"
             class="link"
-            :class="{'link--active': m === material}"
-          >{{m.name}}</section>
+            :class="{ 'link--active': m === material }"
+          >
+            {{ m.name }}
+          </section>
         </section>
       </div>
     </section>
@@ -94,11 +117,28 @@
       <div class="m-card">
         <div class="m-card__body">
           <h3>¿Quieres reiniciar el progreso?</h3>
-          <p class="mt-4">El progreso de este curso se reiniciará. ¿Quieres continuar?</p>
+          <p class="mt-4">
+            El progreso de este curso se reiniciará. ¿Quieres continuar?
+          </p>
         </div>
         <div class="m-card__actions">
-          <m-btn @click="dlg_remove = false" color="primary" small text class="mr-2">Cancelar</m-btn>
-          <m-btn @click="dlg_remove = false; removeProgress()" color="primary" small>Continuar</m-btn>
+          <m-btn
+            @click="dlg_remove = false"
+            color="primary"
+            small
+            text
+            class="mr-2"
+            >Cancelar</m-btn
+          >
+          <m-btn
+            @click="
+              dlg_remove = false;
+              removeProgress();
+            "
+            color="primary"
+            small
+            >Continuar</m-btn
+          >
         </div>
       </div>
     </v-dialog>
@@ -280,7 +320,7 @@ export default {
           }
           this.knowledge(knowledge);
         } catch (error) {
-      this.showMessage("", error.msg || error);
+          this.showMessage("", error.msg || error);
         }
         this.hideLoading();
       }
@@ -328,7 +368,7 @@ export default {
       } else if (this.units.length > unit_idx + 1) {
         materials = this.units[unit_idx + 1].materials;
         this.selectMaterial(materials[0]);
-      } else if (this.materials[0]) this.selectMaterial(this.materials[0]);
+      } else if (this.units[0]) this.selectMaterial(this.units[0].materials[0]);
     },
     selectMaterial(material) {
       this.setMaterial(null);

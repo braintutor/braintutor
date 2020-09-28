@@ -1,12 +1,14 @@
 <template>
   <div class="m-container pa-2" style="padding-bottom: 80px !important">
     <div class="options mt-2">
-      <strong
-        class="mt-1"
-        style="opacity: 0.5"
-      >({{`${units.length}/${Variables.max_units_per_course}`}})</strong>
+      <strong class="mt-1" style="opacity: 0.5"
+        >({{ `${units.length}/${Variables.max_units_per_course}` }})</strong
+      >
       <m-btn
-        @click="createUnit()"
+        @click="
+          dlg_unit = true;
+          unit_name = '';
+        "
         :disabled="units.length >= Variables.max_units_per_course"
         class="ml-2"
         color="primary"
@@ -19,7 +21,7 @@
     <section class="unit mt-4" v-for="(unit, idx) in units" :key="idx">
       <!-- <div class="unit__menu" @click="unit.show = !unit.show; $forceUpdate()"> -->
       <div class="unit__menu">
-        <p v-if="!unit.edit_name" class="unit__name">{{unit.name}}</p>
+        <p v-if="!unit.edit_name" class="unit__name">{{ unit.name }}</p>
         <v-text-field
           v-else
           class="unit__name"
@@ -43,14 +45,28 @@
               </v-btn>
             </template>
             <v-list class="pa-0" dense>
-              <v-list-item @click="unit.edit_name = true; $forceUpdate()">
+              <v-list-item
+                @click="
+                  unit.edit_name = true;
+                  $forceUpdate();
+                "
+              >
                 <v-list-item-title>Editar Nombre</v-list-item-title>
               </v-list-item>
-              <v-list-item @click="unit.edit_order = true; $forceUpdate()">
+              <v-list-item
+                @click="
+                  unit.edit_order = true;
+                  $forceUpdate();
+                "
+              >
                 <v-list-item-title>Editar Orden</v-list-item-title>
               </v-list-item>
               <v-list-item
-                @click="createMaterial(unit)"
+                @click="
+                  dlg_material = true;
+                  material_name = '';
+                  unit_selected = unit;
+                "
                 :disabled="materialsCount >= Variables.max_materials_per_course"
               >
                 <v-list-item-title>Crear Material</v-list-item-title>
@@ -92,7 +108,7 @@
         <div v-for="(material, m_idx) in unit.materials" :key="m_idx">
           <!-- Material -->
           <div class="material">
-            <p class="material__name">{{material.name}}</p>
+            <p class="material__name">{{ material.name }}</p>
             <div v-show="!unit.edit_order" class="material__options">
               <v-tooltip top>
                 <template v-slot:activator="{ on, attrs }">
@@ -106,15 +122,22 @@
                     small
                     @click="selectMaterial(material._id.$oid)"
                   >
-                    <v-icon style="color: #999; font-size: 1.3rem">mdi-pencil</v-icon>
+                    <v-icon style="color: #999; font-size: 1.3rem"
+                      >mdi-pencil</v-icon
+                    >
                   </v-btn>
                 </template>
-                <span style="font-size: .75rem">Editar Material</span>
+                <span style="font-size: 0.75rem">Editar Material</span>
               </v-tooltip>
             </div>
             <!-- Material Menu -->
             <div v-show="unit.edit_order" class="material__menu">
-              <v-btn icon small @click="moveUp(unit.materials, m_idx)" :disabled="m_idx === 0">
+              <v-btn
+                icon
+                small
+                @click="moveUp(unit.materials, m_idx)"
+                :disabled="m_idx === 0"
+              >
                 <v-icon>mdi-chevron-up</v-icon>
               </v-btn>
               <v-btn
@@ -137,6 +160,63 @@
         >+</div>-->
       </div>
     </section>
+
+    <!-- DIALOG UNIT -->
+    <v-dialog v-model="dlg_unit" width="400" persistent>
+      <form @submit.prevent="createUnit()" class="m-card">
+        <div class="m-card__body">
+          <v-text-field
+            v-model="unit_name"
+            :maxlength="UnitModel.name.max_length"
+            label="Nombre"
+            required
+          ></v-text-field>
+        </div>
+        <div class="m-card__actions">
+          <m-btn
+            v-if="!loading_btn"
+            type="button"
+            @click="dlg_unit = false"
+            color="primary"
+            text
+            small
+            class="mr-2"
+            >Cancelar</m-btn
+          >
+          <m-btn type="submit" color="primary" :loading="loading_btn" small
+            >Guardar</m-btn
+          >
+        </div>
+      </form>
+    </v-dialog>
+    <!-- DIALOG MATERIAL -->
+    <v-dialog v-model="dlg_material" width="400" persistent>
+      <form @submit.prevent="createMaterial(unit_selected)" class="m-card">
+        <div class="m-card__body">
+          <v-text-field
+            v-model="material_name"
+            :maxlength="MaterialModel.name.max_length"
+            label="Nombre"
+            required
+          ></v-text-field>
+        </div>
+        <div class="m-card__actions">
+          <m-btn
+            v-if="!loading_btn"
+            type="button"
+            @click="dlg_material = false"
+            color="primary"
+            text
+            small
+            class="mr-2"
+            >Cancelar</m-btn
+          >
+          <m-btn type="submit" color="primary" :loading="loading_btn" small
+            >Guardar</m-btn
+          >
+        </div>
+      </form>
+    </v-dialog>
   </div>
 </template>
 
@@ -153,6 +233,7 @@ import {
 import { addMaterial } from "@/services/materialService.js";
 
 import UnitModel from "@/models/Unit";
+import MaterialModel from "@/models/Material";
 import Variables from "@/models/variables";
 
 export default {
@@ -160,8 +241,17 @@ export default {
     course_id: "",
     course: "",
     units: [],
+    loading_btn: false,
+    // New Unit
+    unit_name: "",
+    dlg_unit: false,
+    // New Material
+    unit_selected: null,
+    material_name: "",
+    dlg_material: false,
     //
     UnitModel,
+    MaterialModel,
     Variables,
   }),
   computed: {
@@ -195,9 +285,11 @@ export default {
   },
   methods: {
     async createUnit() {
-      this.showLoading("Creando Unidad");
+      if (!this.unit_name) return;
+
+      this.loading_btn = true;
       let new_unit = {
-        name: "Nombre",
+        name: this.unit_name,
       };
       try {
         let unit_id = await addUnit(this.course_id, new_unit);
@@ -205,10 +297,11 @@ export default {
         new_unit.materials = [];
         this.units.push(new_unit);
         setTimeout(() => scrollDown("app__body"), 100);
+        this.dlg_unit = false;
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
-      this.hideLoading();
+      this.loading_btn = false;
     },
     async removeUnit(unit_id) {
       this.showLoading("Eliminando Unidad");
@@ -224,6 +317,8 @@ export default {
       redirect("material-editor", { material_id });
     },
     async createMaterial(unit) {
+      if (!this.material_name) return;
+
       let explanation = JSON.stringify({
         blocks: [
           { type: "header", data: { text: "Título", level: 2 } },
@@ -269,8 +364,7 @@ export default {
       };
 
       let new_material = {
-        name: "Nombre",
-        image: require("@/assets/braintutor/icon.png"),
+        name: this.material_name,
         description: "Descripción",
         overview: "Resumen",
         explanation,
@@ -284,16 +378,17 @@ export default {
         documents,
       };
 
-      this.showLoading("Creando Material");
+      this.loading_btn = true;
       try {
         let material_id = await addMaterial(unit._id.$oid, new_material);
         new_material._id = material_id;
         unit.materials.push(new_material);
         // this.selectMaterial(material_id.$oid);
+        this.dlg_material = false;
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
-      this.hideLoading();
+      this.loading_btn = false;
     },
     async updateUnitName(unit) {
       this.showLoading("Guardando Cambios");
