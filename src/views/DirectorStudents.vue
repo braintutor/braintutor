@@ -7,6 +7,7 @@
         item-value="_id"
         item-text="name"
         label="Aula"
+        class="px-2"
       ></v-select>
       <div v-show="!classroom_id" class="text-center mt-3">
         Seleccione un Aula
@@ -14,7 +15,7 @@
 
       <!-- Students -->
       <div v-show="classroom_id">
-        <div class="search mt-2 mb-3">
+        <div class="search my-3">
           <input v-model="student_search" type="text" placeholder="Buscar" />
           <v-icon v-show="student_search" @click="student_search = ''"
             >mdi-close</v-icon
