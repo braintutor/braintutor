@@ -18,7 +18,7 @@
         <canvas id="crt-t"></canvas>
       </div>
 
-      <div class="student__ls" v-if="student.learning_style">
+      <div v-if="student.learning_style" class="student__ls">
         <h3>Estilo de Aprendizaje</h3>
         <canvas id="crt-ls"></canvas>
       </div>
@@ -36,6 +36,7 @@ export default {
   data: () => ({
     crtLS: null,
     crtT: null,
+    time_size: 7,
   }),
   mounted() {
     this.showChartT();
@@ -43,11 +44,10 @@ export default {
   },
   methods: {
     showChartT() {
-      let size = 10;
       let date = new Date();
-      date.setDate(date.getDate() - size);
+      date.setDate(date.getDate() - this.time_size);
 
-      let dates = [...Array(size)].map(() => {
+      let dates = [...Array(this.time_size)].map(() => {
         date.setDate(date.getDate() + 1);
         let month = date.getMonth() + 1;
         let day = date.getDate();
@@ -59,6 +59,7 @@ export default {
         };
       });
 
+      // CREATING
       let ctx = document.getElementById("crt-t").getContext("2d");
       this.crtT = new Chart(ctx, {
         type: "bar",
@@ -78,17 +79,22 @@ export default {
           },
         },
       });
+
+      // UPDATING
+      let { time } = this.student;
       this.crtT.data = {
         labels: dates.map(({ name }) => name),
-        datasets: [
-          {
-            label: ["Tiempo de Sesión (min)"],
-            data: dates.map(({ key }) => this.student.time[key] / 60),
-            backgroundColor: "rgba(54, 162, 235, 0.2)",
-            borderColor: "rgba(54, 162, 235, 1)",
-            borderWidth: 1,
-          },
-        ],
+        datasets: time
+          ? [
+              {
+                label: ["Tiempo de Sesión (min)"],
+                data: dates.map(({ key }) => time[key] / 60),
+                backgroundColor: "rgba(54, 162, 235, 0.2)",
+                borderColor: "rgba(54, 162, 235, 1)",
+                borderWidth: 1,
+              },
+            ]
+          : [],
       };
       this.crtT.update();
     },
