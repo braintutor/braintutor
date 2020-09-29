@@ -62,29 +62,6 @@ const routes = [
     ],
   },
   {
-    path: "/director",
-    component: () => import("../views/Director.vue"),
-    children: [
-      {
-        path: "",
-        name: "director",
-        component: () => import("../components/Director/Sessions/index"),
-      },
-      {
-        path: "student/:student_id",
-        component: () => import("../components/Director/Student/index"),
-      },
-      {
-        path: "students",
-        component: () => import("../components/Director/Students/index"),
-      },
-      {
-        path: "session/:session_id",
-        component: () => import("../components/Director/Session/index"),
-      },
-    ],
-  },
-  {
     path: "/sessions-student",
     name: "sessions-student",
     component: () => import("../views/SessionsStudent.vue"),
@@ -210,6 +187,36 @@ const routes = [
     name: "parent",
     component: () => import("../views/Parent.vue"),
   },
+  // DIR
+  {
+    path: "/director-courses",
+    name: "director-courses",
+    component: () => import("../views/DirectorCourses.vue"),
+  },
+  {
+    path: "/director-students",
+    name: "director-students",
+    component: () => import("../views/DirectorStudents.vue"),
+    // children: [
+    //   {
+    //     path: "",
+    //     name: "director-students",
+    //     component: () => import("../components/Director/Sessions/index"),
+    //   },
+    //   {
+    //     path: "student/:student_id",
+    //     component: () => import("../components/Director/Student/index"),
+    //   },
+    //   {
+    //     path: "students",
+    //     component: () => import("../components/Director/Students/index"),
+    //   },
+    //   {
+    //     path: "session/:session_id",
+    //     component: () => import("../components/Director/Session/index"),
+    //   },
+    // ],
+  },
 ];
 
 const router = new VueRouter({
@@ -242,7 +249,7 @@ router.beforeEach(async (to, from, next) => {
     ADM: "school-editor",
     TEA: "sessions-teacher",
     STU: "sessions-student",
-    DIR: "director",
+    DIR: "director-courses",
     PAR: "parent",
   };
 

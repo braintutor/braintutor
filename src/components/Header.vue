@@ -2,7 +2,11 @@
   <div style="z-index: var(--z-header) !important">
     <header class="header">
       <div class="header__logo" @click="redirect('home')">
-        <v-img alt="BrainTutor Logo" src="@/assets/logo/logo-small.jpg" width="140" />
+        <v-img
+          alt="BrainTutor Logo"
+          src="@/assets/logo/logo-small.jpg"
+          width="140"
+        />
       </div>
       <v-spacer></v-spacer>
       <div class="header__actions">
@@ -12,11 +16,17 @@
           class="header__action"
           text
           @click="redirect(link.name)"
-        >{{link.title}}</v-btn>
+          >{{ link.title }}</v-btn
+        >
         <!-- User -->
-        <div id="user" class="user" v-if="user" @click="user_options = !user_options">
-          <span class="user__name">{{user.name}}</span>
-          <span class="user__role">{{roles[user.role]}}</span>
+        <div
+          id="user"
+          class="user"
+          v-if="user"
+          @click="user_options = !user_options"
+        >
+          <span class="user__name">{{ user.name }}</span>
+          <span class="user__role">{{ roles[user.role] }}</span>
           <div class="user__avatar">
             <img src="@/assets/icons/icon-user.svg" alt />
           </div>
@@ -29,45 +39,78 @@
           class="header__action"
           v-else
           text
-          @click="redirect('login', {school_url: 'maria-prado-de-bellido'})"
-        >Iniciar Sesión</v-btn>
+          @click="redirect('login', { school_url: 'maria-prado-de-bellido' })"
+          >Iniciar Sesión</v-btn
+        >
       </div>
-      <v-app-bar-nav-icon class="nav-icon" @click="drawer = true"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon
+        class="nav-icon"
+        @click="drawer = true"
+      ></v-app-bar-nav-icon>
     </header>
 
-    <v-navigation-drawer style="z-index: var(--z-nav) !important" v-model="drawer" fixed temporary>
+    <v-navigation-drawer
+      style="z-index: var(--z-nav) !important"
+      v-model="drawer"
+      fixed
+      temporary
+    >
       <div class="nav-logo">
-        <v-img alt="BrainTutor Logo" src="@/assets/braintutor/icon.png" width="25" />
+        <v-img
+          alt="BrainTutor Logo"
+          src="@/assets/braintutor/icon.png"
+          width="25"
+        />
       </div>
       <div class="user ml-0" v-if="user" @click="user_options = !user_options">
-        <span class="user__name">{{user.name}}</span>
-        <span class="user__role">{{roles[user.role]}}</span>
+        <span class="user__name">{{ user.name }}</span>
+        <span class="user__role">{{ roles[user.role] }}</span>
       </div>
       <v-list>
         <v-list-item-group active-class="blue--text text--accent-4">
           <v-list-item
             v-for="(link, l_idx) in links_filtered"
             :key="l_idx"
-            @click="redirect(link.name); drawer=false"
+            @click="
+              redirect(link.name);
+              drawer = false;
+            "
           >
             <v-list-item-icon>
-              <v-icon>{{link.icon}}</v-icon>
+              <v-icon>{{ link.icon }}</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>{{link.title}}</v-list-item-title>
+            <v-list-item-title>{{ link.title }}</v-list-item-title>
           </v-list-item>
-          <v-list-item v-if="user" @click="redirect('profile'); drawer=false">
+          <v-list-item
+            v-if="user"
+            @click="
+              redirect('profile');
+              drawer = false;
+            "
+          >
             <v-list-item-icon>
               <v-icon>mdi-account</v-icon>
             </v-list-item-icon>
             <v-list-item-title>Perfil</v-list-item-title>
           </v-list-item>
-          <v-list-item @click="enableFullscreen(); drawer=false">
+          <v-list-item
+            @click="
+              enableFullscreen();
+              drawer = false;
+            "
+          >
             <v-list-item-icon>
               <v-icon>mdi-fullscreen</v-icon>
             </v-list-item-icon>
             <v-list-item-title>Pantalla completa</v-list-item-title>
           </v-list-item>
-          <v-list-item v-if="user" @click="closeSession(); drawer=false">
+          <v-list-item
+            v-if="user"
+            @click="
+              closeSession();
+              drawer = false;
+            "
+          >
             <v-list-item-icon>
               <v-icon>mdi-power</v-icon>
             </v-list-item-icon>
@@ -75,7 +118,10 @@
           </v-list-item>
           <v-list-item
             v-else
-            @click="redirect('login', {school_url: 'maria-prado-de-bellido'}); drawer=false"
+            @click="
+              redirect('login', { school_url: 'maria-prado-de-bellido' });
+              drawer = false;
+            "
           >
             <v-list-item-icon>
               <v-icon>mdi-power</v-icon>
@@ -94,12 +140,14 @@ import { redirect } from "@/services/router.js";
 export default {
   data: () => ({
     links: [
+      // ADM
       {
         title: "Colegio",
         name: "school-editor",
         icon: "mdi-school",
         session_roles: ["ADM"],
       },
+      // TEA
       {
         title: "Cursos",
         name: "sessions-teacher",
@@ -112,30 +160,33 @@ export default {
         icon: "mdi-file-edit",
         session_roles: ["TEA"],
       },
+      // STU
       {
         title: "Cursos",
         name: "sessions-student",
         icon: "mdi-book",
         session_roles: ["STU"],
       },
-      // {
-      //   title: "Tareas",
-      //   name: "tasks",
-      //   icon: "mdi-book",
-      //   session_roles: ['STU', 'PAR']
-      // },
       {
         title: "Agenda",
         name: "events",
         icon: "mdi-calendar",
         session_roles: ["STU"],
       },
+      // DIR
       {
-        title: "Colegio",
-        name: "director",
+        title: "Cursos",
+        name: "director-courses",
+        icon: "mdi-book",
+        session_roles: ["DIR"],
+      },
+      {
+        title: "Alumnos",
+        name: "director-students",
         icon: "mdi-school",
         session_roles: ["DIR"],
       },
+      // PAR
       {
         title: "Colegio",
         name: "parent",
