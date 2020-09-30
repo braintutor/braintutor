@@ -6,6 +6,7 @@
       :time_start="task.time_start"
       :title="task.title"
       :description="task.description"
+      disabled
       class="mb-4"
     />
   </div>

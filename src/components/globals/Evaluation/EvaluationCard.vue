@@ -1,6 +1,6 @@
 <template>
   <section class="evaluation m-card" @click="$emit('click', $event)">
-    <v-progress-linear :value="progress" :height="4" color="var(--color-subtitle)"></v-progress-linear>
+    <v-progress-linear :value="progress" :height="4" color="#84b5ff"></v-progress-linear>
 
     <div class="m-card__body">
       <p class="evaluation__name">{{name}}</p>
@@ -106,7 +106,7 @@ export default {
     word-wrap: break-word;
   }
   &__body {
-    padding: 8px 0;
+    padding: 6px 0;
     // background: rgb(244, 246, 253);
     border-radius: 12px;
 

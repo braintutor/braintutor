@@ -58,7 +58,7 @@ export default {
     async restore() {
       this.showLoading("Cargando Tareas");
       try {
-        this.tasks = this.formatObjects(
+        this.tasks = this.mongoArr(
           await getTasksBySessionStudent(this.session_id)
         );
       } catch (error) {

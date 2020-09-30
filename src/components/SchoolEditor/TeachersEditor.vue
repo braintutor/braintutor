@@ -297,7 +297,7 @@ export default {
   async created() {
     this.showLoading("Cargando Datos");
     try {
-      this.entities = this.formatObjects(await getTeachersBySchool());
+      this.entities = this.mongoArr(await getTeachersBySchool());
     } catch (error) {
       this.showMessage("", error.msg || error);
     }

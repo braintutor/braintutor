@@ -355,7 +355,7 @@ export default {
     async classroom_id() {
       this.showLoading("Cargando Datos");
       try {
-        this.entities = this.formatObjects(
+        this.entities = this.mongoArr(
           await getStudentsByClassroom(this.classroom_id)
         );
       } catch (error) {
@@ -367,10 +367,10 @@ export default {
   async created() {
     this.showLoading("Cargando Datos");
     try {
-      this.classrooms = this.formatObjects(await getClassroomsBySchool());
+      this.classrooms = this.mongoArr(await getClassroomsBySchool());
 
       if (this.classrooms.length > 0) {
-        this.parents = this.formatObjects(await getParents());
+        this.parents = this.mongoArr(await getParents());
         this.classroom_id = this.classrooms[0]._id;
       }
     } catch (error) {

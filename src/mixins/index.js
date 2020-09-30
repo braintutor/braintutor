@@ -13,22 +13,17 @@ Vue.mixin({
       this.$root.$children[0].showMessage(title, description);
     },
     // Format objects from Mongo
-    mongo(obj) {
-      return this.formatObject(obj);
-    },
     mongoArr(arr) {
-      return arr.map((obj) => this.formatObject(obj));
+      return arr.map((obj) => this.mongo(obj));
     },
-    formatObjects(arr) {
-      return arr.map((obj) => this.formatObject(obj));
-    },
-    // TODO make recurrent for child objects
-    formatObject(obj) {
+    mongo(obj) {
+      if (typeof obj !== "object") return obj;
+
       let new_obj = {};
       Object.entries(obj).forEach(([key, val]) => {
         if (typeof val === "object") {
           if (val instanceof Array) {
-            new_obj[key] = val;
+            new_obj[key] = val.map((obj) => this.mongo(obj));
           } else {
             if ("$oid" in val) {
               new_obj[key] = val.$oid;

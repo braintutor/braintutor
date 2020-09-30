@@ -56,11 +56,7 @@ export default {
     // TIME
     setInterval(async () => {
       try {
-        if (this.user && this.user.role === "STU") {
-          console.log("sdss");
-          await updateStudentTime();
-          console.log("sdss2");
-        }
+        if (this.user && this.user.role === "STU") await updateStudentTime();
       } catch (error) {
         //
       }
