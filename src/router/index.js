@@ -10,6 +10,7 @@ import { onRouterChange } from "../knowledge";
 
 Vue.use(VueRouter);
 
+// TODO use meta for routing validation
 const routes = [
   {
     path: "/",
@@ -197,25 +198,6 @@ const routes = [
     path: "/director-students",
     name: "director-students",
     component: () => import("../views/DirectorStudents.vue"),
-    // children: [
-    //   {
-    //     path: "",
-    //     name: "director-students",
-    //     component: () => import("../components/Director/Sessions/index"),
-    //   },
-    //   {
-    //     path: "student/:student_id",
-    //     component: () => import("../components/Director/Student/index"),
-    //   },
-    //   {
-    //     path: "students",
-    //     component: () => import("../components/Director/Students/index"),
-    //   },
-    //   {
-    //     path: "session/:session_id",
-    //     component: () => import("../components/Director/Session/index"),
-    //   },
-    // ],
   },
   {
     path: "/director-session/:session_id",
@@ -234,7 +216,8 @@ const routes = [
       {
         path: "evaluations",
         name: "director-session-evaluations",
-        component: () => import("../components/DirectorSession/Evaluations/index"),
+        component: () =>
+          import("../components/DirectorSession/Evaluations/index"),
       },
     ],
   },
@@ -263,7 +246,14 @@ router.beforeEach(async (to, from, next) => {
     "material-editor",
     "profile",
   ]; // Require Teacher
-  const require_director = ["director", "profile"]; // Require Director
+  const require_director = [
+    "director-courses",
+    "director-students",
+    "director-session-tasks",
+    "director-session-events",
+    "director-session-evaluations",
+    "profile",
+  ]; // Require Director
   const require_parent = ["parent", "profile"]; // Require Director
   let to_name = to.name;
   let redirects = {
