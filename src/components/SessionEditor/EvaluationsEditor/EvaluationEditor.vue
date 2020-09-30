@@ -6,7 +6,7 @@
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
         <v-text-field
-          v-if="!evaluation.started"
+          v-if="!evaluation.public"
           class="menu-title"
           v-model="evaluation.name"
           :maxlength="EvaluationModel.name.max_length"
@@ -16,7 +16,7 @@
         ></v-text-field>
         <span v-else class="menu-title">{{evaluation.name}}</span>
       </div>
-      <div v-if="!evaluation.started" class="menu-right">
+      <div v-if="!evaluation.public" class="menu-right">
         <v-tooltip top>
           <template v-slot:activator="{ on, attrs }">
             <v-btn
@@ -59,10 +59,10 @@
         <input
           type="datetime-local"
           v-model="evaluation.time_start_f"
-          :disabled="evaluation.started"
+          :disabled="evaluation.public"
         />
         <span>Tiempo de Fin:</span>
-        <input type="datetime-local" v-model="evaluation.time_end_f" :disabled="evaluation.started" />
+        <input type="datetime-local" v-model="evaluation.time_end_f" :disabled="evaluation.public" />
       </div>
       <div
         v-for="(c, c_idx) in evaluation.content"
@@ -71,7 +71,7 @@
       >
         <div class="question-editor-question question-editor-text">
           <v-textarea
-            v-if="!evaluation.started"
+            v-if="!evaluation.public"
             v-model="c.question"
             :rows="1"
             :maxlength="QuestionModel.question.max_length"
@@ -81,7 +81,7 @@
           ></v-textarea>
           <span v-else>{{c.question}}</span>
           <v-btn
-            v-if="!evaluation.started && evaluation.content.length > 1"
+            v-if="!evaluation.public && evaluation.content.length > 1"
             icon
             @click="removeQuestion(evaluation.content, c_idx)"
           >
@@ -97,7 +97,7 @@
             >
               <div class="question-editor-alternative-content question-editor-text m-card">
                 <v-textarea
-                  v-if="!evaluation.started"
+                  v-if="!evaluation.public"
                   style="width: 0"
                   v-model="c.alternatives[a_idx]"
                   :rows="1"
@@ -108,17 +108,17 @@
                 ></v-textarea>
                 <span v-else>{{c.alternatives[a_idx]}}</span>
                 <v-btn
-                  v-if="!evaluation.started && c.alternatives.length > 2"
+                  v-if="!evaluation.public && c.alternatives.length > 2"
                   icon
                   @click="removeAlternative(c.alternatives, a_idx)"
                 >
                   <v-icon>mdi-minus</v-icon>
                 </v-btn>
               </div>
-              <v-radio :disabled="evaluation.started" :value="a_idx"></v-radio>
+              <v-radio :disabled="evaluation.public" :value="a_idx"></v-radio>
             </div>
             <div
-              v-if="!evaluation.started && c.alternatives.length < QuestionModel.alternatives.max_length"
+              v-if="!evaluation.public && c.alternatives.length < QuestionModel.alternatives.max_length"
               class="question-editor-alternative-container col-12"
             >
               <div
@@ -133,7 +133,7 @@
       </div>
       <div class="public">
         <m-btn
-          v-if="!evaluation.started"
+          v-if="!evaluation.public"
           @click="dialog_public = true"
           color="primary"
           small
@@ -230,7 +230,7 @@ export default {
         } catch (error) {
           this.showMessage("", error.msg || error);
         }
-        this.evaluation.started = true;
+        this.evaluation.public = true;
         this.hideLoading();
       }
     },

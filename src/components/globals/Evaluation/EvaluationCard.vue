@@ -17,6 +17,8 @@
         </p>
         <p v-else class="evaluation__time">{{size}} pregunta(s)</p>
       </div>
+
+      <slot></slot>
     </div>
 
     <div v-if="buttons" class="evaluation__actions m-card__actions">

@@ -32,9 +32,29 @@
             </div>
           </div>
           <div class="m-card__actions">
-            <m-btn color="primary" text small class="mr-2">Tareas</m-btn>
-            <m-btn color="error" text small class="mr-2">Eventos</m-btn>
-            <m-btn color="warning" text small>Evaluaciones</m-btn>
+            <m-btn
+              @click="selectSession(session, 'tasks')"
+              color="primary"
+              text
+              small
+              class="mr-2"
+              >Tareas</m-btn
+            >
+            <m-btn
+              @click="selectSession(session, 'events')"
+              color="error"
+              text
+              small
+              class="mr-2"
+              >Eventos</m-btn
+            >
+            <m-btn
+              @click="selectSession(session, 'evaluations')"
+              color="warning"
+              text
+              small
+              >Evaluaciones</m-btn
+            >
           </div>
         </div>
       </div>
@@ -84,6 +104,12 @@ export default {
         this.showMessage("", error.msg || error);
       }
       this.hideLoading();
+    },
+    selectSession(session, category) {
+      this.$router.push({
+        name: `director-session-${category}`,
+        params: { session_id: session._id },
+      });
     },
   },
 };

@@ -217,6 +217,27 @@ const routes = [
     //   },
     // ],
   },
+  {
+    path: "/director-session/:session_id",
+    component: () => import("../views/DirectorSession.vue"),
+    children: [
+      {
+        path: "",
+        name: "director-session-tasks",
+        component: () => import("../components/DirectorSession/Tasks"),
+      },
+      {
+        path: "events",
+        name: "director-session-events",
+        component: () => import("../components/DirectorSession/Events"),
+      },
+      {
+        path: "evaluations",
+        name: "director-session-evaluations",
+        component: () => import("../components/DirectorSession/Evaluations/index"),
+      },
+    ],
+  },
 ];
 
 const router = new VueRouter({

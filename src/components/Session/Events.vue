@@ -89,6 +89,7 @@ export default {
     height: 10px;
     width: 40px;
     margin-left: 10px;
+    border-radius: 4px;
   }
 }
 </style>

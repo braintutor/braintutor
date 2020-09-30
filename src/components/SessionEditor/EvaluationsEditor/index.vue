@@ -24,8 +24,8 @@
       :time_end="evaluation.time_end"
       :size="evaluation.content.length"
       :buttons="[{
-            text: evaluation.started? 'Ver Evaluación': 'Editar',
-            icon: evaluation.started? 'mdi-eye': 'mdi-pencil',
+            text: evaluation.public? 'Ver Evaluación': 'Editar',
+            icon: evaluation.public? 'mdi-eye': 'mdi-pencil',
             color: 'primary',
             action: () => {select(evaluation)}
           },{
@@ -33,7 +33,7 @@
             icon: 'mdi-poll',
             color: 'primary',
             action: () => {results(evaluation)},
-            disabled: !evaluation.started
+            disabled: !evaluation.public
           },{
             text: 'Eliminar',
             icon: 'mdi-delete',
