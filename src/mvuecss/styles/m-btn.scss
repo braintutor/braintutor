@@ -106,15 +106,15 @@
         border-color: nth($value, 4);
       }
       &.m-btn--text {
-        background: transparent;
-        // background: nth($value, 6);
+        // background: transparent;
+        background: nth($value, 1);
         box-shadow: none;
         & * {
           color: nth($value, 3) !important;
         }
 
         &:hover {
-          background: nth($value, 1);
+          background: nth($value, 2);
         }
         &:active {
           background: nth($value, 2);

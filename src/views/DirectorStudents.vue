@@ -155,9 +155,13 @@ export default {
   padding: 1rem;
   border-radius: 8px;
   cursor: pointer;
+  user-select: none;
 
   &:hover {
     background: rgba(0, 0, 0, 0.05);
+  }
+  &:active {
+    background: rgba(0, 0, 0, 0.15);
   }
   &__name {
     font-size: 0.9rem;
