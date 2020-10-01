@@ -25,9 +25,9 @@
 
 <script>
 import Layout from "@/components/Layout";
-import MaterialSettings from "@/components/MaterialEditor/MaterialSettings";
 import ContentEditor from "@/components/MaterialEditor/ContentEditor";
 import QuizzesEditor from "@/components/MaterialEditor/QuizzesEditor";
+import MaterialSettings from "@/components/MaterialEditor/MaterialSettings";
 
 import { getParam, redirect } from "@/services/router.js";
 import { getMaterial } from "@/services/materialService";
@@ -78,12 +78,9 @@ export default {
   },
   components: {
     Layout,
-    MaterialSettings,
     ContentEditor,
     QuizzesEditor,
+    MaterialSettings,
   },
 };
 </script>
-
-<style lang='scss' scoped>
-</style>

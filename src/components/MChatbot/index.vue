@@ -2,13 +2,19 @@
   <div style="z-index: var(--z-chatbot) !important">
     <div
       class="m-chatbot"
-      :class="{'m-chatbot--loading': loading, 'm-chatbot--disabled': show && !loading}"
+      :class="{
+        'm-chatbot--loading': loading,
+        'm-chatbot--disabled': show && !loading,
+      }"
       @click="showChatbot()"
     >
-      <img :src="require(`@/assets/avatar/normal.png`)" class="m-chatbot__img" />
+      <img
+        :src="require(`@/assets/avatar/normal.png`)"
+        class="m-chatbot__img"
+      />
     </div>
 
-    <div class="chatbot" :class="{'chatbot--disabled': !(show && !loading)}">
+    <div class="chatbot" :class="{ 'chatbot--disabled': !(show && !loading) }">
       <!-- Avatar -->
       <div class="chatbot__avatar">
         <Avatar ref="avatar" />
@@ -27,12 +33,14 @@
             :key="idx"
             @click="actionChatbot(action.action)"
             class="message__action"
-          >{{action.text}}</div>
+          >
+            {{ action.text }}
+          </div>
         </div>
         <div v-if="writing" class="message message--bot message--writing">
           <div class="message--writing__dot" style="--offset: 0s"></div>
-          <div class="message--writing__dot" style="--offset: .2s"></div>
-          <div class="message--writing__dot" style="--offset: .4s"></div>
+          <div class="message--writing__dot" style="--offset: 0.2s"></div>
+          <div class="message--writing__dot" style="--offset: 0.4s"></div>
         </div>
       </div>
       <!-- Input -->
@@ -96,9 +104,9 @@ export default {
             nombres: this.$store.state.user.first_name,
           },
         };
-        this.showLoading("");
+        this.loading = true;
         this.chatbot.train(this.knowledge, entities);
-        this.hideLoading();
+        this.loading = false;
       }
     },
     addMessage(text, type, actions = []) {

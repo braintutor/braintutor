@@ -3,13 +3,17 @@
     <div class="editor__menu">
       <div class="editor__title">
         <h2>Cursos</h2>
-        <strong
-          class="ml-2 mt-1"
-          style="opacity: 0.5"
-        >({{`${entities.length}/${variables.max_courses_per_school}`}})</strong>
+        <strong class="ml-2 mt-1" style="opacity: 0.5"
+          >({{
+            `${entities.length}/${variables.max_courses_per_school}`
+          }})</strong
+        >
       </div>
       <m-btn
-        @click="dialog_edit = true; add()"
+        @click="
+          dialog_edit = true;
+          add();
+        "
         :disabled="entities.length >= variables.max_courses_per_school"
         color="primary"
         small
@@ -23,6 +27,8 @@
           <tr>
             <th class="text-left">Nombre</th>
             <th class="text-left">Encargado</th>
+            <th class="text-left">N° Unidades</th>
+            <th class="text-left">N° Materiales</th>
             <th></th>
           </tr>
         </thead>
@@ -30,6 +36,8 @@
           <tr v-for="(e, e_idx) in entities_aux" :key="e_idx">
             <td>{{ e.name }}</td>
             <td>{{ e.teacher }}</td>
+            <td class="text-center">{{ e.units_count }}</td>
+            <td class="text-center">{{ e.materials_count }}</td>
             <td class="text-center">
               <v-menu offset-y>
                 <template v-slot:activator="{ on, attrs }">
@@ -38,10 +46,20 @@
                   </v-btn>
                 </template>
                 <v-list class="pa-0" dense>
-                  <v-list-item @click="dialog_edit = true; edit(e)">
+                  <v-list-item
+                    @click="
+                      dialog_edit = true;
+                      edit(e);
+                    "
+                  >
                     <v-list-item-title>Editar Curso</v-list-item-title>
                   </v-list-item>
-                  <v-list-item @click="dialog_remove = true; entity = e">
+                  <v-list-item
+                    @click="
+                      dialog_remove = true;
+                      entity = e;
+                    "
+                  >
                     <v-list-item-title>Eliminar Curso</v-list-item-title>
                   </v-list-item>
                 </v-list>
@@ -50,7 +68,9 @@
           </tr>
         </tbody>
       </table>
-      <p class="text-center mt-2" v-show="entities_aux.length === 0">No hay cursos.</p>
+      <p class="text-center mt-2" v-show="entities_aux.length === 0">
+        No hay cursos.
+      </p>
     </div>
 
     <!-- DIALOG CREATE|EDIT -->
@@ -84,8 +104,11 @@
             small
             text
             class="mr-2"
-          >Cerrar</m-btn>
-          <m-btn color="primary" type="submit" :loading="loading_save" small>Guardar</m-btn>
+            >Cerrar</m-btn
+          >
+          <m-btn color="primary" type="submit" :loading="loading_save" small
+            >Guardar</m-btn
+          >
         </div>
       </form>
     </v-dialog>
@@ -97,8 +120,22 @@
           <h3>¿Desea eliminar?</h3>
         </div>
         <div class="m-card__actions">
-          <m-btn @click="dialog_remove = false" color="primary" small class="mr-2">Cancelar</m-btn>
-          <m-btn @click="remove(); dialog_remove = false" color="error" small>Eliminar</m-btn>
+          <m-btn
+            @click="dialog_remove = false"
+            color="primary"
+            small
+            class="mr-2"
+            >Cancelar</m-btn
+          >
+          <m-btn
+            @click="
+              remove();
+              dialog_remove = false;
+            "
+            color="error"
+            small
+            >Eliminar</m-btn
+          >
         </div>
       </div>
     </v-dialog>

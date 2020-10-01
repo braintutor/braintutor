@@ -18,12 +18,6 @@ export default new Vuex.Store({
     setUser(state, user) {
       state.user = user;
     },
-    loading(state, loading) {
-      state.loading = loading;
-    },
-    loading_msg(state, loading_msg) {
-      state.loading_msg = loading_msg;
-    },
     setMaterial(state, material) {
       state.material = material;
     },
