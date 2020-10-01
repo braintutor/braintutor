@@ -46,9 +46,6 @@ import EvaluationCard from "@/components/globals/Evaluation/EvaluationCard";
 import Result from "./Results";
 
 export default {
-  props: {
-    session: Object,
-  },
   data: () => ({
     evaluations: [],
     students: [],
@@ -58,11 +55,12 @@ export default {
     let session_id = this.$router.currentRoute.params["session_id"];
     this.showLoading("Cargando Evaluaciones");
     try {
+      let session = this.mongo(await this.$api.session.get(session_id));
+      this.students = this.mongoArr(
+        await this.$api.student.getAll(session.classroom_id)
+      );
       this.evaluations = this.mongoArr(
         await this.$api.evaluation.getAll(session_id)
-      );
-      this.students = this.mongoArr(
-        await this.$api.student.getAll(this.session.classroom_id)
       );
     } catch (error) {
       this.showMessage("", error.msg || error);

@@ -219,6 +219,11 @@ const routes = [
         component: () =>
           import("../components/DirectorSession/Evaluations/index"),
       },
+      {
+        path: "students",
+        name: "director-session-students",
+        component: () => import("../components/DirectorSession/Students"),
+      },
     ],
   },
 ];
@@ -252,6 +257,7 @@ router.beforeEach(async (to, from, next) => {
     "director-session-tasks",
     "director-session-events",
     "director-session-evaluations",
+    "director-session-students",
     "profile",
   ]; // Require Director
   const require_parent = ["parent", "profile"]; // Require Director
