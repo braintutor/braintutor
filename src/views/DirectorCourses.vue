@@ -57,6 +57,10 @@
             >
           </div>
         </div>
+
+        <div v-show="sessions.length <= 0" class="text-center mt-3">
+          No hay Sesiones
+        </div>
       </div>
     </div>
   </div>

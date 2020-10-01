@@ -9,6 +9,9 @@
       disabled
       class="mb-4"
     />
+    <div v-show="tasks.length <= 0" class="text-center">
+      No hay Tareas
+    </div>
   </div>
 </template>
 

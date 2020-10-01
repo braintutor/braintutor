@@ -21,6 +21,10 @@
           >
         </div>
       </EvaluationCard>
+
+      <div v-show="evaluations.length <= 0" class="text-center">
+        No hay Evaluaciones
+      </div>
     </div>
 
     <div v-if="evaluation_selected">
@@ -29,7 +33,7 @@
           <v-btn icon @click="evaluation_selected = null">
             <v-icon style="font-size: 1.4rem">mdi-arrow-left</v-icon>
           </v-btn>
-          <span class="m-menu__title">{{evaluation_selected.name}}</span>
+          <span class="m-menu__title">{{ evaluation_selected.name }}</span>
         </div>
       </div>
       <Result :evaluation="evaluation_selected" :students="students" />

@@ -9,13 +9,16 @@
         small
         color="dark"
         class="mr-2"
-      >{{item.text}}</m-btn>
-      <m-btn @click="mode_calendar = !mode_calendar" text small color="dark">Cambiar vista</m-btn>
+        >{{ item.text }}</m-btn
+      >
+      <m-btn @click="mode_calendar = !mode_calendar" text small color="dark"
+        >Cambiar vista</m-btn
+      >
     </div>
 
     <section v-show="mode_calendar" class="calendar">
       <div class="calendar__control">
-        <span class="calendar__month">{{`${months[month]} de ${year}`}}</span>
+        <span class="calendar__month">{{ `${months[month]} de ${year}` }}</span>
         <div class="calendar__actions">
           <m-btn @click="today()" icon class="mr-1">
             <i class="fa fa-calendar"></i>
@@ -32,25 +35,36 @@
       <div class="calendar__body">
         <div
           v-for="(_, idx) in Array(7)"
-          :key="idx+'_'"
+          :key="idx + '_'"
           class="calendar__day-week"
-        >{{days[idx].substring(0, 3)}}</div>
+        >
+          {{ days[idx].substring(0, 3) }}
+        </div>
         <div v-for="(_, idx) in Array(42)" :key="idx">
-          <div v-show="false">{{day = getDayValuesByIdx(idx)}}</div>
+          <div v-show="false">{{ (day = getDayValuesByIdx(idx)) }}</div>
           <div
             class="day"
             :class="day.classname"
-            @click="$emit('on-date-click', date.getFullYear(), date.getMonth(), getDayValuesByIdx(idx).number)"
+            @click="
+              $emit(
+                'on-date-click',
+                date.getFullYear(),
+                date.getMonth(),
+                getDayValuesByIdx(idx).number
+              )
+            "
           >
-            <span class="day__number">{{day.number}}</span>
+            <span class="day__number">{{ day.number }}</span>
             <div class="day__events">
               <div
                 v-for="(event, idx) in day.events"
                 :key="idx"
                 @click="showEvent(event, $event)"
                 class="day__event"
-                :style="{'background': event.color}"
-              >{{event.title}}</div>
+                :style="{ background: event.color }"
+              >
+                {{ event.title }}
+              </div>
             </div>
           </div>
         </div>
@@ -58,7 +72,11 @@
     </section>
 
     <section v-show="!mode_calendar">
-      <div v-for="(e, idx) in events_ordered" :key="idx" class="hevent m-card mt-3">
+      <div
+        v-for="(e, idx) in events_ordered"
+        :key="idx"
+        class="hevent m-card mt-3"
+      >
         <div class="hevent__options">
           <v-menu v-if="options && show_options(e)" offset-y left>
             <template v-slot:activator="{ on }">
@@ -67,24 +85,36 @@
               </v-btn>
             </template>
             <v-list dense>
-              <v-list-item v-for="(option, idx) in options" :key="idx" @click="option.action(e)">
-                <v-list-item-title>{{option.text}}</v-list-item-title>
+              <v-list-item
+                v-for="(option, idx) in options"
+                :key="idx"
+                @click="option.action(e)"
+              >
+                <v-list-item-title>{{ option.text }}</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-menu>
         </div>
-        <div class="hevent__dateinfo" :style="{'background': e.color}">
-          <p class="hevent__date">{{e.date.getDate()}}</p>
-          <p
-            class="hevent__month"
-          >{{`${months[e.date.getMonth()].substring(0, 3)}, ${days[e.date.getDay()]}`}}</p>
-          <p class="hevent__year">{{e.date.getFullYear()}}</p>
+        <div class="hevent__dateinfo" :style="{ background: e.color }">
+          <p class="hevent__date">{{ e.date.getDate() }}</p>
+          <p class="hevent__month">
+            {{
+              `${months[e.date.getMonth()].substring(0, 3)}, ${
+                days[e.date.getDay()]
+              }`
+            }}
+          </p>
+          <p class="hevent__year">{{ e.date.getFullYear() }}</p>
         </div>
         <div class="hevent__body">
-          <p class="hevent__time">{{_getTime(e.date)}}</p>
-          <p class="hevent__title">{{e.title}}</p>
-          <p class="hevent__description">{{e.description}}</p>
+          <p class="hevent__time">{{ _getTime(e.date) }}</p>
+          <p class="hevent__title">{{ e.title }}</p>
+          <p class="hevent__description">{{ e.description }}</p>
         </div>
+      </div>
+
+      <div v-show="events_ordered.length <= 0" class="text-center">
+        No hay Eventos
       </div>
     </section>
 
@@ -93,22 +123,32 @@
       v-if="mode_calendar"
       ref="m-event"
       class="event m-card"
-      :class="{'event--disabled': !show_event}"
-      :style="{ width: `${event_width}px`, ...event_selected_style}"
+      :class="{ 'event--disabled': !show_event }"
+      :style="{ width: `${event_width}px`, ...event_selected_style }"
     >
       <div class="event__menu m-card__actions">
         <m-btn @click="show_event = false" icon>
-          <svg class="event__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
+          <svg
+            class="event__icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 36 36"
+          >
             <path fill="none" d="M0 0 36 36 M36 0 0 36" />
           </svg>
         </m-btn>
       </div>
       <div class="event__body m-card__body">
-        <h2 class="event__title">{{event_selected.title}}</h2>
-        <p class="event__date">{{_formatDate(event_selected.date || new Date())}}</p>
+        <h2 class="event__title">{{ event_selected.title }}</h2>
+        <p class="event__date">
+          {{ _formatDate(event_selected.date || new Date()) }}
+        </p>
         <!-- CUSTOM INFO -->
         <!-- TODO Add to MVUECSS (methods) -->
-        <slot name="event_info" :event="event_selected" :methods="{ hideEvent }"></slot>
+        <slot
+          name="event_info"
+          :event="event_selected"
+          :methods="{ hideEvent }"
+        ></slot>
       </div>
       <div v-if="false" class="event__actions m-card__actions">
         <m-btn color="primary" small>Ver Más</m-btn>
