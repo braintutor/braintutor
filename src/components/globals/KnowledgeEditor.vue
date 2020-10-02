@@ -41,7 +41,7 @@
       </div>
     </div>
     <div id="knowledge-scroll" class="editor-content">
-      <p v-if="knowledge.length <= 0" class="editor-empty">No hay conocimientos.</p>
+      <p v-if="knowledge.length <= 0" class="editor-empty">No hay conocimientos</p>
       <div class="editor-knowledge" v-for="(k, k_idx) in knowledge" :key="k_idx">
         <div class="editor-knowledge-row row no-gutters">
           <div

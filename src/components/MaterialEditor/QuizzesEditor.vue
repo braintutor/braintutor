@@ -1,33 +1,30 @@
 <template>
   <div style="padding-bottom: 120px">
     <section class="quizzes mb-4">
-      <v-btn
+      <m-btn
         class="quizzes__type"
         @click="show_type = 'BAS'"
-        :outlined="show_type !== 'BAS'"
+        :text="show_type !== 'BAS'"
         color="warning"
-        dark
         small
-        rounded
-      >Básico</v-btn>
-      <v-btn
+        >Básico</m-btn
+      >
+      <m-btn
         class="quizzes__type"
         @click="show_type = 'INT'"
-        :outlined="show_type !== 'INT'"
+        :text="show_type !== 'INT'"
         color="warning"
-        dark
         small
-        rounded
-      >Intermedio</v-btn>
-      <v-btn
+        >Intermedio</m-btn
+      >
+      <m-btn
         class="quizzes__type"
         @click="show_type = 'ADV'"
-        :outlined="show_type !== 'ADV'"
+        :text="show_type !== 'ADV'"
         color="warning"
-        dark
         small
-        rounded
-      >Avanzado</v-btn>
+        >Avanzado</m-btn
+      >
     </section>
 
     <section v-show="show_type === 'BAS'" class="quiz">
@@ -80,7 +77,7 @@ export default {
         await updateMaterialQuiz(material_id, data, type);
         this.material.quizzes[type] = data;
       } catch (error) {
-      this.showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },

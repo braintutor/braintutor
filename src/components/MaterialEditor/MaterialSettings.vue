@@ -95,6 +95,45 @@ export default {
       }
       this.hideLoading();
     },
+    // async saveImage() {
+    //   this.showLoading("Guardando Imagen");
+    //   let material_id = this.material._id.$oid;
+    //   try {
+    //     await updateMaterialImage(material_id, this.image_url);
+    //     this.material.image = this.image_url;
+    //   } catch (error) {
+    //   this.showMessage("", error.msg || error);
+    //   }
+    //   this.hideLoading();
+    // },
+    // async onFileSelected() {
+    //   this.showLoading("Subiendo Archivo");
+    //   var data = new FormData();
+    //   data.append("file", this.image_file);
+    //   data.append("material_id", this.material._id.$oid);
+    //   try {
+    //     let res = await fetch(
+    //       `${process.env.VUE_APP_API_URL}/uploadMaterialImage`,
+    //       {
+    //         method: "POST",
+    //         body: data,
+    //         headers: {
+    //           Authorization: `Bearer ${localStorage.getItem("token")}`,
+    //         },
+    //       }
+    //     );
+    //     if (res.status === 413)
+    //       throw { msg: "El archivo excede el tamaño de 1MB" };
+    //     if (res.status >= 400 && res.status < 600) throw await res.json();
+
+    //     let { url } = await res.json();
+    //     this.image_url = url;
+    //     await this.saveImage();
+    //   } catch (error) {
+    //   this.showMessage("", error.msg || error);
+    //   }
+    //   this.hideLoading();
+    // },
   },
 };
 </script>

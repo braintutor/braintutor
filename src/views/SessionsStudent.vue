@@ -1,9 +1,81 @@
 <template>
   <div class="mcontainer">
     <h1 class="mtitle">
-      <v-icon class="mr-3" style="font-size: 2.4rem">mdi-bookshelf</v-icon>Mis Cursos
+      <v-icon class="mr-3" style="font-size: 2.4rem">mdi-bookshelf</v-icon>Mis
+      Cursos
     </h1>
-    <div class="row no-gutters">
+
+    <!-- Sessions -->
+    <div
+      v-for="session in sessions"
+      :key="session._id"
+      class="session m-card mt-3"
+    >
+      <div class="m-card__body">
+        <p class="session__course">{{ session.course.name }}</p>
+        <div class="session__teacher">
+          <v-icon class="session__avatar">mdi-account</v-icon>
+          <span class="mt-1">
+            {{ `${session.teacher.last_name}, ${session.teacher.first_name}` }}
+          </span>
+        </div>
+      </div>
+      <div class="session__actions m-card__actions">
+        <m-btn
+          @click="selectSession(session, 'learn')"
+          color="success"
+          text
+          small
+          class="mr-2"
+        >
+          <span class="session__btn-text">Aprender</span>
+          <v-icon class="session__icon" style="font-size: 1.5rem"
+            >mdi-book</v-icon
+          >
+        </m-btn>
+        <m-btn
+          @click="selectSession(session, 'tasks')"
+          color="primary"
+          text
+          small
+          class="mr-2"
+        >
+          <span class="session__btn-text">Tareas</span>
+          <v-icon class="session__icon" style="font-size: 1.5rem"
+            >mdi-format-list-checks</v-icon
+          >
+        </m-btn>
+        <m-btn
+          @click="selectSession(session, 'events')"
+          color="error"
+          text
+          small
+          class="mr-2"
+        >
+          <span class="session__btn-text">Eventos</span>
+          <v-icon class="session__icon" style="font-size: 1.5rem"
+            >mdi-calendar</v-icon
+          >
+        </m-btn>
+        <m-btn
+          @click="selectSession(session, 'evaluations')"
+          color="warning"
+          text
+          small
+        >
+          <span class="session__btn-text">Evaluaciones</span>
+          <v-icon class="session__icon" style="font-size: 1.5rem"
+            >mdi-list-status</v-icon
+          >
+        </m-btn>
+      </div>
+    </div>
+
+    <div v-show="sessions.length <= 0" class="text-center mt-3">
+      No hay Sesiones
+    </div>
+
+    <!-- <div class="row no-gutters">
       <div v-for="(session, idx) in sessions" :key="idx" class="col-12 col-sm-6 col-md-4 pa-3">
         <section @click="selectSession(session)" class="session">
           <div
@@ -28,7 +100,7 @@
           </section>
         </section>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -58,15 +130,18 @@ export default {
     //
     this.showLoading("Cargando Cursos");
     try {
-      this.sessions = await getSessionsByStudent();
+      this.sessions = this.mongoArr(await getSessionsByStudent());
     } catch (error) {
       this.showMessage("", error.msg || error);
     }
     this.hideLoading(false);
   },
   methods: {
-    selectSession(session) {
-      redirect("session", { session_id: session._id.$oid });
+    selectSession(session, category) {
+      this.$router.push({
+        name: `session-${category}`,
+        params: { session_id: session._id },
+      });
     },
   },
   components: {},
@@ -85,87 +160,44 @@ export default {
 }
 
 .session {
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-  border-radius: 4px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  transition: 0.4s;
-  cursor: pointer;
-
-  display: flex;
-  flex-direction: column;
-
-  &:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  &__course {
+    margin-bottom: 12px;
+    color: #2b2e4a;
+    font-size: 1.5rem;
+    font-weight: bold;
   }
-
-  &--disable {
-    -webkit-filter: grayscale(1);
-    opacity: 0.75;
-  }
-
-  &__image {
-    height: 160px;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-  }
-
-  &__body {
-    flex-grow: 1;
-    padding: 10px;
-
-    display: flex;
-    flex-direction: column;
-  }
-
-  &__classroom {
-    margin: 8px;
-    font-size: 0.85rem;
+  &__teacher {
+    color: #3f4158;
     display: flex;
     align-items: center;
   }
-
   &__avatar {
-    flex-shrink: 0;
-    height: 28px;
-    width: 28px;
-    margin-right: 10px;
+    height: 1.5rem;
+    width: 1.5rem;
+    margin-right: 16px;
     background: var(--color-active);
     color: #fff;
     font-size: 1rem;
     border-radius: 50%;
   }
-
-  &__course {
-    display: block;
-    margin: 4px;
-    font-weight: bold;
-    font-size: 1.1rem;
-    letter-spacing: 0.25px;
-  }
-
   &__actions {
-    margin-top: auto;
-    display: flex;
-    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+  &__icon {
+    display: none;
   }
 }
 
-.button {
-  padding: 10px 12px;
-  font-weight: bold;
-  font-size: 0.85rem;
-  border-radius: 4px;
-  transition: 0.4s;
+@import "@/mvuecss/styles/_breakpoints.scss";
 
-  &:hover {
-    background: #e4e4e4;
-  }
-  &:focus {
-    outline: none;
+@include media-breakpoint(sm) {
+  .session {
+    &__btn-text {
+      display: none;
+    }
+    &__icon {
+      display: initial;
+    }
   }
 }
 </style>

@@ -83,33 +83,6 @@ const routes = [
     component: () => import("../views/Events.vue"),
   },
   {
-    path: "/session/:session_id",
-    component: () => import("../views/Session.vue"),
-    children: [
-      {
-        path: "",
-        name: "session",
-        component: () => import("../components/Materials/index"),
-      },
-      {
-        path: "tasks",
-        component: () => import("../components/Session/Tasks"),
-      },
-      {
-        path: "events",
-        component: () => import("../components/Session/Events"),
-      },
-      {
-        path: "evaluations",
-        component: () => import("../components/Session/Evaluations/index"),
-      },
-      {
-        path: "students",
-        component: () => import("../components/Students/index"),
-      },
-    ],
-  },
-  {
     path: "/courses-editor",
     name: "courses-editor",
     component: () => import("../views/CoursesEditor.vue"),
@@ -187,6 +160,38 @@ const routes = [
     path: "/parent",
     name: "parent",
     component: () => import("../views/Parent.vue"),
+  },
+  // STU
+  {
+    path: "/session/:session_id",
+    component: () => import("../views/Session.vue"),
+    children: [
+      {
+        path: "",
+        name: "session-learn",
+        component: () => import("../components/Materials/index"),
+      },
+      {
+        path: "tasks",
+        name: "session-tasks",
+        component: () => import("../components/Session/Tasks"),
+      },
+      {
+        path: "events",
+        name: "session-events",
+        component: () => import("../components/Session/Events"),
+      },
+      {
+        path: "evaluations",
+        name: "session-evaluations",
+        component: () => import("../components/Session/Evaluations/index"),
+      },
+      {
+        path: "students",
+        name: "session-students",
+        component: () => import("../components/Students/index"),
+      },
+    ],
   },
   // DIR
   {

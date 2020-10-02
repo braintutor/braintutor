@@ -218,6 +218,8 @@ export default {
           this.entity.knowledge = [];
           let entity_id = await addCourse(this.entity);
           this.entity._id = entity_id;
+          this.entity.units_count = 0;
+          this.entity.materials_count = 0;
           this.entities.push(this.entity);
           this.dialog_edit = false;
         } catch (error) {

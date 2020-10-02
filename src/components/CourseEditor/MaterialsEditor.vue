@@ -172,6 +172,8 @@
       </div>
     </section>
 
+    <div v-show="units.length <= 0" class="text-center">No hay unidades</div>
+
     <!-- DIALOG UNIT -->
     <v-dialog v-model="dlg_unit" width="400" persistent>
       <form @submit.prevent="createUnit()" class="m-card">

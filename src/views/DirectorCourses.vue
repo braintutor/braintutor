@@ -23,7 +23,7 @@
           <div class="m-card__body">
             <p class="session__course">{{ session.course.name }}</p>
             <div class="session__teacher">
-              <v-icon class="mr-3">mdi-account-circle</v-icon>
+              <v-icon class="session__avatar">mdi-account</v-icon>
               <span class="mt-1">
                 {{
                   `${session.teacher.last_name}, ${session.teacher.first_name}`
@@ -120,10 +120,6 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-$background: rgba(80, 121, 255, 0.15);
-$background-hover: rgba(80, 121, 255, 0.25);
-$color: rgb(80, 121, 255);
-
 .session {
   &__course {
     margin-bottom: 12px;
@@ -136,15 +132,14 @@ $color: rgb(80, 121, 255);
     display: flex;
     align-items: center;
   }
-  &__btn {
-    padding: 8px 16px;
-    color: $color;
-    border-radius: 8px;
-    cursor: pointer;
-
-    &:hover {
-      background: $background-hover;
-    }
+  &__avatar {
+    height: 1.5rem;
+    width: 1.5rem;
+    margin-right: 16px;
+    background: var(--color-active);
+    color: #fff;
+    font-size: 1rem;
+    border-radius: 50%;
   }
 }
 </style>
