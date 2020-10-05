@@ -22,8 +22,8 @@
     </div>
     <!-- EVALUATIONS -->
     <EvaluationCard
-      v-for="(evaluation, c_idx) in evaluations"
-      :key="c_idx"
+      v-for="evaluation in evaluations"
+      :key="evaluation._id"
       :name="evaluation.name"
       :time_start="evaluation.time_start"
       :time_end="evaluation.time_end"
@@ -69,7 +69,7 @@
     </div>
 
     <!-- Dialog Remove -->
-    <v-dialog v-model="dlg_remove" persistent max-width="400">
+    <v-dialog v-model="dlg_remove" max-width="400">
       <div class="m-card">
         <div class="m-card__body">
           <h3>¿Desea eliminar?</h3>
@@ -101,7 +101,7 @@
   />
   <Results
     v-else
-    :evaluation_id="evaluation._id.$oid"
+    :evaluation_id="evaluation._id"
     :unselect="unselect"
     class="pa-4"
   />
@@ -139,12 +139,12 @@ export default {
   methods: {
     async getEvaluations() {
       this.showLoading("Cargando Evaluaciones");
-      this.evaluations = await getEvaluationsBySession(this.session_id);
+      let evaluations = this.mongoArr(
+        await getEvaluationsBySession(this.session_id)
+      );
+      evaluations.sort((a, b) => b.time_start - a.time_start);
+      this.evaluations = evaluations;
 
-      this.evaluations.forEach((e) => {
-        if (e.time_start.$date) e.time_start = new Date(e.time_start.$date);
-        if (e.time_end.$date) e.time_end = new Date(e.time_end.$date);
-      });
       this.hideLoading();
     },
     async create() {
@@ -173,7 +173,7 @@ export default {
           this.session_id,
           new_evaluation
         );
-        new_evaluation._id = evaluation_id;
+        new_evaluation._id = evaluation_id.$oid;
         this.evaluations.push(new_evaluation);
         this.select(new_evaluation);
       } catch (error) {
@@ -184,9 +184,9 @@ export default {
     async remove() {
       this.showLoading("Eliminando");
       try {
-        await deleteEvaluation(this.evaluation_to_remove._id.$oid);
+        await deleteEvaluation(this.evaluation_to_remove._id);
         this.evaluations = this.evaluations.filter(
-          (e) => e._id.$oid !== this.evaluation_to_remove._id.$oid
+          (e) => e._id !== this.evaluation_to_remove._id
         );
       } catch (error) {
         this.showMessage("", error.msg || error);

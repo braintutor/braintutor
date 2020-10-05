@@ -14,7 +14,7 @@
           dense
           autocomplete="off"
         ></v-text-field>
-        <span v-else class="menu-title">{{evaluation.name}}</span>
+        <span v-else class="menu-title">{{ evaluation.name }}</span>
       </div>
       <div v-if="!evaluation.public" class="menu-right">
         <v-tooltip top>
@@ -24,12 +24,14 @@
               v-bind="attrs"
               v-on="on"
               @click="addQuestion(evaluation.content)"
-              :disabled="evaluation.content.length >= EvaluationModel.content.max_length"
+              :disabled="
+                evaluation.content.length >= EvaluationModel.content.max_length
+              "
             >
               <v-icon>mdi-plus</v-icon>
             </v-btn>
           </template>
-          <span style="font-size: .75rem">Agregar Pregunta</span>
+          <span style="font-size: 0.75rem">Agregar Pregunta</span>
         </v-tooltip>
 
         <v-tooltip top>
@@ -38,7 +40,7 @@
               <v-icon>mdi-content-save</v-icon>
             </v-btn>
           </template>
-          <span style="font-size: .75rem">Guardar Cambios</span>
+          <span style="font-size: 0.75rem">Guardar Cambios</span>
         </v-tooltip>
 
         <v-tooltip top>
@@ -47,7 +49,7 @@
               <v-icon>mdi-delete</v-icon>
             </v-btn>
           </template>
-          <span style="font-size: .75rem">Eliminar Evaluación</span>
+          <span style="font-size: 0.75rem">Eliminar Evaluación</span>
         </v-tooltip>
       </div>
     </div>
@@ -62,7 +64,11 @@
           :disabled="evaluation.public"
         />
         <span>Tiempo de Fin:</span>
-        <input type="datetime-local" v-model="evaluation.time_end_f" :disabled="evaluation.public" />
+        <input
+          type="datetime-local"
+          v-model="evaluation.time_end_f"
+          :disabled="evaluation.public"
+        />
       </div>
       <div
         v-for="(c, c_idx) in evaluation.content"
@@ -79,7 +85,7 @@
             autoGrow
             dense
           ></v-textarea>
-          <span v-else>{{c.question}}</span>
+          <span v-else>{{ c.question }}</span>
           <v-btn
             v-if="!evaluation.public && evaluation.content.length > 1"
             icon
@@ -95,7 +101,9 @@
               v-for="(alternative, a_idx) in c.alternatives"
               :key="a_idx"
             >
-              <div class="question-editor-alternative-content question-editor-text m-card">
+              <div
+                class="question-editor-alternative-content question-editor-text m-card"
+              >
                 <v-textarea
                   v-if="!evaluation.public"
                   style="width: 0"
@@ -106,7 +114,7 @@
                   autoGrow
                   dense
                 ></v-textarea>
-                <span v-else>{{c.alternatives[a_idx]}}</span>
+                <span v-else>{{ c.alternatives[a_idx] }}</span>
                 <v-btn
                   v-if="!evaluation.public && c.alternatives.length > 2"
                   icon
@@ -118,7 +126,10 @@
               <v-radio :disabled="evaluation.public" :value="a_idx"></v-radio>
             </div>
             <div
-              v-if="!evaluation.public && c.alternatives.length < QuestionModel.alternatives.max_length"
+              v-if="
+                !evaluation.public &&
+                c.alternatives.length < QuestionModel.alternatives.max_length
+              "
               class="question-editor-alternative-container col-12"
             >
               <div
@@ -137,7 +148,8 @@
           @click="dialog_public = true"
           color="primary"
           small
-        >Publicar</m-btn>
+          >Publicar</m-btn
+        >
       </div>
     </div>
 
@@ -146,11 +158,28 @@
       <div class="m-card">
         <div class="m-card__body">
           <h3>Confirmar publicación</h3>
-          <p class="mt-4">Una vez publicada la evaluación, no podrá modificar su contenido.</p>
+          <p class="mt-4">
+            Una vez publicada la evaluación, no podrá modificar su contenido.
+          </p>
         </div>
         <div class="m-card__actions">
-          <m-btn @click="dialog_public = false" color="primary" small text class="mr-2">Cancelar</m-btn>
-          <m-btn @click="dialog_public = false; publicEvaluation()" color="primary" small>Publicar</m-btn>
+          <m-btn
+            @click="dialog_public = false"
+            color="primary"
+            small
+            text
+            class="mr-2"
+            >Cancelar</m-btn
+          >
+          <m-btn
+            @click="
+              dialog_public = false;
+              publicEvaluation();
+            "
+            color="primary"
+            small
+            >Publicar</m-btn
+          >
         </div>
       </div>
     </v-dialog>
@@ -160,11 +189,27 @@
       <div class="m-card">
         <div class="m-card__body">
           <h3>Confirmar eliminación</h3>
-          <p class="mt-4">Si elimina este contenido, no podrá revertir los cambios.</p>
+          <p class="mt-4">
+            Si elimina este contenido, no podrá revertir los cambios.
+          </p>
         </div>
         <div class="m-card__actions">
-          <m-btn @click="dialog_delete = false" color="primary" small class="mr-2">Cancelar</m-btn>
-          <m-btn @click="dialog_delete = false; remove()" color="error" small>Eliminar</m-btn>
+          <m-btn
+            @click="dialog_delete = false"
+            color="primary"
+            small
+            class="mr-2"
+            >Cancelar</m-btn
+          >
+          <m-btn
+            @click="
+              dialog_delete = false;
+              remove();
+            "
+            color="error"
+            small
+            >Eliminar</m-btn
+          >
         </div>
       </div>
     </v-dialog>
@@ -207,7 +252,7 @@ export default {
   methods: {
     async save() {
       this.showLoading("Guardando");
-      this.evaluation.id = this.evaluation._id.$oid;
+      this.evaluation.id = this.evaluation._id;
       this.evaluation.time_start = new Date(this.evaluation.time_start_f);
       this.evaluation.time_end = new Date(this.evaluation.time_end_f);
       try {
@@ -224,19 +269,20 @@ export default {
       let success = await this.save();
       if (success) {
         this.showLoading("Publicando");
-        let evaluation_id = this.evaluation._id.$oid;
+        let evaluation_id = this.evaluation._id;
         try {
           await publicEvaluation(evaluation_id);
+          this.evaluation.public = true;
+          this.$forceUpdate();
         } catch (error) {
           this.showMessage("", error.msg || error);
         }
-        this.evaluation.public = true;
         this.hideLoading();
       }
     },
     async remove() {
       this.showLoading("Eliminando");
-      let evaluation_id = this.evaluation._id.$oid;
+      let evaluation_id = this.evaluation._id;
       try {
         await deleteEvaluation(evaluation_id);
         this.unselect();

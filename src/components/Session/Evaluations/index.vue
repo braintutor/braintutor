@@ -31,7 +31,7 @@
         :items="[
           {
             label: 'Estado',
-            value: !!evaluation.result ? 'Completado': 'Sin Realizar',
+            value: !!evaluation.result ? 'Completado' : 'Sin Realizar',
           },
         ]"
         @click="showDialogStart(evaluation)"
@@ -106,13 +106,11 @@ export default {
     async getEvaluations() {
       this.showLoading("Cargando Evaluaciones");
       try {
-        this.evaluations = await getEvaluationsBySessionStudent(
-          this.session_id
+        let evaluations = this.mongoArr(
+          await getEvaluationsBySessionStudent(this.session_id)
         );
-        for (let e of this.evaluations) {
-          if (e.time_start.$date) e.time_start = new Date(e.time_start.$date);
-          if (e.time_end.$date) e.time_end = new Date(e.time_end.$date);
-        }
+        evaluations.sort((a, b) => b.time_start - a.time_start);
+        this.evaluations = evaluations;
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
@@ -121,7 +119,7 @@ export default {
     async select(evaluation) {
       this.showLoading("Cargando Evaluación");
       try {
-        evaluation = await getEvaluationByStudent(evaluation._id.$oid);
+        evaluation = await getEvaluationByStudent(evaluation._id);
         this.evaluation = copy(evaluation);
       } catch (error) {
         this.showMessage("", error.msg || error);

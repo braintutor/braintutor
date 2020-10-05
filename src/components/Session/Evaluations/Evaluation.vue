@@ -5,9 +5,13 @@
       <!-- <div class="time">
         <p>Faltan {{time.m}} minuto(s) y {{time.s}} segundo(s)</p>
       </div>-->
-      <p class="evaluation__name">{{evaluation.name}}</p>
-      <div class="question" v-for="(c, c_idx) in evaluation.content" :key="c_idx">
-        <p class="question__statement">{{`${c_idx + 1}. ${c.question}`}}</p>
+      <p class="evaluation__name">{{ evaluation.name }}</p>
+      <div
+        class="question"
+        v-for="(c, c_idx) in evaluation.content"
+        :key="c_idx"
+      >
+        <p class="question__statement">{{ `${c_idx + 1}. ${c.question}` }}</p>
         <v-radio-group v-model="c.answer">
           <v-radio
             class="question__alternative"
@@ -19,20 +23,38 @@
         </v-radio-group>
       </div>
       <div class="evaluation__action">
-        <v-btn color="primary" small @click="saveAction()">Finalizar</v-btn>
+        <m-btn @click="saveAction()" color="primary" small>Finalizar</m-btn>
       </div>
     </div>
     <!-- Dialog Save -->
-    <v-dialog v-model="dlg_save" max-width="300">
-      <v-card>
-        <v-card-title style="font-size: 1.1rem">¿Finalizar Evaluación?</v-card-title>
-        <v-card-text>{{dlg_save_msg}}</v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn small text @click="dlg_save = false">Cancelar</v-btn>
-          <v-btn small depressed color="primary" @click="dlg_save = false; finish()">Finalizar</v-btn>
-        </v-card-actions>
-      </v-card>
+    <v-dialog v-model="dlg_save" max-width="400">
+      <div class="m-card">
+        <div class="m-card__body">
+          <h3>¿Finalizar Evaluación?</h3>
+          <p v-for="(m, idx) in dlg_save_msg" :key="idx" class="mt-4">
+            {{ m }}
+          </p>
+        </div>
+        <div class="m-card__actions">
+          <m-btn
+            @click="dlg_save = false"
+            color="primary"
+            small
+            text
+            class="mr-2"
+            >Cancelar</m-btn
+          >
+          <m-btn
+            @click="
+              dlg_save = false;
+              finish();
+            "
+            color="primary"
+            small
+            >Finalizar</m-btn
+          >
+        </div>
+      </div>
     </v-dialog>
   </div>
 </template>
@@ -62,7 +84,7 @@ export default {
       try {
         await updateEvaluationAnswers(evaluation_id, answers);
       } catch (error) {
-      this.showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
         this.unselect();
       }
       this.hideLoading();
@@ -74,7 +96,7 @@ export default {
       try {
         await finishEvaluation(evaluation_id);
       } catch (error) {
-      this.showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
       this.unselect();
       this.hideLoading();
@@ -82,8 +104,11 @@ export default {
     saveAction() {
       let answer = this.evaluation.content.map((c) => c.answer);
       this.dlg_save_msg = answer.every((a) => a == null)
-        ? "No hay respuestas seleccionadas. ¿Desea continuar?"
-        : "No podrá cambiar sus respuestas posteriormente.";
+        ? [
+            "¡No hay respuestas seleccionadas!",
+            "No podrá cambiar sus respuestas posteriormente. ¿Desea continuar?",
+          ]
+        : ["No podrá cambiar sus respuestas posteriormente. ¿Desea continuar?"];
       this.dlg_save = true;
     },
   },

@@ -25,10 +25,14 @@ Vue.mixin({
           if (val instanceof Array) {
             new_obj[key] = val.map((obj) => this.mongo(obj));
           } else {
-            if ("$oid" in val) {
-              new_obj[key] = val.$oid;
-            } else if ("$date" in val) {
-              new_obj[key] = new Date(val.$date);
+            if (val) {
+              if ("$oid" in val) {
+                new_obj[key] = val.$oid;
+              } else if ("$date" in val) {
+                new_obj[key] = new Date(val.$date);
+              } else {
+                new_obj[key] = val;
+              }
             } else {
               new_obj[key] = val;
             }
