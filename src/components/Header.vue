@@ -188,8 +188,14 @@ export default {
       },
       // PAR
       {
-        title: "Colegio",
-        name: "parent",
+        title: "Cursos",
+        name: "parent-courses",
+        icon: "mdi-book",
+        session_roles: ["PAR"],
+      },
+      {
+        title: "Alumnos",
+        name: "parent-students",
         icon: "mdi-school",
         session_roles: ["PAR"],
       },

@@ -428,7 +428,7 @@ export default {
     width: 100%;
   }
   &__event {
-    padding: 5px;
+    padding: 4px 8px 2px 8px;
     margin-top: 4px;
     cursor: pointer;
 

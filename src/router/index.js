@@ -249,10 +249,44 @@ const routes = [
   },
   // PAR
   {
-    path: "/parent",
-    name: "parent",
+    path: "/parent-courses",
+    name: "parent-courses",
     meta: { role: "PAR" },
-    component: () => import("../views/Parent.vue"),
+    component: () => import("../views/ParentCourses.vue"),
+  },
+  {
+    path: "/parent-students",
+    name: "parent-students",
+    meta: { role: "PAR" },
+    component: () => import("../views/ParentStudents.vue"),
+  },
+  {
+    path: "/parent-session/:session_id",
+    component: () => import("../views/ParentSession.vue"),
+    meta: { role: "PAR" },
+    children: [
+      {
+        path: "",
+        name: "parent-session-tasks",
+        component: () => import("../components/ParentSession/Tasks"),
+      },
+      {
+        path: "events",
+        name: "parent-session-events",
+        component: () => import("../components/ParentSession/Events"),
+      },
+      {
+        path: "evaluations",
+        name: "parent-session-evaluations",
+        component: () =>
+          import("../components/ParentSession/Evaluations/index"),
+      },
+      {
+        path: "students",
+        name: "parent-session-students",
+        component: () => import("../components/ParentSession/Students"),
+      },
+    ],
   },
 ];
 
@@ -287,7 +321,7 @@ router.beforeEach(async (to, from, next) => {
     TEA: "sessions-teacher",
     STU: "sessions-student",
     DIR: "director-courses",
-    PAR: "parent",
+    PAR: "parent-courses",
   };
 
   // if route auth required
