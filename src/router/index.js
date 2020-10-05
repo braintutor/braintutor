@@ -24,54 +24,16 @@ const routes = [
     component: () => import("../views/Login.vue"),
   },
   {
-    path: "/sessions-student",
-    name: "sessions-student",
-    component: () => import("../views/SessionsStudent.vue"),
-  },
-  {
-    path: "/sessions-teacher",
-    name: "sessions-teacher",
-    component: () => import("../views/SessionsTeacher.vue"),
-  },
-  {
-    path: "/tasks",
-    name: "tasks",
-    component: () => import("../views/Tasks.vue"),
-  },
-  {
-    path: "/events",
-    name: "events",
-    component: () => import("../views/Events.vue"),
-  },
-  {
-    path: "/courses-editor",
-    name: "courses-editor",
-    component: () => import("../views/CoursesEditor.vue"),
-  },
-  {
-    path: "/material-editor/:material_id",
-    name: "material-editor",
-    component: () => import("../views/MaterialEditor.vue"),
-  },
-  {
     path: "/profile",
     name: "profile",
+    meta: { role: "*" },
     component: () => import("../views/Profile.vue"),
-  },
-  {
-    path: "/task/:task_id",
-    name: "task",
-    component: () => import("../views/Task.vue"),
-  },
-  {
-    path: "/parent",
-    name: "parent",
-    component: () => import("../views/Parent.vue"),
   },
   // ADM
   {
     path: "/school-editor",
     component: () => import("../views/SchoolEditor.vue"),
+    meta: { role: "ADM" },
     children: [
       {
         path: "",
@@ -117,7 +79,20 @@ const routes = [
   },
   // TEA
   {
+    path: "/sessions-teacher",
+    name: "sessions-teacher",
+    meta: { role: "TEA" },
+    component: () => import("../views/SessionsTeacher.vue"),
+  },
+  {
+    path: "/courses-editor",
+    name: "courses-editor",
+    meta: { role: "TEA" },
+    component: () => import("../views/CoursesEditor.vue"),
+  },
+  {
     path: "/session-editor/:session_id",
+    meta: { role: "TEA" },
     component: () => import("../views/SessionEditor.vue"),
     children: [
       {
@@ -151,6 +126,7 @@ const routes = [
   },
   {
     path: "/course-editor/:course_id",
+    meta: { role: "TEA" },
     component: () => import("../views/CourseEditor.vue"),
     children: [
       {
@@ -170,10 +146,23 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/material-editor/:material_id",
+    name: "material-editor",
+    meta: { role: "TEA" },
+    component: () => import("../views/MaterialEditor.vue"),
+  },
   // STU
+  {
+    path: "/sessions-student",
+    name: "sessions-student",
+    meta: { role: "STU" },
+    component: () => import("../views/SessionsStudent.vue"),
+  },
   {
     path: "/session/:session_id",
     component: () => import("../views/Session.vue"),
+    meta: { role: "STU" },
     children: [
       {
         path: "",
@@ -202,20 +191,41 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/events",
+    name: "events",
+    meta: { role: "STU" },
+    component: () => import("../views/Events.vue"),
+  },
+  {
+    path: "/task/:task_id",
+    name: "task",
+    meta: { role: "STU" },
+    component: () => import("../views/Task.vue"),
+  },
+  {
+    path: "/tasks",
+    name: "tasks",
+    meta: { role: "STU" },
+    component: () => import("../views/Tasks.vue"),
+  },
   // DIR
   {
     path: "/director-courses",
     name: "director-courses",
+    meta: { role: "DIR" },
     component: () => import("../views/DirectorCourses.vue"),
   },
   {
     path: "/director-students",
     name: "director-students",
+    meta: { role: "DIR" },
     component: () => import("../views/DirectorStudents.vue"),
   },
   {
     path: "/director-session/:session_id",
     component: () => import("../views/DirectorSession.vue"),
+    meta: { role: "DIR" },
     children: [
       {
         path: "",
@@ -240,6 +250,13 @@ const routes = [
       },
     ],
   },
+  // PAR
+  {
+    path: "/parent",
+    name: "parent",
+    meta: { role: "PAR" },
+    component: () => import("../views/Parent.vue"),
+  },
 ];
 
 const router = new VueRouter({
@@ -248,42 +265,7 @@ const router = new VueRouter({
   routes,
 });
 router.beforeEach(async (to, from, next) => {
-  const require_student = [
-    "sessions-student",
-    "session",
-    "tasks",
-    "events",
-    "profile",
-    "task",
-  ]; // Require Student
-  const require_admin = ["school-editor", "profile"]; // Require Admin
-  const require_teacher = [
-    "courses-editor",
-    "sessions-teacher",
-    "session-editor",
-    "course-editor",
-    "material-editor",
-    "profile",
-  ]; // Require Teacher
-  const require_director = [
-    "director-courses",
-    "director-students",
-    "director-session-tasks",
-    "director-session-events",
-    "director-session-evaluations",
-    "director-session-students",
-    "profile",
-  ]; // Require Director
-  const require_parent = ["parent", "profile"]; // Require Director
-  let to_name = to.name;
-  let redirects = {
-    ADM: "school-editor",
-    TEA: "sessions-teacher",
-    STU: "sessions-student",
-    DIR: "director-courses",
-    PAR: "parent",
-  };
-
+  // GET USER
   let user = null;
   let token = localStorage.getItem("token");
   if (token) {
@@ -299,27 +281,27 @@ router.beforeEach(async (to, from, next) => {
     store.state.loading_user = false;
   }
 
-  // Chatbot
+  // CHATBOT
   onRouterChange(to.fullPath.split("/")[1]);
 
-  // Router Authorization
-  if (
-    require_student
-      .concat(require_admin, require_teacher, require_director, require_parent)
-      .includes(to_name)
-  )
-    if (
-      user &&
-      ((require_admin.includes(to_name) && user.role === "ADM") ||
-        (require_teacher.includes(to_name) && user.role === "TEA") ||
-        (require_student.includes(to_name) && user.role === "STU") ||
-        (require_director.includes(to_name) && user.role === "DIR") ||
-        (require_parent.includes(to_name) && user.role === "PAR"))
-    )
-      next();
-    else redirect("home");
-  else if (["home", "login"].includes(to_name) && user)
-    redirect(redirects[user.role]);
+  // ROUTER AUTHORIZATION
+  let redirects = {
+    ADM: "school-editor",
+    TEA: "sessions-teacher",
+    STU: "sessions-student",
+    DIR: "director-courses",
+    PAR: "parent",
+  };
+
+  // if route auth required
+  let route = to.matched.find(({ meta }) => meta.role);
+  if (route) {
+    if (user) {
+      let role = route.meta.role;
+      if (role === "*" || role === user.role) next();
+      else redirect("home");
+    } else redirect("home");
+  } else if (user) redirect(redirects[user.role]);
   else next();
 });
 

@@ -3,12 +3,23 @@
   <section class="quiz">
     <!-- QUIZ MENU -->
     <div class="quiz__menu">
-      <strong class="mt-1" style="opacity: 0.5">({{`${data.length}/${maxlength}`}})</strong>
+      <strong class="mt-1" style="opacity: 0.5"
+        >({{ `${data.length}/${maxlength}` }})</strong
+      >
       <div class="quiz__actions">
         <v-btn v-if="edit" @click="$emit('submit', data)" text small rounded>
           <v-icon class="mr-2" small>mdi-content-save</v-icon>Guardar
         </v-btn>
-        <v-btn v-if="edit" @click="edit = false; $emit('submit', data)" text small rounded>
+        <v-btn
+          v-if="edit"
+          @click="
+            edit = false;
+            $emit('submit', data);
+          "
+          text
+          small
+          rounded
+        >
           <v-icon class="mr-2" small>mdi-close</v-icon>Finalizar
         </v-btn>
         <v-btn v-else @click="edit = true" text small rounded>
@@ -29,10 +40,22 @@
           auto-grow
           dense
         ></v-textarea>
-        <p v-else class="mb-3" style="white-space: pre-wrap">{{d.question}}</p>
+        <p v-else class="mb-3" style="white-space: pre-wrap">
+          {{ d.question }}
+        </p>
         <!-- ALTERNATIVE -->
-        <div v-for="(alternative, a_idx) in d.alternatives" :key="a_idx" class="alternative mt-2">
-          <input type="radio" v-model="d.correct" :value="a_idx" :disabled="!edit" class="mr-2" />
+        <div
+          v-for="(alternative, a_idx) in d.alternatives"
+          :key="a_idx"
+          class="alternative mt-2"
+        >
+          <input
+            type="radio"
+            v-model="d.correct"
+            :value="a_idx"
+            :disabled="!edit"
+            class="mr-2"
+          />
           <v-textarea
             v-model="d.alternatives[a_idx]"
             :disabled="!edit"
@@ -58,11 +81,23 @@
         </div>
         <!-- ALTERNATIVE ADD -->
         <div
-          v-if="edit && d.alternatives.length < QuestionModel.alternatives.max_length"
+          v-if="
+            edit &&
+            d.alternatives.length < QuestionModel.alternatives.max_length
+          "
           class="alternative"
         >
-          <input type="radio" style="pointer-events: none; opacity: 0" class="mr-2" />
-          <div @click="addAlternative(d.alternatives)" class="alternative--add mt-2">+</div>
+          <input
+            type="radio"
+            style="pointer-events: none; opacity: 0"
+            class="mr-2"
+          />
+          <div
+            @click="addAlternative(d.alternatives)"
+            class="alternative--add mt-2"
+          >
+            +
+          </div>
           <v-btn
             v-if="d.alternatives.length > 2"
             class="ml-2"
@@ -89,7 +124,10 @@
             <v-list-item @click="moveDown(data, d_idx)">
               <v-list-item-title>Mover Abajo</v-list-item-title>
             </v-list-item>
-            <v-list-item @click="remove(data, d_idx)" :disabled="data.length <= 1">
+            <v-list-item
+              @click="remove(data, d_idx)"
+              :disabled="data.length <= 1"
+            >
               <v-list-item-title>Eliminar</v-list-item-title>
             </v-list-item>
           </v-list>
