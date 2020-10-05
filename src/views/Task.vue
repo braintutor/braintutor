@@ -21,7 +21,9 @@
           <template v-slot:activator="{ on }">
             <v-btn
               v-on="on"
-              :disabled="answer.data && answer.data.length >= AnswerModel.data.max_length"
+              :disabled="
+                answer.data && answer.data.length >= AnswerModel.data.max_length
+              "
               color="success"
               small
               rounded
@@ -31,7 +33,12 @@
             </v-btn>
           </template>
           <v-list subheader dense>
-            <v-list-item @click="dialog_link = true; link = ''">
+            <v-list-item
+              @click="
+                dialog_link = true;
+                link = '';
+              "
+            >
               <v-list-item-icon class="mr-3">
                 <v-icon>mdi-link</v-icon>
               </v-list-item-icon>
@@ -46,7 +53,10 @@
             <v-divider></v-divider>
             <v-subheader class="text-center">Crear</v-subheader>
             <v-list-item @click="add(0)">
-              <v-list-item-icon class="mr-2" style="display: flex; align-items: center">
+              <v-list-item-icon
+                class="mr-2"
+                style="display: flex; align-items: center"
+              >
                 <img
                   style="width: 16px; height: 16px"
                   src="https://drive-thirdparty.googleusercontent.com/16/type/application/vnd.google-apps.document"
@@ -55,7 +65,10 @@
               <v-list-item-title class="mr-3">Documento</v-list-item-title>
             </v-list-item>
             <v-list-item @click="add(1)">
-              <v-list-item-icon class="mr-2" style="display: flex; align-items: center">
+              <v-list-item-icon
+                class="mr-2"
+                style="display: flex; align-items: center"
+              >
                 <img
                   style="width: 16px; height: 16px"
                   src="https://drive-thirdparty.googleusercontent.com/16/type/application/vnd.google-apps.presentation"
@@ -64,13 +77,18 @@
               <v-list-item-title class="mr-3">Presentación</v-list-item-title>
             </v-list-item>
             <v-list-item @click="add(2)">
-              <v-list-item-icon class="mr-2" style="display: flex; align-items: center">
+              <v-list-item-icon
+                class="mr-2"
+                style="display: flex; align-items: center"
+              >
                 <img
                   style="width: 16px; height: 16px"
                   src="https://drive-thirdparty.googleusercontent.com/16/type/application/vnd.google-apps.spreadsheet"
                 />
               </v-list-item-icon>
-              <v-list-item-title class="mr-3">Hoja de Cálculo</v-list-item-title>
+              <v-list-item-title class="mr-3"
+                >Hoja de Cálculo</v-list-item-title
+              >
             </v-list-item>
           </v-list>
         </v-menu>
@@ -90,8 +108,8 @@
           <div class="link" v-if="item.type === 'link'">
             <a class="link__data" :href="item.url" target="_blank">
               <img class="link__image" :src="item.image" alt />
-              <p class="link__title">{{item.title}}</p>
-              <p class="link__description">{{item.description}}</p>
+              <p class="link__title">{{ item.title }}</p>
+              <p class="link__description">{{ item.description }}</p>
             </a>
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
@@ -101,27 +119,37 @@
                   class="ml-1"
                   small
                   icon
-                  @click="idx_to_remove = idx; dialog_remove = true;"
+                  @click="
+                    idx_to_remove = idx;
+                    dialog_remove = true;
+                  "
                 >
                   <v-icon>mdi-close</v-icon>
                 </v-btn>
               </template>
-              <span style="font-size: .75rem">Remover</span>
+              <span style="font-size: 0.75rem">Remover</span>
             </v-tooltip>
           </div>
           <!-- LINK FILE -->
           <div class="linkFile" v-if="item.type === 'file'">
             <a class="linkFile__data" :href="item.url" target="_blank">
               <img class="linkFile__image" :src="item.image" alt />
-              <p class="linkFile__title">{{item.title}}</p>
+              <p class="linkFile__title">{{ item.title }}</p>
             </a>
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
-                <v-btn v-bind="attrs" v-on="on" class="ml-1" small icon @click="update(item, idx)">
+                <v-btn
+                  v-bind="attrs"
+                  v-on="on"
+                  class="ml-1"
+                  small
+                  icon
+                  @click="update(item, idx)"
+                >
                   <v-icon>mdi-sync</v-icon>
                 </v-btn>
               </template>
-              <span style="font-size: .75rem">Actualizar Nombre</span>
+              <span style="font-size: 0.75rem">Actualizar Nombre</span>
             </v-tooltip>
 
             <v-tooltip top>
@@ -132,12 +160,15 @@
                   class="ml-1"
                   small
                   icon
-                  @click="idx_to_remove = idx; dialog_remove = true;"
+                  @click="
+                    idx_to_remove = idx;
+                    dialog_remove = true;
+                  "
                 >
                   <v-icon>mdi-close</v-icon>
                 </v-btn>
               </template>
-              <span style="font-size: .75rem">Remover</span>
+              <span style="font-size: 0.75rem">Remover</span>
             </v-tooltip>
           </div>
         </div>
@@ -161,7 +192,9 @@
           <input type="text" placeholder="Buscar" v-model="file_search" />
         </div>
         <div class="files__body">
-          <p class="text-center mt-3 mb-5" v-show="files_filtered.length === 0">Ningún elemento.</p>
+          <p class="text-center mt-3 mb-5" v-show="files_filtered.length === 0">
+            Ningún elemento.
+          </p>
           <div class="row no-gutters">
             <div
               class="col-12 col-sm-6 col-md-3 pa-2"
@@ -170,7 +203,7 @@
             >
               <div class="m-card file" @click="addFileDrive(file)">
                 <img class="file__img" :src="file.iconLink" />
-                <p class="file__name">{{file.name}}</p>
+                <p class="file__name">{{ file.name }}</p>
               </div>
             </div>
           </div>
@@ -187,22 +220,49 @@
           <v-text-field v-model="link" label="Vínculo"></v-text-field>
         </div>
         <div class="m-card__actions">
-          <m-btn @click="dialog_link = false" color="primary" small text>Cerrar</m-btn>
-          <m-btn @click="dialog_link = false; addLink()" color="primary" small class="ml-2">Agregar</m-btn>
+          <m-btn @click="dialog_link = false" color="primary" small text
+            >Cerrar</m-btn
+          >
+          <m-btn
+            @click="
+              dialog_link = false;
+              addLink();
+            "
+            color="primary"
+            small
+            class="ml-2"
+            >Agregar</m-btn
+          >
         </div>
       </div>
     </v-dialog>
     <!-- DIALOG REMOVE -->
-    <v-dialog v-model="dialog_remove" max-width="280">
-      <v-card>
-        <v-card-text class="text-center pt-4 pb-3" style="font-size: 1rem">
-          <span>¿Desea quitar el enlace?</span>
-        </v-card-text>
-        <v-card-actions style="width: max-content; margin: 0 auto">
-          <v-btn small text @click="dialog_remove = false">Cancelar</v-btn>
-          <v-btn color="primary" small @click="dialog_remove = false; remove()" depressed>Continuar</v-btn>
-        </v-card-actions>
-      </v-card>
+    <v-dialog v-model="dialog_remove" max-width="400">
+      <div class="m-card">
+        <div class="m-card__body">
+          <h3>¿Desea quitar el enlace?</h3>
+          <!-- <p class="mt-4"></p> -->
+        </div>
+        <div class="m-card__actions">
+          <m-btn
+            @click="dialog_remove = false"
+            color="primary"
+            small
+            text
+            class="mr-2"
+            >Cancelar</m-btn
+          >
+          <m-btn
+            @click="
+              dialog_remove = false;
+              remove();
+            "
+            color="primary"
+            small
+            >Continuar</m-btn
+          >
+        </div>
+      </div>
     </v-dialog>
   </div>
 </template>
