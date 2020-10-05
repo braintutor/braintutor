@@ -547,9 +547,11 @@ export default {
     z-index: 1;
   }
   &__dateinfo {
-    width: 110px;
+    flex-shrink: 0;
+    width: 25%;
+    max-width: 140px;
     margin: 0;
-    padding: 20px;
+    padding: 10px;
     color: #fff;
 
     display: flex;
