@@ -109,7 +109,9 @@
         <div class="hevent__body">
           <p class="hevent__time">{{ _getTime(e.date) }}</p>
           <p class="hevent__title">{{ e.title }}</p>
-          <p class="hevent__description">{{ e.description }}</p>
+          <!-- CUSTOM INFO -->
+          <!-- TODO Add to MVUECSS (methods) -->
+          <slot name="event_info" :event="e" :methods="{ hideEvent }"></slot>
         </div>
       </div>
 
@@ -426,8 +428,6 @@ export default {
     width: 100%;
   }
   &__event {
-    overflow: hidden;
-    max-height: 26px;
     padding: 5px;
     margin-top: 4px;
     cursor: pointer;
@@ -436,6 +436,11 @@ export default {
     color: #fff;
     text-align: center;
     border-radius: 4px;
+
+    white-space: nowrap;
+    // display: -webkit-box;
+    // -webkit-line-clamp: 1;
+    // -webkit-box-orient: vertical;
   }
 
   &--disabled {
@@ -533,8 +538,8 @@ export default {
 //
 .hevent {
   position: relative;
-  display: flex;
   overflow: hidden;
+  display: flex;
   &__options {
     position: absolute;
     top: 8px;
@@ -546,7 +551,11 @@ export default {
     margin: 0;
     padding: 20px;
     color: #fff;
-    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
   &__date {
     margin: 0;
