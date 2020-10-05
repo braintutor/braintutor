@@ -4,13 +4,11 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 
 import store from "../store";
-import { redirect } from "@/services/router";
 import { getUser } from "@/services/userService";
 import { onRouterChange } from "../knowledge";
 
 Vue.use(VueRouter);
 
-// TODO use meta for routing validation
 const routes = [
   {
     path: "/",
@@ -23,6 +21,7 @@ const routes = [
     name: "login",
     component: () => import("../views/Login.vue"),
   },
+  // *
   {
     path: "/profile",
     name: "profile",
@@ -299,9 +298,9 @@ router.beforeEach(async (to, from, next) => {
     if (user) {
       let role = route.meta.role;
       if (role === "*" || role === user.role) next();
-      else redirect("home");
-    } else redirect("home");
-  } else if (user) redirect(redirects[user.role]);
+      else next("/home");
+    } else next("/home");
+  } else if (user) next(`/${redirects[user.role]}`);
   else next();
 });
 
