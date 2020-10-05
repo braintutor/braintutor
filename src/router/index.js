@@ -1,7 +1,6 @@
 /* eslint-disable */
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
 
 import store from "../store";
 import { getUser } from "@/services/userService";
@@ -13,9 +12,8 @@ const routes = [
   {
     path: "/",
     name: "home",
-    component: Home,
+    component: () => import("../views/Home.vue"),
   },
-  // { path: '*', redirect: { name: 'home' } },
   {
     path: "/login/:school_url",
     name: "login",
@@ -280,7 +278,7 @@ router.beforeEach(async (to, from, next) => {
     store.state.loading_user = false;
   }
 
-  // CHATBOT
+  // CHANGE CHATBOT KNOWLEDGE
   onRouterChange(to.fullPath.split("/")[1]);
 
   // ROUTER AUTHORIZATION

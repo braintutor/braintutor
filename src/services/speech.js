@@ -1,12 +1,14 @@
 function SpeechToText(callback) {
   var SpeechRecognition = SpeechRecognition || window.webkitSpeechRecognition;
-  var recognition = new SpeechRecognition();
-  recognition.start();
-  recognition.onresult = function (event) {
-    var last = event.results.length - 1;
-    var text = event.results[last][0].transcript;
-    callback(text);
-  };
+  if (SpeechRecognition) {
+    var recognition = new SpeechRecognition();
+    recognition.start();
+    recognition.onresult = function(event) {
+      var last = event.results.length - 1;
+      var text = event.results[last][0].transcript;
+      callback(text);
+    };
+  }
 }
 
 function TextToSpeech(text, callback) {
@@ -29,4 +31,4 @@ function stopSpeech() {
   }
 }
 
-export { SpeechToText, TextToSpeech, stopSpeech }
+export { SpeechToText, TextToSpeech, stopSpeech };
