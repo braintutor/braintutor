@@ -183,7 +183,12 @@ $color-message-user: #0078ff;
   border-radius: 50%;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   transition: $animation-time;
+  opacity: 0.5;
   cursor: pointer;
+
+  &:hover {
+    opacity: 1;
+  }
 
   &__img {
     height: $icon-size;

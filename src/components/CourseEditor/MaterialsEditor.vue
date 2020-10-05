@@ -1,9 +1,13 @@
 <template>
-  <div class="m-container pa-2" style="padding-bottom: 80px !important">
-    <div class="options mt-2">
-      <strong class="mt-1" style="opacity: 0.5"
+  <div class="m-container" style="padding-bottom: 60px !important">
+    <div class="options mb-3">
+      <strong
+        v-show="$store.state.show_limits"
+        class="mt-1"
+        style="opacity: 0.5"
         >({{ `${units.length}/${Variables.max_units_per_course}` }})</strong
       >
+      <div></div>
       <m-btn
         @click="
           dlg_unit = true;
@@ -18,7 +22,7 @@
       </m-btn>
     </div>
     <!-- Unit -->
-    <section class="unit mt-4" v-for="(unit, idx) in units" :key="idx">
+    <section class="unit mb-4" v-for="(unit, idx) in units" :key="idx">
       <!-- <div class="unit__menu" @click="unit.show = !unit.show; $forceUpdate()"> -->
       <div class="unit__menu">
         <p v-if="!unit.edit_name" class="unit__name">{{ unit.name }}</p>
@@ -551,14 +555,12 @@ export default {
 
 <style lang='scss' scoped>
 .options {
-  margin-bottom: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .unit {
-  margin-bottom: 16px;
   border-radius: 12px;
   transition: 0.3s;
   box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2),

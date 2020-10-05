@@ -24,45 +24,6 @@ const routes = [
     component: () => import("../views/Login.vue"),
   },
   {
-    path: "/school-editor",
-    component: () => import("../views/SchoolEditor.vue"),
-    children: [
-      {
-        path: "",
-        name: "school-editor",
-        component: () => import("../components/SchoolEditor/SchoolSettings"),
-      },
-      {
-        path: "teachers",
-        component: () => import("../components/SchoolEditor/TeachersEditor"),
-      },
-      {
-        path: "courses",
-        component: () => import("../components/SchoolEditor/CoursesEditor"),
-      },
-      {
-        path: "classrooms",
-        component: () => import("../components/SchoolEditor/ClassroomsEditor"),
-      },
-      {
-        path: "students",
-        component: () => import("../components/SchoolEditor/StudentsEditor"),
-      },
-      {
-        path: "sessions",
-        component: () => import("../components/SchoolEditor/SessionsEditor"),
-      },
-      {
-        path: "director",
-        component: () => import("../components/SchoolEditor/DirectorEditor"),
-      },
-      {
-        path: "parents",
-        component: () => import("../components/SchoolEditor/ParentsEditor"),
-      },
-    ],
-  },
-  {
     path: "/sessions-student",
     name: "sessions-student",
     component: () => import("../views/SessionsStudent.vue"),
@@ -88,12 +49,80 @@ const routes = [
     component: () => import("../views/CoursesEditor.vue"),
   },
   {
+    path: "/material-editor/:material_id",
+    name: "material-editor",
+    component: () => import("../views/MaterialEditor.vue"),
+  },
+  {
+    path: "/profile",
+    name: "profile",
+    component: () => import("../views/Profile.vue"),
+  },
+  {
+    path: "/task/:task_id",
+    name: "task",
+    component: () => import("../views/Task.vue"),
+  },
+  {
+    path: "/parent",
+    name: "parent",
+    component: () => import("../views/Parent.vue"),
+  },
+  // ADM
+  {
+    path: "/school-editor",
+    component: () => import("../views/SchoolEditor.vue"),
+    children: [
+      {
+        path: "",
+        name: "school-editor",
+        component: () => import("../components/SchoolEditor/SchoolSettings"),
+      },
+      {
+        path: "teachers",
+        name: "school-editor-teachers",
+        component: () => import("../components/SchoolEditor/TeachersEditor"),
+      },
+      {
+        path: "courses",
+        name: "school-editor-courses",
+        component: () => import("../components/SchoolEditor/CoursesEditor"),
+      },
+      {
+        path: "classrooms",
+        name: "school-editor-classrooms",
+        component: () => import("../components/SchoolEditor/ClassroomsEditor"),
+      },
+      {
+        path: "students",
+        name: "school-editor-students",
+        component: () => import("../components/SchoolEditor/StudentsEditor"),
+      },
+      {
+        path: "sessions",
+        name: "school-editor-sessions",
+        component: () => import("../components/SchoolEditor/SessionsEditor"),
+      },
+      {
+        path: "director",
+        name: "school-editor-director",
+        component: () => import("../components/SchoolEditor/DirectorEditor"),
+      },
+      {
+        path: "parents",
+        name: "school-editor-parents",
+        component: () => import("../components/SchoolEditor/ParentsEditor"),
+      },
+    ],
+  },
+  // TEA
+  {
     path: "/session-editor/:session_id",
     component: () => import("../views/SessionEditor.vue"),
     children: [
       {
         path: "",
-        name: "session-editor",
+        name: "session-editor-learn",
         component: () => import("../components/Materials/index"),
       },
       {
@@ -116,7 +145,7 @@ const routes = [
       {
         path: "students",
         name: "session-editor-students",
-        component: () => import("../components/Students/index"),
+        component: () => import("../components/SessionEditor/Students"),
       },
     ],
   },
@@ -140,26 +169,6 @@ const routes = [
         component: () => import("../components/CourseEditor/MaterialsPreview"),
       },
     ],
-  },
-  {
-    path: "/material-editor/:material_id",
-    name: "material-editor",
-    component: () => import("../views/MaterialEditor.vue"),
-  },
-  {
-    path: "/profile",
-    name: "profile",
-    component: () => import("../views/Profile.vue"),
-  },
-  {
-    path: "/task/:task_id",
-    name: "task",
-    component: () => import("../views/Task.vue"),
-  },
-  {
-    path: "/parent",
-    name: "parent",
-    component: () => import("../views/Parent.vue"),
   },
   // STU
   {
@@ -189,7 +198,7 @@ const routes = [
       {
         path: "students",
         name: "session-students",
-        component: () => import("../components/Students/index"),
+        component: () => import("../components/Session/Students"),
       },
     ],
   },

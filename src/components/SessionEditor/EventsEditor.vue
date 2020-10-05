@@ -1,12 +1,18 @@
 <template>
-  <div class="m-container py-3">
+  <div class="m-container">
     <div class="legend">
       <div class="legend__item">
         <div class="legend__name">
           <strong
+            v-show="$store.state.show_limits"
             class="mr-2"
             style="opacity: 0.5"
-          >({{`${events.filter(e => e.type === 'event').length}/${variables.max_events_per_session}`}})</strong>
+            >({{
+              `${events.filter((e) => e.type === "event").length}/${
+                variables.max_events_per_session
+              }`
+            }})</strong
+          >
           <span>Eventos</span>
         </div>
         <div class="legend__color" style="background-color: #178ae2"></div>
@@ -19,40 +25,61 @@
 
     <m-calendar
       :events="events"
-      :show_options="event => event.type === 'event'"
-      :options="[{
-            text: 'Editar',
-            action: showEdit
-          },{
-            text: 'Eliminar',
-            action: showRemove
-          }]"
-      :menu="[{
-            text: 'Crear',
-            action: () => showCreateByDate(new Date())
-          }]"
+      :show_options="(event) => event.type === 'event'"
+      :options="[
+        {
+          text: 'Editar',
+          action: showEdit,
+        },
+        {
+          text: 'Eliminar',
+          action: showRemove,
+        },
+      ]"
+      :menu="[
+        {
+          text: 'Crear',
+          action: () => showCreateByDate(new Date()),
+        },
+      ]"
       @on-date-click="showCreate"
       class="my-3"
     >
       <template v-slot:event_info="{ event, methods }">
         <div>
-          <p class="mt-5">{{event.description}}</p>
+          <p class="mt-5">{{ event.description }}</p>
           <div v-if="event.type === 'event'" class="m-card__actions pa-0 pt-3">
             <m-btn
               color="primary"
               small
               @click="showEdit(event, methods.hideEvent)"
               class="mr-2"
-            >Editar</m-btn>
-            <m-btn color="error" small @click="showRemove(event, methods.hideEvent)">Eliminar</m-btn>
+              >Editar</m-btn
+            >
+            <m-btn
+              color="error"
+              small
+              @click="showRemove(event, methods.hideEvent)"
+              >Eliminar</m-btn
+            >
           </div>
         </div>
       </template>
     </m-calendar>
 
     <!-- DLG CREATE -->
-    <v-dialog v-model="dlg_create" max-width="800" :persistent="action !== 'create'">
-      <form @submit.prevent="dlg_create = false; saveEvent()" class="m-card">
+    <v-dialog
+      v-model="dlg_create"
+      max-width="800"
+      :persistent="action !== 'create'"
+    >
+      <form
+        @submit.prevent="
+          dlg_create = false;
+          saveEvent();
+        "
+        class="m-card"
+      >
         <div class="m-card__body">
           <h2 v-if="action === 'create'">Nuevo Evento</h2>
           <h2 v-else>Editar Evento</h2>
@@ -85,7 +112,8 @@
             @click="dlg_create = false"
             text
             class="mr-2"
-          >Cancelar</m-btn>
+            >Cancelar</m-btn
+          >
           <m-btn color="primary" small type="submit">Guardar</m-btn>
         </div>
       </form>
@@ -96,11 +124,23 @@
       <div class="m-card">
         <div class="m-card__body">
           <h3>Confirmar eliminación</h3>
-          <p class="mt-4">Si elimina este contenido, no podrá revertir los cambios.</p>
+          <p class="mt-4">
+            Si elimina este contenido, no podrá revertir los cambios.
+          </p>
         </div>
         <div class="m-card__actions">
-          <m-btn color="primary" small @click="dlg_delete = false" class="mr-2">Cancelar</m-btn>
-          <m-btn color="error" small @click="dlg_delete = false; removeEvent()">Eliminar</m-btn>
+          <m-btn color="primary" small @click="dlg_delete = false" class="mr-2"
+            >Cancelar</m-btn
+          >
+          <m-btn
+            color="error"
+            small
+            @click="
+              dlg_delete = false;
+              removeEvent();
+            "
+            >Eliminar</m-btn
+          >
         </div>
       </div>
     </v-dialog>

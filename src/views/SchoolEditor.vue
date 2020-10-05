@@ -1,55 +1,54 @@
 <template>
-  <Layout :links="links" :base="base">
+  <Layout :links="links">
     <router-view />
   </Layout>
 </template>
 
 <script>
-import Layout from "@/components/LayoutLinks";
+import Layout from "@/components/Layout2";
 
 export default {
   data: () => ({
-    base: "school-editor",
     links: [
       {
         image: require(`@/assets/icons/icon-settings.svg`),
         text: "Configuración",
-        name: "",
+        name: "school-editor",
       },
       {
         image: require(`@/assets/icons/icon-teacher.svg`),
         text: "Docentes",
-        name: "teachers",
+        name: "school-editor-teachers",
       },
       {
         image: require(`@/assets/icons/icon-course.svg`),
         text: "Cursos",
-        name: "courses",
+        name: "school-editor-courses",
       },
       {
         image: require(`@/assets/icons/icon-classroom.svg`),
         text: "Aulas",
-        name: "classrooms",
+        name: "school-editor-classrooms",
       },
       {
         image: require(`@/assets/icons/icon-student.svg`),
         text: "Alumnos",
-        name: "students",
+        name: "school-editor-students",
       },
       {
         image: require(`@/assets/icons/icon-session.svg`),
         text: "Sesiones",
-        name: "sessions",
+        name: "school-editor-sessions",
       },
       {
         image: require(`@/assets/icons/icon-director.svg`),
         text: "Director",
-        name: "director",
+        name: "school-editor-director",
       },
       {
         image: require(`@/assets/icons/icon-parent.svg`),
         text: "Padres",
-        name: "parents",
+        name: "school-editor-parents",
       },
     ],
   }),

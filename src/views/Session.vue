@@ -1,61 +1,57 @@
 <template>
-  <Layout :links="links" :base="base" fluid>
+  <Layout :links="links" fluid>
     <section slot="header" class="m-path">
-      <span @click="redirect('sessions-student')" class="m-path__name m-path__name--link">Cursos</span>
+      <span @click="redirectCourses()" class="m-path__name m-path__name--link"
+        >Cursos</span
+      >
       <span class="m-path__icon">></span>
-      <span class="m-path__name">{{course.name}}</span>
+      <span class="m-path__name">{{ course.name }}</span>
     </section>
 
-    <router-view v-if="course._id" :course="course" :get="getStudents" />
+    <router-view v-if="course._id" :course="course" />
   </Layout>
 </template>
 
 <script>
-import Layout from "@/components/LayoutLinks";
+import Layout from "@/components/Layout2";
 
-import { redirect, getParam } from "@/services/router";
 import { getSessionByStudent } from "@/services/sessionService";
-import { getStudentsBySessionStudent } from "@/services/studentService";
 
 export default {
   data: () => ({
     course: {
       name: "...",
     },
-    base: "",
     links: [
       {
         image: require(`@/assets/icons/icon-course.svg`),
         text: "Aprender",
-        name: "",
+        name: "session-learn",
       },
       {
         image: require(`@/assets/icons/icon-task.svg`),
         text: "Tareas",
-        name: "tasks",
-      },
-      {
-        image: require("@/assets/icons/icon-evaluation.svg"),
-        text: "Evaluaciones",
-        name: "evaluations",
+        name: "session-tasks",
       },
       {
         image: require("@/assets/icons/icon-calendar.svg"),
         text: "Agenda",
-        name: "events",
+        name: "session-events",
+      },
+      {
+        image: require("@/assets/icons/icon-evaluation.svg"),
+        text: "Evaluaciones",
+        name: "session-evaluations",
       },
       {
         image: require("@/assets/icons/icon-student.svg"),
         text: "Alumnos",
-        name: "students",
+        name: "session-students",
       },
     ],
   }),
   async created() {
-    let session_id = getParam("session_id");
-    this.base = `session/${session_id}`;
-
-    // Loading Session
+    let session_id = this.$router.currentRoute.params["session_id"];
     this.showLoading("Cargando");
     try {
       let session = await getSessionByStudent(session_id);
@@ -66,10 +62,10 @@ export default {
     this.hideLoading();
   },
   methods: {
-    redirect,
-    async getStudents() {
-      let session_id = getParam("session_id");
-      return await getStudentsBySessionStudent(session_id);
+    redirectCourses() {
+      this.$router.push({
+        name: "sessions-student",
+      });
     },
   },
   components: {

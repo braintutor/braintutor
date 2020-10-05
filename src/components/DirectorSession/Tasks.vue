@@ -7,7 +7,7 @@
       :title="task.title"
       :description="task.description"
       disabled
-      class="mb-4"
+      class="mb-3"
     />
     <div v-show="tasks.length <= 0" class="text-center">
       No hay Tareas

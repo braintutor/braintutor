@@ -4,7 +4,6 @@
 
 @import "./animation.scss";
 @import "./layout.scss";
-@import "./m-card.scss";
 @import "./m-table.scss";
 @import "./m-menu.scss";
 @import "./m-editor.scss";
@@ -12,13 +11,6 @@
 body,
 body * {
   font-family: Comfortaa, Arial, Helvetica, sans-serif;
-}
-
-.m-container {
-  width: 100%;
-  max-width: 950px;
-  margin: 0 auto;
-  // padding: 20px;
 }
 
 .m-container-plus {

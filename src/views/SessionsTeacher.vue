@@ -1,40 +1,52 @@
 <template>
   <div class="mcontainer">
-    <h1 class="mtitle">
-      <v-icon class="mr-3" style="font-size: 2.4rem">mdi-bookshelf</v-icon>Mis Cursos
+    <h1 class="mtitle mb-4">
+      <v-icon class="mr-3" style="font-size: 2.4rem">mdi-bookshelf</v-icon>
+      <span>Mis Cursos</span>
     </h1>
-    <div class="row no-gutters">
-      <div v-for="(session, idx) in sessions" :key="idx" class="col-12 col-sm-6 col-md-4 pa-3">
-        <section @click="selectSession(session)" class="session">
-          <div
-            class="session__image"
-            :style="{ backgroundImage: `url('${require('@/assets/backgrounds/banner2.jpg')}')`}"
-          />
-          <section class="session__body">
-            <div class="session__classroom">
-              <v-icon class="session__avatar">mdi-account-multiple</v-icon>
-              <span>{{session.classroom.name}}</span>
-            </div>
-            <span class="session__course mb-7">{{session.course.name}}</span>
-            <div class="session__actions">
-              <button class="button">
-                Ingresar
-                <v-icon
-                  class="ml-1"
-                  style="color: var(--color-active); font-size: 1.4rem"
-                >mdi-arrow-right</v-icon>
-              </button>
-            </div>
-          </section>
-        </section>
-      </div>
-    </div>
+
+    <!-- Sessions -->
+    <SessionCard
+      v-for="session in sessions"
+      :key="session._id"
+      class="session mb-3"
+      :name="session.course.name"
+      :user="session.classroom.name"
+      user_icon="mdi-account-multiple"
+      :buttons="[
+        {
+          text: 'Aprender',
+          icon: 'mdi-book',
+          color: 'success',
+          action: () => selectSession(session, 'learn'),
+        },
+        {
+          text: 'Tareas',
+          icon: 'mdi-format-list-checks',
+          color: 'primary',
+          action: () => selectSession(session, 'tasks'),
+        },
+        {
+          text: 'Eventos',
+          icon: 'mdi-calendar',
+          color: 'error',
+          action: () => selectSession(session, 'events'),
+        },
+        {
+          text: 'Evaluaciones',
+          icon: 'mdi-list-status',
+          color: 'warning',
+          action: () => selectSession(session, 'evaluations'),
+        },
+      ]"
+    />
   </div>
 </template>
 
 <script>
+import SessionCard from "@/components/globals/Session/SessionCard";
+
 import { getSessionsByTeacher } from "@/services/sessionService";
-import { redirect } from "@/services/router.js";
 
 export default {
   data: () => ({
@@ -43,16 +55,22 @@ export default {
   async created() {
     this.showLoading("Cargando Cursos");
     try {
-      this.sessions = await getSessionsByTeacher();
+      this.sessions = this.mongoArr(await getSessionsByTeacher());
     } catch (error) {
       this.showMessage("", error.msg || error);
     }
     this.hideLoading();
   },
   methods: {
-    selectSession(session) {
-      redirect("session-editor", { session_id: session._id.$oid });
+    selectSession(session, category) {
+      this.$router.push({
+        name: `session-editor-${category}`,
+        params: { session_id: session._id },
+      });
     },
+  },
+  components: {
+    SessionCard,
   },
 };
 </script>
@@ -66,90 +84,5 @@ export default {
 .mtitle {
   margin: 10px;
   color: #5b5b6a;
-}
-
-.session {
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-  border-radius: 4px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  transition: 0.4s;
-  cursor: pointer;
-
-  display: flex;
-  flex-direction: column;
-
-  &:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  }
-
-  &--disable {
-    -webkit-filter: grayscale(1);
-    opacity: 0.75;
-  }
-
-  &__image {
-    height: 160px;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-  }
-
-  &__body {
-    flex-grow: 1;
-    padding: 10px;
-
-    display: flex;
-    flex-direction: column;
-  }
-
-  &__classroom {
-    margin: 8px;
-    font-size: 0.85rem;
-    display: flex;
-    align-items: center;
-  }
-
-  &__avatar {
-    flex-shrink: 0;
-    height: 28px;
-    width: 28px;
-    margin-right: 10px;
-    background: var(--color-active);
-    color: #fff;
-    font-size: 1rem;
-    border-radius: 50%;
-  }
-
-  &__course {
-    display: block;
-    margin: 4px;
-    font-weight: bold;
-    font-size: 1.1rem;
-    letter-spacing: 0.25px;
-  }
-
-  &__actions {
-    margin-top: auto;
-    display: flex;
-    justify-content: flex-end;
-  }
-}
-
-.button {
-  padding: 10px 12px;
-  font-weight: bold;
-  font-size: 0.85rem;
-  border-radius: 4px;
-  transition: 0.4s;
-
-  &:hover {
-    background: #e4e4e4;
-  }
-  &:focus {
-    outline: none;
-  }
 }
 </style>

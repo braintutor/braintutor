@@ -14,3 +14,18 @@
     justify-content: flex-end;
   }
 }
+
+@include media-breakpoint(md) {
+  .m-card {
+    border-radius: 0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+
+    &__body {
+      padding: 12px;
+    }
+    &__actions {
+      padding: 12px;
+      padding-top: 0;
+    }
+  }
+}

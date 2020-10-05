@@ -1,18 +1,23 @@
 <template>
-  <div v-if="!evaluation" class="m-container pa-4">
+  <div v-if="!evaluation" class="m-container">
     <!-- MENU -->
-    <div class="evaluations__menu">
+    <div class="evaluations__menu mb-3">
       <strong
+        v-show="$store.state.show_limits"
         class="mt-1"
         style="opacity: 0.5"
-      >({{`${evaluations.length}/${variables.max_evaluations_per_session}`}})</strong>
+        >({{
+          `${evaluations.length}/${variables.max_evaluations_per_session}`
+        }})</strong
+      >
+      <div></div>
       <m-btn
         @click="create()"
         :disabled="evaluations.length >= variables.max_evaluations_per_session"
         color="primary"
         small
       >
-        <v-icon left style="font-size: .9rem">mdi-plus</v-icon>Crear Evaluación
+        <v-icon left style="font-size: 0.9rem">mdi-plus</v-icon>Crear Evaluación
       </m-btn>
     </div>
     <!-- EVALUATIONS -->
@@ -23,28 +28,41 @@
       :time_start="evaluation.time_start"
       :time_end="evaluation.time_end"
       :size="evaluation.content.length"
-      :buttons="[{
-            text: evaluation.public? 'Ver Evaluación': 'Editar',
-            icon: evaluation.public? 'mdi-eye': 'mdi-pencil',
-            color: 'primary',
-            action: () => {select(evaluation)}
-          },{
-            text: 'Resultados',
-            icon: 'mdi-poll',
-            color: 'primary',
-            action: () => {results(evaluation)},
-            disabled: !evaluation.public
-          },{
-            text: 'Eliminar',
-            icon: 'mdi-delete',
-            color: 'error',
-            action: () => {dlg_remove = true; evaluation_to_remove = evaluation}
-          }]"
+      :buttons="[
+        {
+          text: evaluation.public ? 'Ver Evaluación' : 'Editar',
+          icon: evaluation.public ? 'mdi-eye' : 'mdi-pencil',
+          color: 'primary',
+          action: () => {
+            select(evaluation);
+          },
+        },
+        {
+          text: 'Resultados',
+          icon: 'mdi-poll',
+          color: 'primary',
+          action: () => {
+            results(evaluation);
+          },
+          disabled: !evaluation.public,
+        },
+        {
+          text: 'Eliminar',
+          icon: 'mdi-delete',
+          color: 'error',
+          action: () => {
+            dlg_remove = true;
+            evaluation_to_remove = evaluation;
+          },
+        },
+      ]"
       disabled
-      class="mt-4"
+      class="mb-3"
     />
 
-    <div class="text-center mt-4" v-show="evaluations.length === 0">No hay evaluaciones.</div>
+    <div class="text-center" v-show="evaluations.length === 0">
+      No hay evaluaciones.
+    </div>
 
     <!-- Dialog Remove -->
     <v-dialog v-model="dlg_remove" persistent max-width="400">
@@ -54,8 +72,19 @@
           <p class="mt-4">Se borrarán también los resultados de los alumnos.</p>
         </div>
         <div class="m-card__actions">
-          <m-btn @click="dlg_remove = false" color="primary" small>Cancelar</m-btn>
-          <m-btn @click=" dlg_remove = false; remove()" color="error" small class="ml-2">Eliminar</m-btn>
+          <m-btn @click="dlg_remove = false" color="primary" small
+            >Cancelar</m-btn
+          >
+          <m-btn
+            @click="
+              dlg_remove = false;
+              remove();
+            "
+            color="error"
+            small
+            class="ml-2"
+            >Eliminar</m-btn
+          >
         </div>
       </div>
     </v-dialog>
@@ -66,7 +95,12 @@
     :unselect="unselect"
     class="m-container pa-4"
   />
-  <Results v-else :evaluation_id="evaluation._id.$oid" :unselect="unselect" class="pa-4" />
+  <Results
+    v-else
+    :evaluation_id="evaluation._id.$oid"
+    :unselect="unselect"
+    class="pa-4"
+  />
 </template>
 
 <script>
@@ -139,7 +173,7 @@ export default {
         this.evaluations.push(new_evaluation);
         this.select(new_evaluation);
       } catch (error) {
-      this.showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
@@ -151,7 +185,7 @@ export default {
           (e) => e._id.$oid !== this.evaluation_to_remove._id.$oid
         );
       } catch (error) {
-      this.showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },

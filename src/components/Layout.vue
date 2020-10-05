@@ -18,7 +18,7 @@
       </div>
     </nav>
     <!-- Body -->
-    <div id="app__body" class="app__body" :class="{'pa-3': !fluid}">
+    <div id="app__body" class="app__body">
       <div class="content" :class="{'m-container': !fluid}">
         <slot name="default"></slot>
         <template v-for="(link, idx) in links">

@@ -2,9 +2,14 @@
   <div class="editor-container m-container">
     <div class="menu">
       <strong
+        v-show="$store.state.show_limits"
         class="mt-1"
         style="opacity: 0.5"
-      >({{`${knowledge.length}/${CourseModel.knowledge.max_length}`}})</strong>
+        >({{
+          `${knowledge.length}/${CourseModel.knowledge.max_length}`
+        }})</strong
+      >
+      <div></div>
       <div class="menu-action">
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
@@ -18,7 +23,7 @@
               <v-icon>mdi-comment-plus-outline</v-icon>
             </v-btn>
           </template>
-          <span style="font-size: .75rem">Agregar Conocimiento</span>
+          <span style="font-size: 0.75rem">Agregar Conocimiento</span>
         </v-tooltip>
 
         <v-tooltip bottom>
@@ -27,7 +32,7 @@
               <v-icon>mdi-restore</v-icon>
             </v-btn>
           </template>
-          <span style="font-size: .75rem">Restaurar Cambios</span>
+          <span style="font-size: 0.75rem">Restaurar Cambios</span>
         </v-tooltip>
 
         <v-tooltip bottom>
@@ -36,13 +41,19 @@
               <v-icon>mdi-content-save</v-icon>
             </v-btn>
           </template>
-          <span style="font-size: .75rem">Guardar Cambios</span>
+          <span style="font-size: 0.75rem">Guardar Cambios</span>
         </v-tooltip>
       </div>
     </div>
     <div id="knowledge-scroll" class="editor-content">
-      <p v-if="knowledge.length <= 0" class="editor-empty">No hay conocimientos</p>
-      <div class="editor-knowledge" v-for="(k, k_idx) in knowledge" :key="k_idx">
+      <p v-if="knowledge.length <= 0" class="editor-empty">
+        No hay conocimientos
+      </p>
+      <div
+        class="editor-knowledge"
+        v-for="(k, k_idx) in knowledge"
+        :key="k_idx"
+      >
         <div class="editor-knowledge-row row no-gutters">
           <div
             v-for="(type, t_idx) in ['questions', 'answers']"
@@ -63,7 +74,9 @@
                   <v-btn
                     icon
                     @click="add(k, k[type])"
-                    :disabled="k[type].length >= KnowledgeModel.questions.max_length"
+                    :disabled="
+                      k[type].length >= KnowledgeModel.questions.max_length
+                    "
                   >
                     <v-icon>mdi-plus</v-icon>
                   </v-btn>
@@ -87,7 +100,11 @@
         </div>
         <div class="editor-actions">
           <v-badge
-            :color="k.show || (k.questions.length + k.answers.length <= 2) ? 'rgba(255, 0, 0, 0)': 'green'"
+            :color="
+              k.show || k.questions.length + k.answers.length <= 2
+                ? 'rgba(255, 0, 0, 0)'
+                : 'green'
+            "
             dot
             overlap
           >
@@ -159,7 +176,7 @@ export default {
       try {
         await this.update(knowledge);
       } catch (error) {
-      this.showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
@@ -168,7 +185,7 @@ export default {
       try {
         this.knowledge = await this.get();
       } catch (error) {
-      this.showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },

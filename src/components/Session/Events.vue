@@ -1,5 +1,5 @@
 <template>
-  <div class="m-container py-3">
+  <div class="m-container">
     <div class="legend">
       <div class="legend__item">
         <div class="legend__name">Eventos</div>
@@ -14,14 +14,15 @@
     <m-calendar :events="events">
       <template v-slot:event_info="{ event }">
         <div>
-          <p class="mt-5">{{event.description}}</p>
+          <p class="mt-5">{{ event.description }}</p>
         </div>
         <div v-if="event.type === 'task'" class="m-card__actions pa-0 pt-3">
           <m-btn
-            @click="redirect('task', {task_id: event._id.$oid})"
+            @click="redirect('task', { task_id: event._id.$oid })"
             color="success"
             small
-          >Ver Respuesta</m-btn>
+            >Ver Respuesta</m-btn
+          >
         </div>
       </template>
     </m-calendar>

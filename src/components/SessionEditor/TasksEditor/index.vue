@@ -1,18 +1,21 @@
 <template>
-  <div v-if="!task_selected" class="m-container pa-4">
+  <div v-if="!task_selected" class="m-container">
     <!-- MENU -->
-    <div class="tasks__menu">
+    <div class="tasks__menu mb-3">
       <strong
+        v-show="$store.state.show_limits"
         class="mt-1"
         style="opacity: 0.5"
-      >({{`${tasks.length}/${variables.max_tasks_per_session}`}})</strong>
+        >({{ `${tasks.length}/${variables.max_tasks_per_session}` }})</strong
+      >
+      <div></div>
       <m-btn
         @click="showCreate()"
         :disabled="tasks.length >= variables.max_tasks_per_session"
         color="primary"
         small
       >
-        <v-icon left style="font-size: .9rem">mdi-plus</v-icon>Crear Tarea
+        <v-icon left style="font-size: 0.9rem">mdi-plus</v-icon>Crear Tarea
       </m-btn>
     </div>
     <!-- TASKS -->
@@ -22,22 +25,35 @@
       :time_start="task.time_start || new Date()"
       :title="task.title"
       :description="task.description"
-      :options="[{
-            text: 'Editar',
-            action: () => {showEdit(task)}
-          },{
-            text: 'Eliminar',
-            action: () => {showRemove(task)}
-          }]"
-      :buttons="[{
-            text: 'Ver Respuestas',
-            action: () => {showAnswers(task)}
-          }]"
+      :options="[
+        {
+          text: 'Editar',
+          action: () => {
+            showEdit(task);
+          },
+        },
+        {
+          text: 'Eliminar',
+          action: () => {
+            showRemove(task);
+          },
+        },
+      ]"
+      :buttons="[
+        {
+          text: 'Ver Respuestas',
+          action: () => {
+            showAnswers(task);
+          },
+        },
+      ]"
       disabled
-      class="mt-4"
+      class="mb-3"
     />
 
-    <div class="text-center mt-4" v-show="tasks.length === 0">No hay tareas.</div>
+    <div class="text-center" v-show="tasks.length === 0">
+      No hay tareas.
+    </div>
 
     <!-- DIALOG NEW -->
     <v-dialog v-model="dialog_new" persistent max-width="750">
@@ -65,8 +81,11 @@
             class="mr-2"
             v-show="!loading_save"
             @click="dialog_new = false"
-          >Cerrar</m-btn>
-          <m-btn small color="primary" :loading="loading_save" @click="create()">Guardar</m-btn>
+            >Cerrar</m-btn
+          >
+          <m-btn small color="primary" :loading="loading_save" @click="create()"
+            >Guardar</m-btn
+          >
         </div>
       </div>
     </v-dialog>
@@ -75,11 +94,24 @@
       <div class="m-card">
         <div class="m-card__body">
           <h3>¿Eliminar la Tarea?</h3>
-          <p class="mt-4">También se borrarán las respuestas y calificaciones de los alumnos.</p>
+          <p class="mt-4">
+            También se borrarán las respuestas y calificaciones de los alumnos.
+          </p>
         </div>
         <div class="m-card__actions">
-          <m-btn @click="dialog_remove = false" color="primary" small>Cancelar</m-btn>
-          <m-btn @click="dialog_remove = false; remove()" color="error" small class="ml-2">Eliminar</m-btn>
+          <m-btn @click="dialog_remove = false" color="primary" small
+            >Cancelar</m-btn
+          >
+          <m-btn
+            @click="
+              dialog_remove = false;
+              remove();
+            "
+            color="error"
+            small
+            class="ml-2"
+            >Eliminar</m-btn
+          >
         </div>
       </div>
     </v-dialog>
@@ -176,7 +208,7 @@ export default {
           this.tasks.push(this.task);
           this.dialog_new = false;
         } catch (error) {
-      this.showMessage("", error.msg || error);
+          this.showMessage("", error.msg || error);
         }
       } else if (this.action === "edit") {
         try {
@@ -188,7 +220,7 @@ export default {
           this.tasks.splice();
           this.dialog_new = false;
         } catch (error) {
-      this.showMessage("", error.msg || error);
+          this.showMessage("", error.msg || error);
         }
       }
       this.loading_save = false;
@@ -200,7 +232,7 @@ export default {
         await removeTask(task_id_to_remove);
         this.tasks = this.tasks.filter((t) => t._id.$oid !== task_id_to_remove);
       } catch (error) {
-      this.showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
@@ -210,7 +242,7 @@ export default {
         this.students = await getStudentsBySession(this.session_id);
         this.tasks = await getTasksBySessionTeacher(this.session_id);
       } catch (error) {
-      this.showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },

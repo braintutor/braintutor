@@ -1,15 +1,22 @@
 <template>
-  <div class="tasks m-container py-3">
+  <div class="tasks m-container">
     <!-- MENU -->
-    <div class="tasks__menu">
+    <div class="tasks__menu mb-3">
       <m-btn
         @click="show_pending = true"
         :text="!show_pending"
         color="primary"
         small
         class="mr-2"
-      >Pendientes</m-btn>
-      <m-btn @click="show_pending = false" :text="show_pending" color="dark" small>Respondidos</m-btn>
+        >Pendientes</m-btn
+      >
+      <m-btn
+        @click="show_pending = false"
+        :text="show_pending"
+        color="dark"
+        small
+        >Respondidos</m-btn
+      >
     </div>
     <!-- TASKS -->
     <TaskCard
@@ -19,9 +26,11 @@
       :time_start="task.time_start"
       :title="task.title"
       :description="task.description"
-      class="mt-4"
+      class="mb-3"
     />
-    <div class="text-center mt-4" v-show="tasks_filtered.length === 0">No hay tareas.</div>
+    <div class="text-center" v-show="tasks_filtered.length === 0">
+      No hay tareas.
+    </div>
   </div>
 </template>
 
@@ -62,7 +71,7 @@ export default {
           await getTasksBySessionStudent(this.session_id)
         );
       } catch (error) {
-      this.showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
@@ -80,7 +89,7 @@ export default {
 .tasks {
   &__menu {
     width: max-content;
-    margin: 10px auto;
+    margin: 0 auto;
   }
 }
 </style>

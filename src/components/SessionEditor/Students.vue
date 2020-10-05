@@ -1,9 +1,11 @@
 <template>
-  <Students :students="students" />
+  <Students :students="students" class="m-container" />
 </template>
 
 <script>
 import Students from "@/components/globals/Students/index";
+
+import { getStudentsBySession } from "@/services/studentService";
 
 export default {
   data: () => ({
@@ -13,10 +15,7 @@ export default {
     let session_id = this.$router.currentRoute.params["session_id"];
     this.showLoading("Cargando Alumnos");
     try {
-      let session = this.mongo(await this.$api.session.get(session_id));
-      this.students = this.mongoArr(
-        await this.$api.student.getAll(session.classroom_id)
-      );
+      this.students = this.mongoArr(await getStudentsBySession(session_id));
     } catch (error) {
       this.showMessage("", error.msg || error);
     }
@@ -27,3 +26,6 @@ export default {
   },
 };
 </script>
+
+<style>
+</style>

@@ -10,6 +10,7 @@ export default new Vuex.Store({
     loading_msg: "",
     loading_user: false,
     material: null,
+    show_limits: false,
     // Chatbot
     show_chatbot: false,
     knowledge: [],

@@ -1,12 +1,13 @@
 <template>
-  <Layout :links="links" :base="base" fluid>
+  <Layout :links="links" fluid>
     <section slot="header" class="m-path">
       <span
-        @click="redirect('courses-editor')"
+        @click="redirectCoursesEditor()"
         class="m-path__name m-path__name--link"
-      >Editar Cursos</span>
+        >Editar Cursos</span
+      >
       <span class="m-path__icon">></span>
-      <span class="m-path__name">{{course.name}}</span>
+      <span class="m-path__name">{{ course.name }}</span>
     </section>
 
     <router-view :get="getKnowledge" :update="updateKnowledge" />
@@ -14,9 +15,8 @@
 </template>
 
 <script>
-import Layout from "@/components/LayoutLinks";
+import Layout from "@/components/Layout2";
 
-import { getParam, redirect } from "@/services/router.js";
 import {
   getCourseByTeacher,
   updateCourseKnowledge,
@@ -24,22 +24,21 @@ import {
 
 export default {
   data: () => ({
-    base: "",
     links: [
       {
         image: require("@/assets/icons/icon-course.svg"),
         text: "Material",
-        name: "",
+        name: "course-editor",
       },
       {
         image: require("@/assets/icons/icon-knowledge.svg"),
         text: "Conocimiento",
-        name: "knowledge",
+        name: "course-editor-knowledge",
       },
       {
         image: require("@/assets/icons/icon-preview.svg"),
         text: "Vista previa",
-        name: "preview",
+        name: "course-editor-preview",
       },
     ],
     course_id: "",
@@ -48,9 +47,7 @@ export default {
     },
   }),
   async created() {
-    this.course_id = getParam("course_id");
-    this.base = `course-editor/${this.course_id}`;
-
+    this.course_id = this.$router.currentRoute.params["course_id"];
     try {
       this.course = await getCourseByTeacher(this.course_id);
     } catch (error) {
@@ -58,7 +55,11 @@ export default {
     }
   },
   methods: {
-    redirect,
+    redirectCoursesEditor() {
+      this.$router.push({
+        name: "courses-editor",
+      });
+    },
     async getKnowledge() {
       let { knowledge } = await getCourseByTeacher(this.course_id);
       return knowledge || [];

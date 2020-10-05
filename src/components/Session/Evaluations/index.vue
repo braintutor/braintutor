@@ -1,16 +1,23 @@
 <template>
-  <div class="m-container pa-3">
+  <div class="m-container">
     <div v-if="!evaluation" class="evaluations">
       <!-- MENU -->
-      <div class="evaluations__menu">
+      <div class="evaluations__menu mb-3">
         <m-btn
           @click="showAvailable = true"
           :text="!showAvailable"
           color="primary"
           small
           class="mr-2"
-        >Por Realizar</m-btn>
-        <m-btn @click="showAvailable = false" :text="showAvailable" color="dark" small>Otros</m-btn>
+          >Por Realizar</m-btn
+        >
+        <m-btn
+          @click="showAvailable = false"
+          :text="showAvailable"
+          color="dark"
+          small
+          >Otros</m-btn
+        >
       </div>
       <!-- EVALUATIONS -->
       <EvaluationCard
@@ -24,30 +31,39 @@
         :hasResult="!!evaluation.result"
         student
         @click="showDialogStart(evaluation)"
-        :class="[showAvailable? 'levitation': 'evaluation--disabled']"
-        class="evaluation mt-4"
+        :class="[showAvailable ? 'levitation' : 'evaluation--disabled']"
+        class="evaluation mb-3"
       />
 
-      <p class="text-center my-4" v-show="evaluations.length === 0">No hay evaluaciones.</p>
+      <p class="text-center" v-show="evaluations.length === 0">
+        No hay evaluaciones.
+      </p>
 
       <!-- Dialog Start Evaluation -->
       <v-dialog v-model="dialog_start" persistent max-width="400">
         <div class="m-card">
           <div class="m-card__body">
             <h3>Iniciar Evaluación</h3>
-            <p
-              class="mt-4"
-            >Una vez que inicias una evaluación, solo tendrás una oportunidad para responderla.</p>
+            <p class="mt-4">
+              Una vez que inicias una evaluación, solo tendrás una oportunidad
+              para responderla.
+            </p>
             <p class="mt-4">No cierres la pestaña o cambies de página.</p>
           </div>
           <div class="m-card__actions">
-            <m-btn @click="dialog_start = false" color="primary" small text>Cerrar</m-btn>
+            <m-btn @click="dialog_start = false" color="primary" small text
+              >Cerrar</m-btn
+            >
             <m-btn
-              @click="dialog_start = false; select(evaluation_to_start)"
+              @click="
+                dialog_start = false;
+                select(evaluation_to_start);
+              "
               color="primary"
               small
               class="ml-2"
-            >Iniciar</m-btn>
+              >Iniciar</m-btn
+            >
           </div>
         </div>
       </v-dialog>
@@ -104,7 +120,7 @@ export default {
         evaluation = await getEvaluationByStudent(evaluation._id.$oid);
         this.evaluation = copy(evaluation);
       } catch (error) {
-      this.showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
@@ -131,7 +147,7 @@ export default {
 .evaluations {
   &__menu {
     width: max-content;
-    margin: 10px auto;
+    margin: 0 auto;
   }
 }
 .evaluation {

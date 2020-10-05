@@ -7,57 +7,39 @@
         item-value="_id"
         item-text="name"
         label="Aula"
-        class="px-2"
+        class="px-2 mb-3"
       ></v-select>
-      <div v-show="!classroom_id" class="text-center mt-3">
-        Seleccione un Aula
-      </div>
+      <div v-show="!classroom_id" class="text-center">Seleccione un Aula</div>
 
       <!-- Sessions -->
       <div v-show="classroom_id">
-        <div
+        <SessionCard
           v-for="session in sessions"
           :key="session._id"
-          class="session m-card mt-3"
-        >
-          <div class="m-card__body">
-            <p class="session__course">{{ session.course.name }}</p>
-            <div class="session__teacher">
-              <v-icon class="session__avatar">mdi-account</v-icon>
-              <span class="mt-1">
-                {{
-                  `${session.teacher.last_name}, ${session.teacher.first_name}`
-                }}
-              </span>
-            </div>
-          </div>
-          <div class="m-card__actions">
-            <m-btn
-              @click="selectSession(session, 'tasks')"
-              color="primary"
-              text
-              small
-              class="mr-2"
-              >Tareas</m-btn
-            >
-            <m-btn
-              @click="selectSession(session, 'events')"
-              color="error"
-              text
-              small
-              class="mr-2"
-              >Eventos</m-btn
-            >
-            <m-btn
-              @click="selectSession(session, 'evaluations')"
-              color="warning"
-              text
-              small
-              >Evaluaciones</m-btn
-            >
-          </div>
-        </div>
-
+          class="session mb-3"
+          :name="session.course.name"
+          :user="`${session.teacher.last_name}, ${session.teacher.first_name}`"
+          :buttons="[
+            {
+              text: 'Tareas',
+              icon: 'mdi-format-list-checks',
+              color: 'primary',
+              action: () => selectSession(session, 'tasks'),
+            },
+            {
+              text: 'Eventos',
+              icon: 'mdi-calendar',
+              color: 'error',
+              action: () => selectSession(session, 'events'),
+            },
+            {
+              text: 'Evaluaciones',
+              icon: 'mdi-list-status',
+              color: 'warning',
+              action: () => selectSession(session, 'evaluations'),
+            },
+          ]"
+        />
         <div v-show="sessions.length <= 0" class="text-center mt-3">
           No hay Sesiones
         </div>
@@ -67,6 +49,8 @@
 </template>
 
 <script>
+import SessionCard from "@/components/globals/Session/SessionCard";
+
 export default {
   data: () => ({
     classrooms: [],
@@ -115,6 +99,9 @@ export default {
         params: { session_id: session._id },
       });
     },
+  },
+  components: {
+    SessionCard,
   },
 };
 </script>

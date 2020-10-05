@@ -1,26 +1,34 @@
 <template>
-  <section class="task m-card" :class="{'levitation': !disabled}" @click="$emit('click', $event)">
+  <section
+    class="task m-card"
+    :class="{ levitation: !disabled }"
+    @click="$emit('click', $event)"
+  >
     <div class="m-card__body">
       <div class="task__header">
         <p class="task__time_start">
-          <v-icon class="mr-2" style="font-size: .9rem">mdi-calendar</v-icon>
-          <span>{{toDateTimeString(time_start)}}</span>
+          <v-icon class="mr-2" style="font-size: 0.9rem">mdi-calendar</v-icon>
+          <span>{{ toDateTimeString(time_start) }}</span>
         </p>
         <v-menu v-if="options" offset-y left>
           <template v-slot:activator="{ on }">
             <v-btn icon small v-on="on">
-              <v-icon>mdi-dots-vertical</v-icon>
+              <v-icon style="font-size: 1.5rem">mdi-dots-vertical</v-icon>
             </v-btn>
           </template>
           <v-list dense>
-            <v-list-item v-for="(option, idx) in options" :key="idx" @click="option.action">
-              <v-list-item-title>{{option.text}}</v-list-item-title>
+            <v-list-item
+              v-for="(option, idx) in options"
+              :key="idx"
+              @click="option.action"
+            >
+              <v-list-item-title>{{ option.text }}</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
       </div>
-      <p class="task__title">{{title}}</p>
-      <p class="task__description">{{description}}</p>
+      <p class="task__title">{{ title }}</p>
+      <p class="task__description">{{ description }}</p>
     </div>
 
     <div v-if="buttons" class="m-card__actions">
@@ -31,7 +39,8 @@
         color="primary"
         small
         text
-      >{{button.text}}</m-btn>
+        >{{ button.text }}</m-btn
+      >
     </div>
   </section>
 </template>

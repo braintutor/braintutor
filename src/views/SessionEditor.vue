@@ -1,61 +1,57 @@
 <template>
-  <Layout :links="links" :base="base" fluid>
+  <Layout :links="links" fluid>
     <section slot="header" class="m-path">
-      <span @click="redirectCourses()" class="m-path__name m-path__name--link">Cursos</span>
+      <span @click="redirectCourses()" class="m-path__name m-path__name--link"
+        >Cursos</span
+      >
       <span class="m-path__icon">></span>
-      <span class="m-path__name">{{course.name}}</span>
+      <span class="m-path__name">{{ course.name }}</span>
     </section>
 
-    <router-view v-if="course._id" :course="course" :get="getStudents" />
+    <router-view v-if="course._id" :course="course" />
   </Layout>
 </template>
 
 <script>
-import Layout from "@/components/LayoutLinks";
+import Layout from "@/components/Layout2";
 
-import { redirect, getParam } from "@/services/router";
 import { getSessionByTeacher } from "@/services/sessionService";
-import { getStudentsBySession } from "@/services/studentService";
 
 export default {
   data: () => ({
     course: {
       name: "...",
     },
-    base: "",
     links: [
       {
         image: require(`@/assets/icons/icon-course.svg`),
         text: "Aprender",
-        name: "",
+        name: "session-editor-learn",
       },
       {
         image: require(`@/assets/icons/icon-task.svg`),
         text: "Tareas",
-        name: "tasks",
-      },
-      {
-        image: require("@/assets/icons/icon-evaluation.svg"),
-        text: "Evaluaciones",
-        name: "evaluations",
+        name: "session-editor-tasks",
       },
       {
         image: require("@/assets/icons/icon-calendar.svg"),
         text: "Agenda",
-        name: "events",
+        name: "session-editor-events",
+      },
+      {
+        image: require("@/assets/icons/icon-evaluation.svg"),
+        text: "Evaluaciones",
+        name: "session-editor-evaluations",
       },
       {
         image: require("@/assets/icons/icon-student.svg"),
         text: "Alumnos",
-        name: "students",
+        name: "session-editor-students",
       },
     ],
   }),
   async created() {
-    let session_id = getParam("session_id");
-    this.base = `session-editor/${session_id}`;
-
-    //
+    let session_id = this.$router.currentRoute.params["session_id"];
     this.showLoading("Cargando");
     try {
       let session = await getSessionByTeacher(session_id);
@@ -67,11 +63,9 @@ export default {
   },
   methods: {
     redirectCourses() {
-      redirect("sessions-teacher");
-    },
-    async getStudents() {
-      let session_id = getParam("session_id");
-      return await getStudentsBySession(session_id);
+      this.$router.push({
+        name: "sessions-teacher",
+      });
     },
   },
   components: {
