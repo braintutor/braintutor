@@ -2,7 +2,7 @@
   <div>
     <div v-show="!evaluation_selected">
       <EvaluationCard
-        v-for="(evaluation, c_idx) in evaluations"
+        v-for="(evaluation, c_idx) in evaluations_ordered"
         :key="c_idx"
         :name="evaluation.name"
         :time_start="evaluation.time_start"
@@ -26,7 +26,7 @@
         </div>
       </EvaluationCard>
 
-      <div v-show="evaluations.length <= 0" class="text-center">
+      <div v-show="evaluations_ordered.length <= 0" class="text-center">
         No hay Evaluaciones
       </div>
     </div>
@@ -55,6 +55,11 @@ export default {
     students: [],
     evaluation_selected: null,
   }),
+  computed: {
+    evaluations_ordered() {
+      return this.orderObjectsByDate(this.evaluations, "time_start");
+    },
+  },
   async created() {
     let session_id = this.$router.currentRoute.params["session_id"];
     this.showLoading("Cargando Evaluaciones");

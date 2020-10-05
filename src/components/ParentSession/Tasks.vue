@@ -1,7 +1,7 @@
 <template>
   <div>
     <TaskCard
-      v-for="(task, idx) in tasks"
+      v-for="(task, idx) in tasks_ordered"
       :key="idx"
       :time_start="task.time_start"
       :title="task.title"
@@ -9,7 +9,7 @@
       disabled
       class="mb-3"
     />
-    <div v-show="tasks.length <= 0" class="text-center">
+    <div v-show="tasks_ordered.length <= 0" class="text-center">
       No hay Tareas
     </div>
   </div>
@@ -22,6 +22,11 @@ export default {
   data: () => ({
     tasks: [],
   }),
+  computed: {
+    tasks_ordered() {
+      return this.orderObjectsByDate(this.tasks, "time_start");
+    },
+  },
   async created() {
     let session_id = this.$router.currentRoute.params["session_id"];
     this.showLoading("Cargando Tareas");
