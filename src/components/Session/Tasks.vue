@@ -20,7 +20,7 @@
     </div>
     <!-- TASKS -->
     <TaskCard
-      v-for="(task, idx) in tasks_filtered"
+      v-for="(task, idx) in tasks_ordered"
       :key="idx"
       @click="select(task)"
       :time_start="task.time_start"
@@ -28,7 +28,7 @@
       :description="task.description"
       class="mb-3"
     />
-    <div class="text-center" v-show="tasks_filtered.length === 0">
+    <div class="text-center" v-show="tasks_ordered.length === 0">
       No hay tareas.
     </div>
   </div>
@@ -51,16 +51,13 @@ export default {
     this.restore();
   },
   computed: {
-    tasks_filtered() {
+    tasks_ordered() {
       let tasks = this.tasks.filter(({ answer }) => {
         if (answer.text || (answer.data && answer.data.length > 0))
           return !this.show_pending;
         else return this.show_pending;
       });
-      tasks.sort(function (a, b) {
-        return b.time_start - a.time_start;
-      });
-      return tasks;
+      return this.orderObjectsByDate(tasks, "time_start");
     },
   },
   methods: {

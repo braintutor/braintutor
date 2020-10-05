@@ -2,7 +2,13 @@
   <div class="pa-2">
     <div class="menu pa-0 pb-2">
       <div class="menu-left">
-        <v-btn icon @click="unselect(); restore()">
+        <v-btn
+          icon
+          @click="
+            unselect();
+            restore();
+          "
+        >
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
         <span class="menu-title">Ver Tareas</span>
@@ -17,49 +23,55 @@
     />
 
     <!-- ANSWERS -->
-    <p style="font-weight: bold; font-size: 1.2rem" class="ml-2 mt-6 mb-3">Respuestas</p>
+    <p style="font-weight: bold; font-size: 1.2rem" class="ml-2 mt-6 mb-3">
+      Respuestas
+    </p>
     <div class="row no-gutters">
       <!-- STUDENTS -->
       <div class="students m-card col-12 col-sm-2">
         <div
           class="student"
-          :class="{'student--active': student === s}"
+          :class="{ 'student--active': student === s }"
           v-for="(s, idx) in students"
           :key="idx"
           @click="student = s"
         >
-          <span>{{`${s.last_name}, ${s.first_name}`}}</span>
+          <span>{{ `${s.last_name}, ${s.first_name}` }}</span>
         </div>
       </div>
       <!-- ANSWER -->
       <div v-if="student" class="col-12 col-sm-10">
         <div class="response m-card mb-4 ml-sm-5">
           <div class="response__menu">
-            <p class="response__student">{{`${student.last_name}, ${student.first_name}`}}</p>
+            <p class="response__student">
+              {{ `${student.last_name}, ${student.first_name}` }}
+            </p>
             <p
               v-if="answer.text || (answer.data && answer.data.length > 0)"
               class="response__time"
-            >{{toDateTimeString(answer.time_end)}}</p>
+            >
+              {{ toDateTimeString(answer.time_end) }}
+            </p>
           </div>
           <div
             v-if="answer.text || (answer.data && answer.data.length > 0)"
             class="response__answer"
           >
-            <p class="response__text">{{answer.text}}</p>
+            <p class="response__text">{{ answer.text }}</p>
             <div class="mt-3" v-for="(item, idx) in answer.data" :key="idx">
               <!-- LINK -->
               <div class="link" v-if="item.type === 'link'">
                 <a class="link__data" :href="item.url" target="_blank">
                   <img class="link__image" :src="item.image" alt />
-                  <p class="link__title">{{item.title}}</p>
-                  <p class="link__description">{{item.description}}</p>
+                  <p class="link__title">{{ item.title }}</p>
+                  <p class="link__description">{{ item.description }}</p>
                 </a>
               </div>
               <!-- LINK FILE -->
               <div class="linkFile" v-if="item.type === 'file'">
                 <a class="linkFile__data" :href="item.url" target="_blank">
                   <img class="linkFile__image" :src="item.image" alt />
-                  <p class="linkFile__title">{{item.title}}</p>
+                  <p class="linkFile__title">{{ item.title }}</p>
                 </a>
               </div>
             </div>
@@ -67,8 +79,10 @@
           <div
             v-else
             class="text-center pt-4 pb-2"
-            style="color: #aaa; font-size: .9rem"
-          >No hay respuestas.</div>
+            style="color: #aaa; font-size: 0.9rem"
+          >
+            No hay respuestas.
+          </div>
         </div>
       </div>
     </div>
@@ -94,11 +108,8 @@ export default {
       let answer = {};
       try {
         answer =
-          this.task.answers.find(
-            (answer) => answer._id.$oid === this.student._id.$oid
-          ) || {};
-        if (answer.time_end.$date)
-          answer.time_end = new Date(answer.time_end.$date);
+          this.task.answers.find((answer) => answer._id === this.student._id) ||
+          {};
       } catch (error) {
         //
       }

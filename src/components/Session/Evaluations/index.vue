@@ -21,7 +21,7 @@
       </div>
       <!-- EVALUATIONS -->
       <EvaluationCard
-        v-for="(evaluation, c_idx) in evaluations"
+        v-for="(evaluation, c_idx) in evaluations_ordered"
         v-model="evaluation.dateState"
         v-show="showAvailable === isAvailable(evaluation)"
         :key="c_idx"
@@ -39,7 +39,7 @@
         class="evaluation mb-3"
       />
 
-      <p class="text-center" v-show="evaluations.length === 0">
+      <p class="text-center" v-show="evaluations_ordered.length === 0">
         No hay evaluaciones.
       </p>
 
@@ -98,6 +98,11 @@ export default {
     showAvailable: true,
     dialog_start: false,
   }),
+  computed: {
+    evaluations_ordered() {
+      return this.orderObjectsByDate(this.evaluations, "time_start");
+    },
+  },
   async mounted() {
     this.session_id = getParam("session_id");
     this.getEvaluations();
@@ -106,11 +111,9 @@ export default {
     async getEvaluations() {
       this.showLoading("Cargando Evaluaciones");
       try {
-        let evaluations = this.mongoArr(
+        this.evaluations = this.mongoArr(
           await getEvaluationsBySessionStudent(this.session_id)
         );
-        evaluations.sort((a, b) => b.time_start - a.time_start);
-        this.evaluations = evaluations;
       } catch (error) {
         this.showMessage("", error.msg || error);
       }

@@ -20,7 +20,7 @@
     </div>
     <!-- TASKS -->
     <TaskCard
-      v-for="(task, idx) in tasks_formatted"
+      v-for="(task, idx) in tasks_ordered"
       :key="idx"
       :time_start="task.time_start || new Date()"
       :title="task.title"
@@ -51,7 +51,7 @@
       class="mb-3"
     />
 
-    <div class="text-center" v-show="tasks.length === 0">
+    <div class="text-center" v-show="tasks_ordered.length === 0">
       No hay tareas.
     </div>
 
@@ -163,19 +163,8 @@ export default {
     this.restore();
   },
   computed: {
-    tasks_formatted() {
-      let tasks = this.tasks.map((t) => {
-        let task = {
-          ...t,
-        };
-        if (task.time_start.$date)
-          task.time_start = new Date(t.time_start.$date);
-        return task;
-      });
-      tasks.sort(function (a, b) {
-        return b.time_start - a.time_start;
-      });
-      return tasks;
+    tasks_ordered() {
+      return this.orderObjectsByDate(this.tasks, "time_start");
     },
   },
   methods: {
@@ -187,12 +176,12 @@ export default {
     showEdit(task) {
       this.action = "edit";
       this.task = Object.assign({}, task);
-      this.task.id = this.task._id.$oid;
+      this.task.id = this.task._id;
       this.dialog_new = true;
     },
     showRemove(task) {
       this.task = Object.assign({}, task);
-      this.task.id = this.task._id.$oid;
+      this.task.id = this.task._id;
       this.dialog_remove = true;
     },
     showAnswers(task) {
@@ -204,7 +193,7 @@ export default {
         try {
           this.task.time_start = new Date();
           let _id = await addTask(this.session_id, this.task);
-          this.task._id = _id;
+          this.task._id = _id.$oid;
           this.tasks.push(this.task);
           this.dialog_new = false;
         } catch (error) {
@@ -213,9 +202,7 @@ export default {
       } else if (this.action === "edit") {
         try {
           await updateTask(this.task);
-          let task_idx = this.tasks.findIndex(
-            (tasks) => tasks._id.$oid === this.task.id
-          );
+          let task_idx = this.tasks.findIndex((t) => t._id === this.task.id);
           this.tasks[task_idx] = Object.assign({}, this.task);
           this.tasks.splice();
           this.dialog_new = false;
@@ -228,9 +215,9 @@ export default {
     async remove() {
       this.showLoading("Eliminando Tarea");
       try {
-        let task_id_to_remove = this.task._id.$oid;
+        let task_id_to_remove = this.task._id;
         await removeTask(task_id_to_remove);
-        this.tasks = this.tasks.filter((t) => t._id.$oid !== task_id_to_remove);
+        this.tasks = this.tasks.filter((t) => t._id !== task_id_to_remove);
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
@@ -239,8 +226,12 @@ export default {
     async restore() {
       this.showLoading("Cargando Tareas");
       try {
-        this.students = await getStudentsBySession(this.session_id);
-        this.tasks = await getTasksBySessionTeacher(this.session_id);
+        this.students = this.mongoArr(
+          await getStudentsBySession(this.session_id)
+        );
+        this.tasks = this.mongoArr(
+          await getTasksBySessionTeacher(this.session_id)
+        );
       } catch (error) {
         this.showMessage("", error.msg || error);
       }

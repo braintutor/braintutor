@@ -22,7 +22,7 @@
     </div>
     <!-- EVALUATIONS -->
     <EvaluationCard
-      v-for="evaluation in evaluations"
+      v-for="evaluation in evaluations_ordered"
       :key="evaluation._id"
       :name="evaluation.name"
       :time_start="evaluation.time_start"
@@ -64,7 +64,7 @@
       class="mb-3"
     />
 
-    <div class="text-center" v-show="evaluations.length === 0">
+    <div class="text-center" v-show="evaluations_ordered.length === 0">
       No hay evaluaciones.
     </div>
 
@@ -136,15 +136,21 @@ export default {
     this.session_id = getParam("session_id");
     this.getEvaluations();
   },
+  computed: {
+    evaluations_ordered() {
+      return this.orderObjectsByDate(this.evaluations, "time_start");
+    },
+  },
   methods: {
     async getEvaluations() {
       this.showLoading("Cargando Evaluaciones");
-      let evaluations = this.mongoArr(
-        await getEvaluationsBySession(this.session_id)
-      );
-      evaluations.sort((a, b) => b.time_start - a.time_start);
-      this.evaluations = evaluations;
-
+      try {
+        this.evaluations = this.mongoArr(
+          await getEvaluationsBySession(this.session_id)
+        );
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
       this.hideLoading();
     },
     async create() {

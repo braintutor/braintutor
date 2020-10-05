@@ -77,7 +77,7 @@
         :key="idx"
         class="hevent m-card mt-3"
       >
-        <div class="hevent__options">
+        <!-- <div class="hevent__options">
           <v-menu v-if="options && show_options(e)" offset-y left>
             <template v-slot:activator="{ on }">
               <v-btn icon v-on="on">
@@ -94,7 +94,7 @@
               </v-list-item>
             </v-list>
           </v-menu>
-        </div>
+        </div> -->
         <div class="hevent__dateinfo" :style="{ background: e.color }">
           <p class="hevent__date">{{ e.date.getDate() }}</p>
           <p class="hevent__month">
@@ -170,12 +170,12 @@ export default {
     menu: {
       type: Array,
     },
-    show_options: {
-      type: Function,
-    },
-    options: {
-      type: Array,
-    },
+    // show_options: {
+    //   type: Function,
+    // },
+    // options: {
+    //   type: Array,
+    // },
   },
   data: () => ({
     days: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
