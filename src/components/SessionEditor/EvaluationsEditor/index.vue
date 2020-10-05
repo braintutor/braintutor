@@ -27,7 +27,12 @@
       :name="evaluation.name"
       :time_start="evaluation.time_start"
       :time_end="evaluation.time_end"
-      :size="evaluation.content.length"
+      :items="[
+        {
+          label: 'N° Preguntas',
+          value: `${evaluation.content.length} preguntas`,
+        },
+      ]"
       :buttons="[
         {
           text: evaluation.public ? 'Ver Evaluación' : 'Editar',
@@ -56,7 +61,6 @@
           },
         },
       ]"
-      disabled
       class="mb-3"
     />
 

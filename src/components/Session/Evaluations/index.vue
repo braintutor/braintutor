@@ -28,8 +28,12 @@
         :name="evaluation.name"
         :time_start="evaluation.time_start"
         :time_end="evaluation.time_end"
-        :hasResult="!!evaluation.result"
-        student
+        :items="[
+          {
+            label: 'Estado',
+            value: !!evaluation.result ? 'Completado': 'Sin Realizar',
+          },
+        ]"
         @click="showDialogStart(evaluation)"
         :class="[showAvailable ? 'levitation' : 'evaluation--disabled']"
         class="evaluation mb-3"

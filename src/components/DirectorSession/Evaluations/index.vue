@@ -7,8 +7,12 @@
         :name="evaluation.name"
         :time_start="evaluation.time_start"
         :time_end="evaluation.time_end"
-        :size="evaluation.content.length"
-        disabled
+        :items="[
+          {
+            label: 'N° Preguntas',
+            value: `${evaluation.content.length} preguntas`,
+          },
+        ]"
         class="mb-4"
       >
         <div class="text-center pt-4">

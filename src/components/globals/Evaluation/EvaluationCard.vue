@@ -1,21 +1,32 @@
 <template>
   <section class="evaluation m-card" @click="$emit('click', $event)">
-    <v-progress-linear :value="progress" :height="4" color="#84b5ff"></v-progress-linear>
+    <v-progress-linear
+      :value="progress"
+      :height="4"
+      color="#84b5ff"
+    ></v-progress-linear>
 
     <div class="m-card__body">
-      <p class="evaluation__name">{{name}}</p>
+      <p class="evaluation__name">{{ name }}</p>
       <div class="evaluation__body">
-        <span class="evaluation__label">Tiempo Inicio</span>
-        <span class="evaluation__label">Tiempo Fin</span>
-        <span v-if="student" class="evaluation__label">Estado</span>
-        <span v-else class="evaluation__label">N° de preguntas</span>
-        <p class="evaluation__time">{{toDateTimeString(time_start, false)}}</p>
-        <p class="evaluation__time">{{toDateTimeString(time_end, false)}}</p>
-        <p v-if="student" class="evaluation__time">
-          <span v-if="hasResult" class="evaluation__state1">Completado</span>
-          <span v-else class="evaluation__state0">Sin Realizar</span>
-        </p>
-        <p v-else class="evaluation__time">{{size}} pregunta(s)</p>
+        <div class="evaluation__item">
+          <span class="evaluation__label">Tiempo Inicio</span>
+          <p class="evaluation__value">
+            {{ toDateTimeString(time_start, false) }}
+          </p>
+        </div>
+        <div class="evaluation__item">
+          <span class="evaluation__label">Tiempo Fin</span>
+          <p class="evaluation__value">
+            {{ toDateTimeString(time_end, false) }}
+          </p>
+        </div>
+        <div v-for="(item, idx) in items" :key="idx" class="evaluation__item">
+          <span class="evaluation__label">{{ item.label }}</span>
+          <p class="evaluation__value">
+            {{ item.value }}
+          </p>
+        </div>
       </div>
 
       <slot></slot>
@@ -33,10 +44,10 @@
             text
             class="mx-1"
           >
-            <v-icon style="font-size: 1.5rem">{{button.icon}}</v-icon>
+            <v-icon style="font-size: 1.5rem">{{ button.icon }}</v-icon>
           </m-btn>
         </template>
-        <span style="font-size: .75rem">{{button.text}}</span>
+        <span style="font-size: 0.75rem">{{ button.text }}</span>
       </v-tooltip>
     </div>
   </section>
@@ -51,13 +62,8 @@ export default {
     name: String,
     time_start: Date,
     time_end: Date,
-    size: Number,
+    items: Array,
     buttons: Array,
-    hasResult: Boolean,
-    student: {
-      type: Boolean,
-      default: false,
-    },
   },
   data: () => ({
     now: new Date(),
@@ -106,40 +112,28 @@ export default {
     word-wrap: break-word;
   }
   &__body {
-    padding: 6px 0;
-    // background: rgb(244, 246, 253);
-    border-radius: 12px;
-
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    column-gap: 8px;
-    row-gap: 8px;
-  }
-  &__actions {
+    display: flex;
     justify-content: center;
   }
-
+  &__item {
+    padding: 0 5%;
+    text-align: center;
+  }
   &__label {
     color: var(--color-subtitle);
     font-weight: bold;
     font-size: 0.85rem;
     text-align: center;
   }
-  &__time {
+  &__value {
     color: rgb(47, 47, 47);
     margin-bottom: 0;
     font-size: 1rem;
     font-weight: bold;
     text-align: center;
   }
-  &__state0 {
-    color: var(--color-font-disable);
-  }
-  &__state1 {
-    padding: 6px 18px;
-    background: var(--color-subtitle);
-    color: #fff;
-    border-radius: 12px;
+  &__actions {
+    justify-content: center;
   }
 }
 </style>

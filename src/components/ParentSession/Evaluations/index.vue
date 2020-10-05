@@ -7,8 +7,6 @@
         :name="evaluation.name"
         :time_start="evaluation.time_start"
         :time_end="evaluation.time_end"
-        student
-        disabled
         class="mb-4"
       />
 
