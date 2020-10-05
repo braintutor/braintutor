@@ -549,7 +549,7 @@ export default {
   &__dateinfo {
     flex-shrink: 0;
     width: 25%;
-    max-width: 140px;
+    max-width: 120px;
     margin: 0;
     padding: 10px;
     color: #fff;
