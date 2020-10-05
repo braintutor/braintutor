@@ -97,13 +97,12 @@
     v-else-if="edit"
     :evaluation="evaluation"
     :unselect="unselect"
-    class="m-container pa-4"
+    class="m-container"
   />
   <Results
     v-else
     :evaluation_id="evaluation._id"
     :unselect="unselect"
-    class="pa-4"
   />
 </template>
 

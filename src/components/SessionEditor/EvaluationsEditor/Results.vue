@@ -1,91 +1,137 @@
 <template>
-  <div>
-    <div class="menu">
-      <div class="menu-left">
-        <v-btn @click="unselect()" icon>
-          <v-icon>mdi-arrow-left</v-icon>
-        </v-btn>
-        <p class="menu-title">{{evaluation.name}}</p>
-      </div>
-    </div>
-
-    <div v-if="evaluation" class="mt-3" style="overflow-x: auto">
-      <table class="m-table">
-        <thead>
-          <tr>
-            <th></th>
-            <!-- <th></th> -->
-            <th class="student"></th>
-            <th class="text-center">C</th>
-            <th class="text-center">I</th>
-            <th class="text-center">B</th>
-            <th v-for="(c, idx) in evaluation.content" :key="idx" class="evaluation">{{idx + 1}}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="(student, idx) in students"
-            :key="idx"
-            :set="values = getStats(student, evaluation)"
-          >
-            <td>
-              <v-menu offset-y>
-                <template v-slot:activator="{ on }">
-                  <v-btn icon v-on="on">
-                    <v-icon>mdi-dots-vertical</v-icon>
-                  </v-btn>
-                </template>
-                <v-list dense>
-                  <v-list-item
-                    @click="dialog_dlt = true; student_dlt = student"
-                    :disabled="!values.has_answer"
-                  >
-                    <v-list-item-title>Eliminar Nota</v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
-            </td>
-            <td class="student">{{`${student.last_name}, ${student.first_name}`}}</td>
-            <!-- <td></td> -->
-            <td class="text-center">{{values.corrects}}</td>
-            <td class="text-center">{{values.incorrects}}</td>
-            <td class="text-center">{{values.empty}}</td>
-            <td v-for="(item, idx) in values.answers_state" :key="idx">
-              <div class="score" :class="`score--${item}`">
-                <template v-if="item !== -1">
-                  <v-icon v-if="item">mdi-check</v-icon>
-                  <v-icon v-else>mdi-close</v-icon>
-                </template>
-                <template v-else>-</template>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Dialog Delete -->
-    <v-dialog v-model="dialog_dlt" max-width="400">
-      <div class="m-card">
-        <div class="m-card__body">
-          <h3>Confirmar eliminación</h3>
-          <p class="mt-4">Si elimina la nota actual, el alumno podrá realizar el examen otra vez.</p>
-        </div>
-        <div class="m-card__actions">
-          <m-btn @click="dialog_dlt = false" color="primary" small>Cancelar</m-btn>
-          <m-btn
-            @click="dialog_dlt = false; removeResult()"
-            color="error"
-            small
-            class="ml-2"
-          >Eliminar</m-btn>
+  <div class="m-container">
+    <div v-show="!show_evaluation">
+      <div class="menu">
+        <div class="menu-left">
+          <v-btn @click="unselect()" icon>
+            <v-icon>mdi-arrow-left</v-icon>
+          </v-btn>
+          <p class="menu-title">{{ evaluation.name }}</p>
         </div>
       </div>
-    </v-dialog>
+
+      <div v-if="evaluation" class="mt-3" style="overflow-x: auto">
+        <table class="m-table">
+          <thead>
+            <tr>
+              <th></th>
+              <!-- <th></th> -->
+              <th class="student"></th>
+              <th class="text-center">C</th>
+              <th class="text-center">I</th>
+              <th class="text-center">B</th>
+              <th
+                v-for="(c, idx) in evaluation.content"
+                :key="idx"
+                class="evaluation"
+              >
+                {{ idx + 1 }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(student, idx) in students"
+              :key="idx"
+              :set="(values = getStats(student, evaluation))"
+            >
+              <td>
+                <v-menu offset-y>
+                  <template v-slot:activator="{ on }">
+                    <v-btn icon v-on="on">
+                      <v-icon>mdi-dots-vertical</v-icon>
+                    </v-btn>
+                  </template>
+                  <v-list dense>
+                    <v-list-item
+                      @click="showEvaluation(student)"
+                      :disabled="!values.has_answer"
+                    >
+                      <v-list-item-title>Ver Examen</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item
+                      @click="
+                        dialog_dlt = true;
+                        student_selected = student;
+                      "
+                      :disabled="!values.has_answer"
+                    >
+                      <v-list-item-title>Eliminar Nota</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </td>
+              <td class="student">
+                {{ `${student.last_name}, ${student.first_name}` }}
+              </td>
+              <!-- <td></td> -->
+              <td class="text-center">{{ values.corrects }}</td>
+              <td class="text-center">{{ values.incorrects }}</td>
+              <td class="text-center">{{ values.empty }}</td>
+              <td v-for="(item, idx) in values.answers_state" :key="idx">
+                <div class="score" :class="`score--${item}`">
+                  <template v-if="item !== -1">
+                    <v-icon v-if="item">mdi-check</v-icon>
+                    <v-icon v-else>mdi-close</v-icon>
+                  </template>
+                  <template v-else>-</template>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Dialog Delete -->
+      <v-dialog v-model="dialog_dlt" max-width="400">
+        <div class="m-card">
+          <div class="m-card__body">
+            <h3>Confirmar eliminación</h3>
+            <p class="mt-4">
+              Si elimina la nota actual, el alumno podrá realizar el examen otra
+              vez.
+            </p>
+          </div>
+          <div class="m-card__actions">
+            <m-btn @click="dialog_dlt = false" color="primary" small
+              >Cancelar</m-btn
+            >
+            <m-btn
+              @click="
+                dialog_dlt = false;
+                removeResult();
+              "
+              color="error"
+              small
+              class="ml-2"
+              >Eliminar</m-btn
+            >
+          </div>
+        </div>
+      </v-dialog>
+    </div>
+
+    <div v-if="show_evaluation">
+      <div class="menu mb-3">
+        <div class="menu-left">
+          <v-btn @click="show_evaluation = false" icon>
+            <v-icon>mdi-arrow-left</v-icon>
+          </v-btn>
+          <p class="menu-title">
+            {{
+              `${student_selected.last_name}, ${student_selected.first_name}`
+            }}
+          </p>
+        </div>
+      </div>
+      <EvaluationStudent :evaluation="evaluation" :student="student_selected" />
+    </div>
   </div>
 </template>
 
 <script>
+import EvaluationStudent from "./EvaluationStudent";
+
 import { getParam } from "@/services/router.js";
 import { getStudentsBySession } from "@/services/studentService";
 import { getEvaluation, removeResult } from "@/services/evaluationService";
@@ -99,8 +145,9 @@ export default {
     evaluation: {},
     students: [],
     //
-    student_dlt: null,
+    student_selected: null,
     dialog_dlt: false,
+    show_evaluation: false,
   }),
   async created() {
     this.showLoading("Cargando Resultados");
@@ -128,7 +175,7 @@ export default {
       if (student_answer) {
         has_answer = true;
         evaluation.content.forEach((c, idx) => {
-          if (student_answer.answers[idx] !== -1)
+          if (student_answer.answers[idx] >= 0)
             if (c.correct === student_answer.answers[idx]) {
               answers_state[idx] = 1;
               corrects++;
@@ -144,17 +191,24 @@ export default {
     },
     async removeResult() {
       this.showLoading("Eliminando Resultado");
-      let student_dlt_id = this.student_dlt._id.$oid;
+      let student_id = this.student_selected._id.$oid;
       try {
-        await removeResult(this.evaluation._id.$oid, student_dlt_id);
+        await removeResult(this.evaluation._id.$oid, student_id);
         this.evaluation.results = this.evaluation.results.filter(
-          (result) => result._id.$oid !== student_dlt_id
+          (result) => result._id.$oid !== student_id
         );
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
+    showEvaluation(student) {
+      this.show_evaluation = true;
+      this.student_selected = student;
+    },
+  },
+  components: {
+    EvaluationStudent,
   },
 };
 </script>

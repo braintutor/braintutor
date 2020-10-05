@@ -11,7 +11,7 @@
         v-for="(c, c_idx) in evaluation.content"
         :key="c_idx"
       >
-        <p class="question__statement">{{ `${c_idx + 1}. ${c.question}` }}</p>
+        <p class="question__statement">{{ c.question }}</p>
         <v-radio-group v-model="c.answer">
           <v-radio
             class="question__alternative"
@@ -144,6 +144,7 @@ export default {
   &__statement {
     margin: 8px;
     font-weight: bold;
+    white-space: pre-wrap;
   }
   &__alternative {
     margin-bottom: 8px;
@@ -151,6 +152,7 @@ export default {
     background: #f5f5f5;
     border-radius: 10px;
     transition: background-color 0.2s;
+    white-space: pre-wrap;
     cursor: pointer;
     &:hover {
       background: #e6ecff;
