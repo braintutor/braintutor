@@ -150,7 +150,7 @@ export default {
       // TEA
       {
         title: "Cursos",
-        name: "sessions-teacher",
+        name: "teacher-sessions",
         icon: "mdi-book",
         session_roles: ["TEA"],
       },
@@ -163,7 +163,7 @@ export default {
       // STU
       {
         title: "Cursos",
-        name: "sessions-student",
+        name: "student-sessions",
         icon: "mdi-book",
         session_roles: ["STU"],
       },
@@ -176,7 +176,7 @@ export default {
       // DIR
       {
         title: "Cursos",
-        name: "director-courses",
+        name: "director-sessions",
         icon: "mdi-book",
         session_roles: ["DIR"],
       },
@@ -189,7 +189,7 @@ export default {
       // PAR
       {
         title: "Cursos",
-        name: "parent-courses",
+        name: "parent-sessions",
         icon: "mdi-book",
         session_roles: ["PAR"],
       },

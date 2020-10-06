@@ -309,7 +309,7 @@ export default {
       };
       this.task.time_start = new Date(this.task.time_start.$date);
     } catch (error) {
-      redirect("sessions-student");
+      redirect("student-sessions-tasks");
     }
     this.hideLoading();
   },
@@ -324,7 +324,7 @@ export default {
   methods: {
     redirectSession() {
       this.$router
-        .push(`/session/${this.task.session_id.$oid}/tasks`)
+        .push(`/student-session/${this.task.session_id.$oid}/tasks`)
         .catch(() => {});
     },
     async showAll() {
@@ -412,7 +412,7 @@ export default {
     },
     // GOOGLE DRIVE
     login() {
-      let redirect_uri = `${window.location.protocol}//${window.location.host}/sessions-student`;
+      let redirect_uri = `${window.location.protocol}//${window.location.host}/student-sessions`;
       let url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${this.client_id}&redirect_uri=${redirect_uri}&response_type=token&scope=${this.scope}&state=${this.task_id}`;
       window.location = url;
     },

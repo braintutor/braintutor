@@ -76,10 +76,10 @@ const routes = [
   },
   // TEA
   {
-    path: "/sessions-teacher",
-    name: "sessions-teacher",
+    path: "/teacher-sessions",
+    name: "teacher-sessions",
     meta: { role: "TEA" },
-    component: () => import("../views/SessionsTeacher.vue"),
+    component: () => import("../views/TeacherSessions.vue"),
   },
   {
     path: "/courses-editor",
@@ -88,36 +88,36 @@ const routes = [
     component: () => import("../views/CoursesEditor.vue"),
   },
   {
-    path: "/session-editor/:session_id",
+    path: "/teacher-session/:session_id",
     meta: { role: "TEA" },
-    component: () => import("../views/SessionEditor.vue"),
+    component: () => import("../views/TeacherSession.vue"),
     children: [
       {
         path: "",
-        name: "session-editor-learn",
+        name: "teacher-session-learn",
         component: () => import("../components/Materials/index"),
       },
       {
         path: "tasks",
-        name: "session-editor-tasks",
+        name: "teacher-session-tasks",
         component: () =>
-          import("../components/SessionEditor/TasksEditor/index"),
+          import("../components/TeacherSession/TasksEditor/index"),
       },
       {
         path: "events",
-        name: "session-editor-events",
-        component: () => import("../components/SessionEditor/EventsEditor"),
+        name: "teacher-session-events",
+        component: () => import("../components/TeacherSession/EventsEditor"),
       },
       {
         path: "evaluations",
-        name: "session-editor-evaluations",
+        name: "teacher-session-evaluations",
         component: () =>
-          import("../components/SessionEditor/EvaluationsEditor/index"),
+          import("../components/TeacherSession/EvaluationsEditor/index"),
       },
       {
         path: "students",
-        name: "session-editor-students",
-        component: () => import("../components/SessionEditor/Students"),
+        name: "teacher-session-students",
+        component: () => import("../components/TeacherSession/Students"),
       },
     ],
   },
@@ -151,40 +151,41 @@ const routes = [
   },
   // STU
   {
-    path: "/sessions-student",
-    name: "sessions-student",
+    path: "/student-sessions",
+    name: "student-sessions",
     meta: { role: "STU" },
-    component: () => import("../views/SessionsStudent.vue"),
+    component: () => import("../views/StudentSessions.vue"),
   },
   {
-    path: "/session/:session_id",
-    component: () => import("../views/Session.vue"),
+    path: "/student-session/:session_id",
+    component: () => import("../views/StudentSession.vue"),
     meta: { role: "STU" },
     children: [
       {
         path: "",
-        name: "session-learn",
+        name: "student-session-learn",
         component: () => import("../components/Materials/index"),
       },
       {
         path: "tasks",
-        name: "session-tasks",
-        component: () => import("../components/Session/Tasks"),
+        name: "student-session-tasks",
+        component: () => import("../components/StudentSession/Tasks"),
       },
       {
         path: "events",
-        name: "session-events",
-        component: () => import("../components/Session/Events"),
+        name: "student-session-events",
+        component: () => import("../components/StudentSession/Events"),
       },
       {
         path: "evaluations",
-        name: "session-evaluations",
-        component: () => import("../components/Session/Evaluations/index"),
+        name: "student-session-evaluations",
+        component: () =>
+          import("../components/StudentSession/Evaluations/index"),
       },
       {
         path: "students",
-        name: "session-students",
-        component: () => import("../components/Session/Students"),
+        name: "student-session-students",
+        component: () => import("../components/StudentSession/Students"),
       },
     ],
   },
@@ -208,10 +209,10 @@ const routes = [
   },
   // DIR
   {
-    path: "/director-courses",
-    name: "director-courses",
+    path: "/director-sessions",
+    name: "director-sessions",
     meta: { role: "DIR" },
-    component: () => import("../views/DirectorCourses.vue"),
+    component: () => import("../views/DirectorSessions.vue"),
   },
   {
     path: "/director-students",
@@ -249,10 +250,10 @@ const routes = [
   },
   // PAR
   {
-    path: "/parent-courses",
-    name: "parent-courses",
+    path: "/parent-sessions",
+    name: "parent-sessions",
     meta: { role: "PAR" },
-    component: () => import("../views/ParentCourses.vue"),
+    component: () => import("../views/ParentSessions.vue"),
   },
   {
     path: "/parent-students",
@@ -318,10 +319,10 @@ router.beforeEach(async (to, from, next) => {
   // ROUTER AUTHORIZATION
   let redirects = {
     ADM: "school-editor",
-    TEA: "sessions-teacher",
-    STU: "sessions-student",
-    DIR: "director-courses",
-    PAR: "parent-courses",
+    TEA: "teacher-sessions",
+    STU: "student-sessions",
+    DIR: "director-sessions",
+    PAR: "parent-sessions",
   };
 
   // if route auth required

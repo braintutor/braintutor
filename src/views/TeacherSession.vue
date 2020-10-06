@@ -26,27 +26,27 @@ export default {
       {
         image: require(`@/assets/icons/icon-course.svg`),
         text: "Aprender",
-        name: "session-editor-learn",
+        name: "teacher-session-learn",
       },
       {
         image: require("@/assets/icons/icon-calendar.svg"),
         text: "Agenda",
-        name: "session-editor-events",
+        name: "teacher-session-events",
       },
       {
         image: require(`@/assets/icons/icon-task.svg`),
         text: "Tareas",
-        name: "session-editor-tasks",
+        name: "teacher-session-tasks",
       },
       {
         image: require("@/assets/icons/icon-evaluation.svg"),
         text: "Evaluaciones",
-        name: "session-editor-evaluations",
+        name: "teacher-session-evaluations",
       },
       {
         image: require("@/assets/icons/icon-student.svg"),
         text: "Alumnos",
-        name: "session-editor-students",
+        name: "teacher-session-students",
       },
     ],
   }),
@@ -64,7 +64,7 @@ export default {
   methods: {
     redirectCourses() {
       this.$router.push({
-        name: "sessions-teacher",
+        name: "teacher-sessions",
       });
     },
   },

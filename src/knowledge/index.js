@@ -1,12 +1,12 @@
 import store from "../store";
 import course_editor_knowledge from "./course-editor.knowledge";
 import material_editor_knowledge from "./material-editor.knowledge";
-import session_editor_knowledge from "./session-editor.knowledge";
+import teacher_session_knowledge from "./teacher-session.knowledge";
 
 const nameToKnowledge = {
   "course-editor": course_editor_knowledge,
   "material-editor": material_editor_knowledge,
-  "session-editor": session_editor_knowledge,
+  "teacher-session": teacher_session_knowledge,
 };
 
 const onRouterChange = (name) => {

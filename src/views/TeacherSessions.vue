@@ -11,7 +11,8 @@
       :key="session._id"
       class="session mb-3"
       :name="session.course.name"
-      :user="`${session.teacher.last_name}, ${session.teacher.first_name}`"
+      :user="session.classroom.name"
+      user_icon="mdi-account-multiple"
       :buttons="[
         {
           text: 'Aprender',
@@ -39,56 +40,38 @@
         },
       ]"
     />
-
-    <div v-show="sessions.length <= 0" class="text-center mt-3">
-      No hay Sesiones
-    </div>
   </div>
 </template>
 
 <script>
 import SessionCard from "@/components/globals/Session/SessionCard";
 
-import { getSessionsByStudent } from "@/services/sessionService";
-import { redirect } from "@/services/router.js";
+import { getSessionsByTeacher } from "@/services/sessionService";
 
 export default {
   data: () => ({
     sessions: [],
   }),
-  async mounted() {
-    // GOOGLE
-    let fragmentString = location.hash.substring(1);
-    let params = {};
-    var regex = /([^&=]+)=([^&]*)/g,
-      m;
-    while ((m = regex.exec(fragmentString))) {
-      params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
-    }
-    if (params.access_token)
-      localStorage.setItem("access_token", params.access_token);
-
-    let state = params["state"] || params["/state"];
-    if (state) redirect("task", { task_id: state });
-
-    //
+  async created() {
     this.showLoading("Cargando Cursos");
     try {
-      this.sessions = this.mongoArr(await getSessionsByStudent());
+      this.sessions = this.mongoArr(await getSessionsByTeacher());
     } catch (error) {
       this.showMessage("", error.msg || error);
     }
-    this.hideLoading(false);
+    this.hideLoading();
   },
   methods: {
     selectSession(session, category) {
       this.$router.push({
-        name: `session-${category}`,
+        name: `teacher-session-${category}`,
         params: { session_id: session._id },
       });
     },
   },
-  components: { SessionCard },
+  components: {
+    SessionCard,
+  },
 };
 </script>
 
