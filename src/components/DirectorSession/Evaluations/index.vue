@@ -32,7 +32,7 @@
     </div>
 
     <div v-if="evaluation_selected">
-      <div class="m-menu">
+      <div class="m-menu mb-3">
         <div class="m-menu__left">
           <v-btn icon @click="evaluation_selected = null">
             <v-icon style="font-size: 1.4rem">mdi-arrow-left</v-icon>
@@ -40,14 +40,17 @@
           <span class="m-menu__title">{{ evaluation_selected.name }}</span>
         </div>
       </div>
-      <Result :evaluation="evaluation_selected" :students="students" />
+      <EvaluationResults
+        :evaluation="evaluation_selected"
+        :students="students"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import EvaluationCard from "@/components/globals/Evaluation/EvaluationCard";
-import Result from "./Results";
+import EvaluationResults from "@/components/globals/Evaluation/EvaluationResults";
 
 export default {
   data: () => ({
@@ -78,7 +81,7 @@ export default {
   },
   components: {
     EvaluationCard,
-    Result,
+    EvaluationResults,
   },
 };
 </script>

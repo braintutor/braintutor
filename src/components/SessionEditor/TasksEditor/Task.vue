@@ -1,7 +1,7 @@
 <template>
   <div class="pa-2">
-    <div class="menu pa-0 pb-2">
-      <div class="menu-left">
+    <div class="m-menu pa-0 pb-2">
+      <div class="m-menu__left">
         <v-btn
           icon
           @click="
@@ -11,7 +11,7 @@
         >
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
-        <span class="menu-title">Ver Tareas</span>
+        <span class="m-menu__title">Ver Tareas</span>
       </div>
     </div>
 

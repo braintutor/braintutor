@@ -150,28 +150,6 @@ textarea {
   font-size: 0.9rem !important;
 }
 
-//
-.menu {
-  padding: 5px 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  .menu-title {
-    margin: 0 10px !important;
-    font-size: 1.1rem;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-  }
-  .menu-left {
-    flex-grow: 1;
-    display: flex;
-  }
-  .menu-right {
-    display: flex;
-  }
-}
-
 .empty {
   margin: 10px;
   color: #797979;

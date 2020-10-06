@@ -45,7 +45,7 @@ export default {
   }),
   created() {
     let result = this.evaluation.results.find(
-      (r) => r._id.$oid === this.student._id.$oid
+      (r) => r._id === this.student._id
     );
     if (result) this.answers = result.answers;
   },

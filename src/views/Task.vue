@@ -1,11 +1,11 @@
 <template>
   <div class="m-container pa-2">
-    <div class="menu pa-0 pb-2">
-      <div class="menu-left">
+    <div class="m-menu pa-0 pb-2">
+      <div class="m-menu__left">
         <v-btn icon @click="redirectSession()">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
-        <span class="menu-title">Volver</span>
+        <span class="m-menu__title">Volver</span>
       </div>
     </div>
     <!-- TASK -->

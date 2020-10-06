@@ -1,22 +1,22 @@
 <template>
   <div class="quiz-editor-container m-fullscreen">
-    <div class="menu">
-      <div class="menu-left">
+    <div class="m-menu">
+      <div class="m-menu__left">
         <v-btn icon @click="unselect()">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
         <v-text-field
           v-if="!evaluation.public"
-          class="menu-title"
+          class="m-menu__title"
           v-model="evaluation.name"
           :maxlength="EvaluationModel.name.max_length"
           :counter="EvaluationModel.name.max_length"
           dense
           autocomplete="off"
         ></v-text-field>
-        <span v-else class="menu-title">{{ evaluation.name }}</span>
+        <span v-else class="m-menu__title">{{ evaluation.name }}</span>
       </div>
-      <div v-if="!evaluation.public" class="menu-right">
+      <div v-if="!evaluation.public" class="m-menu__right">
         <v-tooltip top>
           <template v-slot:activator="{ on, attrs }">
             <v-btn
