@@ -1,13 +1,17 @@
 <template>
   <div class="pb-3">
-    <div class="legend">
-      <div class="legend__item">
-        <div class="legend__name">Eventos</div>
-        <div class="legend__color" style="background-color: #178ae2"></div>
+    <div class="m-legend">
+      <div class="m-legend__item">
+        <div class="m-legend__name">Eventos</div>
+        <div class="m-legend__color" style="background-color: #178ae2"></div>
       </div>
-      <div class="legend__item">
-        <div class="legend__name">Tareas</div>
-        <div class="legend__color" style="background-color: #00af3d"></div>
+      <div class="m-legend__item">
+        <div class="m-legend__name">Tareas</div>
+        <div class="m-legend__color" style="background-color: #00af3d"></div>
+      </div>
+      <div class="m-legend__item">
+        <div class="m-legend__name">Evaluaciones</div>
+        <div class="m-legend__color" style="background-color: #e8a834"></div>
       </div>
     </div>
 
@@ -28,21 +32,38 @@ export default {
     let session_id = this.$router.currentRoute.params["session_id"];
     this.showLoading("Cargando Evaluaciones");
     try {
-      let events = await this.$api.event.getAll(session_id);
+      let events = this.mongoArr(await this.$api.event.getAll(session_id));
       events.forEach((i) => {
-        i.date = new Date(i.time_start.$date);
+        i.date = i.time_start;
         i.color = "#178ae2";
         i.type = "event";
       });
 
-      let tasks = await this.$api.task.getAll(session_id);
+      let tasks = this.mongoArr(await this.$api.task.getAll(session_id));
       tasks.forEach((i) => {
-        i.date = new Date(i.time_start.$date);
+        i.date = i.time_start;
         i.color = "#00af3d";
         i.type = "task";
       });
 
-      this.events = events.concat(tasks);
+      let evaluations = this.mongoArr(
+        await this.$api.evaluation.getAll(session_id)
+      );
+      evaluations.forEach((i) => {
+        i.title = i.name;
+        i.date = i.time_start;
+        i.description = `Termina el ${i.time_end.toLocaleDateString("es-ES", {
+          weekday: "long",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        })}`;
+        i.color = "#e8a834";
+        i.type = "evaluation";
+      });
+
+      this.events = events.concat(tasks, evaluations);
     } catch (error) {
       this.showMessage("", error.msg || error);
     }
@@ -50,25 +71,3 @@ export default {
   },
 };
 </script>
-
-<style lang='scss' scoped>
-.legend {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  &__item {
-    margin: 10px 14px;
-    display: flex;
-    align-items: center;
-  }
-  &__name {
-    font-size: 0.8rem;
-  }
-  &__color {
-    height: 10px;
-    width: 40px;
-    margin-left: 10px;
-    border-radius: 4px;
-  }
-}
-</style>

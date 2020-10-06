@@ -1,8 +1,8 @@
 <template>
   <div class="m-container">
-    <div class="legend">
-      <div class="legend__item">
-        <div class="legend__name">
+    <div class="m-legend">
+      <div class="m-legend__item">
+        <div class="m-legend__name">
           <strong
             v-show="$store.state.show_limits"
             class="mr-2"
@@ -15,11 +15,11 @@
           >
           <span>Eventos</span>
         </div>
-        <div class="legend__color" style="background-color: #178ae2"></div>
+        <div class="m-legend__color" style="background-color: #178ae2"></div>
       </div>
-      <div class="legend__item">
-        <div class="legend__name">Tareas</div>
-        <div class="legend__color" style="background-color: #00af3d"></div>
+      <div class="m-legend__item">
+        <div class="m-legend__name">Tareas</div>
+        <div class="m-legend__color" style="background-color: #00af3d"></div>
       </div>
     </div>
 
@@ -273,27 +273,3 @@ export default {
   },
 };
 </script>
-
-<style lang='scss' scoped>
-.legend {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  &__item {
-    margin: 10px 14px;
-    display: flex;
-    align-items: center;
-  }
-  &__name {
-    font-size: 0.8rem;
-    display: flex;
-    align-items: center;
-  }
-  &__color {
-    height: 10px;
-    width: 40px;
-    margin-left: 10px;
-    border-radius: 4px;
-  }
-}
-</style>

@@ -1,0 +1,19 @@
+.m-legend {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  &__item {
+    margin: 10px 14px;
+    display: flex;
+    align-items: center;
+  }
+  &__name {
+    font-size: 0.8rem;
+  }
+  &__color {
+    height: 10px;
+    width: 40px;
+    margin-left: 10px;
+    border-radius: 4px;
+  }
+}
