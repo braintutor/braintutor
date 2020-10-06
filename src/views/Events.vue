@@ -18,6 +18,14 @@
           v-model="filters"
         />Tareas
       </label>
+      <label class="filter__item">
+        <input
+          class="mr-1"
+          type="checkbox"
+          value="evaluation"
+          v-model="filters"
+        />Evaluaciones
+      </label>
     </div>
 
     <div class="m-legend">
@@ -41,7 +49,7 @@
         </div>
         <div v-if="event.type === 'task'" class="m-card__actions pa-0 pt-3">
           <m-btn
-            @click="redirect('task', { task_id: event._id.$oid })"
+            @click="redirect('task', { task_id: event._id })"
             color="primary"
             small
             >Ver Respuesta</m-btn
@@ -60,7 +68,7 @@ export default {
   data: () => ({
     sessions: [],
     events: [],
-    filters: ["task", "event"],
+    filters: ["task", "event", "evaluation"],
   }),
   computed: {
     events_f() {
@@ -75,7 +83,7 @@ export default {
     async init() {
       this.showLoading("Cargando Eventos");
       try {
-        let sessions = await getSessionsEventsAndTaksByStudent();
+        let sessions = this.mongoArr(await getSessionsEventsAndTaksByStudent());
         let events = [];
 
         sessions.forEach((session) => {
@@ -85,9 +93,8 @@ export default {
 
           events = events.concat(
             session.events.map((i) => {
-              let date = new Date(i.time_start.$date);
               return {
-                date,
+                date: i.time_start,
                 type: "event",
                 color,
                 ...i,
@@ -96,10 +103,30 @@ export default {
           );
           events = events.concat(
             session.tasks.map((i) => {
-              let date = new Date(i.time_start.$date);
               return {
-                date,
+                date: i.time_start,
                 type: "task",
+                color,
+                ...i,
+              };
+            })
+          );
+          events = events.concat(
+            session.evaluations.map((i) => {
+              i.title = i.name;
+              i.description = `Termina el ${i.time_end.toLocaleDateString(
+                "es-ES",
+                {
+                  weekday: "long",
+                  month: "long",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                }
+              )}`;
+              return {
+                date: i.time_start,
+                type: "evaluation",
                 color,
                 ...i,
               };
