@@ -13,14 +13,14 @@ export default {
     session: {},
     links: [
       {
-        image: require(`@/assets/icons/icon-task.svg`),
-        text: "Tareas",
-        name: "parent-session-tasks",
-      },
-      {
         image: require("@/assets/icons/icon-calendar.svg"),
         text: "Agenda",
         name: "parent-session-events",
+      },
+      {
+        image: require(`@/assets/icons/icon-task.svg`),
+        text: "Tareas",
+        name: "parent-session-tasks",
       },
       {
         image: require("@/assets/icons/icon-evaluation.svg"),

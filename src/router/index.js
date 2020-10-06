@@ -226,13 +226,13 @@ const routes = [
     children: [
       {
         path: "",
-        name: "director-session-tasks",
-        component: () => import("../components/DirectorSession/Tasks"),
-      },
-      {
-        path: "events",
         name: "director-session-events",
         component: () => import("../components/DirectorSession/Events"),
+      },
+      {
+        path: "tasks",
+        name: "director-session-tasks",
+        component: () => import("../components/DirectorSession/Tasks"),
       },
       {
         path: "evaluations",
@@ -267,13 +267,13 @@ const routes = [
     children: [
       {
         path: "",
-        name: "parent-session-tasks",
-        component: () => import("../components/ParentSession/Tasks"),
-      },
-      {
-        path: "events",
         name: "parent-session-events",
         component: () => import("../components/ParentSession/Events"),
+      },
+      {
+        path: "tasks",
+        name: "parent-session-tasks",
+        component: () => import("../components/ParentSession/Tasks"),
       },
       {
         path: "evaluations",

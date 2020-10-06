@@ -3,15 +3,24 @@
     <div class="m-legend">
       <div class="m-legend__item">
         <div class="m-legend__name">Eventos</div>
-        <div class="m-legend__color" style="background-color: #178ae2"></div>
+        <div
+          class="m-legend__color"
+          style="background-color: var(--color-session-event)"
+        ></div>
       </div>
       <div class="m-legend__item">
         <div class="m-legend__name">Tareas</div>
-        <div class="m-legend__color" style="background-color: #00af3d"></div>
+        <div
+          class="m-legend__color"
+          style="background-color: var(--color-session-task)"
+        ></div>
       </div>
       <div class="m-legend__item">
         <div class="m-legend__name">Evaluaciones</div>
-        <div class="m-legend__color" style="background-color: #e8a834"></div>
+        <div
+          class="m-legend__color"
+          style="background-color: var(--color-session-evaluation)"
+        ></div>
       </div>
     </div>
 
@@ -35,14 +44,14 @@ export default {
       let events = this.mongoArr(await this.$api.event.getAll(session_id));
       events.forEach((i) => {
         i.date = i.time_start;
-        i.color = "#178ae2";
+        i.color = "var(--color-session-event)";
         i.type = "event";
       });
 
       let tasks = this.mongoArr(await this.$api.task.getAll(session_id));
       tasks.forEach((i) => {
         i.date = i.time_start;
-        i.color = "#00af3d";
+        i.color = "var(--color-session-task)";
         i.type = "task";
       });
 
@@ -59,7 +68,7 @@ export default {
           hour: "2-digit",
           minute: "2-digit",
         })}`;
-        i.color = "#e8a834";
+        i.color = "var(--color-session-evaluation)";
         i.type = "evaluation";
       });
 

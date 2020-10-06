@@ -3,11 +3,24 @@
     <div class="m-legend">
       <div class="m-legend__item">
         <div class="m-legend__name">Eventos</div>
-        <div class="m-legend__color" style="background-color: #178ae2"></div>
+        <div
+          class="m-legend__color"
+          style="background-color: var(--color-session-event)"
+        ></div>
       </div>
       <div class="m-legend__item">
         <div class="m-legend__name">Tareas</div>
-        <div class="m-legend__color" style="background-color: #00af3d"></div>
+        <div
+          class="m-legend__color"
+          style="background-color: var(--color-session-task)"
+        ></div>
+      </div>
+      <div class="m-legend__item">
+        <div class="m-legend__name">Evaluaciones</div>
+        <div
+          class="m-legend__color"
+          style="background-color: var(--color-session-evaluation)"
+        ></div>
       </div>
     </div>
 
@@ -28,21 +41,38 @@ export default {
     let session_id = this.$router.currentRoute.params["session_id"];
     this.showLoading("Cargando Evaluaciones");
     try {
-      let events = await this.$api.event.getAll(session_id);
+      let events = this.mongoArr(await this.$api.event.getAll(session_id));
       events.forEach((i) => {
-        i.date = new Date(i.time_start.$date);
-        i.color = "#178ae2";
+        i.date = i.time_start;
+        i.color = "var(--color-session-event)";
         i.type = "event";
       });
 
-      let tasks = await this.$api.task.getAll(session_id);
+      let tasks = this.mongoArr(await this.$api.task.getAll(session_id));
       tasks.forEach((i) => {
-        i.date = new Date(i.time_start.$date);
-        i.color = "#00af3d";
+        i.date = i.time_start;
+        i.color = "var(--color-session-task)";
         i.type = "task";
       });
 
-      this.events = events.concat(tasks);
+      let evaluations = this.mongoArr(
+        await this.$api.evaluation.getAll(session_id)
+      );
+      evaluations.forEach((i) => {
+        i.title = i.name;
+        i.date = i.time_start;
+        i.description = `Termina el ${i.time_end.toLocaleDateString("es-ES", {
+          weekday: "long",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        })}`;
+        i.color = "var(--color-session-evaluation)";
+        i.type = "evaluation";
+      });
+
+      this.events = events.concat(tasks, evaluations);
     } catch (error) {
       this.showMessage("", error.msg || error);
     }

@@ -11,14 +11,14 @@ export default {
   data: () => ({
     links: [
       {
-        image: require(`@/assets/icons/icon-task.svg`),
-        text: "Tareas",
-        name: "director-session-tasks",
-      },
-      {
         image: require("@/assets/icons/icon-calendar.svg"),
         text: "Agenda",
         name: "director-session-events",
+      },
+      {
+        image: require(`@/assets/icons/icon-task.svg`),
+        text: "Tareas",
+        name: "director-session-tasks",
       },
       {
         image: require("@/assets/icons/icon-evaluation.svg"),
