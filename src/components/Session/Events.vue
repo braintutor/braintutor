@@ -31,7 +31,7 @@
         </div>
         <div v-if="event.type === 'task'" class="m-card__actions pa-0 pt-3">
           <m-btn
-            @click="redirect('task', { task_id: event._id.$oid })"
+            @click="redirect('task', { task_id: event._id })"
             color="success"
             small
             >Ver Respuesta</m-btn

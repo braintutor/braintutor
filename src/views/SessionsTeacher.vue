@@ -17,20 +17,20 @@
         {
           text: 'Aprender',
           icon: 'mdi-book',
-          color: 'success',
-          action: () => selectSession(session, 'learn'),
-        },
-        {
-          text: 'Tareas',
-          icon: 'mdi-format-list-checks',
           color: 'primary',
-          action: () => selectSession(session, 'tasks'),
+          action: () => selectSession(session, 'learn'),
         },
         {
           text: 'Eventos',
           icon: 'mdi-calendar',
           color: 'error',
           action: () => selectSession(session, 'events'),
+        },
+        {
+          text: 'Tareas',
+          icon: 'mdi-format-list-checks',
+          color: 'success',
+          action: () => selectSession(session, 'tasks'),
         },
         {
           text: 'Evaluaciones',

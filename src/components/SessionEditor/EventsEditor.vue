@@ -2,24 +2,25 @@
   <div class="m-container">
     <div class="m-legend">
       <div class="m-legend__item">
-        <div class="m-legend__name">
-          <strong
-            v-show="$store.state.show_limits"
-            class="mr-2"
-            style="opacity: 0.5"
-            >({{
-              `${events.filter((e) => e.type === "event").length}/${
-                variables.max_events_per_session
-              }`
-            }})</strong
-          >
-          <span>Eventos</span>
-        </div>
-        <div class="m-legend__color" style="background-color: #178ae2"></div>
+        <div class="m-legend__name">Eventos</div>
+        <div
+          class="m-legend__color"
+          style="background-color: var(--color-session-event)"
+        ></div>
       </div>
       <div class="m-legend__item">
         <div class="m-legend__name">Tareas</div>
-        <div class="m-legend__color" style="background-color: #00af3d"></div>
+        <div
+          class="m-legend__color"
+          style="background-color: var(--color-session-task)"
+        ></div>
+      </div>
+      <div class="m-legend__item">
+        <div class="m-legend__name">Evaluaciones</div>
+        <div
+          class="m-legend__color"
+          style="background-color: var(--color-session-evaluation)"
+        ></div>
       </div>
     </div>
 
@@ -156,6 +157,7 @@ import {
   removeEvent,
 } from "@/services/eventService";
 import { getTasksBySessionTeacher } from "@/services/taskService";
+import { getEvaluationsBySession } from "@/services/evaluationService";
 
 import EventModel from "@/models/Event";
 import variables from "@/models/variables";
@@ -185,18 +187,35 @@ export default {
         let events = await getEventsBySession(this.session_id);
         events.forEach((i) => {
           i.date = new Date(i.time_start.$date);
-          i.color = "#178ae2";
+          i.color = "var(--color-session-event)";
           i.type = "event";
         });
 
         let tasks = await getTasksBySessionTeacher(this.session_id);
         tasks.forEach((i) => {
           i.date = new Date(i.time_start.$date);
-          i.color = "#00af3d";
+          i.color = "var(--color-session-task)";
           i.type = "task";
         });
 
-        this.events = events.concat(tasks);
+        let evaluations = await getEvaluationsBySession(this.session_id);
+        evaluations.forEach((i) => {
+          i.title = i.name;
+          i.date = new Date(i.time_start.$date);
+          i.description = `Termina el ${new Date(
+            i.time_end.$date
+          ).toLocaleDateString("es-ES", {
+            weekday: "long",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          })}`;
+          i.color = "var(--color-session-evaluation)";
+          i.type = "evaluation";
+        });
+
+        this.events = events.concat(tasks, evaluations);
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
