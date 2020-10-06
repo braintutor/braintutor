@@ -29,14 +29,14 @@ export default {
         name: "session-learn",
       },
       {
-        image: require(`@/assets/icons/icon-task.svg`),
-        text: "Tareas",
-        name: "session-tasks",
-      },
-      {
         image: require("@/assets/icons/icon-calendar.svg"),
         text: "Agenda",
         name: "session-events",
+      },
+      {
+        image: require(`@/assets/icons/icon-task.svg`),
+        text: "Tareas",
+        name: "session-tasks",
       },
       {
         image: require("@/assets/icons/icon-evaluation.svg"),
