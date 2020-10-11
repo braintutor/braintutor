@@ -48,11 +48,16 @@
           <p class="mt-5">{{ event.description }}</p>
         </div>
         <div v-if="event.type === 'task'" class="m-card__actions pa-0 pt-3">
-          <m-btn
-            @click="redirect('task', { task_id: event._id })"
-            color="primary"
-            small
-            >Ver Respuesta</m-btn
+          <m-btn @click="redirectTask(event)" color="primary" small text>{{
+            user.role === "TEA" ? "Ir a Tareas" : "Ver Tarea"
+          }}</m-btn>
+        </div>
+        <div
+          v-if="event.type === 'evaluation'"
+          class="m-card__actions pa-0 pt-3"
+        >
+          <m-btn @click="redirectEvaluation(event)" color="primary" small text
+            >Ir a Evaluaciones</m-btn
           >
         </div>
       </template>
@@ -62,7 +67,7 @@
 
 <script>
 import { redirect } from "@/services/router.js";
-import { getSessionsEventsAndTaksByStudent } from "@/services/sessionService";
+import { mapState } from "vuex";
 
 export default {
   data: () => ({
@@ -71,6 +76,7 @@ export default {
     filters: ["task", "event", "evaluation"],
   }),
   computed: {
+    ...mapState(["user"]),
     events_f() {
       return this.events.filter((event) => this.filters.includes(event.type));
     },
@@ -79,11 +85,10 @@ export default {
     await this.init();
   },
   methods: {
-    redirect,
     async init() {
       this.showLoading("Cargando Eventos");
       try {
-        let sessions = this.mongoArr(await getSessionsEventsAndTaksByStudent());
+        let sessions = this.mongoArr(await this.$api.event.getAll());
         let events = [];
 
         sessions.forEach((session) => {
@@ -139,6 +144,23 @@ export default {
         this.showMessage("", error.msg || error);
       }
       this.hideLoading();
+    },
+    redirectTask(event) {
+      if (this.user.role === "TEA")
+        redirect("teacher-session-tasks", {
+          session_id: event.session_id,
+        });
+      else redirect("task", { task_id: event._id });
+    },
+    redirectEvaluation(event) {
+      redirect(
+        this.user.role === "TEA"
+          ? "teacher-session-evaluations"
+          : "student-session-evaluations",
+        {
+          session_id: event.session_id,
+        }
+      );
     },
   },
 };

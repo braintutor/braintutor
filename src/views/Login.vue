@@ -2,7 +2,7 @@
   <v-form ref="form_login" @submit.prevent="login" class="login m-card">
     <div class="m-card__body">
       <div class="login__img">
-        <img :src="school.image" width="100%" />
+        <img :src="require('@/assets/logo/logo-long.jpg')" width="100%" />
       </div>
 
       <div v-if="show_error" class="alert">
@@ -90,7 +90,7 @@ export default {
   margin: 20px auto;
 
   &__img {
-    max-width: 120px;
+    max-width: 140px;
     margin: 20px auto;
   }
 }

@@ -167,12 +167,6 @@ export default {
         icon: "mdi-book",
         session_roles: ["STU"],
       },
-      {
-        title: "Agenda",
-        name: "events",
-        icon: "mdi-calendar",
-        session_roles: ["STU"],
-      },
       // DIR
       {
         title: "Cursos",
@@ -198,6 +192,13 @@ export default {
         name: "parent-students",
         icon: "mdi-school",
         session_roles: ["PAR"],
+      },
+      // *
+      {
+        title: "Agenda",
+        name: "events",
+        icon: "mdi-calendar",
+        session_roles: ["TEA", "STU"],
       },
     ],
     roles: {

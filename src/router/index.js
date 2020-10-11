@@ -23,14 +23,20 @@ const routes = [
   {
     path: "/profile",
     name: "profile",
-    meta: { role: "*" },
+    meta: { roles: ["ADM", "TEA", "STU", "DIR", "PAR"] },
     component: () => import("../views/Profile.vue"),
+  },
+  {
+    path: "/events",
+    name: "events",
+    meta: { roles: ["TEA", "STU"] },
+    component: () => import("../views/Events.vue"),
   },
   // ADM
   {
     path: "/school-editor",
     component: () => import("../views/SchoolEditor.vue"),
-    meta: { role: "ADM" },
+    meta: { roles: ["ADM"] },
     children: [
       {
         path: "",
@@ -78,18 +84,18 @@ const routes = [
   {
     path: "/teacher-sessions",
     name: "teacher-sessions",
-    meta: { role: "TEA" },
+    meta: { roles: ["TEA"] },
     component: () => import("../views/TeacherSessions.vue"),
   },
   {
     path: "/courses-editor",
     name: "courses-editor",
-    meta: { role: "TEA" },
+    meta: { roles: ["TEA"] },
     component: () => import("../views/CoursesEditor.vue"),
   },
   {
     path: "/teacher-session/:session_id",
-    meta: { role: "TEA" },
+    meta: { roles: ["TEA"] },
     component: () => import("../views/TeacherSession.vue"),
     children: [
       {
@@ -123,7 +129,7 @@ const routes = [
   },
   {
     path: "/course-editor/:course_id",
-    meta: { role: "TEA" },
+    meta: { roles: ["TEA"] },
     component: () => import("../views/CourseEditor.vue"),
     children: [
       {
@@ -146,20 +152,20 @@ const routes = [
   {
     path: "/material-editor/:material_id",
     name: "material-editor",
-    meta: { role: "TEA" },
+    meta: { roles: ["TEA"] },
     component: () => import("../views/MaterialEditor.vue"),
   },
   // STU
   {
     path: "/student-sessions",
     name: "student-sessions",
-    meta: { role: "STU" },
+    meta: { roles: ["STU"] },
     component: () => import("../views/StudentSessions.vue"),
   },
   {
     path: "/student-session/:session_id",
     component: () => import("../views/StudentSession.vue"),
-    meta: { role: "STU" },
+    meta: { roles: ["STU"] },
     children: [
       {
         path: "",
@@ -190,40 +196,34 @@ const routes = [
     ],
   },
   {
-    path: "/events",
-    name: "events",
-    meta: { role: "STU" },
-    component: () => import("../views/Events.vue"),
-  },
-  {
     path: "/task/:task_id",
     name: "task",
-    meta: { role: "STU" },
+    meta: { roles: ["STU"] },
     component: () => import("../views/Task.vue"),
   },
   {
     path: "/tasks",
     name: "tasks",
-    meta: { role: "STU" },
+    meta: { roles: ["STU"] },
     component: () => import("../views/Tasks.vue"),
   },
   // DIR
   {
     path: "/director-sessions",
     name: "director-sessions",
-    meta: { role: "DIR" },
+    meta: { roles: ["DIR"] },
     component: () => import("../views/DirectorSessions.vue"),
   },
   {
     path: "/director-students",
     name: "director-students",
-    meta: { role: "DIR" },
+    meta: { roles: ["DIR"] },
     component: () => import("../views/DirectorStudents.vue"),
   },
   {
     path: "/director-session/:session_id",
     component: () => import("../views/DirectorSession.vue"),
-    meta: { role: "DIR" },
+    meta: { roles: ["DIR"] },
     children: [
       {
         path: "",
@@ -252,19 +252,19 @@ const routes = [
   {
     path: "/parent-sessions",
     name: "parent-sessions",
-    meta: { role: "PAR" },
+    meta: { roles: ["PAR"] },
     component: () => import("../views/ParentSessions.vue"),
   },
   {
     path: "/parent-students",
     name: "parent-students",
-    meta: { role: "PAR" },
+    meta: { roles: ["PAR"] },
     component: () => import("../views/ParentStudents.vue"),
   },
   {
     path: "/parent-session/:session_id",
     component: () => import("../views/ParentSession.vue"),
-    meta: { role: "PAR" },
+    meta: { roles: ["PAR"] },
     children: [
       {
         path: "",
@@ -326,13 +326,13 @@ router.beforeEach(async (to, from, next) => {
   };
 
   // if route auth required
-  let route = to.matched.find(({ meta }) => meta.role);
+  let route = to.matched.find(({ meta }) => meta.roles);
   if (route) {
     if (user) {
-      let role = route.meta.role;
-      if (role === "*" || role === user.role) next();
-      else next("/home");
-    } else next("/home");
+      let roles = route.meta.roles;
+      if (roles.includes(user.role)) next();
+      else next("/");
+    } else next("/");
   } else if (user) next(`/${redirects[user.role]}`);
   else next();
 });
