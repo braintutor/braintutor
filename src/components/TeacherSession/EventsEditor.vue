@@ -179,14 +179,7 @@
 
 <script>
 import { getParam, redirect } from "@/services/router.js";
-import {
-  // getEventsBySession,
-  addEvent,
-  updateEvent,
-  removeEvent,
-} from "@/services/eventService";
-// import { getTasksBySessionTeacher } from "@/services/taskService";
-// import { getEvaluationsBySession } from "@/services/evaluationService";
+import { addEvent, updateEvent, removeEvent } from "@/services/eventService";
 
 import EventModel from "@/models/Event";
 import variables from "@/models/variables";
@@ -257,39 +250,6 @@ export default {
         );
 
         this.events = all_events;
-
-        // let events = await getEventsBySession(this.session_id);
-        // events.forEach((i) => {
-        //   i.date = new Date(i.time_start.$date);
-        //   i.color = "var(--color-session-event)";
-        //   i.type = "event";
-        // });
-
-        // let tasks = await getTasksBySessionTeacher(this.session_id);
-        // tasks.forEach((i) => {
-        //   i.date = new Date(i.time_start.$date);
-        //   i.color = "var(--color-session-task)";
-        //   i.type = "task";
-        // });
-
-        // let evaluations = await getEvaluationsBySession(this.session_id);
-        // evaluations.forEach((i) => {
-        //   i.title = i.name;
-        //   i.date = new Date(i.time_start.$date);
-        //   i.description = `Termina el ${new Date(
-        //     i.time_end.$date
-        //   ).toLocaleDateString("es-ES", {
-        //     weekday: "long",
-        //     month: "long",
-        //     day: "numeric",
-        //     hour: "2-digit",
-        //     minute: "2-digit",
-        //   })}`;
-        //   i.color = "var(--color-session-evaluation)";
-        //   i.type = "evaluation";
-        // });
-
-        // this.events = events.concat(tasks, evaluations);
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
