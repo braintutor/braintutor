@@ -48,9 +48,13 @@
           <p class="mt-5">{{ event.description }}</p>
         </div>
         <div v-if="event.type === 'task'" class="m-card__actions pa-0 pt-3">
-          <m-btn @click="redirectTask(event)" color="primary" small text>{{
-            user.role === "TEA" ? "Ir a Tareas" : "Ver Tarea"
-          }}</m-btn>
+          <m-btn
+            @click="redirectTask(event)"
+            color="primary"
+            small
+            :text="user.role === 'TEA'"
+            >{{ user.role === "TEA" ? "Ir a Tareas" : "Ver Tarea" }}</m-btn
+          >
         </div>
         <div
           v-if="event.type === 'evaluation'"
