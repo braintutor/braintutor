@@ -64,6 +64,35 @@
               >Eliminar</m-btn
             >
           </div>
+          <div v-if="event.type === 'task'" class="m-card__actions pa-0 pt-3">
+            <m-btn
+              @click="
+                redirect('teacher-session-tasks', {
+                  session_id: event.session_id,
+                })
+              "
+              color="success"
+              small
+              text
+              >Ir a Tareas</m-btn
+            >
+          </div>
+          <div
+            v-if="event.type === 'evaluation'"
+            class="m-card__actions pa-0 pt-3"
+          >
+            <m-btn
+              @click="
+                redirect('teacher-session-evaluations', {
+                  session_id: event.session_id,
+                })
+              "
+              color="warning"
+              small
+              text
+              >Ir a Evaluaciones</m-btn
+            >
+          </div>
         </div>
       </template>
     </m-calendar>
@@ -149,15 +178,15 @@
 </template>
 
 <script>
-import { getParam } from "@/services/router.js";
+import { getParam, redirect } from "@/services/router.js";
 import {
-  getEventsBySession,
+  // getEventsBySession,
   addEvent,
   updateEvent,
   removeEvent,
 } from "@/services/eventService";
-import { getTasksBySessionTeacher } from "@/services/taskService";
-import { getEvaluationsBySession } from "@/services/evaluationService";
+// import { getTasksBySessionTeacher } from "@/services/taskService";
+// import { getEvaluationsBySession } from "@/services/evaluationService";
 
 import EventModel from "@/models/Event";
 import variables from "@/models/variables";
@@ -180,42 +209,87 @@ export default {
     await this.init();
   },
   methods: {
+    redirect,
     async init() {
       this.showLoading("Cargando Eventos");
       this.session_id = getParam("session_id");
       try {
-        let events = await getEventsBySession(this.session_id);
-        events.forEach((i) => {
-          i.date = new Date(i.time_start.$date);
-          i.color = "var(--color-session-event)";
-          i.type = "event";
-        });
+        let all_events = [];
+        let { events, tasks, evaluations } =
+          this.mongoArr(await this.$api.event.getAll(this.session_id))[0] || {};
 
-        let tasks = await getTasksBySessionTeacher(this.session_id);
-        tasks.forEach((i) => {
-          i.date = new Date(i.time_start.$date);
-          i.color = "var(--color-session-task)";
-          i.type = "task";
-        });
+        all_events = all_events.concat(
+          events.map((i) => ({
+            date: i.time_start,
+            type: "event",
+            color: "var(--color-session-event)",
+            ...i,
+          }))
+        );
+        all_events = all_events.concat(
+          tasks.map((i) => ({
+            date: i.time_start,
+            type: "task",
+            color: "var(--color-session-task)",
+            ...i,
+          }))
+        );
+        all_events = all_events.concat(
+          evaluations.map((i) => {
+            return {
+              date: i.time_start,
+              type: "evaluation",
+              title: i.name,
+              description: `Termina el ${i.time_end.toLocaleDateString(
+                "es-ES",
+                {
+                  weekday: "long",
+                  month: "long",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                }
+              )}`,
+              color: "var(--color-session-evaluation)",
+              ...i,
+            };
+          })
+        );
 
-        let evaluations = await getEvaluationsBySession(this.session_id);
-        evaluations.forEach((i) => {
-          i.title = i.name;
-          i.date = new Date(i.time_start.$date);
-          i.description = `Termina el ${new Date(
-            i.time_end.$date
-          ).toLocaleDateString("es-ES", {
-            weekday: "long",
-            month: "long",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          })}`;
-          i.color = "var(--color-session-evaluation)";
-          i.type = "evaluation";
-        });
+        this.events = all_events;
 
-        this.events = events.concat(tasks, evaluations);
+        // let events = await getEventsBySession(this.session_id);
+        // events.forEach((i) => {
+        //   i.date = new Date(i.time_start.$date);
+        //   i.color = "var(--color-session-event)";
+        //   i.type = "event";
+        // });
+
+        // let tasks = await getTasksBySessionTeacher(this.session_id);
+        // tasks.forEach((i) => {
+        //   i.date = new Date(i.time_start.$date);
+        //   i.color = "var(--color-session-task)";
+        //   i.type = "task";
+        // });
+
+        // let evaluations = await getEvaluationsBySession(this.session_id);
+        // evaluations.forEach((i) => {
+        //   i.title = i.name;
+        //   i.date = new Date(i.time_start.$date);
+        //   i.description = `Termina el ${new Date(
+        //     i.time_end.$date
+        //   ).toLocaleDateString("es-ES", {
+        //     weekday: "long",
+        //     month: "long",
+        //     day: "numeric",
+        //     hour: "2-digit",
+        //     minute: "2-digit",
+        //   })}`;
+        //   i.color = "var(--color-session-evaluation)";
+        //   i.type = "evaluation";
+        // });
+
+        // this.events = events.concat(tasks, evaluations);
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
@@ -229,7 +303,7 @@ export default {
         if (this.action === "create")
           await addEvent(this.session_id, new_event);
         else {
-          new_event.id = new_event._id.$oid;
+          new_event.id = new_event._id;
           await updateEvent(new_event);
         }
 
@@ -242,9 +316,9 @@ export default {
     async removeEvent() {
       this.showLoading("Eliminando Evento");
       try {
-        await removeEvent(this.event_selected._id.$oid);
+        await removeEvent(this.event_selected._id);
         this.events = this.events.filter(
-          (event) => event._id.$oid != this.event_selected._id.$oid
+          (event) => event._id != this.event_selected._id
         );
       } catch (error) {
         this.showMessage("", error.msg || error);
