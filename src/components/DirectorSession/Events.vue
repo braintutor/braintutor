@@ -26,7 +26,31 @@
 
     <m-calendar :events="events">
       <template v-slot:event_info="{ event }">
-        <span class="mt-5">{{ event.description }}</span>
+        <div>
+          <span class="mt-5">{{ event.description }}</span>
+        </div>
+        <div v-if="event.type === 'task'" class="m-card__actions pa-0 pt-4">
+          <m-btn
+            @click="$router.push({ name: 'director-session-tasks' })"
+            color="success"
+            small
+            text
+            class="mr-2"
+            >Ir a Tareas</m-btn
+          >
+        </div>
+        <div
+          v-if="event.type === 'evaluation'"
+          class="m-card__actions pa-0 pt-4"
+        >
+          <m-btn
+            @click="$router.push({ name: 'director-session-evaluations' })"
+            color="warning"
+            small
+            text
+            >Ir a Evaluaciones</m-btn
+          >
+        </div>
       </template>
     </m-calendar>
   </div>
@@ -39,40 +63,48 @@ export default {
   }),
   async created() {
     let session_id = this.$router.currentRoute.params["session_id"];
-    this.showLoading("Cargando Evaluaciones");
+    this.showLoading("Cargando Eventos");
     try {
-      let events = this.mongoArr(await this.$api.event.getAll(session_id));
-      events.forEach((i) => {
-        i.date = i.time_start;
-        i.color = "var(--color-session-event)";
-        i.type = "event";
-      });
+      let all_events = [];
+      let { events, tasks, evaluations } =
+        this.mongoArr(await this.$api.event.getAll(session_id))[0] || {};
 
-      let tasks = this.mongoArr(await this.$api.task.getAll(session_id));
-      tasks.forEach((i) => {
-        i.date = i.time_start;
-        i.color = "var(--color-session-task)";
-        i.type = "task";
-      });
-
-      let evaluations = this.mongoArr(
-        await this.$api.evaluation.getAll(session_id)
+      all_events = all_events.concat(
+        events.map((i) => ({
+          date: i.time_start,
+          type: "event",
+          color: "var(--color-session-event)",
+          ...i,
+        }))
       );
-      evaluations.forEach((i) => {
-        i.title = i.name;
-        i.date = i.time_start;
-        i.description = `Termina el ${i.time_end.toLocaleDateString("es-ES", {
-          weekday: "long",
-          month: "long",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        })}`;
-        i.color = "var(--color-session-evaluation)";
-        i.type = "evaluation";
-      });
+      all_events = all_events.concat(
+        tasks.map((i) => ({
+          date: i.time_start,
+          type: "task",
+          color: "var(--color-session-task)",
+          ...i,
+        }))
+      );
+      all_events = all_events.concat(
+        evaluations.map((i) => {
+          return {
+            date: i.time_start,
+            type: "evaluation",
+            title: i.name,
+            description: `Termina el ${i.time_end.toLocaleDateString("es-ES", {
+              weekday: "long",
+              month: "long",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            })}`,
+            color: "var(--color-session-evaluation)",
+            ...i,
+          };
+        })
+      );
 
-      this.events = events.concat(tasks, evaluations);
+      this.events = all_events;
     } catch (error) {
       this.showMessage("", error.msg || error);
     }

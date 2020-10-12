@@ -3,7 +3,7 @@
   justify-content: center;
   flex-wrap: wrap;
   &__item {
-    margin: 10px 14px;
+    margin: 8px 12px;
     display: flex;
     align-items: center;
   }
@@ -12,8 +12,8 @@
   }
   &__color {
     height: 10px;
-    width: 40px;
-    margin-left: 10px;
+    width: 30px;
+    margin-left: 8px;
     border-radius: 4px;
   }
 }
