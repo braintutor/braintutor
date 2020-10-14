@@ -2,12 +2,15 @@
   <v-form ref="form_login" @submit.prevent="login" class="login m-card">
     <div class="m-card__body">
       <div class="login__img">
-        <img :src="require('@/assets/logo/logo-long.jpg')" width="100%" />
+        <!-- <img :src="require('@/assets/logo/logo-long.jpg')" width="100%" /> -->
+        <img :src="school.image" width="100%" />
       </div>
 
       <div v-if="show_error" class="alert">
         <span>Datos incorrectos.</span>
-        <v-icon @click="show_error = false" class="alert__icon">mdi-close</v-icon>
+        <v-icon @click="show_error = false" class="alert__icon"
+          >mdi-close</v-icon
+        >
       </div>
 
       <v-text-field
@@ -29,7 +32,9 @@
         rounded
         dense
       ></v-text-field>
-      <m-btn :loading="loading_login" color="primary" block>Iniciar Sesión</m-btn>
+      <m-btn :loading="loading_login" color="primary" block
+        >Iniciar Sesión</m-btn
+      >
     </div>
   </v-form>
 </template>
@@ -90,7 +95,7 @@ export default {
   margin: 20px auto;
 
   &__img {
-    max-width: 140px;
+    max-width: 200px;
     margin: 20px auto;
   }
 }

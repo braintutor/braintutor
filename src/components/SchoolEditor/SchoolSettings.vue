@@ -10,6 +10,14 @@
         required
         class="mt-4"
       ></v-text-field>
+      <input
+        @change="onFileSelected($event)"
+        onclick="value = null"
+        type="file"
+      />
+      <div class="school__image my-4">
+        <img :src="school.image" />
+      </div>
     </div>
     <div class="m-card__actions">
       <m-btn color="primary" small>Guardar</m-btn>
@@ -25,6 +33,7 @@ export default {
   data: () => ({
     links: [],
     school: {},
+    school_img: null,
     //
     SchoolModel,
   }),
@@ -47,6 +56,22 @@ export default {
       }
       this.hideLoading();
     },
+    async onFileSelected(e) {
+      let file = e.target.files[0];
+      if (!file) return;
+
+      this.showLoading("Guardando Cambios");
+      var formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        let { url } = await this.$api.school.updateImage(formData);
+        this.school.image = url;
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
+    },
   },
 };
 </script>
@@ -55,5 +80,13 @@ export default {
 .school {
   max-width: 600px;
   margin: 0 auto;
+
+  &__image {
+    img {
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+    }
+  }
 }
 </style>

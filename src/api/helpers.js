@@ -2,24 +2,26 @@ import router from "../router";
 import store from "../store";
 
 function getApiUrl() {
-  // let base_url = process.env.VUE_APP_API_URL || "http://localhost:5000";
-  let base_url = "http://localhost:5000";
+  let base_url = process.env.VUE_APP_API_URL || "http://localhost:5000";
+  // let base_url = "http://localhost:5000";
   return `${base_url}/api/v1`;
 }
 
-function getHeaders() {
+function getHeaders(isJSON = true) {
   let token = localStorage.getItem("token");
-  return {
-    "Content-Type": "application/json",
+  let headers = {
     Authorization: `Bearer ${token}`,
   };
+  if (isJSON)
+    headers["Content-Type"] = "application/json"
+  return headers
 }
 
-async function _fetch(method, name, data) {
+async function _fetch(method, name, data, isJSON = true) {
   let res = await fetch(`${getApiUrl()}/${name}`, {
     method,
-    body: JSON.stringify(data),
-    headers: getHeaders(),
+    body: isJSON ? JSON.stringify(data) : data,
+    headers: getHeaders(isJSON)
   });
   let json = await res.json();
   if (res.status >= 400 && res.status < 600) {

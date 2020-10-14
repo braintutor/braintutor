@@ -26,7 +26,7 @@
       </div>
       <!-- EVALUATIONS -->
       <EvaluationCard
-        v-for="evaluation in evaluations_ordered"
+        v-for="evaluation in evaluations_filtered"
         :key="evaluation._id"
         :name="evaluation.name"
         :time_start="evaluation.time_start"
@@ -57,7 +57,7 @@
           },
           {
             text: 'Modificar Tiempo',
-            icon: 'mdi-sort-clock-descending-outline',
+            icon: 'mdi-clock-time-two-outline',
             color: 'success',
             action: () => {
               showUpdateTime(evaluation);
@@ -77,12 +77,12 @@
         class="mb-3"
       />
 
-      <div class="text-center" v-show="evaluations_ordered.length === 0">
+      <div class="text-center" v-show="evaluations_filtered.length === 0">
         No hay evaluaciones.
       </div>
 
       <!-- DLG UPDATE TIME -->
-      <v-dialog v-model="dlg_update_time" max-width="600" persistent>
+      <v-dialog v-model="dlg_update_time" max-width="450" persistent>
         <div class="m-card">
           <div class="m-card__body">
             <h3>Modificar Tiempo</h3>
@@ -235,7 +235,7 @@ export default {
     this.getEvaluations();
   },
   computed: {
-    evaluations_ordered() {
+    evaluations_filtered() {
       return this.orderObjectsByDate(this.evaluations, "time_start");
     },
   },

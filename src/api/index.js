@@ -6,6 +6,7 @@ import Event from "./event";
 import Session from "./session";
 import Student from "./student";
 import Task from "./task";
+import School from "./school";
 
 export default {
   install(Vue) {
@@ -16,6 +17,7 @@ export default {
       session: Session(fetch_get),
       student: Student(fetch_get),
       task: Task(fetch_get),
+      school: School(_fetch),
     };
     Vue.prototype.$api = repositories;
   },

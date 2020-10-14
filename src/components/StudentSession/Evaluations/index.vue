@@ -21,9 +21,8 @@
       </div>
       <!-- EVALUATIONS -->
       <EvaluationCard
-        v-for="(evaluation, c_idx) in evaluations_ordered"
+        v-for="(evaluation, c_idx) in evaluations_filtered"
         v-model="evaluation.dateState"
-        v-show="showAvailable === isAvailable(evaluation)"
         :key="c_idx"
         :name="evaluation.name"
         :time_start="evaluation.time_start"
@@ -39,7 +38,7 @@
         class="evaluation mb-3"
       />
 
-      <p class="text-center" v-show="evaluations_ordered.length === 0">
+      <p class="text-center" v-show="evaluations_filtered.length === 0">
         No hay evaluaciones.
       </p>
 
@@ -99,8 +98,11 @@ export default {
     dialog_start: false,
   }),
   computed: {
-    evaluations_ordered() {
-      return this.orderObjectsByDate(this.evaluations, "time_start");
+    evaluations_filtered() {
+      let evaluations = this.evaluations.filter(
+        (evaluation) => this.showAvailable === this.isAvailable(evaluation)
+      );
+      return this.orderObjectsByDate(evaluations, "time_start");
     },
   },
   async mounted() {
