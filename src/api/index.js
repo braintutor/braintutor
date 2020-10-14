@@ -1,4 +1,4 @@
-import { fetch_get } from "./helpers";
+import { _fetch, fetch_get } from "./helpers";
 
 import Classroom from "./classroom";
 import Evaluation from "./evaluation";
@@ -11,7 +11,7 @@ export default {
   install(Vue) {
     const repositories = {
       classroom: Classroom(fetch_get),
-      evaluation: Evaluation(fetch_get),
+      evaluation: Evaluation(_fetch, fetch_get),
       event: Event(fetch_get),
       session: Session(fetch_get),
       student: Student(fetch_get),

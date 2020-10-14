@@ -2,8 +2,8 @@ import router from "../router";
 import store from "../store";
 
 function getApiUrl() {
-  let base_url = process.env.VUE_APP_API_URL || "http://localhost:5000";
-  // let base_url = "http://localhost:5000";
+  // let base_url = process.env.VUE_APP_API_URL || "http://localhost:5000";
+  let base_url = "http://localhost:5000";
   return `${base_url}/api/v1`;
 }
 
@@ -13,6 +13,21 @@ function getHeaders() {
     "Content-Type": "application/json",
     Authorization: `Bearer ${token}`,
   };
+}
+
+async function _fetch(method, name, data) {
+  let res = await fetch(`${getApiUrl()}/${name}`, {
+    method,
+    body: JSON.stringify(data),
+    headers: getHeaders(),
+  });
+  let json = await res.json();
+  if (res.status >= 400 && res.status < 600) {
+    handlerCode(json.code);
+    throw json;
+  }
+
+  return json;
 }
 
 async function fetch_get(name) {
@@ -49,9 +64,9 @@ function handlerCode(code) {
     if (code == "1000") {
       localStorage.removeItem("token");
       store.commit("setUser", null);
-      router.push("/").catch(() => {});
+      router.push("/").catch(() => { });
     }
   }
 }
 
-export { fetch_get, fetch_post };
+export { _fetch, fetch_get, fetch_post };

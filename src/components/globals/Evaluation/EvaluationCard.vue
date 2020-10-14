@@ -36,10 +36,10 @@
       <v-tooltip v-for="(button, idx) in buttons" :key="idx" bottom>
         <template v-slot:activator="{ on }">
           <m-btn
+            v-show="!button.disabled"
             v-on="on"
             @click="button.action"
             :color="button.color"
-            :disabled="button.disabled"
             small
             text
             class="mx-1"

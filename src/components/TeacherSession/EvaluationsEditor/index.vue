@@ -56,12 +56,21 @@
             disabled: !evaluation.public,
           },
           {
+            text: 'Modificar Tiempo',
+            icon: 'mdi-sort-clock-descending-outline',
+            color: 'success',
+            action: () => {
+              showUpdateTime(evaluation);
+            },
+            disabled: !evaluation.public,
+          },
+          {
             text: 'Eliminar',
             icon: 'mdi-delete',
             color: 'error',
             action: () => {
               dlg_remove = true;
-              evaluation_to_remove = evaluation;
+              evaluation_selected = evaluation;
             },
           },
         ]"
@@ -71,6 +80,37 @@
       <div class="text-center" v-show="evaluations_ordered.length === 0">
         No hay evaluaciones.
       </div>
+
+      <!-- DLG UPDATE TIME -->
+      <v-dialog v-model="dlg_update_time" max-width="600" persistent>
+        <div class="m-card">
+          <div class="m-card__body">
+            <h3>Modificar Tiempo</h3>
+            <div v-if="evaluation_selected" class="mt-4">
+              <span class="mr-4">Tiempo de Fin:</span>
+              <input
+                type="datetime-local"
+                v-model="evaluation_selected.time_end_f"
+              />
+            </div>
+          </div>
+          <div class="m-card__actions">
+            <m-btn @click="dlg_update_time = false" color="primary" small text
+              >Cancelar</m-btn
+            >
+            <m-btn
+              @click="
+                dlg_update_time = false;
+                updateTime();
+              "
+              color="primary"
+              small
+              class="ml-2"
+              >Guardar</m-btn
+            >
+          </div>
+        </div>
+      </v-dialog>
 
       <!-- Dialog Remove -->
       <v-dialog v-model="dlg_remove" max-width="400">
@@ -180,11 +220,12 @@ export default {
   data: () => ({
     session_id: "",
     evaluation: null,
-    evaluation_to_remove: null,
+    evaluation_selected: null,
     evaluations: [],
     students: [],
     student_selected: null,
     edit: false,
+    dlg_update_time: false,
     dlg_remove: false,
     dlg_remove_result: false,
     variables,
@@ -250,9 +291,9 @@ export default {
     async remove() {
       this.showLoading("Eliminando");
       try {
-        await deleteEvaluation(this.evaluation_to_remove._id);
+        await deleteEvaluation(this.evaluation_selected._id);
         this.evaluations = this.evaluations.filter(
-          (e) => e._id !== this.evaluation_to_remove._id
+          (e) => e._id !== this.evaluation_selected._id
         );
       } catch (error) {
         this.showMessage("", error.msg || error);
@@ -273,6 +314,25 @@ export default {
       }
       this.hideLoading();
     },
+    async updateTime() {
+      this.showLoading("Guardando Cambios");
+      let evaluation_id = this.evaluation_selected._id;
+      let evaluation_time_end = new Date(this.evaluation_selected.time_end_f);
+      try {
+        await this.$api.evaluation.update(evaluation_id, evaluation_time_end);
+        this.evaluation_selected.time_end = evaluation_time_end;
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
+    },
+    showUpdateTime(evaluation) {
+      this.dlg_update_time = true;
+      this.evaluation_selected = evaluation;
+      this.evaluation_selected.time_end_f = this.formatDate(
+        this.evaluation_selected.time_end
+      );
+    },
     showRemoveResult(student) {
       this.dlg_remove_result = true;
       this.student_selected = student;
@@ -288,6 +348,12 @@ export default {
     results(evaluation) {
       this.edit = false;
       this.evaluation = copy(evaluation);
+    },
+    formatDate(date) {
+      let date_f = new Date();
+      date_f.setTime(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
+      date_f = date_f.toISOString().substring(0, 16);
+      return date_f;
     },
   },
   components: {

@@ -326,8 +326,8 @@ export default {
     _getTime(date) {
       let hours = date.getHours();
       let minutes = date.getMinutes();
-      hours += hours < 10 ? "0" : "";
-      minutes += minutes < 10 ? "0" : "";
+      hours = hours < 10 ? "0" + hours : hours;
+      minutes = minutes < 10 ? "0" + minutes : minutes;
       return `${hours}:${minutes}`;
     },
     // CALENDAR CONTROL

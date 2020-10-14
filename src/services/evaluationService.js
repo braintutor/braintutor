@@ -31,8 +31,8 @@ function addEvaluation(session_id, evaluation) {
   })
 }
 
-function updateEvaluation(evaluation) {
-  return fetch_post('updateEvaluation', {
+function updateEvaluationByTeacher(evaluation) {
+  return fetch_post('updateEvaluationByTeacher', {
     evaluation
   })
 }
@@ -89,7 +89,7 @@ export {
   getEvaluationsBySessionStudent,
   getEvaluationsBySessionDirector,
   addEvaluation,
-  updateEvaluation,
+  updateEvaluationByTeacher,
   publicEvaluation,
   deleteEvaluation,
   //

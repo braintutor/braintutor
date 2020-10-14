@@ -4,7 +4,7 @@ export default (fetch_get) => ({
   },
   getAll(classroom_id, parent_id) {
     return fetch_get(
-      `student?classroom_id=${classroom_id || ''}&&parent_id=${parent_id || ''}`
+      `student?classroom_id=${classroom_id || ''}&parent_id=${parent_id || ''}`
     );
   },
 });

@@ -219,7 +219,7 @@
 <script>
 import { scrollDown } from "@/services/scroll";
 import {
-  updateEvaluation,
+  updateEvaluationByTeacher,
   publicEvaluation,
   deleteEvaluation,
 } from "@/services/evaluationService";
@@ -256,7 +256,7 @@ export default {
       this.evaluation.time_start = new Date(this.evaluation.time_start_f);
       this.evaluation.time_end = new Date(this.evaluation.time_end_f);
       try {
-        await updateEvaluation(this.evaluation);
+        await updateEvaluationByTeacher(this.evaluation);
         this.hideLoading();
         return true;
       } catch (error) {
