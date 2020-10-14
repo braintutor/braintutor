@@ -95,7 +95,7 @@ export default {
   margin: 20px auto;
 
   &__img {
-    max-width: 200px;
+    max-width: 180px;
     margin: 20px auto;
   }
 }
