@@ -1,10 +1,7 @@
-class Message {
-  constructor(text, type, action, icon) {
-    this.text = text;
-    this.type = type;
-    this.action = action;
-    this.icon = icon;
+const Message = {
+  message: {
+    max_length: 500,
   }
-}
+};
 
-export default Message
+export default Message;

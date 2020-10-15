@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="menu mt-3">
+    <div class="menu pt-3">
       <m-btn
         @click="showStudents = true"
         :text="!showStudents"

@@ -7,6 +7,7 @@ import Session from "./session";
 import Student from "./student";
 import Task from "./task";
 import School from "./school";
+import Message from "./message";
 
 export default {
   install(Vue) {
@@ -18,6 +19,7 @@ export default {
       student: Student(fetch_get),
       task: Task(fetch_get),
       school: School(_fetch),
+      message: Message(_fetch),
     };
     Vue.prototype.$api = repositories;
   },

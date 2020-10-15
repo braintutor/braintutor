@@ -121,6 +121,12 @@ const routes = [
           import("../components/TeacherSession/EvaluationsEditor/index"),
       },
       {
+        path: "messages",
+        name: "teacher-session-messages",
+        component: () =>
+          import("../components/TeacherSession/Messages"),
+      },
+      {
         path: "students",
         name: "teacher-session-students",
         component: () => import("../components/TeacherSession/Students"),
@@ -187,6 +193,12 @@ const routes = [
         name: "student-session-evaluations",
         component: () =>
           import("../components/StudentSession/Evaluations/index"),
+      },
+      {
+        path: "messages",
+        name: "student-session-messages",
+        component: () =>
+          import("../components/StudentSession/Messages"),
       },
       {
         path: "students",

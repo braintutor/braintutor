@@ -44,6 +44,11 @@ export default {
         name: "teacher-session-evaluations",
       },
       {
+        image: require("@/assets/icons/icon-evaluation.svg"),
+        text: "Mensajes",
+        name: "teacher-session-messages",
+      },
+      {
         image: require("@/assets/icons/icon-student.svg"),
         text: "Aula",
         name: "teacher-session-students",
