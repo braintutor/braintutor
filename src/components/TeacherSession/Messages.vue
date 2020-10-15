@@ -1,7 +1,5 @@
 <template>
   <div class="m-container">
-    <h2>Mensajes Profesor</h2>
-
     <div class="m-card mt-4">
       <div class="m-card__body">
         <m-btn
@@ -21,7 +19,14 @@
     <div class="m-card mt-4" v-if="student_selected">
       <div class="m-card__body">
         <div>
-          <p v-for="(message, idx) in messages" :key="idx">{{ message }}</p>
+          <p
+            v-for="(message, idx) in messages"
+            :key="idx"
+            class="message"
+            :class="`message--${message.user_id == user._id.$oid ? '0' : '1'}`"
+          >
+            {{ message.message }}
+          </p>
         </div>
         <form @submit.prevent="addMessage()">
           <v-text-field
@@ -29,6 +34,7 @@
             :maxlength="MessageModel.message.max_length"
             :counter="MessageModel.message.max_length"
             required
+            autocomplete="off"
           ></v-text-field>
           <m-btn color="primary" small>enviar</m-btn>
         </form>
@@ -40,6 +46,7 @@
 <script>
 import { getStudentsBySession } from "@/services/studentService";
 
+import { mapState } from "vuex";
 import MessageModel from "@/models/Message";
 
 export default {
@@ -51,6 +58,9 @@ export default {
     new_message: "",
     MessageModel,
   }),
+  computed: {
+    ...mapState(["user"]),
+  },
   watch: {
     async student_selected() {
       await this.getMessages();
@@ -93,6 +103,7 @@ export default {
           this.student_selected._id
         );
         this.messages.push({
+          user_id: this.user._id.$oid,
           message: this.new_message,
         });
         this.new_message = "";
@@ -105,5 +116,19 @@ export default {
 };
 </script>
 
-<style>
+<style lang='scss' scoped>
+.message {
+  width: max-content;
+  max-width: 75%;
+  padding: 6px 12px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px #ccc;
+  &--0 {
+    margin-left: auto;
+    background: var(--color-active);
+    color: #fff;
+  }
+  &--1 {
+  }
+}
 </style>
