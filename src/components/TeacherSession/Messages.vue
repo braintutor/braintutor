@@ -1,6 +1,6 @@
 <template>
   <div class="m-container">
-    <div class="m-card mt-4">
+    <div class="m-card">
       <div class="m-card__body">
         <m-btn
           v-for="(student, idx) in students"
@@ -16,29 +16,34 @@
       </div>
     </div>
 
-    <div class="m-card mt-4" v-if="student_selected">
+    <div class="chat m-card mt-4" v-if="student_selected">
       <div class="m-card__body">
         <div>
           <p
             v-for="(message, idx) in messages"
             :key="idx"
             class="message"
-            :class="`message--${message.user_id == user._id.$oid ? '0' : '1'}`"
+            :class="`message--${
+              message.user_id !== student_selected._id ? '0' : '1'
+            }`"
           >
             {{ message.message }}
           </p>
         </div>
-        <form @submit.prevent="addMessage()">
-          <v-text-field
-            v-model="new_message"
-            :maxlength="MessageModel.message.max_length"
-            :counter="MessageModel.message.max_length"
-            required
-            autocomplete="off"
-          ></v-text-field>
-          <m-btn color="primary" small>enviar</m-btn>
-        </form>
       </div>
+      <form @submit.prevent="addMessage()" class="input">
+        <v-text-field
+          v-model="new_message"
+          :maxlength="MessageModel.message.max_length"
+          required
+          autocomplete="off"
+          hide-details
+          dense
+        ></v-text-field>
+        <v-btn :loading="loading_btn" icon class="ml-2"
+          ><v-icon>mdi-send</v-icon></v-btn
+        >
+      </form>
     </div>
   </div>
 </template>
@@ -46,7 +51,6 @@
 <script>
 import { getStudentsBySession } from "@/services/studentService";
 
-import { mapState } from "vuex";
 import MessageModel from "@/models/Message";
 
 export default {
@@ -56,11 +60,9 @@ export default {
     student_selected: null,
     messages: [],
     new_message: "",
+    loading_btn: false,
     MessageModel,
   }),
-  computed: {
-    ...mapState(["user"]),
-  },
   watch: {
     async student_selected() {
       await this.getMessages();
@@ -83,6 +85,7 @@ export default {
     async getMessages() {
       this.showLoading("");
       try {
+        this.messages = [];
         this.messages = this.mongoArr(
           await this.$api.message.getAll(
             this.room_id,
@@ -95,31 +98,38 @@ export default {
       this.hideLoading();
     },
     async addMessage() {
-      this.showLoading("Enviando");
+      if (this.loading_btn) return;
+
+      this.loading_btn = true;
+      let new_message = this.new_message;
+      this.new_message = "";
       try {
         await this.$api.message.add(
           this.room_id,
-          this.new_message,
+          new_message,
           this.student_selected._id
         );
         this.messages.push({
-          user_id: this.user._id.$oid,
-          message: this.new_message,
+          message: new_message,
         });
-        this.new_message = "";
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
-      this.hideLoading();
+      this.loading_btn = false;
     },
   },
 };
 </script>
 
 <style lang='scss' scoped>
+.chat {
+  overflow: hidden;
+}
+
 .message {
   width: max-content;
   max-width: 75%;
+  margin-bottom: 6px;
   padding: 6px 12px;
   border-radius: 8px;
   box-shadow: 0 4px 10px #ccc;
@@ -130,5 +140,13 @@ export default {
   }
   &--1 {
   }
+}
+
+.input {
+  padding: 8px 12px;
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+
+  display: flex;
+  align-items: center;
 }
 </style>
