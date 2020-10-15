@@ -40,7 +40,7 @@
           hide-details
           dense
         ></v-text-field>
-        <v-btn :loading="loading_btn" icon class="ml-2"
+        <v-btn :loading="loading_btn" type="submit" icon class="ml-2"
           ><v-icon>mdi-send</v-icon></v-btn
         >
       </form>
