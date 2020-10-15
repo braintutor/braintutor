@@ -87,7 +87,7 @@ export default {
     async addMessage() {
       this.showLoading("Enviando");
       try {
-        this.$api.message.add(
+        await this.$api.message.add(
           this.room_id,
           this.new_message,
           this.student_selected._id

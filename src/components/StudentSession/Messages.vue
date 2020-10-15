@@ -43,7 +43,7 @@ export default {
       let room_id = this.$router.currentRoute.params["session_id"];
       this.showLoading("Enviando");
       try {
-        this.$api.message.add(room_id, this.new_message);
+        await this.$api.message.add(room_id, this.new_message);
         this.messages.push({
           message: this.new_message,
         });
