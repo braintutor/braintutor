@@ -45,7 +45,7 @@ export default {
       },
       {
         image: require("@/assets/icons/icon-student.svg"),
-        text: "Alumnos",
+        text: "Aula",
         name: "teacher-session-students",
       },
     ],
