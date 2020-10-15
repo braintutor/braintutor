@@ -40,9 +40,9 @@
           hide-details
           dense
         ></v-text-field>
-        <v-btn :loading="loading_btn" type="submit" icon class="ml-2"
-          ><v-icon>mdi-send</v-icon></v-btn
-        >
+        <v-btn :loading="loading_btn" type="submit" icon class="ml-2" small>
+          <v-icon style="font-size: 1.2rem">mdi-send</v-icon>
+        </v-btn>
       </form>
     </div>
   </div>
@@ -132,7 +132,7 @@ export default {
   margin-bottom: 6px;
   padding: 6px 12px;
   border-radius: 8px;
-  box-shadow: 0 4px 10px #ccc;
+  box-shadow: 0 3px 6px #ccc;
   &--0 {
     margin-left: auto;
     background: var(--color-active);
@@ -144,7 +144,7 @@ export default {
 
 .input {
   padding: 8px 12px;
-  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 -3px 6px rgba(0, 0, 0, 0.05);
 
   display: flex;
   align-items: center;
