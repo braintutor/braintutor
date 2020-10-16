@@ -54,6 +54,14 @@
       </div>
     </div>
 
+    <input
+      v-show="false"
+      @change="onFileSelected($event)"
+      onclick="value = null"
+      id="ipt_file"
+      type="file"
+    />
+
     <!-- Quiz Content -->
     <div id="quiz-scroll" class="quiz-editor-content m-fullscreen-content">
       <div class="time-editor">
@@ -76,15 +84,23 @@
         class="question-editor-container m-card"
       >
         <div class="question-editor-question question-editor-text">
-          <v-textarea
-            v-if="!evaluation.public"
-            v-model="c.question"
-            :rows="1"
-            :maxlength="QuestionModel.question.max_length"
-            :counter="QuestionModel.question.max_length"
-            autoGrow
-            dense
-          ></v-textarea>
+          <div v-if="!evaluation.public" class="question">
+            <v-textarea
+              v-model="c.question"
+              :rows="1"
+              :maxlength="QuestionModel.question.max_length"
+              :counter="QuestionModel.question.max_length"
+              autoGrow
+              dense
+            ></v-textarea>
+            <v-btn
+              @click="question_selected = c_idx"
+              onclick="ipt_file.click()"
+              icon
+            >
+              <v-icon>mdi-image</v-icon>
+            </v-btn>
+          </div>
           <span v-else>{{ c.question }}</span>
           <v-btn
             v-if="!evaluation.public && evaluation.content.length > 1"
@@ -92,6 +108,20 @@
             @click="removeQuestion(evaluation.content, c_idx)"
           >
             <v-icon>mdi-minus</v-icon>
+          </v-btn>
+        </div>
+        <div v-if="c.image" class="question__image">
+          <img :src="c.image" />
+          <v-btn
+            v-if="!evaluation.public"
+            @click="
+              c.image = null;
+              $forceUpdate();
+            "
+            class="question__image-close"
+            icon
+          >
+            <v-icon>mdi-close</v-icon>
           </v-btn>
         </div>
         <v-radio-group v-model="c.correct">
@@ -231,6 +261,7 @@ import QuestionModel from "@/models/Question";
 export default {
   props: ["evaluation", "unselect"],
   data: () => ({
+    question_selected: -1,
     dialog_delete: false,
     dialog_public: false,
     EvaluationModel,
@@ -310,6 +341,28 @@ export default {
     removeAlternative(alternatives, alternative_idx) {
       alternatives.splice(alternative_idx, 1);
     },
+    // Image
+    async onFileSelected(e) {
+      let file = e.target.files[0];
+      if (!file) return;
+
+      this.showLoading("Guardando Cambios");
+      var formData = new FormData();
+      formData.append("file", file);
+      formData.append("question", this.question_selected);
+
+      try {
+        let { url } = await this.$api.evaluation.updateImage(
+          this.evaluation._id,
+          formData
+        );
+        this.evaluation.content[this.question_selected].image = url;
+        this.$forceUpdate();
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
+    },
   },
 };
 </script>
@@ -362,6 +415,27 @@ export default {
     margin-top: 20px;
     display: flex;
     justify-content: center;
+  }
+}
+
+.question {
+  width: 100%;
+  display: flex;
+
+  &__image {
+    position: relative;
+    max-width: 80%;
+    margin: 0 auto;
+    img {
+      display: block;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+    &-close {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
   }
 }
 

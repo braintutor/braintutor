@@ -53,6 +53,11 @@ export default {
         text: "Aula",
         name: "teacher-session-students",
       },
+      {
+        image: require("@/assets/icons/icon-student.svg"),
+        text: "Multimedia",
+        name: "teacher-session-files",
+      },
     ],
   }),
   async created() {

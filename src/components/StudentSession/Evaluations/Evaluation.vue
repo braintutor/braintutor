@@ -12,6 +12,9 @@
         :key="c_idx"
       >
         <p class="question__statement">{{ c.question }}</p>
+        <div v-if="c.image" class="question__image">
+          <img :src="c.image" />
+        </div>
         <v-radio-group v-model="c.answer">
           <v-radio
             class="question__alternative"
@@ -145,6 +148,15 @@ export default {
     margin: 8px;
     font-weight: bold;
     white-space: pre-wrap;
+  }
+  &__image {
+    max-width: 80%;
+    margin: 20px auto;
+    img {
+      display: block;
+      max-width: 100%;
+      margin: 0 auto;
+    }
   }
   &__alternative {
     margin-bottom: 8px;
