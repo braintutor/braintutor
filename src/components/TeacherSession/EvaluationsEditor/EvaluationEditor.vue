@@ -346,6 +346,9 @@ export default {
       let file = e.target.files[0];
       if (!file) return;
 
+      let success = await this.save();
+      if (!success) return;
+
       this.showLoading("Guardando Cambios");
       var formData = new FormData();
       formData.append("file", file);
