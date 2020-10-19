@@ -7,6 +7,7 @@
           v-for="(student, idx) in students"
           :key="idx"
           @click="student_selected = student"
+          :rounded="false"
           color="dark"
           small
           block
@@ -18,19 +19,17 @@
 
       <!-- MESSAGES -->
       <div class="chat col-8" v-if="student_selected">
-        <div class="chat__messages m-card__body">
-          <div>
-            <p
-              v-for="(message, idx) in messages"
-              :key="idx"
-              class="message"
-              :class="`message--${
-                message.user_id !== student_selected._id ? '0' : '1'
-              }`"
-            >
-              {{ message.message }}
-            </p>
-          </div>
+        <div class="chat__messages">
+          <p
+            v-for="(message, idx) in messages"
+            :key="idx"
+            class="message"
+            :class="`message--${
+              message.user_id !== student_selected._id ? '0' : '1'
+            }`"
+          >
+            {{ message.message }}
+          </p>
         </div>
         <form @submit.prevent="addMessage()" class="chat__input">
           <v-text-field
@@ -135,6 +134,7 @@ export default {
   flex-direction: column;
 
   &__messages {
+    padding: 10px;
     flex-grow: 1;
   }
 
@@ -152,6 +152,7 @@ export default {
   max-width: 75%;
   margin-bottom: 6px;
   padding: 6px 12px;
+  font-size: 0.85rem;
   border-radius: 8px;
   box-shadow: 0 3px 6px #ccc;
   &--0 {
