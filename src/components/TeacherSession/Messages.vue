@@ -2,7 +2,7 @@
   <div class="m-container container">
     <div class="m-card row no-gutters">
       <!-- STUDENTS -->
-      <div class="students col-4">
+      <div class="students col-3">
         <m-btn
           v-for="(student, idx) in students"
           :key="idx"
@@ -18,7 +18,7 @@
       </div>
 
       <!-- MESSAGES -->
-      <div class="chat col-8" v-if="student_selected">
+      <div class="chat col-9" v-if="student_selected">
         <div class="chat__messages">
           <p
             v-for="(message, idx) in messages"

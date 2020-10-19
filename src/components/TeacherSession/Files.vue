@@ -1,7 +1,6 @@
 <template>
   <div class="files m-container">
-    <h1 class="files__title">Archivos</h1>
-    <p v-if="files.length <= 0" class="text-center">No hay archivos.</p>
+    <p v-if="files.length <= 0" class="text-center my-3">No hay archivos.</p>
 
     <div class="container pa-0">
       <div class="row no-gutters">
@@ -93,12 +92,6 @@ export default {
 
 <style lang='scss'>
 .files {
-  &__title {
-    margin: 10px;
-    margin-top: 0;
-
-    font-size: 1.8rem;
-  }
 }
 
 .file {
