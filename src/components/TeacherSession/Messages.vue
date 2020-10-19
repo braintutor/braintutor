@@ -1,7 +1,8 @@
 <template>
-  <div class="m-container">
-    <div class="m-card">
-      <div class="m-card__body">
+  <div class="m-container container">
+    <div class="m-card row no-gutters">
+      <!-- STUDENTS -->
+      <div class="students col-4">
         <m-btn
           v-for="(student, idx) in students"
           :key="idx"
@@ -14,36 +15,37 @@
           >{{ `${student.last_name}, ${student.first_name}` }}</m-btn
         >
       </div>
-    </div>
 
-    <div class="chat m-card mt-4" v-if="student_selected">
-      <div class="m-card__body">
-        <div>
-          <p
-            v-for="(message, idx) in messages"
-            :key="idx"
-            class="message"
-            :class="`message--${
-              message.user_id !== student_selected._id ? '0' : '1'
-            }`"
-          >
-            {{ message.message }}
-          </p>
+      <!-- MESSAGES -->
+      <div class="chat col-8" v-if="student_selected">
+        <div class="chat__messages m-card__body">
+          <div>
+            <p
+              v-for="(message, idx) in messages"
+              :key="idx"
+              class="message"
+              :class="`message--${
+                message.user_id !== student_selected._id ? '0' : '1'
+              }`"
+            >
+              {{ message.message }}
+            </p>
+          </div>
         </div>
+        <form @submit.prevent="addMessage()" class="chat__input">
+          <v-text-field
+            v-model="new_message"
+            :maxlength="MessageModel.message.max_length"
+            required
+            autocomplete="off"
+            hide-details
+            dense
+          ></v-text-field>
+          <v-btn :loading="loading_btn" type="submit" icon class="ml-2" small>
+            <v-icon style="font-size: 1.2rem">mdi-send</v-icon>
+          </v-btn>
+        </form>
       </div>
-      <form @submit.prevent="addMessage()" class="input">
-        <v-text-field
-          v-model="new_message"
-          :maxlength="MessageModel.message.max_length"
-          required
-          autocomplete="off"
-          hide-details
-          dense
-        ></v-text-field>
-        <v-btn :loading="loading_btn" type="submit" icon class="ml-2" small>
-          <v-icon style="font-size: 1.2rem">mdi-send</v-icon>
-        </v-btn>
-      </form>
     </div>
   </div>
 </template>
@@ -122,8 +124,27 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+.students {
+  padding: 10px;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
 .chat {
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  &__messages {
+    flex-grow: 1;
+  }
+
+  &__input {
+    padding: 8px 12px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+
+    display: flex;
+    align-items: center;
+  }
 }
 
 .message {
@@ -140,13 +161,5 @@ export default {
   }
   &--1 {
   }
-}
-
-.input {
-  padding: 8px 12px;
-  box-shadow: 0 -3px 6px rgba(0, 0, 0, 0.05);
-
-  display: flex;
-  align-items: center;
 }
 </style>
