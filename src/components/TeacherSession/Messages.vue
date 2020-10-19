@@ -30,6 +30,9 @@
           >
             {{ message.message }}
           </p>
+          <p v-show="messages.length <= 0" class="text-center my-4">
+            No hay mensajes.
+          </p>
         </div>
         <form @submit.prevent="addMessage()" class="chat__input">
           <v-text-field
