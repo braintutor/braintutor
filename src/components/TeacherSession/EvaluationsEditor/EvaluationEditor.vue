@@ -234,9 +234,11 @@
 
     <!-- DLG FILES -->
     <v-dialog v-model="dlg_files" max-width="1000">
-      <div v-if="dlg_files" class="m-card pa-4">
-        <FilesSession @file="onFileSelected" />
-      </div>
+      <FilesSession
+        v-if="dlg_files"
+        @file="onFileSelected"
+        class="m-card pa-4"
+      />
     </v-dialog>
   </div>
 </template>

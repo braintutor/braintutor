@@ -2,15 +2,19 @@
   <div class="files">
     <div class="files__menu mb-4">
       <m-btn
-        @click="show = 0"
-        :text="show !== 0"
-        color="dark"
+        @click="show = 'LIST'"
+        :text="show !== 'LIST'"
+        color="primary"
         small
         class="mr-2"
-        >Subir Archivo</m-btn
-      >
-      <m-btn @click="show = 1" :text="show !== 1" color="dark" small
         >Mis Archivos</m-btn
+      >
+      <m-btn
+        @click="show = 'UPLOAD'"
+        :text="show !== 'UPLOAD'"
+        color="dark"
+        small
+        >Subir Archivo</m-btn
       >
     </div>
 
@@ -24,16 +28,8 @@
     </div>
 
     <div v-show="!loading">
-      <div v-show="show === 0">
-        <input
-          v-show="!loading"
-          type="file"
-          onclick="value = null"
-          @change="onFileSelected"
-        />
-      </div>
-
-      <div v-show="show === 1">
+      <div v-show="show === 'LIST'">
+        <p>{{ size }}</p>
         <p v-show="files.length <= 0" class="text-center my-3">
           No hay archivos.
         </p>
@@ -58,6 +54,14 @@
             </div>
           </div>
         </div>
+      </div>
+      <div v-show="show === 'UPLOAD'">
+        <input
+          v-show="!loading"
+          type="file"
+          onclick="value = null"
+          @change="onFileSelected"
+        />
       </div>
     </div>
 
@@ -90,15 +94,31 @@
 </template>
 
 <script>
+import variables from "@/models/variables";
+
 export default {
   data: () => ({
     session_id: "",
     files: [],
     file_selected: null,
-    show: 0,
+    //
+    show: "LIST",
     loading: false,
     dlg_remove: false,
+    variables,
   }),
+  computed: {
+    size() {
+      let current_size = this.files.reduce((sum, f) => {
+        sum += f.size;
+        return sum;
+      }, 0);
+      let kb_to_mb = (size) => (size / 1000 / 1000).toFixed(3);
+      return `Espacio utilizado: ${kb_to_mb(current_size)} MB / ${kb_to_mb(
+        this.variables.max_session_size
+      )} MB`;
+    },
+  },
   async created() {
     this.session_id = this.$router.currentRoute.params["session_id"];
     await this.init();
@@ -140,15 +160,16 @@ export default {
       formData.append("file", file);
 
       try {
-        let { name, url } = await this.$api.file.session.addFile(
+        let { name, url, size } = await this.$api.file.session.addFile(
           this.session_id,
           formData
         );
         this.files.push({
           name,
           url,
+          size,
         });
-        this.show = 1;
+        this.show = "LIST";
       } catch (error) {
         this.showMessage("", error.msg || error);
       }

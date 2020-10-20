@@ -15,6 +15,9 @@ const variables = {
   max_questions_per_evaluation: 50,
   max_questions_per_material: 10,
   max_alternatives_per_question: 10,
+  
+  // FIREBASE
+  max_session_size: 10 * 1000 * 1000
 };
 
 export default variables;

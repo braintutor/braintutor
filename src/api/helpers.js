@@ -2,8 +2,8 @@ import router from "../router";
 import store from "../store";
 
 function getApiUrl() {
-  // let base_url = process.env.VUE_APP_API_URL || "http://localhost:5000";
-  let base_url = "http://localhost:5000";
+  let base_url = process.env.VUE_APP_API_URL || "http://localhost:5000";
+  // let base_url = "http://localhost:5000";
   return `${base_url}/api/v1`;
 }
 
