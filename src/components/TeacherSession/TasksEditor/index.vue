@@ -59,6 +59,8 @@
     <v-dialog v-model="dialog_new" persistent max-width="750">
       <form @submit.prevent="create()" class="m-card">
         <div class="m-card__body">
+          <span class="mr-2">Tiempo de Inicio:</span>
+          <input type="datetime-local" v-model="task.time_start_f" required />
           <v-text-field
             v-model="task.title"
             :maxlength="TaskModel.title.max_length"
@@ -77,6 +79,7 @@
         </div>
         <div class="m-card__actions">
           <m-btn
+            type="button"
             small
             text
             color="primary"
@@ -171,13 +174,19 @@ export default {
   methods: {
     showCreate() {
       this.action = "create";
-      this.task = {};
+      this.task = {
+        time_start_f: this._formatDateToInput(new Date()),
+        public: false,
+      };
       this.dialog_new = true;
     },
     showEdit(task) {
       this.action = "edit";
-      this.task = Object.assign({}, task);
-      this.task.id = this.task._id;
+      this.task = {
+        ...task,
+        id: task._id,
+        time_start_f: this._formatDateToInput(task.time_start),
+      };
       this.dialog_new = true;
     },
     showRemove(task) {
@@ -192,9 +201,12 @@ export default {
       this.loading_save = true;
       if (this.action === "create") {
         try {
-          this.task.time_start = new Date();
-          let _id = await addTask(this.session_id, this.task);
+          let _id = await addTask(this.session_id, {
+            ...this.task,
+            time_start: new Date(this.task.time_start_f),
+          });
           this.task._id = _id.$oid;
+          this.task.time_start = new Date(this.task.time_start_f);
           this.tasks.push(this.task);
           this.dialog_new = false;
         } catch (error) {
@@ -202,7 +214,11 @@ export default {
         }
       } else if (this.action === "edit") {
         try {
-          await this.$api.task.update(this.task.id, this.task);
+          await this.$api.task.update(this.task.id, {
+            ...this.task,
+            time_start: new Date(this.task.time_start_f),
+          });
+          this.task.time_start = new Date(this.task.time_start_f);
           let task_idx = this.tasks.findIndex((t) => t._id === this.task.id);
           this.tasks[task_idx] = Object.assign({}, this.task);
           this.tasks.splice();
@@ -237,6 +253,13 @@ export default {
         this.showMessage("", error.msg || error);
       }
       this.hideLoading();
+    },
+    //
+    _formatDateToInput(date) {
+      let date_f = new Date();
+      date_f.setTime(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
+      date_f = date_f.toISOString().substring(0, 16);
+      return date_f;
     },
     unselect() {
       this.task_selected = null;
