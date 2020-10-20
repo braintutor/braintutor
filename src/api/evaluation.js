@@ -7,7 +7,4 @@ export default (_fetch, fetch_get) => ({
       id, time_end
     });
   },
-  updateImage(evaluation_id, data) {
-    return _fetch('PATCH', `evaluation/${evaluation_id}/image`, data, false);
-  },
 });
