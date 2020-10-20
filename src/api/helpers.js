@@ -45,21 +45,6 @@ async function fetch_get(name) {
   return json;
 }
 
-async function fetch_post(name, data) {
-  let res = await fetch(`${getApiUrl()}/${name}`, {
-    method: "POST",
-    body: JSON.stringify(data),
-    headers: getHeaders(),
-  });
-  let json = await res.json();
-  if (res.status >= 400 && res.status < 600) {
-    handlerCode(json.code);
-    throw json;
-  }
-
-  return json;
-}
-
 function handlerCode(code) {
   if (code) {
     // TOKEN EXPIRED
@@ -71,4 +56,4 @@ function handlerCode(code) {
   }
 }
 
-export { _fetch, fetch_get, fetch_post };
+export { _fetch, fetch_get };

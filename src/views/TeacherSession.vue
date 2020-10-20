@@ -44,7 +44,7 @@ export default {
         name: "teacher-session-evaluations",
       },
       {
-        image: require("@/assets/icons/icon-evaluation.svg"),
+        image: require("@/assets/icons/icon-message.svg"),
         text: "Mensajes",
         name: "teacher-session-messages",
       },
@@ -54,7 +54,7 @@ export default {
         name: "teacher-session-students",
       },
       {
-        image: require("@/assets/icons/icon-student.svg"),
+        image: require("@/assets/icons/icon-file.svg"),
         text: "Multimedia",
         name: "teacher-session-files",
       },
