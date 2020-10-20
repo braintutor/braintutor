@@ -57,20 +57,21 @@
 
     <!-- DIALOG NEW -->
     <v-dialog v-model="dialog_new" persistent max-width="750">
-      <div class="m-card">
+      <form @submit.prevent="create()" class="m-card">
         <div class="m-card__body">
           <v-text-field
             v-model="task.title"
             :maxlength="TaskModel.title.max_length"
             :counter="TaskModel.title.max_length"
             label="Título"
+            required
           ></v-text-field>
           <v-textarea
             v-model="task.description"
             :maxlength="TaskModel.description.max_length"
             :counter="TaskModel.description.max_length"
             label="Descripción"
-            value
+            required
           ></v-textarea>
           <v-checkbox v-model="task.public" label="Público"></v-checkbox>
         </div>
@@ -84,11 +85,11 @@
             @click="dialog_new = false"
             >Cerrar</m-btn
           >
-          <m-btn small color="primary" :loading="loading_save" @click="create()"
+          <m-btn type="submit" small color="primary" :loading="loading_save"
             >Guardar</m-btn
           >
         </div>
-      </div>
+      </form>
     </v-dialog>
     <!-- DIALOG REMOVE -->
     <v-dialog v-model="dialog_remove" max-width="400">
