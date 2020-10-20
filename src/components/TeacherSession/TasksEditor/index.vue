@@ -72,6 +72,7 @@
             label="Descripción"
             value
           ></v-textarea>
+          <v-checkbox v-model="task.public" label="Público"></v-checkbox>
         </div>
         <div class="m-card__actions">
           <m-btn
@@ -135,7 +136,6 @@ import Task from "./Task";
 import {
   getTasksBySessionTeacher,
   addTask,
-  updateTask,
   removeTask,
 } from "@/services/taskService";
 import { getStudentsBySession } from "@/services/studentService";
@@ -201,7 +201,7 @@ export default {
         }
       } else if (this.action === "edit") {
         try {
-          await updateTask(this.task);
+          await this.$api.task.update(this.task.id, this.task);
           let task_idx = this.tasks.findIndex((t) => t._id === this.task.id);
           this.tasks[task_idx] = Object.assign({}, this.task);
           this.tasks.splice();

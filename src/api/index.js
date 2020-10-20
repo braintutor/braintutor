@@ -18,7 +18,7 @@ export default {
       event: Event(fetch_get),
       session: Session(fetch_get),
       student: Student(fetch_get),
-      task: Task(fetch_get),
+      task: Task(_fetch),
       school: School(_fetch),
       message: Message(_fetch),
       file: File(_fetch),
