@@ -175,7 +175,7 @@ export default {
     showCreate() {
       this.action = "create";
       this.task = {
-        time_start_f: this._formatDateToInput(new Date()),
+        time_start_f: this._formatDateToInput(new Date().addHours(1)),
         public: false,
       };
       this.dialog_new = true;
