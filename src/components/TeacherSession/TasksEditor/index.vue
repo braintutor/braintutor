@@ -25,6 +25,7 @@
       :time_start="task.time_start || new Date()"
       :title="task.title"
       :description="task.description"
+      :isPublic="task.public"
       :options="[
         {
           text: 'Editar',
@@ -59,14 +60,17 @@
     <v-dialog v-model="dialog_new" persistent max-width="750">
       <form @submit.prevent="create()" class="m-card">
         <div class="m-card__body">
-          <span class="mr-2">Tiempo de Inicio:</span>
-          <input type="datetime-local" v-model="task.time_start_f" required />
+          <div>
+            <span class="mr-2">Tiempo de Inicio:</span>
+            <input type="datetime-local" v-model="task.time_start_f" required />
+          </div>
           <v-text-field
             v-model="task.title"
             :maxlength="TaskModel.title.max_length"
             :counter="TaskModel.title.max_length"
             label="Título"
             required
+            class="mt-3"
           ></v-text-field>
           <v-textarea
             v-model="task.description"

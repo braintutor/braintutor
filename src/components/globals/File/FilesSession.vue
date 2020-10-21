@@ -44,9 +44,10 @@
             >
               <img :src="`${file.url}?${Date.now()}`" />
               <div class="file__menu">
-                <span class="file__name pl-2">{{
+                <!-- <span class="file__name pl-2">{{
                   file.name.substring(file.name.lastIndexOf("/") + 1)
-                }}</span>
+                }}</span> -->
+                <span class="file__name pl-2">{{ kb_to_mb(file.size) }}</span>
                 <v-btn @click.stop="showRemove(file)" color="error" icon small>
                   <v-icon style="font-size: 1.4rem">mdi-delete</v-icon>
                 </v-btn>
@@ -113,10 +114,9 @@ export default {
         sum += f.size;
         return sum;
       }, 0);
-      let kb_to_mb = (size) => (size / 1000 / 1000).toFixed(3);
-      return `Espacio utilizado: ${kb_to_mb(current_size)} MB / ${kb_to_mb(
-        this.variables.max_session_size
-      )} MB`;
+      return `Espacio utilizado: ${this.kb_to_mb(
+        current_size
+      )} / ${this.kb_to_mb(this.variables.max_session_size)}`;
     },
   },
   async created() {
@@ -174,6 +174,9 @@ export default {
         this.showMessage("", error.msg || error);
       }
       this.loading = false;
+    },
+    kb_to_mb(size) {
+      return `${(size / 1000 / 1000).toFixed(3)} MB`;
     },
   },
 };

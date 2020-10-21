@@ -1,29 +1,39 @@
 <template>
   <div>
     <!-- Evaluation Content -->
-    <div class="evaluation m-card">
+    <div class="evaluation">
       <!-- <div class="time">
         <p>Faltan {{time.m}} minuto(s) y {{time.s}} segundo(s)</p>
       </div>-->
       <p class="evaluation__name">{{ evaluation.name }}</p>
       <div
-        class="question"
+        class="question m-card mb-4"
         v-for="(c, c_idx) in evaluation.content"
         :key="c_idx"
       >
-        <p class="question__statement">{{ c.question }}</p>
-        <div v-if="c.image" class="question__image">
-          <img :src="c.image" />
+        <div class="m-card__body">
+          <p class="question__statement">{{ c.question }}</p>
+          <div v-if="c.image" class="question__image">
+            <img :src="c.image" />
+          </div>
+          <v-radio-group v-model="c.answer">
+            <v-radio
+              class="question__alternative"
+              v-for="(alternative, a_idx) in c.alternatives"
+              :key="a_idx"
+              :label="alternative"
+              :value="a_idx"
+            ></v-radio>
+            <label
+              class="m-btn m-btn--dark m-btn--text m-btn--small mt-3 mx-auto"
+              style="width: max-content"
+              :for="c_idx + ''"
+            >
+              Limpiar
+            </label>
+            <v-radio v-show="false" :value="-1" :id="c_idx + ''"></v-radio>
+          </v-radio-group>
         </div>
-        <v-radio-group v-model="c.answer">
-          <v-radio
-            class="question__alternative"
-            v-for="(alternative, a_idx) in c.alternatives"
-            :key="a_idx"
-            :label="alternative"
-            :value="a_idx"
-          ></v-radio>
-        </v-radio-group>
       </div>
       <div class="evaluation__action">
         <m-btn @click="saveAction()" color="primary" small>Finalizar</m-btn>
@@ -126,8 +136,6 @@ export default {
 //   font-weight: bold;
 // }
 .evaluation {
-  padding: 18px;
-  padding-bottom: 24px;
   &__name {
     margin: 12px 0 28px;
     color: #585858;
@@ -143,7 +151,6 @@ export default {
   }
 }
 .question {
-  padding-bottom: 16px;
   &__statement {
     margin: 8px;
     font-weight: bold;

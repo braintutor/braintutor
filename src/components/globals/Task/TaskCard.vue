@@ -7,6 +7,7 @@
     <div class="m-card__body">
       <div class="task__header">
         <p class="task__time_start">
+          <span class="task__public mr-2" v-show="!isPublic">Borrador</span>
           <v-icon class="mr-2" style="font-size: 0.9rem">mdi-calendar</v-icon>
           <span>{{ toDateTimeString(time_start) }}</span>
         </p>
@@ -62,6 +63,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    isPublic: {
+      type: Boolean,
+      default: true,
+    },
   },
   methods: {
     toDateTimeString,
@@ -98,6 +103,15 @@ export default {
     margin-bottom: 0;
     font-size: 0.95rem;
     word-wrap: break-word;
+  }
+  &__public {
+    padding: 3px 12px 2px;
+    background: rgba(0, 0, 0, 0.25);
+    color: #fff;
+    font-size: 0.7rem;
+    letter-spacing: .075rem;
+    text-transform: uppercase;
+    border-radius: 100px;
   }
 }
 </style>
