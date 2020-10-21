@@ -7,7 +7,10 @@
     ></v-progress-linear>
 
     <div class="m-card__body">
-      <p class="evaluation__name">{{ name }}</p>
+      <div class="mb-3" style="display: flex; justify-content: center; align-items: center">
+        <div class="evaluation__public mr-3" v-show="!isPublic">Privado</div>
+        <div class="evaluation__name">{{ name }}</div>
+      </div>
       <div class="evaluation__body">
         <div class="evaluation__item">
           <span class="evaluation__label">Tiempo Inicio</span>
@@ -64,6 +67,10 @@ export default {
     time_end: Date,
     items: Array,
     buttons: Array,
+    isPublic: {
+      type: Boolean,
+      default: true,
+    },
   },
   data: () => ({
     now: new Date(),
@@ -134,6 +141,15 @@ export default {
   }
   &__actions {
     justify-content: center;
+  }
+  &__public {
+    padding: 3px 12px 2px;
+    background: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    font-size: 0.7rem;
+    letter-spacing: 0.075rem;
+    text-transform: uppercase;
+    border-radius: 100px;
   }
 }
 </style>

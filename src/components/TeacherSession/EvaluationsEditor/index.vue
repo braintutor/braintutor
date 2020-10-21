@@ -31,6 +31,7 @@
         :name="evaluation.name"
         :time_start="evaluation.time_start"
         :time_end="evaluation.time_end"
+        :isPublic="evaluation.public"
         :items="[
           {
             label: 'N° Preguntas',
