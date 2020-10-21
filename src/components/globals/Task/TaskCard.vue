@@ -7,7 +7,7 @@
     <div class="m-card__body">
       <div class="task__header">
         <p class="task__time_start">
-          <span class="task__public mr-2" v-show="!isPublic">Borrador</span>
+          <span class="task__public mr-2" v-show="!isPublic">Privado</span>
           <v-icon class="mr-2" style="font-size: 0.9rem">mdi-calendar</v-icon>
           <span>{{ toDateTimeString(time_start) }}</span>
         </p>
@@ -106,10 +106,10 @@ export default {
   }
   &__public {
     padding: 3px 12px 2px;
-    background: rgba(0, 0, 0, 0.25);
+    background: rgba(0, 0, 0, 0.4);
     color: #fff;
     font-size: 0.7rem;
-    letter-spacing: .075rem;
+    letter-spacing: 0.075rem;
     text-transform: uppercase;
     border-radius: 100px;
   }
