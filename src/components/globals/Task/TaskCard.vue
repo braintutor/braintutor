@@ -7,7 +7,7 @@
     <div class="m-card__body">
       <div class="task__header">
         <p class="task__time_start">
-          <span class="task__public mr-2" v-show="!isPublic">Privado</span>
+          <span class="task__public mr-3" v-show="!isPublic">Privado</span>
           <v-icon class="mr-2" style="font-size: 0.9rem">mdi-calendar</v-icon>
           <span>{{ toDateTimeString(time_start) }}</span>
         </p>
