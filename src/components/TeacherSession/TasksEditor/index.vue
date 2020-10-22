@@ -202,7 +202,6 @@
     :task="task_selected"
     :students="students"
     :unselect="unselect"
-    :restore="restore"
   />
 </template>
 
@@ -210,11 +209,7 @@
 import TaskCard from "@/components/globals/Task/TaskCard";
 import Task from "./Task";
 
-import {
-  getTasksBySessionTeacher,
-  addTask,
-  removeTask,
-} from "@/services/taskService";
+import { addTask, removeTask } from "@/services/taskService";
 import { getStudentsBySession } from "@/services/studentService";
 import { getParam } from "@/services/router.js";
 
@@ -239,7 +234,7 @@ export default {
   }),
   async created() {
     this.session_id = getParam("session_id");
-    this.init();
+    await this.init();
   },
   computed: {
     tasks_ordered() {
@@ -254,7 +249,7 @@ export default {
           await getStudentsBySession(this.session_id)
         );
         this.tasks = this.mongoArr(
-          await getTasksBySessionTeacher(this.session_id)
+          await this.$api.task.getAll(this.session_id)
         );
       } catch (error) {
         this.showMessage("", error.msg || error);
@@ -360,8 +355,9 @@ export default {
       date_f = date_f.toISOString().substring(0, 16);
       return date_f;
     },
-    unselect() {
+    async unselect() {
       this.task_selected = null;
+      // await this.init();
     },
   },
   components: {

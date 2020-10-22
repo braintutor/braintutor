@@ -309,7 +309,8 @@ export default {
       };
       this.task.time_start = new Date(this.task.time_start.$date);
     } catch (error) {
-      redirect("student-sessions-tasks");
+      // this.showMessage("", error.msg || error)
+      redirect("home");
     }
     this.hideLoading();
   },

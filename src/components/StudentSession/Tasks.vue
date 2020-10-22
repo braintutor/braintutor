@@ -37,7 +37,6 @@
 <script>
 import TaskCard from "@/components/globals/Task/TaskCard";
 
-import { getTasksBySessionStudent } from "@/services/taskService";
 import { getParam, redirect } from "@/services/router.js";
 
 export default {
@@ -65,7 +64,7 @@ export default {
       this.showLoading("Cargando Tareas");
       try {
         this.tasks = this.mongoArr(
-          await getTasksBySessionStudent(this.session_id)
+          await this.$api.task.getAll(this.session_id)
         );
       } catch (error) {
         this.showMessage("", error.msg || error);

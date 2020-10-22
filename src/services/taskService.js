@@ -7,18 +7,6 @@ function getTaskByStudent(id) {
   })
 }
 
-function getTasksBySessionTeacher(session_id) {
-  return fetch_post('getTasksBySessionTeacher', {
-    session_id
-  })
-}
-
-function getTasksBySessionStudent(id) {
-  return fetch_post('getTasksBySessionStudent', {
-    id
-  })
-}
-
 function addTask(session_id, task) {
   return fetch_post('addTask', {
     session_id,
@@ -28,7 +16,7 @@ function addTask(session_id, task) {
 
 function updateTaskAnswer(id, answer) {
   return fetch_post('updateTaskAnswer', {
-    id, 
+    id,
     answer
   })
 }
@@ -39,4 +27,4 @@ function removeTask(task_id) {
   })
 }
 
-export { getTaskByStudent, getTasksBySessionTeacher, getTasksBySessionStudent, addTask, updateTaskAnswer, removeTask }
+export { getTaskByStudent, addTask, updateTaskAnswer, removeTask }
