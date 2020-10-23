@@ -7,7 +7,9 @@
     >
       <div class="m-card__body">
         <p class="evaluation__statement">{{ c.question }}</p>
-
+        <div v-if="c.image" class="evaluation__image">
+          <img :src="c.image" />
+        </div>
         <div
           v-for="(alternative, a_idx) in c.alternatives"
           :key="a_idx"
@@ -58,6 +60,15 @@ export default {
   }
   &__statement {
     white-space: pre-wrap;
+  }
+  &__image {
+    max-width: 80%;
+    margin: 20px auto;
+    img {
+      display: block;
+      max-width: 100%;
+      margin: 0 auto;
+    }
   }
 }
 
