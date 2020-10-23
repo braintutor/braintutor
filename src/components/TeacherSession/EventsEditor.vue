@@ -48,7 +48,6 @@
     >
       <template v-slot:event_info="{ event, methods }">
         <div>
-          <p class="mt-5">{{ event.description }}</p>
           <div v-if="event.type === 'event'" class="m-card__actions pa-0 pt-4">
             <m-btn
               color="primary"
@@ -291,14 +290,14 @@ export default {
       this.new_event = { ...event };
 
       let date = new Date(event.date.getTime()); // create a copy
-      this.date_selected = this.toLocalISOString(date);
+      this.date_selected = this.dateToInput(date);
       if (next) next();
     },
     showCreateByDate(date) {
       this.action = "create";
       this.dlg_create = true;
       this.new_event = {};
-      this.date_selected = this.toLocalISOString(date);
+      this.date_selected = this.dateToInput(date);
     },
     showCreate(year, month, day) {
       if (
@@ -312,16 +311,12 @@ export default {
       this.new_event = {};
 
       let date = new Date(year, month, day);
-      this.date_selected = this.toLocalISOString(date);
+      this.date_selected = this.dateToInput(date);
     },
     showRemove(event, next) {
       this.event_selected = event;
       this.dlg_delete = true;
       if (next) next();
-    },
-    toLocalISOString(date) {
-      date.setTime(date.getTime() - date.getTimezoneOffset() * 60 * 1000); // remove 5 hours
-      return date.toISOString().substring(0, 16);
     },
   },
 };

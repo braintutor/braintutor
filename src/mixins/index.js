@@ -12,6 +12,20 @@ Vue.mixin({
     showMessage(title, description) {
       this.$root.$children[0].showMessage(title, description);
     },
+    // DATE
+    dateToInput(date) {
+      let date_f = new Date();
+      date_f.setTime(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
+      date_f = date_f.toISOString().substring(0, 16);
+      return date_f;
+    },
+    // HTML
+    toHTML(text = "") {
+      var urlRegex = /(https?:\/\/[^\s]+)/g;
+      return text.replace(urlRegex, function (url) {
+        return `<a href="${url}" target="_blank">${url}</a>`;
+      });
+    },
     // Format objects from Mongo
     mongoArr(arr) {
       return arr.map((obj) => this.mongo(obj));

@@ -44,9 +44,6 @@
 
     <m-calendar :events="events_f">
       <template v-slot:event_info="{ event }">
-        <div>
-          <p class="mt-5">{{ event.description }}</p>
-        </div>
         <div v-if="event.type === 'task'" class="m-card__actions pa-0 pt-4">
           <m-btn
             @click="redirectTask(event)"

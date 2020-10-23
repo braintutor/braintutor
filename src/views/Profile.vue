@@ -7,45 +7,64 @@
           <!--  -->
           <v-icon class="profile__icon">mdi-card-account-details</v-icon>
           <span class="profile__item">Nombres:</span>
-          <span class="profile__value">{{profile.first_name}}</span>
+          <span class="profile__value">{{ profile.first_name }}</span>
           <!--  -->
           <v-icon class="profile__icon">mdi-card-account-details</v-icon>
           <span class="profile__item">Apellidos:</span>
-          <span class="profile__value">{{profile.last_name}}</span>
+          <span class="profile__value">{{ profile.last_name }}</span>
           <!--  -->
           <v-icon class="profile__icon">mdi-account</v-icon>
           <span class="profile__item">Usuario:</span>
-          <span class="profile__value">{{profile.username}}</span>
+          <span class="profile__value">{{ profile.username }}</span>
         </div>
       </div>
       <div class="m-card__actions">
         <m-btn
-          @click="current_password = ''; new_password = ''; confirm_new_password = ''; dialog_password = true"
+          @click="
+            current_password = '';
+            new_password = '';
+            confirm_new_password = '';
+            dialog_password = true;
+          "
           color="primary"
           small
-        >Cambiar Contraseña</m-btn>
+          >Cambiar Contraseña</m-btn
+        >
       </div>
     </div>
 
     <div v-show="user_role === 'STU'" class="diagram m-card">
-      <canvas v-show="profile.learning_style" id="myChart" width="600" height="400"></canvas>
-      <div
-        v-show="!profile.learning_style"
-        class="no-style"
-      >Realiza un test para obtener tu estilo de aprendizaje</div>
+      <canvas
+        v-show="profile.learning_style"
+        id="myChart"
+        width="600"
+        height="400"
+      ></canvas>
+      <div v-show="!profile.learning_style" class="no-style">
+        Realiza un test para obtener tu estilo de aprendizaje
+      </div>
       <div class="diagram__actions">
         <m-btn @click="newTest()" small color="primary">Nuevo Test</m-btn>
       </div>
     </div>
 
     <!-- Dialog Test -->
-    <v-dialog v-model="dialog_test" max-width="900">
+    <v-dialog v-model="dialog_test" max-width="1000">
       <div id="test" class="test m-card">
         <h2 class="test__title">Cuestionario de Estilos de Aprendizaje</h2>
-        <p class="test__page">Página {{questions_page + 1}} de 4</p>
+        <p class="test__page">Página {{ questions_page + 1 }} de 4</p>
         <div class="test__content">
-          <div class="test__question" v-for="(question, q_idx) in _questions" :key="q_idx">
-            <h3 class="test__question-title">{{(q_idx + 1)}}. {{question.enunciado}}</h3>
+          <div
+            class="test__question"
+            v-for="(question, q_idx) in _questions"
+            :key="q_idx"
+          >
+            <h3 class="test__question-title">
+              <v-btn @click="talk(question.enunciado)" icon small class="mr-2">
+                <v-icon style="font-size: 1.3rem">mdi-volume-high</v-icon>
+              </v-btn>
+              <span>{{ q_idx + 1 }}. {{ question.enunciado }}</span>
+            </h3>
             <v-radio-group v-model="question.answer">
               <v-radio
                 v-for="(alternative, a_idx) in question.alternatives"
@@ -63,9 +82,22 @@
             @click="changePage(-1)"
             small
             class="mr-3"
-          >Anterior</v-btn>
-          <v-btn v-if="questions_page !== 3" color="primary" @click="changePage(1)" small>Siguiente</v-btn>
-          <v-btn v-if="questions_page === 3" color="success" @click="saveTest()" small>Guardar</v-btn>
+            >Anterior</v-btn
+          >
+          <v-btn
+            v-if="questions_page !== 3"
+            color="primary"
+            @click="changePage(1)"
+            small
+            >Siguiente</v-btn
+          >
+          <v-btn
+            v-if="questions_page === 3"
+            color="success"
+            @click="saveTest()"
+            small
+            >Guardar</v-btn
+          >
         </div>
       </div>
     </v-dialog>
@@ -114,6 +146,7 @@ import Chart from "chart.js";
 import { updateLearningStyle } from "@/services/studentService";
 import { getUser, updatePassword } from "@/services/userService";
 import { scrollTop } from "@/services/scroll";
+import { TextToSpeech } from "@/services/speech";
 
 import User from "@/models/User";
 
@@ -400,7 +433,7 @@ export default {
         await updatePassword(this.current_password, this.new_password);
         this.showMessage("", "Contraseña modificada.");
       } catch (error) {
-      this.showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
@@ -571,6 +604,9 @@ export default {
         this.showMessage("Alerta", "No dejes preguntas sin responder.");
       }
     },
+    talk(text) {
+      TextToSpeech(text);
+    }
   },
 };
 </script>

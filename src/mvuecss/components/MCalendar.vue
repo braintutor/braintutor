@@ -144,6 +144,11 @@
         <p class="event__date">
           {{ _formatDate(event_selected.date || new Date()) }}
         </p>
+        <p
+          class="mt-5"
+          style="white-space: pre-wrap"
+          v-html="toHTML(event_selected.description)"
+        ></p>
         <!-- CUSTOM INFO -->
         <!-- TODO Add to MVUECSS (methods) -->
         <slot

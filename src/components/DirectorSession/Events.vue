@@ -26,9 +26,6 @@
 
     <m-calendar :events="events">
       <template v-slot:event_info="{ event }">
-        <div>
-          <span class="mt-5">{{ event.description }}</span>
-        </div>
         <div v-if="event.type === 'task'" class="m-card__actions pa-0 pt-4">
           <m-btn
             @click="$router.push({ name: 'director-session-tasks' })"

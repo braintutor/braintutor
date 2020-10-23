@@ -319,7 +319,7 @@ export default {
     },
     showCreate() {
       this.task = {
-        time_start_f: this._formatDateToInput(new Date().addHours(1)),
+        time_start_f: this.dateToInput(new Date().addHours(1)),
         public: false,
       };
       this.dlg_new = true;
@@ -336,7 +336,7 @@ export default {
     showEditDate(task) {
       this.task = {
         _id: task._id,
-        time_start_f: this._formatDateToInput(task.time_start),
+        time_start_f: this.dateToInput(task.time_start),
       };
       this.dlg_edit_date = true;
     },
@@ -349,12 +349,6 @@ export default {
       this.task_selected = Object.assign({}, task);
     },
     //
-    _formatDateToInput(date) {
-      let date_f = new Date();
-      date_f.setTime(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
-      date_f = date_f.toISOString().substring(0, 16);
-      return date_f;
-    },
     async unselect() {
       this.task_selected = null;
       // await this.init();
