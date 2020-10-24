@@ -25,7 +25,8 @@ $spacer-plus: 40px;
   }
   &__image {
     display: block;
-    margin: $spacer-plus 0;
+    margin: $spacer-plus auto;
+    // margin: $spacer-plus 0;
     max-width: 100%;
 
     &--centered {
@@ -119,16 +120,12 @@ $spacer-plus: 40px;
 .m-editor-img {
   padding: 20px 0;
   input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #e4e4e4;
-    border-radius: 3px;
-    outline: none;
-    font-size: 14px;
+    display: none;
   }
   img {
+    display: block;
     max-width: 100%;
-    margin-bottom: 15px;
+    margin: 0 auto;
   }
 }
 

@@ -8,12 +8,18 @@
 
     <div :id="id"></div>
 
-    <Files
+    <v-dialog
+      v-model="showFiles"
       v-if="document_type && document_id"
-      @file="onFileSelected"
-      :document_type="document_type"
-      :document_id="document_id"
-    />
+      width="1000"
+    >
+      <Files
+        @file="onFileSelected"
+        :document_type="document_type"
+        :document_id="document_id"
+        class="m-card pa-4"
+      />
+    </v-dialog>
   </div>
 </template>
 
@@ -32,6 +38,7 @@ import Table from "@editorjs/table";
 
 import { convertToHMTL } from "@/services/editor";
 
+// FROM https://editorjs.io/creating-a-block-tool
 class MImage {
   constructor({ data }) {
     this.data = data;
@@ -48,42 +55,35 @@ class MImage {
     this.wrapper.classList.add("m-editor-img");
 
     if (this.data && this.data.url) {
-      this._createImage(this.data.url, this.data.caption);
+      this._createImage(this.data.url);
       return this.wrapper;
     }
 
-    const input = document.createElement("input");
-    input.setAttribute("id", "document-img");
+    let input = document.createElement("input");
+    input.setAttribute("id", "document-ipt");
     input.className = "m-editor-img-input";
-    input.placeholder = "Paste an image URL...";
-
-    input.addEventListener("paste", (event) => {
-      this._createImage(event.clipboardData.getData("text"));
+    input.addEventListener("click", (e) => {
+      this._createImage(e.target.value);
     });
 
     this.wrapper.appendChild(input);
+    window.showFiles();
+
     return this.wrapper;
   }
   save(blockContent) {
     const image = blockContent.querySelector("img");
-    const caption = blockContent.querySelector("input");
 
     return {
       url: image.src,
-      caption: caption.value,
     };
   }
-  _createImage(url, captionText) {
+  _createImage(url) {
     const image = document.createElement("img");
-    const caption = document.createElement("input");
-
     image.src = url;
-    caption.placeholder = "Caption...";
-    caption.value = captionText || "";
 
-    // this.wrapper.innerHTML = "";
+    this.wrapper.innerHTML = "";
     this.wrapper.appendChild(image);
-    this.wrapper.appendChild(caption);
   }
 }
 
@@ -104,9 +104,13 @@ export default {
   },
   data: () => ({
     editor: null,
+    showFiles: false,
   }),
   mounted() {
     this.create();
+    window.showFiles = () => {
+      this.showFiles = true;
+    };
   },
   methods: {
     create() {
@@ -168,12 +172,15 @@ export default {
     },
     async submit() {
       let data = await this.getData();
-      console.log(data);
       this.$emit("submit", data);
     },
     onFileSelected(file) {
-      let el = document.getElementById("document-img");
-      el.value = file.url;
+      let input = document.getElementById("document-ipt");
+      if (input) {
+        input.value = file.url;
+        input.click();
+      }
+      this.showFiles = false;
     },
   },
   components: {
