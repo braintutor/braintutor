@@ -115,6 +115,23 @@ $spacer-plus: 40px;
   }
 }
 
+// INPUT
+.m-editor-img {
+  padding: 20px 0;
+  input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e4e4e4;
+    border-radius: 3px;
+    outline: none;
+    font-size: 14px;
+  }
+  img {
+    max-width: 100%;
+    margin-bottom: 15px;
+  }
+}
+
 @keyframes shimmer {
   0% {
     background-position-x: -600px;
