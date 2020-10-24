@@ -6,11 +6,15 @@
       </v-btn>
     </div>
 
+    <Files v-if="document_type && document_id" :document_type="document_type" :document_id="document_id" />
+
     <div :id="id" class="document"></div>
   </div>
 </template>
 
 <script>
+import Files from "@/components/globals/File/Files";
+
 import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
 import List from "@editorjs/list";
@@ -52,6 +56,9 @@ export default {
     },
     hideControls: Boolean,
     readonly: Boolean,
+    // Files
+    document_type: String,
+    document_id: String
   },
   data: () => ({
     editor: null,
@@ -121,6 +128,9 @@ export default {
       let data = await this.getData();
       this.$emit("submit", data);
     },
+  },
+  components: {
+    Files,
   },
 };
 </script>

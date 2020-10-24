@@ -11,7 +11,7 @@
         >
           <section class="category" @click="selectCategory(category)">
             <img class="category__image" :src="value.image" alt />
-            <span class="category__name">{{value.name}}</span>
+            <span class="category__name">{{ value.name }}</span>
           </section>
         </div>
       </div>
@@ -23,7 +23,7 @@
         <v-btn @click="category = null" icon small>
           <v-icon style="font-size: 1.4rem">mdi-arrow-left</v-icon>
         </v-btn>
-        <span class="editor__title">{{categories[category].name}}</span>
+        <span class="editor__title">{{ categories[category].name }}</span>
       </div>
       <!-- Overview -->
       <TextEditor
@@ -47,7 +47,13 @@
         @submit="save"
       />
       <!-- Default -->
-      <DocumentEditor v-else :data="material[category]" @submit="save" />
+      <DocumentEditor
+        v-else
+        :data="material[category]"
+        @submit="save"
+        :document_type="'course'"
+        :document_id="material.course_id.$oid"
+      />
     </section>
   </div>
 </template>
@@ -118,7 +124,7 @@ export default {
         await updateMaterialCategory(material_id, category, data);
         this.material[category] = data;
       } catch (error) {
-      this.showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
