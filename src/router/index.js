@@ -158,6 +158,11 @@ const routes = [
         name: "course-editor-preview",
         component: () => import("../components/CourseEditor/MaterialsPreview"),
       },
+      {
+        path: "files",
+        name: "course-editor-files",
+        component: () => import("../components/CourseEditor/Files"),
+      },
     ],
   },
   {

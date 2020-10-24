@@ -15,6 +15,7 @@
 
       <div class="student__t">
         <h3>Tiempo de Sesión</h3>
+        <p class="mt-2">Ultima Sesión: {{ time.time_last_f }}</p>
         <canvas id="crt-t"></canvas>
       </div>
 
@@ -36,9 +37,16 @@ export default {
   data: () => ({
     crtLS: null,
     crtT: null,
+    time: {},
     time_size: 7,
   }),
   mounted() {
+    this.time = this.student.time || {};
+    if (this.time.time_last) {
+      this.time.time_last_f = this.formatDate(
+        new Date(this.time.time_last.$date).addHours(5)
+      );
+    }
     this.showChartT();
     this.showChartLS();
   },

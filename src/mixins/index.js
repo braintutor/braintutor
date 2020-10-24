@@ -19,6 +19,18 @@ Vue.mixin({
       date_f = date_f.toISOString().substring(0, 16);
       return date_f;
     },
+    formatDate(date) {
+      let options = {
+        month: "long",
+        day: "numeric",
+        weekday: "long",
+        hour: "2-digit",
+        minute: "2-digit",
+      };
+      let date_format = date.toLocaleDateString("es-ES", options);
+      date_format = date_format.charAt(0).toUpperCase() + date_format.slice(1);
+      return date_format;
+    },
     // HTML
     toHTML(text = "") {
       var urlRegex = /(https?:\/\/[^\s]+)/g;

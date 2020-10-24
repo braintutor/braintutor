@@ -40,6 +40,11 @@ export default {
         text: "Vista previa",
         name: "course-editor-preview",
       },
+      {
+        image: require("@/assets/icons/icon-file.svg"),
+        text: "Multimedia",
+        name: "course-editor-files",
+      },
     ],
     course_id: "",
     course: {

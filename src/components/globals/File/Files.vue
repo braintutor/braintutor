@@ -98,8 +98,17 @@
 import variables from "@/models/variables";
 
 export default {
+  props: {
+    document_type: {
+      type: String,
+      required: true,
+    },
+    document_id: {
+      type: String,
+      required: true,
+    },
+  },
   data: () => ({
-    session_id: "",
     files: [],
     file_selected: null,
     //
@@ -120,14 +129,16 @@ export default {
     },
   },
   async created() {
-    this.session_id = this.$router.currentRoute.params["session_id"];
     await this.init();
   },
   methods: {
     async init() {
       this.loading = true;
       try {
-        let { files } = await this.$api.file.session.getFiles(this.session_id);
+        let { files } = await this.$api.file.getFiles(
+          this.document_type,
+          this.document_id
+        );
         this.files = files;
       } catch (error) {
         this.showMessage("", error.msg || error);
@@ -139,7 +150,11 @@ export default {
       let file_name = this.file_selected.name;
       let file_name_f = file_name.replaceAll("/", "&&");
       try {
-        await this.$api.file.session.removeFile(this.session_id, file_name_f);
+        await this.$api.file.removeFile(
+          this.document_type,
+          this.document_id,
+          file_name_f
+        );
         this.files = this.files.filter((f) => f.name !== file_name);
       } catch (error) {
         this.showMessage("", error.msg || error);
@@ -160,8 +175,9 @@ export default {
       formData.append("file", file);
 
       try {
-        let { name, url, size } = await this.$api.file.session.addFile(
-          this.session_id,
+        let { name, url, size } = await this.$api.file.addFile(
+          this.document_type,
+          this.document_id,
           formData
         );
         this.files.push({
