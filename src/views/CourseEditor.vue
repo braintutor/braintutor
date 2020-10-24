@@ -36,14 +36,14 @@ export default {
         name: "course-editor-knowledge",
       },
       {
-        image: require("@/assets/icons/icon-preview.svg"),
-        text: "Vista previa",
-        name: "course-editor-preview",
-      },
-      {
         image: require("@/assets/icons/icon-file.svg"),
         text: "Multimedia",
         name: "course-editor-files",
+      },
+      {
+        image: require("@/assets/icons/icon-preview.svg"),
+        text: "Vista previa",
+        name: "course-editor-preview",
       },
     ],
     course_id: "",
