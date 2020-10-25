@@ -59,15 +59,16 @@ class MImage {
       return this.wrapper;
     }
 
+    let input_id = new Date().getTime();
     let input = document.createElement("input");
-    input.setAttribute("id", "document-ipt");
+    input.setAttribute("id", input_id);
     input.className = "m-editor-img-input";
     input.addEventListener("click", (e) => {
       this._createImage(e.target.value);
     });
 
     this.wrapper.appendChild(input);
-    window.showFiles();
+    window.showFiles(input_id);
 
     return this.wrapper;
   }
@@ -75,8 +76,13 @@ class MImage {
     const image = blockContent.querySelector("img");
 
     return {
-      url: image.src,
+      url: image ? image.src : "",
     };
+  }
+  validate(savedData) {
+    if (!savedData.url.trim()) return false;
+
+    return true;
   }
   _createImage(url) {
     const image = document.createElement("img");
@@ -105,11 +111,13 @@ export default {
   data: () => ({
     editor: null,
     showFiles: false,
+    input_id: null,
   }),
   mounted() {
     this.create();
-    window.showFiles = () => {
+    window.showFiles = (input_id) => {
       this.showFiles = true;
+      this.input_id = input_id;
     };
   },
   methods: {
@@ -175,7 +183,7 @@ export default {
       this.$emit("submit", data);
     },
     onFileSelected(file) {
-      let input = document.getElementById("document-ipt");
+      let input = document.getElementById(this.input_id);
       if (input) {
         input.value = file.url;
         input.click();
