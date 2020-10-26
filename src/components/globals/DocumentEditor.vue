@@ -59,16 +59,23 @@ class MImage {
       return this.wrapper;
     }
 
-    let input_id = new Date().getTime();
+    let custom_id = new Date().getTime();
+
     let input = document.createElement("input");
-    input.setAttribute("id", input_id);
-    input.className = "m-editor-img-input";
+    input.setAttribute("id", custom_id);
     input.addEventListener("click", (e) => {
       this._createImage(e.target.value);
     });
 
+    let button = document.createElement("button");
+    button.innerText = "Añadir Imagen"
+    button.addEventListener("click", () => {
+      window.showFiles(custom_id);
+    });
+
     this.wrapper.appendChild(input);
-    window.showFiles(input_id);
+    this.wrapper.appendChild(button);
+    window.showFiles(custom_id);
 
     return this.wrapper;
   }

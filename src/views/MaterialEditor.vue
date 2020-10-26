@@ -18,15 +18,15 @@
       :material="material"
       :course="course"
     />
-    <QuizzesEditor :slot="1" :material="material" />
-    <MaterialSettings :slot="2" :material="material" :course="course" />
+    <!-- <QuizzesEditor :slot="1" :material="material" /> -->
+    <MaterialSettings :slot="1" :material="material" :course="course" />
   </Layout>
 </template>
 
 <script>
 import Layout from "@/components/Layout";
 import ContentEditor from "@/components/MaterialEditor/ContentEditor";
-import QuizzesEditor from "@/components/MaterialEditor/QuizzesEditor";
+// import QuizzesEditor from "@/components/MaterialEditor/QuizzesEditor";
 import MaterialSettings from "@/components/MaterialEditor/MaterialSettings";
 
 import { getParam, redirect } from "@/services/router.js";
@@ -40,10 +40,10 @@ export default {
         image: require("@/assets/braintutor/icon-material.png"),
         name: "Material",
       },
-      {
-        image: require("@/assets/braintutor/icon-quiz.png"),
-        name: "Pruebas",
-      },
+      // {
+      //   image: require("@/assets/braintutor/icon-quiz.png"),
+      //   name: "Pruebas",
+      // },
       {
         image: require("@/assets/braintutor/icon-settings.png"),
         name: "Configuración",
@@ -79,7 +79,7 @@ export default {
   components: {
     Layout,
     ContentEditor,
-    QuizzesEditor,
+    // QuizzesEditor,
     MaterialSettings,
   },
 };

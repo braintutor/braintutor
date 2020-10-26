@@ -119,6 +119,19 @@ $spacer-plus: 40px;
 // INPUT
 .m-editor-img {
   padding: 20px 0;
+  button {
+    display: block;
+    margin: 0 auto;
+    padding: 10px;
+    border: 1px solid #e4e4e4;
+    border-radius: 3px;
+    outline: none;
+    font-size: .85rem;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+  }
   input {
     display: none;
   }
