@@ -114,16 +114,16 @@
           <div class="material">
             <p class="material__name">{{ material.name }}</p>
             <div v-show="!unit.edit_order" class="material__options">
+              <v-btn @click="selectMaterial(material._id.$oid)" icon small class="mr-1">
+                <v-icon style="font-size: 1.2rem">mdi-pencil</v-icon>
+              </v-btn>
               <v-menu offset-y>
                 <template v-slot:activator="{ on }">
-                  <v-btn class="ml-2" icon small v-on="on">
-                    <v-icon>mdi-dots-vertical</v-icon>
+                  <v-btn icon small v-on="on">
+                    <v-icon style="font-size: 1.4rem">mdi-dots-vertical</v-icon>
                   </v-btn>
                 </template>
                 <v-list class="pa-0" dense>
-                  <v-list-item @click="selectMaterial(material._id.$oid)">
-                    <v-list-item-title>Editar Material</v-list-item-title>
-                  </v-list-item>
                   <v-list-item
                     @click="
                       dlg_update_material_unit = true;
@@ -588,7 +588,8 @@ export default {
 
 .material {
   margin-top: 12px;
-  padding: 12px 16px;
+  padding: 10px 14px;
+  padding-right: 10px;
   background: #eee;
   color: #555;
   border-radius: 12px;
@@ -603,12 +604,7 @@ export default {
     font-size: 1rem;
   }
   &__options {
-    // opacity: 0;
-    // transition: 0.3s;
-
-    // .material:hover & {
-    //   opacity: 1;
-    // }
+    display: flex;
   }
   &__menu {
     display: flex;
