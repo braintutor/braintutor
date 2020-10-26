@@ -65,7 +65,7 @@ export default {
 .category-text-content {
   padding-bottom: 16px; // padding - padding-bottom
   font-size: 1rem;
-  white-space: pre-wrap;
+  white-space: pre-line;
   display: flex;
   align-items: flex-start;
 }
@@ -74,7 +74,7 @@ export default {
   margin-bottom: 10px;
   border-radius: 10px;
   font-size: 1rem;
-  white-space: pre-wrap;
+  white-space: pre-line;
   @include box-shadow;
   &:hover {
     cursor: pointer;

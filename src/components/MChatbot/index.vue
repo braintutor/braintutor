@@ -267,7 +267,7 @@ $color-message-user: #0078ff;
   font-size: 0.95rem;
   border-radius: 14px;
   word-wrap: break-word;
-  white-space: pre-wrap;
+  white-space: pre-line;
 
   &:not(:last-child) {
     margin-bottom: 8px;

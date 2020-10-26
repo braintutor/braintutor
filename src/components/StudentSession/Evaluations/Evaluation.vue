@@ -154,7 +154,7 @@ export default {
   &__statement {
     margin: 8px;
     font-weight: bold;
-    white-space: pre-wrap;
+    white-space: pre-line;
   }
   &__image {
     max-width: 80%;
@@ -171,7 +171,7 @@ export default {
     background: #f5f5f5;
     border-radius: 10px;
     transition: background-color 0.2s;
-    white-space: pre-wrap;
+    white-space: pre-line;
     cursor: pointer;
     &:hover {
       background: #e6ecff;

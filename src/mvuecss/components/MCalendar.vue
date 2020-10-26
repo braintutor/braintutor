@@ -146,7 +146,7 @@
         </p>
         <p
           class="mt-5"
-          style="white-space: pre-wrap"
+          style="white-space: pre-line"
           v-html="toHTML(event_selected.description)"
         ></p>
         <!-- CUSTOM INFO -->

@@ -218,7 +218,7 @@ $color-btn-hover: rgb(218, 230, 255);
     margin: 0;
     color: #3d3d3d;
     font-size: 0.9rem;
-    white-space: pre-wrap;
+    white-space: pre-line;
   }
 }
 

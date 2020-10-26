@@ -59,7 +59,7 @@ export default {
   &__question {
   }
   &__statement {
-    white-space: pre-wrap;
+    white-space: pre-line;
   }
   &__image {
     max-width: 80%;
@@ -100,7 +100,7 @@ export default {
     padding: 8px 12px;
     background: rgba(0, 0, 0, 0.025);
     border-radius: 6px;
-    white-space: pre-wrap;
+    white-space: pre-line;
     &:last-child {
       margin-bottom: 0;
     }

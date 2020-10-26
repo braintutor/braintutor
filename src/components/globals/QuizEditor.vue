@@ -44,7 +44,7 @@
             <v-icon>mdi-image</v-icon>
           </v-btn>
         </div>
-        <p v-else class="mb-3" style="white-space: pre-wrap">
+        <p v-else class="mb-3" style="white-space: pre-line">
           {{ d.question }}
         </p>
         <!-- QUESTION IMAGE -->
