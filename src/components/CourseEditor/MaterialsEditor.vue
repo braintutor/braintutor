@@ -114,7 +114,12 @@
           <div class="material">
             <p class="material__name">{{ material.name }}</p>
             <div v-show="!unit.edit_order" class="material__options">
-              <v-btn @click="selectMaterial(material._id.$oid)" icon small class="mr-1">
+              <v-btn
+                @click="selectMaterial(material._id.$oid)"
+                icon
+                small
+                class="mr-1"
+              >
                 <v-icon style="font-size: 1.2rem">mdi-pencil</v-icon>
               </v-btn>
               <v-menu offset-y>

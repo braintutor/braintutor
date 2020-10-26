@@ -234,7 +234,13 @@
 
     <!-- DLG FILES -->
     <v-dialog v-model="dlg_files" max-width="1000">
-      <Files v-if="dlg_files" @file="onFileSelected" class="m-card pa-4" />
+      <Files
+        v-if="dlg_files"
+        document_type="session"
+        :document_id="session_id"
+        @file="onFileSelected"
+        class="m-card pa-4"
+      />
     </v-dialog>
   </div>
 </template>
@@ -256,6 +262,7 @@ import QuestionModel from "@/models/Question";
 export default {
   props: ["evaluation", "unselect"],
   data: () => ({
+    session_id: "",
     question_selected: -1,
     dialog_delete: false,
     dialog_public: false,
@@ -264,6 +271,8 @@ export default {
     QuestionModel,
   }),
   created() {
+    this.session_id = this.$route.params["session_id"];
+
     let formatDate = (date) => {
       let date_f = new Date();
       date_f.setTime(date.getTime() - date.getTimezoneOffset() * 60 * 1000);

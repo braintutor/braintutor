@@ -141,10 +141,17 @@
         <v-icon small>mdi-dots-vertical</v-icon>
       </v-btn>
     </div>
+
+    <!-- DLG FILES -->
+    <v-dialog v-model="dlg_files" max-width="1000">
+      <Files v-if="dlg_files" @file="onFileSelected" class="m-card pa-4" />
+    </v-dialog>
   </section>
 </template>
 
 <script>
+import Files from "@/components/globals/File/Files";
+
 import QuestionModel from "@/models/Question";
 
 export default {
@@ -152,6 +159,9 @@ export default {
   data: () => ({
     data: [],
     edit: false,
+    //
+    dlg_files: false,
+    //
     QuestionModel,
   }),
   watch: {
@@ -202,6 +212,9 @@ export default {
         this.$forceUpdate();
       }
     },
+  },
+  components: {
+    Files,
   },
 };
 </script>
