@@ -34,6 +34,23 @@
     </div>
 
     <div v-show="user_role === 'STU'" class="diagram m-card">
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            v-show="profile.learning_style"
+            @click="dialog_test_2 = true"
+            color="primary"
+            icon
+            small
+            v-bind="attrs"
+            v-on="on"
+            class="mb-3"
+            style="display: block; margin-left: auto"
+            ><v-icon style="font-size: 1.2rem">mdi-help</v-icon></v-btn
+          >
+        </template>
+        <span>Saber Más</span>
+      </v-tooltip>
       <canvas
         v-show="profile.learning_style"
         id="myChart"
@@ -44,11 +61,11 @@
         Realiza un test para obtener tu estilo de aprendizaje
       </div>
       <div class="diagram__actions">
-        <m-btn @click="newTest()" small color="primary">Nuevo Test</m-btn>
+        <m-btn @click="newTest()" small color="primary" text>Nuevo Test</m-btn>
       </div>
     </div>
 
-    <!-- Dialog Test -->
+    <!-- DLG TEST -->
     <v-dialog v-model="dialog_test" max-width="1000">
       <div id="test" class="test m-card">
         <h2 class="test__title">Cuestionario de Estilos de Aprendizaje</h2>
@@ -102,7 +119,7 @@
       </div>
     </v-dialog>
 
-    <!-- DIALOG PASSWORD -->
+    <!-- DLG PASSWORD -->
     <v-dialog v-model="dialog_password" max-width="400">
       <form @submit.prevent="updatePassword()" class="m-card">
         <div class="m-card__body">
@@ -136,6 +153,91 @@
           <m-btn color="primary" small>Guardar</m-btn>
         </div>
       </form>
+    </v-dialog>
+
+    <!-- DLG TEST 2 -->
+    <v-dialog v-model="dialog_test_2" max-width="1000">
+      <div v-if="profile.learning_style" class="m-card">
+        <div class="m-card__body">
+          <p v-if="profile.learning_style.procesamiento === 'activo'">
+            <strong>ACTIVO:</strong> Prefiere hacer cosas que puede comprobar en
+            el mundo real. Tiende a ser extrovertido. No aprende de situaciones
+            que requieren pasividad o espera, pues es de naturaleza impaciente y
+            siente que si no está haciendo algo está perdiendo el tiempo. Tiende
+            a iniciar de inmediato las cosas por hacer, sin pensarlas demasiado.
+            Trabaja mejor en equipo y acumula conocimiento de lo que va
+            viviendo, por lo cual los talleres y casos prácticos le van bien.
+          </p>
+          <p v-else>
+            <strong>REFLEXIVO:</strong> Prefiere hacer las cosas cuando ha
+            meditado con anterioridad las posibilidades y las consecuencias de
+            lo que puede pasar. Es introspectivo y dado a la reflexión. Se
+            desconcierta en situaciones que requieren respuestas inmediatas,
+            pues no tiene tiempo para pensar bien el escenario que enfrentan.
+            Trabaja mejor individualmente o en compañía de una persona. Aprende
+            de los modelos teóricos y de la reflexión, por lo cual cursos y
+            manuales le van bien.
+          </p>
+
+          <p v-if="profile.learning_style.percepcion === 'sensorial'">
+            <strong>SENSITIVO:</strong> Prefiere los hechos, los datos y la
+            experimentación. Prefiere resolver problemas usando métodos estándar
+            ya probados, y por tanto no le gustan las sorpresas. Es paciente,
+            detallista, y no les gustan las complicaciones innecesarias. Es
+            bueno memorizando hechos o datos. Prefiere aquello que es simple y
+            evidente. Es cauteloso, lo que puede provocar que sea un poco lento.
+            Se siente cómodo con las experiencias.
+          </p>
+          <p v-else>
+            <strong>INTUITIVO:</strong> Prefiere los principios y las teorías.
+            Le gusta la innovación y le disgusta o aburre hacer siempre lo mismo
+            de la misma manera. Es impaciente, le aburre el detalle y ve como un
+            reto las complicaciones. Es bueno desarrollando nuevos conceptos y
+            cambiando los existentes: es creativo y resolutor de problemas
+            nuevos. Es rápido, pero poco cauteloso. Se siente cómodo con los
+            símbolos.
+          </p>
+
+          <p v-if="profile.learning_style.entrada === 'visual'">
+            <strong>VISUAL:</strong> Le gusta ver formas, dibujos, colores,
+            diagramas, símbolos. Recuerda aquellas cosas que ve y percibe al
+            verlas. Para aprender y expresarse le van mejor los medios
+            audiovisuales y multimedia. Es bueno para representar ideas que son
+            difíciles de explicar con palabras.
+          </p>
+          <p v-else>
+            <strong>VERBAL:</strong> Le gustan las palabras: decirlas,
+            escribirlas y oírlas. Recuerda lo que dice, escribe o escucha en
+            forma de palabras. Prefiere la lectura y el discurso, pone atención
+            a los conceptos y es bueno para entender y argumentar de manera
+            lógica las situaciones.
+          </p>
+
+          <p v-if="profile.learning_style.comprension === 'secuencial'">
+            <strong>SECUENCIAL:</strong> Prefiere la exposición al conocimiento
+            de manera ordenada y progresiva y no tiene problema en aprender las
+            cosas por partes, una después de la otra. Sigue un proceso de
+            razonamiento lineal para resolver problemas. Se siente cómodo con
+            material que conoce parcialmente. Se le da el análisis, aprende y se
+            comunica bien en una progresión de lo básico a lo complejo. Puede
+            aprender las cosas gradualmente, con la desventaja de que puede
+            olvidar partes aprendidas anteriormente a la llegada de nuevo
+            conocimiento.
+          </p>
+          <p v-else>
+            <strong>GLOBAL:</strong> Prefiere la exposición de todo el
+            conocimiento junto. Sigue un proceso intuitivo para resolver
+            problemas y se siente incómodo con información incompleta o poco
+            profunda. Es bueno para la síntesis y no tiene problemas para ir
+            directamente a lo complejo de un tema, tratando de descifrarlo.
+            Parece no entender nada, hasta que de pronto lo entiende todo; lo
+            cual puede generar impaciencia en las personas de estilo secuencial.
+            Batalla para aprender, pero una vez que aprende algo no olvida
+            detalle, pues requiere del todo para entenderlo. Es capaz de ver
+            todo el panorama de una situación.
+          </p>
+        </div>
+      </div>
     </v-dialog>
   </div>
 </template>
@@ -351,6 +453,7 @@ export default {
     user_role: -1,
     myChart: null,
     dialog_test: false,
+    dialog_test_2: false,
     //
     current_password: "",
     new_password: "",
@@ -657,7 +760,7 @@ export default {
   max-width: 500px;
   margin: 0 auto;
   margin-top: 18px;
-  padding: 4%;
+  padding: 3%;
   padding-bottom: 0;
 
   &__actions {
