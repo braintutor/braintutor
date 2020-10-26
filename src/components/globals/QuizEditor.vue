@@ -30,19 +30,38 @@
     <!-- QUESTION -->
     <div v-for="(d, d_idx) in data" :key="d_idx" class="question mt-3">
       <section class="question__body m-card pa-3">
-        <v-textarea
-          v-if="edit"
-          v-model="d.question"
-          :maxlength="QuestionModel.question.max_length"
-          :counter="QuestionModel.question.max_length"
-          class="mb-3"
-          rows="1"
-          auto-grow
-          dense
-        ></v-textarea>
+        <div v-if="edit" class="question__statement">
+          <v-textarea
+            v-model="d.question"
+            :maxlength="QuestionModel.question.max_length"
+            :counter="QuestionModel.question.max_length"
+            class="mb-3"
+            rows="1"
+            auto-grow
+            dense
+          ></v-textarea>
+          <v-btn @click="showFiles(d_idx)" icon class="ml-2">
+            <v-icon>mdi-image</v-icon>
+          </v-btn>
+        </div>
         <p v-else class="mb-3" style="white-space: pre-wrap">
           {{ d.question }}
         </p>
+        <!-- QUESTION IMAGE -->
+        <div v-if="d.image" class="question__image">
+          <img :src="d.image" />
+          <v-btn
+            v-if="edit"
+            @click="
+              d.image = null;
+              $forceUpdate();
+            "
+            class="question__image-close"
+            icon
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </div>
         <!-- ALTERNATIVE -->
         <div
           v-for="(alternative, a_idx) in d.alternatives"
@@ -144,7 +163,13 @@
 
     <!-- DLG FILES -->
     <v-dialog v-model="dlg_files" max-width="1000">
-      <Files v-if="dlg_files" @file="onFileSelected" class="m-card pa-4" />
+      <Files
+        v-if="dlg_files"
+        @file="onFileSelected"
+        :document_type="document_type"
+        :document_id="document_id"
+        class="m-card pa-4"
+      />
     </v-dialog>
   </section>
 </template>
@@ -155,10 +180,11 @@ import Files from "@/components/globals/File/Files";
 import QuestionModel from "@/models/Question";
 
 export default {
-  props: ["quiz", "maxlength"],
+  props: ["quiz", "maxlength", "document_type", "document_id"],
   data: () => ({
     data: [],
     edit: false,
+    question_selected: -1,
     //
     dlg_files: false,
     //
@@ -212,6 +238,15 @@ export default {
         this.$forceUpdate();
       }
     },
+    // Files
+    showFiles(idx) {
+      this.question_selected = idx;
+      this.dlg_files = true;
+    },
+    onFileSelected(file) {
+      this.dlg_files = false;
+      this.data[this.question_selected].image = file.url;
+    },
   },
   components: {
     Files,
@@ -233,6 +268,26 @@ export default {
 
   &__body {
     flex-grow: 1;
+  }
+
+  &__statement {
+    display: flex;
+  }
+
+  &__image {
+    position: relative;
+    max-width: 80%;
+    margin: 20px auto;
+    img {
+      display: block;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+    &-close {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
   }
 
   &--add {

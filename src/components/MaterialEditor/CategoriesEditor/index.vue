@@ -37,6 +37,8 @@
         v-else-if="category === 'exercises'"
         :quiz="material[category]"
         :maxlength="MaterialModel.exercises.max_length"
+        document_type="course"
+        :document_id="material.course_id.$oid"
         @submit="save"
       />
       <!-- FAQ -->
