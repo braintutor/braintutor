@@ -1,5 +1,5 @@
 <template>
-  <div class="container py-0 px-3">
+  <div class="m-container">
     <div class="profile m-card">
       <div class="m-card__body">
         <h2 class="profile__title">Mis Datos</h2>
@@ -606,7 +606,7 @@ export default {
     },
     talk(text) {
       TextToSpeech(text);
-    }
+    },
   },
 };
 </script>
@@ -614,7 +614,7 @@ export default {
 <style lang='scss' scoped>
 .profile {
   max-width: 500px;
-  margin: 24px auto;
+  margin: 0 auto;
 
   &__title {
     font-size: 1.2rem;
@@ -656,7 +656,7 @@ export default {
 .diagram {
   max-width: 500px;
   margin: 0 auto;
-  margin-bottom: 24px;
+  margin-top: 18px;
   padding: 4%;
   padding-bottom: 0;
 
