@@ -32,8 +32,21 @@
             target="_blank"
             class="file mt-3"
           >
-            <span>{{ file.type }}</span>
-            <span>{{ file.name }}</span>
+            <div class="file__type">
+              <img
+                v-if="file.type === 'audio'"
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Speaker_Icon.svg/1024px-Speaker_Icon.svg.png"
+              />
+              <img
+                v-else-if="file.type === 'image'"
+                src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-image-512.png"
+              />
+              <img
+                v-else
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR9NTAxbufxYBJOqHS9WvGyA8E-koSuV2YbBg&usqp=CAU"
+              />
+            </div>
+            <span class="file__name">{{ file.name }}</span>
           </a>
         </div>
       </div>
@@ -124,12 +137,30 @@ export default {
 <style lang='scss' scoped>
 .file {
   display: block;
-  padding: 12px 18px;
-  background: rgb(224, 224, 224);
+  background: rgba(0, 0, 255, 0.075);
   border-radius: 6px;
 
   color: rgba(0, 0, 0, 0.75);
   text-decoration: none;
   cursor: pointer;
+
+  display: flex;
+  align-items: center;
+
+  &__type {
+    padding: 12px;
+    border-right: 1px solid #ccc;
+
+    display: flex;
+    align-items: center;
+
+    img {
+      height: 32px;
+      width: 32px;
+    }
+  }
+  &__name {
+    padding: 12px 18px;
+  }
 }
 </style>
