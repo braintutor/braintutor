@@ -8,4 +8,11 @@ export default (_fetch) => ({
     removeFile(document_type, document_id, file_id) {
         return _fetch('DELETE', `file/${document_type}/${document_id}/${file_id}`);
     },
+    // Task
+    getFilesTask(task_id) {
+        return _fetch('GET', `file/task/${task_id}`);
+    },
+    addFileTask(task_id, data) {
+        return _fetch('POST', `file/task/${task_id}`, data, false);
+    },
 })

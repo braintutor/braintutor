@@ -224,6 +224,12 @@ const routes = [
     component: () => import("../views/Task.vue"),
   },
   {
+    path: "/student-task/:task_id",
+    name: "student-task",
+    meta: { roles: ["STU"] },
+    component: () => import("../views/StudentTask.vue"),
+  },
+  {
     path: "/tasks",
     name: "tasks",
     meta: { roles: ["STU"] },
