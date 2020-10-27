@@ -35,7 +35,7 @@
           <div class="files">
             <div class="files__menu mb-4">
               <span>{{ size }}</span>
-              <m-btn onclick="ipt_file.click()" color="primary" small
+              <m-btn onclick="ipt_file.click()" color="primary" small text
                 >Subir Archivo</m-btn
               >
             </div>
@@ -64,7 +64,13 @@
                 </v-btn>
               </div>
             </a>
+            <p v-show="files_f.length <= 0" class="text-center ma-0">
+              No hay Archivos.
+            </p>
           </div>
+        </div>
+        <div class="m-card__actions">
+          <m-btn @click="save()" color="primary" small>Guardar</m-btn>
         </div>
       </div>
 
@@ -154,6 +160,7 @@ export default {
       }
       this.hideLoading();
     },
+    async save() {},
     // FILE
     async onFileSelected(e) {
       let file = e.target.files[0];
