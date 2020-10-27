@@ -185,13 +185,9 @@ export default {
     async removeFile() {
       this.showLoading("Eliminando Archivo");
       let file_name = this.file_selected.name;
-      //   let file_name_f = file_name.replaceAll("/", "&&");
+      let file_name_f = file_name.replaceAll("/", "&&");
       try {
-        // await this.$api.file.removeFile(
-        //   this.document_type,
-        //   this.document_id,
-        //   file_name_f
-        // );
+        await this.$api.file.removeFileTask(this.task_id, file_name_f);
         this.files = this.files.filter((f) => f.name !== file_name);
       } catch (error) {
         this.showMessage("", error.msg || error);

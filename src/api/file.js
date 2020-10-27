@@ -15,4 +15,7 @@ export default (_fetch) => ({
     addFileTask(task_id, data) {
         return _fetch('POST', `file/task/${task_id}`, data, false);
     },
+    removeFileTask(task_id, file_id) {
+        return _fetch('DELETE', `file/task/${task_id}/${file_id}`);
+    },
 })
