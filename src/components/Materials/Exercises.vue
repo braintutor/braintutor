@@ -8,17 +8,26 @@
     </div>
     <div v-for="(exercise, q_idx) in exercises" :key="q_idx" class="pb-6">
       <div class="category-text-content">
-        <strong class="mr-3">{{q_idx+1}}.</strong>
-        <div>{{exercise.question}}</div>
+        <strong class="mr-3">{{ q_idx + 1 }}.</strong>
+        <div>{{ exercise.question }}</div>
+      </div>
+      <!-- QUESTION IMAGE -->
+      <div v-if="exercise.image" class="question__image">
+        <img :src="exercise.image" />
       </div>
       <div
         v-for="(alternative, a_idx) in exercise.alternatives"
         :key="a_idx"
         class="category-text-alternative transform-scale ml-4"
-        :class="{'category-text-alternative-correct': exercise.show_correct && exercise.correct === a_idx, 
-        'category-text-alternative-incorrect': exercise.incorrect === a_idx}"
+        :class="{
+          'category-text-alternative-correct':
+            exercise.show_correct && exercise.correct === a_idx,
+          'category-text-alternative-incorrect': exercise.incorrect === a_idx,
+        }"
         @click="selectAlternative(exercise, exercise.correct, a_idx)"
-      >{{alternative}}</div>
+      >
+        {{ alternative }}
+      </div>
     </div>
   </div>
 </template>
@@ -28,7 +37,7 @@ export default {
   props: ["exercises", "talk"],
   methods: {
     resetExercises() {
-      this.exercises.forEach(exercise => {
+      this.exercises.forEach((exercise) => {
         (exercise.show_correct = false), (exercise.incorrect = -1);
       });
       this.$forceUpdate(); /* Correct Binding Update (:class) */
@@ -44,8 +53,8 @@ export default {
         }
         this.$forceUpdate(); /* Correct Binding Update (:class) */
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -88,6 +97,25 @@ export default {
     background: #ff887f;
     color: #fff;
     font-weight: bold;
+  }
+}
+
+.question {
+  &__image {
+    position: relative;
+    max-width: 80%;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    img {
+      display: block;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+    &-close {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
   }
 }
 </style>
