@@ -25,11 +25,16 @@
             {{ text }}
           </div>
           <input type="file" onclick="value = null" @change="onFileSelected" />
-          <div v-for="(file, idx) in files_f" :key="idx">
-            <a :href="file.url" target="_blank">
-              {{ file.name }}.{{ file.type }}
-            </a>
-          </div>
+          <a
+            v-for="(file, idx) in files_f"
+            :key="idx"
+            :href="file.url"
+            target="_blank"
+            class="file mt-3"
+          >
+            <span>{{ file.type }}</span>
+            <span>{{ file.name }}</span>
+          </a>
         </div>
       </div>
     </div>
@@ -118,9 +123,13 @@ export default {
 
 <style lang='scss' scoped>
 .file {
+  display: block;
   padding: 12px 18px;
   background: rgb(224, 224, 224);
   border-radius: 6px;
+
+  color: rgba(0, 0, 0, 0.75);
+  text-decoration: none;
   cursor: pointer;
 }
 </style>
