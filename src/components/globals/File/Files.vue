@@ -40,14 +40,14 @@
               v-for="(file, idx) in files_f"
               :key="idx"
               @click="$emit('file', file)"
-              class="file col-6 col-md-4"
+              class="m-file col-6 col-md-4"
             >
               <img :src="`${file.url}?${Date.now()}`" />
-              <div class="file__menu">
+              <div class="m-file__menu">
                 <!-- <span class="file__name pl-2">{{
                   file.name.substring(file.name.lastIndexOf("/") + 1)
                 }}</span> -->
-                <span class="file__name pl-2">{{ kb_to_mb(file.size) }}</span>
+                <span class="m-file__name pl-2">{{ kb_to_mb(file.size) }}</span>
                 <v-btn @click.stop="showRemove(file)" color="error" icon small>
                   <v-icon style="font-size: 1.4rem">mdi-delete</v-icon>
                 </v-btn>
@@ -207,7 +207,7 @@ export default {
   }
 }
 
-.file {
+.m-file {
   position: relative;
   transition: 0.3s;
   cursor: pointer;
@@ -236,7 +236,7 @@ export default {
     pointer-events: none;
     transition: 0.3s;
 
-    .file:hover & {
+    .m-file:hover & {
       opacity: 1;
       pointer-events: initial;
     }
