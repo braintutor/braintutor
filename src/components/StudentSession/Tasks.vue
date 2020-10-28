@@ -72,7 +72,7 @@ export default {
       this.hideLoading();
     },
     select(task) {
-      redirect("task", { task_id: task._id });
+      redirect("student-task", { task_id: task._id });
     },
   },
   components: {

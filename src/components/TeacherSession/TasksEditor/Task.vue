@@ -35,49 +35,54 @@
       </div>
       <!-- ANSWER -->
       <div v-if="student" class="col-12 col-sm-10">
-        <div class="response m-card mb-4 ml-sm-5">
+        <div v-if="!loading" class="response m-card mb-4 ml-sm-5">
           <div class="response__menu">
             <p class="response__student">
               {{ `${student.last_name}, ${student.first_name}` }}
             </p>
-            <p
-              v-if="answer.text || (answer.data && answer.data.length > 0)"
-              class="response__time"
-            >
+            <p v-if="answer" class="response__time">
               {{ toDateTimeString(answer.time_end) }}
             </p>
           </div>
-          <div
-            v-if="answer.text || (answer.data && answer.data.length > 0)"
-            class="response__answer"
-          >
+          <div v-if="answer" class="response__answer">
             <p class="response__text">{{ answer.text }}</p>
-            <div class="mt-3" v-for="(item, idx) in answer.data" :key="idx">
-              <!-- LINK -->
-              <div class="link" v-if="item.type === 'link'">
-                <a class="link__data" :href="item.url" target="_blank">
-                  <img class="link__image" :src="item.image" alt />
-                  <p class="link__title">{{ item.title }}</p>
-                  <p class="link__description">{{ item.description }}</p>
-                </a>
-              </div>
-              <!-- LINK FILE -->
-              <div class="linkFile" v-if="item.type === 'file'">
-                <a class="linkFile__data" :href="item.url" target="_blank">
-                  <img class="linkFile__image" :src="item.image" alt />
-                  <p class="linkFile__title">{{ item.title }}</p>
-                </a>
-              </div>
-            </div>
+            <!-- ANSWER FILES -->
+            <a v-for="(file, idx) in files_f" :key="idx" class="file mt-2">
+              <a :href="file.url" target="_blank" class="file__body">
+                <div class="file__type">
+                  <img
+                    v-if="file.type === 'audio'"
+                    src="@/assets/file/icon-audio.svg"
+                  />
+                  <img
+                    v-else-if="file.type === 'image'"
+                    src="@/assets/file/icon-image.svg"
+                  />
+                  <img
+                    v-else-if="file.type === 'video'"
+                    src="@/assets/file/icon-video.svg"
+                  />
+                  <!--  -->
+                  <img
+                    v-else-if="file.content_type === 'application/pdf'"
+                    src="@/assets/file/icon-application-pdf.svg"
+                  />
+                  <img v-else src="@/assets/file/icon-default.svg" />
+                </div>
+                <span class="file__name">{{ file.name_f }}</span>
+              </a>
+            </a>
           </div>
           <div
-            v-else
+            v-if="!answer && files.length <= 0"
             class="text-center pt-4 pb-2"
             style="color: #aaa; font-size: 0.9rem"
           >
             No hay respuestas.
           </div>
         </div>
+
+        <div v-else class="text-center">Cargando...</div>
       </div>
     </div>
   </div>
@@ -89,25 +94,40 @@ import TaskCard from "@/components/globals/Task/TaskCard";
 import { toDateTimeString } from "@/services/date";
 
 export default {
-  props: ["task", "students", "unselect", "restore"],
+  props: ["task", "students", "unselect"],
   data: () => ({
-    session_id: "",
     student: null,
+    answer: null,
+    files: [],
+    loading: true,
   }),
   created() {
     this.student = this.students[0];
   },
   computed: {
-    answer() {
-      let answer = {};
-      try {
-        answer =
-          this.task.answers.find((answer) => answer._id === this.student._id) ||
-          {};
-      } catch (error) {
-        //
-      }
-      return answer;
+    files_f() {
+      return this.files.map((f) => ({
+        ...f,
+        name_f: f.name.substring(f.name.lastIndexOf("/") + 1),
+        type: f.content_type.split("/")[0],
+      }));
+    },
+  },
+  watch: {
+    async student() {
+      this.loading = true;
+
+      let answer = (this.task.answers || []).find(
+        (answer) => answer._id === this.student._id
+      );
+      this.answer = answer;
+      let { files } = await this.$api.file.getFilesTask(
+        this.task._id,
+        this.student._id
+      );
+      this.files = files;
+
+      this.loading = false;
     },
   },
   methods: {
@@ -172,83 +192,45 @@ export default {
   }
 }
 
-// ANSWERS
-.link {
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  transition: all 0.3s;
-  cursor: pointer;
-  overflow: hidden;
-  //
+// FILE
+.file {
+  display: block;
+  background: rgba(0, 0, 255, 0.07);
+  border-radius: 6px;
+
   display: flex;
   align-items: center;
 
-  &:hover {
-    box-shadow: 0 2px 6px #ccc;
-  }
-  &__data {
+  &__body {
     flex-grow: 1;
-    color: #494949;
+    color: rgba(0, 0, 0, 0.75);
     text-decoration: none;
-    //
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto auto;
-    column-gap: 12px;
-    row-gap: 6px;
-    align-items: center;
-  }
-  &__image {
-    max-width: 80px;
-    grid-row-start: 1;
-    grid-row-end: 3;
-    grid-column-start: 1;
-  }
-  &__title {
-    margin: 0;
-    font-size: 0.9rem;
-    font-weight: bold;
-    grid-column-start: 2;
-  }
-  &__description {
-    margin: 0;
-    font-size: 0.75rem;
-    font-weight: lighter;
-    grid-column-start: 2;
-  }
-}
-.linkFile {
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  transition: all 0.3s;
-  cursor: pointer;
-  //
-  display: flex;
-  align-items: center;
 
-  &:hover {
-    box-shadow: 0 2px 6px #ccc;
-  }
-
-  &__data {
-    flex-grow: 1;
     display: flex;
     align-items: center;
-    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(0, 0, 255, 0.05);
+    }
   }
-  &__image {
-    width: 20px;
-    height: 20px;
+  &__actions {
   }
-  &__title {
+
+  &__type {
+    padding: 16px;
+
+    display: flex;
+    align-items: center;
+
+    img {
+      height: 32px;
+      width: 32px;
+    }
+  }
+  &__name {
     flex-grow: 1;
-    margin: 0;
-    color: #3b3b3b;
-    font-size: 0.9rem;
-    font-weight: bold;
-    text-align: center;
+    padding: 8px;
   }
 }
 </style>
