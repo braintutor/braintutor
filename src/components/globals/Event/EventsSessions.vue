@@ -162,7 +162,7 @@ export default {
         redirect("teacher-session-tasks", {
           session_id: event.session_id,
         });
-      else redirect("task", { task_id: event._id });
+      else redirect("student-task", { task_id: event._id });
     },
     redirectEvaluation(event) {
       redirect(

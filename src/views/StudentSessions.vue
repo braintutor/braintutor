@@ -50,7 +50,7 @@
 import SessionCard from "@/components/globals/Session/SessionCard";
 
 import { getSessionsByStudent } from "@/services/sessionService";
-import { redirect } from "@/services/router.js";
+// import { redirect } from "@/services/router.js";
 
 export default {
   data: () => ({
@@ -58,18 +58,18 @@ export default {
   }),
   async mounted() {
     // GOOGLE
-    let fragmentString = location.hash.substring(1);
-    let params = {};
-    var regex = /([^&=]+)=([^&]*)/g,
-      m;
-    while ((m = regex.exec(fragmentString))) {
-      params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
-    }
-    if (params.access_token)
-      localStorage.setItem("access_token", params.access_token);
+    // let fragmentString = location.hash.substring(1);
+    // let params = {};
+    // var regex = /([^&=]+)=([^&]*)/g,
+    //   m;
+    // while ((m = regex.exec(fragmentString))) {
+    //   params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+    // }
+    // if (params.access_token)
+    //   localStorage.setItem("access_token", params.access_token);
 
-    let state = params["state"] || params["/state"];
-    if (state) redirect("task", { task_id: state });
+    // let state = params["state"] || params["/state"];
+    // if (state) redirect("task", { task_id: state });
 
     //
     this.showLoading("Cargando Cursos");
