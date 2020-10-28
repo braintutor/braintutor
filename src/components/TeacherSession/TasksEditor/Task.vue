@@ -82,7 +82,14 @@
           </div>
         </div>
 
-        <div v-else class="text-center">Cargando...</div>
+        <div v-else style="width: max-content" class="pa-4 mx-auto">
+          <v-progress-circular
+            :width="3"
+            :size="80"
+            indeterminate
+            color="var(--color-subtitle)"
+          ></v-progress-circular>
+        </div>
       </div>
     </div>
   </div>

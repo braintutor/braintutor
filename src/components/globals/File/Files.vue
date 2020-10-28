@@ -30,14 +30,14 @@
     <div v-show="!loading">
       <div v-show="show === 'LIST'">
         <p>{{ size }}</p>
-        <p v-show="files.length <= 0" class="text-center my-3">
+        <p v-show="files_f.length <= 0" class="text-center my-3">
           No hay archivos.
         </p>
 
         <div class="container pa-0">
           <div class="row no-gutters">
             <div
-              v-for="(file, idx) in files"
+              v-for="(file, idx) in files_f"
               :key="idx"
               @click="$emit('file', file)"
               class="file col-6 col-md-4"
@@ -126,6 +126,9 @@ export default {
       return `Espacio utilizado: ${this.kb_to_mb(
         current_size
       )} / ${this.kb_to_mb(this.variables.max_session_size)}`;
+    },
+    files_f() {
+      return this.files.filter((f) => !f.name.includes("/task/"));
     },
   },
   async created() {
