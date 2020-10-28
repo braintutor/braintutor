@@ -22,7 +22,14 @@
       <div class="m-card mt-3">
         <div class="m-card__body">
           <div>
-            {{ text }}
+            <v-textarea
+              v-model="text"
+              :maxlength="AnswerModel.text.max_length"
+              :counter="AnswerModel.text.max_length"
+              label="Escribe tu respuesta"
+              rows="1"
+              auto-grow
+            ></v-textarea>
           </div>
           <input
             v-show="false"
@@ -32,7 +39,7 @@
             @change="onFileSelected"
           />
           <!-- FILES -->
-          <div class="files">
+          <div class="files mt-4">
             <div class="files__menu mb-4">
               <span>{{ size }}</span>
               <m-btn onclick="ipt_file.click()" color="primary" small text
@@ -45,16 +52,22 @@
                 <div class="file__type">
                   <img
                     v-if="file.type === 'audio'"
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Speaker_Icon.svg/1024px-Speaker_Icon.svg.png"
+                    src="@/assets/file/icon-audio.svg"
                   />
                   <img
                     v-else-if="file.type === 'image'"
-                    src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-image-512.png"
+                    src="@/assets/file/icon-image.svg"
                   />
                   <img
-                    v-else
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR9NTAxbufxYBJOqHS9WvGyA8E-koSuV2YbBg&usqp=CAU"
+                    v-else-if="file.type === 'video'"
+                    src="@/assets/file/icon-video.svg"
                   />
+                  <!--  -->
+                  <img
+                    v-else-if="file.content_type === 'application/pdf'"
+                    src="@/assets/file/icon-application-pdf.svg"
+                  />
+                  <img v-else src="@/assets/file/icon-default.svg" />
                 </div>
                 <span class="file__name">{{ file.name_f }}</span>
               </a>
@@ -110,17 +123,20 @@
 <script>
 import TaskCard from "@/components/globals/Task/TaskCard";
 
-import { getTaskByStudent } from "@/services/taskService";
+import { getTaskByStudent, updateTaskAnswer } from "@/services/taskService";
 import variables from "@/models/variables";
+
+import { AnswerModel } from "@/models/Task";
 
 export default {
   data: () => ({
     task: null,
-    text: {},
+    text: "",
     files: [],
     file_selected: null,
     dlg_remove: false,
     //
+    AnswerModel,
     variables,
   }),
   computed: {
@@ -160,7 +176,17 @@ export default {
       }
       this.hideLoading();
     },
-    async save() {},
+    async save() {
+      this.showLoading("Guardando Respuesta");
+      try {
+        await updateTaskAnswer(this.task._id, {
+          text: this.text || '',
+        });
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
+    },
     // FILE
     async onFileSelected(e) {
       let file = e.target.files[0];
@@ -185,7 +211,10 @@ export default {
         });
         this.show = "LIST";
       } catch (error) {
-        this.showMessage("", error.msg || error);
+        this.showMessage(
+          "",
+          error.msg || "Ha ocurrido un error al subir el archivo."
+        );
       }
       this.hideLoading();
     },
@@ -224,10 +253,11 @@ export default {
 <style lang='scss' scoped>
 .files {
   &__menu {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 0.9rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: rgba(0, 0, 0, 0.6);
   }
 }
 .file {
@@ -261,8 +291,8 @@ export default {
     align-items: center;
 
     img {
-      height: 24px;
-      width: 24px;
+      height: 32px;
+      width: 32px;
     }
   }
   &__name {
