@@ -286,6 +286,7 @@ export default {
 
   &__type {
     padding: 16px;
+    opacity: .6;
 
     display: flex;
     align-items: center;

@@ -40,7 +40,7 @@
             >Ir a Tareas</m-btn
           >
           <m-btn
-            @click="redirect('task', { task_id: event._id })"
+            @click="redirect('student-task', { task_id: event._id })"
             color="success"
             small
             >Ver Tarea</m-btn
