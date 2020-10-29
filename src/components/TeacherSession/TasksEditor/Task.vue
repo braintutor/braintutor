@@ -46,40 +46,33 @@
           </div>
           <div v-if="answer" class="response__answer">
             <p class="response__text">{{ answer.text }}</p>
-            <!-- ANSWER FILES -->
-            <a v-for="(file, idx) in files_f" :key="idx" class="file mt-2">
-              <a :href="file.url" target="_blank" class="file__body">
-                <div class="file__type">
-                  <img
-                    v-if="file.type === 'audio'"
-                    src="@/assets/file/icon-audio.svg"
-                  />
-                  <img
-                    v-else-if="file.type === 'image'"
-                    src="@/assets/file/icon-image.svg"
-                  />
-                  <img
-                    v-else-if="file.type === 'video'"
-                    src="@/assets/file/icon-video.svg"
-                  />
-                  <!--  -->
-                  <img
-                    v-else-if="file.content_type === 'application/pdf'"
-                    src="@/assets/file/icon-application-pdf.svg"
-                  />
-                  <img v-else src="@/assets/file/icon-default.svg" />
-                </div>
-                <span class="file__name">{{ file.name_f }}</span>
-              </a>
+          </div>
+          <!-- ANSWER FILES -->
+          <a v-for="(file, idx) in files_f" :key="idx" class="file mt-2">
+            <a :href="file.url" target="_blank" class="file__body">
+              <div class="file__type">
+                <img
+                  v-if="file.type === 'audio'"
+                  src="@/assets/file/icon-audio.svg"
+                />
+                <img
+                  v-else-if="file.type === 'image'"
+                  src="@/assets/file/icon-image.svg"
+                />
+                <img
+                  v-else-if="file.type === 'video'"
+                  src="@/assets/file/icon-video.svg"
+                />
+                <!--  -->
+                <img
+                  v-else-if="file.content_type === 'application/pdf'"
+                  src="@/assets/file/icon-application-pdf.svg"
+                />
+                <img v-else src="@/assets/file/icon-default.svg" />
+              </div>
+              <span class="file__name">{{ file.name_f }}</span>
             </a>
-          </div>
-          <div
-            v-if="!answer && files.length <= 0"
-            class="text-center pt-4 pb-2"
-            style="color: #aaa; font-size: 0.9rem"
-          >
-            No hay respuestas.
-          </div>
+          </a>
         </div>
 
         <div v-else style="width: max-content" class="pa-4 mx-auto">
@@ -226,7 +219,7 @@ export default {
 
   &__type {
     padding: 16px;
-    opacity: .6;
+    opacity: 0.6;
 
     display: flex;
     align-items: center;
