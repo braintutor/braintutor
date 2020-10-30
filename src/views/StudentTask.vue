@@ -73,7 +73,7 @@
               </a>
               <div class="file__actions mx-2">
                 <v-btn @click="showRemove(file)" icon>
-                  <v-icon>mdi-delete</v-icon>
+                  <v-icon style="font-size: 1.5rem">mdi-delete</v-icon>
                 </v-btn>
               </div>
             </a>
@@ -180,7 +180,7 @@ export default {
       this.showLoading("Guardando Respuesta");
       try {
         await updateTaskAnswer(this.task._id, {
-          text: this.text || '',
+          text: this.text || "",
         });
       } catch (error) {
         this.showMessage("", error.msg || error);
@@ -209,7 +209,7 @@ export default {
           size,
           content_type,
         });
-        this.show = "LIST";
+        await this.save();
       } catch (error) {
         this.showMessage(
           "",
@@ -225,6 +225,7 @@ export default {
       try {
         await this.$api.file.removeFileTask(this.task_id, file_name_f);
         this.files = this.files.filter((f) => f.name !== file_name);
+        await this.save();
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
@@ -269,6 +270,7 @@ export default {
   align-items: center;
 
   &__body {
+    overflow: hidden;
     flex-grow: 1;
     color: rgba(0, 0, 0, 0.75);
     text-decoration: none;
@@ -286,7 +288,7 @@ export default {
 
   &__type {
     padding: 16px;
-    opacity: .6;
+    opacity: 0.6;
 
     display: flex;
     align-items: center;

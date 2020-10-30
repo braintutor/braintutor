@@ -31,6 +31,16 @@ Vue.mixin({
       date_format = date_format.charAt(0).toUpperCase() + date_format.slice(1);
       return date_format;
     },
+    formatDateTime(date, long = true) {
+      return date.toLocaleString("es-ES", {
+        // weekday: 'short', // "Sat"
+        day: "2-digit", // "15"
+        month: long ? "long" : "2-digit", // "junio"
+        year: "numeric", // "1997"
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    },
     // HTML
     toHTML(text = "") {
       var urlRegex = /(https?:\/\/[^\s]+)/g;

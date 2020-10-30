@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!task_show_id" class="m-container">
+  <div v-if="!task_selected" class="m-container">
     <!-- MENU -->
     <div class="tasks__menu mb-3">
       <strong
@@ -50,7 +50,7 @@
         {
           text: 'Ver Respuestas',
           action: () => {
-            showAnswers(task._id);
+            showAnswers(task);
           },
         },
       ]"
@@ -199,7 +199,8 @@
   <Task
     class="m-container-plus"
     v-else
-    :task_id="task_show_id"
+    :task="task_selected"
+    :students="students"
     :unselect="unselect"
   />
 </template>
@@ -209,6 +210,8 @@ import TaskCard from "@/components/globals/Task/TaskCard";
 import Task from "./Task";
 
 import { addTask, removeTask } from "@/services/taskService";
+import { getStudentsBySession } from "@/services/studentService";
+import { getParam } from "@/services/router.js";
 
 import { TaskModel } from "@/models/Task";
 import variables from "@/models/variables";
@@ -218,7 +221,7 @@ export default {
     session_id: "",
     tasks: [],
     task: {},
-    task_show_id: null,
+    task_selected: null,
     action: "",
     //
     loading_save: false,
@@ -230,7 +233,7 @@ export default {
     variables,
   }),
   async created() {
-    this.session_id = this.$route.params["session_id"];
+    this.session_id = getParam("session_id");
     await this.init();
   },
   computed: {
@@ -238,28 +241,16 @@ export default {
       return this.orderObjectsByDate(this.tasks, "time_start");
     },
   },
-  watch: {
-    async task_show_id() {
-      let query = null;
-      if (this.task_show_id) query = { task_id: this.task_show_id };
-
-      this.$router
-        .push({
-          query,
-        })
-        .catch(() => {});
-    },
-  },
   methods: {
     async init() {
       this.showLoading("Cargando Tareas");
       try {
+        this.students = this.mongoArr(
+          await getStudentsBySession(this.session_id)
+        );
         this.tasks = this.mongoArr(
           await this.$api.task.getAll(this.session_id)
         );
-        let task_id = this.$route.query.task_id;
-        if (this.tasks.map((t) => t._id).includes(task_id))
-          this.task_show_id = task_id;
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
@@ -354,13 +345,13 @@ export default {
       this.task.id = this.task._id;
       this.dlg_remove = true;
     },
-    showAnswers(task_id) {
-      this.task_show_id = task_id;
+    showAnswers(task) {
+      this.task_selected = Object.assign({}, task);
     },
     //
     async unselect() {
-      this.task_show_id = null;
-      await this.init();
+      this.task_selected = null;
+      // await this.init();
     },
   },
   components: {
