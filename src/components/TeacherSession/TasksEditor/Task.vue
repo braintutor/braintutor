@@ -179,6 +179,7 @@ export default {
 
 .students {
   padding: 8px;
+  padding-right: 0;
   width: 30%;
 }
 
