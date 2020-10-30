@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-3">
+  <div class="pt-3">
     <div class="m-menu mb-3">
       <div class="m-menu__left">
         <v-btn icon @click="unselect()">
@@ -16,40 +16,37 @@
         :title="task.title"
         :description="task.description"
         disabled
-        class="mb-3"
+        class="mb-4"
       />
 
-      <!-- STUDENTS -->
-      <div class="m-card mb-3">
-        <div class="pa-2">
-          <m-btn
+      <div class="answers m-card">
+        <!-- STUDENTS -->
+        <div class="students">
+          <div
             v-for="(student, idx) in students"
             :key="idx"
             @click="student_selected = student"
-            color="dark"
-            :rounded="false"
-            small
-            :text="student_selected._id !== student._id"
-            block
-            class="mb-2"
-            >{{ `${student.last_name}, ${student.first_name}` }}</m-btn
+            class="student"
+            :class="{ 'student--active': student._id === student_selected._id }"
           >
+            <v-icon class="mr-3">mdi-account-circle</v-icon>
+            <div class="student__name">
+              {{ `${student.last_name}, ${student.first_name}` }}
+            </div>
+          </div>
         </div>
-      </div>
-
-      <!-- ANSWER -->
-      <div v-if="student_selected">
-        <div v-if="!loading" class="m-card mb-3">
-          <div class="m-card__body">
+        <!-- ANSWER -->
+        <div v-if="student_selected" class="answer">
+          <div v-if="!loading">
             <!-- ANSWER STUDENT -->
-            <p>
+            <!-- <p>
               {{
                 `${student_selected.last_name}, ${student_selected.first_name}`
               }}
-            </p>
+            </p> -->
             <!-- ANSWER TEXT -->
             <div v-if="answer">
-              <p>{{ formatDateTime(answer.time_end) }}</p>
+              <p class="answer__time">{{ formatDateTime(answer.time_end) }}</p>
               <p>{{ answer.text }}</p>
             </div>
             <!-- ANSWER FILES -->
@@ -78,16 +75,20 @@
                 <span class="file__name">{{ file.name_f }}</span>
               </a>
             </a>
-          </div>
-        </div>
 
-        <div v-else style="width: max-content" class="pa-4 mx-auto">
-          <v-progress-circular
-            :width="3"
-            :size="80"
-            indeterminate
-            color="var(--color-subtitle)"
-          ></v-progress-circular>
+            <!-- ANSWER EMPTY -->
+            <p v-if="!(answer.text || files_f.length > 0)" class="text-center">
+              No hay respuesta
+            </p>
+          </div>
+          <div v-else style="width: max-content" class="pa-4 mx-auto">
+            <v-progress-circular
+              :width="3"
+              :size="80"
+              indeterminate
+              color="var(--color-subtitle)"
+            ></v-progress-circular>
+          </div>
         </div>
       </div>
     </div>
@@ -161,6 +162,55 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+.answers {
+  overflow: hidden;
+  display: flex;
+}
+
+.answer {
+  flex-grow: 1;
+  padding: 16px;
+  &__time {
+    color: var(--color-active);
+    text-align: end;
+    font-weight: bold;
+  }
+}
+
+.students {
+  padding: 8px;
+  width: 30%;
+}
+
+$background-active: #e4e9ff;
+.student {
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    background: var(--background-hover);
+  }
+  &:active {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  &--active {
+    background: $background-active;
+    * {
+      color: var(--color-active);
+    }
+    &:hover {
+      background: $background-active;
+    }
+  }
+}
+
 // FILE
 .file {
   display: block;

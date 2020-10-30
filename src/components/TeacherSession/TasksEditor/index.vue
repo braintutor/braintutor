@@ -197,10 +197,10 @@
 
   <!-- TASK -->
   <Task
-    class="m-container-plus"
     v-else
     :task_id="task_show_id"
     :unselect="unselect"
+    class="m-container-plus"
   />
 </template>
 
