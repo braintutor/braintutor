@@ -29,7 +29,7 @@
             class="student"
             :class="{ 'student--active': student._id === student_selected._id }"
           >
-            <v-icon class="mr-3">mdi-account-circle</v-icon>
+            <v-icon class="mr-2" style="font-size: 1.2rem">mdi-account-circle</v-icon>
             <div class="student__name">
               {{ `${student.last_name}, ${student.first_name}` }}
             </div>
@@ -178,16 +178,16 @@ export default {
 }
 
 .students {
-  padding: 8px;
+  padding: 6px;
   padding-right: 0;
-  width: 25%;
+  width: 24%;
 }
 
 $background-active: #e4e9ff;
 .student {
   padding: 8px 12px;
-  margin-bottom: 8px;
-  font-size: 0.85rem;
+  margin-bottom: 6px;
+  font-size: 0.8rem;
   border-radius: 8px;
   cursor: pointer;
 
