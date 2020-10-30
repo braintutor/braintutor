@@ -180,14 +180,14 @@ export default {
 .students {
   padding: 8px;
   padding-right: 0;
-  width: 30%;
+  width: 25%;
 }
 
 $background-active: #e4e9ff;
 .student {
-  padding: 12px 16px;
+  padding: 8px 12px;
   margin-bottom: 8px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   border-radius: 8px;
   cursor: pointer;
 
