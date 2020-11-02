@@ -79,7 +79,10 @@
             </a>
 
             <!-- ANSWER EMPTY -->
-            <p v-if="!(answer.text || files_f.length > 0)" class="text-center">
+            <p
+              v-if="!((answer && answer.text) || files_f.length > 0)"
+              class="text-center"
+            >
               No hay respuesta
             </p>
           </div>

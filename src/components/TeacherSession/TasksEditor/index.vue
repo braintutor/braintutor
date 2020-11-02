@@ -231,7 +231,11 @@ export default {
   }),
   async created() {
     this.session_id = this.$route.params["session_id"];
+    let task_id = this.$route.query.task_id;
+
     await this.init();
+    if (this.tasks.map((t) => t._id).includes(task_id))
+      this.task_show_id = task_id;
   },
   computed: {
     tasks_ordered() {
@@ -257,9 +261,6 @@ export default {
         this.tasks = this.mongoArr(
           await this.$api.task.getAll(this.session_id)
         );
-        let task_id = this.$route.query.task_id;
-        if (this.tasks.map((t) => t._id).includes(task_id))
-          this.task_show_id = task_id;
       } catch (error) {
         this.showMessage("", error.msg || error);
       }

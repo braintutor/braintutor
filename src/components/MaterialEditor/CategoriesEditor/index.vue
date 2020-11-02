@@ -1,21 +1,22 @@
 <template>
   <div>
     <!-- Categories -->
-    <div v-show="!category" class="container">
-      <div class="row no-gutters">
+    <v-container v-show="!category">
+      <v-row no-gutters>
         <!-- Category -->
-        <div
+        <v-col
+          cols="6"
+          sm="3"
           v-for="([category, value], idx) in Object.entries(categories)"
           :key="idx"
-          class="col-6 col-sm-3"
         >
           <section class="category" @click="selectCategory(category)">
             <img class="category__image" :src="value.image" alt />
             <span class="category__name">{{ value.name }}</span>
           </section>
-        </div>
-      </div>
-    </div>
+        </v-col>
+      </v-row>
+    </v-container>
 
     <!-- CategoryEditor -->
     <section v-if="category" class="editor">

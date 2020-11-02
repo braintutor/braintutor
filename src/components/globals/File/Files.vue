@@ -34,9 +34,11 @@
           No hay archivos.
         </p>
 
-        <div class="container pa-0">
-          <div class="row no-gutters">
-            <div
+        <v-container fluid class="pa-0">
+          <v-row no-gutters>
+            <v-col
+              cols="6"
+              md="4"
               v-for="(file, idx) in files_f"
               :key="idx"
               @click="$emit('file', file)"
@@ -52,9 +54,9 @@
                   <v-icon style="font-size: 1.4rem">mdi-delete</v-icon>
                 </v-btn>
               </div>
-            </div>
-          </div>
-        </div>
+            </v-col>
+          </v-row>
+        </v-container>
       </div>
       <div v-show="show === 'UPLOAD'">
         <input
