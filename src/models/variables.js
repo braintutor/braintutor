@@ -17,7 +17,7 @@ const variables = {
   max_alternatives_per_question: 10,
   
   // FIREBASE
-  max_session_size: 100 * 1000 * 1000,
+  max_session_size: 1000 * 1000 * 1000,
   max_task_size: 10 * 1000 * 1000
 };
 
