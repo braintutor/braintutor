@@ -1,22 +1,14 @@
 <template>
-  <div>
-    <CategoriesEditor v-if="course.adaptive" :material="material" />
-    <DocumentsEditor v-else :material="material" />
-  </div>
+  <FSEditor v-if="material" :material="material" />
 </template>
 
 <script>
-import CategoriesEditor from "./CategoriesEditor/index";
-import DocumentsEditor from "./DocumentsEditor/index";
+import FSEditor from "./FSEditor/index";
 
 export default {
-  props: ["material", "course"],
+  props: ["material"],
   components: {
-    CategoriesEditor,
-    DocumentsEditor
-  }
+    FSEditor,
+  },
 };
 </script>
-
-<style lang='scss' scoped>
-</style>

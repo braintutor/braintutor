@@ -101,14 +101,13 @@
         <!-- <div class="material__menu">
           <span class="material__name">{{material.name}}</span>
         </div>-->
-        <MaterialCategories
+        <FS
           v-if="course.adaptive"
           :material="material"
           :categories="categories"
           @finish="saveProgress"
           @next="showNextMaterial"
         />
-        <MaterialDocuments v-else :material="material" />
       </div>
     </div>
 
@@ -146,8 +145,7 @@
 </template>
 
 <script>
-import MaterialCategories from "./MaterialCategories";
-import MaterialDocuments from "./MaterialDocuments";
+import FS from "./FS/index";
 
 import { getQuestionTemplate } from "@/services/chatService";
 import {
@@ -267,7 +265,8 @@ export default {
                   }
                 }
               );
-              material.faq.forEach(({ question, answer }) => {
+              // FS
+              material.data_fs.faq.forEach(({ question, answer }) => {
                 knowledge.push({
                   questions: [question],
                   answers: [answer],
@@ -284,7 +283,7 @@ export default {
           } else {
             let questions = [
               "Muéstrame información sobre @.",
-              '"Háblame sobre @.',
+              "Háblame sobre @.",
               "Explícame sobre @.",
             ];
             this.materials.forEach((material) => {
@@ -388,8 +387,7 @@ export default {
     },
   },
   components: {
-    MaterialCategories,
-    MaterialDocuments,
+    FS,
   },
 };
 </script>

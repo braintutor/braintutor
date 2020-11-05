@@ -1,18 +1,5 @@
 import { fetch_post } from "./fetch";
 
-function getMaterial(material_id) {
-  return fetch_post("getMaterial", {
-    material_id,
-  });
-}
-
-function addMaterial(unit_id, material) {
-  return fetch_post("addMaterial", {
-    unit_id,
-    material,
-  });
-}
-
 function updateMaterialCategory(material_id, category, data) {
   return fetch_post("updateMaterialCategory", {
     material_id,
@@ -65,8 +52,6 @@ function removeMaterial(material_id) {
 }
 
 export {
-  getMaterial,
-  addMaterial,
   updateMaterialCategory,
   updateMaterialUnit,
   updateMaterialDocuments,

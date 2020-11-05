@@ -13,7 +13,7 @@ const variables = {
 
   //
   max_questions_per_evaluation: 50,
-  max_questions_per_material: 10,
+  max_questions_per_material: 20,
   max_alternatives_per_question: 10,
   
   // FIREBASE

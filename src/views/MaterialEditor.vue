@@ -12,12 +12,7 @@
       <span class="m-path__name">{{ material.name }}</span>
     </section>
 
-    <ContentEditor
-      :slot="0"
-      v-if="material._id"
-      :material="material"
-      :course="course"
-    />
+    <ContentEditor :slot="0" v-if="material._id" :material="material" />
     <!-- <QuizzesEditor :slot="1" :material="material" /> -->
     <MaterialSettings :slot="1" :material="material" :course="course" />
   </Layout>
@@ -30,7 +25,6 @@ import ContentEditor from "@/components/MaterialEditor/ContentEditor";
 import MaterialSettings from "@/components/MaterialEditor/MaterialSettings";
 
 import { getParam, redirect } from "@/services/router.js";
-import { getMaterial } from "@/services/materialService";
 import { getCourseByTeacher } from "@/services/courseService";
 
 export default {
@@ -60,7 +54,7 @@ export default {
     this.showLoading("Cargando Material");
     let material_id = getParam("material_id");
     try {
-      this.material = await getMaterial(material_id);
+      this.material = await this.$api.material.get(material_id);
       let course_id = this.material.course_id.$oid;
       this.course = await getCourseByTeacher(course_id);
     } catch (error) {

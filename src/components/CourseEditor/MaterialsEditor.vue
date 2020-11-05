@@ -314,7 +314,6 @@ import {
   removeUnit,
 } from "@/services/unitService.js";
 import {
-  addMaterial,
   updateMaterialUnit,
   removeMaterial,
 } from "@/services/materialService.js";
@@ -437,11 +436,11 @@ export default {
         blocks: [{ type: "header", data: { text: "Enlaces", level: 2 } }],
       });
       // Documents
-      let documents = [
-        JSON.stringify({
-          blocks: [{ type: "header", data: { text: "Título", level: 2 } }],
-        }),
-      ];
+      // let documents = [
+      //   JSON.stringify({
+      //     blocks: [{ type: "header", data: { text: "Título", level: 2 } }],
+      //   }),
+      // ];
       // Quizzes
       let quiz = [
         {
@@ -450,30 +449,30 @@ export default {
           correct: 0,
         },
       ];
-      let quizzes = {
-        BAS: quiz,
-        INT: quiz,
-        ADV: quiz,
-      };
+      // let quizzes = {
+      //   BAS: quiz,
+      //   INT: quiz,
+      //   ADV: quiz,
+      // };
 
       let new_material = {
+        unit_id: unit._id.$oid,
         name: this.material_name,
-        description: "Descripción",
-        overview: "Resumen",
-        explanation,
-        movies,
-        images,
-        hyperlinks,
-        examples,
-        exercises: quiz,
-        faq: [{ question: "Pregunta", answer: "Respuesta" }],
-        quizzes,
-        documents,
+        data_fs: {
+          overview: "Resumen",
+          explanation,
+          movies,
+          images,
+          hyperlinks,
+          examples,
+          exercises: quiz,
+          faq: [{ question: "Pregunta", answer: "Respuesta" }],
+        },
       };
 
       this.loading_btn = true;
       try {
-        let material_id = await addMaterial(unit._id.$oid, new_material);
+        let material_id = await this.$api.material.add(new_material);
         new_material._id = material_id;
         unit.materials.push(new_material);
         // this.selectMaterial(material_id.$oid);

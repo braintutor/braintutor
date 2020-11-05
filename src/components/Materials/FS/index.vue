@@ -7,63 +7,75 @@
           <v-icon style="color: #fff; font-size: 1.3rem">mdi-arrow-left</v-icon>
         </button>
         <div></div>
-        <button v-show="category_idx < categories.length - 2" @click="move(1)" class="button">
-          <v-icon style="color: #fff; font-size: 1.3rem">mdi-arrow-right</v-icon>
+        <button
+          v-show="category_idx < categories.length - 2"
+          @click="move(1)"
+          class="button"
+        >
+          <v-icon style="color: #fff; font-size: 1.3rem"
+            >mdi-arrow-right</v-icon
+          >
         </button>
         <button
           v-show="category_idx === categories.length - 2"
           @click="move(1)"
           class="button button--special"
         >
-          <v-icon style="color: #fff; font-size: 1.3rem">mdi-arrow-right</v-icon>
+          <v-icon style="color: #fff; font-size: 1.3rem"
+            >mdi-arrow-right</v-icon
+          >
         </button>
       </div>
       <!-- Body -->
       <DocumentEditor
         v-show="category === 'explanation'"
         :id="'explanation'"
-        :data="material['explanation']"
+        :data="material.data_fs['explanation']"
         hideControls
         readonly
       />
       <DocumentEditor
         v-show="category === 'examples'"
         :id="'examples'"
-        :data="material['examples']"
+        :data="material.data_fs['examples']"
         hideControls
         readonly
       />
       <DocumentEditor
         v-show="category === 'movies'"
         :id="'movies'"
-        :data="material['movies']"
+        :data="material.data_fs['movies']"
         hideControls
         readonly
       />
       <DocumentEditor
         v-show="category === 'images'"
         :id="'images'"
-        :data="material['images']"
+        :data="material.data_fs['images']"
         hideControls
         readonly
       />
       <DocumentEditor
         v-show="category === 'hyperlinks'"
         :id="'hyperlinks'"
-        :data="material['hyperlinks']"
+        :data="material.data_fs['hyperlinks']"
         hideControls
         readonly
       />
       <Exercises
         v-show="category === 'exercises'"
-        :exercises="material['exercises']"
+        :exercises="material.data_fs['exercises']"
         class="material mt-2"
       />
       <div v-show="category === 'faq'" class="material mt-2">
         <h2 class="faq__title">Preguntas Frecuentes</h2>
-        <div v-for="(faq, idx) in material['faq']" :key="idx" class="faq">
-          <p class="faq__question">{{faq.question}}</p>
-          <p class="faq__answer">{{faq.answer}}</p>
+        <div
+          v-for="(faq, idx) in material.data_fs['faq']"
+          :key="idx"
+          class="faq"
+        >
+          <p class="faq__question">{{ faq.question }}</p>
+          <p class="faq__answer">{{ faq.answer }}</p>
         </div>
       </div>
       <!-- <Quizzes
@@ -80,26 +92,40 @@
             color="primary"
             small
             class="mt-4"
-          >Ir al siguiente material</m-btn>
+            >Ir al siguiente material</m-btn
+          >
         </div>
       </div>
       <!-- Actions -->
       <div class="material__actions mb-3 mt-8">
         <button v-show="category_idx > 0" @click="move(-1)" class="button">
-          <v-icon class="mr-2" style="color: #fff; font-size: 1.3rem">mdi-arrow-left</v-icon>Anterior
+          <v-icon class="mr-2" style="color: #fff; font-size: 1.3rem"
+            >mdi-arrow-left</v-icon
+          >Anterior
         </button>
         <div></div>
-        <button v-show="category_idx < categories.length - 2" @click="move(1)" class="button">
+        <button
+          v-show="category_idx < categories.length - 2"
+          @click="move(1)"
+          class="button"
+        >
           Siguiente
-          <v-icon class="ml-1" style="color: #fff; font-size: 1.3rem">mdi-arrow-right</v-icon>
+          <v-icon class="ml-1" style="color: #fff; font-size: 1.3rem"
+            >mdi-arrow-right</v-icon
+          >
         </button>
         <button
           v-show="category_idx === categories.length - 2"
-          @click="move(1); $emit('finish', material)"
+          @click="
+            move(1);
+            $emit('finish', material);
+          "
           class="button button--special"
         >
           Finalizar
-          <v-icon class="ml-1" style="color: #fff; font-size: 1.3rem">mdi-arrow-right</v-icon>
+          <v-icon class="ml-1" style="color: #fff; font-size: 1.3rem"
+            >mdi-arrow-right</v-icon
+          >
         </button>
       </div>
     </div>
