@@ -2,8 +2,8 @@ import router from "../router";
 import store from "../store";
 
 function getApiUrl() {
-  // return process.env.VUE_APP_API_URL || "http://localhost:5000";
-  return "http://localhost:5000";
+  return process.env.VUE_APP_API_URL || "http://localhost:5000";
+  // return "http://localhost:5000";
 }
 
 function getHeaders() {
@@ -48,7 +48,7 @@ function handlerCode(code) {
     if (code == "1000") {
       localStorage.removeItem("token");
       store.commit("setUser", null);
-      router.push("/").catch(() => {});
+      router.push("/").catch(() => { });
     }
   }
 }
