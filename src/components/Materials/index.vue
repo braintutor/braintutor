@@ -213,7 +213,6 @@ export default {
           this.categories = categories.concat(["quizzes"]);
 
           //Materials
-          if (this.materials[0]) this.selectMaterial(this.materials[0]);
           units.forEach((u) => {
             u.show = true;
             // Find Materials
@@ -230,6 +229,8 @@ export default {
             u.materials = materials;
           });
           this.units = units.filter((u) => u.materials.length > 0); // Only show units with materials
+          if (this.units[0] && this.units[0].materials[0])
+            this.selectMaterial(this.units[0].materials[0]);
 
           //Knowledge
           this.showLoading("Cargando Conocimiento");
