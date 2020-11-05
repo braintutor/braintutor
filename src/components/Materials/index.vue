@@ -149,14 +149,6 @@
 import MaterialCategories from "./MaterialCategories";
 import MaterialDocuments from "./MaterialDocuments";
 
-import {
-  getUnitsByCourseTeacher,
-  getUnitsByCourseStudent,
-} from "@/services/unitService";
-import {
-  getMaterialsByCourseTeacher,
-  getMaterialsByCourseStudent,
-} from "@/services/materialService";
 import { getQuestionTemplate } from "@/services/chatService";
 import {
   getCategoriesByLearningStyle,
@@ -193,12 +185,8 @@ export default {
         this.showLoading("Cargando Material");
         let course_id = this.course._id.$oid;
         try {
-          let units = await (this.user.role === "TEA"
-            ? getUnitsByCourseTeacher(course_id)
-            : getUnitsByCourseStudent(course_id));
-          this.materials = await (this.user.role === "TEA"
-            ? getMaterialsByCourseTeacher(course_id)
-            : getMaterialsByCourseStudent(course_id));
+          let units = await this.$api.unit.getAll(course_id);
+          this.materials = await this.$api.material.getAll(course_id);
 
           // Validate Materials
           let progress_materials = (

@@ -7,8 +7,10 @@ import Session from "./session";
 import Student from "./student";
 import Task from "./task";
 import School from "./school";
-import Message from "./message";
+import Material from "./material";
+import Unit from "./unit";
 import File from "./file";
+// import Message from "./message";
 
 export default {
   install(Vue) {
@@ -20,8 +22,10 @@ export default {
       student: Student(fetch_get),
       task: Task(_fetch),
       school: School(_fetch),
-      message: Message(_fetch),
+      material: Material(_fetch),
+      unit: Unit(_fetch),
       file: File(_fetch),
+      // message: Message(_fetch),
     };
     Vue.prototype.$api = repositories;
   },

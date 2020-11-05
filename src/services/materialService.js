@@ -6,17 +6,6 @@ function getMaterial(material_id) {
   });
 }
 
-function getMaterialsByCourseTeacher(course_id) {
-  return fetch_post("getMaterialsByCourseTeacher", {
-    course_id,
-  });
-}
-function getMaterialsByCourseStudent(course_id) {
-  return fetch_post("getMaterialsByCourseStudent", {
-    course_id,
-  });
-}
-
 function addMaterial(unit_id, material) {
   return fetch_post("addMaterial", {
     unit_id,
@@ -77,8 +66,6 @@ function removeMaterial(material_id) {
 
 export {
   getMaterial,
-  getMaterialsByCourseTeacher,
-  getMaterialsByCourseStudent,
   addMaterial,
   updateMaterialCategory,
   updateMaterialUnit,
