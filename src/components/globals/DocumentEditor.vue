@@ -17,7 +17,8 @@
         @file="onFileSelected"
         :document_type="document_type"
         :document_id="document_id"
-        class="m-card pa-4"
+        class="m-card"
+        style="height: 75vh"
       />
     </v-dialog>
   </div>
@@ -68,7 +69,7 @@ class MImage {
     });
 
     let button = document.createElement("button");
-    button.innerText = "Añadir Imagen"
+    button.innerText = "Añadir Imagen";
     button.addEventListener("click", () => {
       window.showFiles(custom_id);
     });

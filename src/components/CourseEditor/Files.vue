@@ -1,7 +1,9 @@
 <template>
-  <div class="m-container">
-    <Files :document_type="'course'" :document_id="document_id" />
-  </div>
+  <Files
+    :document_type="'course'"
+    :document_id="document_id"
+    class="m-container pa-0 pt-3"
+  />
 </template>
 
 <script>

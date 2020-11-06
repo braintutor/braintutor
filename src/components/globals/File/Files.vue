@@ -1,6 +1,6 @@
 <template>
   <div class="files">
-    <div class="files__menu mb-4">
+    <div class="files__menu pa-3">
       <m-btn
         @click="show = 'LIST'"
         :text="show !== 'LIST'"
@@ -16,55 +16,64 @@
         small
         >Subir Archivo</m-btn
       >
+      <p class="ma-0 mt-3">{{ size }}</p>
     </div>
 
-    <div v-show="loading" style="width: max-content" class="pa-4 mx-auto">
-      <v-progress-circular
-        :width="3"
-        :size="80"
-        indeterminate
-        color="var(--color-subtitle)"
-      ></v-progress-circular>
-    </div>
+    <div class="files__body pb-3">
+      <div v-show="loading" style="width: max-content" class="pa-4 mx-auto">
+        <v-progress-circular
+          :width="3"
+          :size="80"
+          indeterminate
+          color="var(--color-subtitle)"
+        ></v-progress-circular>
+      </div>
 
-    <div v-show="!loading">
-      <div v-show="show === 'LIST'">
-        <p>{{ size }}</p>
-        <p v-show="files_f.length <= 0" class="text-center my-3">
-          No hay archivos.
-        </p>
+      <div v-show="!loading">
+        <div v-show="show === 'LIST'">
+          <p v-show="files_f.length <= 0" class="text-center my-3">
+            No hay archivos.
+          </p>
 
-        <v-container fluid class="pa-0">
-          <v-row no-gutters>
-            <v-col
-              cols="6"
-              md="4"
-              v-for="(file, idx) in files_f"
-              :key="idx"
-              @click="$emit('file', file)"
-              class="m-file col-6 col-md-4"
-            >
-              <img :src="`${file.url}?${Date.now()}`" />
-              <div class="m-file__menu">
-                <!-- <span class="file__name pl-2">{{
+          <v-container fluid class="pa-0">
+            <v-row no-gutters>
+              <v-col
+                cols="6"
+                md="4"
+                v-for="(file, idx) in files_f"
+                :key="idx"
+                @click="$emit('file', file)"
+                class="m-file col-6 col-md-4"
+              >
+                <img :src="`${file.url}?${Date.now()}`" />
+                <div class="m-file__menu">
+                  <!-- <span class="file__name pl-2">{{
                   file.name.substring(file.name.lastIndexOf("/") + 1)
                 }}</span> -->
-                <span class="m-file__name pl-2">{{ kb_to_mb(file.size) }}</span>
-                <v-btn @click.stop="showRemove(file)" color="error" icon small>
-                  <v-icon style="font-size: 1.4rem">mdi-delete</v-icon>
-                </v-btn>
-              </div>
-            </v-col>
-          </v-row>
-        </v-container>
-      </div>
-      <div v-show="show === 'UPLOAD'">
-        <input
-          v-show="!loading"
-          type="file"
-          onclick="value = null"
-          @change="onFileSelected"
-        />
+                  <span class="m-file__name pl-2">{{
+                    kb_to_mb(file.size)
+                  }}</span>
+                  <v-btn
+                    @click.stop="showRemove(file)"
+                    color="error"
+                    icon
+                    small
+                  >
+                    <v-icon style="font-size: 1.4rem">mdi-delete</v-icon>
+                  </v-btn>
+                </div>
+              </v-col>
+            </v-row>
+          </v-container>
+        </div>
+        <div v-show="show === 'UPLOAD'">
+          <input
+            v-show="!loading"
+            type="file"
+            onclick="value = null"
+            @change="onFileSelected"
+          />
+        </div>
       </div>
     </div>
 
@@ -205,7 +214,15 @@ export default {
 
 <style lang='scss'>
 .files {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
   &__menu {
+  }
+  &__body {
+    flex-grow: 1;
+    overflow-y: auto;
   }
 }
 
