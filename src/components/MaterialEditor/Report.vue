@@ -32,11 +32,10 @@ export default {
       this.showLoading("Guardando Cambios");
       let material_id = this.material._id.$oid;
       try {
-        let report_id = await this.$api.report.update({
+        await this.$api.report.update({
           material_id,
           document,
         });
-        console.log(report_id);
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
