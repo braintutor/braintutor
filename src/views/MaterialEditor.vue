@@ -14,7 +14,8 @@
 
     <ContentEditor :slot="0" v-if="material._id" :material="material" />
     <!-- <QuizzesEditor :slot="1" :material="material" /> -->
-    <MaterialSettings :slot="1" :material="material" :course="course" />
+    <Report :slot="1" v-if="material._id" :material="material" />
+    <MaterialSettings :slot="2" :material="material" :course="course" />
   </Layout>
 </template>
 
@@ -22,6 +23,7 @@
 import Layout from "@/components/Layout";
 import ContentEditor from "@/components/MaterialEditor/ContentEditor";
 // import QuizzesEditor from "@/components/MaterialEditor/QuizzesEditor";
+import Report from "@/components/MaterialEditor/Report";
 import MaterialSettings from "@/components/MaterialEditor/MaterialSettings";
 
 import { getParam, redirect } from "@/services/router.js";
@@ -34,10 +36,10 @@ export default {
         image: require("@/assets/braintutor/icon-material.png"),
         name: "Material",
       },
-      // {
-      //   image: require("@/assets/braintutor/icon-quiz.png"),
-      //   name: "Pruebas",
-      // },
+      {
+        image: require("@/assets/braintutor/icon-quiz.png"),
+        name: "Reporte",
+      },
       {
         image: require("@/assets/braintutor/icon-settings.png"),
         name: "Configuración",
@@ -73,6 +75,7 @@ export default {
   components: {
     Layout,
     ContentEditor,
+    Report,
     // QuizzesEditor,
     MaterialSettings,
   },
