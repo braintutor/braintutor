@@ -119,7 +119,7 @@ export default {
   }
 
   &__document {
-    padding: 20px;
+    padding: 40px 20px;
     box-shadow: 0 2px 10px #ccc;
     border-radius: 6px;
   }
