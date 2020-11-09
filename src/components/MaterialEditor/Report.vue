@@ -16,13 +16,13 @@
       ></v-text-field>
       <strong>Fecha:</strong>
       <input type="datetime-local" v-model="report.time_start_f" />
-      <strong class="mt-1">Grado y Sección:</strong>
+      <!-- <strong class="mt-1">Grado y Sección:</strong>
       <v-text-field
         v-model="report.classroom"
         :maxlength="ReportModel.time.max_length"
         dense
         hide-details
-      ></v-text-field>
+      ></v-text-field> -->
       <strong>Docente:</strong>
       <span v-if="teacher">{{
         `${teacher.last_name}, ${teacher.first_name}`
