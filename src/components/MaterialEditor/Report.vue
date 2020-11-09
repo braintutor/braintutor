@@ -35,7 +35,6 @@ export default {
     let material_id = this.material._id.$oid;
     try {
       let report = this.mongo(await this.$api.report.get(material_id));
-      console.log(report);
       report.time_start_f = this.dateToInput(
         report.time_start ? report.time_start : new Date()
       );
