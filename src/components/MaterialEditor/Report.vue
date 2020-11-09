@@ -5,7 +5,7 @@
     </div>
 
     <div class="report__time mt-4 mx-2">
-      <strong>Unidad:</strong>
+      <strong>Título de la Unidad:</strong>
       <span>{{ material.name }}</span>
       <strong class="mt-1">Temporización:</strong>
       <v-text-field
@@ -16,6 +16,13 @@
       ></v-text-field>
       <strong>Fecha:</strong>
       <input type="datetime-local" v-model="report.time_start_f" />
+      <strong class="mt-1">Grado y Sección:</strong>
+      <v-text-field
+        v-model="report.classroom"
+        :maxlength="ReportModel.time.max_length"
+        dense
+        hide-details
+      ></v-text-field>
       <strong>Docente:</strong>
       <span v-if="teacher">{{
         `${teacher.last_name}, ${teacher.first_name}`
