@@ -1,14 +1,26 @@
 <template>
-  <div v-if="report" class="report">
+  <div v-if="material && report" class="report">
     <div class="report__menu">
       <m-btn @click="save()" color="primary" small>Guardar</m-btn>
     </div>
 
-    <div class="report__time mt-4">
-      <span>Tiempo de Inicio:</span>
+    <div class="report__time mt-4 mx-2">
+      <strong>Unidad:</strong>
+      <span>{{ material.name }}</span>
+      <strong class="mt-1">Temporización:</strong>
+      <v-text-field
+        v-model="report.time"
+        :maxlength="ReportModel.time.max_length"
+        dense
+        hide-details
+      ></v-text-field>
+      <strong>Fecha:</strong>
       <input type="datetime-local" v-model="report.time_start_f" />
-      <span>Tiempo de Fin:</span>
-      <input type="datetime-local" v-model="report.time_end_f" />
+      <strong>Docente:</strong>
+      <span v-if="teacher">{{
+        `${teacher.last_name}, ${teacher.first_name}`
+      }}</span>
+      <span v-else>...</span>
     </div>
 
     <DocumentEditor
@@ -25,42 +37,54 @@
 <script>
 import DocumentEditor from "@/components/globals/DocumentEditor";
 
+import ReportModel from "@/models/Report";
+
 export default {
-  props: ["material"],
   data: () => ({
+    material: null,
     report: null,
+    teacher: null,
+    ReportModel,
   }),
   async created() {
     this.showLoading("Cargando Reporte");
-    let material_id = this.material._id.$oid;
+    let material_id = this.$route.params["material_id"];
     try {
-      let report = this.mongo(await this.$api.report.get(material_id));
+      let [material, report] = await Promise.all([
+        this.$api.material.get(material_id),
+        this.$api.report.get(material_id),
+      ]);
+
+      this.material = this.mongo(material);
+      report = this.mongo(report);
+
       report.time_start_f = this.dateToInput(
         report.time_start ? report.time_start : new Date()
       );
-      report.time_end_f = this.dateToInput(
-        report.time_end ? report.time_end : new Date()
-      );
       this.report = report;
     } catch (error) {
-      this.showMessage("", error.msg || error);
+      this.showMessage("", error.msg || "Ha ocurrido un error");
     }
     this.hideLoading();
+
+    let course = await this.$api.course.get(this.material.course_id);
+    this.teacher = course.teacher;
   },
   methods: {
     async save() {
       this.showLoading("Guardando Cambios");
 
-      let material_id = this.material._id.$oid;
+      let material_id = this.$route.params["material_id"];
       let document = await this.$refs["document"].getData();
+      let time = this.report.time;
       let time_start = new Date(this.report.time_start_f);
-      let time_end = new Date(this.report.time_end_f);
+
       try {
         await this.$api.report.update({
           material_id,
           document,
+          time,
           time_start,
-          time_end,
         });
       } catch (error) {
         this.showMessage("", error.msg || error);
@@ -86,7 +110,7 @@ export default {
   }
 
   &__time {
-    max-width: 400px;
+    // max-width: 400px;
 
     display: grid;
     grid-template-columns: auto 1fr;

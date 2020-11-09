@@ -4,6 +4,7 @@ import Classroom from "./classroom";
 import Evaluation from "./evaluation";
 import Event from "./event";
 import Session from "./session";
+import Course from "./course";
 import Student from "./student";
 import Task from "./task";
 import School from "./school";
@@ -27,6 +28,7 @@ export default {
       unit: Unit(_fetch),
       file: File(_fetch),
       report: Report(_fetch),
+      course: Course(_fetch),
       // message: Message(_fetch),
     };
     Vue.prototype.$api = repositories;

@@ -14,7 +14,7 @@
 
     <ContentEditor :slot="0" v-if="material._id" :material="material" />
     <!-- <QuizzesEditor :slot="1" :material="material" /> -->
-    <Report :slot="1" v-if="material._id" :material="material" />
+    <Report :slot="1" />
     <MaterialSettings :slot="2" :material="material" :course="course" />
   </Layout>
 </template>
