@@ -43,24 +43,58 @@
                 v-for="(file, idx) in files_f"
                 :key="idx"
                 @click="$emit('file', file)"
-                class="m-file col-6 col-md-4"
+                class="col-6 col-md-4 col-lg-3 pa-1"
               >
-                <img :src="`${file.url}?${Date.now()}`" />
-                <div class="m-file__menu">
-                  <!-- <span class="file__name pl-2">{{
-                  file.name.substring(file.name.lastIndexOf("/") + 1)
-                }}</span> -->
-                  <span class="m-file__name pl-2">{{
-                    kb_to_mb(file.size)
-                  }}</span>
-                  <v-btn
-                    @click.stop="showRemove(file)"
-                    color="error"
-                    icon
-                    small
+                <div class="m-file">
+                  <div
+                    v-if="['image', 'video'].includes(file.type)"
+                    class="m-file__content"
                   >
-                    <v-icon style="font-size: 1.4rem">mdi-delete</v-icon>
-                  </v-btn>
+                    <img
+                      v-if="file.type === 'image'"
+                      :src="`${file.url}?${Date.now()}`"
+                    />
+                    <embed
+                      v-else-if="file.type === 'video'"
+                      :src="`${file.url}?${Date.now()}`"
+                    />
+                  </div>
+
+                  <div v-else class="m-file__type">
+                    <img
+                      v-if="file.type === 'audio'"
+                      src="@/assets/file/icon-audio.svg"
+                    />
+                    <img
+                      v-show="false"
+                      v-else-if="file.type === 'image'"
+                      src="@/assets/file/icon-image.svg"
+                    />
+                    <img
+                      v-show="false"
+                      v-else-if="file.type === 'video'"
+                      src="@/assets/file/icon-video.svg"
+                    />
+                    <!--  -->
+                    <img
+                      v-else-if="file.content_type === 'application/pdf'"
+                      src="@/assets/file/icon-application-pdf.svg"
+                    />
+                    <img v-else src="@/assets/file/icon-default.svg" />
+                  </div>
+
+                  <div @click.stop="showFile(file)" class="m-file__menu">
+                    <span class="m-file__name pl-2">{{ file.name_f }}</span>
+                    <!-- <span class="m-file__name pl-2">{{ file.size_f }}</span> -->
+                    <v-btn
+                      @click.stop="showRemove(file)"
+                      color="error"
+                      icon
+                      small
+                    >
+                      <v-icon style="font-size: 1.4rem">mdi-delete</v-icon>
+                    </v-btn>
+                  </div>
                 </div>
               </v-col>
             </v-row>
@@ -118,6 +152,10 @@ export default {
       type: String,
       required: true,
     },
+    filters: {
+      type: Array,
+      default: () => [],
+    },
   },
   data: () => ({
     files: [],
@@ -139,7 +177,17 @@ export default {
       )} / ${this.kb_to_mb(this.variables.max_session_size)}`;
     },
     files_f() {
-      return this.files.filter((f) => !f.name.includes("/task/"));
+      let files = this.files.filter((f) => !f.name.includes("/task/"));
+      files = files.map((f) => ({
+        ...f,
+        name_f: f.name.substring(f.name.lastIndexOf("/") + 1),
+        size_f: this.kb_to_mb(f.size),
+        type: f.content_type.split("/")[0],
+      }));
+      files = files.filter(
+        (f) => this.filters.length <= 0 || this.filters.includes(f.type)
+      );
+      return files;
     },
   },
   async created() {
@@ -179,6 +227,9 @@ export default {
       this.file_selected = file;
       this.dlg_remove = true;
     },
+    showFile(file) {
+      window.open(file.url, "_blank");
+    },
     // Upload
     async onFileSelected(e) {
       let file = e.target.files[0];
@@ -189,16 +240,12 @@ export default {
       formData.append("file", file);
 
       try {
-        let { name, url, size } = await this.$api.file.addFile(
+        let file = await this.$api.file.addFile(
           this.document_type,
           this.document_id,
           formData
         );
-        this.files.push({
-          name,
-          url,
-          size,
-        });
+        this.files.push(file);
         this.show = "LIST";
       } catch (error) {
         this.showMessage("", error.msg || error);
@@ -226,17 +273,45 @@ export default {
   }
 }
 
+$background-file: rgba(0, 0, 255, 0.05);
+
 .m-file {
   position: relative;
+  overflow: hidden;
+  height: 100%;
+  border-radius: 6px;
   transition: 0.3s;
   cursor: pointer;
+
   &:hover {
     box-shadow: 0 4px 8px #ccc;
+    z-index: 1;
   }
-  img {
-    display: block;
-    margin: 0 auto;
-    max-width: 100%;
+  &__type {
+    height: 100%;
+    padding: 40px;
+    transition: 0.3s;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background: $background-file;
+    }
+
+    img {
+      height: 32px;
+      width: 32px;
+    }
+  }
+  &__content {
+    height: 100%;
+    background: $background-file;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   &__menu {
     width: 100%;
@@ -266,6 +341,15 @@ export default {
     overflow: hidden;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
+  }
+
+  //
+  img {
+    display: block;
+    max-width: 100%;
+  }
+  embed {
+    max-width: 100%;
   }
 }
 </style>

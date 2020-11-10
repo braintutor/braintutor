@@ -17,6 +17,7 @@
         @file="onFileSelected"
         :document_type="document_type"
         :document_id="document_id"
+        :filters="['image']"
         class="m-card"
         style="height: 75vh"
       />
