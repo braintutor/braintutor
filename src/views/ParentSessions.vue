@@ -82,7 +82,7 @@ export default {
       try {
         let { classroom_id } = this.students.find((s) => s._id === student_id);
         this.sessions = this.mongoArr(
-          await this.$api.session.getAll(classroom_id)
+          await this.$api.session.getAll({ classroom_id })
         );
       } catch (error) {
         this.showMessage("", error.msg || error);

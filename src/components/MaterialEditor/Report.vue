@@ -16,13 +16,8 @@
       ></v-text-field>
       <strong>Fecha:</strong>
       <input type="datetime-local" v-model="report.time_start_f" />
-      <!-- <strong class="mt-1">Grado y Sección:</strong>
-      <v-text-field
-        v-model="report.classroom"
-        :maxlength="ReportModel.time.max_length"
-        dense
-        hide-details
-      ></v-text-field> -->
+      <strong class="mt-1">Grado y Sección:</strong>
+      <span>{{ sessions.map((s) => s.classroom.name).join(", ") }}</span>
       <strong>Docente:</strong>
       <span v-if="teacher">{{
         `${teacher.last_name}, ${teacher.first_name}`
@@ -51,6 +46,7 @@ export default {
     material: null,
     report: null,
     teacher: null,
+    sessions: [],
     ReportModel,
   }),
   async created() {
@@ -74,7 +70,14 @@ export default {
     }
     this.hideLoading();
 
-    let course = await this.$api.course.get(this.material.course_id);
+    let course = this.mongo(
+      await this.$api.course.get(this.material.course_id)
+    );
+    this.sessions = this.mongoArr(
+      await this.$api.session.getAll({
+        course_id: this.material.course_id,
+      })
+    );
     this.teacher = course.teacher;
   },
   methods: {
