@@ -29,10 +29,10 @@
     </div>
 
     <DocumentEditor
-      ref="document"
+      ref="report-editor"
       :data="report.document"
       :document_type="'course'"
-      :document_id="material.course_id.$oid"
+      :document_id="material.course_id"
       hideControls
       class="report__document my-5"
     />
@@ -88,7 +88,7 @@ export default {
       this.showLoading("Guardando Cambios");
 
       let material_id = this.$route.params["material_id"];
-      let document = await this.$refs["document"].getData();
+      let document = await this.$refs["report-editor"].getData();
       let time = this.report.time;
       let time_start = new Date(this.report.time_start_f);
 
