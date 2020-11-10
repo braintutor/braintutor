@@ -16,8 +16,11 @@
       ></v-text-field>
       <strong>Fecha:</strong>
       <input type="datetime-local" v-model="report.time_start_f" />
-      <strong class="mt-1">Grado y Sección:</strong>
-      <span>{{ sessions.map((s) => s.classroom.name).join(", ") }}</span>
+      <strong>Grado y Sección:</strong>
+      <span v-if="sessions.length > 0">{{
+        sessions.map((s) => s.classroom.name).join(", ")
+      }}</span>
+      <span v-else>...</span>
       <strong>Docente:</strong>
       <span v-if="teacher">{{
         `${teacher.last_name}, ${teacher.first_name}`
