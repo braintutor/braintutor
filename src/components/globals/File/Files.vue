@@ -46,16 +46,9 @@
                 class="col-6 col-md-4 col-lg-3 pa-1"
               >
                 <div class="m-file">
-                  <div
-                    v-if="['image', 'video'].includes(file.type)"
-                    class="m-file__content"
-                  >
+                  <div v-if="file.type === 'image'" class="m-file__content">
                     <img
                       v-if="file.type === 'image'"
-                      :src="`${file.url}?${Date.now()}`"
-                    />
-                    <embed
-                      v-else-if="file.type === 'video'"
                       :src="`${file.url}?${Date.now()}`"
                     />
                   </div>
@@ -66,12 +59,10 @@
                       src="@/assets/file/icon-audio.svg"
                     />
                     <img
-                      v-show="false"
                       v-else-if="file.type === 'image'"
                       src="@/assets/file/icon-image.svg"
                     />
                     <img
-                      v-show="false"
                       v-else-if="file.type === 'video'"
                       src="@/assets/file/icon-video.svg"
                     />
@@ -301,8 +292,8 @@ $background-file: rgba(0, 0, 255, 0.05);
     }
 
     img {
-      height: 32px;
-      width: 32px;
+      height: 36px;
+      width: 36px;
     }
   }
   &__content {
@@ -312,6 +303,11 @@ $background-file: rgba(0, 0, 255, 0.05);
     display: flex;
     align-items: center;
     justify-content: center;
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
   }
   &__menu {
     width: 100%;
@@ -341,15 +337,6 @@ $background-file: rgba(0, 0, 255, 0.05);
     overflow: hidden;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
-  }
-
-  //
-  img {
-    display: block;
-    max-width: 100%;
-  }
-  embed {
-    max-width: 100%;
   }
 }
 </style>
