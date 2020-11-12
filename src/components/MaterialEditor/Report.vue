@@ -1,10 +1,10 @@
 <template>
-  <div v-if="material && report" class="report">
+  <div v-if="material && report" class="report mb-4">
     <div class="report__menu">
       <m-btn @click="save()" color="primary" small>Guardar</m-btn>
     </div>
 
-    <div class="report__time mt-4 mx-2">
+    <div class="report__time my-4 mx-2">
       <strong>Título de la Unidad:</strong>
       <span>{{ material.name }}</span>
       <strong class="mt-1">Temporización:</strong>
@@ -28,14 +28,149 @@
       <span v-else>...</span>
     </div>
 
-    <DocumentEditor
-      ref="report-editor"
-      :data="report.document"
-      :document_type="'course'"
-      :document_id="material.course_id"
-      hideControls
-      class="report__document my-5"
-    />
+    <div class="phase">
+      <h3 class="mx-2">1. Motivación</h3>
+      <DocumentEditor
+        ref="report-motivation"
+        id="report-motivation"
+        :data="report.motivation.document"
+        :document_type="'course'"
+        :document_id="material.course_id"
+        hideControls
+        class="phase__document"
+      />
+      <div class="phase__content mx-2">
+        <div class="mb-2"><strong>Incluye:</strong></div>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              value="image"
+              v-model="report.motivation.content"
+            />
+            <span class="ml-2">Imágenes</span>
+          </label>
+        </div>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              value="video"
+              v-model="report.motivation.content"
+            />
+            <span class="ml-2">Videos</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <h3 class="mx-2">2. Adquisición</h3>
+      <DocumentEditor
+        ref="report-adquisition"
+        id="report-adquisition"
+        :data="report.adquisition.document"
+        :document_type="'course'"
+        :document_id="material.course_id"
+        hideControls
+        class="phase__document"
+      />
+      <div class="phase__content mx-2">
+        <div class="mb-2"><strong>Incluye:</strong></div>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              value="image"
+              v-model="report.adquisition.content"
+            />
+            <span class="ml-2">Imágenes</span>
+          </label>
+        </div>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              value="video"
+              v-model="report.adquisition.content"
+            />
+            <span class="ml-2">Videos</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <h3 class="mx-2">3. Metacognición</h3>
+      <DocumentEditor
+        ref="report-metacognition"
+        id="report-metacognition"
+        :data="report.metacognition.document"
+        :document_type="'course'"
+        :document_id="material.course_id"
+        hideControls
+        class="phase__document"
+      />
+      <div class="phase__content mx-2">
+        <div class="mb-2"><strong>Incluye:</strong></div>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              value="image"
+              v-model="report.metacognition.content"
+            />
+            <span class="ml-2">Imágenes</span>
+          </label>
+        </div>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              value="video"
+              v-model="report.metacognition.content"
+            />
+            <span class="ml-2">Videos</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <h3 class="mx-2">4. Transferencia</h3>
+      <DocumentEditor
+        ref="report-transference"
+        id="report-transference"
+        :data="report.transference.document"
+        :document_type="'course'"
+        :document_id="material.course_id"
+        hideControls
+        class="phase__document"
+      />
+      <div class="phase__content mx-2">
+        <div class="mb-2"><strong>Incluye:</strong></div>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              value="image"
+              v-model="report.transference.content"
+            />
+            <span class="ml-2">Imágenes</span>
+          </label>
+        </div>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              value="video"
+              v-model="report.transference.content"
+            />
+            <span class="ml-2">Videos</span>
+          </label>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -55,6 +190,7 @@ export default {
   async created() {
     this.showLoading("Cargando Reporte");
     let material_id = this.$route.params["material_id"];
+
     try {
       let [material, report] = await Promise.all([
         this.$api.material.get(material_id),
@@ -62,11 +198,36 @@ export default {
       ]);
 
       this.material = this.mongo(material);
-      report = this.mongo(report);
+      report = this.mongo(report) || {};
 
       report.time_start_f = this.dateToInput(
         report.time_start ? report.time_start : new Date()
       );
+      report.motivation = report.motivation
+        ? report.motivation
+        : {
+            document: "",
+            content: [],
+          };
+      report.adquisition = report.adquisition
+        ? report.adquisition
+        : {
+            document: "",
+            content: [],
+          };
+      report.metacognition = report.metacognition
+        ? report.metacognition
+        : {
+            document: "",
+            content: [],
+          };
+      report.transference = report.transference
+        ? report.transference
+        : {
+            document: "",
+            content: [],
+          };
+
       this.report = report;
     } catch (error) {
       this.showMessage("", error.msg || "Ha ocurrido un error");
@@ -88,16 +249,37 @@ export default {
       this.showLoading("Guardando Cambios");
 
       let material_id = this.$route.params["material_id"];
-      let document = await this.$refs["report-editor"].getData();
-      let time = this.report.time;
-      let time_start = new Date(this.report.time_start_f);
+      let {
+        time,
+        time_start_f,
+        motivation,
+        adquisition,
+        metacognition,
+        transference,
+      } = this.report;
+      let time_start = new Date(time_start_f);
 
       try {
         await this.$api.report.update({
           material_id,
-          document,
           time,
           time_start,
+          motivation: {
+            document: await this.$refs["report-motivation"].getData(),
+            content: motivation.content,
+          },
+          adquisition: {
+            document: await this.$refs["report-adquisition"].getData(),
+            content: adquisition.content,
+          },
+          metacognition: {
+            document: await this.$refs["report-metacognition"].getData(),
+            content: metacognition.content,
+          },
+          transference: {
+            document: await this.$refs["report-transference"].getData(),
+            content: transference.content,
+          },
         });
       } catch (error) {
         this.showMessage("", error.msg || error);
@@ -123,18 +305,25 @@ export default {
   }
 
   &__time {
-    // max-width: 400px;
-
     display: grid;
     grid-template-columns: auto 1fr;
     column-gap: 20px;
     row-gap: 8px;
   }
+}
+
+.phase {
+  margin-top: 30px;
 
   &__document {
-    padding: 40px 20px;
+    margin-top: 16px;
+    background: #fff;
+    padding: 30px 20px;
     box-shadow: 0 2px 10px #ccc;
     border-radius: 6px;
+  }
+  &__content {
+    margin-top: 16px;
   }
 }
 </style>

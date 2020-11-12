@@ -53,6 +53,7 @@ Vue.mixin({
       return arr.map((obj) => this.mongo(obj));
     },
     mongo(obj) {
+      if (obj == null) return obj;
       if (typeof obj !== "object") return obj;
 
       let new_obj = {};
