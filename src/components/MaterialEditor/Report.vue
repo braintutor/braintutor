@@ -29,7 +29,7 @@
     </div>
 
     <div class="phase">
-      <h3 class="mx-2">1. Motivación / Introducción</h3>
+      <h2 class="phase__title mx-2">1. Motivación / Introducción</h2>
       <DocumentEditor
         ref="report-motivation"
         id="report-motivation"
@@ -55,7 +55,7 @@
     </div>
 
     <div class="phase">
-      <h3 class="mx-2">2. Construcción</h3>
+      <h2 class="phase__title mx-2">2. Construcción</h2>
       <DocumentEditor
         ref="report-construction"
         id="report-construction"
@@ -78,10 +78,20 @@
           </label>
         </div>
       </div>
+
+      <div v-if="show_material" class="m-card mt-3">
+        <div class="m-card__body">
+          <h3 class="mb-2">Preguntas Frecuentes</h3>
+          <div v-for="(f, idx) in material.data_fs['faq']" :key="idx">
+            <strong>{{ f.question }}</strong>
+            <p>{{ f.answer }}</p>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="phase">
-      <h3 class="mx-2">3. Metacognición</h3>
+      <h2 class="phase__title mx-2">3. Metacognición</h2>
       <DocumentEditor
         ref="report-metacognition"
         id="report-metacognition"
@@ -91,33 +101,10 @@
         hideControls
         class="phase__document"
       />
-      <!-- <div class="phase__content mx-2">
-        <div class="mb-2"><strong>Incluye:</strong></div>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              value="image"
-              v-model="report.metacognition.content"
-            />
-            <span class="ml-2">Imágenes</span>
-          </label>
-        </div>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              value="video"
-              v-model="report.metacognition.content"
-            />
-            <span class="ml-2">Videos</span>
-          </label>
-        </div>
-      </div> -->
     </div>
 
     <div class="phase">
-      <h3 class="mx-2">4. Transferencia</h3>
+      <h2 class="phase__title mx-2">4. Transferencia</h2>
       <DocumentEditor
         ref="report-transference"
         id="report-transference"
@@ -134,29 +121,6 @@
         hideControls
         readonly
       />
-      <!-- <div class="phase__content mx-2">
-        <div class="mb-2"><strong>Incluye:</strong></div>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              value="image"
-              v-model="report.transference.content"
-            />
-            <span class="ml-2">Imágenes</span>
-          </label>
-        </div>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              value="video"
-              v-model="report.transference.content"
-            />
-            <span class="ml-2">Videos</span>
-          </label>
-        </div>
-      </div> -->
     </div>
   </div>
 </template>
@@ -173,7 +137,8 @@ export default {
     teacher: null,
     sessions: [],
     //
-    show_material: true,
+    // show_material: true,
+    show_material: false,
     content_type: [
       {
         name: "Imágenes",
@@ -314,6 +279,9 @@ export default {
 .phase {
   margin-top: 30px;
 
+  &__title {
+    font-size: 1.3rem;
+  }
   &__document {
     margin-top: 16px;
     background: #fff;
