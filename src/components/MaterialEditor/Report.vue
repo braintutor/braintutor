@@ -29,7 +29,7 @@
     </div>
 
     <div class="phase">
-      <h3 class="mx-2">1. Motivación</h3>
+      <h3 class="mx-2">1. Motivación / Introducción</h3>
       <DocumentEditor
         ref="report-motivation"
         id="report-motivation"
@@ -41,35 +41,25 @@
       />
       <div class="phase__content mx-2">
         <div class="mb-2"><strong>Incluye:</strong></div>
-        <div>
+        <div v-for="(c, idx) in content_type" :key="idx">
           <label>
             <input
               type="checkbox"
-              value="image"
+              :value="c.value"
               v-model="report.motivation.content"
             />
-            <span class="ml-2">Imágenes</span>
-          </label>
-        </div>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              value="video"
-              v-model="report.motivation.content"
-            />
-            <span class="ml-2">Videos</span>
+            <span class="ml-2">{{ c.name }}</span>
           </label>
         </div>
       </div>
     </div>
 
     <div class="phase">
-      <h3 class="mx-2">2. Adquisición</h3>
+      <h3 class="mx-2">2. Construcción</h3>
       <DocumentEditor
-        ref="report-adquisition"
-        id="report-adquisition"
-        :data="report.adquisition.document"
+        ref="report-construction"
+        id="report-construction"
+        :data="report.construction.document"
         :document_type="'course'"
         :document_id="material.course_id"
         hideControls
@@ -77,24 +67,14 @@
       />
       <div class="phase__content mx-2">
         <div class="mb-2"><strong>Incluye:</strong></div>
-        <div>
+        <div v-for="(c, idx) in content_type" :key="idx">
           <label>
             <input
               type="checkbox"
-              value="image"
-              v-model="report.adquisition.content"
+              :value="c.value"
+              v-model="report.construction.content"
             />
-            <span class="ml-2">Imágenes</span>
-          </label>
-        </div>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              value="video"
-              v-model="report.adquisition.content"
-            />
-            <span class="ml-2">Videos</span>
+            <span class="ml-2">{{ c.name }}</span>
           </label>
         </div>
       </div>
@@ -111,7 +91,7 @@
         hideControls
         class="phase__document"
       />
-      <div class="phase__content mx-2">
+      <!-- <div class="phase__content mx-2">
         <div class="mb-2"><strong>Incluye:</strong></div>
         <div>
           <label>
@@ -133,7 +113,7 @@
             <span class="ml-2">Videos</span>
           </label>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <div class="phase">
@@ -147,7 +127,14 @@
         hideControls
         class="phase__document"
       />
-      <div class="phase__content mx-2">
+      <DocumentEditor
+        v-if="show_material"
+        :id="'hyperlinks'"
+        :data="material.data_fs['hyperlinks']"
+        hideControls
+        readonly
+      />
+      <!-- <div class="phase__content mx-2">
         <div class="mb-2"><strong>Incluye:</strong></div>
         <div>
           <label>
@@ -169,7 +156,7 @@
             <span class="ml-2">Videos</span>
           </label>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -185,6 +172,18 @@ export default {
     report: null,
     teacher: null,
     sessions: [],
+    //
+    show_material: true,
+    content_type: [
+      {
+        name: "Imágenes",
+        value: "image",
+      },
+      {
+        name: "Videos",
+        value: "video",
+      },
+    ],
     ReportModel,
   }),
   async created() {
@@ -209,8 +208,8 @@ export default {
             document: "",
             content: [],
           };
-      report.adquisition = report.adquisition
-        ? report.adquisition
+      report.construction = report.construction
+        ? report.construction
         : {
             document: "",
             content: [],
@@ -253,7 +252,7 @@ export default {
         time,
         time_start_f,
         motivation,
-        adquisition,
+        construction,
         metacognition,
         transference,
       } = this.report;
@@ -268,9 +267,9 @@ export default {
             document: await this.$refs["report-motivation"].getData(),
             content: motivation.content,
           },
-          adquisition: {
-            document: await this.$refs["report-adquisition"].getData(),
-            content: adquisition.content,
+          construction: {
+            document: await this.$refs["report-construction"].getData(),
+            content: construction.content,
           },
           metacognition: {
             document: await this.$refs["report-metacognition"].getData(),
