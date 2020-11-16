@@ -29,7 +29,7 @@
     </div>
 
     <div class="phase">
-      <h2 class="phase__title mx-2">1. Motivación / Introducción</h2>
+      <h2 class="phase__title mx-2">Motivación / Introducción</h2>
       <DocumentEditor
         ref="report-motivation"
         id="report-motivation"
@@ -41,21 +41,20 @@
       />
       <div class="phase__content mx-2">
         <div class="mb-2"><strong>Incluye:</strong></div>
-        <div v-for="(c, idx) in content_type" :key="idx">
-          <label>
-            <input
-              type="checkbox"
-              :value="c.value"
-              v-model="report.motivation.content"
-            />
-            <span class="ml-2">{{ c.name }}</span>
-          </label>
-        </div>
+        <label v-for="(c, idx) in content_type" :key="idx" class="mr-4">
+          <input
+            type="checkbox"
+            :value="c.value"
+            v-model="report.motivation.content"
+          />
+          <span class="ml-1">{{ c.name }}</span>
+        </label>
       </div>
     </div>
 
+    <!-- TODO: Desplegar -->
     <div class="phase">
-      <h2 class="phase__title mx-2">2. Construcción</h2>
+      <h2 class="phase__title mx-2">Construcción</h2>
       <DocumentEditor
         ref="report-construction"
         id="report-construction"
@@ -67,16 +66,14 @@
       />
       <div class="phase__content mx-2">
         <div class="mb-2"><strong>Incluye:</strong></div>
-        <div v-for="(c, idx) in content_type" :key="idx">
-          <label>
-            <input
-              type="checkbox"
-              :value="c.value"
-              v-model="report.construction.content"
-            />
-            <span class="ml-2">{{ c.name }}</span>
-          </label>
-        </div>
+        <label v-for="(c, idx) in content_type_2" :key="idx" class="mr-4">
+          <input
+            type="checkbox"
+            :value="c.value"
+            v-model="report.construction.content"
+          />
+          <span class="ml-1">{{ c.name }}</span>
+        </label>
       </div>
 
       <div v-if="show_material" class="m-card mt-3">
@@ -91,7 +88,7 @@
     </div>
 
     <div class="phase">
-      <h2 class="phase__title mx-2">3. Metacognición</h2>
+      <h2 class="phase__title mx-2">Metacognición</h2>
       <DocumentEditor
         ref="report-metacognition"
         id="report-metacognition"
@@ -104,7 +101,7 @@
     </div>
 
     <div class="phase">
-      <h2 class="phase__title mx-2">4. Transferencia</h2>
+      <h2 class="phase__title mx-2">Transferencia</h2>
       <DocumentEditor
         ref="report-transference"
         id="report-transference"
@@ -120,6 +117,31 @@
         :data="material.data_fs['hyperlinks']"
         hideControls
         readonly
+      />
+      <div class="phase__content mx-2">
+        <div class="mb-2"><strong>Incluye:</strong></div>
+        <label v-for="(c, idx) in content_type_4" :key="idx" class="mr-4">
+          <input
+            type="checkbox"
+            :value="c.value"
+            v-model="report.motivation.content"
+          />
+          <span class="ml-1">{{ c.name }}</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="phase">
+      <hr class="mt-10 mb-10" />
+      <h2 class="phase__title mx-2">Observaciones</h2>
+      <DocumentEditor
+        ref="report-observations"
+        id="report-observations"
+        :data="report.observations.document"
+        :document_type="'course'"
+        :document_id="material.course_id"
+        hideControls
+        class="phase__document"
       />
     </div>
   </div>
@@ -147,6 +169,62 @@ export default {
       {
         name: "Videos",
         value: "video",
+      },
+      {
+        name: "Resumen",
+        value: "overview",
+      },
+    ],
+    content_type_2: [
+      {
+        name: "Imágenes",
+        value: "image",
+      },
+      {
+        name: "Videos",
+        value: "video",
+      },
+      {
+        name: "Ejercicios",
+        value: "exercise",
+      },
+      {
+        name: "Ejemplos",
+        value: "example",
+      },
+      {
+        name: "Ejemplos",
+        value: "example",
+      },
+      {
+        name: "Enlaces",
+        value: "hyperlinks",
+      },
+    ],
+    content_type_4: [
+      {
+        name: "Imágenes",
+        value: "image",
+      },
+      {
+        name: "Videos",
+        value: "video",
+      },
+      {
+        name: "Ejercicios",
+        value: "exercise",
+      },
+      {
+        name: "Ejemplos",
+        value: "example",
+      },
+      {
+        name: "Ejemplos",
+        value: "example",
+      },
+      {
+        name: "Enlaces",
+        value: "hyperlinks",
       },
     ],
     ReportModel,
@@ -191,6 +269,12 @@ export default {
             document: "",
             content: [],
           };
+      report.observations = report.observations
+        ? report.observations
+        : {
+            document: "",
+            content: [],
+          };
 
       this.report = report;
     } catch (error) {
@@ -220,6 +304,7 @@ export default {
         construction,
         metacognition,
         transference,
+        observations,
       } = this.report;
       let time_start = new Date(time_start_f);
 
@@ -243,6 +328,10 @@ export default {
           transference: {
             document: await this.$refs["report-transference"].getData(),
             content: transference.content,
+          },
+          observations: {
+            document: await this.$refs["report-observations"].getData(),
+            content: observations.content,
           },
         });
       } catch (error) {
