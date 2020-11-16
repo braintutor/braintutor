@@ -53,8 +53,6 @@
       </div>
     </div>
 
-    <!-- TODO: Desplegar -->
-    <!-- TODO: Limpiar -->
     <div class="phase">
       <h2 class="phase__title mx-2">Construcción</h2>
       <DocumentEditor
@@ -126,7 +124,7 @@
           <input
             type="checkbox"
             :value="c.value"
-            v-model="report.motivation.content"
+            v-model="report.transference.content"
           />
           <span class="ml-1">{{ c.name }}</span>
         </label>
