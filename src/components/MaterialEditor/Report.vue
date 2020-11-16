@@ -1,7 +1,9 @@
 <template>
   <div v-if="material && report" class="report mb-4">
     <div class="report__menu">
-      <m-btn @click="reset()" color="dark" small class="mr-2">Limpiar</m-btn>
+      <m-btn @click="dlg_remove = true" color="dark" small class="mr-2"
+        >Limpiar</m-btn
+      >
       <m-btn @click="save()" color="primary" small>Guardar</m-btn>
     </div>
 
@@ -30,120 +32,219 @@
     </div>
 
     <div class="phase">
-      <h2 class="phase__title mx-2">Motivación / Introducción</h2>
-      <DocumentEditor
-        ref="report-motivation"
-        id="report-motivation"
-        :data="report.motivation.document"
-        :document_type="'course'"
-        :document_id="material.course_id"
-        hideControls
-        class="phase__document"
-      />
-      <div class="phase__content mx-2">
-        <div class="mb-2"><strong>Incluye:</strong></div>
-        <label v-for="(c, idx) in content_type" :key="idx" class="mr-4">
-          <input
-            type="checkbox"
-            :value="c.value"
-            v-model="report.motivation.content"
-          />
-          <span class="ml-1">{{ c.name }}</span>
-        </label>
+      <div
+        @click="
+          show_phase.motivation = !show_phase.motivation;
+          $forceUpdate();
+        "
+        class="phase__menu"
+      >
+        <h2 class="phase__title">Motivación / Introducción</h2>
+        <v-icon
+          class="phase__icon"
+          :class="{ 'phase__icon--active': show_phase.motivation }"
+          >mdi-chevron-down</v-icon
+        >
+      </div>
+      <div v-show="show_phase.motivation">
+        <DocumentEditor
+          ref="report-motivation"
+          id="report-motivation"
+          :data="report.motivation.document"
+          :document_type="'course'"
+          :document_id="material.course_id"
+          hideControls
+          class="phase__document"
+        />
+        <div class="phase__content mx-3">
+          <div class="mb-2"><strong>Incluye:</strong></div>
+          <label v-for="(c, idx) in content_type" :key="idx" class="mr-4">
+            <input
+              type="checkbox"
+              :value="c.value"
+              v-model="report.motivation.content"
+            />
+            <span class="ml-1">{{ c.name }}</span>
+          </label>
+        </div>
       </div>
     </div>
 
     <div class="phase">
-      <h2 class="phase__title mx-2">Construcción</h2>
-      <DocumentEditor
-        ref="report-construction"
-        id="report-construction"
-        :data="report.construction.document"
-        :document_type="'course'"
-        :document_id="material.course_id"
-        hideControls
-        class="phase__document"
-      />
-      <div class="phase__content mx-2">
-        <div class="mb-2"><strong>Incluye:</strong></div>
-        <label v-for="(c, idx) in content_type_2" :key="idx" class="mr-4">
-          <input
-            type="checkbox"
-            :value="c.value"
-            v-model="report.construction.content"
-          />
-          <span class="ml-1">{{ c.name }}</span>
-        </label>
+      <div
+        @click="
+          show_phase.construction = !show_phase.construction;
+          $forceUpdate();
+        "
+        class="phase__menu"
+      >
+        <h2 class="phase__title">Construcción</h2>
+        <v-icon
+          class="phase__icon"
+          :class="{ 'phase__icon--active': show_phase.construction }"
+          >mdi-chevron-down</v-icon
+        >
       </div>
+      <div v-show="show_phase.construction">
+        <DocumentEditor
+          ref="report-construction"
+          id="report-construction"
+          :data="report.construction.document"
+          :document_type="'course'"
+          :document_id="material.course_id"
+          hideControls
+          class="phase__document"
+        />
+        <div class="phase__content mx-3">
+          <div class="mb-2"><strong>Incluye:</strong></div>
+          <label v-for="(c, idx) in content_type_2" :key="idx" class="mr-4">
+            <input
+              type="checkbox"
+              :value="c.value"
+              v-model="report.construction.content"
+            />
+            <span class="ml-1">{{ c.name }}</span>
+          </label>
+        </div>
 
-      <div v-if="show_material" class="m-card mt-3">
-        <div class="m-card__body">
-          <h3 class="mb-2">Preguntas Frecuentes</h3>
-          <div v-for="(f, idx) in material.data_fs['faq']" :key="idx">
-            <strong>{{ f.question }}</strong>
-            <p>{{ f.answer }}</p>
+        <div v-if="show_material" class="m-card mt-3">
+          <div class="m-card__body">
+            <h3 class="mb-2">Preguntas Frecuentes</h3>
+            <div v-for="(f, idx) in material.data_fs['faq']" :key="idx">
+              <strong>{{ f.question }}</strong>
+              <p>{{ f.answer }}</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
     <div class="phase">
-      <h2 class="phase__title mx-2">Metacognición</h2>
-      <DocumentEditor
-        ref="report-metacognition"
-        id="report-metacognition"
-        :data="report.metacognition.document"
-        :document_type="'course'"
-        :document_id="material.course_id"
-        hideControls
-        class="phase__document"
-      />
+      <div
+        @click="
+          show_phase.metacognition = !show_phase.metacognition;
+          $forceUpdate();
+        "
+        class="phase__menu"
+      >
+        <h2 class="phase__title">Metacognición</h2>
+        <v-icon
+          class="phase__icon"
+          :class="{ 'phase__icon--active': show_phase.metacognition }"
+          >mdi-chevron-down</v-icon
+        >
+      </div>
+      <div v-show="show_phase.metacognition">
+        <DocumentEditor
+          ref="report-metacognition"
+          id="report-metacognition"
+          :data="report.metacognition.document"
+          :document_type="'course'"
+          :document_id="material.course_id"
+          hideControls
+          class="phase__document"
+        />
+      </div>
     </div>
 
     <div class="phase">
-      <h2 class="phase__title mx-2">Transferencia</h2>
-      <DocumentEditor
-        ref="report-transference"
-        id="report-transference"
-        :data="report.transference.document"
-        :document_type="'course'"
-        :document_id="material.course_id"
-        hideControls
-        class="phase__document"
-      />
-      <DocumentEditor
-        v-if="show_material"
-        :id="'hyperlinks'"
-        :data="material.data_fs['hyperlinks']"
-        hideControls
-        readonly
-      />
-      <div class="phase__content mx-2">
-        <div class="mb-2"><strong>Incluye:</strong></div>
-        <label v-for="(c, idx) in content_type_4" :key="idx" class="mr-4">
-          <input
-            type="checkbox"
-            :value="c.value"
-            v-model="report.transference.content"
-          />
-          <span class="ml-1">{{ c.name }}</span>
-        </label>
+      <div
+        @click="
+          show_phase.transference = !show_phase.transference;
+          $forceUpdate();
+        "
+        class="phase__menu"
+      >
+        <h2 class="phase__title">Transferencia</h2>
+        <v-icon
+          class="phase__icon"
+          :class="{ 'phase__icon--active': show_phase.transference }"
+          >mdi-chevron-down</v-icon
+        >
+      </div>
+      <div v-show="show_phase.transference">
+        <DocumentEditor
+          ref="report-transference"
+          id="report-transference"
+          :data="report.transference.document"
+          :document_type="'course'"
+          :document_id="material.course_id"
+          hideControls
+          class="phase__document"
+        />
+        <DocumentEditor
+          v-if="show_material"
+          :id="'hyperlinks'"
+          :data="material.data_fs['hyperlinks']"
+          hideControls
+          readonly
+        />
+        <div class="phase__content mx-3">
+          <div class="mb-2"><strong>Incluye:</strong></div>
+          <label v-for="(c, idx) in content_type_4" :key="idx" class="mr-4">
+            <input
+              type="checkbox"
+              :value="c.value"
+              v-model="report.transference.content"
+            />
+            <span class="ml-1">{{ c.name }}</span>
+          </label>
+        </div>
       </div>
     </div>
 
     <div class="phase">
       <hr class="mt-10 mb-10" />
-      <h2 class="phase__title mx-2">Observaciones</h2>
-      <DocumentEditor
-        ref="report-observations"
-        id="report-observations"
-        :data="report.observations.document"
-        :document_type="'course'"
-        :document_id="material.course_id"
-        hideControls
-        class="phase__document"
-      />
+      <div
+        @click="
+          show_phase.observations = !show_phase.observations;
+          $forceUpdate();
+        "
+        class="phase__menu"
+      >
+        <h2 class="phase__title">Observaciones</h2>
+        <v-icon
+          class="phase__icon"
+          :class="{ 'phase__icon--active': show_phase.observations }"
+          >mdi-chevron-down</v-icon
+        >
+      </div>
+      <div v-show="show_phase.observations">
+        <DocumentEditor
+          ref="report-observations"
+          id="report-observations"
+          :data="report.observations.document"
+          :document_type="'course'"
+          :document_id="material.course_id"
+          hideControls
+          class="phase__document"
+        />
+      </div>
     </div>
+
+    <!-- DIALOG REMOVE -->
+    <v-dialog v-model="dlg_remove" max-width="400">
+      <div class="m-card">
+        <div class="m-card__body">
+          <h3>¿Desea limpiar?</h3>
+          <p class="mt-4">No podrá revertir los cambios.</p>
+        </div>
+        <div class="m-card__actions">
+          <m-btn @click="dlg_remove = false" color="primary" small class="mr-2"
+            >Cancelar</m-btn
+          >
+          <m-btn
+            @click="
+              reset();
+              dlg_remove = false;
+            "
+            color="dark"
+            small
+            >Continuar</m-btn
+          >
+        </div>
+      </div>
+    </v-dialog>
   </div>
 </template>
 
@@ -161,6 +262,7 @@ export default {
     //
     // show_material: true,
     show_material: false,
+    show_phase: {},
     content_type: [
       {
         name: "Imágenes",
@@ -219,6 +321,7 @@ export default {
         value: "hyperlinks",
       },
     ],
+    dlg_remove: false,
     ReportModel,
   }),
   async created() {
@@ -390,8 +493,26 @@ export default {
 }
 
 .phase {
-  margin-top: 30px;
+  margin-top: 24px;
 
+  &__menu {
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.03);
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
+  }
+  &__icon {
+    &--active {
+      transform: rotate(180deg);
+    }
+  }
   &__title {
     font-size: 1.3rem;
   }
