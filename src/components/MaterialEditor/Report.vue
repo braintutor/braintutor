@@ -193,10 +193,6 @@ export default {
         value: "example",
       },
       {
-        name: "Ejemplos",
-        value: "example",
-      },
-      {
         name: "Enlaces",
         value: "hyperlinks",
       },
