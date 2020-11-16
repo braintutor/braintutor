@@ -237,6 +237,12 @@ const routes = [
     component: () => import("../views/DirectorSessions.vue"),
   },
   {
+    path: "/director-reports",
+    name: "director-reports",
+    meta: { roles: ["DIR"] },
+    component: () => import("../views/DirectorReports.vue"),
+  },
+  {
     path: "/director-students",
     name: "director-students",
     meta: { roles: ["DIR"] },

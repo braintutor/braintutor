@@ -180,6 +180,12 @@ export default {
         icon: "mdi-school",
         session_roles: ["DIR"],
       },
+      {
+        title: "Reportes",
+        name: "director-reports",
+        icon: "mdi-book",
+        session_roles: ["DIR"],
+      },
       // PAR
       {
         title: "Cursos",
