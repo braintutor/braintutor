@@ -32,8 +32,12 @@
         </div>
       </div>
       <div class="mb-3">{{ course_selected }}</div>
+      <!-- <input v-model="time_end" type="date" name="" id="" /> -->
       <div v-for="(report, idx) in reports" :key="idx" class="m-card mb-3">
-        <div class="m-card__body">{{ report }}</div>
+        <div class="m-card__body">
+          <p>{{ report.time_start }}</p>
+          <p>{{ report }}</p>
+        </div>
       </div>
     </div>
   </div>
@@ -62,8 +66,14 @@ export default {
 
       this.showLoading("Cargando Reportes");
       try {
+        let date = new Date(2020, 10, 16);
+        console.log(date.toString());
+
         this.reports = this.mongoArr(
-          await this.$api.report.getAll({ course_id: course._id })
+          await this.$api.report.getAll({
+            course_id: course._id,
+            time_end: date.toISOString(),
+          })
         );
       } catch (error) {
         this.showMessage("", error.msg || error);
