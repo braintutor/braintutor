@@ -1,6 +1,7 @@
 <template>
   <div v-if="material && report" class="report mb-4">
     <div class="report__menu">
+      <m-btn @click="reset()" color="dark" small class="mr-2">Limpiar</m-btn>
       <m-btn @click="save()" color="primary" small>Guardar</m-btn>
     </div>
 
@@ -53,6 +54,7 @@
     </div>
 
     <!-- TODO: Desplegar -->
+    <!-- TODO: Limpiar -->
     <div class="phase">
       <h2 class="phase__title mx-2">Construcción</h2>
       <DocumentEditor
@@ -215,10 +217,6 @@ export default {
         value: "example",
       },
       {
-        name: "Ejemplos",
-        value: "example",
-      },
-      {
         name: "Enlaces",
         value: "hyperlinks",
       },
@@ -335,6 +333,38 @@ export default {
       }
 
       this.hideLoading();
+    },
+    async reset() {
+      this.report = {
+        time: "",
+        time_start_f: this.dateToInput(new Date()),
+        motivation: {
+          document: "",
+          content: [],
+        },
+        construction: {
+          document: "",
+          content: [],
+        },
+        metacognition: {
+          document: "",
+          content: [],
+        },
+        transference: {
+          document: "",
+          content: [],
+        },
+        observations: {
+          document: "",
+          content: [],
+        },
+      };
+      this.$refs["report-motivation"].clear();
+      this.$refs["report-construction"].clear();
+      this.$refs["report-metacognition"].clear();
+      this.$refs["report-transference"].clear();
+      this.$refs["report-observations"].clear();
+      await this.save();
     },
   },
   components: {

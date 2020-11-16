@@ -123,14 +123,14 @@ export default {
     input_id: null,
   }),
   mounted() {
-    this.create();
+    this.init();
     window.showFiles = (input_id) => {
       this.showFiles = true;
       this.input_id = input_id;
     };
   },
   methods: {
-    create() {
+    init() {
       let data = {};
       try {
         data = JSON.parse(this.data);
@@ -198,6 +198,9 @@ export default {
         input.click();
       }
       this.showFiles = false;
+    },
+    clear() {
+      this.editor.clear();
     },
   },
   components: {
