@@ -24,35 +24,44 @@
 
     <!-- REPORTS -->
     <div v-if="course_selected" class="reports">
-      <div class="reports__menu m-menu">
-        <div class="m-menu__left">
-          <v-btn
-            icon
-            @click="
-              course_selected = null;
-              report_selected = null;
-            "
-          >
-            <v-icon style="font-size: 1.4rem">mdi-arrow-left</v-icon>
-          </v-btn>
-          <span class="m-menu__title">{{ course_selected.name }}</span>
-        </div>
-        <div class="m-menu__right">
-          <form
-            @submit.prevent="showReports(course_selected)"
-            class="reports__filter"
-          >
-            <strong class="mr-3">Hasta:</strong>
-            <input
-              v-model="time_end"
-              type="date"
-              required
-              class="reports__date"
-            />
-            <v-btn type="submit" color="primary" class="mx-3" x-small fab dark>
-              <v-icon dark>mdi-magnify</v-icon>
+      <div class="reports__menu">
+        <div class="m-menu">
+          <div class="m-menu__left">
+            <v-btn
+              icon
+              @click="
+                course_selected = null;
+                report_selected = null;
+              "
+            >
+              <v-icon style="font-size: 1.4rem">mdi-arrow-left</v-icon>
             </v-btn>
-          </form>
+            <span class="m-menu__title">{{ course_selected.name }}</span>
+          </div>
+          <div class="m-menu__right">
+            <form
+              @submit.prevent="showReports(course_selected)"
+              class="reports__filter"
+            >
+              <strong class="mr-3">Hasta:</strong>
+              <input
+                v-model="time_end"
+                type="date"
+                required
+                class="reports__date"
+              />
+              <v-btn
+                type="submit"
+                color="primary"
+                class="mx-3"
+                x-small
+                fab
+                dark
+              >
+                <v-icon dark>mdi-magnify</v-icon>
+              </v-btn>
+            </form>
+          </div>
         </div>
       </div>
 
@@ -183,6 +192,8 @@ export default {
 }
 
 .report {
+  max-width: 800px;
+  margin: 0 auto;
   cursor: pointer;
   &__body {
     display: grid;
