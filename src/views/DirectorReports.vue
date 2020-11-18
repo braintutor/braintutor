@@ -86,18 +86,23 @@
           </p>
         </div>
 
-        <Report
-          v-if="report_selected"
-          :report="report_selected"
-          @unselect="report_selected = null"
-        />
+        <!-- REPORT -->
+        <div v-if="report_selected" class="m-container pa-0">
+          <div style="display: flex; justify-content: flex-end">
+            <m-btn @click="report_selected = null" color="dark" small text>
+              <v-icon style="font-size: 1.2rem" class="mr-2">mdi-close</v-icon>
+              <span>Cerrar</span>
+            </m-btn>
+          </div>
+          <ReportEditor :material_id="report_selected.material_id" readonly />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Report from "@/components/DirectorReports/Report";
+import ReportEditor from "@/components/globals/Report/ReportEditor";
 
 export default {
   data: () => ({
@@ -149,7 +154,7 @@ export default {
     },
   },
   components: {
-    Report,
+    ReportEditor,
   },
 };
 </script>
