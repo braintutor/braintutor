@@ -17,15 +17,16 @@
       <span v-if="course">{{ course.name }}</span>
       <span v-else>...</span>
 
-      <strong class="mt-1">Temporización:</strong>
+      <strong :class="{ 'mt-1': !readonly }">Temporización:</strong>
       <v-text-field
+        v-if="!readonly"
         v-model="report.time"
         :maxlength="ReportModel.time.max_length"
         placeholder="Escriba aquí"
         dense
-        :readonly="readonly"
         hide-details
       ></v-text-field>
+      <span v-else>{{ report.time }}</span>
 
       <strong>Fecha:</strong>
       <input
@@ -41,7 +42,7 @@
       <span v-else>...</span>
 
       <strong>Docente:</strong>
-      <span v-if="course.teacher">{{
+      <span v-if="course && course.teacher">{{
         `${course.teacher.last_name}, ${course.teacher.first_name}`
       }}</span>
       <span v-else>...</span>
@@ -281,7 +282,7 @@ export default {
   data: () => ({
     material: null,
     report: null,
-    course: {},
+    course: null,
     sessions: [],
     //
     // show_material: true,
