@@ -43,6 +43,13 @@
               @submit.prevent="showReports(course_selected)"
               class="reports__filter"
             >
+              <strong class="mr-3">Desde:</strong>
+              <input
+                v-model="time_start"
+                type="date"
+                required
+                class="reports__date mr-4"
+              />
               <strong class="mr-3">Hasta:</strong>
               <input
                 v-model="time_end"
@@ -110,11 +117,19 @@ export default {
     course_selected: null,
     reports: [],
     report_selected: null,
+    time_start: null,
     time_end: null,
   }),
   async created() {
     let date = new Date();
     this.time_end =
+      date.getFullYear().toString() +
+      "-" +
+      (date.getMonth() + 1).toString().padStart(2, 0) +
+      "-" +
+      date.getDate().toString().padStart(2, 0);
+    date.setDate(date.getDate() - 7);
+    this.time_start =
       date.getFullYear().toString() +
       "-" +
       (date.getMonth() + 1).toString().padStart(2, 0) +
@@ -138,8 +153,13 @@ export default {
       this.showLoading("Cargando Reportes");
       try {
         let data = { course_id: course._id };
-        if (this.time_end)
+
+        if (this.time_start && this.time_end) {
+          data["time_start"] = new Date(
+            this.time_start + "T00:00"
+          ).toISOString();
           data["time_end"] = new Date(this.time_end + "T24:00").toISOString();
+        }
 
         this.reports = this.mongoArr(await this.$api.report.getAll(data));
         this.reports.forEach((r) => {
