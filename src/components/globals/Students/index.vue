@@ -36,6 +36,14 @@
           </v-menu>
         </div>
       </div>
+
+      <!-- STUDENT LEARN -->
+      <div v-show="students.length > 0" class="chart m-card mt-3">
+        <div class="m-card__body">
+          <h3 class="text-center">Estilos de Aprendizaje (Promedio)</h3>
+          <canvas id="crt" class="mt-4"></canvas>
+        </div>
+      </div>
     </div>
 
     <!-- Student -->
@@ -54,6 +62,8 @@
 </template>
 
 <script>
+import Chart from "chart.js";
+
 import Student from "./Student";
 
 export default {
@@ -63,7 +73,36 @@ export default {
   data: () => ({
     student_search: "",
     student_selected: null,
+    crt: null,
   }),
+  mounted() {
+    let ctx = document.getElementById("crt").getContext("2d");
+    this.crt = new Chart(ctx, {
+      type: "bar",
+      options: {
+        legend: {
+          display: false,
+        },
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true,
+                max: 11,
+                stepSize: 1,
+              },
+            },
+          ],
+        },
+      },
+    });
+    this.updateChartLS();
+  },
+  watch: {
+    students() {
+      if (this.crt) this.updateChartLS();
+    },
+  },
   computed: {
     students_filtered() {
       return this.students.filter(
@@ -73,6 +112,87 @@ export default {
             .includes(this.student_search.toLowerCase()) ||
           s.last_name.toLowerCase().includes(this.student_search.toLowerCase())
       );
+    },
+  },
+  methods: {
+    updateChartLS() {
+      let length = 0;
+      let procesamiento_activo = 0;
+      let procesamiento_reflexivo = 0;
+      let percepcion_sensorial = 0;
+      let percepcion_intuitivo = 0;
+      let entrada_visual = 0;
+      let entrada_verbal = 0;
+      let comprension_secuencial = 0;
+      let comprension_global = 0;
+
+      this.students.forEach(({ learning_style }) => {
+        if (learning_style) {
+          length++;
+          if (learning_style.procesamiento === "activo")
+            procesamiento_activo += learning_style.procesamiento_valor;
+          else procesamiento_reflexivo += learning_style.procesamiento_valor;
+          if (learning_style.percepcion === "sensorial")
+            percepcion_sensorial += learning_style.percepcion_valor;
+          else percepcion_intuitivo += learning_style.percepcion_valor;
+          if (learning_style.entrada === "visual")
+            entrada_visual += learning_style.entrada_valor;
+          else entrada_verbal += learning_style.entrada_valor;
+          if (learning_style.comprension === "secuencial")
+            comprension_secuencial += learning_style.comprension_valor;
+          else comprension_global += learning_style.comprension_valor;
+        }
+      });
+
+      this.crt.data = {
+        labels: [
+          "activo",
+          "reflexivo",
+          "sensorial",
+          "intuitivo",
+          "visual",
+          "verbal",
+          "secuencial",
+          "global",
+        ],
+        datasets: [
+          {
+            label: ["Estilo de Aprendizaje"],
+            data: [
+              procesamiento_activo / length,
+              procesamiento_reflexivo / length,
+              percepcion_sensorial / length,
+              percepcion_intuitivo / length,
+              entrada_visual / length,
+              entrada_verbal / length,
+              comprension_secuencial / length,
+              comprension_global / length,
+            ],
+            backgroundColor: [
+              "rgba(255, 99, 132, 0.2)",
+              "rgba(255, 99, 132, 0.2)",
+              "rgba(54, 162, 235, 0.2)",
+              "rgba(54, 162, 235, 0.2)",
+              "rgba(255, 206, 86, 0.2)",
+              "rgba(255, 206, 86, 0.2)",
+              "rgba(75, 192, 192, 0.2)",
+              "rgba(75, 192, 192, 0.2)",
+            ],
+            borderColor: [
+              "rgba(255, 99, 132, 1)",
+              "rgba(255, 99, 132, 1)",
+              "rgba(54, 162, 235, 1)",
+              "rgba(54, 162, 235, 1)",
+              "rgba(255, 206, 86, 1)",
+              "rgba(255, 206, 86, 1)",
+              "rgba(75, 192, 192, 1)",
+              "rgba(75, 192, 192, 1)",
+            ],
+            borderWidth: 1,
+          },
+        ],
+      };
+      this.crt.update();
     },
   },
   components: {
