@@ -72,37 +72,39 @@
         </div>
       </div>
 
-      <div class="reports__body pt-4">
-        <div v-show="!report_selected" class="m-container pa-0">
-          <div
-            v-for="(report, idx) in reports"
-            :key="idx"
-            @click="report_selected = report"
-            class="report m-card mb-3"
-          >
-            <div class="report__body m-card__body">
-              <strong>Título de la Unidad:</strong>
-              <span>{{ report.material.name }}</span>
-              <strong>Fecha:</strong>
-              <span>{{ report.time_start_f }} </span>
-            </div>
+      <div class="reports__list">
+        <div
+          v-for="(report, idx) in reports"
+          :key="idx"
+          @click="selectReport(report)"
+          class="report"
+          :class="{
+            'report--active':
+              report_selected && report._id === report_selected._id,
+          }"
+        >
+          <div class="report__body">
+            <strong>Unidad:</strong>
+            <span>{{ report.material.name }}</span>
+            <strong>Fecha:</strong>
+            <span>{{ report.time_start_f }} </span>
           </div>
-
-          <p v-show="reports.length <= 0" class="text-center my-3">
-            No hay reportes
-          </p>
         </div>
 
-        <!-- REPORT -->
-        <div v-if="report_selected" class="m-container pa-0">
-          <div style="display: flex; justify-content: flex-end">
-            <m-btn @click="report_selected = null" color="dark" small text>
-              <v-icon style="font-size: 1.2rem" class="mr-2">mdi-close</v-icon>
-              <span>Cerrar</span>
-            </m-btn>
-          </div>
-          <ReportEditor :material_id="report_selected.material_id" readonly />
-        </div>
+        <p v-show="reports.length <= 0" class="text-center ma-3">
+          No hay reportes
+        </p>
+      </div>
+
+      <div class="reports__body py-3">
+        <ReportEditor
+          v-if="report_selected"
+          :material_id="report_selected.material_id"
+          readonly
+        />
+        <p v-show="!report_selected" class="text-center ma-3">
+          Seleccione un reporte
+        </p>
       </div>
     </div>
   </div>
@@ -161,16 +163,25 @@ export default {
           data["time_end"] = new Date(this.time_end + "T24:00").toISOString();
         }
 
-        this.reports = this.mongoArr(await this.$api.report.getAll(data));
-        this.reports.forEach((r) => {
+        let reports = this.mongoArr(await this.$api.report.getAll(data));
+        reports.forEach((r) => {
           r.time_start_f = r.time_start
             ? this.formatDateTime(r.time_start)
             : "No hay fecha";
         });
+        this.reports = this.orderObjectsByDate(reports, "time_start");
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
       this.hideLoading();
+    },
+    selectReport(report) {
+      this.showLoading("Cargando Reporte");
+      this.report_selected = null;
+      setTimeout(() => {
+        this.hideLoading();
+        this.report_selected = report;
+      }, 100);
     },
   },
   components: {
@@ -180,17 +191,27 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+$border: 1px solid rgba(25, 0, 255, 0.1);
+
 .reports {
   height: 100%;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  grid-template-rows: auto 1fr;
 
   &__menu {
+    grid-column-start: 1;
+    grid-column-end: 3;
     z-index: 1;
     padding: 6px;
     padding-top: 0;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  &__list {
+    padding: 12px 0;
+    overflow: auto;
+    border-right: $border;
   }
   &__body {
     overflow: auto;
@@ -217,14 +238,22 @@ export default {
 }
 
 .report {
-  max-width: 800px;
-  margin: 0 auto;
+  padding: 16px;
+  border-bottom: $border;
   cursor: pointer;
   &__body {
     display: grid;
     grid-template-columns: auto 1fr;
-    column-gap: 20px;
-    row-gap: 8px;
+    column-gap: 18px;
+    row-gap: 6px;
+  }
+  &:first-child {
+    border-top: $border;
+  }
+
+  &--active {
+    background: var(--background-active);
+    color: var(--color-active);
   }
 }
 </style>
