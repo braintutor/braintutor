@@ -212,7 +212,10 @@
       </div>
 
       <div class="phase">
-        <hr class="mt-10 mb-10" />
+        <hr
+          class="mt-10 mb-10"
+          style="border: none; border-bottom: 1px solid #ccc"
+        />
         <div
           @click="
             show_phase.observations = !show_phase.observations;

@@ -192,12 +192,13 @@ export default {
 
 <style lang='scss' scoped>
 $border: 1px solid rgba(25, 0, 255, 0.1);
+$width-list: 360px;
 
 .reports {
   height: 100%;
 
   display: grid;
-  grid-template-columns: 400px 1fr;
+  grid-template-columns: $width-list 1fr;
   grid-template-rows: auto 1fr;
 
   &__menu {
@@ -245,7 +246,7 @@ $border: 1px solid rgba(25, 0, 255, 0.1);
   &__body {
     display: grid;
     grid-template-columns: auto 1fr;
-    column-gap: 18px;
+    column-gap: 16px;
     row-gap: 8px;
   }
   &:first-child {
