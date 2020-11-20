@@ -240,12 +240,13 @@ $border: 1px solid rgba(25, 0, 255, 0.1);
 .report {
   padding: 16px;
   border-bottom: $border;
+  font-size: 0.9rem;
   cursor: pointer;
   &__body {
     display: grid;
     grid-template-columns: auto 1fr;
     column-gap: 18px;
-    row-gap: 6px;
+    row-gap: 8px;
   }
   &:first-child {
     border-top: $border;
