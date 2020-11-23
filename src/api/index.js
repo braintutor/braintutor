@@ -12,6 +12,7 @@ import Material from "./material";
 import Unit from "./unit";
 import File from "./file";
 import Report from "./report";
+import Grade from "./grade";
 // import Message from "./message";
 
 export default {
@@ -29,6 +30,7 @@ export default {
       file: File(_fetch),
       report: Report(_fetch),
       course: Course(_fetch),
+      grade: Grade(_fetch),
       // message: Message(_fetch),
     };
     Vue.prototype.$api = repositories;
