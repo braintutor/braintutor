@@ -1,7 +1,7 @@
-const Classroom = {
+const Grade = {
   name: {
     max_length: 50,
   },
 };
 
-export default Classroom;
+export default Grade;

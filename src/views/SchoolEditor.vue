@@ -25,10 +25,15 @@ export default {
         text: "Cursos",
         name: "school-editor-courses",
       },
+      // {
+      //   image: require(`@/assets/icons/icon-classroom.svg`),
+      //   text: "Aulas",
+      //   name: "school-editor-classrooms",
+      // },
       {
         image: require(`@/assets/icons/icon-classroom.svg`),
         text: "Aulas",
-        name: "school-editor-classrooms",
+        name: "school-editor-grades",
       },
       {
         image: require(`@/assets/icons/icon-student.svg`),

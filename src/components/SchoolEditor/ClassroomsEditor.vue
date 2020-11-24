@@ -1,51 +1,68 @@
 <template>
   <div class="editor">
     <div class="editor__menu">
-      <h2>Grados y Secciones</h2>
-      <m-btn @click="showCreate()" color="primary" small>
+      <div class="editor__title">
+        <h2>Aulas</h2>
+        <strong
+          class="ml-2 mt-1"
+          style="opacity: 0.5"
+        >({{`${entities.length}/${variables.max_classrooms_per_school}`}})</strong>
+      </div>
+      <m-btn
+        @click="dialog_edit = true; add()"
+        :disabled="entities.length >= variables.max_classrooms_per_school"
+        color="primary"
+        small
+      >
         <v-icon small class="mr-2">mdi-plus</v-icon>Crear
       </m-btn>
     </div>
-
-    <div class="mt-4">
-      <div v-for="(grade, idx) in grades_f" :key="idx" class="grade mb-3">
-        <div class="grade__body">
-          <span class="grade__name">
-            {{ grade.name }}
-          </span>
-        </div>
-
-        <v-menu offset-y>
-          <template v-slot:activator="{ on }">
-            <v-btn class="mx-3" icon small v-on="on">
-              <v-icon style="font-size: 1.5rem">mdi-dots-vertical</v-icon>
-            </v-btn>
-          </template>
-          <v-list class="pa-0" dense>
-            <v-list-item>
-              <v-list-item-title>Ver Más</v-list-item-title>
-            </v-list-item>
-            <v-list-item @click="showEdit(grade)">
-              <v-list-item-title>Editar</v-list-item-title>
-            </v-list-item>
-            <v-list-item @click="showRemove(grade)">
-              <v-list-item-title>Eliminar</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </div>
-
-      <p v-show="grades.length <= 0" class="text-center my-4">No hay Grados</p>
+    <div class="editor__content mt-4">
+      <table class="m-table">
+        <thead>
+          <tr>
+            <th class="text-left">Nombre</th>
+            <!-- <th class="text-center">Alumnos</th> -->
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(e, e_idx) in entities" :key="e_idx">
+            <td>{{ e.name }}</td>
+            <!-- <td class="text-center" v-if="!entity.students">0</td>
+            <td class="text-center" v-else>{{ entity.students.length }}</td>-->
+            <td class="text-center">
+              <v-menu offset-y>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn v-bind="attrs" v-on="on" small icon>
+                    <v-icon>mdi-dots-vertical</v-icon>
+                  </v-btn>
+                </template>
+                <v-list class="pa-0" dense>
+                  <v-list-item @click="dialog_edit = true; edit(e)">
+                    <v-list-item-title>Editar Aula</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item @click="dialog_remove = true; entity = e">
+                    <v-list-item-title>Eliminar Aula</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="text-center mt-2" v-show="entities.length === 0">No hay aulas.</p>
     </div>
 
-    <!-- DLG CREATE -->
-    <v-dialog v-model="dlg_create" max-width="600" persistent>
-      <form @submit.prevent="create()" class="m-card">
+    <!-- DIALOG CREATE|EDIT -->
+    <v-dialog v-model="dialog_edit" max-width="600" persistent>
+      <form @submit.prevent="save()" class="m-card">
         <div class="m-card__body">
-          <h3>Crear</h3>
+          <h3 v-if="action === 'create'">Crear</h3>
+          <h3 v-else>Editar</h3>
           <v-text-field
-            v-model="grade.name"
-            :maxlength="GradeModel.name.max_length"
+            v-model="entity.name"
+            :maxlength="ClassroomModel.name.max_length"
             label="Nombre"
             autocomplete="off"
             required
@@ -54,73 +71,28 @@
         </div>
         <div class="m-card__actions">
           <m-btn
-            v-if="!loading_btn"
-            @click="dlg_create = false"
+            v-if="!loading_save"
+            @click="dialog_edit = false"
             color="primary"
             type="button"
             small
             text
             class="mr-2"
-            >Cerrar</m-btn
-          >
-          <m-btn color="primary" type="submit" :loading="loading_btn" small
-            >Guardar</m-btn
-          >
+          >Cerrar</m-btn>
+          <m-btn color="primary" type="submit" :loading="loading_save" small>Guardar</m-btn>
         </div>
       </form>
     </v-dialog>
 
-    <!-- DLG EDIT -->
-    <v-dialog v-model="dlg_edit" max-width="600" persistent>
-      <form @submit.prevent="update()" class="m-card">
-        <div class="m-card__body">
-          <h3>Editar</h3>
-          <v-text-field
-            v-model="grade.name"
-            :maxlength="GradeModel.name.max_length"
-            label="Nombre"
-            autocomplete="off"
-            required
-            class="mt-4"
-          ></v-text-field>
-        </div>
-        <div class="m-card__actions">
-          <m-btn
-            v-if="!loading_btn"
-            @click="dlg_edit = false"
-            color="primary"
-            type="button"
-            small
-            text
-            class="mr-2"
-            >Cerrar</m-btn
-          >
-          <m-btn color="primary" type="submit" :loading="loading_btn" small
-            >Guardar</m-btn
-          >
-        </div>
-      </form>
-    </v-dialog>
-
-    <!-- DLG REMOVE -->
-    <v-dialog v-model="dlg_remove" max-width="400">
+    <!-- DIALOG REMOVE -->
+    <v-dialog v-model="dialog_remove" max-width="400">
       <div class="m-card">
         <div class="m-card__body">
           <h3>¿Desea eliminar?</h3>
         </div>
         <div class="m-card__actions">
-          <m-btn @click="dlg_remove = false" color="primary" small class="mr-2"
-            >Cancelar</m-btn
-          >
-          <m-btn
-            @click="
-              remove();
-              dlg_remove = false;
-            "
-            color="error"
-            small
-            >Eliminar</m-btn
-          >
+          <m-btn @click="dialog_remove = false" color="primary" small class="mr-2">Cancelar</m-btn>
+          <m-btn @click="remove(); dialog_remove = false" color="error" small>Eliminar</m-btn>
         </div>
       </div>
     </v-dialog>
@@ -128,84 +100,89 @@
 </template>
 
 <script>
-import GradeModel from "@/models/Grade";
+import ClassroomModel from "@/models/Classroom";
+
+import {
+  addClassroom,
+  getClassroomsBySchool,
+  updateClassroom,
+  removeClassroom,
+} from "@/services/classroomService";
+
+import variables from "@/models/variables";
 
 export default {
   data: () => ({
-    grades: [],
-    grade: {},
+    entities: [],
+    entity: {},
     //
-    dlg_create: false,
-    dlg_edit: false,
-    dlg_remove: false,
-    loading_btn: false,
-    GradeModel,
+    action: "",
+    dialog_edit: false,
+    dialog_remove: false,
+    loading_save: false,
+    ClassroomModel,
+    variables,
   }),
-  async created() {
-    await this.init();
-  },
-  computed: {
-    grades_f() {
-      return [...this.grades].sort((a, b) => a.name.localeCompare(b.name));
-    },
+  async mounted() {
+    this.showLoading("Cargando Aulas");
+    try {
+      this.entities = await getClassroomsBySchool();
+      this.entities.sort((a, b) => a.name.localeCompare(b.name));
+    } catch (error) {
+      this.showMessage("", error.msg || error);
+    }
+    this.hideLoading();
   },
   methods: {
-    async init() {
-      this.showLoading("Cargando");
-      try {
-        this.grades = this.mongoArr(await this.$api.grade.getAll());
-      } catch (error) {
-        this.showMessage("", error.msg || error);
-      }
-      this.hideLoading();
+    add() {
+      this.action = "create";
+      this.entity = {};
     },
-    async create() {
-      this.loading_btn = true;
-      try {
-        let { $oid } = await this.$api.grade.add(this.grade);
-        this.grade._id = $oid;
-        this.grades.push(this.grade);
-        this.dlg_create = false;
-      } catch (error) {
-        this.showMessage("", error.msg || error);
-      }
-      this.loading_btn = false;
+    edit(entity) {
+      this.action = "edit";
+      this.entity = JSON.parse(JSON.stringify(entity));
+      this.entity.id = this.entity._id.$oid;
     },
-    async update() {
-      this.loading_btn = true;
-      try {
-        await this.$api.grade.update(this.grade._id, this.grade);
-        let idx = this.grades.findIndex((e) => e._id === this.grade._id);
-        this.grades[idx] = JSON.parse(JSON.stringify(this.grade));
-        this.grades.splice(); // updates the array without modifying it
-        this.dlg_edit = false;
-      } catch (error) {
-        this.showMessage("", error.msg || error);
+    async save() {
+      this.loading_save = true;
+      if (this.action === "create") {
+        // Create
+        try {
+          let entity_id = await addClassroom(this.entity);
+          this.entity._id = entity_id;
+          this.entities.push(this.entity);
+          this.dialog_edit = false;
+        } catch (error) {
+          this.showMessage("", error.msg || error);
+        }
+      } else if (this.action === "edit") {
+        // Update
+        try {
+          await updateClassroom(this.entity);
+          let entity_idx = this.entities.findIndex(
+            (entity) => entity._id.$oid === this.entity.id
+          );
+          this.entities[entity_idx] = JSON.parse(JSON.stringify(this.entity));
+          this.entities.splice(); // updates the array without modifying it
+          this.dialog_edit = false;
+        } catch (error) {
+          this.showMessage("", error.msg || error);
+        }
       }
-      this.loading_btn = false;
+      this.loading_save = false;
     },
     async remove() {
       this.showLoading("Eliminando Aula");
-      this.dlg_remove = false;
+      this.dialog_edit = false;
       try {
-        await this.$api.grade.remove(this.grade._id);
-        this.grades = this.grades.filter((e) => e._id !== this.grade._id);
+        await removeClassroom(this.entity._id.$oid);
+        this.entities = this.entities.filter(
+          (e) => e._id.$oid !== this.entity._id.$oid
+        );
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
       this.hideLoading();
-    },
-    showCreate() {
-      this.dlg_create = true;
-      this.grade = {};
-    },
-    showEdit(grade) {
-      this.dlg_edit = true;
-      this.grade = Object.assign({}, grade);
-    },
-    showRemove(grade) {
-      this.dlg_remove = true;
-      this.grade = grade;
     },
   },
 };
@@ -213,32 +190,18 @@ export default {
 
 <style lang='scss' scoped>
 .editor {
+  padding: 10px 16px;
   &__menu {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
-}
-
-.grade {
-  overflow: hidden;
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 12px;
-  user-select: none;
-  cursor: pointer;
-
-  display: flex;
-  align-items: center;
-
-  &__body {
-    padding: 18px 24px;
-    flex-grow: 1;
-    &:hover {
-      background: rgba(0, 0, 0, 0.05);
-    }
-    &:active {
-      background: rgba(0, 0, 0, 0.1);
-    }
+  &__title {
+    display: flex;
+    align-items: center;
+  }
+  &__content {
+    overflow-x: auto;
   }
 }
 </style>
