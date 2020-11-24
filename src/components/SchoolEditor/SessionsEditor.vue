@@ -4,13 +4,17 @@
     <div class="editor__menu">
       <div class="editor__title">
         <h2>Sesiones</h2>
-        <strong
-          class="ml-2 mt-1"
-          style="opacity: 0.5"
-        >({{`${entities.length}/${variables.max_sessions_per_school}`}})</strong>
+        <strong class="ml-2 mt-1" style="opacity: 0.5"
+          >({{
+            `${entities.length}/${variables.max_sessions_per_school}`
+          }})</strong
+        >
       </div>
       <m-btn
-        @click="dialog_edit = true; add()"
+        @click="
+          dialog_edit = true;
+          add();
+        "
         :disabled="entities.length >= variables.max_sessions_per_school"
         color="primary"
         small
@@ -39,9 +43,9 @@
         </thead>
         <tbody>
           <tr v-for="(entity, e_idx) in entities_f" :key="e_idx">
-            <td>{{entity.classroom}}</td>
-            <td>{{entity.course}}</td>
-            <td>{{`${entity.teacher? entity.teacher.name: ''}`}}</td>
+            <td>{{ entity.classroom }}</td>
+            <td>{{ entity.course }}</td>
+            <td>{{ `${entity.teacher ? entity.teacher.name : ""}` }}</td>
 
             <td class="text-center">
               <v-menu offset-y>
@@ -51,7 +55,12 @@
                   </v-btn>
                 </template>
                 <v-list class="pa-0" dense>
-                  <v-list-item @click="dialog_edit = true; edit(entity)">
+                  <v-list-item
+                    @click="
+                      dialog_edit = true;
+                      edit(entity);
+                    "
+                  >
                     <v-list-item-title>Editar Sesión</v-list-item-title>
                   </v-list-item>
                   <v-list-item @click="showRemove(entity)">
@@ -63,7 +72,9 @@
           </tr>
         </tbody>
       </table>
-      <p class="text-center mt-2" v-show="entities_f.length === 0">No hay sesiones</p>
+      <p class="text-center mt-2" v-show="entities_f.length === 0">
+        No hay sesiones
+      </p>
     </div>
 
     <!-- DIALOG -->
@@ -79,7 +90,8 @@
             text
             dismissible
             class="mt-4"
-          >{{error}}</v-alert>
+            >{{ error }}</v-alert
+          >
           <v-select
             v-model="entity.classroom_id"
             :disabled="action === 'edit'"
@@ -115,8 +127,11 @@
             text
             small
             class="mr-2"
-          >Cerrar</m-btn>
-          <m-btn @click="save()" :loading="loading_save" color="primary" small>Guardar</m-btn>
+            >Cerrar</m-btn
+          >
+          <m-btn @click="save()" :loading="loading_save" color="primary" small
+            >Guardar</m-btn
+          >
         </div>
       </div>
     </v-dialog>
@@ -125,14 +140,25 @@
       <div class="m-card">
         <div class="m-card__body">
           <h3>¿Desea eliminar?</h3>
-          <p
-            class="mt-4"
-          >La sesión no debe tener evaluaciones ni tareas asignadas para continuar con la eliminación.</p>
+          <p class="mt-4">
+            La sesión no debe tener evaluaciones ni tareas asignadas para
+            continuar con la eliminación.
+          </p>
           <p>Los eventos creados dentro de la sesión serán eliminados.</p>
         </div>
         <div class="m-card__actions">
-          <m-btn @click="dlg_remove = false" color="primary" small class="mr-2">Cancelar</m-btn>
-          <m-btn @click="remove(); dlg_remove = false" color="error" small>Eliminar</m-btn>
+          <m-btn @click="dlg_remove = false" color="primary" small class="mr-2"
+            >Cancelar</m-btn
+          >
+          <m-btn
+            @click="
+              remove();
+              dlg_remove = false;
+            "
+            color="error"
+            small
+            >Eliminar</m-btn
+          >
         </div>
       </div>
     </v-dialog>

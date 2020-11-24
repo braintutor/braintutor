@@ -590,7 +590,9 @@ export default {
       this.$forceUpdate();
     },
     showCreate() {
-      this.entity = {};
+      this.entity = {
+        section_id: this.section_id,
+      };
       this.grade_id_form = this.grade_id;
       this.action = "CREATE";
       this.dlg_edit = true;
