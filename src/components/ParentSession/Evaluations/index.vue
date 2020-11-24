@@ -50,7 +50,7 @@ export default {
     try {
       let session = this.mongo(await this.$api.session.get(session_id));
       this.students = this.mongoArr(
-        await this.$api.student.getAll(session.classroom_id)
+        await this.$api.student.getAll({classroom_id: session.classroom_id})
       );
       this.evaluations = this.mongoArr(
         await this.$api.evaluation.getAll(session_id)

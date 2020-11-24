@@ -54,11 +54,6 @@ const routes = [
         component: () => import("../components/SchoolEditor/CoursesEditor"),
       },
       {
-        path: "classrooms",
-        name: "school-editor-classrooms",
-        component: () => import("../components/SchoolEditor/ClassroomsEditor"),
-      },
-      {
         path: "grades",
         name: "school-editor-grades",
         component: () => import("../components/SchoolEditor/GradesEditor"),

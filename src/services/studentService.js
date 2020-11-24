@@ -1,11 +1,5 @@
 import { fetch_get, fetch_post } from "./fetch";
 
-function getStudentsByClassroom(classroom_id) {
-  return fetch_post("getStudentsByClassroom", {
-    classroom_id,
-  });
-}
-
 function getStudentsByClassroomDirector(classroom_id) {
   return fetch_post("getStudentsByClassroomDirector", {
     classroom_id,
@@ -26,18 +20,6 @@ function getStudentsBySessionStudent(session_id) {
 
 function getStudentsByParent() {
   return fetch_get("getStudentsByParent");
-}
-
-function addStudent(user) {
-  return fetch_post("addStudent", {
-    user,
-  });
-}
-
-function updateStudent(user) {
-  return fetch_post("updateStudent", {
-    user,
-  });
 }
 
 function updateStudentProgress(course_id, materials) {
@@ -75,13 +57,10 @@ function getCategoriesByLearningStyle() {
 }
 
 export {
-  getStudentsByClassroom,
   getStudentsByClassroomDirector,
   getStudentsBySession,
   getStudentsBySessionStudent,
   getStudentsByParent,
-  addStudent,
-  updateStudent,
   updateStudentProgress,
   updateStudentParent,
   updateStudentTime,

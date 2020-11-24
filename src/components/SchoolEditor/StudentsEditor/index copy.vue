@@ -1,5 +1,5 @@
 <template>
-  <div v-if="this.grades.length > 0" class="editor">
+  <div v-if="this.classrooms.length > 0" class="editor">
     <!-- EDITOR Menu -->
     <input
       style="display: none"
@@ -11,7 +11,7 @@
     />
     <div class="editor__menu">
       <h2 class="editor__title">Alumnos</h2>
-      <div v-if="sections.length > 0">
+      <div>
         <m-btn onclick="ipt_file.click()" color="dark" small class="mr-2">
           <v-icon left small>mdi-file-excel</v-icon>Importar
         </m-btn>
@@ -19,23 +19,14 @@
           <v-icon left small>mdi-plus</v-icon>Crear
         </m-btn>
       </div>
-      <strong v-else>No hay Secciones</strong>
     </div>
     <!-- EDITOR Filter -->
     <v-select
-      v-model="grade_id"
-      :items="grades"
+      v-model="classroom_id"
+      :items="classrooms"
       item-text="name"
       item-value="_id"
-      label="Grado"
-    ></v-select>
-    <v-select
-      v-show="sections.length > 0"
-      v-model="section_id"
-      :items="sections"
-      item-text="name"
-      item-value="_id"
-      label="Sección"
+      label="Aula"
     ></v-select>
     <!-- EDITOR Table -->
     <div class="editor__table mt-4">
@@ -50,7 +41,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(e, idx) in entities_f" :key="idx">
+          <tr v-for="(e, idx) in entities" :key="idx">
             <td>{{ e.first_name }}</td>
             <td>{{ e.last_name }}</td>
             <td>{{ e.email }}</td>
@@ -81,12 +72,10 @@
           </tr>
         </tbody>
       </table>
-      <p class="text-center mt-4" v-show="entities_f.length === 0">
-        No hay alumnos asignados
-      </p>
+      <p class="text-center mt-4" v-show="entities.length === 0">No hay alumnos asignados</p>
     </div>
 
-    <!-- DIALOG CREATE|EDIT -->
+    <!-- DIALOG -->
     <v-dialog v-model="dlg_edit" max-width="600" persistent>
       <form @submit.prevent="save()" class="m-card">
         <div class="m-card__body">
@@ -113,22 +102,11 @@
             required
           ></v-text-field>
           <v-select
-            v-model="grade_id_form"
-            :items="grades"
+            v-model="entity.classroom_id"
+            :items="classrooms"
             item-text="name"
             item-value="_id"
             label="Aula"
-            :disabled="action === 'CREATE'"
-            required
-          ></v-select>
-          <v-select
-            v-model="entity.section_id"
-            :items="sections_form"
-            item-text="name"
-            item-value="_id"
-            label="Sección"
-            class="mt-4"
-            required
           ></v-select>
           <v-text-field
             v-model="entity.username"
@@ -142,7 +120,7 @@
             v-model="entity.password"
             :maxlength="UserModel.username.max_length"
             label="Contraseña"
-            :type="entity.showPassword ? 'text' : 'password'"
+            :type="entity.showPassword? 'text': 'password'"
             required
             :append-icon="entity.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             @click:append="toogleShowPassword(entity)"
@@ -157,11 +135,8 @@
             small
             text
             class="mr-2"
-            >Cerrar</m-btn
-          >
-          <m-btn :loading="loading_btn" color="primary" type="submit" small
-            >Guardar</m-btn
-          >
+          >Cerrar</m-btn>
+          <m-btn :loading="loading_btn" color="primary" type="submit" small>Guardar</m-btn>
         </div>
       </form>
     </v-dialog>
@@ -170,13 +145,10 @@
       <form @submit.prevent="remove()" class="m-card">
         <div class="m-card__body">
           <h3>¿Desea eliminar?</h3>
-          <p class="mt-4">
-            Es posible que el alumno tenga evaluaciones guardadas. ¿Desea
-            Continuar?
-          </p>
+          <p class="mt-4">Es posible que el alumno tenga evaluaciones guardadas. ¿Desea Continuar?</p>
           <p>
             Escriba
-            <strong>{{ entity.username }}</strong> para continuar:
+            <strong>{{entity.username}}</strong> para continuar:
           </p>
           <v-text-field
             v-model.trim="username"
@@ -187,21 +159,8 @@
           ></v-text-field>
         </div>
         <div class="m-card__actions">
-          <m-btn
-            @click="dlg_remove = false"
-            type="button"
-            color="primary"
-            small
-            class="mr-2"
-            >Cerrar</m-btn
-          >
-          <m-btn
-            :disabled="entity.username !== username"
-            type="submit"
-            color="error"
-            small
-            >Eliminar</m-btn
-          >
+          <m-btn @click="dlg_remove = false" type="button" color="primary" small class="mr-2">Cerrar</m-btn>
+          <m-btn :disabled="entity.username !== username" type="submit" color="error" small>Eliminar</m-btn>
         </div>
       </form>
     </v-dialog>
@@ -235,22 +194,14 @@
             small
             text
             class="mr-2"
-            >Cerrar</m-btn
-          >
+          >Cerrar</m-btn>
           <m-btn
             :loading="loading_btn"
-            :disabled="
-              !(
-                new_password.length > 0 &&
-                confirm_new_password.length > 0 &&
-                new_password === confirm_new_password
-              )
-            "
+            :disabled="!(new_password.length > 0 && confirm_new_password.length > 0 && new_password === confirm_new_password)"
             color="primary"
             type="submit"
             small
-            >Guardar</m-btn
-          >
+          >Guardar</m-btn>
         </div>
       </form>
     </v-dialog>
@@ -259,8 +210,8 @@
       <div class="import m-card">
         <div class="m-card__body">
           <v-select
-            v-model="grade_id_import"
-            :items="grades"
+            v-model="classroom_id_import"
+            :items="classrooms"
             item-text="name"
             item-value="_id"
             label="Aula"
@@ -318,21 +269,17 @@
                   </td>
                   <td>
                     <v-text-field
-                      :type="entity.showPassword ? 'text' : 'password'"
+                      :type="entity.showPassword? 'text': 'password'"
                       v-model="entity.password"
                       :maxlength="UserModel.password.max_length"
                       dense
                       hide-details
                       autocomplete="off"
-                      :append-icon="
-                        entity.showPassword ? 'mdi-eye' : 'mdi-eye-off'
-                      "
+                      :append-icon="entity.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                       @click:append="toogleShowPassword(entity)"
                     ></v-text-field>
                   </td>
-                  <td style="color: red; font-size: 0.8rem">
-                    {{ entity.response }}
-                  </td>
+                  <td style="color: red; font-size: 0.8rem">{{ entity.response }}</td>
                 </tr>
               </tbody>
             </table>
@@ -346,11 +293,8 @@
             small
             text
             class="mr-2"
-            >Cerrar</m-btn
-          >
-          <m-btn @click="saveAll()" :loading="loading_btn" color="primary" small
-            >Guardar</m-btn
-          >
+          >Cerrar</m-btn>
+          <m-btn @click="saveAll()" :loading="loading_btn" color="primary" small>Guardar</m-btn>
         </div>
       </div>
     </v-dialog>
@@ -367,7 +311,13 @@
 <script>
 import ParentSelector from "./ParentSelector";
 
-import { removeStudent } from "@/services/studentService";
+import { getClassroomsBySchool } from "@/services/classroomService";
+import {
+  getStudentsByClassroom,
+  addStudent,
+  updateStudent,
+  removeStudent,
+} from "@/services/studentService";
 import { updatePasswordByAdmin } from "@/services/userService";
 import { getParents } from "@/services/parentService";
 
@@ -379,12 +329,8 @@ export default {
   data: () => ({
     entities: [],
     entity: {},
-    grades: [],
-    grade_id: "",
-    grade_id_form: "",
-    sections: [],
-    section_id: "",
-    sections_form: [],
+    classrooms: [],
+    classroom_id: "",
     parents: [],
     UserModel,
     //
@@ -400,71 +346,32 @@ export default {
     dlg_password: false,
     // import
     new_data: [],
-    grade_id_import: "",
+    classroom_id_import: "",
     dlg_import: false,
     // parent
     dlg_parent: false,
   }),
-  computed: {
-    entities_f() {
-      return this.entities.filter((e) => e.section_id === this.section_id);
-    },
-  },
   watch: {
-    async entity() {
-      if (this.entity.grade_id) {
-        try {
-          let sections = this.mongoArr(
-            await this.$api.section.getAll({ grade_id: this.entity.grade_id })
-          );
-          this.sections_form = [...sections].sort((a, b) =>
-            a.name.localeCompare(b.name)
-          );
-        } catch (error) {
-          this.showMessage("", error.msg || error);
-        }
-      }
-    },
-    async grade_id() {
+    async classroom_id() {
       this.showLoading("Cargando Datos");
       try {
         this.entities = this.mongoArr(
-          await this.$api.student.getAll({ grade_id: this.grade_id })
+          await getStudentsByClassroom(this.classroom_id)
         );
-        let sections = this.mongoArr(
-          await this.$api.section.getAll({ grade_id: this.grade_id })
-        );
-        this.sections = [...sections].sort((a, b) =>
-          a.name.localeCompare(b.name)
-        );
-        this.section_id = this.sections[0] ? this.sections[0]._id : null;
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
-    async grade_id_form() {
-      try {
-        let sections = this.mongoArr(
-          await this.$api.section.getAll({ grade_id: this.grade_id_form })
-        );
-        this.sections_form = [...sections].sort((a, b) =>
-          a.name.localeCompare(b.name)
-        );
-      } catch (error) {
-        this.showMessage("", error.msg || error);
-      }
-    },
   },
   async created() {
     this.showLoading("Cargando Datos");
     try {
-      let grades = this.mongoArr(await this.$api.grade.getAll());
-      this.grades = [...grades].sort((a, b) => a.name.localeCompare(b.name));
+      this.classrooms = this.mongoArr(await getClassroomsBySchool());
 
-      if (this.grades.length > 0) {
+      if (this.classrooms.length > 0) {
         this.parents = this.mongoArr(await getParents());
-        this.grade_id = this.grades[0]._id;
+        this.classroom_id = this.classrooms[0]._id;
       }
     } catch (error) {
       this.showMessage("", error.msg || error);
@@ -475,23 +382,21 @@ export default {
     async save() {
       this.loading_btn = true;
       try {
-        let entity = {
-          ...this.entity,
-          grade_id: this.grade_id_form,
-        };
         if (this.action === "CREATE") {
-          let { _id } = await this.$api.student.add(entity);
-          entity._id = _id;
-          if (entity.grade_id === this.grade_id) this.entities.push(entity);
+          let { _id } = await addStudent(this.entity);
+          this.entity._id = _id;
+          if (this.entity.classroom_id === this.classroom_id)
+            this.entities.push(this.entity);
         } else {
-          await this.$api.student.update(entity._id, entity);
-          let entity_idx = this.entities.findIndex((e) => e._id === entity._id);
-          if (entity.grade_id === this.grade_id)
-            this.entities[entity_idx] = Object.assign({}, entity);
+          await updateStudent(this.entity);
+          let entity_idx = this.entities.findIndex(
+            (entity) => entity._id === this.entity._id
+          );
+          if (this.entity.classroom_id === this.classroom_id)
+            this.entities[entity_idx] = Object.assign({}, this.entity);
           else this.entities.splice(entity_idx, 1);
         }
         this.dlg_edit = false;
-        this.entities.splice();
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
@@ -504,7 +409,7 @@ export default {
       this.dlg_remove = false;
       try {
         await removeStudent(this.entity._id);
-        if (this.entity.grade_id === this.grade_id)
+        if (this.entity.classroom_id === this.classroom_id)
           this.entities = this.entities.filter(
             (e) => e._id !== this.entity._id
           );
@@ -532,12 +437,13 @@ export default {
       let i = 0;
       while (i < this.new_data.length) {
         let entity = this.new_data[i];
-        entity.grade_id = this.grade_id_import;
+        entity.classroom_id = this.classroom_id_import;
         // entity.pass = generatePassword();
         try {
-          let { _id } = await this.$api.student.add(this.entity);
+          let { _id } = await addStudent(entity);
           entity._id = _id;
-          if (entity.grade_id === this.grade_id) this.entities.push(entity);
+          if (entity.classroom_id === this.classroom_id)
+            this.entities.push(entity);
           this.new_data.splice(i, 1);
         } catch (error) {
           entity.response = error.msg || error;
@@ -591,13 +497,11 @@ export default {
     },
     showCreate() {
       this.entity = {};
-      this.grade_id_form = this.grade_id;
       this.action = "CREATE";
       this.dlg_edit = true;
     },
     showEdit(e) {
       this.entity = Object.assign({}, e);
-      this.grade_id_form = this.grade_id;
       this.action = "EDIT";
       this.dlg_edit = true;
     },
@@ -617,7 +521,7 @@ export default {
       this.dlg_parent = true;
     },
     showImport() {
-      this.grade_id_import = this.grade_id;
+      this.classroom_id_import = this.classroom_id;
       this.dlg_import = true;
     },
   },

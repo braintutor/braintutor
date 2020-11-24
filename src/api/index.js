@@ -23,7 +23,7 @@ export default {
       evaluation: Evaluation(_fetch, fetch_get),
       event: Event(fetch_get),
       session: Session(fetch_get),
-      student: Student(fetch_get),
+      student: Student(_fetch),
       task: Task(_fetch),
       school: School(_fetch),
       material: Material(_fetch),

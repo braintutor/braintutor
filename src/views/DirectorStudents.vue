@@ -54,7 +54,7 @@ export default {
       this.showLoading("Cargando Alumnos");
       try {
         this.students = this.mongoArr(
-          await this.$api.student.getAll(classroom_id)
+          await this.$api.student.getAll({ classroom_id })
         );
       } catch (error) {
         this.showMessage("", error.msg || error);

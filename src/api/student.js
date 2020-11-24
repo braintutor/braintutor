@@ -1,10 +1,15 @@
-export default (fetch_get) => ({
+export default (_fetch) => ({
   get(student_id) {
-    return fetch_get(`student/${student_id}`);
+    return _fetch('GET', `student/${student_id}`);
   },
-  getAll(classroom_id, parent_id) {
-    return fetch_get(
-      `student?classroom_id=${classroom_id || ''}&parent_id=${parent_id || ''}`
+  getAll({ grade_id, parent_id }) {
+    return _fetch('GET', `student?grade_id=${grade_id || ''}&parent_id=${parent_id || ''}`
     );
+  },
+  add(data) {
+    return _fetch('POST', 'student', data);
+  },
+  update(user_id, data) {
+    return _fetch('PATCH', `student/${user_id}`, data);
   },
 });
