@@ -30,12 +30,6 @@ function getSessionsByClassroom(classroom_id) {
   });
 }
 
-function addSession(session) {
-  return fetch_post("addSession", {
-    session,
-  });
-}
-
 function updateSession(session) {
   return fetch_post("updateSession", {
     session,
@@ -55,7 +49,6 @@ export {
   getSessionsByTeacher,
   getSessionsByStudent,
   getSessionsByClassroom,
-  addSession,
   updateSession,
   removeSession,
 };

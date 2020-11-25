@@ -35,7 +35,7 @@
     ></v-select>
 
     <!-- SESSIONS -->
-    <div class="mt-3">
+    <div class="mt-4">
       <div v-for="(e, idx) in entities" :key="idx" class="session m-card mb-4">
         <div class="session__body m-card__body">
           <span>{{ e.course.name }}</span>
@@ -48,8 +48,11 @@
             </v-btn>
           </template>
           <v-list class="pa-0" dense>
-            <v-list-item>
-              <v-list-item-title>Editar Orden</v-list-item-title>
+            <v-list-item @click="showEdit(e)">
+              <v-list-item-title>Asignar Docente</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="showRemove(e)">
+              <v-list-item-title>Eliminar Sesión</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -98,6 +101,62 @@
         </div>
       </div>
     </v-dialog>
+
+    <!-- DLG EDIT -->
+    <v-dialog v-model="dlg_edit" max-width="600" persistent>
+      <div class="m-card">
+        <div class="m-card__body">
+          <h3>Asignar Docente</h3>
+          <p class="mt-4">
+            <strong>{{
+              (courses.find((c) => c._id === entity.course_id) || {}).name
+            }}</strong>
+          </p>
+          <v-select
+            v-model="entity.teacher_id"
+            :items="teachers"
+            item-text="name"
+            item-value="_id"
+            label="Profesor"
+            class="mt-4"
+          ></v-select>
+        </div>
+        <div class="m-card__actions">
+          <m-btn
+            v-if="!ldg_save"
+            @click="dlg_edit = false"
+            color="primary"
+            text
+            small
+            class="mr-2"
+            >Cerrar</m-btn
+          >
+          <m-btn @click="update()" :loading="ldg_save" color="primary" small
+            >Guardar</m-btn
+          >
+        </div>
+      </div>
+    </v-dialog>
+
+    <!-- DLG REMOVE -->
+    <v-dialog v-model="dlg_remove" max-width="400">
+      <div class="m-card">
+        <div class="m-card__body">
+          <h3>¿Desea eliminar?</h3>
+          <p class="mt-4">
+            La sesión no debe tener evaluaciones ni tareas asignadas para
+            continuar con la eliminación.
+          </p>
+          <p>Los eventos creados dentro de la sesión serán eliminados.</p>
+        </div>
+        <div class="m-card__actions">
+          <m-btn @click="dlg_remove = false" color="primary" small class="mr-2"
+            >Cancelar</m-btn
+          >
+          <m-btn @click="remove()" color="error" small>Eliminar</m-btn>
+        </div>
+      </div>
+    </v-dialog>
   </div>
 </template>
 
@@ -115,12 +174,15 @@ export default {
     section_id: "",
     //
     dlg_create: false,
+    dlg_edit: false,
+    dlg_remove: false,
     ldg_save: false,
   }),
   watch: {
     async grade_id() {
       if (this.grade_id) {
         this.showLoading("Cargando Aulas");
+        this.sections = [];
         try {
           this.sections = this.mongoArr(
             await this.$api.section.getAll({
@@ -138,6 +200,7 @@ export default {
     async section_id() {
       if (this.section_id) {
         this.showLoading("Cargando Sesiones");
+        this.entities = [];
         try {
           this.entities = this.mongoArr(
             await this.$api.session.getAll({
@@ -189,6 +252,33 @@ export default {
       }
       this.ldg_save = false;
     },
+    async update() {
+      this.ldg_save = true;
+      try {
+        await this.$api.session.update(this.entity._id, this.entity);
+        this.entity.teacher = this.teachers.find(
+          (t) => t._id === this.entity.teacher_id
+        );
+        let idx = this.entities.findIndex((e) => e._id === this.entity._id);
+        this.entities[idx] = JSON.parse(JSON.stringify(this.entity));
+        this.entities.splice(); // updates the array without modifying it
+        this.dlg_edit = false;
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.ldg_save = false;
+    },
+    async remove() {
+      this.showLoading("Eliminando");
+      this.dlg_remove = false;
+      try {
+        await this.$api.session.remove(this.entity._id);
+        this.entities = this.entities.filter((e) => e._id !== this.entity._id);
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
+    },
     //
     async showCreate() {
       this.entity = {
@@ -196,6 +286,14 @@ export default {
         section_id: this.section_id,
       };
       this.dlg_create = true;
+    },
+    async showEdit(e) {
+      this.entity = e;
+      this.dlg_edit = true;
+    },
+    async showRemove(e) {
+      this.entity = e;
+      this.dlg_remove = true;
     },
   },
 };
@@ -224,11 +322,6 @@ export default {
     flex-grow: 1;
     display: grid;
     grid-template-columns: 1fr 1fr;
-
-    &:hover {
-      background: rgba(0, 0, 0, 0.05);
-      cursor: pointer;
-    }
   }
 }
 </style>

@@ -8,4 +8,10 @@ export default (_fetch) => ({
   add(data) {
     return _fetch('POST', 'session', data);
   },
+  update(session_id, data) {
+    return _fetch('PATCH', `session/${session_id}`, data);
+  },
+  remove(session_id) {
+    return _fetch('DELETE', `session/${session_id}`);
+  },
 });
