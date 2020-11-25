@@ -6,6 +6,7 @@ import Event from "./event";
 import Session from "./session";
 import Course from "./course";
 import Student from "./student";
+import Teacher from "./teacher";
 import Task from "./task";
 import School from "./school";
 import Material from "./material";
@@ -22,8 +23,9 @@ export default {
       classroom: Classroom(fetch_get),
       evaluation: Evaluation(_fetch, fetch_get),
       event: Event(fetch_get),
-      session: Session(fetch_get),
+      session: Session(_fetch),
       student: Student(_fetch),
+      teacher: Teacher(_fetch),
       task: Task(_fetch),
       school: School(_fetch),
       material: Material(_fetch),

@@ -1,8 +1,11 @@
-export default (fetch_get) => ({
+export default (_fetch) => ({
   get(session_id) {
-    return fetch_get(`session/${session_id}`);
+    return _fetch('GET', `session/${session_id}`);
   },
-  getAll({ classroom_id, course_id }) {
-    return fetch_get(`session?classroom_id=${classroom_id || ''}&course_id=${course_id || ''}`);
-  }
+  getAll({ grade_id, section_id, course_id }) {
+    return _fetch('GET', `session?grade_id=${grade_id || ''}&section_id=${section_id || ''}&course_id=${course_id || ''}`);
+  },
+  add(data) {
+    return _fetch('POST', 'session', data);
+  },
 });
