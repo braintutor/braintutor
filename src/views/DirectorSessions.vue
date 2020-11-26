@@ -7,7 +7,7 @@
         item-value="_id"
         item-text="name"
         label="Aula"
-        class="px-2 mb-3"
+        class="px-2 mb-2"
       ></v-select>
       <v-select
         v-show="sections.length > 0"
@@ -16,7 +16,7 @@
         item-text="name"
         item-value="_id"
         label="Sección"
-        class="px-2 mb-3"
+        class="px-2 mb-4"
       ></v-select>
 
       <!-- Sessions -->
@@ -76,6 +76,7 @@ export default {
 
         this.showLoading("Cargando Aulas");
         this.sections = [];
+        this.sessions = [];
         try {
           this.sections = this.mongoArr(
             await this.$api.section.getAll({

@@ -183,6 +183,7 @@ export default {
       if (this.grade_id) {
         this.showLoading("Cargando Aulas");
         this.sections = [];
+        this.entities = [];
         try {
           this.sections = this.mongoArr(
             await this.$api.section.getAll({
