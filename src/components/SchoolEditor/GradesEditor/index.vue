@@ -8,6 +8,15 @@
         </m-btn>
       </div>
 
+      <v-select
+        v-model="level_selected"
+        :items="levels"
+        item-text="name"
+        item-value="_id"
+        label="Nivel"
+        class="mt-4"
+      ></v-select>
+
       <div class="mt-4">
         <div v-for="(grade, idx) in grades_f" :key="idx" class="grade mb-3">
           <div @click="grade_selected = grade" class="grade__body">
@@ -36,8 +45,8 @@
           </v-menu>
         </div>
 
-        <p v-show="grades.length <= 0" class="text-center my-4">
-          No hay Grados
+        <p v-show="grades_f.length <= 0" class="text-center my-4">
+          No hay información
         </p>
       </div>
 
@@ -175,6 +184,7 @@ export default {
         name: "Secundaria",
       },
     ],
+    level_selected: "PRI",
     //
     dlg_create: false,
     dlg_edit: false,
@@ -187,7 +197,8 @@ export default {
   },
   computed: {
     grades_f() {
-      return [...this.grades].sort((a, b) => a.name.localeCompare(b.name));
+      let grades = this.grades.filter((g) => g.level === this.level_selected);
+      return [...grades].sort((a, b) => a.name.localeCompare(b.name));
     },
   },
   methods: {
