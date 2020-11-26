@@ -36,8 +36,8 @@
 
     <!-- SESSIONS -->
     <div class="mt-4">
-      <div v-for="(e, idx) in entities" :key="idx" class="session m-card mb-4">
-        <div class="session__body m-card__body">
+      <div v-for="(e, idx) in entities" :key="idx" class="session mb-3">
+        <div class="session__body">
           <span>{{ e.course.name }}</span>
           <span>{{ `${e.teacher.last_name}, ${e.teacher.first_name}` }}</span>
         </div>
@@ -315,13 +315,20 @@ export default {
 
 .session {
   overflow: hidden;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  user-select: none;
+
   display: flex;
   align-items: center;
 
   &__body {
+    padding: 18px 24px;
     flex-grow: 1;
+
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 20px;
   }
 }
 </style>

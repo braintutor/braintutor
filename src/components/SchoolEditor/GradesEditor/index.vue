@@ -54,6 +54,13 @@
               required
               class="mt-4"
             ></v-text-field>
+            <v-select
+              v-model="grade.level"
+              :items="levels"
+              item-text="name"
+              item-value="_id"
+              label="Nivel"
+            ></v-select>
           </div>
           <div class="m-card__actions">
             <m-btn
@@ -86,6 +93,13 @@
               required
               class="mt-4"
             ></v-text-field>
+            <v-select
+              v-model="grade.level"
+              :items="levels"
+              item-text="name"
+              item-value="_id"
+              label="Nivel"
+            ></v-select>
           </div>
           <div class="m-card__actions">
             <m-btn
@@ -151,6 +165,16 @@ export default {
     grades: [],
     grade: {},
     grade_selected: null,
+    levels: [
+      {
+        _id: "PRI",
+        name: "Primaria",
+      },
+      {
+        _id: "SEC",
+        name: "Secundaria",
+      },
+    ],
     //
     dlg_create: false,
     dlg_edit: false,
