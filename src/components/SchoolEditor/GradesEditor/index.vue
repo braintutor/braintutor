@@ -14,10 +14,10 @@
         item-text="name"
         item-value="_id"
         label="Nivel"
-        class="mt-4"
+        class="mt-3"
       ></v-select>
 
-      <div class="mt-4">
+      <div class="mt-3">
         <div v-for="(grade, idx) in grades_f" :key="idx" class="grade mb-3">
           <div @click="grade_selected = grade" class="grade__body">
             <span class="grade__name">

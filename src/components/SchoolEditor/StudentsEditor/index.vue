@@ -28,6 +28,7 @@
       item-text="name"
       item-value="_id"
       label="Grado"
+      class="mt-3"
     ></v-select>
     <v-select
       v-show="sections.length > 0"
