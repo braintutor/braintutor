@@ -1,20 +1,20 @@
 <template>
   <div class="editor">
     <!-- EDITOR Menu -->
-    <input
+    <!-- <input
       style="display: none"
       id="ipt_file"
       type="file"
       onclick="this.value=null"
       accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
       @change="onLoadFile($event)"
-    />
+    /> -->
     <div class="editor__menu">
       <h2 class="editor__title">Docentes</h2>
       <div>
-        <m-btn onclick="ipt_file.click()" color="dark" small class="mr-2">
+        <!-- <m-btn onclick="ipt_file.click()" color="dark" small class="mr-2">
           <v-icon left small>mdi-file-excel</v-icon>Importar
-        </m-btn>
+        </m-btn> -->
         <m-btn @click="showCreate()" color="primary" small>
           <v-icon left small>mdi-plus</v-icon>Crear
         </m-btn>
@@ -254,7 +254,7 @@
             text
             class="mr-2"
           >Cerrar</m-btn>
-          <m-btn @click="saveAll()" :loading="loading_btn" color="primary" small>Guardar</m-btn>
+          <!-- <m-btn @click="saveAll()" :loading="loading_btn" color="primary" small>Guardar</m-btn> -->
         </div>
       </div>
     </v-dialog>
@@ -270,7 +270,7 @@ import {
 } from "@/services/teacherService";
 import { updatePasswordByAdmin } from "@/services/userService";
 
-import * as XLSX from "xlsx";
+// import * as XLSX from "xlsx";
 
 import UserModel from "@/models/User";
 
@@ -349,63 +349,63 @@ export default {
       this.loading_btn = false;
     },
     // Import
-    async saveAll() {
-      this.loading_btn = true;
-      let i = 0;
-      while (i < this.new_data.length) {
-        let entity = this.new_data[i];
-        entity.classroom_id = this.classroom_id_import;
-        // entity.pass = generatePassword();
-        try {
-          let { _id } = await addTeacher(entity);
-          entity._id = _id;
-          this.entities.push(entity);
-          this.new_data.splice(i, 1);
-        } catch (error) {
-          entity.response = error.msg || error;
-          i++;
-        }
-      }
-      if (this.new_data.length <= 0) this.dlg_import = false;
-      this.loading_btn = false;
-    },
-    onLoadFile(e) {
-      let file = e.target.files[0];
-      if (file) {
-        let reader = new FileReader();
-        reader.onload = (e) => {
-          let file_data = e.target.result;
-          let excel = XLSX.read(file_data, { type: "binary" });
-          let names = excel.SheetNames;
-          let data = XLSX.utils.sheet_to_json(excel.Sheets[names[0]]);
-          //
-          if (data.length <= 1000) {
-            this.new_data = data.map((d) => {
-              let {
-                nombres,
-                apellidos,
-                usuario,
-                correo,
-                Nombres,
-                Apellidos,
-                Usuario,
-                Correo,
-              } = d;
-              return {
-                first_name: nombres || Nombres || "",
-                last_name: apellidos || Apellidos || "",
-                email: correo || Correo || "",
-                username: usuario || Usuario || "",
-              };
-            });
-            this.showImport();
-          } else {
-            this.showMessage("", "Error al Importar");
-          }
-        };
-        reader.readAsBinaryString(file);
-      }
-    },
+    // async saveAll() {
+    //   this.loading_btn = true;
+    //   let i = 0;
+    //   while (i < this.new_data.length) {
+    //     let entity = this.new_data[i];
+    //     entity.classroom_id = this.classroom_id_import;
+    //     // entity.pass = generatePassword();
+    //     try {
+    //       let { _id } = await addTeacher(entity);
+    //       entity._id = _id;
+    //       this.entities.push(entity);
+    //       this.new_data.splice(i, 1);
+    //     } catch (error) {
+    //       entity.response = error.msg || error;
+    //       i++;
+    //     }
+    //   }
+    //   if (this.new_data.length <= 0) this.dlg_import = false;
+    //   this.loading_btn = false;
+    // },
+    // onLoadFile(e) {
+    //   let file = e.target.files[0];
+    //   if (file) {
+    //     let reader = new FileReader();
+    //     reader.onload = (e) => {
+    //       let file_data = e.target.result;
+    //       let excel = XLSX.read(file_data, { type: "binary" });
+    //       let names = excel.SheetNames;
+    //       let data = XLSX.utils.sheet_to_json(excel.Sheets[names[0]]);
+    //       //
+    //       if (data.length <= 1000) {
+    //         this.new_data = data.map((d) => {
+    //           let {
+    //             nombres,
+    //             apellidos,
+    //             usuario,
+    //             correo,
+    //             Nombres,
+    //             Apellidos,
+    //             Usuario,
+    //             Correo,
+    //           } = d;
+    //           return {
+    //             first_name: nombres || Nombres || "",
+    //             last_name: apellidos || Apellidos || "",
+    //             email: correo || Correo || "",
+    //             username: usuario || Usuario || "",
+    //           };
+    //         });
+    //         this.showImport();
+    //       } else {
+    //         this.showMessage("", "Error al Importar");
+    //       }
+    //     };
+    //     reader.readAsBinaryString(file);
+    //   }
+    // },
     //
     toogleShowPassword(e) {
       e.showPassword = !e.showPassword;
@@ -432,10 +432,10 @@ export default {
       this.confirm_new_password = "";
       this.dlg_password = true;
     },
-    showImport() {
-      this.classroom_id_import = this.classroom_id;
-      this.dlg_import = true;
-    },
+    // showImport() {
+    //   this.classroom_id_import = this.classroom_id;
+    //   this.dlg_import = true;
+    // },
   },
 };
 </script>

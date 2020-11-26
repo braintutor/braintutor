@@ -1,6 +1,5 @@
 const variables = {
   max_users_per_school: 1000, // addStudent, addTeacher
-  max_classrooms_per_school: 100, // addClassroom
   max_courses_per_school: 100, // addCourse
   max_sessions_per_school: 100, // addSession
 

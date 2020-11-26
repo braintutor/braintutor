@@ -64,7 +64,7 @@ export default {
     try {
       let all_events = [];
       let { events, tasks, evaluations } =
-        this.mongoArr(await this.$api.event.getAll(session_id))[0] || {};
+        this.mongoArr(await this.$api.event.getAll({ session_id }))[0] || {};
 
       all_events = all_events.concat(
         events.map((i) => ({

@@ -63,7 +63,7 @@ export default {
     this.showLoading("Cargando Alumnos");
     let student_id = this.$route.query.student_id;
     try {
-      this.students = this.mongoArr(await this.$api.student.getAll());
+      this.students = this.mongoArr(await this.$api.student.getAll({}));
       this.students.forEach((student) => {
         student.name = `${student.last_name}, ${student.first_name}`;
       });
@@ -80,9 +80,11 @@ export default {
 
       this.showLoading("Cargando Sesiones");
       try {
-        let { classroom_id } = this.students.find((s) => s._id === student_id);
+        let { grade_id, section_id } = this.students.find(
+          (s) => s._id === student_id
+        );
         this.sessions = this.mongoArr(
-          await this.$api.session.getAll({ classroom_id })
+          await this.$api.session.getAll({ grade_id, section_id })
         );
       } catch (error) {
         this.showMessage("", error.msg || error);

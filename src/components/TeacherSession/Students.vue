@@ -48,7 +48,10 @@ export default {
       this.showLoading("Cargando Eventos");
       this.students = this.mongoArr(await getStudentsBySession(session_id));
       this.sessions = this.mongoArr(
-        await this.$api.event.getAll("", session.classroom_id)
+        await this.$api.event.getAll({
+          grade_id: session.grade_id,
+          section_id: session.section_id,
+        })
       );
     } catch (error) {
       this.showMessage("", error.msg || error);
