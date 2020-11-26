@@ -49,7 +49,6 @@
 <script>
 import SessionCard from "@/components/globals/Session/SessionCard";
 
-import { getSessionsByStudent } from "@/services/sessionService";
 // import { redirect } from "@/services/router.js";
 
 export default {
@@ -74,7 +73,7 @@ export default {
     //
     this.showLoading("Cargando Cursos");
     try {
-      this.sessions = this.mongoArr(await getSessionsByStudent());
+      this.sessions = this.mongoArr(await this.$api.session.getAll({}));
     } catch (error) {
       this.showMessage("", error.msg || error);
     }

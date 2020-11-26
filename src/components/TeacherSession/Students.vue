@@ -31,7 +31,6 @@
 import Students from "@/components/globals/Students/index";
 import EventsSessions from "@/components/globals/Event/EventsSessions";
 
-import { getSessionByTeacher } from "@/services/sessionService";
 import { getStudentsBySession } from "@/services/studentService";
 
 export default {
@@ -45,7 +44,7 @@ export default {
     let session_id = this.$router.currentRoute.params["session_id"];
     try {
       this.showLoading("Cargando Alumnos");
-      let session = this.mongo(await getSessionByTeacher(session_id));
+      let session = this.mongo(await this.$api.session.get(session_id));
       this.showLoading("Cargando Eventos");
       this.students = this.mongoArr(await getStudentsBySession(session_id));
       this.sessions = this.mongoArr(

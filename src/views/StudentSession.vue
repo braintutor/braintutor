@@ -15,8 +15,6 @@
 <script>
 import Layout from "@/components/Layout2";
 
-import { getSessionByStudent } from "@/services/sessionService";
-
 export default {
   data: () => ({
     course: {
@@ -59,7 +57,7 @@ export default {
     let session_id = this.$router.currentRoute.params["session_id"];
     this.showLoading("Cargando");
     try {
-      let session = await getSessionByStudent(session_id);
+      let session = await this.$api.session.get(session_id);
       this.course = session.course;
     } catch (error) {
       this.showMessage("", error.msg || error);

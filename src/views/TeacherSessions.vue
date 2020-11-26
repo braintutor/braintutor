@@ -11,7 +11,7 @@
       :key="session._id"
       class="session mb-3"
       :name="session.course.name"
-      :user="session.classroom.name"
+      :user="`${session.grade.name} - ${session.section.name}`"
       user_icon="mdi-account-multiple"
       :buttons="[
         {
@@ -45,17 +45,23 @@
 
 <script>
 import SessionCard from "@/components/globals/Session/SessionCard";
-
-import { getSessionsByTeacher } from "@/services/sessionService";
+import { mapState } from "vuex";
 
 export default {
   data: () => ({
     sessions: [],
   }),
+  computed: {
+    ...mapState(["user"]),
+  },
   async created() {
     this.showLoading("Cargando Cursos");
     try {
-      this.sessions = this.mongoArr(await getSessionsByTeacher());
+      this.sessions = this.mongoArr(
+        await this.$api.session.getAll({
+          teacher_id: this.user._id.$oid,
+        })
+      );
     } catch (error) {
       this.showMessage("", error.msg || error);
     }
