@@ -32,19 +32,6 @@ async function _fetch(method, name, data, isJSON = true) {
   return json;
 }
 
-async function fetch_get(name) {
-  let res = await fetch(`${getApiUrl()}/${name}`, {
-    headers: getHeaders(),
-  });
-  let json = await res.json();
-  if (res.status >= 400 && res.status < 600) {
-    handlerCode(json.code);
-    throw json;
-  }
-
-  return json;
-}
-
 function handlerCode(code) {
   if (code) {
     // TOKEN EXPIRED
@@ -56,4 +43,4 @@ function handlerCode(code) {
   }
 }
 
-export { _fetch, fetch_get };
+export { _fetch };
