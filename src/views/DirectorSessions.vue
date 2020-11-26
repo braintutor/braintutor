@@ -2,47 +2,53 @@
   <div class="m-container pb-3 px-1">
     <div>
       <v-select
-        v-model="classroom_id"
-        :items="classrooms"
+        v-model="grade_id"
+        :items="grades"
         item-value="_id"
         item-text="name"
         label="Aula"
         class="px-2 mb-3"
       ></v-select>
-      <div v-show="!classroom_id" class="text-center">Seleccione un Aula</div>
+      <v-select
+        v-show="sections.length > 0"
+        v-model="section_id"
+        :items="sections"
+        item-text="name"
+        item-value="_id"
+        label="Sección"
+        class="px-2 mb-3"
+      ></v-select>
 
       <!-- Sessions -->
-      <div v-show="classroom_id">
-        <SessionCard
-          v-for="session in sessions"
-          :key="session._id"
-          class="session mb-3"
-          :name="session.course.name"
-          :user="`${session.teacher.last_name}, ${session.teacher.first_name}`"
-          :buttons="[
-            {
-              text: 'Eventos',
-              icon: 'mdi-calendar',
-              color: 'primary',
-              action: () => selectSession(session, 'events'),
-            },
-            {
-              text: 'Tareas',
-              icon: 'mdi-format-list-checks',
-              color: 'success',
-              action: () => selectSession(session, 'tasks'),
-            },
-            {
-              text: 'Evaluaciones',
-              icon: 'mdi-list-status',
-              color: 'warning',
-              action: () => selectSession(session, 'evaluations'),
-            },
-          ]"
-        />
-        <div v-show="sessions.length <= 0" class="text-center mt-3">
-          No hay Sesiones
-        </div>
+      <SessionCard
+        v-for="session in sessions"
+        :key="session._id"
+        class="session mb-3"
+        :name="session.course.name"
+        :user="`${session.teacher.last_name}, ${session.teacher.first_name}`"
+        :buttons="[
+          {
+            text: 'Eventos',
+            icon: 'mdi-calendar',
+            color: 'primary',
+            action: () => selectSession(session, 'events'),
+          },
+          {
+            text: 'Tareas',
+            icon: 'mdi-format-list-checks',
+            color: 'success',
+            action: () => selectSession(session, 'tasks'),
+          },
+          {
+            text: 'Evaluaciones',
+            icon: 'mdi-list-status',
+            color: 'warning',
+            action: () => selectSession(session, 'evaluations'),
+          },
+        ]"
+      />
+      <div v-show="sessions.length <= 0" class="text-center mt-3">
+        No hay Sesiones
       </div>
     </div>
   </div>
@@ -53,46 +59,75 @@ import SessionCard from "@/components/globals/Session/SessionCard";
 
 export default {
   data: () => ({
-    classrooms: [],
+    grades: [],
+    grade_id: null,
+    sections: [],
+    section_id: null,
     sessions: [],
-    classroom_id: null,
   }),
   watch: {
-    async classroom_id() {
-      this.$router
-        .push({
-          query: { classroom_id: this.classroom_id },
-        })
-        .catch(() => {});
-      await this.getSessions(this.classroom_id);
+    async grade_id() {
+      if (this.grade_id) {
+        this.$router
+          .push({
+            query: { grade_id: this.grade_id },
+          })
+          .catch(() => {});
+
+        this.showLoading("Cargando Aulas");
+        this.sections = [];
+        try {
+          this.sections = this.mongoArr(
+            await this.$api.section.getAll({
+              grade_id: this.grade_id,
+            })
+          );
+          this.sections.sort((a, b) => a.name.localeCompare(b.name));
+          this.section_id = this.sections[0] ? this.sections[0]._id : null;
+        } catch (error) {
+          this.showMessage("", error.msg || error);
+        }
+        this.hideLoading();
+      }
+    },
+    async section_id() {
+      if (this.section_id) {
+        this.showLoading("Cargando Sesiones");
+        this.sessions = [];
+        try {
+          this.sessions = this.mongoArr(
+            await this.$api.session.getAll({
+              grade_id: this.grade_id,
+              section_id: this.section_id,
+            })
+          );
+        } catch (error) {
+          this.showMessage("", error.msg || error);
+        }
+        this.hideLoading();
+      }
     },
   },
   async created() {
     this.showLoading("Cargando Aulas");
-    let classroom_id = this.$route.query.classroom_id;
+    let grade_id = this.$route.query.grade_id;
     try {
-      this.classrooms = this.mongoArr(await this.$api.classroom.getAll());
-      if (this.classrooms.map((c) => c._id).includes(classroom_id))
-        this.classroom_id = classroom_id;
+      let grades = this.mongoArr(await this.$api.grade.getAll());
+      grades.sort((a, b) => a.name.localeCompare(b.name));
+      this.grades = [
+        ...grades.filter((g) => g.level === "PRI"),
+        ...grades.filter((g) => g.level === "SEC"),
+      ];
+
+      if (this.grades.map((g) => g._id).includes(grade_id))
+        this.grade_id = grade_id;
+      else this.grade_id = this.grades[0] ? this.grades[0]._id : null;
     } catch (error) {
       this.showMessage("", error.msg || error);
     }
     this.hideLoading();
   },
   methods: {
-    async getSessions(classroom_id) {
-      if (!classroom_id) return;
-
-      this.showLoading("Cargando Sesiones");
-      try {
-        this.sessions = this.mongoArr(
-          await this.$api.session.getAll({ classroom_id })
-        );
-      } catch (error) {
-        this.showMessage("", error.msg || error);
-      }
-      this.hideLoading();
-    },
     selectSession(session, category) {
       this.$router.push({
         name: `director-session-${category}`,
