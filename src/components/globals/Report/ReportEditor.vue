@@ -38,7 +38,7 @@
 
         <strong>Grado y Sección:</strong>
         <span v-if="sessions.length > 0">{{
-          sessions.map((s) => s.classroom.name).join(", ")
+          sessions.map((s) => `${s.grade.name} - ${s.section.name}`).join(", ")
         }}</span>
         <span v-else>...</span>
 
