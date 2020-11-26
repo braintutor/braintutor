@@ -218,8 +218,12 @@ export default {
   async created() {
     this.showLoading("Cargando Aulas");
     try {
-      this.grades = this.mongoArr(await this.$api.grade.getAll());
-      this.grades.sort((a, b) => a.name.localeCompare(b.name));
+      let grades = this.mongoArr(await this.$api.grade.getAll());
+      grades.sort((a, b) => a.name.localeCompare(b.name));
+      this.grades = [
+        ...grades.filter((g) => g.level === "PRI"),
+        ...grades.filter((g) => g.level === "SEC"),
+      ];
       this.grade_id = this.grades[0] ? this.grades[0]._id : null;
 
       this.courses = this.mongoArr(await this.$api.course.getAll());

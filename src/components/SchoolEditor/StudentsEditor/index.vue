@@ -460,7 +460,11 @@ export default {
     this.showLoading("Cargando Datos");
     try {
       let grades = this.mongoArr(await this.$api.grade.getAll());
-      this.grades = [...grades].sort((a, b) => a.name.localeCompare(b.name));
+      grades = [...grades].sort((a, b) => a.name.localeCompare(b.name));
+      this.grades = [
+        ...grades.filter((g) => g.level === "PRI"),
+        ...grades.filter((g) => g.level === "SEC"),
+      ];
 
       if (this.grades.length > 0) {
         this.parents = this.mongoArr(await getParents());
