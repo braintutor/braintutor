@@ -222,7 +222,7 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-$border: 1px solid rgba(25, 0, 255, 0.1);
+$border: 1px solid rgba(100, 121, 143, 0.122);
 $width-list: 360px;
 
 .reports {
@@ -273,7 +273,13 @@ $width-list: 360px;
   padding: 16px;
   border-bottom: $border;
   font-size: 0.9rem;
+  transition: .3s;
   cursor: pointer;
+
+  &:hover {
+    background: var(--background-active);
+  }
+
   &__body {
     display: grid;
     grid-template-columns: auto 1fr;

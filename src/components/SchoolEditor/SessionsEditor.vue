@@ -199,9 +199,9 @@ export default {
       }
     },
     async section_id() {
+      this.entities = [];
       if (this.section_id) {
         this.showLoading("Cargando Sesiones");
-        this.entities = [];
         try {
           this.entities = this.mongoArr(
             await this.$api.session.getAll({

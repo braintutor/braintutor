@@ -1,20 +1,20 @@
 <template>
   <div v-if="this.grades.length > 0" class="editor">
     <!-- EDITOR Menu -->
-    <!-- <input
+    <input
       style="display: none"
       id="ipt_file"
       type="file"
       onclick="this.value=null"
       accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
       @change="onLoadFile($event)"
-    /> -->
+    />
     <div class="editor__menu">
       <h2 class="editor__title">Alumnos</h2>
       <div v-if="sections.length > 0">
-        <!-- <m-btn onclick="ipt_file.click()" color="dark" small class="mr-2">
+        <m-btn onclick="ipt_file.click()" color="dark" small class="mr-2">
           <v-icon left small>mdi-file-excel</v-icon>Importar
-        </m-btn> -->
+        </m-btn>
         <m-btn @click="showCreate()" color="primary" small>
           <v-icon left small>mdi-plus</v-icon>Crear
         </m-btn>
@@ -51,7 +51,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(e, idx) in entities" :key="idx">
+          <tr v-for="(e, idx) in entities_f" :key="idx">
             <td>{{ e.first_name }}</td>
             <td>{{ e.last_name }}</td>
             <td>{{ e.email }}</td>
@@ -82,7 +82,7 @@
           </tr>
         </tbody>
       </table>
-      <p class="text-center mt-4" v-show="entities.length === 0">
+      <p class="text-center mt-4" v-show="entities_f.length === 0">
         No hay alumnos asignados
       </p>
     </div>
@@ -119,6 +119,7 @@
             item-text="name"
             item-value="_id"
             label="Aula"
+            :disabled="action === 'CREATE'"
             required
           ></v-select>
           <v-select
@@ -405,6 +406,11 @@ export default {
     // parent
     dlg_parent: false,
   }),
+  computed: {
+    entities_f() {
+      return this.entities.filter((e) => e.section_id === this.section_id);
+    },
+  },
   watch: {
     async entity() {
       if (this.entity.grade_id) {
@@ -421,9 +427,11 @@ export default {
       }
     },
     async grade_id() {
-      this.entities = [];
       this.showLoading("Cargando Datos");
       try {
+        this.entities = this.mongoArr(
+          await this.$api.student.getAll({ grade_id: this.grade_id })
+        );
         let sections = this.mongoArr(
           await this.$api.section.getAll({ grade_id: this.grade_id })
         );
@@ -436,25 +444,7 @@ export default {
       }
       this.hideLoading();
     },
-    async section_id() {
-      this.entities = [];
-      if (this.section_id) {
-        this.showLoading("Cargando Datos");
-        try {
-          this.entities = this.mongoArr(
-            await this.$api.student.getAll({
-              grade_id: this.grade_id,
-              section_id: this.section_id,
-            })
-          );
-        } catch (error) {
-          this.showMessage("", error.msg || error);
-        }
-        this.hideLoading();
-      }
-    },
     async grade_id_form() {
-      this.loading_btn = true;
       try {
         let sections = this.mongoArr(
           await this.$api.section.getAll({ grade_id: this.grade_id_form })
@@ -462,19 +452,9 @@ export default {
         this.sections_form = [...sections].sort((a, b) =>
           a.name.localeCompare(b.name)
         );
-
-        if (this.entity) {
-          if (
-            !this.sections_form
-              .map((m) => m._id)
-              .includes(this.entity.section_id)
-          )
-            this.entity.section_id = null;
-        }
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
-      this.loading_btn = false;
     },
   },
   async created() {
@@ -498,9 +478,6 @@ export default {
   },
   methods: {
     async save() {
-      if (!(this.grade_id_form && this.entity.section_id) || this.loading_btn)
-        return;
-
       this.loading_btn = true;
       try {
         let entity = {
@@ -510,18 +487,11 @@ export default {
         if (this.action === "CREATE") {
           let { _id } = await this.$api.student.add(entity);
           entity._id = _id;
-          if (
-            entity.grade_id === this.grade_id &&
-            entity.section_id === this.section_id
-          )
-            this.entities.push(entity);
+          if (entity.grade_id === this.grade_id) this.entities.push(entity);
         } else {
           await this.$api.student.update(entity._id, entity);
           let entity_idx = this.entities.findIndex((e) => e._id === entity._id);
-          if (
-            entity.grade_id === this.grade_id &&
-            entity.section_id === this.section_id
-          )
+          if (entity.grade_id === this.grade_id)
             this.entities[entity_idx] = Object.assign({}, entity);
           else this.entities.splice(entity_idx, 1);
         }
