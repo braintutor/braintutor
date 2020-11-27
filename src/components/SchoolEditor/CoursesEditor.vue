@@ -182,7 +182,7 @@ export default {
     teachers_aux() {
       let teachers = this.teachers.map((t) => ({
         ...t,
-        name: `${t.first_name} ${t.last_name}`,
+        name: `${t.last_name}, ${t.first_name}`,
       }));
       return teachers;
     },

@@ -1,6 +1,15 @@
 <template>
   <div style="height: 100%">
     <div v-show="!course_selected" class="m-container">
+      <v-select
+        v-model="level_selected"
+        :items="levels"
+        item-value="_id"
+        item-text="name"
+        label="Nivel"
+        class="px-2 mb-2"
+      ></v-select>
+
       <div
         v-for="(course, idx) in courses"
         :key="idx"
@@ -119,9 +128,25 @@ export default {
     course_selected: null,
     reports: [],
     report_selected: null,
+    levels: [
+      {
+        _id: "PRI",
+        name: "Primaria",
+      },
+      {
+        _id: "SEC",
+        name: "Secundaria",
+      },
+    ],
+    level_selected: "PRI",
     time_start: null,
     time_end: null,
   }),
+  watch: {
+    async level_selected() {
+      await this.init();
+    },
+  },
   async created() {
     let date = new Date();
     this.time_end =
@@ -138,15 +163,21 @@ export default {
       "-" +
       date.getDate().toString().padStart(2, 0);
 
-    this.showLoading("Cargando Cursos");
-    try {
-      this.courses = this.mongoArr(await this.$api.course.getAll());
-    } catch (error) {
-      this.showMessage("", error.msg || error);
-    }
-    this.hideLoading();
+    await this.init();
   },
   methods: {
+    async init() {
+      this.showLoading("Cargando Cursos");
+      this.courses = [];
+      try {
+        this.courses = this.mongoArr(
+          await this.$api.course.getAll({ level: this.level_selected })
+        );
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
+    },
     async showReports(course) {
       this.course_selected = course;
       this.report_selected = null;

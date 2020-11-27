@@ -227,7 +227,7 @@ export default {
       ];
       this.grade_id = this.grades[0] ? this.grades[0]._id : null;
 
-      this.courses = this.mongoArr(await this.$api.course.getAll());
+      this.courses = this.mongoArr(await this.$api.course.getAll({}));
       let teachers = this.mongoArr(await this.$api.teacher.getAll());
       this.teachers = teachers.map((t) => ({
         ...t,
