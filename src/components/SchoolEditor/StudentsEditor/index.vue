@@ -498,8 +498,8 @@ export default {
   },
   methods: {
     async save() {
-      if (!(this.grade_id_form && this.entity.section_id) || this.loading_btn)
-        return;
+      if (this.loading_btn) return;
+      if (!(this.grade_id_form && this.entity.section_id)) return;
 
       this.loading_btn = true;
       try {
