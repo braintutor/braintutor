@@ -36,11 +36,12 @@
           :readonly="readonly"
         />
 
-        <strong>Grado y Sección:</strong>
-        <span v-if="sessions.length > 0">{{
-          sessions.map((s) => `${s.grade.name} - ${s.section.name}`).join(", ")
-        }}</span>
-        <span v-else>...</span>
+        <strong>Grados y Secciones:</strong>
+        <div>
+          <p v-for="(s, idx) in sessions" :key="idx" class="mb-1">
+            {{ `${s.grade.name} - ${s.section.name}` }}
+          </p>
+        </div>
 
         <strong>Docente:</strong>
         <span v-if="course && course.teacher">{{
