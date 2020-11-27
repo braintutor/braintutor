@@ -37,11 +37,12 @@
         />
 
         <strong>Grados y Secciones:</strong>
-        <div>
+        <div v-if="sessions.length > 0">
           <p v-for="(s, idx) in sessions" :key="idx" class="mb-1">
             {{ `${s.grade.name} - ${s.section.name}` }}
           </p>
         </div>
+        <span v-else>...</span>
 
         <strong>Docente:</strong>
         <span v-if="course && course.teacher">{{
