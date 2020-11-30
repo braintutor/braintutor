@@ -1,38 +1,35 @@
 <template>
   <div class="m-container pb-3 px-1">
-    <div>
-      <v-row no-gutters>
-        <v-col class="col-4 px-1">
-          <v-select
-            v-model="level_selected"
-            :items="levels"
-            item-text="name"
-            item-value="_id"
-            label="Nivel"
-          ></v-select>
-        </v-col>
-        <v-col class="col-4 px-1">
-          <v-select
-            v-model="grade_id"
-            :items="grades_f"
-            item-value="_id"
-            item-text="name"
-            label="Grado"
-          ></v-select>
-        </v-col>
-        <v-col class="col-4 px-1">
-          <v-select
-            v-show="sections.length > 0"
-            v-model="section_id"
-            :items="sections"
-            item-text="name"
-            item-value="_id"
-            label="Sección"
-            class="mb-4"
-          ></v-select>
-        </v-col>
-      </v-row>
-    </div>
+    <v-row no-gutters class="mb-3">
+      <v-col class="col-4 px-1">
+        <v-select
+          v-model="level_selected"
+          :items="levels"
+          item-text="name"
+          item-value="_id"
+          label="Nivel"
+        ></v-select>
+      </v-col>
+      <v-col class="col-4 px-1">
+        <v-select
+          v-model="grade_id"
+          :items="grades_f"
+          item-value="_id"
+          item-text="name"
+          label="Grado"
+        ></v-select>
+      </v-col>
+      <v-col class="col-4 px-1">
+        <v-select
+          v-show="sections.length > 0"
+          v-model="section_id"
+          :items="sections"
+          item-text="name"
+          item-value="_id"
+          label="Sección"
+        ></v-select>
+      </v-col>
+    </v-row>
 
     <!-- Sessions -->
     <SessionCard
