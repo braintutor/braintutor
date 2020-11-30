@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-3">
+  <div>
     <div class="m-menu mb-3">
       <div class="m-menu__left">
         <v-btn icon @click="unselect()">
@@ -103,8 +103,6 @@
 <script>
 import TaskCard from "@/components/globals/Task/TaskCard";
 
-import { getStudentsBySession } from "@/services/studentService";
-
 export default {
   props: ["task_id", "unselect"],
   data: () => ({
@@ -150,8 +148,14 @@ export default {
       this.showLoading("Cargando Tarea");
       try {
         this.task = this.mongo(await this.$api.task.get(this.task_id));
+        let session = this.mongo(
+          await this.$api.session.get(this.task.session_id)
+        );
         this.students = this.mongoArr(
-          await getStudentsBySession(this.task.session_id)
+          await this.$api.student.getAll({
+            grade_id: session.grade_id,
+            section_id: session.section_id,
+          })
         );
         this.student_selected = this.students[0];
       } catch (error) {

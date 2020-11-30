@@ -1,7 +1,7 @@
 <template>
   <div class="m-container pb-3 px-1">
     <v-row no-gutters class="mb-3">
-      <v-col class="col-4 px-1">
+      <v-col class="col-4 px-2">
         <v-select
           v-model="level_selected"
           :items="levels"
@@ -10,7 +10,7 @@
           label="Nivel"
         ></v-select>
       </v-col>
-      <v-col class="col-4 px-1">
+      <v-col class="col-4 px-2">
         <v-select
           v-model="grade_id"
           :items="grades_f"
@@ -19,7 +19,7 @@
           label="Grado"
         ></v-select>
       </v-col>
-      <v-col class="col-4 px-1">
+      <v-col class="col-4 px-2">
         <v-select
           v-show="sections.length > 0"
           v-model="section_id"

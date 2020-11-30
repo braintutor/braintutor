@@ -1,6 +1,6 @@
 <template>
   <Layout :links="links">
-    <router-view />
+    <router-view v-if="course._id" :course="course" />
   </Layout>
 </template>
 
@@ -9,7 +9,13 @@ import Layout from "@/components/Layout2";
 
 export default {
   data: () => ({
+    course: {},
     links: [
+      // {
+      //   image: require(`@/assets/icons/icon-course.svg`),
+      //   text: "Aprender",
+      //   name: "director-session-learn",
+      // },
       {
         image: require("@/assets/icons/icon-calendar.svg"),
         text: "Agenda",
@@ -32,14 +38,15 @@ export default {
       },
     ],
   }),
-  // async created() {
-  //   let session_id = this.$router.currentRoute.params["session_id"];
-  //   try {
-  //     this.session = this.mongo(await this.$api.session.get(session_id));
-  //   } catch (error) {
-  //     this.showMessage("", error.msg || error);
-  //   }
-  // },
+  async created() {
+    let session_id = this.$router.currentRoute.params["session_id"];
+    try {
+      let session = this.mongo(await this.$api.session.get(session_id));
+      this.course = session.course;
+    } catch (error) {
+      this.showMessage("", error.msg || error);
+    }
+  },
   components: {
     Layout,
   },

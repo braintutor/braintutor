@@ -255,13 +255,18 @@ const routes = [
     children: [
       {
         path: "",
+        name: "director-session-learn",
+        component: () => import("../components/Materials/index"),
+      },
+      {
+        path: "",
         name: "director-session-events",
         component: () => import("../components/DirectorSession/Events"),
       },
       {
         path: "tasks",
         name: "director-session-tasks",
-        component: () => import("../components/DirectorSession/Tasks"),
+        component: () => import("../components/DirectorSession/Tasks/index"),
       },
       {
         path: "evaluations",

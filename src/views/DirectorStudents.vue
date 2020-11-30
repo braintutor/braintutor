@@ -1,23 +1,40 @@
 <template>
   <div class="m-container px-1">
     <Students :students="students">
-      <v-select
-        v-model="grade_id"
-        :items="grades"
-        item-value="_id"
-        item-text="name"
-        label="Aula"
-        class="px-2 mb-2"
-      ></v-select>
-      <v-select
-        v-show="sections.length > 0"
-        v-model="section_id"
-        :items="sections"
-        item-text="name"
-        item-value="_id"
-        label="Sección"
-        class="px-2 mb-4"
-      ></v-select>
+      <v-row no-gutters class="mb-3">
+        <v-col class="col-4 px-2">
+          <v-select
+            v-model="level_selected"
+            :items="levels"
+            item-text="name"
+            item-value="_id"
+            label="Nivel"
+          ></v-select>
+        </v-col>
+        <v-col class="col-4 px-2">
+          <v-select
+            v-model="grade_id"
+            :items="grades_f"
+            item-value="_id"
+            item-text="name"
+            label="Grado"
+          ></v-select>
+        </v-col>
+        <v-col class="col-4 px-2">
+          <v-select
+            v-show="sections.length > 0"
+            v-model="section_id"
+            :items="sections"
+            item-text="name"
+            item-value="_id"
+            label="Sección"
+          ></v-select>
+        </v-col>
+      </v-row>
+
+      <div v-show="section_id && students.length <= 0" class="text-center mt-3">
+        No hay Alumnos
+      </div>
     </Students>
   </div>
 </template>
@@ -32,25 +49,33 @@ export default {
     sections: [],
     section_id: null,
     students: [],
+    levels: [
+      {
+        _id: "PRI",
+        name: "Primaria",
+      },
+      {
+        _id: "SEC",
+        name: "Secundaria",
+      },
+    ],
+    level_selected: "PRI",
   }),
+  computed: {
+    grades_f() {
+      return this.grades.filter((g) => g.level === this.level_selected);
+    },
+  },
   watch: {
+    level_selected() {
+      this.grade_id = null;
+    },
     async grade_id() {
-      this.$router
-        .push({
-          query: { grade_id: this.grade_id },
-        })
-        .catch(() => {});
+      this.section_id = null;
+      this.sections = [];
 
       if (this.grade_id) {
-        this.$router
-          .push({
-            query: { grade_id: this.grade_id },
-          })
-          .catch(() => {});
-
         this.showLoading("Cargando Aulas");
-        this.sections = [];
-        this.students = [];
         try {
           this.sections = this.mongoArr(
             await this.$api.section.getAll({
@@ -66,9 +91,10 @@ export default {
       }
     },
     async section_id() {
+      this.students = [];
+
       if (this.section_id) {
         this.showLoading("Cargando Alumnos");
-        this.students = [];
         try {
           this.students = this.mongoArr(
             await this.$api.student.getAll({
@@ -85,18 +111,10 @@ export default {
   },
   async created() {
     this.showLoading("Cargando Aulas");
-    let grade_id = this.$route.query.grade_id;
     try {
       let grades = this.mongoArr(await this.$api.grade.getAll());
       grades.sort((a, b) => a.name.localeCompare(b.name));
-      this.grades = [
-        ...grades.filter((g) => g.level === "PRI"),
-        ...grades.filter((g) => g.level === "SEC"),
-      ];
-
-      if (this.grades.map((g) => g._id).includes(grade_id))
-        this.grade_id = grade_id;
-      else this.grade_id = this.grades[0] ? this.grades[0]._id : null;
+      this.grades = grades;
     } catch (error) {
       this.showMessage("", error.msg || error);
     }
