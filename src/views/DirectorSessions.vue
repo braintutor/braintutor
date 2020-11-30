@@ -1,13 +1,19 @@
 <template>
   <div class="m-container pb-3 px-1">
-    <div>
+    <div class="px-2">
+      <v-select
+        v-model="level_selected"
+        :items="levels"
+        item-text="name"
+        item-value="_id"
+        label="Nivel"
+      ></v-select>
       <v-select
         v-model="grade_id"
-        :items="grades"
+        :items="grades_f"
         item-value="_id"
         item-text="name"
-        label="Aula"
-        class="px-2 mb-2"
+        label="Grado"
       ></v-select>
       <v-select
         v-show="sections.length > 0"
@@ -16,40 +22,40 @@
         item-text="name"
         item-value="_id"
         label="Sección"
-        class="px-2 mb-4"
+        class="mb-4"
       ></v-select>
+    </div>
 
-      <!-- Sessions -->
-      <SessionCard
-        v-for="session in sessions"
-        :key="session._id"
-        class="session mb-3"
-        :name="session.course.name"
-        :user="`${session.teacher.last_name}, ${session.teacher.first_name}`"
-        :buttons="[
-          {
-            text: 'Eventos',
-            icon: 'mdi-calendar',
-            color: 'primary',
-            action: () => selectSession(session, 'events'),
-          },
-          {
-            text: 'Tareas',
-            icon: 'mdi-format-list-checks',
-            color: 'success',
-            action: () => selectSession(session, 'tasks'),
-          },
-          {
-            text: 'Evaluaciones',
-            icon: 'mdi-list-status',
-            color: 'warning',
-            action: () => selectSession(session, 'evaluations'),
-          },
-        ]"
-      />
-      <div v-show="sessions.length <= 0" class="text-center mt-3">
-        No hay Sesiones
-      </div>
+    <!-- Sessions -->
+    <SessionCard
+      v-for="session in sessions"
+      :key="session._id"
+      class="session mb-3"
+      :name="session.course.name"
+      :user="`${session.teacher.last_name}, ${session.teacher.first_name}`"
+      :buttons="[
+        {
+          text: 'Eventos',
+          icon: 'mdi-calendar',
+          color: 'primary',
+          action: () => selectSession(session, 'events'),
+        },
+        {
+          text: 'Tareas',
+          icon: 'mdi-format-list-checks',
+          color: 'success',
+          action: () => selectSession(session, 'tasks'),
+        },
+        {
+          text: 'Evaluaciones',
+          icon: 'mdi-list-status',
+          color: 'warning',
+          action: () => selectSession(session, 'evaluations'),
+        },
+      ]"
+    />
+    <div v-show="section_id && sessions.length <= 0" class="text-center mt-3">
+      No hay Sesiones
     </div>
   </div>
 </template>
@@ -64,19 +70,33 @@ export default {
     sections: [],
     section_id: null,
     sessions: [],
+    levels: [
+      {
+        _id: "PRI",
+        name: "Primaria",
+      },
+      {
+        _id: "SEC",
+        name: "Secundaria",
+      },
+    ],
+    level_selected: "PRI",
   }),
+  computed: {
+    grades_f() {
+      return this.grades.filter((g) => g.level === this.level_selected);
+    },
+  },
   watch: {
+    level_selected() {
+      this.grade_id = null;
+    },
     async grade_id() {
-      if (this.grade_id) {
-        this.$router
-          .push({
-            query: { grade_id: this.grade_id },
-          })
-          .catch(() => {});
+      this.section_id = null;
+      this.sections = [];
 
+      if (this.grade_id) {
         this.showLoading("Cargando Aulas");
-        this.sections = [];
-        this.sessions = [];
         try {
           this.sections = this.mongoArr(
             await this.$api.section.getAll({
@@ -92,9 +112,10 @@ export default {
       }
     },
     async section_id() {
+      this.sessions = [];
+
       if (this.section_id) {
         this.showLoading("Cargando Sesiones");
-        this.sessions = [];
         try {
           this.sessions = this.mongoArr(
             await this.$api.session.getAll({
@@ -111,18 +132,10 @@ export default {
   },
   async created() {
     this.showLoading("Cargando Aulas");
-    let grade_id = this.$route.query.grade_id;
     try {
       let grades = this.mongoArr(await this.$api.grade.getAll());
       grades.sort((a, b) => a.name.localeCompare(b.name));
-      this.grades = [
-        ...grades.filter((g) => g.level === "PRI"),
-        ...grades.filter((g) => g.level === "SEC"),
-      ];
-
-      if (this.grades.map((g) => g._id).includes(grade_id))
-        this.grade_id = grade_id;
-      else this.grade_id = this.grades[0] ? this.grades[0]._id : null;
+      this.grades = grades;
     } catch (error) {
       this.showMessage("", error.msg || error);
     }
