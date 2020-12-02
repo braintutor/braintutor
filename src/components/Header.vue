@@ -238,7 +238,7 @@ export default {
     closeSession() {
       this.$store.state.user = null;
       localStorage.removeItem("token");
-      redirect("home");
+      redirect("schools");
     },
     enableFullscreen() {
       let container = document.getElementById("braintutor");
