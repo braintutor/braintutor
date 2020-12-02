@@ -362,6 +362,7 @@
       :parents="parents"
     />
   </div>
+  <div v-else class="text-center my-4">No hay grados creados</div>
 </template>
 
 <script>
