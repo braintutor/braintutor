@@ -45,13 +45,14 @@ export default {
 
 <style lang='scss' scoped>
 .schools {
-  display: flex;
-  justify-content: center;
+  max-width: 600px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 20px;
 }
 
 .school {
-  margin: 10px;
-  max-width: 300px;
   transition: 0.3s;
   box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.15);
   cursor: pointer;
