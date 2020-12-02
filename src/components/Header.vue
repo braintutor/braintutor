@@ -236,9 +236,16 @@ export default {
   methods: {
     redirect,
     closeSession() {
+      let user = this.$store.state.user;
       this.$store.state.user = null;
       localStorage.removeItem("token");
-      redirect("schools");
+
+      if (user && user.school)
+        this.$router.push({
+          name: "login",
+          params: { school_url: user.school.url },
+        });
+      else redirect("schools");
     },
     enableFullscreen() {
       let container = document.getElementById("braintutor");
