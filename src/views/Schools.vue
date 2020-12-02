@@ -46,7 +46,7 @@ export default {
 <style lang='scss' scoped>
 .schools {
   max-width: 600px;
-  margin: 0 auto;
+  margin: 20px auto;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   column-gap: 20px;
