@@ -200,7 +200,7 @@
     v-else
     :task_id="task_show_id"
     :unselect="unselect"
-    class="m-container-plus"
+    class="m-container-plus py-3"
   />
 </template>
 

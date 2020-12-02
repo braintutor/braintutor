@@ -188,8 +188,11 @@ export default {
 
           // Validate Materials
           let progress_materials = (
-            (this.user.progress.find((p) => p._id.$oid === course_id) || {})
-              .materials || []
+            (
+              (this.user.progress || []).find(
+                (p) => p._id.$oid === course_id
+              ) || {}
+            ).materials || []
           ).map((p) => p.$oid); // get progress by course
           progress_materials = progress_materials.filter((pm) =>
             this.materials.map((m) => m._id.$oid).includes(pm)
