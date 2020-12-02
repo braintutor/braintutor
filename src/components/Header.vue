@@ -35,11 +35,7 @@
             <v-btn small text @click="closeSession()">Cerrar Sesión</v-btn>
           </div>
         </div>
-        <v-btn
-          class="header__action"
-          v-else
-          text
-          @click="redirect('login', { school_url: 'maria-prado-de-bellido' })"
+        <v-btn class="header__action" v-else text @click="redirect('schools')"
           >Iniciar Sesión</v-btn
         >
       </div>
@@ -119,7 +115,7 @@
           <v-list-item
             v-else
             @click="
-              redirect('login', { school_url: 'maria-prado-de-bellido' });
+              redirect('schools');
               drawer = false;
             "
           >
