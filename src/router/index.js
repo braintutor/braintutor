@@ -317,7 +317,7 @@ const routes = [
       {
         path: "tasks",
         name: "parent-session-tasks",
-        component: () => import("../components/ParentSession/Tasks"),
+        component: () => import("../components/ParentSession/Tasks/index"),
       },
       {
         path: "evaluations",

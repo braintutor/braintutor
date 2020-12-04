@@ -6,12 +6,6 @@ function getEvaluationsBySession(session_id) {
   })
 }
 
-function getEvaluation(evaluation_id) {
-  return fetch_post('getEvaluation', {
-    evaluation_id
-  })
-}
-
 function getEvaluationsBySessionStudent(id) {
   return fetch_post('getEvaluationsBySessionStudent', {
     id
@@ -85,7 +79,6 @@ function removeResult(evaluation_id, student_id) {
 
 export {
   getEvaluationsBySession,
-  getEvaluation,
   getEvaluationsBySessionStudent,
   getEvaluationsBySessionDirector,
   addEvaluation,
