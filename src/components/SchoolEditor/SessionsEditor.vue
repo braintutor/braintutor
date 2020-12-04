@@ -17,12 +17,19 @@
 
     <!-- EDITOR Filter -->
     <v-select
+      v-model="level_selected"
+      :items="levels"
+      item-text="name"
+      item-value="_id"
+      label="Nivel"
+      class="mt-2"
+    ></v-select>
+    <v-select
       v-model="grade_id"
-      :items="grades"
+      :items="grades_f"
       item-text="name"
       item-value="_id"
       label="Grado"
-      class="mt-3"
     ></v-select>
     <v-select
       v-show="sections.length > 0"
@@ -31,7 +38,6 @@
       item-text="name"
       item-value="_id"
       label="Sección"
-      class="mt-2"
     ></v-select>
 
     <!-- SESSIONS -->
@@ -58,7 +64,7 @@
         </v-menu>
       </div>
 
-      <p v-show="entities.length <= 0" class="text-center my-4">
+      <p v-show="grade_id && entities.length <= 0" class="text-center my-4">
         No hay Sesiones
       </p>
     </div>
@@ -172,18 +178,38 @@ export default {
     grade_id: "",
     sections: [],
     section_id: "",
+    levels: [
+      {
+        _id: "PRI",
+        name: "Primaria",
+      },
+      {
+        _id: "SEC",
+        name: "Secundaria",
+      },
+    ],
+    level_selected: "PRI",
     //
     dlg_create: false,
     dlg_edit: false,
     dlg_remove: false,
     ldg_save: false,
   }),
+  computed: {
+    grades_f() {
+      return this.grades.filter((g) => g.level === this.level_selected);
+    },
+  },
   watch: {
+    level_selected() {
+      this.grade_id = null;
+    },
     async grade_id() {
+      this.section_id = null;
+      this.sections = [];
+
       if (this.grade_id) {
         this.showLoading("Cargando Aulas");
-        this.sections = [];
-        this.entities = [];
         try {
           this.sections = this.mongoArr(
             await this.$api.section.getAll({
@@ -200,6 +226,7 @@ export default {
     },
     async section_id() {
       this.entities = [];
+
       if (this.section_id) {
         this.showLoading("Cargando Sesiones");
         try {
@@ -225,7 +252,7 @@ export default {
         ...grades.filter((g) => g.level === "PRI"),
         ...grades.filter((g) => g.level === "SEC"),
       ];
-      this.grade_id = this.grades[0] ? this.grades[0]._id : null;
+      // this.grade_id = this.grades[0] ? this.grades[0]._id : null;
 
       this.courses = this.mongoArr(await this.$api.course.getAll({}));
       let teachers = this.mongoArr(await this.$api.teacher.getAll());
