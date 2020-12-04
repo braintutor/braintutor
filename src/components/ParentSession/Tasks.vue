@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="m-container">
     <TaskCard
       v-for="(task, idx) in tasks_ordered"
       :key="idx"

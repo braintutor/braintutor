@@ -306,6 +306,11 @@ const routes = [
     children: [
       {
         path: "",
+        name: "parent-session-learn",
+        component: () => import("../components/Materials/index"),
+      },
+      {
+        path: "events",
         name: "parent-session-events",
         component: () => import("../components/ParentSession/Events"),
       },

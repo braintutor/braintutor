@@ -1,6 +1,6 @@
 <template>
-  <Layout :links="links">
-    <router-view />
+  <Layout :links="links" fluid>
+    <router-view v-if="course._id" :course="course" />
   </Layout>
 </template>
 
@@ -9,9 +9,13 @@ import Layout from "@/components/Layout2";
 
 export default {
   data: () => ({
-    session_id: null,
-    session: {},
+    course: {},
     links: [
+      {
+        image: require(`@/assets/icons/icon-course.svg`),
+        text: "Aprender",
+        name: "parent-session-learn",
+      },
       {
         image: require("@/assets/icons/icon-calendar.svg"),
         text: "Agenda",
@@ -34,6 +38,17 @@ export default {
       },
     ],
   }),
+  async created() {
+    let session_id = this.$router.currentRoute.params["session_id"];
+    this.showLoading("Cargando");
+    try {
+      let session = await this.$api.session.get(session_id);
+      this.course = session.course;
+    } catch (error) {
+      this.showMessage("", error.msg || error);
+    }
+    this.hideLoading();
+  },
   components: {
     Layout,
   },

@@ -1,5 +1,5 @@
 <template>
-  <Students :students="students" />
+  <Students :students="students" class="m-container" />
 </template>
 
 <script>

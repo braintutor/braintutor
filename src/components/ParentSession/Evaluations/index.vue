@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="m-container">
     <div v-show="!evaluation_selected">
       <EvaluationCard
         v-for="(evaluation, c_idx) in evaluations_ordered"

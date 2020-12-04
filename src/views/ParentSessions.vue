@@ -18,9 +18,15 @@
       :user="`${session.teacher.last_name}, ${session.teacher.first_name}`"
       :buttons="[
         {
+          text: 'Aprender',
+          icon: 'mdi-book',
+          color: 'primary',
+          action: () => selectSession(session, 'learn'),
+        },
+        {
           text: 'Eventos',
           icon: 'mdi-calendar',
-          color: 'primary',
+          color: 'error',
           action: () => selectSession(session, 'events'),
         },
         {

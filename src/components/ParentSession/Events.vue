@@ -1,5 +1,5 @@
 <template>
-  <div class="pb-3">
+  <div class="m-container">
     <div class="m-legend">
       <div class="m-legend__item">
         <div class="m-legend__name">Eventos</div>
