@@ -29,6 +29,10 @@
           >
         </div>
       </div>
+
+      <p v-show="courses.length <= 0" class="text-center ma-3">
+        No hay Cursos
+      </p>
     </div>
 
     <!-- REPORTS -->
@@ -273,7 +277,7 @@ $width-list: 360px;
   padding: 16px;
   border-bottom: $border;
   font-size: 0.9rem;
-  transition: .3s;
+  transition: 0.3s;
   cursor: pointer;
 
   &:hover {
