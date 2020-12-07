@@ -32,7 +32,7 @@
         </v-col>
       </v-row>
 
-      <div v-show="section_id && students.length <= 0" class="text-center mt-3">
+      <div v-show="grade_id && students.length <= 0" class="text-center mt-3">
         No hay Alumnos
       </div>
     </Students>
