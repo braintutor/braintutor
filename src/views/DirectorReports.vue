@@ -1,14 +1,27 @@
 <template>
   <div style="height: 100%">
     <div v-show="!course_selected" class="m-container">
-      <v-select
-        v-model="level_selected"
-        :items="levels"
-        item-value="_id"
-        item-text="name"
-        label="Nivel"
-        class="px-2 mb-2"
-      ></v-select>
+      <v-row no-gutters class="mb-3">
+        <v-col class="col-6 px-2">
+          <v-select
+            v-model="level_selected"
+            :items="levels"
+            item-value="_id"
+            item-text="name"
+            label="Nivel"
+            class="px-2 mb-2"
+          ></v-select>
+        </v-col>
+        <v-col class="col-6 px-2">
+          <v-select
+            v-model="grade_id"
+            :items="grades_f"
+            item-value="_id"
+            item-text="name"
+            label="Grado"
+          ></v-select>
+        </v-col>
+      </v-row>
 
       <div
         v-for="(course, idx) in courses"
@@ -30,9 +43,7 @@
         </div>
       </div>
 
-      <p v-show="courses.length <= 0" class="text-center ma-3">
-        No hay Cursos
-      </p>
+      <p v-show="courses.length <= 0" class="text-center ma-3">No hay Cursos</p>
     </div>
 
     <!-- REPORTS -->
@@ -128,6 +139,8 @@ import ReportEditor from "@/components/globals/Report/ReportEditor";
 
 export default {
   data: () => ({
+    grades: [],
+    grade_id: null,
     courses: [],
     course_selected: null,
     reports: [],
@@ -146,9 +159,20 @@ export default {
     time_start: null,
     time_end: null,
   }),
+  computed: {
+    grades_f() {
+      return this.grades.filter((g) => g.level === this.level_selected);
+    },
+  },
   watch: {
     async level_selected() {
-      await this.init();
+      this.grade_id = null;
+      await this.search();
+    },
+    async grade_id() {
+      if (this.grade_id) {
+        await this.search();
+      }
     },
   },
   async created() {
@@ -167,16 +191,27 @@ export default {
       "-" +
       date.getDate().toString().padStart(2, 0);
 
-    await this.init();
+    this.showLoading("Cargando Aulas");
+    try {
+      let grades = this.mongoArr(await this.$api.grade.getAll());
+      grades.sort((a, b) => a.name.localeCompare(b.name));
+      this.grades = grades;
+    } catch (error) {
+      this.showMessage("", error.msg || error);
+    }
+    this.hideLoading();
+
+    await this.search();
   },
   methods: {
-    async init() {
+    async search() {
       this.showLoading("Cargando Cursos");
       this.courses = [];
+      let params = { level: this.level_selected };
+      if (this.grade_id) params["grade_id"] = this.grade_id;
+      
       try {
-        this.courses = this.mongoArr(
-          await this.$api.course.getAll({ level: this.level_selected })
-        );
+        this.courses = this.mongoArr(await this.$api.course.getAll(params));
       } catch (error) {
         this.showMessage("", error.msg || error);
       }

@@ -197,6 +197,7 @@ export default {
         }
         return e;
       });
+      entities.sort((a, b) => a.name.localeCompare(b.name));
       return entities;
     },
   },
