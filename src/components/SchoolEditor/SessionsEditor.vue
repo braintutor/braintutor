@@ -64,7 +64,7 @@
         </v-menu>
       </div>
 
-      <p v-show="grade_id && entities.length <= 0" class="text-center my-4">
+      <p v-show="section_id && entities.length <= 0" class="text-center my-4">
         No hay Sesiones
       </p>
     </div>

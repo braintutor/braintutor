@@ -77,13 +77,18 @@ export default {
       if (this.grade_id) {
         this.showLoading("Cargando Aulas");
         try {
+          this.students = this.mongoArr(
+            await this.$api.student.getAll({
+              grade_id: this.grade_id,
+            })
+          );
           this.sections = this.mongoArr(
             await this.$api.section.getAll({
               grade_id: this.grade_id,
             })
           );
           this.sections.sort((a, b) => a.name.localeCompare(b.name));
-          this.section_id = this.sections[0] ? this.sections[0]._id : null;
+          // this.section_id = this.sections[0] ? this.sections[0]._id : null;
         } catch (error) {
           this.showMessage("", error.msg || error);
         }
