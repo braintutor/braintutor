@@ -1,26 +1,46 @@
 <template>
   <div class="m-container">
-    <TaskCard
-      v-for="(task, idx) in tasks_ordered"
-      :key="idx"
-      :time_start="task.time_start"
-      :title="task.title"
-      :description="task.description"
-      disabled
-      class="mb-3"
-    />
-    <div v-show="tasks_ordered.length <= 0" class="text-center">
-      No hay Tareas
+    <div v-show="!task_show_id">
+      <TaskCard
+        v-for="(task, idx) in tasks_ordered"
+        :key="idx"
+        :time_start="task.time_start"
+        :title="task.title"
+        :description="task.description"
+        :buttons="[
+          {
+            text: 'Ver Respuestas',
+            action: () => {
+              showAnswers(task._id);
+            },
+          },
+        ]"
+        disabled
+        class="mb-3"
+      />
+      <div v-show="tasks_ordered.length <= 0" class="text-center">
+        No hay Tareas
+      </div>
     </div>
+
+    <!-- TASK -->
+    <Task
+      v-if="task_show_id"
+      :task_id="task_show_id"
+      :unselect="unselect"
+      class="m-container-plus py-3"
+    />
   </div>
 </template>
 
 <script>
 import TaskCard from "@/components/globals/Task/TaskCard";
+import Task from "./Task";
 
 export default {
   data: () => ({
     tasks: [],
+    task_show_id: null,
   }),
   computed: {
     tasks_ordered() {
@@ -37,8 +57,17 @@ export default {
     }
     this.hideLoading();
   },
+  methods: {
+    showAnswers(task_id) {
+      this.task_show_id = task_id;
+    },
+    unselect() {
+      this.task_show_id = null;
+    },
+  },
   components: {
     TaskCard,
+    Task,
   },
 };
 </script>
