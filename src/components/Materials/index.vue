@@ -147,7 +147,7 @@
 <script>
 import FS from "./FS/index";
 
-import { getQuestionTemplate } from "@/services/chatService";
+// import { getQuestionTemplate } from "@/services/chatService";
 import {
   getCategoriesByLearningStyle,
   updateStudentProgress,
@@ -240,75 +240,75 @@ export default {
           let knowledge = this.course.knowledge || [];
 
           // Knowledge Material
-          if (this.course.adaptive) {
-            let question_template = await getQuestionTemplate();
-            this.materials.forEach((material) => {
-              Object.entries(question_template).forEach(
-                ([category, questions]) => {
-                  if (questions[0]) {
-                    questions = questions.map((question) =>
-                      question.replace(/@/, material.name)
-                    );
-                    knowledge.push({
-                      questions,
-                      answers: [
-                        "Esto te puede servir.",
-                        "He encontrado esta información.",
-                      ],
-                      actions: [
-                        {
-                          text: "Ver información",
-                          action: () =>
-                            this.selectMaterialByID(
-                              material._id.$oid,
-                              category
-                            ),
-                        },
-                      ],
-                    });
-                  }
-                }
-              );
-              // FS
-              material.data_fs.faq.forEach(({ question, answer }) => {
-                knowledge.push({
-                  questions: [question],
-                  answers: [answer],
-                  actions: [
-                    {
-                      text: "Ver información",
-                      action: () =>
-                        this.selectMaterialByID(material._id.$oid, null),
-                    },
-                  ],
-                });
-              });
+          // if (this.course.adaptive) {
+          //   let question_template = await getQuestionTemplate();
+          //   this.materials.forEach((material) => {
+          //     Object.entries(question_template).forEach(
+          //       ([category, questions]) => {
+          //         if (questions[0]) {
+          //           questions = questions.map((question) =>
+          //             question.replace(/@/, material.name)
+          //           );
+          //           knowledge.push({
+          //             questions,
+          //             answers: [
+          //               "Esto te puede servir.",
+          //               "He encontrado esta información.",
+          //             ],
+          //             actions: [
+          //               {
+          //                 text: "Ver información",
+          //                 action: () =>
+          //                   this.selectMaterialByID(
+          //                     material._id.$oid,
+          //                     category
+          //                   ),
+          //               },
+          //             ],
+          //           });
+          //         }
+          //       }
+          //     );
+          //     // FS
+          //     material.data_fs.faq.forEach(({ question, answer }) => {
+          //       knowledge.push({
+          //         questions: [question],
+          //         answers: [answer],
+          //         actions: [
+          //           {
+          //             text: "Ver información",
+          //             action: () =>
+          //               this.selectMaterialByID(material._id.$oid, null),
+          //           },
+          //         ],
+          //       });
+          //     });
+          //   });
+          // } else {
+          let questions = [
+            "Muéstrame información sobre @.",
+            "Háblame sobre @.",
+            "Explícame sobre @.",
+          ];
+          this.materials.forEach((material) => {
+            knowledge.push({
+              questions: questions.map((question) =>
+                question.replace(/@/, material.name)
+              ),
+              answers: [
+                "Esto te puede servir.",
+                "He encontrado esta información.",
+              ],
+              actions: [
+                {
+                  text: "Ver información",
+                  action: () =>
+                    this.selectMaterialByID(material._id.$oid, null),
+                },
+              ],
             });
-          } else {
-            let questions = [
-              "Muéstrame información sobre @.",
-              "Háblame sobre @.",
-              "Explícame sobre @.",
-            ];
-            this.materials.forEach((material) => {
-              knowledge.push({
-                questions: questions.map((question) =>
-                  question.replace(/@/, material.name)
-                ),
-                answers: [
-                  "Esto te puede servir.",
-                  "He encontrado esta información.",
-                ],
-                actions: [
-                  {
-                    text: "Ver información",
-                    action: () =>
-                      this.selectMaterialByID(material._id.$oid, null),
-                  },
-                ],
-              });
-            });
-          }
+          });
+          // }
           this.knowledge(knowledge);
         } catch (error) {
           this.showMessage("", error.msg || error);
