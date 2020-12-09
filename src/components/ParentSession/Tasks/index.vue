@@ -24,12 +24,7 @@
     </div>
 
     <!-- TASK -->
-    <Task
-      v-if="task_show_id"
-      :task_id="task_show_id"
-      :unselect="unselect"
-      class="m-container-plus py-3"
-    />
+    <Task v-if="task_show_id" :task_id="task_show_id" :unselect="unselect" />
   </div>
 </template>
 
