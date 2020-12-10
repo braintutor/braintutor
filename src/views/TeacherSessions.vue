@@ -6,7 +6,7 @@
     </h1>
 
     <!-- Sessions -->
-    <SessionCard
+    <!-- <SessionCard
       v-for="session in sessions"
       :key="session._id"
       class="session mb-3"
@@ -36,6 +36,34 @@
           text: 'Evaluaciones',
           icon: 'mdi-list-status',
           color: 'warning',
+          action: () => selectSession(session, 'evaluations'),
+        },
+      ]"
+    /> -->
+    <SessionCard
+      v-for="session in sessions"
+      :key="session._id"
+      class="mb-3"
+      :session="session"
+      :buttons="[
+        {
+          text: 'Aprender',
+          icon: 'mdi-book',
+          action: () => selectSession(session, 'learn'),
+        },
+        {
+          text: 'Eventos',
+          icon: 'mdi-calendar',
+          action: () => selectSession(session, 'events'),
+        },
+        {
+          text: 'Tareas',
+          icon: 'mdi-format-list-checks',
+          action: () => selectSession(session, 'tasks'),
+        },
+        {
+          text: 'Evaluaciones',
+          icon: 'mdi-list-status',
           action: () => selectSession(session, 'evaluations'),
         },
       ]"

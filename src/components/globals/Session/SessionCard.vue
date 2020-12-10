@@ -1,28 +1,33 @@
 <template>
   <div class="session m-card">
     <div class="m-card__body">
-      <p class="session__course">{{ name }}</p>
-      <div class="session__user">
-        <v-icon class="session__avatar">{{
-          user_icon || "mdi-account"
-        }}</v-icon>
+      <div class="mb-3">
+        <span class="session__level">{{ levels[session.grade.level] }}</span>
+        <span class="session__grade">{{ session.grade.name }}</span>
+        <span class="session__section">{{ session.section.name }}</span>
+      </div>
+      <h2 class="session__course mb-3">
+        {{ session.course.name }}
+      </h2>
+      <div class="session__teacher mb-3">
+        <v-icon class="session__avatar mr-2">mdi-account</v-icon>
         <span class="mt-1">
-          {{ user }}
+          {{ `${session.teacher.last_name}, ${session.teacher.first_name}` }}
         </span>
       </div>
     </div>
-    <div class="session__actions m-card__actions">
+    <div class="m-card__actions">
       <m-btn
         v-for="(button, idx) in buttons"
         :key="idx"
         @click="button.action()"
-        :color="button.color"
-        text
+        color="primary"
         small
+        text
         class="ml-2"
       >
         <span class="session__btn-text">{{ button.text }}</span>
-        <v-icon class="session__icon" style="font-size: 1.5rem">{{
+        <v-icon class="session__icon" style="font-size: 1.4rem">{{
           button.icon
         }}</v-icon>
       </m-btn>
@@ -33,38 +38,46 @@
 <script>
 export default {
   props: {
-    name: String,
-    user: String,
-    user_icon: String,
+    session: Object,
     buttons: Array,
   },
+  data: () => ({
+    levels: {
+      PRI: "Primaria",
+      SEC: "Secundaria",
+    },
+  }),
 };
 </script>
 
 <style lang='scss' scoped>
+$color: #5299f7;
+
 .session {
-  &__course {
-    margin-bottom: 12px;
-    color: #2b2e4a;
-    font-size: 1.5rem;
-    font-weight: bold;
+  &__level {
+    padding-right: 8px;
+    color: $color;
+    font-size: 0.85rem;
+    border-right: 1px solid $color;
   }
-  &__user {
-    color: #3f4158;
-    display: flex;
-    align-items: center;
+  &__grade {
+    padding: 0 8px;
+    color: $color;
+    font-size: 0.85rem;
+    border-right: 1px solid $color;
+  }
+  &__section {
+    padding: 0 8px;
+    color: $color;
+    font-size: 0.85rem;
   }
   &__avatar {
     height: 1.5rem;
     width: 1.5rem;
-    margin-right: 16px;
-    background: var(--color-active);
+    background: $color;
     color: #fff;
     font-size: 1rem;
     border-radius: 50%;
-  }
-  &__actions {
-    flex-wrap: wrap;
   }
   &__icon {
     display: none;
