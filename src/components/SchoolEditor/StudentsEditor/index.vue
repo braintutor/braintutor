@@ -21,31 +21,38 @@
       </div>
     </div>
     <!-- EDITOR Filter -->
-    <v-select
-      v-model="level_selected"
-      :items="levels"
-      item-text="name"
-      item-value="_id"
-      label="Nivel"
-      class="mt-2"
-    ></v-select>
-    <v-select
-      v-model="grade_id"
-      :items="grades_f"
-      item-text="name"
-      item-value="_id"
-      label="Grado"
-    ></v-select>
-    <v-select
-      v-show="sections.length > 0"
-      v-model="section_id"
-      :items="sections"
-      item-text="name"
-      item-value="_id"
-      label="Sección"
-    ></v-select>
+    <div class="row no-gutters">
+      <div class="col-4 pr-4">
+        <v-select
+          v-model="level_selected"
+          :items="levels"
+          item-text="name"
+          item-value="_id"
+          label="Nivel"
+        ></v-select>
+      </div>
+      <div class="col-4 pr-2">
+        <v-select
+          v-model="grade_id"
+          :items="grades_f"
+          item-text="name"
+          item-value="_id"
+          label="Grado"
+        ></v-select>
+      </div>
+      <div class="col-4 pl-2">
+        <v-select
+          v-show="sections.length > 0"
+          v-model="section_id"
+          :items="sections"
+          item-text="name"
+          item-value="_id"
+          label="Sección"
+        ></v-select>
+      </div>
+    </div>
     <!-- EDITOR Table -->
-    <div v-if="section_id" class="editor__table mt-4">
+    <div v-if="section_id" class="editor__table mt-2">
       <table class="m-table">
         <thead>
           <tr>
