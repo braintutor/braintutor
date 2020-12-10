@@ -11,7 +11,7 @@
     /> -->
     <div class="editor__menu">
       <h2 class="editor__title">Alumnos</h2>
-      <div v-if="sections.length > 0">
+      <div v-if="section_id">
         <!-- <m-btn onclick="ipt_file.click()" color="dark" small class="mr-2">
           <v-icon left small>mdi-file-excel</v-icon>Importar
         </m-btn> -->
@@ -19,16 +19,22 @@
           <v-icon left small>mdi-plus</v-icon>Crear
         </m-btn>
       </div>
-      <strong v-else>No hay Secciones</strong>
     </div>
     <!-- EDITOR Filter -->
     <v-select
+      v-model="level_selected"
+      :items="levels"
+      item-text="name"
+      item-value="_id"
+      label="Nivel"
+      class="mt-2"
+    ></v-select>
+    <v-select
       v-model="grade_id"
-      :items="grades"
+      :items="grades_f"
       item-text="name"
       item-value="_id"
       label="Grado"
-      class="mt-3"
     ></v-select>
     <v-select
       v-show="sections.length > 0"
@@ -39,7 +45,7 @@
       label="Sección"
     ></v-select>
     <!-- EDITOR Table -->
-    <div class="editor__table mt-4">
+    <div v-if="section_id" class="editor__table mt-4">
       <table class="m-table">
         <thead>
           <tr>
@@ -386,6 +392,17 @@ export default {
     sections: [],
     section_id: "",
     sections_form: [],
+    levels: [
+      {
+        _id: "PRI",
+        name: "Primaria",
+      },
+      {
+        _id: "SEC",
+        name: "Secundaria",
+      },
+    ],
+    level_selected: "PRI",
     parents: [],
     UserModel,
     //
@@ -406,7 +423,15 @@ export default {
     // parent
     dlg_parent: false,
   }),
+  computed: {
+    grades_f() {
+      return this.grades.filter((g) => g.level === this.level_selected);
+    },
+  },
   watch: {
+    level_selected() {
+      this.grade_id = null;
+    },
     async entity() {
       if (this.entity.grade_id) {
         try {
@@ -422,23 +447,28 @@ export default {
       }
     },
     async grade_id() {
-      this.entities = [];
-      this.showLoading("Cargando Datos");
-      try {
-        let sections = this.mongoArr(
-          await this.$api.section.getAll({ grade_id: this.grade_id })
-        );
-        this.sections = [...sections].sort((a, b) =>
-          a.name.localeCompare(b.name)
-        );
-        this.section_id = this.sections[0] ? this.sections[0]._id : null;
-      } catch (error) {
-        this.showMessage("", error.msg || error);
+      this.section_id = null;
+      this.sections = [];
+
+      if (this.grade_id) {
+        this.showLoading("Cargando Datos");
+        try {
+          let sections = this.mongoArr(
+            await this.$api.section.getAll({ grade_id: this.grade_id })
+          );
+          this.sections = [...sections].sort((a, b) =>
+            a.name.localeCompare(b.name)
+          );
+          this.section_id = this.sections[0] ? this.sections[0]._id : null;
+        } catch (error) {
+          this.showMessage("", error.msg || error);
+        }
+        this.hideLoading();
       }
-      this.hideLoading();
     },
     async section_id() {
       this.entities = [];
+
       if (this.section_id) {
         this.showLoading("Cargando Datos");
         try {
@@ -490,7 +520,7 @@ export default {
 
       if (this.grades.length > 0) {
         this.parents = this.mongoArr(await getParents());
-        this.grade_id = this.grades[0]._id;
+        // this.grade_id = this.grades[0]._id;
       }
     } catch (error) {
       this.showMessage("", error.msg || error);
