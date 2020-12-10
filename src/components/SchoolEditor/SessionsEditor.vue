@@ -48,7 +48,7 @@
     </div>
 
     <!-- SESSIONS -->
-    <div class="mt-2">
+    <div class="mt-3">
       <div v-for="(e, idx) in entities" :key="idx" class="session mb-3">
         <div class="session__body">
           <span>{{ e.course.name }}</span>
