@@ -16,32 +16,39 @@
     </div>
 
     <!-- EDITOR Filter -->
-    <v-select
-      v-model="level_selected"
-      :items="levels"
-      item-text="name"
-      item-value="_id"
-      label="Nivel"
-      class="mt-2"
-    ></v-select>
-    <v-select
-      v-model="grade_id"
-      :items="grades_f"
-      item-text="name"
-      item-value="_id"
-      label="Grado"
-    ></v-select>
-    <v-select
-      v-show="sections.length > 0"
-      v-model="section_id"
-      :items="sections"
-      item-text="name"
-      item-value="_id"
-      label="Sección"
-    ></v-select>
+    <div class="row no-gutters mt-2">
+      <div class="col-4 pr-4">
+        <v-select
+          v-model="level_selected"
+          :items="levels"
+          item-text="name"
+          item-value="_id"
+          label="Nivel"
+        ></v-select>
+      </div>
+      <div class="col-4 pr-2">
+        <v-select
+          v-model="grade_id"
+          :items="grades_f"
+          item-text="name"
+          item-value="_id"
+          label="Grado"
+        ></v-select>
+      </div>
+      <div class="col-4 pl-2">
+        <v-select
+          v-show="sections.length > 0"
+          v-model="section_id"
+          :items="sections"
+          item-text="name"
+          item-value="_id"
+          label="Sección"
+        ></v-select>
+      </div>
+    </div>
 
     <!-- SESSIONS -->
-    <div class="mt-4">
+    <div class="mt-2">
       <div v-for="(e, idx) in entities" :key="idx" class="session mb-3">
         <div class="session__body">
           <span>{{ e.course.name }}</span>

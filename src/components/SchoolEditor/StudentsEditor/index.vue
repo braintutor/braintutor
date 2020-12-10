@@ -21,7 +21,7 @@
       </div>
     </div>
     <!-- EDITOR Filter -->
-    <div class="row no-gutters">
+    <div class="row no-gutters mt-2">
       <div class="col-4 pr-4">
         <v-select
           v-model="level_selected"
