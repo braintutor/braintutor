@@ -9,9 +9,8 @@
     <SessionCard
       v-for="session in sessions"
       :key="session._id"
-      class="session mb-3"
-      :name="session.course.name"
-      :user="`${session.teacher.last_name}, ${session.teacher.first_name}`"
+      class="mb-3"
+      :session="session"
       :buttons="[
         {
           text: 'Aprender',

@@ -21,7 +21,7 @@
         v-for="(button, idx) in buttons"
         :key="idx"
         @click="button.action()"
-        color="primary"
+        :color="button.color"
         small
         text
         class="ml-2"

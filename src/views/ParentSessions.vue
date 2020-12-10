@@ -14,8 +14,7 @@
       v-for="session in sessions"
       :key="session._id"
       class="mb-3"
-      :name="session.course.name"
-      :user="`${session.teacher.last_name}, ${session.teacher.first_name}`"
+      :session="session"
       :buttons="[
         {
           text: 'Aprender',
