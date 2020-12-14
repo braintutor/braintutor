@@ -133,7 +133,7 @@
 </template>
 
 <script>
-import DocumentEditor from "@/components/globals/DocumentEditor";
+import DocumentEditor from "@/components/globals/DocumentEditor/index";
 import Exercises from "./Exercises";
 import Quizzes from "./Quizzes";
 

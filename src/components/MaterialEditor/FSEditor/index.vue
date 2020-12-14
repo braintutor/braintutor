@@ -65,7 +65,7 @@
 import TextEditor from "./TextEditor";
 import QuizEditor from "@/components/globals/QuizEditor";
 import FAQEditor from "./FAQEditor";
-import DocumentEditor from "@/components/globals/DocumentEditor";
+import DocumentEditor from "@/components/globals/DocumentEditor/index";
 
 import { updateMaterialCategory } from "@/services/materialService";
 
