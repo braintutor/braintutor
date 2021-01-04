@@ -97,6 +97,7 @@
             type="file"
             onclick="value = null"
             @change="onFileSelected"
+            class="mx-3"
           />
         </div>
       </div>
