@@ -26,7 +26,7 @@
     </div>
     <!-- Services -->
     <div class="m-container-plus">
-      <div class="services-container">
+      <div class="services-container container">
         <span class="services-title">Servicios</span>
         <div class="row">
           <div v-for="(service, s_idx) in services" :key="s_idx" class="col-sm-6 col-md-4">
@@ -44,7 +44,7 @@
       </div>
     </div>
     <!-- Secondary -->
-    <div class="m-container-plus">
+    <div class="m-container-plus container">
       <div class="secondary-container row" v-for="(post, p_idx) in posts" :key="p_idx">
         <div class="secondary-content col-sm-4">
           <h1 class="secondary-title">{{post.title}}</h1>
@@ -190,7 +190,7 @@ export default {
 }
 
 .services-container {
-  padding: 0 10px 14vw 10px;
+  padding: 0 14px 110px 14px;
   .services-title {
     display: block;
     margin-bottom: calc(2px + 2vw);
