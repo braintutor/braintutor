@@ -21,5 +21,4 @@ yarn-error.log*
 *.sw?
 
 
-deploy-project.sh
-deploy-page.sh
+*.sh
