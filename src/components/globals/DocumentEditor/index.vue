@@ -33,12 +33,13 @@ import Header from "@editorjs/header";
 import List from "@editorjs/list";
 // import SimpleImage from "@editorjs/simple-image";
 import Marker from "@editorjs/marker";
-import Embed from "@editorjs/embed";
+// import Embed from "@editorjs/embed";
 import LinkTool from "@editorjs/link";
 import Delimiter from "@editorjs/delimiter";
 import Table from "@editorjs/table";
 
 import Image from "./Image";
+import Embed from "./Embed";
 
 import { convertToHMTL } from "@/services/editor";
 
