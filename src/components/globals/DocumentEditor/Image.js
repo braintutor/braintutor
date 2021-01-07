@@ -30,12 +30,12 @@ export default class Image {
         let button = document.createElement("button");
         button.innerText = "Añadir Imagen";
         button.addEventListener("click", () => {
-            window.showFiles(custom_id);
+            window.showFiles(custom_id, ['image']);
         });
 
         this.wrapper.appendChild(input);
         this.wrapper.appendChild(button);
-        window.showFiles(custom_id);
+        window.showFiles(custom_id, ['image']);
 
         return this.wrapper;
     }
