@@ -48,6 +48,18 @@
     >
       <template v-slot:event_info="{ event, methods }">
         <div>
+          <div v-if="event.videocall" class="mb-2">
+            <a
+              :href="event.videocall"
+              target="_blank"
+              class="m-btn m-btn--success m-btn--small"
+              style="text-decoration: none; color: #fff"
+            >
+              <v-icon class="mr-1 mb-1" style="font-size: 1.2rem"
+                >mdi-video</v-icon
+              >Unirse a videollamada</a
+            >
+          </div>
           <div v-if="event.type === 'event'" class="m-card__actions pa-0 pt-4">
             <m-btn
               color="primary"
@@ -131,6 +143,58 @@
               label="Descripción"
               required
             ></v-textarea>
+            <div v-if="new_event.videocall">
+              <div>
+                <a
+                  :href="new_event.videocall"
+                  target="_blank"
+                  class="m-btn m-btn--success m-btn--small"
+                  style="text-decoration: none; color: #fff"
+                >
+                  <v-icon class="mr-1 mb-1" style="font-size: 1.2rem"
+                    >mdi-video</v-icon
+                  >Unirse a videollamada</a
+                >
+                <v-btn icon small class="ml-2" @click="copyClipboard()">
+                  <v-icon>mdi-content-copy</v-icon>
+                </v-btn>
+                <v-btn
+                  icon
+                  small
+                  @click="
+                    new_event.videocall = null;
+                    $forceUpdate();
+                  "
+                  class="ml-2"
+                >
+                  <v-icon>mdi-close</v-icon>
+                </v-btn>
+              </div>
+              <span id="videocall" style="font-size: 0.75rem; color: #696969">{{
+                new_event.videocall
+              }}</span>
+              <input
+                id="ipt-videocall"
+                type="text"
+                :value="new_event.videocall"
+                style="display: none"
+              />
+            </div>
+            <m-btn
+              v-else
+              @click="addVideo"
+              color="success"
+              :rounded="false"
+              small
+              type="button"
+              class="mr-2"
+              :loading="ldg_videocall"
+            >
+              <v-icon class="mr-1 mb-1" style="font-size: 1.2rem"
+                >mdi-video</v-icon
+              >
+              Añadir videollamada
+            </m-btn>
           </div>
         </div>
         <div class="m-card__actions">
@@ -192,6 +256,7 @@ export default {
     new_event: {},
     //
     action: "",
+    ldg_videocall: false,
     dlg_create: false,
     dlg_delete: false,
     EventModel,
@@ -319,6 +384,24 @@ export default {
       this.event_selected = event;
       this.dlg_delete = true;
       if (next) next();
+    },
+    addVideo() {
+      if (this.ldg_videocall) return;
+
+      this.ldg_videocall = true;
+      setTimeout(() => {
+        this.new_event.videocall = "https://meet.google.com/tjg-gpoi-pub";
+        this.ldg_videocall = false;
+        this.$forceUpdate();
+      }, 1000);
+    },
+    copyClipboard() {
+      var hidden = document.getElementById("ipt-videocall");
+      hidden.style.display = "block";
+      hidden.select();
+      hidden.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+      hidden.style.display = "none";
     },
   },
 };
