@@ -126,8 +126,9 @@
               v-for="(alternative, a_idx) in c.alternatives"
               :key="a_idx"
             >
+              <v-radio :disabled="evaluation.public" :value="a_idx"></v-radio>
               <div
-                class="question-editor-alternative-content question-editor-text m-card"
+                class="question-editor-alternative-content question-editor-text"
               >
                 <v-textarea
                   v-if="!evaluation.public"
@@ -154,7 +155,6 @@
                   <span>Eliminar</span>
                 </v-tooltip>
               </div>
-              <v-radio :disabled="evaluation.public" :value="a_idx"></v-radio>
             </div>
             <div
               v-if="
