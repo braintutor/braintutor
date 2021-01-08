@@ -11,6 +11,10 @@
           class="mt-3"
           required
         ></v-text-field>
+        <v-checkbox
+          v-model="isPrivate"
+          label="Privado"
+        ></v-checkbox>
       </div>
       <div class="m-card__actions">
         <m-btn type="submit" color="primary" small>Guardar</m-btn>
@@ -66,6 +70,7 @@ export default {
     //
     dlg_remove: false,
     MaterialModel,
+    isPrivate: true,
   }),
   created() {
     this.material_clone = Object.assign({}, this.material);
@@ -76,7 +81,7 @@ export default {
       let material_id = this.material._id.$oid;
       let { name } = this.material_clone;
       try {
-        await updateMaterial(material_id, name);
+        await updateMaterial(material_id, name, this.isPrivate);
         this.material.name = name;
       } catch (error) {
         this.showMessage("", error.msg || error);
@@ -95,45 +100,7 @@ export default {
       }
       this.hideLoading();
     },
-    // async saveImage() {
-    //   this.showLoading("Guardando Imagen");
-    //   let material_id = this.material._id.$oid;
-    //   try {
-    //     await updateMaterialImage(material_id, this.image_url);
-    //     this.material.image = this.image_url;
-    //   } catch (error) {
-    //   this.showMessage("", error.msg || error);
-    //   }
-    //   this.hideLoading();
-    // },
-    // async onFileSelected() {
-    //   this.showLoading("Subiendo Archivo");
-    //   var data = new FormData();
-    //   data.append("file", this.image_file);
-    //   data.append("material_id", this.material._id.$oid);
-    //   try {
-    //     let res = await fetch(
-    //       `${process.env.VUE_APP_API_URL}/uploadMaterialImage`,
-    //       {
-    //         method: "POST",
-    //         body: data,
-    //         headers: {
-    //           Authorization: `Bearer ${localStorage.getItem("token")}`,
-    //         },
-    //       }
-    //     );
-    //     if (res.status === 413)
-    //       throw { msg: "El archivo excede el tamaño de 1MB" };
-    //     if (res.status >= 400 && res.status < 600) throw await res.json();
 
-    //     let { url } = await res.json();
-    //     this.image_url = url;
-    //     await this.saveImage();
-    //   } catch (error) {
-    //   this.showMessage("", error.msg || error);
-    //   }
-    //   this.hideLoading();
-    // },
   },
 };
 </script>

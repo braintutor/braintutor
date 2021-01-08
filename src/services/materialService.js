@@ -22,11 +22,11 @@ function updateMaterialDocuments(material_id, documents) {
   });
 }
 
-function updateMaterial(id, name, description) {
+function updateMaterial(id, name, isPrivate) {
   return fetch_post("updateMaterial", {
     id,
     name,
-    description,
+    is_private: isPrivate,
   });
 }
 
