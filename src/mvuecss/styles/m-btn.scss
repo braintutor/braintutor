@@ -109,6 +109,7 @@
         // background: transparent;
         background: nth($value, 1);
         box-shadow: none;
+        border: 1px solid nth($value, 2);
         & * {
           color: nth($value, 3) !important;
         }

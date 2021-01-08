@@ -17,7 +17,7 @@
         @file="onFileSelected"
         :document_type="document_type"
         :document_id="document_id"
-        :filters="['image']"
+        :filters="filters"
         class="m-card"
         style="height: 75vh"
       />
@@ -62,12 +62,14 @@ export default {
     editor: null,
     showFiles: false,
     input_id: null,
+    filters: [],
   }),
   mounted() {
     this.init();
-    window.showFiles = (input_id) => {
+    window.showFiles = (input_id, filters) => {
       this.showFiles = true;
       this.input_id = input_id;
+      this.filters = filters;
     };
   },
   methods: {

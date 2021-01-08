@@ -12,50 +12,79 @@ export default class Embed {
     }
     render() {
         this.wrapper = document.createElement("div");
-        this.wrapper.classList.add("m-editor-img");
+        this.wrapper.classList.add("m-editor-iframe");
 
-        if (this.data && this.data.url) {
-            this._createImage(this.data.url);
+        if (this.data && this.data.embed) {
+            this._createImage(this.data.embed);
             return this.wrapper;
         }
 
         let custom_id = new Date().getTime();
+        let custom_id_url = new Date().getTime() + "_";
 
         let input = document.createElement("input");
         input.setAttribute("id", custom_id);
+        input.style.display = "none";
         input.addEventListener("click", (e) => {
             this._createImage(e.target.value);
         });
 
+        let input_url = document.createElement("input");
+        input_url.setAttribute("id", custom_id_url);
+        input_url.setAttribute("placeholder", 'Ingresar URL');
+
+        let button_url = document.createElement("button");
+        button_url.innerText = "Añadir URL";
+        button_url.addEventListener("click", () => {
+            if (input_url.value) {
+                let url = this._getEmbed(input_url.value)
+                this._createImage(url)
+            }
+        });
+
         let button = document.createElement("button");
-        button.innerText = "Añadir Imagen";
+        button.innerText = "Añadir Video";
         button.addEventListener("click", () => {
-            window.showFiles(custom_id);
+            window.showFiles(custom_id, ['video', 'audio']);
         });
 
         this.wrapper.appendChild(input);
+        this.wrapper.appendChild(input_url);
+        this.wrapper.appendChild(button_url);
         this.wrapper.appendChild(button);
-        window.showFiles(custom_id);
 
         return this.wrapper;
     }
     save(blockContent) {
-        const image = blockContent.querySelector("img");
+        const iframe = blockContent.querySelector("iframe");
 
         return {
-            url: image ? image.src : "",
+            embed: iframe ? iframe.src : "",
         };
     }
     validate(savedData) {
-        if (!savedData.url.trim()) return false;
+        if (!savedData.embed.trim()) return false;
 
         return true;
     }
-    _createImage(url) {
-        const image = document.createElement("img");
-        image.src = url;
+    _createImage(embed) {
+        const div = document.createElement("div");
+        const iframe = document.createElement("iframe");
+        iframe.src = embed;
 
         this.wrapper.innerHTML = "";
-        this.wrapper.appendChild(image);
+        div.appendChild(iframe);
+        this.wrapper.appendChild(div);
+    }
+    //
+    _getEmbed(url) {
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+        const match = url.match(regExp);
+
+        let youtube_id = (match && match[2].length === 11)
+            ? match[2]
+            : null;
+
+        return `//www.youtube.com/embed/${youtube_id}`
     }
 }

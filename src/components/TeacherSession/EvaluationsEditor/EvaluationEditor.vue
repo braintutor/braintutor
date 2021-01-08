@@ -90,13 +90,20 @@
             </v-btn>
           </div>
           <span v-else>{{ c.question }}</span>
-          <v-btn
-            v-if="!evaluation.public && evaluation.content.length > 1"
-            icon
-            @click="removeQuestion(evaluation.content, c_idx)"
-          >
-            <v-icon>mdi-minus</v-icon>
-          </v-btn>
+          
+          <v-tooltip bottom v-if="!evaluation.public && evaluation.content.length > 1">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                icon
+                v-bind="attrs"
+                v-on="on"
+                @click="removeQuestion(evaluation.content, c_idx)"
+              >
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </template>
+            <span>Eliminar</span>
+          </v-tooltip>
         </div>
         <div v-if="c.image" class="question__image">
           <img :src="c.image" />
@@ -119,8 +126,9 @@
               v-for="(alternative, a_idx) in c.alternatives"
               :key="a_idx"
             >
+              <v-radio :disabled="evaluation.public" :value="a_idx"></v-radio>
               <div
-                class="question-editor-alternative-content question-editor-text m-card"
+                class="question-editor-alternative-content question-editor-text"
               >
                 <v-textarea
                   v-if="!evaluation.public"
@@ -133,15 +141,20 @@
                   dense
                 ></v-textarea>
                 <span v-else>{{ c.alternatives[a_idx] }}</span>
-                <v-btn
-                  v-if="!evaluation.public && c.alternatives.length > 2"
-                  icon
-                  @click="removeAlternative(c.alternatives, a_idx)"
-                >
-                  <v-icon>mdi-minus</v-icon>
-                </v-btn>
+                <v-tooltip bottom v-if="!evaluation.public && c.alternatives.length > 2">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      icon
+                      @click="removeAlternative(c.alternatives, a_idx)"
+                      v-bind="attrs"
+                      v-on="on"
+                    >
+                      <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Eliminar</span>
+                </v-tooltip>
               </div>
-              <v-radio :disabled="evaluation.public" :value="a_idx"></v-radio>
             </div>
             <div
               v-if="
