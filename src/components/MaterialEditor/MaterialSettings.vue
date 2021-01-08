@@ -12,7 +12,7 @@
           required
         ></v-text-field>
         <v-checkbox
-          v-model="isPrivate"
+          v-model="material_clone.is_private"
           label="Privado"
         ></v-checkbox>
       </div>
@@ -70,7 +70,6 @@ export default {
     //
     dlg_remove: false,
     MaterialModel,
-    isPrivate: true,
   }),
   created() {
     this.material_clone = Object.assign({}, this.material);
@@ -81,7 +80,7 @@ export default {
       let material_id = this.material._id.$oid;
       let { name } = this.material_clone;
       try {
-        await updateMaterial(material_id, name, this.isPrivate);
+        await updateMaterial(material_id, name, this.material_clone.is_private);
         this.material.name = name;
       } catch (error) {
         this.showMessage("", error.msg || error);

@@ -53,19 +53,18 @@
             }"
           >
             <div
-              class="progress"
-              :class="{
-                'progress--complete': progress_materials.includes(m._id.$oid),
-              }"
+              v-if="progress_materials.includes(m._id.$oid)"
+              class="progress progress--complete"
             >
               <v-icon
-                v-if="progress_materials.includes(m._id.$oid)"
                 style="font-size: 1.25rem; opacity: 0.7"
                 >mdi-check</v-icon
               >
             </div>
-            <span>{{ m.name }}</span>
-            <!-- <v-icon>mdi-eye-off-outline</v-icon> -->
+            <div class="d-flex justify-space-between">
+              <span>{{ m.name }}</span>
+              <v-icon v-if="m.is_private">mdi-eye-off-outline</v-icon>
+            </div>
           </section>
         </div>
       </section>
