@@ -22,12 +22,9 @@ export default class Embed {
         let custom_id = new Date().getTime();
         let custom_id_url = new Date().getTime() + "_";
 
-        let input = document.createElement("input");
-        input.setAttribute("id", custom_id);
-        input.style.display = "none";
-        input.addEventListener("click", (e) => {
-            this._createImage(e.target.value);
-        });
+        //
+        let container_url = document.createElement("div");
+        container_url.classList.add("container-url")
 
         let input_url = document.createElement("input");
         input_url.setAttribute("id", custom_id_url);
@@ -42,15 +39,29 @@ export default class Embed {
             }
         });
 
+        container_url.appendChild(input_url);
+        container_url.appendChild(button_url);
+        
+        let text = document.createElement("p");
+        text.innerText = "- o -"
+
+        let input = document.createElement("input");
+        input.setAttribute("id", custom_id);
+        input.style.display = "none";
+        input.addEventListener("click", (e) => {
+            this._createImage(e.target.value);
+        });
+
         let button = document.createElement("button");
-        button.innerText = "Añadir Video";
+        button.innerText = "Subir Archivo";
         button.addEventListener("click", () => {
             window.showFiles(custom_id, ['video', 'audio']);
         });
+        button.classList.add("btn-files")
 
+        this.wrapper.appendChild(container_url);
+        this.wrapper.appendChild(text);
         this.wrapper.appendChild(input);
-        this.wrapper.appendChild(input_url);
-        this.wrapper.appendChild(button_url);
         this.wrapper.appendChild(button);
 
         return this.wrapper;
@@ -68,13 +79,14 @@ export default class Embed {
         return true;
     }
     _createImage(embed) {
-        const div = document.createElement("div");
+        const container_iframe = document.createElement("div");
+        container_iframe.classList.add("container-iframe")
         const iframe = document.createElement("iframe");
         iframe.src = embed;
 
         this.wrapper.innerHTML = "";
-        div.appendChild(iframe);
-        this.wrapper.appendChild(div);
+        container_iframe.appendChild(iframe);
+        this.wrapper.appendChild(container_iframe);
     }
     //
     _getEmbed(url) {
