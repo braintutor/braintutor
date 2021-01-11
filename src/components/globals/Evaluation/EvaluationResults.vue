@@ -48,9 +48,9 @@
               {{ `${student.last_name}, ${student.first_name}` }}
             </td>
             <td></td>
-            <td class="results__value">{{ student.corrects }}</td>
-            <td class="results__value">{{ student.incorrects }}</td>
-            <td class="results__value">{{ student.emptys }}</td>
+            <td class="results__value" title="correctas">{{ student.corrects }}</td>
+            <td class="results__value" title="incorrectas">{{ student.incorrects }}</td>
+            <td class="results__value" title="vacias">{{ student.emptys }}</td>
             <td></td>
             <td v-for="(c, idx) in evaluation.content" :key="idx">
               <span
@@ -100,6 +100,8 @@
 <script>
 import EvaluationStudent from "./EvaluationStudent";
 
+const hasBeenAnswerered = (student, questionIdx) => student.answers[questionIdx] >= 0
+
 export default {
   props: {
     evaluation: Object,
@@ -125,21 +127,22 @@ export default {
           student.has_answer = false;
         }
 
-        // corrects, incorrects, emptys
-        let corrects = 0;
-        let incorrects = 0;
-        let emptys = 0;
-        this.evaluation.content.forEach((c, idx) => {
-          if (student.answers[idx] >= 0)
-            if (student.answers[idx] === c.correct) corrects += 1;
-            else incorrects += 1;
-          else emptys += 1;
-        });
-        student.corrects = corrects;
-        student.incorrects = incorrects;
-        student.emptys = emptys;
+        student.corrects = this.corrects(student).length;
+        student.incorrects = this.incorrects(student).length;
+        student.emptys = this.emptys(student).length;
       });
       this.students.splice();
+    },
+    corrects(student) {
+      return this.evaluation.content.filter((c, idx) => student.answers[idx] === c.correct);
+    },
+    incorrects(student) {
+      return this.evaluation.content.filter((c, idx) => 
+        (hasBeenAnswerered(student, idx) && student.answers[idx] !== c.correct)
+      );
+    },
+    emptys(student) {
+      return this.evaluation.content.filter((c, idx) => !hasBeenAnswerered(student, idx))
     },
     showEvaluationStudent(student) {
       this.student_selected = student;
