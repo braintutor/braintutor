@@ -126,7 +126,16 @@
           <h2 v-else>Editar Evento</h2>
           <div class="mt-5">
             <strong class="mr-3">Fecha:</strong>
-            <input type="datetime-local" v-model="date_selected" required />
+            <v-datetime-picker v-model="date_selected"
+              :date-picker-props="{'locale': 'es-ES'}"
+            >
+              <template slot="dateIcon">
+                <v-icon>mdi-calendar</v-icon>
+              </template>
+              <template slot="timeIcon">
+                <v-icon>mdi-clock-outline</v-icon>
+              </template>
+            </v-datetime-picker>
           </div>
           <div class="mt-4">
             <v-text-field
@@ -242,7 +251,9 @@
 
 <script>
 import { getParam, redirect } from "@/services/router.js";
-import { addEvent, updateEvent, removeEvent } from "@/services/eventService";
+import { 
+  addEvent, updateEvent, 
+removeEvent } from "@/services/eventService";
 
 import EventModel from "@/models/Event";
 import variables from "@/models/variables";
@@ -252,7 +263,7 @@ export default {
     session_id: "",
     events: [],
     event_selected: null,
-    date_selected: null,
+    date_selected: new Date(),
     new_event: {},
     //
     action: "",
@@ -324,7 +335,7 @@ export default {
     async saveEvent() {
       this.showLoading("Guardando Cambios");
       let new_event = this.new_event;
-      new_event.time_start = new Date(this.date_selected);
+      new_event.time_start = this.date_selected;
       try {
         if (this.action === "create")
           await addEvent(this.session_id, new_event);
@@ -355,16 +366,14 @@ export default {
       this.action = "edit";
       this.dlg_create = true;
       this.new_event = { ...event };
-
-      let date = new Date(event.date.getTime()); // create a copy
-      this.date_selected = this.dateToInput(date);
+      this.date_selected = new Date(event.date.getTime());// create a copy
       if (next) next();
     },
     showCreateByDate(date) {
       this.action = "create";
       this.dlg_create = true;
       this.new_event = {};
-      this.date_selected = this.dateToInput(date);
+      this.date_selected = date
     },
     showCreate(year, month, day) {
       if (
@@ -377,8 +386,7 @@ export default {
       this.dlg_create = true;
       this.new_event = {};
 
-      let date = new Date(year, month, day);
-      this.date_selected = this.dateToInput(date);
+      this.date_selected =  new Date(year, month, day);
     },
     showRemove(event, next) {
       this.event_selected = event;
