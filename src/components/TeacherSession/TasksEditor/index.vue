@@ -66,9 +66,18 @@
     <v-dialog v-model="dlg_new" persistent max-width="750">
       <form @submit.prevent="create()" class="m-card">
         <div class="m-card__body">
-          <div>
-            <span class="mr-2">Tiempo de Inicio:</span>
-            <input type="datetime-local" v-model="task.time_start_f" required />
+          <div class="close-modal">
+            <div>
+              <span class="mr-2">Tiempo de Inicio:</span>
+              <input
+                type="datetime-local"
+                v-model="task.time_start_f"
+                required
+              />
+            </div>
+            <v-btn class="mx-2" icon small @click="dlg_new = false">
+              <v-icon dark> mdi-close-thick </v-icon>
+            </v-btn>
           </div>
           <v-text-field
             v-model="task.title"
@@ -92,11 +101,10 @@
             type="button"
             small
             text
-            color="primary"
-            class="mr-2"
+            class="cancel-button"
             v-show="!loading_save"
             @click="dlg_new = false"
-            >Cerrar</m-btn
+            >Cancelar</m-btn
           >
           <m-btn type="submit" small color="primary" :loading="loading_save"
             >Guardar</m-btn
@@ -108,6 +116,12 @@
     <v-dialog v-model="dlg_edit" persistent max-width="750">
       <form @submit.prevent="save()" class="m-card">
         <div class="m-card__body">
+          <div class="close-modal">
+            <h2>Editar Tarea</h2>
+            <v-btn class="mx-2" icon small @click="dlg_edit = false">
+              <v-icon dark> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
           <v-text-field
             v-model="task.title"
             :maxlength="TaskModel.title.max_length"
@@ -129,11 +143,10 @@
             type="button"
             small
             text
-            color="primary"
-            class="mr-2"
+            class="cancel-button"
             v-show="!loading_save"
             @click="dlg_edit = false"
-            >Cerrar</m-btn
+            >Cancelar</m-btn
           >
           <m-btn type="submit" small color="primary" :loading="loading_save"
             >Guardar</m-btn
@@ -155,8 +168,7 @@
             type="button"
             small
             text
-            color="primary"
-            class="mr-2"
+            class="cancel-button"
             v-show="!loading_save"
             @click="dlg_edit_date = false"
             >Cerrar</m-btn
@@ -376,5 +388,16 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.close-modal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cancel-button {
+  background: none;
+  border: 1px solid gray;
+  margin-right: 8px;
 }
 </style>

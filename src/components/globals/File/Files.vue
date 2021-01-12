@@ -257,9 +257,7 @@ export default {
   display: flex;
   flex-direction: column;
 
-  &__menu {
-  }
-  &__body {
+ &__body {
     flex-grow: 1;
     overflow-y: auto;
   }

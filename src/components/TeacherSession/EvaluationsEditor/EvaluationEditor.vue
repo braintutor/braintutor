@@ -90,8 +90,11 @@
             </v-btn>
           </div>
           <span v-else>{{ c.question }}</span>
-          
-          <v-tooltip bottom v-if="!evaluation.public && evaluation.content.length > 1">
+
+          <v-tooltip
+            bottom
+            v-if="!evaluation.public && evaluation.content.length > 1"
+          >
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 icon
@@ -141,7 +144,10 @@
                   dense
                 ></v-textarea>
                 <span v-else>{{ c.alternatives[a_idx] }}</span>
-                <v-tooltip bottom v-if="!evaluation.public && c.alternatives.length > 2">
+                <v-tooltip
+                  bottom
+                  v-if="!evaluation.public && c.alternatives.length > 2"
+                >
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn
                       icon
@@ -219,17 +225,18 @@
     <v-dialog v-model="dialog_delete" max-width="400">
       <div class="m-card">
         <div class="m-card__body">
-          <h3>Confirmar eliminación</h3>
+          <div class="close-modal">
+            <h3>Confirmar eliminación</h3>
+            <v-btn class="mx-2" icon small @click="dialog_delete = false">
+              <v-icon dark> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
           <p class="mt-4">
             Si elimina este contenido, no podrá revertir los cambios.
           </p>
         </div>
         <div class="m-card__actions">
-          <m-btn
-            @click="dialog_delete = false"
-            color="primary"
-            small
-            class="mr-2"
+          <m-btn @click="dialog_delete = false" small class="cancel-button"
             >Cancelar</m-btn
           >
           <m-btn
@@ -445,6 +452,18 @@ export default {
       right: 0;
     }
   }
+}
+
+.close-modal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cancel-button {
+  background: none;
+  border: 1px solid gray;
+  margin-right: 8px;
 }
 
 .time-editor {

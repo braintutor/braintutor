@@ -122,8 +122,13 @@
         class="m-card"
       >
         <div class="m-card__body">
-          <h2 v-if="action === 'create'">Nuevo Evento</h2>
-          <h2 v-else>Editar Evento</h2>
+          <div class="close-modal">
+            <h2 v-if="action === 'create'">Nuevo Evento</h2>
+            <h2 v-else>Editar Evento</h2>
+            <v-btn class="mx-2" icon small @click="dlg_create= false">
+              <v-icon dark> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
           <div class="mt-5">
             <strong class="mr-3">Fecha:</strong>
             <input type="datetime-local" v-model="date_selected" required />
@@ -199,12 +204,12 @@
         </div>
         <div class="m-card__actions">
           <m-btn
-            color="primary"
+            
             small
             type="button"
             @click="dlg_create = false"
             text
-            class="mr-2"
+            class="cancel-button"
             >Cancelar</m-btn
           >
           <m-btn color="primary" small type="submit">Guardar</m-btn>
@@ -406,3 +411,18 @@ export default {
   },
 };
 </script>
+<style lang='scss' scoped>
+
+.close-modal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cancel-button {
+  background: none;
+  border: 1px solid gray;
+  margin-right: 8px;
+}
+
+</style>
