@@ -131,16 +131,7 @@
           </div>
           <div class="mt-5">
             <strong class="mr-3">Fecha:</strong>
-            <v-datetime-picker v-model="date_selected"
-              :date-picker-props="{'locale': 'es-ES'}"
-            >
-              <template slot="dateIcon">
-                <v-icon>mdi-calendar</v-icon>
-              </template>
-              <template slot="timeIcon">
-                <v-icon>mdi-clock-outline</v-icon>
-              </template>
-            </v-datetime-picker>
+            <date-time v-model="date_selected"/>
           </div>
           <div class="mt-4">
             <v-text-field
@@ -262,8 +253,10 @@ removeEvent } from "@/services/eventService";
 
 import EventModel from "@/models/Event";
 import variables from "@/models/variables";
+import DateTime from "../globals/DateTime"
 
 export default {
+  components: {DateTime},
   data: () => ({
     session_id: "",
     events: [],
