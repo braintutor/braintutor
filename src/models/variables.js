@@ -1,5 +1,19 @@
-const kb = n => n * 1000
-const mb = n => n * kb(1000)
+// very simple implementation of quantity pattern, see Analysis Patterns
+export class Megabytes {
+  static fromBytes(bytes) {
+    return new Megabytes(bytes / 1000 / 1000)
+  }
+
+  constructor(amount){
+    this.amount = amount
+    this.unit = "MB"
+  }
+
+  toString() {
+    const amountStr = this.amount < 1? (this.amount).toFixed(2): this.amount
+    return `${amountStr} ${this.unit}`
+  }
+}
 
 const variables = {
   max_users_per_school: 1000, // addStudent, addTeacher
@@ -19,8 +33,8 @@ const variables = {
   max_alternatives_per_question: 10,
 
   // FIREBASE
-  max_session_size: mb(1000),
   max_task_size: 10 * 1000 * 1000
 };
 
+export const max_session_size = new Megabytes(1000)
 export default variables;

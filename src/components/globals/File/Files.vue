@@ -131,7 +131,7 @@
 </template>
 
 <script>
-import variables from "@/models/variables";
+import { max_session_size, Megabytes } from "@/models/variables";
 import sum from "lodash/fp/sum"
 
 export default {
@@ -159,7 +159,7 @@ export default {
   }),
   computed: {
     size() {
-      return `Espacio utilizado: ${this.kb_to_mb(this.current_size)} / ${this.kb_to_mb(variables.max_session_size)}`;
+      return `Espacio utilizado: ${Megabytes.fromBytes(this.current_size)} / ${max_session_size}`;
     },
     current_size() {
       return sum(this.files.map(f => f.size));
@@ -238,10 +238,7 @@ export default {
         this.showMessage("", error.msg || error);
       }
       this.loading = false;
-    },
-    kb_to_mb(size) {
-      return `${(size / 1000 / 1000).toFixed(3)} MB`;
-    },
+    }
   },
 };
 </script>
