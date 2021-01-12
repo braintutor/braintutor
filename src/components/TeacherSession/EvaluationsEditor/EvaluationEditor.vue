@@ -58,14 +58,12 @@
     <div id="quiz-scroll" class="quiz-editor-content m-fullscreen-content">
       <div class="time-editor">
         <span>Tiempo de Inicio:</span>
-        <input
-          type="datetime-local"
+        <date-time
           v-model="evaluation.time_start_f"
           :disabled="evaluation.public"
         />
         <span>Tiempo de Fin:</span>
-        <input
-          type="datetime-local"
+        <date-time
           v-model="evaluation.time_end_f"
           :disabled="evaluation.public"
         />
@@ -278,6 +276,7 @@ import {
 
 import EvaluationModel from "@/models/Evaluation";
 import QuestionModel from "@/models/Question";
+import DateTime from '@/components/globals/DateTime';
 
 export default {
   props: ["evaluation", "unselect"],
@@ -292,17 +291,9 @@ export default {
   }),
   created() {
     this.session_id = this.$route.params["session_id"];
-
-    let formatDate = (date) => {
-      let date_f = new Date();
-      date_f.setTime(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
-      date_f = date_f.toISOString().substring(0, 16);
-      return date_f;
-    };
-
     let { time_start, time_end } = this.evaluation;
-    this.evaluation.time_start_f = formatDate(time_start);
-    this.evaluation.time_end_f = formatDate(time_end);
+    this.evaluation.time_start_f = time_start;
+    this.evaluation.time_end_f = time_end;
     this.$forceUpdate();
   },
   methods: {
@@ -378,6 +369,7 @@ export default {
   },
   components: {
     Files,
+    DateTime
   },
 };
 </script>
