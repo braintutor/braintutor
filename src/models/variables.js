@@ -19,7 +19,7 @@ export class Megabytes {
 
 export const current_size = files => {
   return Megabytes.fromBytes(sum(files.map(f => f.size)));
-},
+}
 
 const variables = {
   max_users_per_school: 1000, // addStudent, addTeacher
