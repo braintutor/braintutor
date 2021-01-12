@@ -245,7 +245,7 @@ export default {
   display: flex;
   flex-direction: column;
 
-  &__body {
+ &__body {
     flex-grow: 1;
     overflow-y: auto;
   }
