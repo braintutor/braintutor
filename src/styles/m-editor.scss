@@ -144,9 +144,31 @@ $spacer-plus: 40px;
 
 .m-editor-iframe {
   position: relative;
-  button {
+
+  .container-url {
+    display: flex;
+    align-items: center;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+
+    input {
+      width: 100%;
+      padding: 8px;
+    }
+    button {
+      flex-shrink: 0;
+      padding: 10px;
+      background: #ebebeb;
+      font-size: .85rem;
+    }
+  }
+  p {
+    margin: 8px 0;
+    text-align: center;
+  }
+  .btn-files {
     display: block;
-    margin: 20px auto;
+    margin: 8px auto;
     padding: 10px;
     border: 1px solid #e4e4e4;
     border-radius: 3px;
@@ -157,7 +179,7 @@ $spacer-plus: 40px;
       background: rgba(0, 0, 0, 0.05);
     }
   }
-  div {
+  .container-iframe {
     margin: $spacer 0;
     padding-bottom: 50%;
   }
