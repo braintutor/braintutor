@@ -1,3 +1,6 @@
+const kb = n => n * 1000
+const mb = n => n * kb(1000)
+
 const variables = {
   max_users_per_school: 1000, // addStudent, addTeacher
   max_courses_per_school: 100, // addCourse
@@ -16,7 +19,7 @@ const variables = {
   max_alternatives_per_question: 10,
 
   // FIREBASE
-  max_session_size: 1000 * 1000 * 1000,
+  max_session_size: mb(1000),
   max_task_size: 10 * 1000 * 1000
 };
 

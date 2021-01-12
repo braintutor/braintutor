@@ -132,6 +132,7 @@
 
 <script>
 import variables from "@/models/variables";
+import sum from "lodash/fp/sum"
 
 export default {
   props: {
@@ -154,20 +155,14 @@ export default {
     //
     show: "LIST",
     loading: false,
-    dlg_remove: false,
-    variables,
+    dlg_remove: false
   }),
   computed: {
     size() {
-      return `Espacio utilizado: ${this.kb_to_mb(
-        this.current_size
-      )} / ${this.kb_to_mb(this.variables.max_session_size)}`;
+      return `Espacio utilizado: ${this.kb_to_mb(this.current_size)} / ${this.kb_to_mb(variables.max_session_size)}`;
     },
-    current_size(){
-      return this.files.reduce((sum, f) => {
-        sum += f.size;
-        return sum;
-      }, 0);
+    current_size() {
+      return sum(this.files.map(f => f.size));
     },
     files_f() {
       return this.files
@@ -257,8 +252,6 @@ export default {
   display: flex;
   flex-direction: column;
 
-  &__menu {
-  }
   &__body {
     flex-grow: 1;
     overflow-y: auto;

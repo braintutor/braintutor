@@ -19,6 +19,7 @@
     "@editorjs/simple-image": "^1.4.0",
     "chart.js": "^2.9.4",
     "core-js": "^3.8.2",
+    "lodash": "^4.17.20",
     "machinelearn": "^2.1.5",
     "normalize.css": "^8.0.1",
     "vue": "^2.6.12",
