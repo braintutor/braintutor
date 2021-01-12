@@ -131,8 +131,7 @@
 </template>
 
 <script>
-import { max_session_size, Megabytes } from "@/models/variables";
-import sum from "lodash/fp/sum"
+import { max_session_size, Megabytes, current_size } from "@/models/variables";
 
 export default {
   props: {
@@ -159,10 +158,7 @@ export default {
   }),
   computed: {
     size() {
-      return `Espacio utilizado: ${Megabytes.fromBytes(this.current_size)} / ${max_session_size}`;
-    },
-    current_size() {
-      return sum(this.files.map(f => f.size));
+      return `Espacio utilizado: ${current_size(this.files)} / ${max_session_size}`;
     },
     files_f() {
       return this.files
