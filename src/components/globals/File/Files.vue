@@ -76,7 +76,6 @@
 
                   <div @click.stop="showFile(file)" class="m-file__menu">
                     <span class="m-file__name pl-2">{{ file.name_f }}</span>
-                    <!-- <span class="m-file__name pl-2">{{ file.size_f }}</span> -->
                     <v-btn
                       @click.stop="showRemove(file)"
                       color="error"
@@ -132,7 +131,8 @@
 </template>
 
 <script>
-import variables from "@/models/variables";
+import { max_session_size, Megabytes } from "@/models/variables";
+import sum from "lodash/fp/sum"
 
 export default {
   props: {
@@ -155,31 +155,26 @@ export default {
     //
     show: "LIST",
     loading: false,
-    dlg_remove: false,
-    variables,
+    dlg_remove: false
   }),
   computed: {
     size() {
-      let current_size = this.files.reduce((sum, f) => {
-        sum += f.size;
-        return sum;
-      }, 0);
-      return `Espacio utilizado: ${this.kb_to_mb(
-        current_size
-      )} / ${this.kb_to_mb(this.variables.max_session_size)}`;
+      return `Espacio utilizado: ${Megabytes.fromBytes(this.current_size)} / ${max_session_size}`;
+    },
+    current_size() {
+      return sum(this.files.map(f => f.size));
     },
     files_f() {
-      let files = this.files.filter((f) => !f.name.includes("/task/"));
-      files = files.map((f) => ({
-        ...f,
-        name_f: f.name.substring(f.name.lastIndexOf("/") + 1),
-        size_f: this.kb_to_mb(f.size),
-        type: f.content_type.split("/")[0],
-      }));
-      files = files.filter(
-        (f) => this.filters.length <= 0 || this.filters.includes(f.type)
-      );
-      return files;
+      return this.files
+        .filter((f) => !f.name.includes("/task/"))
+        .map((f) => ({
+          ...f,
+          name_f: f.name.substring(f.name.lastIndexOf("/") + 1),
+          type: f.content_type.split("/")[0],
+        }))
+        .filter(
+          (f) => this.filters.length <= 0 || this.filters.includes(f.type)
+        );
     },
   },
   async created() {
@@ -243,10 +238,7 @@ export default {
         this.showMessage("", error.msg || error);
       }
       this.loading = false;
-    },
-    kb_to_mb(size) {
-      return `${(size / 1000 / 1000).toFixed(3)} MB`;
-    },
+    }
   },
 };
 </script>

@@ -15,9 +15,9 @@
           :key="l_idx"
           class="header__action"
           text
-          @click="redirect(link.name)"
-          >{{ link.title }}</v-btn
-        >
+          :to="link.name"
+          >{{ link.title }}
+        </v-btn>
         <!-- User -->
         <div
           id="user"
@@ -31,11 +31,11 @@
             <img src="@/assets/icons/icon-user.svg" alt />
           </div>
           <div v-show="user_options" class="user__options">
-            <v-btn small text @click="redirect('profile')">Perfil</v-btn>
+            <v-btn small text to="profile">Perfil</v-btn>
             <v-btn small text @click="closeSession()">Cerrar Sesión</v-btn>
           </div>
         </div>
-        <v-btn class="header__action" v-else text @click="redirect('schools')"
+        <v-btn class="header__action" v-else text to="schools"
           >Iniciar Sesión</v-btn
         >
       </div>
