@@ -253,7 +253,7 @@ removeEvent } from "@/services/eventService";
 
 import EventModel from "@/models/Event";
 import variables from "@/models/variables";
-import DateTime from "../globals/DateTime"
+import DateTime from "@/components/globals/DateTime"
 
 export default {
   components: {DateTime},

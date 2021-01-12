@@ -1,6 +1,7 @@
 <template>
     <v-datetime-picker v-model="dateTime"
         :date-picker-props="{'locale': 'es-ES'}"
+        :disabled="disabled"
     >
         <template slot="dateIcon">
         <v-icon>mdi-calendar</v-icon>
@@ -13,7 +14,10 @@
 
 <script>
 export default {
-    props: ["value"],
+    props: {
+        value: Date,
+        disabled: { type: Boolean, default: false }
+    },
     computed: {
         dateTime: {
             get() { return this.value },
