@@ -131,7 +131,7 @@
 </template>
 
 <script>
-import { max_session_size, Megabytes, current_size } from "@/models/variables";
+import { max_session_size, current_size } from "@/models/variables";
 
 export default {
   props: {
