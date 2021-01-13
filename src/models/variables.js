@@ -43,6 +43,6 @@ const variables = {
 
 // FIREBASE
 export const max_session_size = new Megabytes(1000)
-export const max_task_size = new Megabytes(10) // TODO: andre cambiar esto a new Megabytes(10)
+export const max_task_size = new Megabytes(10) 
 
 export default variables;

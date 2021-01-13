@@ -106,13 +106,18 @@
     <v-dialog v-model="dlg_remove" max-width="400">
       <div class="m-card">
         <div class="m-card__body">
-          <h3>Confirmar eliminación</h3>
+          <div class="close-modal">
+            <h3>Confirmar eliminación</h3>
+            <v-btn class="mx-2" icon small @click="dlg_remove = false">
+              <v-icon dark>mdi-close-thick</v-icon>
+            </v-btn>
+          </div>
           <p class="mt-4">
             Si elimina este contenido, no podrá revertir los cambios.
           </p>
         </div>
         <div class="m-card__actions">
-          <m-btn @click="dlg_remove = false" color="primary" small class="mr-2"
+          <m-btn @click="dlg_remove = false" small class="cancel-button"
             >Cancelar</m-btn
           >
           <m-btn
@@ -154,11 +159,13 @@ export default {
     //
     show: "LIST",
     loading: false,
-    dlg_remove: false
+    dlg_remove: false,
   }),
   computed: {
     size() {
-      return `Espacio utilizado: ${current_size(this.files)} / ${max_session_size}`;
+      return `Espacio utilizado: ${current_size(
+        this.files
+      )} / ${max_session_size}`;
     },
     files_f() {
       return this.files
@@ -234,7 +241,7 @@ export default {
         this.showMessage("", error.msg || error);
       }
       this.loading = false;
-    }
+    },
   },
 };
 </script>
@@ -245,7 +252,7 @@ export default {
   display: flex;
   flex-direction: column;
 
- &__body {
+  &__body {
     flex-grow: 1;
     overflow-y: auto;
   }
@@ -299,16 +306,13 @@ $background-file: rgba(0, 0, 255, 0.05);
   &__menu {
     width: 100%;
     padding: 4px;
-
     position: absolute;
     left: 0;
     bottom: 0;
     background: #fff;
-
     display: flex;
     justify-content: space-between;
     align-items: center;
-
     opacity: 0;
     pointer-events: none;
     transition: 0.3s;
@@ -325,5 +329,17 @@ $background-file: rgba(0, 0, 255, 0.05);
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
   }
+}
+
+.cancel-button {
+  background: none;
+  border: 1px solid gray;
+  margin-right: 8px;
+}
+
+.close-modal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>

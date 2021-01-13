@@ -245,9 +245,7 @@ $background-active: #e4e9ff;
       background: rgba(0, 0, 255, 0.05);
     }
   }
-  &__actions {
-  }
-
+  
   &__type {
     padding: 16px;
     opacity: 0.6;

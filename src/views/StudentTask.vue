@@ -146,8 +146,6 @@ export default {
       }));
     },
     size() {
-      // TODO: borrar esto usar funcion current_size de variables.js
-      // TODO: borrar la funcion kb_to_mb
       return `Espacio utilizado: ${current_size(this.files)} / ${max_task_size}`;
     },
   },
