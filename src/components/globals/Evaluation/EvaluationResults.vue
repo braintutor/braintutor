@@ -52,22 +52,22 @@
             <td class="results__value" title="incorrectas">{{ student.incorrects }}</td>
             <td class="results__value" title="vacias">{{ student.emptys }}</td>
             <td></td>
-            <td v-for="(c, idx) in evaluation.content" :key="idx">
+            <td v-for="(answer, idx) in student.answers" :key="idx">
               <span
                 class="answer"
                 :class="[
-                  student.answers[idx] >= 0
-                    ? student.answers[idx] === c.correct
+                  answer.hasBeenAnswered
+                    ? answer.isCorrect
                       ? 'answer--correct'
                       : 'answer--incorrect'
                     : 'answer--empty',
                 ]"
               >
                 <i
-                  v-if="student.answers[idx] >= 0"
+                  v-if="answer.hasBeenAnswered"
                   class="fa"
                   :class="[
-                    student.answers[idx] === c.correct
+                    answer.isCorrect
                       ? 'fa-check'
                       : 'fa-close',
                   ]"
@@ -100,7 +100,25 @@
 <script>
 import EvaluationStudent from "./EvaluationStudent";
 
-const hasBeenAnswerered = (student, questionIdx) => student.answers[questionIdx] >= 0
+class Answer {
+  static empty(question) { return new Answer(question, undefined)}
+  constructor(question, value) {
+    this.question = question
+    this.value = value
+  }
+
+  get hasBeenAnswered() {
+    return this.value >= 0
+  }
+
+  get isIncorrect() {
+    return this.hasBeenAnswered && this.value !== this.question.correct
+  }
+
+  get isCorrect() {
+    return this.hasBeenAnswered && this.value === this.question.correct
+  }
+}
 
 export default {
   props: {
@@ -120,10 +138,10 @@ export default {
       this.students.forEach((student) => {
         let result = this.evaluation.results.find((r) => r._id === student._id);
         if (result) {
-          student.answers = result.answers;
+          student.answers = this.evaluation.content.map((c, idx) => new Answer(c, result.answers[idx]));
           student.has_answer = true;
         } else {
-          student.answers = [];
+          student.answers = this.evaluation.content.map(c => Answer.empty(c))
           student.has_answer = false;
         }
 
@@ -131,18 +149,15 @@ export default {
         student.incorrects = this.incorrects(student).length;
         student.emptys = this.emptys(student).length;
       });
-      this.students.splice();
     },
     corrects(student) {
-      return this.evaluation.content.filter((c, idx) => student.answers[idx] === c.correct);
+      return student.answers.filter(answer => answer.isCorrect)
     },
     incorrects(student) {
-      return this.evaluation.content.filter((c, idx) => 
-        (hasBeenAnswerered(student, idx) && student.answers[idx] !== c.correct)
-      );
+      return student.answers.filter(answer => answer.isIncorrect)
     },
     emptys(student) {
-      return this.evaluation.content.filter((c, idx) => !hasBeenAnswerered(student, idx))
+      return student.answers.filter(answer => !answer.hasBeenAnswered)
     },
     showEvaluationStudent(student) {
       this.student_selected = student;
