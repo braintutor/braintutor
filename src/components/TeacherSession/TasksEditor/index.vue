@@ -76,10 +76,9 @@
           </div>
           <div>
               <span class="mr-2">Tiempo de Inicio:</span>
-              <input
-                type="datetime-local"
+              <date-time
                 v-model="task.time_start_f"
-                required
+                :disabled="task.public"
               />
             </div>
           <v-text-field
@@ -169,7 +168,7 @@
           </div>
             <div class="datetime-section">
               <span class="mr-2">Tiempo de Inicio:</span>
-              <input type="datetime-local" v-model="task.time_start_f" required />
+              <date-time v-model="task.time_start_f" />
             </div>
         </div>
         <div class="m-card__actions">
@@ -233,6 +232,8 @@ import { addTask, removeTask } from "@/services/taskService";
 
 import { TaskModel } from "@/models/Task";
 import variables from "@/models/variables";
+import DateTime from '@/components/globals/DateTime';
+
 
 export default {
   data: () => ({
@@ -349,7 +350,7 @@ export default {
     },
     showCreate() {
       this.task = {
-        time_start_f: this.dateToInput(new Date().addHours(1)),
+        time_start_f: new Date().addHours(1),
         public: false,
       };
       this.dlg_new = true;
@@ -366,7 +367,7 @@ export default {
     showEditDate(task) {
       this.task = {
         _id: task._id,
-        time_start_f: this.dateToInput(task.time_start),
+        time_start_f: task.time_start,
       };
       this.dlg_edit_date = true;
     },
@@ -387,6 +388,7 @@ export default {
   components: {
     Task,
     TaskCard,
+    DateTime
   },
 };
 </script>

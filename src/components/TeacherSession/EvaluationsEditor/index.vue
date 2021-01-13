@@ -89,8 +89,7 @@
             <h3>Modificar Tiempo</h3>
             <div v-if="evaluation_selected" class="mt-4">
               <span class="mr-4">Tiempo de Fin:</span>
-              <input
-                type="datetime-local"
+              <date-time
                 v-model="evaluation_selected.time_end_f"
               />
             </div>
@@ -216,6 +215,7 @@ import { getParam } from "@/services/router.js";
 import { copy } from "@/services/object.js";
 
 import variables from "@/models/variables";
+import DateTime from '@/components/globals/DateTime';
 
 export default {
   data: () => ({
@@ -330,7 +330,7 @@ export default {
     showUpdateTime(evaluation) {
       this.dlg_update_time = true;
       this.evaluation_selected = evaluation;
-      this.evaluation_selected.time_end_f = this.formatDate(
+      this.evaluation_selected.time_end_f = new Date(
         this.evaluation_selected.time_end
       );
     },
@@ -361,6 +361,7 @@ export default {
     EvaluationCard,
     EvaluationEditor,
     EvaluationResults,
+    DateTime
   },
 };
 </script>
