@@ -124,8 +124,7 @@
 import TaskCard from "@/components/globals/Task/TaskCard";
 
 import { getTaskByStudent, updateTaskAnswer } from "@/services/taskService";
-import { max_task_size } from "@/models/variables";
-
+import {current_size, max_task_size} from "@/models/variables";
 import { AnswerModel } from "@/models/Task";
 
 export default {
@@ -147,18 +146,7 @@ export default {
       }));
     },
     size() {
-      // TODO: andre
-      // TODO: borrar esto usar funcion current_size de variables.js
-      let current_size = this.files_f.reduce((sum, f) => {
-        sum += f.size;
-        return sum;
-      }, 0);
-
-
-      // TODO: borrar la funcion kb_to_mb
-      return `Espacio utilizado: ${this.kb_to_mb(
-        current_size
-      )} / ${this.kb_to_mb(max_task_size)}`;
+      return `Espacio utilizado: ${current_size(this.files)} / ${max_task_size}`;
     },
   },
   async created() {
@@ -287,9 +275,7 @@ export default {
       background: rgba(0, 0, 255, 0.05);
     }
   }
-  &__actions {
-  }
-
+ 
   &__type {
     padding: 16px;
     opacity: 0.6;

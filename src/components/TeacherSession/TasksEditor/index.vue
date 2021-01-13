@@ -68,6 +68,13 @@
         <div class="m-card__body">
           <div class="close-modal">
             <div>
+              <h2>Crear Tarea</h2>
+            </div>
+            <v-btn class="mx-2" icon small @click="dlg_new = false">
+              <v-icon dark> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
+          <div>
               <span class="mr-2">Tiempo de Inicio:</span>
               <input
                 type="datetime-local"
@@ -75,10 +82,6 @@
                 required
               />
             </div>
-            <v-btn class="mx-2" icon small @click="dlg_new = false">
-              <v-icon dark> mdi-close-thick </v-icon>
-            </v-btn>
-          </div>
           <v-text-field
             v-model="task.title"
             :maxlength="TaskModel.title.max_length"
@@ -116,7 +119,7 @@
     <v-dialog v-model="dlg_edit" persistent max-width="750">
       <form @submit.prevent="save()" class="m-card">
         <div class="m-card__body">
-          <div class="close-modal">
+          <div class="close-modal modal-pd">
             <h2>Editar Tarea</h2>
             <v-btn class="mx-2" icon small @click="dlg_edit = false">
               <v-icon dark> mdi-close-thick </v-icon>
@@ -158,10 +161,16 @@
     <v-dialog v-model="dlg_edit_date" persistent max-width="450">
       <form @submit.prevent="saveDate()" class="m-card">
         <div class="m-card__body">
-          <div>
-            <span class="mr-2">Tiempo de Inicio:</span>
-            <input type="datetime-local" v-model="task.time_start_f" required />
+          <div class="close-modal modal-pd">
+            <h3>Editar Fecha</h3>
+            <v-btn class="mx-2" icon small @click="dlg_edit_date= false">
+              <v-icon dark> mdi-close-thick </v-icon>
+            </v-btn>  
           </div>
+            <div class="datetime-section">
+              <span class="mr-2">Tiempo de Inicio:</span>
+              <input type="datetime-local" v-model="task.time_start_f" required />
+            </div>
         </div>
         <div class="m-card__actions">
           <m-btn
@@ -171,7 +180,7 @@
             class="cancel-button"
             v-show="!loading_save"
             @click="dlg_edit_date = false"
-            >Cerrar</m-btn
+            >Cancelar</m-btn
           >
           <m-btn type="submit" small color="primary" :loading="loading_save"
             >Guardar</m-btn
@@ -232,7 +241,6 @@ export default {
     task: {},
     task_show_id: null,
     action: "",
-    //
     loading_save: false,
     dlg_new: false,
     dlg_edit: false,
@@ -399,5 +407,13 @@ export default {
   background: none;
   border: 1px solid gray;
   margin-right: 8px;
+}
+
+.modal-pd {
+  padding: 15px 0px;
+}
+
+.datetime-section {
+  padding: 15px 0px;
 }
 </style>
