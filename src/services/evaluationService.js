@@ -19,7 +19,7 @@ function getEvaluationsBySessionDirector(session_id) {
 }
 
 function addEvaluation(session_id, evaluation) {
-  return fetch_post('addEvaluation', {
+  return fetch_post('api/v1/evaluation2', {
     session_id,
     evaluation
   })
