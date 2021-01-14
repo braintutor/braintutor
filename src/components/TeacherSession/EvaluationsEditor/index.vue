@@ -86,17 +86,21 @@
       <v-dialog v-model="dlg_update_time" max-width="450" persistent>
         <div class="m-card">
           <div class="m-card__body">
-            <h3>Modificar Tiempo</h3>
+            <div class="close-modal">
+              <h3>Modificar Tiempo</h3>
+              <v-btn class="mx-2" icon small @click="dlg_update_time= false">
+                <v-icon dark> mdi-close-thick </v-icon>
+              </v-btn>
+            </div>
             <div v-if="evaluation_selected" class="mt-4">
               <span class="mr-4">Tiempo de Fin:</span>
-              <input
-                type="datetime-local"
+              <date-time
                 v-model="evaluation_selected.time_end_f"
               />
             </div>
           </div>
           <div class="m-card__actions">
-            <m-btn @click="dlg_update_time = false" color="primary" small text
+            <m-btn @click="dlg_update_time = false" class="cancel-button" small text
               >Cancelar</m-btn
             >
             <m-btn
@@ -117,13 +121,18 @@
       <v-dialog v-model="dlg_remove" max-width="400">
         <div class="m-card">
           <div class="m-card__body">
-            <h3>¿Desea eliminar?</h3>
+            <div class="close-modal">
+              <h3>¿Desea eliminar?</h3>
+              <v-btn class="mx-2" icon small @click="dlg_remove = false">
+                <v-icon>mdi-close-thick</v-icon>
+              </v-btn>
+            </div>
             <p class="mt-4">
               Se borrarán también los resultados de los alumnos.
             </p>
           </div>
           <div class="m-card__actions">
-            <m-btn @click="dlg_remove = false" color="primary" small
+            <m-btn @click="dlg_remove = false" class="cancel-button" small
               >Cancelar</m-btn
             >
             <m-btn
@@ -216,6 +225,7 @@ import { getParam } from "@/services/router.js";
 import { copy } from "@/services/object.js";
 
 import variables from "@/models/variables";
+import DateTime from '@/components/globals/DateTime';
 
 export default {
   data: () => ({
@@ -330,7 +340,7 @@ export default {
     showUpdateTime(evaluation) {
       this.dlg_update_time = true;
       this.evaluation_selected = evaluation;
-      this.evaluation_selected.time_end_f = this.formatDate(
+      this.evaluation_selected.time_end_f = new Date(
         this.evaluation_selected.time_end
       );
     },
@@ -361,6 +371,7 @@ export default {
     EvaluationCard,
     EvaluationEditor,
     EvaluationResults,
+    DateTime
   },
 };
 </script>

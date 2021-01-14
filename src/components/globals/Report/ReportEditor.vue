@@ -30,8 +30,7 @@
         <span v-else>{{ report.time }}</span>
 
         <strong>Fecha:</strong>
-        <input
-          type="datetime-local"
+        <date-time
           v-model="report.time_start_f"
           :readonly="readonly"
         />
@@ -279,8 +278,8 @@
 
 <script>
 import DocumentEditor from "@/components/globals/DocumentEditor/index";
-
 import ReportModel from "@/models/Report";
+import DateTime from '@/components/globals/DateTime';
 
 export default {
   props: {
@@ -376,9 +375,9 @@ export default {
         report = this.mongo(report) || {};
 
         //
-        report.time_start_f = this.dateToInput(
+        report.time_start_f = 
           report.time_start ? report.time_start : new Date()
-        );
+        ;
         let document_default = JSON.stringify({
           blocks: [{ type: "paragraph", data: { text: "Escriba aquí" } }],
         });
@@ -478,7 +477,7 @@ export default {
     async reset() {
       this.report = {
         time: "",
-        time_start_f: this.dateToInput(new Date()),
+        time_start_f: new Date(),
         motivation: {
           document: "",
           content: [],
@@ -510,6 +509,7 @@ export default {
   },
   components: {
     DocumentEditor,
+    DateTime
   },
 };
 </script>
