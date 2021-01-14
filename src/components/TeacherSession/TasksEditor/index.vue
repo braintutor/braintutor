@@ -76,10 +76,9 @@
           </div>
           <div>
               <span class="mr-2">Tiempo de Inicio:</span>
-              <input
-                type="datetime-local"
+              <date-time
                 v-model="task.time_start_f"
-                required
+                :disabled="task.public"
               />
             </div>
           <v-text-field
@@ -122,7 +121,7 @@
           <div class="close-modal modal-pd">
             <h2>Editar Tarea</h2>
             <v-btn class="mx-2" icon small @click="dlg_edit = false">
-              <v-icon dark> mdi-close-thick </v-icon>
+              <v-icon> mdi-close-thick </v-icon>
             </v-btn>
           </div>
           <v-text-field
@@ -169,7 +168,7 @@
           </div>
             <div class="datetime-section">
               <span class="mr-2">Tiempo de Inicio:</span>
-              <input type="datetime-local" v-model="task.time_start_f" required />
+              <date-time v-model="task.time_start_f" />
             </div>
         </div>
         <div class="m-card__actions">
@@ -192,13 +191,18 @@
     <v-dialog v-model="dlg_remove" max-width="400">
       <div class="m-card">
         <div class="m-card__body">
-          <h3>¿Eliminar la Tarea?</h3>
+          <div class="close-modal">
+            <h3>¿Eliminar la Tarea?</h3>
+            <v-btn class="mx-2" icon small @click="dlg_remove= false">
+              <v-icon dark> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
           <p class="mt-4">
             También se borrarán las respuestas y calificaciones de los alumnos.
           </p>
         </div>
         <div class="m-card__actions">
-          <m-btn @click="dlg_remove = false" color="primary" small
+          <m-btn @click="dlg_remove = false" small class="cancel-button"
             >Cancelar</m-btn
           >
           <m-btn
@@ -228,11 +232,11 @@
 <script>
 import TaskCard from "@/components/globals/Task/TaskCard";
 import Task from "./Task";
-
 import { addTask, removeTask } from "@/services/taskService";
-
 import { TaskModel } from "@/models/Task";
 import variables from "@/models/variables";
+import DateTime from '@/components/globals/DateTime';
+
 
 export default {
   data: () => ({
@@ -349,7 +353,7 @@ export default {
     },
     showCreate() {
       this.task = {
-        time_start_f: this.dateToInput(new Date().addHours(1)),
+        time_start_f: new Date().addHours(1),
         public: false,
       };
       this.dlg_new = true;
@@ -366,7 +370,7 @@ export default {
     showEditDate(task) {
       this.task = {
         _id: task._id,
-        time_start_f: this.dateToInput(task.time_start),
+        time_start_f: task.time_start,
       };
       this.dlg_edit_date = true;
     },
@@ -387,6 +391,7 @@ export default {
   components: {
     Task,
     TaskCard,
+    DateTime
   },
 };
 </script>

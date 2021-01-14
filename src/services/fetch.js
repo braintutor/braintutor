@@ -27,11 +27,12 @@ async function fetch_get(name) {
   return json;
 }
 
-async function fetch_post(name, data) {
+async function sendRequest(name, method="POST", otherParams = { }) {
+
   let res = await fetch(`${getApiUrl()}/${name}`, {
-    method: "POST",
-    body: JSON.stringify(data),
+    method: method,
     headers: getHeaders(),
+    ...otherParams
   });
   let json = await res.json();
   if (res.status >= 400 && res.status < 600) {
@@ -41,6 +42,17 @@ async function fetch_post(name, data) {
 
   return json;
 }
+
+async function fetch_post(name, data) {
+  return sendRequest(name,'POST',{ body: JSON.stringify(data)})
+}
+async function fetch_put(name, data) {
+  return sendRequest(name,'PUT',{ body: JSON.stringify(data)})
+}
+async function fetch_delete(name) {
+  return sendRequest(name, 'DELETE')
+}
+
 
 function handlerCode(code) {
   if (code) {
@@ -53,4 +65,4 @@ function handlerCode(code) {
   }
 }
 
-export { fetch_get, fetch_post, getHeaders };
+export { fetch_get, fetch_post, getHeaders, fetch_put, fetch_delete };

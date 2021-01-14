@@ -123,7 +123,12 @@
     <v-dialog v-model="dialog_password" max-width="400">
       <form @submit.prevent="updatePassword()" class="m-card">
         <div class="m-card__body">
-          <h3>Cambiar Contraseña</h3>
+          <div class="close-modal">
+            <h3>Cambiar Contraseña</h3>
+            <v-btn class="mx-2" icon small @click="dialog_password = false">
+              <v-icon dark> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
           <v-text-field
             class="mt-4 text-field"
             type="password"
