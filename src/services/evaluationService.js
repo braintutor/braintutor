@@ -77,6 +77,20 @@ function removeResult(evaluation_id, student_id) {
   })
 }
 
+function later(delay) {
+  return new Promise(function(resolve) {
+      setTimeout(resolve, delay);
+  });
+}
+
+function scoreEvaluation(evaluation_id, student_id, score) {
+  // return fetch_post('scoreEvaluation', {
+  //   student_id,
+  //   score
+  // })
+  return later(1000).then(() => ({ student: { name: "hello", _id: student_id, score: score, evaluation_id}}))
+}
+
 export {
   getEvaluationsBySession,
   getEvaluationsBySessionStudent,
@@ -90,5 +104,7 @@ export {
   getResultByStudent,
   updateEvaluationAnswers,
   finishEvaluation,
-  removeResult
+  removeResult,
+
+  scoreEvaluation
 }

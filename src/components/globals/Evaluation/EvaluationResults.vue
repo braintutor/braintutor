@@ -7,6 +7,7 @@
             <th></th>
             <th></th>
             <th class="results__spacer"></th>
+            <th>Nota</th>
             <th>C</th>
             <th>I</th>
             <th>B</th>
@@ -48,6 +49,13 @@
               {{ `${student.last_name}, ${student.first_name}` }}
             </td>
             <td></td>
+            <td>
+              <v-text-field
+                class="box-sm"
+                v-model="student.score"
+                @blur="saveScore(student)"
+              ></v-text-field>
+            </td>
             <td class="results__value" title="correctas">{{ student.corrects }}</td>
             <td class="results__value" title="incorrectas">{{ student.incorrects }}</td>
             <td class="results__value" title="vacias">{{ student.emptys }}</td>
@@ -99,6 +107,7 @@
 
 <script>
 import EvaluationStudent from "./EvaluationStudent";
+import { scoreEvaluation } from "@/services/evaluationService";
 
 class Answer {
   static empty(question) { return new Answer(question, undefined)}
@@ -163,6 +172,15 @@ export default {
       this.student_selected = student;
       this.show_evaluation_result = true;
     },
+    async saveScore(student) {
+      this.showLoading("Registrando nota");
+      try {
+        await scoreEvaluation(this.evaluation._id, student._id, student.score)
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
+    }
   },
   components: {
     EvaluationStudent,
@@ -175,6 +193,11 @@ $size-name: 180px;
 $size-value: 32px;
 $size-icon: 32px;
 $size-spacer: 12px;
+$size-box-sm:20px;
+
+.box-sm{
+  width: $size-box-sm;
+}
 
 .results {
   overflow-x: auto;
