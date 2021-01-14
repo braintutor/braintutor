@@ -121,7 +121,7 @@
           <div class="close-modal modal-pd">
             <h2>Editar Tarea</h2>
             <v-btn class="mx-2" icon small @click="dlg_edit = false">
-              <v-icon dark> mdi-close-thick </v-icon>
+              <v-icon> mdi-close-thick </v-icon>
             </v-btn>
           </div>
           <v-text-field

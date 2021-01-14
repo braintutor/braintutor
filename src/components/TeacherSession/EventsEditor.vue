@@ -221,13 +221,18 @@
     <v-dialog v-model="dlg_delete" max-width="400">
       <div class="m-card">
         <div class="m-card__body">
-          <h3>Confirmar eliminación</h3>
+          <div class="close-modal">
+            <h3>Confirmar eliminación</h3>
+            <v-btn class="mx-2" icon small @click="dlg_delete = false">
+              <v-icon>mdi-close-thick</v-icon>
+            </v-btn>
+          </div>
           <p class="mt-4">
             Si elimina este contenido, no podrá revertir los cambios.
           </p>
         </div>
         <div class="m-card__actions">
-          <m-btn color="primary" small @click="dlg_delete = false" class="mr-2"
+          <m-btn class="cancel-button" small @click="dlg_delete = false"
             >Cancelar</m-btn
           >
           <m-btn
