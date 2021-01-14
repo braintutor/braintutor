@@ -1,10 +1,10 @@
-import { fetch_post } from "./fetch";
+import { fetch_post, fetch_get } from "./fetch";
 
 function getEvaluationsBySession(session_id) {
-  return fetch_post('getEvaluationsBySession', {
-    session_id
-  })
+  return fetch_get(`api/v1/evaluation2?session_id=${session_id}`)
 }
+
+
 
 function getEvaluationsBySessionStudent(id) {
   return fetch_post('getEvaluationsBySessionStudent', {

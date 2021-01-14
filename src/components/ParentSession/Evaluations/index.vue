@@ -17,6 +17,9 @@
 
 <script>
 import EvaluationCard from "@/components/globals/Evaluation/EvaluationCard";
+import {
+  getEvaluationsBySession
+} from "@/services/evaluationService.js"; 
 
 export default {
   data: () => ({
@@ -32,7 +35,7 @@ export default {
     this.showLoading("Cargando Evaluaciones");
     try {
       this.evaluations = this.mongoArr(
-        await this.$api.evaluation.getAll(session_id)
+        await getEvaluationsBySession(session_id)
       );
     } catch (error) {
       this.showMessage("", error.msg || error);
