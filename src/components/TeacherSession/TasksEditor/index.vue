@@ -191,13 +191,18 @@
     <v-dialog v-model="dlg_remove" max-width="400">
       <div class="m-card">
         <div class="m-card__body">
-          <h3>¿Eliminar la Tarea?</h3>
+          <div class="close-modal">
+            <h3>¿Eliminar la Tarea?</h3>
+            <v-btn class="mx-2" icon small @click="dlg_remove= false">
+              <v-icon dark> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
           <p class="mt-4">
             También se borrarán las respuestas y calificaciones de los alumnos.
           </p>
         </div>
         <div class="m-card__actions">
-          <m-btn @click="dlg_remove = false" color="primary" small
+          <m-btn @click="dlg_remove = false" small class="cancel-button"
             >Cancelar</m-btn
           >
           <m-btn
@@ -227,9 +232,7 @@
 <script>
 import TaskCard from "@/components/globals/Task/TaskCard";
 import Task from "./Task";
-
 import { addTask, removeTask } from "@/services/taskService";
-
 import { TaskModel } from "@/models/Task";
 import variables from "@/models/variables";
 import DateTime from '@/components/globals/DateTime';
