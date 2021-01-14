@@ -1,4 +1,4 @@
-import { fetch_post, fetch_get, fetch_put } from "./fetch";
+import { fetch_post, fetch_get, fetch_put, fetch_delete} from "./fetch";
 
 function getEvaluationsBySession(session_id) {
   return fetch_get(`api/v1/evaluation2?session_id=${session_id}`)
@@ -38,9 +38,7 @@ function publicEvaluation(evaluation_id) {
 }
 
 function deleteEvaluation(evaluation_id) {
-  return fetch_post('deleteEvaluation', {
-    evaluation_id
-  })
+  return fetch_delete(`api/v1/evaluation2/${evaluation_id}`)
 }
 
 /*************************************************/
