@@ -27,9 +27,9 @@ async function fetch_get(name) {
   return json;
 }
 
-async function fetch_post(name, data) {
+async function sendRequest(name, data, method="POST") {
   let res = await fetch(`${getApiUrl()}/${name}`, {
-    method: "POST",
+    method: method,
     body: JSON.stringify(data),
     headers: getHeaders(),
   });
@@ -42,6 +42,15 @@ async function fetch_post(name, data) {
   return json;
 }
 
+async function fetch_post(name, data) {
+  return sendRequest(name,data,'POST')
+}
+async function fetch_put(name, data) {
+  return sendRequest(name,data,'PUT')
+}
+
+
+
 function handlerCode(code) {
   if (code) {
     // TOKEN EXPIRED
@@ -53,4 +62,4 @@ function handlerCode(code) {
   }
 }
 
-export { fetch_get, fetch_post, getHeaders };
+export { fetch_get, fetch_post, getHeaders, fetch_put };
