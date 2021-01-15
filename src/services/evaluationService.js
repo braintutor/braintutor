@@ -48,15 +48,13 @@ function getResultByStudent(evaluation_id) {
 }
 
 function updateEvaluationAnswers(evaluation_id, answers) {
-  return fetch_post('updateEvaluationAnswers', {
-    evaluation_id,
+  return fetch_post(`api/v1/evaluation2/${evaluation_id}/answer`, {
     answers
   })
 }
 
 function finishEvaluation(evaluation_id) {
-  return fetch_post('finishEvaluation', {
-    evaluation_id
+  return fetch_post(`api/v1/evaluation2/${evaluation_id}/finish`, {
   })
 }
 
