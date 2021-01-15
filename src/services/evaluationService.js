@@ -59,10 +59,7 @@ function finishEvaluation(evaluation_id) {
 }
 
 function removeResult(evaluation_id, student_id) {
-  return fetch_post('removeResult', {
-    evaluation_id,
-    student_id
-  })
+  return fetch_delete(`api/v1/evaluation2/${evaluation_id}/result/${student_id}`)
 }
 
 function later(delay) {
