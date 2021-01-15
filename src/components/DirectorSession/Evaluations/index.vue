@@ -42,7 +42,6 @@
       </div>
       <EvaluationResults
         :evaluation="evaluation_selected"
-        :students="students"
       />
     </div>
   </div>

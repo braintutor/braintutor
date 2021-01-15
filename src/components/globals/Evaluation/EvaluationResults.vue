@@ -68,18 +68,29 @@
 <script>
 import EvaluationStudent from "./EvaluationStudent";
 import { scoreEvaluation } from "@/services/evaluationService";
+import { getStudentsBySession } from "@/services/studentService";
 
 export default {
   props: {
     evaluation: Object,
-    students: Array,
     buttons: Array,
+  },
+  watch: {
+    evaluation: {
+      immediate: true,
+      handler: async function(val) {
+        this.students = this.mongoArr(
+          await getStudentsBySession(val.session_id)
+        );
+      }
+    }
   },
   data: () => ({
     student_selected: null,
     show_evaluation_result: false,
 
     selected: [],
+    students: [],
     headers: [{ text: 'Nombres', value: 'fullName' }, { text: "Nota", value: "score"}]
   }),
   methods: {

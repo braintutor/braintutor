@@ -169,7 +169,6 @@
       <EvaluationResults
         ref="evaluation_results"
         :evaluation="evaluation"
-        :students="students"
         :buttons="[
           {
             text: 'Eliminar Nota',
