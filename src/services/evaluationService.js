@@ -1,10 +1,10 @@
-import { fetch_post } from "./fetch";
+import { fetch_post, fetch_get, fetch_put, fetch_delete} from "./fetch";
 
 function getEvaluationsBySession(session_id) {
-  return fetch_post('getEvaluationsBySession', {
-    session_id
-  })
+  return fetch_get(`api/v1/evaluation2?session_id=${session_id}`)
 }
+
+
 
 function getEvaluationsBySessionStudent(id) {
   return fetch_post('getEvaluationsBySessionStudent', {
@@ -12,35 +12,27 @@ function getEvaluationsBySessionStudent(id) {
   })
 }
 
-function getEvaluationsBySessionDirector(session_id) {
-  return fetch_post('getEvaluationsBySessionDirector', {
-    session_id
-  })
-}
 
 function addEvaluation(session_id, evaluation) {
-  return fetch_post('addEvaluation', {
+  return fetch_post('api/v1/evaluation2', {
     session_id,
     evaluation
   })
 }
 
 function updateEvaluationByTeacher(evaluation) {
-  return fetch_post('updateEvaluationByTeacher', {
+  return fetch_put('api/v1/evaluation2', {
     evaluation
   })
 }
 
 function publicEvaluation(evaluation_id) {
-  return fetch_post('publicEvaluation', {
-    evaluation_id
+  return fetch_post(`api/v1/evaluation2/${evaluation_id}/publish`, {
   })
 }
 
 function deleteEvaluation(evaluation_id) {
-  return fetch_post('deleteEvaluation', {
-    evaluation_id
-  })
+  return fetch_delete(`api/v1/evaluation2/${evaluation_id}`)
 }
 
 /*************************************************/
@@ -77,10 +69,23 @@ function removeResult(evaluation_id, student_id) {
   })
 }
 
+function later(delay) {
+  return new Promise(function(resolve) {
+      setTimeout(resolve, delay);
+  });
+}
+
+function scoreEvaluation(evaluation_id, student_id, score) {
+  // return fetch_post('scoreEvaluation', {
+  //   student_id,
+  //   score
+  // })
+  return later(1000).then(() => ({ student: { name: "hello", _id: student_id, score: score, evaluation_id}}))
+}
+
 export {
   getEvaluationsBySession,
   getEvaluationsBySessionStudent,
-  getEvaluationsBySessionDirector,
   addEvaluation,
   updateEvaluationByTeacher,
   publicEvaluation,
@@ -90,5 +95,7 @@ export {
   getResultByStudent,
   updateEvaluationAnswers,
   finishEvaluation,
-  removeResult
+  removeResult,
+
+  scoreEvaluation
 }

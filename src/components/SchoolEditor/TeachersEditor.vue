@@ -1,20 +1,20 @@
 <template>
   <div class="editor">
     <!-- EDITOR Menu -->
-    <!-- <input
+    <input
       style="display: none"
       id="ipt_file"
       type="file"
       onclick="this.value=null"
       accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
       @change="onLoadFile($event)"
-    /> -->
+    />
     <div class="editor__menu">
       <h2 class="editor__title">Docentes</h2>
       <div>
-        <!-- <m-btn onclick="ipt_file.click()" color="dark" small class="mr-2">
+        <m-btn onclick="ipt_file.click()" color="dark" small class="mr-2">
           <v-icon left small>mdi-file-excel</v-icon>Importar
-        </m-btn> -->
+        </m-btn>
         <m-btn @click="showCreate()" color="primary" small>
           <v-icon left small>mdi-plus</v-icon>Crear
         </m-btn>
@@ -61,7 +61,9 @@
           </tr>
         </tbody>
       </table>
-      <p class="text-center mt-4" v-show="entities.length === 0">No hay docentes</p>
+      <p class="text-center mt-4" v-show="entities.length === 0">
+        No hay docentes
+      </p>
     </div>
 
     <!-- DIALOG -->
@@ -101,7 +103,7 @@
             v-model="entity.password"
             :maxlength="UserModel.username.max_length"
             label="Contraseña"
-            :type="entity.showPassword? 'text': 'password'"
+            :type="entity.showPassword ? 'text' : 'password'"
             required
             :append-icon="entity.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             @click:append="toogleShowPassword(entity)"
@@ -116,8 +118,11 @@
             small
             text
             class="mr-2"
-          >Cerrar</m-btn>
-          <m-btn :loading="loading_btn" color="primary" type="submit" small>Guardar</m-btn>
+            >Cerrar</m-btn
+          >
+          <m-btn :loading="loading_btn" color="primary" type="submit" small
+            >Guardar</m-btn
+          >
         </div>
       </form>
     </v-dialog>
@@ -128,7 +133,14 @@
           <h3>¿Desea eliminar?</h3>
         </div>
         <div class="m-card__actions">
-          <m-btn @click="dlg_remove = false" type="button" color="primary" small class="mr-2">Cerrar</m-btn>
+          <m-btn
+            @click="dlg_remove = false"
+            type="button"
+            color="primary"
+            small
+            class="mr-2"
+            >Cerrar</m-btn
+          >
           <m-btn @click="remove()" color="error" small>Eliminar</m-btn>
         </div>
       </div>
@@ -163,19 +175,108 @@
             small
             text
             class="mr-2"
-          >Cerrar</m-btn>
+            >Cerrar</m-btn
+          >
           <m-btn
             :loading="loading_btn"
-            :disabled="!(new_password.length > 0 && confirm_new_password.length > 0 && new_password === confirm_new_password)"
+            :disabled="
+              !(
+                new_password.length > 0 &&
+                confirm_new_password.length > 0 &&
+                new_password === confirm_new_password
+              )
+            "
             color="primary"
             type="submit"
             small
-          >Guardar</m-btn>
+            >Guardar</m-btn
+          >
         </div>
       </form>
     </v-dialog>
 
     <v-dialog v-model="dlg_import" width="1200" persistent>
+      <v-form ref="form_import" @submit.prevent="saveAll()" class="m-card">
+        <div class="m-card__body">
+          <table class="m-table">
+            <thead>
+              <tr>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+                <th>Correo</th>
+                <th>Usuario</th>
+                <th>Contraseña</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(entity, idx) in new_data" :key="idx">
+                <td class="px-1">
+                  <v-text-field
+                    v-model="entity.first_name"
+                    :rules="nameRules"
+                    dense
+                    autocomplete="off"
+                  ></v-text-field>
+                </td>
+                <td class="px-1">
+                  <v-text-field
+                    v-model="entity.last_name"
+                    :rules="nameRules"
+                    dense
+                    autocomplete="off"
+                  ></v-text-field>
+                </td>
+                <td class="px-1">
+                  <v-text-field
+                    v-model="entity.email"
+                    :rules="emailRules"
+                    dense
+                    autocomplete="off"
+                  ></v-text-field>
+                </td>
+                <td class="px-1">
+                  <v-text-field
+                    v-model="entity.username"
+                    :rules="usernameRules"
+                    dense
+                    autocomplete="off"
+                  ></v-text-field>
+                </td>
+                <td class="px-1">
+                  <v-text-field
+                    v-model="entity.password"
+                    :rules="passwordRules"
+                    dense
+                    autocomplete="off"
+                  ></v-text-field>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="m-card__actions">
+          <m-btn
+            v-if="!loading_btn"
+            color="primary"
+            type="submit"
+            small
+            class="mr-2"
+            >Guardar</m-btn
+          >
+          <m-btn
+            v-if="!loading_btn"
+            @click="dlg_import = false"
+            color="primary"
+            type="button"
+            small
+            text
+            >Cerrar</m-btn
+          >
+        </div>
+      </v-form>
+    </v-dialog>
+
+    <!-- <v-dialog v-model="dlg_import" width="1200" persistent>
       <div class="import m-card">
         <div class="import__body m-card__body">
           <div class="mt-4">
@@ -229,17 +330,21 @@
                   </td>
                   <td>
                     <v-text-field
-                      :type="entity.showPassword? 'text': 'password'"
+                      :type="entity.showPassword ? 'text' : 'password'"
                       v-model="entity.password"
                       :maxlength="UserModel.password.max_length"
                       dense
                       hide-details
                       autocomplete="off"
-                      :append-icon="entity.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                      :append-icon="
+                        entity.showPassword ? 'mdi-eye' : 'mdi-eye-off'
+                      "
                       @click:append="toogleShowPassword(entity)"
                     ></v-text-field>
                   </td>
-                  <td style="color: red; font-size: 0.8rem">{{ entity.response }}</td>
+                  <td style="color: red; font-size: 0.8rem">
+                    {{ entity.response }}
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -253,11 +358,12 @@
             small
             text
             class="mr-2"
-          >Cerrar</m-btn>
-          <!-- <m-btn @click="saveAll()" :loading="loading_btn" color="primary" small>Guardar</m-btn> -->
+            >Cerrar</m-btn
+          >
+          <m-btn @click="saveAll()" :loading="loading_btn" color="primary" small>Guardar</m-btn>
         </div>
       </div>
-    </v-dialog>
+    </v-dialog> -->
   </div>
 </template>
 
@@ -270,7 +376,7 @@ import {
 } from "@/services/teacherService";
 import { updatePasswordByAdmin } from "@/services/userService";
 
-// import * as XLSX from "xlsx";
+import * as XLSX from "xlsx";
 
 import UserModel from "@/models/User";
 
@@ -292,6 +398,22 @@ export default {
     dlg_password: false,
     // import
     new_data: [],
+    nameRules: [
+      (v) => !!v || "Nombre requerido",
+      (v) => /^[a-zA-ZÀ-ÿ\s]+$/.test(v) || "Nombre inválido",
+    ],
+    emailRules: [
+      (v) => !!v || "Correo requerido",
+      (v) => /^[^@]+@[^@]+\.[^@]+$/.test(v) || "Correo inválido",
+    ],
+    usernameRules: [
+      (v) => !!v || "Nombre de usuario requerido",
+      (v) => /^[a-z][a-zñ0-9._@]*$/.test(v) || "Nombre de usuario inválido",
+    ],
+    passwordRules: [
+      (v) => !!v || "Contraseña requerida",
+      (v) => /^\S+$/.test(v) || "Contraseña inválida",
+    ],
     dlg_import: false,
   }),
   async created() {
@@ -349,6 +471,51 @@ export default {
       this.loading_btn = false;
     },
     // Import
+    onLoadFile(e) {
+      let file = e.target.files[0];
+      this.new_data = [];
+      if (!file) return;
+
+      let reader = new FileReader();
+      reader.onload = (e) => {
+        let file_data = e.target.result;
+        let excel = XLSX.read(file_data, { type: "binary" });
+        let names = excel.SheetNames;
+        let data = XLSX.utils.sheet_to_json(excel.Sheets[names[0]]);
+        //
+        if (data.length <= 1000) {
+          this.new_data = data.map((d) => {
+            let {
+              nombres,
+              apellidos,
+              usuario,
+              correo,
+              contraseña,
+              Nombres,
+              Apellidos,
+              Usuario,
+              Correo,
+              Contraseña,
+            } = d;
+            return {
+              first_name: nombres || Nombres || "",
+              last_name: apellidos || Apellidos || "",
+              email: correo || Correo || "",
+              username: usuario || Usuario || "",
+              password: contraseña || Contraseña || "",
+            };
+          });
+          this.dlg_import = true;
+        } else {
+          this.showMessage("", "Error al Importar");
+        }
+      };
+      reader.readAsBinaryString(file);
+    },
+    saveAll() {
+      this.$refs.form_import.validate();
+      console.log("Guardando");
+    },
     // async saveAll() {
     //   this.loading_btn = true;
     //   let i = 0;
@@ -369,44 +536,6 @@ export default {
     //   if (this.new_data.length <= 0) this.dlg_import = false;
     //   this.loading_btn = false;
     // },
-    // onLoadFile(e) {
-    //   let file = e.target.files[0];
-    //   if (file) {
-    //     let reader = new FileReader();
-    //     reader.onload = (e) => {
-    //       let file_data = e.target.result;
-    //       let excel = XLSX.read(file_data, { type: "binary" });
-    //       let names = excel.SheetNames;
-    //       let data = XLSX.utils.sheet_to_json(excel.Sheets[names[0]]);
-    //       //
-    //       if (data.length <= 1000) {
-    //         this.new_data = data.map((d) => {
-    //           let {
-    //             nombres,
-    //             apellidos,
-    //             usuario,
-    //             correo,
-    //             Nombres,
-    //             Apellidos,
-    //             Usuario,
-    //             Correo,
-    //           } = d;
-    //           return {
-    //             first_name: nombres || Nombres || "",
-    //             last_name: apellidos || Apellidos || "",
-    //             email: correo || Correo || "",
-    //             username: usuario || Usuario || "",
-    //           };
-    //         });
-    //         this.showImport();
-    //       } else {
-    //         this.showMessage("", "Error al Importar");
-    //       }
-    //     };
-    //     reader.readAsBinaryString(file);
-    //   }
-    // },
-    //
     toogleShowPassword(e) {
       e.showPassword = !e.showPassword;
       this.$forceUpdate();
@@ -432,10 +561,6 @@ export default {
       this.confirm_new_password = "";
       this.dlg_password = true;
     },
-    // showImport() {
-    //   this.classroom_id_import = this.classroom_id;
-    //   this.dlg_import = true;
-    // },
   },
 };
 </script>
