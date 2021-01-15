@@ -196,6 +196,87 @@
     </v-dialog>
 
     <v-dialog v-model="dlg_import" width="1200" persistent>
+      <v-form ref="form_import" @submit.prevent="saveAll()" class="m-card">
+        <div class="m-card__body">
+          <table class="m-table">
+            <thead>
+              <tr>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+                <th>Correo</th>
+                <th>Usuario</th>
+                <th>Contraseña</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(entity, idx) in new_data" :key="idx">
+                <td class="px-1">
+                  <v-text-field
+                    v-model="entity.first_name"
+                    :rules="nameRules"
+                    dense
+                    autocomplete="off"
+                  ></v-text-field>
+                </td>
+                <td class="px-1">
+                  <v-text-field
+                    v-model="entity.last_name"
+                    :rules="nameRules"
+                    dense
+                    autocomplete="off"
+                  ></v-text-field>
+                </td>
+                <td class="px-1">
+                  <v-text-field
+                    v-model="entity.email"
+                    :rules="emailRules"
+                    dense
+                    autocomplete="off"
+                  ></v-text-field>
+                </td>
+                <td class="px-1">
+                  <v-text-field
+                    v-model="entity.username"
+                    :rules="usernameRules"
+                    dense
+                    autocomplete="off"
+                  ></v-text-field>
+                </td>
+                <td class="px-1">
+                  <v-text-field
+                    v-model="entity.password"
+                    :rules="passwordRules"
+                    dense
+                    autocomplete="off"
+                  ></v-text-field>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="m-card__actions">
+          <m-btn
+            v-if="!loading_btn"
+            color="primary"
+            type="submit"
+            small
+            class="mr-2"
+            >Guardar</m-btn
+          >
+          <m-btn
+            v-if="!loading_btn"
+            @click="dlg_import = false"
+            color="primary"
+            type="button"
+            small
+            text
+            >Cerrar</m-btn
+          >
+        </div>
+      </v-form>
+    </v-dialog>
+
+    <!-- <v-dialog v-model="dlg_import" width="1200" persistent>
       <div class="import m-card">
         <div class="import__body m-card__body">
           <div class="mt-4">
@@ -279,10 +360,10 @@
             class="mr-2"
             >Cerrar</m-btn
           >
-          <!-- <m-btn @click="saveAll()" :loading="loading_btn" color="primary" small>Guardar</m-btn> -->
+          <m-btn @click="saveAll()" :loading="loading_btn" color="primary" small>Guardar</m-btn>
         </div>
       </div>
-    </v-dialog>
+    </v-dialog> -->
   </div>
 </template>
 
@@ -317,6 +398,22 @@ export default {
     dlg_password: false,
     // import
     new_data: [],
+    nameRules: [
+      (v) => !!v || "Nombre requerido",
+      (v) => /^[a-zA-ZÀ-ÿ\s]+$/.test(v) || "Nombre inválido",
+    ],
+    emailRules: [
+      (v) => !!v || "Correo requerido",
+      (v) => /^[^@]+@[^@]+\.[^@]+$/.test(v) || "Correo inválido",
+    ],
+    usernameRules: [
+      (v) => !!v || "Nombre de usuario requerido",
+      (v) => /^[a-z][a-zñ0-9._@]*$/.test(v) || "Nombre de usuario inválido",
+    ],
+    passwordRules: [
+      (v) => !!v || "Contraseña requerida",
+      (v) => /^\S+$/.test(v) || "Contraseña inválida",
+    ],
     dlg_import: false,
   }),
   async created() {
@@ -376,6 +473,7 @@ export default {
     // Import
     onLoadFile(e) {
       let file = e.target.files[0];
+      this.new_data = [];
       if (!file) return;
 
       let reader = new FileReader();
@@ -392,24 +490,31 @@ export default {
               apellidos,
               usuario,
               correo,
+              contraseña,
               Nombres,
               Apellidos,
               Usuario,
               Correo,
+              Contraseña,
             } = d;
             return {
               first_name: nombres || Nombres || "",
               last_name: apellidos || Apellidos || "",
               email: correo || Correo || "",
               username: usuario || Usuario || "",
+              password: contraseña || Contraseña || "",
             };
           });
-          console.log(this.new_data);
+          this.dlg_import = true;
         } else {
           this.showMessage("", "Error al Importar");
         }
       };
       reader.readAsBinaryString(file);
+    },
+    saveAll() {
+      this.$refs.form_import.validate();
+      console.log("Guardando");
     },
     // async saveAll() {
     //   this.loading_btn = true;
@@ -456,10 +561,6 @@ export default {
       this.confirm_new_password = "";
       this.dlg_password = true;
     },
-    // showImport() {
-    //   this.classroom_id_import = this.classroom_id;
-    //   this.dlg_import = true;
-    // },
   },
 };
 </script>
