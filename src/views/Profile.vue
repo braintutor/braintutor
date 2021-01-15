@@ -155,6 +155,15 @@
           ></v-text-field>
         </div>
         <div class="m-card__actions">
+           <m-btn
+            type="button"
+            small
+            text
+            class="cancel-button"
+            v-show="!loading_save"
+            @click="dialog_password = false"
+            >Cancelar</m-btn
+          >
           <m-btn color="primary" small>Guardar</m-btn>
         </div>
       </form>
@@ -828,4 +837,11 @@ export default {
 .learn-md {
   padding: 10px 0px;
 }
+
+.cancel-button {
+  background: none;
+  border: 1px solid gray;
+  margin-right: 8px;
+}
+
 </style>
