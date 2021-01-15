@@ -186,6 +186,12 @@
     <!-- DIALOG UNIT -->
     <v-dialog v-model="dlg_unit" width="400" persistent>
       <form @submit.prevent="createUnit()" class="m-card">
+        <div class="close-modal modal-crUnidad">
+          <h3>Crear Unidad</h3>
+          <v-btn class="mx-2" icon small @click="dlg_unit = false">
+              <v-icon dark> mdi-close-thick </v-icon>
+            </v-btn>        
+        </div>
         <div class="m-card__body">
           <v-text-field
             v-model="unit_name"
@@ -199,10 +205,9 @@
             v-if="!loading_btn"
             type="button"
             @click="dlg_unit = false"
-            color="primary"
             text
             small
-            class="mr-2"
+            class="cancel-button"
             >Cancelar</m-btn
           >
           <m-btn type="submit" color="primary" :loading="loading_btn" small
@@ -215,6 +220,12 @@
     <v-dialog v-model="dlg_material" width="400" persistent>
       <form @submit.prevent="createMaterial(unit_selected)" class="m-card">
         <div class="m-card__body">
+          <div class="close-modal">
+            <h3>Crear Material</h3>
+            <v-btn class="mx-2" icon small @click="dlg_material= false">
+              <v-icon dark> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
           <v-text-field
             v-model="material_name"
             :maxlength="MaterialModel.name.max_length"
@@ -227,10 +238,9 @@
             v-if="!loading_btn"
             type="button"
             @click="dlg_material = false"
-            color="primary"
             text
             small
-            class="mr-2"
+            class="cancel-button"
             >Cancelar</m-btn
           >
           <m-btn type="submit" color="primary" :loading="loading_btn" small
@@ -630,5 +640,21 @@ export default {
       background: #f3f3f3;
     }
   }
+}
+
+.close-modal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-crUnidad {
+  padding: 15px;
+}
+
+.cancel-button {
+  background: none;
+  border: 1px solid gray;
+  margin-right: 8px;
 }
 </style>

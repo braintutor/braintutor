@@ -1,90 +1,50 @@
 <template>
   <div>
     <div v-show="!show_evaluation_result" class="results">
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th></th>
-            <th class="results__spacer"></th>
-            <th>Nota</th>
-            <th>C</th>
-            <th>I</th>
-            <th>B</th>
-            <th class="results__spacer"></th>
-            <th v-for="(c, idx) in evaluation.content" :key="idx">
-              {{ idx + 1 }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(student, idx) in students" :key="idx" class="result">
-            <td>
-              <v-menu offset-y>
-                <template v-slot:activator="{ on }">
-                  <v-btn
-                    :disabled="!student.has_answer"
-                    icon
-                    v-on="on"
-                    class="pb-1"
-                  >
-                    <v-icon style="font-size: 1.4rem">mdi-dots-vertical</v-icon>
-                  </v-btn>
-                </template>
-                <v-list dense>
-                  <v-list-item @click="showEvaluationStudent(student)">
-                    <v-list-item-title>Ver Examen</v-list-item-title>
-                  </v-list-item>
-                  <v-list-item
-                    v-for="(button, idx) in buttons"
-                    :key="idx"
-                    @click="button.action(student)"
-                  >
-                    <v-list-item-title>{{ button.text }}</v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
-            </td>
-            <td class="results__name">
-              {{ `${student.last_name}, ${student.first_name}` }}
-            </td>
-            <td></td>
-            <td>
-              <v-text-field
-                class="box-sm"
-                v-model="student.score"
-                @blur="saveScore(student)"
-              ></v-text-field>
-            </td>
-            <td class="results__value" title="correctas">{{ student.corrects }}</td>
-            <td class="results__value" title="incorrectas">{{ student.incorrects }}</td>
-            <td class="results__value" title="vacias">{{ student.emptys }}</td>
-            <td></td>
-            <td v-for="(answer, idx) in student.answers" :key="idx">
-              <span
-                class="answer"
-                :class="[
-                  answer.hasBeenAnswered
-                    ? answer.isCorrect
-                      ? 'answer--correct'
-                      : 'answer--incorrect'
-                    : 'answer--empty',
-                ]"
-              >
-                <i
-                  v-if="answer.hasBeenAnswered"
-                  class="fa"
-                  :class="[
-                    answer.isCorrect
-                      ? 'fa-check'
-                      : 'fa-close',
-                  ]"
-                ></i>
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <v-btn class="mb-4">Entregar notas</v-btn>
+      <v-data-table
+        v-model="selected"
+        :headers="headers"
+        :items="students"
+        item-key="_id"
+        show-select
+        disable-pagination
+        hide-default-footer
+      >
+        <template v-slot:item.fullName="{ item }">
+          {{ `${item.last_name}, ${item.first_name}` }}
+        </template>
+        <template v-slot:item.score="{ item }">
+          <div class="d-flex">
+            <v-text-field
+              class="box-sm"
+              v-model="item.score"
+              @blur="saveScore(item)"
+            ></v-text-field>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  color="primary"
+                  icon
+                  v-bind="attrs"
+                  v-on="on"
+                  @click="showEvaluationStudent(item)"
+                >
+                  <v-icon>mdi-magnify</v-icon>              
+                </v-btn>
+              </template>
+              <span>Ver Examen</span>
+            </v-tooltip>
+            
+          </div>
+
+          <!--:disabled="!student.has_answer" 
+             <td v-for="(button, idx) in buttons" :key="idx" @click="button.action(student)">
+            <v-btn>{{ button.text }}</v-btn>
+          </td> -->
+
+        </template>
+      </v-data-table>
     </div>
 
     <div v-if="show_evaluation_result">
@@ -109,26 +69,6 @@
 import EvaluationStudent from "./EvaluationStudent";
 import { scoreEvaluation } from "@/services/evaluationService";
 
-class Answer {
-  static empty(question) { return new Answer(question, undefined)}
-  constructor(question, value) {
-    this.question = question
-    this.value = value
-  }
-
-  get hasBeenAnswered() {
-    return this.value >= 0
-  }
-
-  get isIncorrect() {
-    return this.hasBeenAnswered && this.value !== this.question.correct
-  }
-
-  get isCorrect() {
-    return this.hasBeenAnswered && this.value === this.question.correct
-  }
-}
-
 export default {
   props: {
     evaluation: Object,
@@ -138,36 +78,11 @@ export default {
   data: () => ({
     student_selected: null,
     show_evaluation_result: false,
-  }),
-  created() {
-    this.init();
-  },
-  methods: {
-    init() {
-      this.students.forEach((student) => {
-        let result = this.evaluation.results.find((r) => r._id === student._id);
-        if (result) {
-          student.answers = this.evaluation.content.map((c, idx) => new Answer(c, result.answers[idx]));
-          student.has_answer = true;
-        } else {
-          student.answers = this.evaluation.content.map(c => Answer.empty(c))
-          student.has_answer = false;
-        }
 
-        student.corrects = this.corrects(student).length;
-        student.incorrects = this.incorrects(student).length;
-        student.emptys = this.emptys(student).length;
-      });
-    },
-    corrects(student) {
-      return student.answers.filter(answer => answer.isCorrect)
-    },
-    incorrects(student) {
-      return student.answers.filter(answer => answer.isIncorrect)
-    },
-    emptys(student) {
-      return student.answers.filter(answer => !answer.hasBeenAnswered)
-    },
+    selected: [],
+    headers: [{ text: 'Nombres', value: 'fullName' }, { text: "Nota", value: "score"}]
+  }),
+  methods: {
     showEvaluationStudent(student) {
       this.student_selected = student;
       this.show_evaluation_result = true;

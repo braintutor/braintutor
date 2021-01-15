@@ -30,13 +30,18 @@
     <v-dialog v-model="dlg_remove" max-width="400">
       <div class="m-card">
         <div class="m-card__body">
-          <h3>Confirmar eliminación</h3>
+          <div class="close-modal">
+            <h3>Confirmar eliminación</h3>
+            <v-btn class="mx-2" icon small @click="dlg_remove= false">
+              <v-icon dark> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
           <p class="mt-4">
             Si elimina este contenido, no podrá revertir los cambios.
           </p>
         </div>
         <div class="m-card__actions">
-          <m-btn @click="dlg_remove = false" color="primary" small class="mr-2"
+          <m-btn @click="dlg_remove = false" small class="cancel-button"
             >Cancelar</m-btn
           >
           <m-btn
@@ -57,7 +62,6 @@
 <script>
 import { redirect } from "@/services/router.js";
 import { updateMaterial, removeMaterial } from "@/services/materialService";
-
 import MaterialModel from "@/models/Material";
 
 export default {
@@ -108,5 +112,11 @@ export default {
 .settings {
   max-width: 600px;
   margin: 0 auto;
+}
+
+.close-modal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>
