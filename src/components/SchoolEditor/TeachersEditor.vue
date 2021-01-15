@@ -70,8 +70,13 @@
     <v-dialog v-model="dlg_edit" max-width="600" persistent>
       <form @submit.prevent="save()" class="m-card">
         <div class="m-card__body">
-          <h3 v-if="action === 'CREATE'">Crear</h3>
-          <h3 v-else>Editar</h3>
+          <div class="close-modal">
+            <h3 v-if="action === 'CREATE'">Crear</h3>
+            <h3 v-else>Editar</h3>
+            <v-btn class="mx-2" icon small @click="dlg_edit = false">
+              <v-icon dark> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
           <v-text-field
             v-model="entity.first_name"
             :maxlength="UserModel.first_name.max_length"
@@ -113,11 +118,10 @@
           <m-btn
             v-if="!loading_btn"
             @click="dlg_edit = false"
-            color="primary"
             type="button"
             small
             text
-            class="mr-2"
+            class="cancel-button"
             >Cerrar</m-btn
           >
           <m-btn :loading="loading_btn" color="primary" type="submit" small
@@ -130,16 +134,20 @@
     <v-dialog v-model="dlg_remove" width="400">
       <div class="m-card">
         <div class="m-card__body">
-          <h3>¿Desea eliminar?</h3>
+          <div class="close-modal">
+            <h3>¿Desea eliminar?</h3>
+            <v-btn class="mx-2" icon small @click="dlg_remove = false">
+              <v-icon dark> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
         </div>
         <div class="m-card__actions">
           <m-btn
             @click="dlg_remove = false"
             type="button"
-            color="primary"
             small
-            class="mr-2"
-            >Cerrar</m-btn
+            class="cancel-button"
+            >Cancelar</m-btn
           >
           <m-btn @click="remove()" color="error" small>Eliminar</m-btn>
         </div>
@@ -149,6 +157,12 @@
     <v-dialog v-model="dlg_password" width="400" persistent>
       <form @submit.prevent="savePassword()" class="m-card">
         <div class="m-card__body">
+          <div class="close-modal">
+            <h3>Cambiar contraseña</h3>
+            <v-btn class="mx-2" icon small @click="dlg_password = false">
+              <v-icon dark> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
           <v-text-field
             type="password"
             class="text-field"
@@ -170,12 +184,11 @@
           <m-btn
             v-if="!loading_btn"
             @click="dlg_password = false"
-            color="primary"
             type="button"
             small
             text
-            class="mr-2"
-            >Cerrar</m-btn
+            class="cancel-button"
+            >Cancelar</m-btn
           >
           <m-btn
             :loading="loading_btn"
@@ -587,5 +600,17 @@ export default {
     overflow-y: auto;
     padding-top: 0;
   }
+}
+
+.close-modal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cancel-button {
+  background: none;
+  border: 1px solid gray;
+  margin-right: 8px;
 }
 </style>
