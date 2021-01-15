@@ -69,26 +69,6 @@
 import EvaluationStudent from "./EvaluationStudent";
 import { scoreEvaluation } from "@/services/evaluationService";
 
-class Answer {
-  static empty(question) { return new Answer(question, undefined)}
-  constructor(question, value) {
-    this.question = question
-    this.value = value
-  }
-
-  get hasBeenAnswered() {
-    return this.value >= 0
-  }
-
-  get isIncorrect() {
-    return this.hasBeenAnswered && this.value !== this.question.correct
-  }
-
-  get isCorrect() {
-    return this.hasBeenAnswered && this.value === this.question.correct
-  }
-}
-
 export default {
   props: {
     evaluation: Object,
@@ -102,35 +82,7 @@ export default {
     selected: [],
     headers: [{ text: 'Nombres', value: 'fullName' }, { text: "Nota", value: "score"}]
   }),
-  created() {
-    this.init();
-  },
   methods: {
-    init() {
-      this.students.forEach((student) => {
-        let result = this.evaluation.results.find((r) => r._id === student._id);
-        if (result) {
-          student.answers = this.evaluation.content.map((c, idx) => new Answer(c, result.answers[idx]));
-          student.has_answer = true;
-        } else {
-          student.answers = this.evaluation.content.map(c => Answer.empty(c))
-          student.has_answer = false;
-        }
-
-        student.corrects = this.corrects(student).length;
-        student.incorrects = this.incorrects(student).length;
-        student.emptys = this.emptys(student).length;
-      });
-    },
-    corrects(student) {
-      return student.answers.filter(answer => answer.isCorrect)
-    },
-    incorrects(student) {
-      return student.answers.filter(answer => answer.isIncorrect)
-    },
-    emptys(student) {
-      return student.answers.filter(answer => !answer.hasBeenAnswered)
-    },
     showEvaluationStudent(student) {
       this.student_selected = student;
       this.show_evaluation_result = true;
