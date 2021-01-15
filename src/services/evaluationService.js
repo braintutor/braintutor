@@ -38,9 +38,7 @@ function deleteEvaluation(evaluation_id) {
 /*************************************************/
 
 function getEvaluationByStudent(evaluation_id) {
-  return fetch_post('getEvaluationByStudent', {
-    evaluation_id
-  })
+  return fetch_post(`api/v1/evaluation2/${evaluation_id}/take`, {})
 }
 
 function getResultByStudent(evaluation_id) {
