@@ -164,6 +164,12 @@
     <v-dialog v-model="dialog_test_2" max-width="1000">
       <div v-if="profile.learning_style" class="m-card">
         <div class="m-card__body">
+          <div class="close-modal learn-md">
+            <h3>Estilos de aprendizaje</h3>
+            <v-btn class="mx-2" icon small @click="dialog_test_2 = false">
+              <v-icon> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
           <p v-if="profile.learning_style.procesamiento === 'activo'">
             <strong>ACTIVO:</strong> Prefiere hacer cosas que puede comprobar en
             el mundo real. Tiende a ser extrovertido. No aprende de situaciones
@@ -811,5 +817,15 @@ export default {
   border-radius: 10px;
   font-size: 1.4rem;
   text-align: center;
+}
+
+.close-modal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.learn-md {
+  padding: 10px 0px;
 }
 </style>
