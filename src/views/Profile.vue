@@ -126,7 +126,7 @@
           <div class="close-modal">
             <h3>Cambiar Contraseña</h3>
             <v-btn class="mx-2" icon small @click="dialog_password = false">
-              <v-icon dark> mdi-close-thick </v-icon>
+              <v-icon> mdi-close-thick </v-icon>
             </v-btn>
           </div>
           <v-text-field

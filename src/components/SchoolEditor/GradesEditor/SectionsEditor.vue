@@ -48,7 +48,12 @@
     <v-dialog v-model="dlg_create" max-width="600" persistent>
       <form @submit.prevent="create()" class="m-card">
         <div class="m-card__body">
-          <h3>Crear</h3>
+          <div class="close-modal">
+            <h3>Crear</h3>
+            <v-btn class="mx-2" icon small @click="dlg_create = false">
+              <v-icon>mdi-close-thick</v-icon>
+            </v-btn>
+          </div>
           <v-text-field
             v-model="section.name"
             :maxlength="SectionModel.name.max_length"
@@ -62,12 +67,11 @@
           <m-btn
             v-if="!loading_btn"
             @click="dlg_create = false"
-            color="primary"
             type="button"
             small
             text
-            class="mr-2"
-            >Cerrar</m-btn
+            class="cancel-button"
+            >Cancelar</m-btn
           >
           <m-btn color="primary" type="submit" :loading="loading_btn" small
             >Guardar</m-btn
@@ -80,7 +84,12 @@
     <v-dialog v-model="dlg_edit" max-width="600" persistent>
       <form @submit.prevent="update()" class="m-card">
         <div class="m-card__body">
-          <h3>Editar</h3>
+          <div class="close-modal">
+            <h3>Editar</h3>
+            <v-btn class="mx-2" icon small @click="dlg_edit = false">
+              <v-icon>mdi-close-thick</v-icon>
+            </v-btn>
+          </div>
           <v-text-field
             v-model="section.name"
             :maxlength="SectionModel.name.max_length"
@@ -94,12 +103,11 @@
           <m-btn
             v-if="!loading_btn"
             @click="dlg_edit = false"
-            color="primary"
             type="button"
             small
             text
-            class="mr-2"
-            >Cerrar</m-btn
+            class="cancel-button"
+            >Cancelar</m-btn
           >
           <m-btn color="primary" type="submit" :loading="loading_btn" small
             >Guardar</m-btn
@@ -111,11 +119,14 @@
     <!-- DLG REMOVE -->
     <v-dialog v-model="dlg_remove" max-width="400">
       <div class="m-card">
-        <div class="m-card__body">
+        <div class="m-card__body close-modal">
           <h3>¿Desea eliminar?</h3>
+          <v-btn class="mx-2" icon small @click="dlg_remove = false">
+            <v-icon> mdi-close-thick </v-icon>
+          </v-btn>
         </div>
         <div class="m-card__actions">
-          <m-btn @click="dlg_remove = false" color="primary" small class="mr-2"
+          <m-btn @click="dlg_remove = false" small class="cancel-button"
             >Cancelar</m-btn
           >
           <m-btn
@@ -239,5 +250,17 @@ export default {
     padding: 18px 24px;
     flex-grow: 1;
   }
+}
+
+.close-modal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cancel-button {
+  background: none;
+  border: 1px solid gray;
+  margin-right: 8px;
 }
 </style>

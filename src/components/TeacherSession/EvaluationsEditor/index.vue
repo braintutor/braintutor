@@ -89,7 +89,7 @@
             <div class="close-modal">
               <h3>Modificar Tiempo</h3>
               <v-btn class="mx-2" icon small @click="dlg_update_time= false">
-                <v-icon dark> mdi-close-thick </v-icon>
+                <v-icon> mdi-close-thick </v-icon>
               </v-btn>
             </div>
             <div v-if="evaluation_selected" class="mt-4">
