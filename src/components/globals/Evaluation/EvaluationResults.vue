@@ -65,7 +65,7 @@
 
 <script>
 import EvaluationStudent from "./EvaluationStudent";
-import { scoreEvaluation } from "@/services/evaluationService";
+import { scoreEvaluation } from "@/services/evaluationResultService";
 import { getResults } from "@/services/evaluationService";
 
 
@@ -95,10 +95,14 @@ export default {
       this.evaluation_result_selected = student;
       this.show_evaluation_result = true;
     },
-    async saveScore(student) {
+    async saveScore(evaluationResult) {
+      if(!evaluationResult.score) {
+        return
+      }
+
       this.showLoading("Registrando nota");
       try {
-        await scoreEvaluation(this.evaluation._id, student._id, student.score)
+        await scoreEvaluation(evaluationResult.id, evaluationResult.score)
       } catch (error) {
         this.showMessage("", error.msg || error);
       }

@@ -62,20 +62,6 @@ function removeResult(evaluation_id, student_id) {
   return fetch_delete(`api/v1/evaluation2/${evaluation_id}/result/${student_id}`)
 }
 
-function later(delay) {
-  return new Promise(function(resolve) {
-      setTimeout(resolve, delay);
-  });
-}
-
-function scoreEvaluation(evaluation_id, student_id, score) {
-  // return fetch_post('scoreEvaluation', {
-  //   student_id,
-  //   score
-  // })
-  return later(1000).then(() => ({ student: { name: "hello", _id: student_id, score: score, evaluation_id}}))
-}
-
 function getResults(evaluation_id) {
   return fetch_get(`api/v1/evaluation2/evaluation-result/${evaluation_id}`)
 }
@@ -94,7 +80,5 @@ export {
   finishEvaluation,
   removeResult,
 
-  getResults,
-
-  scoreEvaluation
+  getResults
 }
