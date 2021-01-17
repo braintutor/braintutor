@@ -40,16 +40,16 @@
 export default {
   props: {
     evaluation: Object,
-    student: Object,
   },
   data: () => ({
     answers: [],
   }),
   created() {
-    let result = this.evaluation.results.find(
-      (r) => r._id === this.student._id
-    );
-    if (result) this.answers = result.answers;
+    // TODO: 
+    // let result = this.evaluation.results.find(
+    //   (r) => r._id === this.student._id
+    // );
+    // if (result) this.answers = result.answers;
   },
 };
 </script>

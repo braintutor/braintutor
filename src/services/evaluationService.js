@@ -76,6 +76,10 @@ function scoreEvaluation(evaluation_id, student_id, score) {
   return later(1000).then(() => ({ student: { name: "hello", _id: student_id, score: score, evaluation_id}}))
 }
 
+function getResults(evaluation_id) {
+  return fetch_get(`api/v1/evaluation2/evaluation-result/${evaluation_id}`)
+}
+
 export {
   getEvaluationsBySession,
   getEvaluationsBySessionStudent,
@@ -89,6 +93,8 @@ export {
   updateEvaluationAnswers,
   finishEvaluation,
   removeResult,
+
+  getResults,
 
   scoreEvaluation
 }
