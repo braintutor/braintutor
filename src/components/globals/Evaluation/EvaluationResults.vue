@@ -12,7 +12,7 @@
         hide-default-footer
       >
         <template v-slot:item.fullName="{ item }">
-          {{ `${item.last_name}, ${item.first_name}` }}
+          {{ item.student.full_name }}
         </template>
         <template v-slot:item.score="{ item }">
           <div class="d-flex">
@@ -54,43 +54,55 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
           <p class="m-menu__title">
-            {{
-              `${student_selected.last_name}, ${student_selected.first_name}`
-            }}
+            {{evaluation_result_selected.student.full_name}}
           </p>
         </div>
       </div>
-      <EvaluationStudent :evaluation="evaluation" :student="student_selected" />
+      <EvaluationStudent :evaluation="evaluation" />
     </div>
   </div>
 </template>
 
 <script>
 import EvaluationStudent from "./EvaluationStudent";
-import { scoreEvaluation } from "@/services/evaluationService";
+import { scoreEvaluation } from "@/services/evaluationResultService";
+import { getResults } from "@/services/evaluationService";
+
 
 export default {
   props: {
     evaluation: Object,
-    students: Array,
     buttons: Array,
   },
+  watch: {
+    evaluation: {
+      immediate: true,
+      handler: async function(val) {
+        this.students =  (await getResults(val._id)).results
+      }
+    }
+  },
   data: () => ({
-    student_selected: null,
+    evaluation_result_selected: null,
     show_evaluation_result: false,
 
     selected: [],
+    students: [],
     headers: [{ text: 'Nombres', value: 'fullName' }, { text: "Nota", value: "score"}]
   }),
   methods: {
     showEvaluationStudent(student) {
-      this.student_selected = student;
+      this.evaluation_result_selected = student;
       this.show_evaluation_result = true;
     },
-    async saveScore(student) {
+    async saveScore(evaluationResult) {
+      if(!evaluationResult.score) {
+        return
+      }
+
       this.showLoading("Registrando nota");
       try {
-        await scoreEvaluation(this.evaluation._id, student._id, student.score)
+        await scoreEvaluation(evaluationResult.id, evaluationResult.score)
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
