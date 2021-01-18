@@ -80,7 +80,12 @@
     <v-dialog v-model="dlg_create" max-width="600" persistent>
       <div class="m-card">
         <div class="m-card__body">
-          <h3>Nueva Sesión</h3>
+          <div class="close-modal">
+            <h3>Nueva Sesión</h3>
+            <v-btn class="mx-2" icon small @click="dlg_create = false">
+              <v-icon> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
           <v-select
             v-model="entity.course_id"
             :items="courses"
@@ -102,11 +107,10 @@
           <m-btn
             v-if="!ldg_save"
             @click="dlg_create = false"
-            color="primary"
             text
             small
-            class="mr-2"
-            >Cerrar</m-btn
+            class="cancel-button"
+            >Cancelar</m-btn
           >
           <m-btn @click="add()" :loading="ldg_save" color="primary" small
             >Guardar</m-btn
@@ -119,7 +123,12 @@
     <v-dialog v-model="dlg_edit" max-width="600" persistent>
       <div class="m-card">
         <div class="m-card__body">
-          <h3>Asignar Docente</h3>
+          <div class="close-modal">
+            <h3>Asignar Docente</h3>
+            <v-btn class="mx-2" icon small @click="dlg_edit = false">
+              <v-icon> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
           <p class="mt-4">
             <strong>{{
               (courses.find((c) => c._id === entity.course_id) || {}).name
@@ -138,11 +147,10 @@
           <m-btn
             v-if="!ldg_save"
             @click="dlg_edit = false"
-            color="primary"
             text
             small
-            class="mr-2"
-            >Cerrar</m-btn
+            class="cancel-button"
+            >Cancelar</m-btn
           >
           <m-btn @click="update()" :loading="ldg_save" color="primary" small
             >Guardar</m-btn
@@ -155,7 +163,12 @@
     <v-dialog v-model="dlg_remove" max-width="400">
       <div class="m-card">
         <div class="m-card__body">
-          <h3>¿Desea eliminar?</h3>
+          <div class="close-modal">
+            <h3>¿Desea eliminar?</h3>
+            <v-btn class="mx-2" icon small @click="dlg_remove = false">
+              <v-icon> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
           <p class="mt-4">
             La sesión no debe tener evaluaciones ni tareas asignadas para
             continuar con la eliminación.
@@ -163,7 +176,7 @@
           <p>Los eventos creados dentro de la sesión serán eliminados.</p>
         </div>
         <div class="m-card__actions">
-          <m-btn @click="dlg_remove = false" color="primary" small class="mr-2"
+          <m-btn @click="dlg_remove = false" small class="cancel-button"
             >Cancelar</m-btn
           >
           <m-btn @click="remove()" color="error" small>Eliminar</m-btn>
@@ -370,5 +383,17 @@ export default {
     grid-template-columns: repeat(2, 1fr);
     column-gap: 20px;
   }
+}
+
+.close-modal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cancel-button {
+  background: none;
+  border: 1px solid gray;
+  margin-right: 8px;
 }
 </style>

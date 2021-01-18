@@ -186,7 +186,12 @@
     <v-dialog v-model="dlg_remove" width="400">
       <form @submit.prevent="remove()" class="m-card">
         <div class="m-card__body">
-          <h3>¿Desea eliminar?</h3>
+          <div class="close-modal">
+            <h3>¿Desea eliminar?</h3>
+            <v-btn class="mx-2" icon small @click="dlg_remove = false">
+              <v-icon> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
           <p class="mt-4">
             Es posible que el alumno tenga evaluaciones guardadas. ¿Desea
             Continuar?
@@ -207,10 +212,9 @@
           <m-btn
             @click="dlg_remove = false"
             type="button"
-            color="primary"
             small
-            class="mr-2"
-            >Cerrar</m-btn
+            class="cancel-button"
+            >Cancelar</m-btn
           >
           <m-btn
             :disabled="entity.username !== username"
@@ -226,6 +230,12 @@
     <v-dialog v-model="dlg_password" width="400" persistent>
       <form @submit.prevent="savePassword()" class="m-card">
         <div class="m-card__body">
+          <div class="close-modal">
+            <h3>¿Desea eliminar?</h3>
+            <v-btn class="mx-2" icon small @click="dlg_password = false">
+              <v-icon> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
           <v-text-field
             type="password"
             class="text-field"
@@ -247,12 +257,11 @@
           <m-btn
             v-if="!loading_btn"
             @click="dlg_password = false"
-            color="primary"
             type="button"
             small
             text
-            class="mr-2"
-            >Cerrar</m-btn
+            class="cancel-button"
+            >Cancelar</m-btn
           >
           <m-btn
             :loading="loading_btn"
@@ -359,11 +368,10 @@
           <m-btn
             v-if="!loading_btn"
             @click="dlg_import = false"
-            color="primary"
             small
             text
-            class="mr-2"
-            >Cerrar</m-btn
+            class="cancel-button"
+            >Cancelar</m-btn
           >
           <m-btn @click="saveAll()" :loading="loading_btn" color="primary" small
             >Guardar</m-btn

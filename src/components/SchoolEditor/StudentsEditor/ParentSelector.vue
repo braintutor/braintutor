@@ -2,22 +2,40 @@
   <v-dialog :value="value" max-width="800" persistent>
     <div class="m-card parents">
       <div class="m-card__body pb-0">
+        <div class="close-modal">
+          <h3>Asignar padre</h3>
+          <v-btn class="mx-2" icon small @click="$emit('input', false)">
+            <v-icon> mdi-close-thick </v-icon>
+          </v-btn>
+        </div>
         <!-- CURRENT PARENT -->
         <div class="subtitle mb-3">Padre Asignado</div>
         <div v-if="parent_selected" class="current m-card">
           <div class="m-card__body current__body">
-            <strong>{{`${parent_selected.last_name}, ${parent_selected.first_name}`}}</strong>
+            <strong>{{
+              `${parent_selected.last_name}, ${parent_selected.first_name}`
+            }}</strong>
             <v-icon @click="parent_selected = null">mdi-close</v-icon>
           </div>
         </div>
         <div class="current--empty subtitle" v-else>No Asignado</div>
         <!-- NEW PARENT -->
-        <v-text-field v-model="search_parent" label="Buscar" class="mt-4"></v-text-field>
+        <v-text-field
+          v-model="search_parent"
+          label="Buscar"
+          class="mt-4"
+        ></v-text-field>
       </div>
       <div class="m-card__body parents__body">
-        <div v-for="(parent, idx) in parents_filtered" :key="idx" class="parent m-card mt-4">
+        <div
+          v-for="(parent, idx) in parents_filtered"
+          :key="idx"
+          class="parent m-card mt-4"
+        >
           <div class="parent__body m-card__body">
-            <div class="parent__name">{{`${parent.last_name}, ${parent.first_name}`}}</div>
+            <div class="parent__name">
+              {{ `${parent.last_name}, ${parent.first_name}` }}
+            </div>
             <v-icon @click="select(parent)">mdi-plus</v-icon>
           </div>
         </div>
@@ -26,12 +44,14 @@
         <m-btn
           v-if="!loading_save"
           @click="$emit('input', false)"
-          color="primary"
           small
           text
-          class="mr-2"
-        >Cancelar</m-btn>
-        <m-btn @click="save()" color="primary" :loading="loading_save" small>Guardar</m-btn>
+          class="cancel-button"
+          >Cancelar</m-btn
+        >
+        <m-btn @click="save()" color="primary" :loading="loading_save" small
+          >Guardar</m-btn
+        >
       </div>
     </div>
   </v-dialog>
@@ -51,6 +71,7 @@ export default {
     search_parent: "",
     parent_id: "",
     loading_save: false,
+    
   }),
   computed: {
     parents_filtered() {
@@ -139,5 +160,17 @@ export default {
 .subtitle {
   font-size: 0.8rem;
   color: rgb(134, 134, 134);
+}
+
+.close-modal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cancel-button {
+  background: none;
+  border: 1px solid gray;
+  margin-right: 8px;
 }
 </style>

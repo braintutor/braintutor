@@ -291,4 +291,16 @@ export default {
     margin: 0;
   }
 }
+
+.close-modal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cancel-button {
+  background: none;
+  border: 1px solid gray;
+  margin-right: 8px;
+}
 </style>
