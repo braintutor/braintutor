@@ -189,8 +189,8 @@
         <div class="close-modal modal-crUnidad">
           <h3>Crear Unidad</h3>
           <v-btn class="mx-2" icon small @click="dlg_unit = false">
-              <v-icon dark> mdi-close-thick </v-icon>
-            </v-btn>        
+            <v-icon> mdi-close-thick </v-icon>
+          </v-btn>
         </div>
         <div class="m-card__body">
           <v-text-field
@@ -222,8 +222,8 @@
         <div class="m-card__body">
           <div class="close-modal">
             <h3>Crear Material</h3>
-            <v-btn class="mx-2" icon small @click="dlg_material= false">
-              <v-icon dark> mdi-close-thick </v-icon>
+            <v-btn class="mx-2" icon small @click="dlg_material = false">
+              <v-icon> mdi-close-thick </v-icon>
             </v-btn>
           </div>
           <v-text-field
@@ -253,7 +253,12 @@
     <v-dialog v-model="dlg_remove_material" max-width="400">
       <div class="m-card">
         <div class="m-card__body">
-          <h3>Confirmar eliminación</h3>
+          <div class="close-modal">
+            <h3>Confirmar eliminación</h3>
+            <v-btn class="mx-2" icon small @click="dlg_remove_material = false">
+              <v-icon> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
           <p class="mt-4">
             Si elimina este contenido, no podrá revertir los cambios.
           </p>
@@ -262,9 +267,8 @@
           <m-btn
             v-if="!loading_btn"
             @click="dlg_remove_material = false"
-            color="primary"
             small
-            class="mr-2"
+            class="cancel-button"
             >Cancelar</m-btn
           >
           <m-btn
@@ -281,6 +285,12 @@
     <v-dialog v-model="dlg_update_material_unit" width="400" persistent>
       <div class="m-card">
         <div class="m-card__body">
+          <div class="close-modal">
+            <h3>Cambiar unidad</h3>
+            <v-btn class="mx-2" icon small @click="dlg_update_material_unit = false">
+              <v-icon> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
           <v-select
             v-model="unit_selected"
             :items="units"
@@ -294,10 +304,9 @@
             v-if="!loading_btn"
             type="button"
             @click="dlg_update_material_unit = false"
-            color="primary"
             text
             small
-            class="mr-2"
+            class="cancel-button"
             >Cancelar</m-btn
           >
           <m-btn
