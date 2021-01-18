@@ -46,7 +46,12 @@
       <v-dialog v-model="dialog_start" persistent max-width="400">
         <div class="m-card">
           <div class="m-card__body">
-            <h3>Iniciar Evaluación</h3>
+            <div class="close-modal">
+              <h3>Iniciar Evaluación</h3>
+              <v-btn class="mx-2" icon small @click="dialog_start = false">
+                <v-icon>mdi-close-thick</v-icon>
+              </v-btn>
+            </div>
             <p class="mt-4">
               Una vez que inicias una evaluación, solo tendrás una oportunidad
               para responderla.
@@ -54,8 +59,8 @@
             <p class="mt-4">No cierres la pestaña o cambies de página.</p>
           </div>
           <div class="m-card__actions">
-            <m-btn @click="dialog_start = false" color="primary" small text
-              >Cerrar</m-btn
+            <m-btn @click="dialog_start = false" small text class="cancel-button"
+              >Cancelar</m-btn
             >
             <m-btn
               @click="
@@ -163,4 +168,17 @@ export default {
     opacity: 0.75;
   }
 }
+
+.close-modal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cancel-button {
+  background: none;
+  border: 1px solid gray;
+  margin-right: 8px;
+}
+
 </style>
