@@ -56,8 +56,7 @@
               v-if="progress_materials.includes(m._id.$oid)"
               class="progress progress--complete"
             >
-              <v-icon
-                style="font-size: 1.25rem; opacity: 0.7"
+              <v-icon style="font-size: 1.25rem; opacity: 0.7"
                 >mdi-check</v-icon
               >
             </div>
@@ -65,9 +64,7 @@
               <span>{{ m.name }}</span>
               <v-tooltip bottom v-if="m.is_private">
                 <template v-slot:activator="{ on, attrs }">
-                  <v-icon 
-                    v-bind="attrs"
-                    v-on="on">
+                  <v-icon v-bind="attrs" v-on="on">
                     mdi-eye-off-outline
                   </v-icon>
                 </template>
@@ -124,7 +121,12 @@
     <v-dialog v-model="dlg_remove" max-width="400">
       <div class="m-card">
         <div class="m-card__body">
-          <h3>¿Quieres reiniciar el progreso?</h3>
+          <div class="cancel-modal">
+            <h3>¿Quieres reiniciar el progreso?</h3>
+            <v-btn class="mx-2" icon small @click="dlg_remove = false">
+              <v-icon> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
           <p class="mt-4">
             El progreso de este curso se reiniciará. ¿Quieres continuar?
           </p>
@@ -132,10 +134,9 @@
         <div class="m-card__actions">
           <m-btn
             @click="dlg_remove = false"
-            color="primary"
             small
             text
-            class="mr-2"
+            class="cancel-button"
             >Cancelar</m-btn
           >
           <m-btn
