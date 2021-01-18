@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-show="!show_evaluation_result" class="results">
-      <v-btn class="mb-4">Entregar notas</v-btn>
+      <v-btn class="mb-4" :disabled="selected.length === 0" @click="publishScores">Entregar notas</v-btn>
       <v-data-table
         v-model="selected"
         :headers="headers"
@@ -16,26 +16,32 @@
         </template>
         <template v-slot:item.score="{ item }">
           <div class="d-flex">
-            <v-text-field
-              class="box-sm"
-              v-model="item.score"
-              @blur="saveScore(item)"
-            ></v-text-field>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  color="primary"
-                  icon
-                  v-bind="attrs"
-                  v-on="on"
-                  @click="showEvaluationStudent(item)"
-                >
-                  <v-icon>mdi-magnify</v-icon>              
-                </v-btn>
-              </template>
-              <span>Ver Examen</span>
-            </v-tooltip>
-            
+              <v-text-field
+                class="box-sm"
+                placeholder="0"
+                v-model="item.score"
+                @blur="saveScore(item)"
+                :hint="!item.is_score_published? 'Aún no devuelto': false"
+                persistent-hint
+              >
+                <template v-slot:append-outer>
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        color="primary"
+                        icon
+                        v-bind="attrs"
+                        v-on="on"
+                        @click="showEvaluationStudent(item)"
+                        
+                      >
+                        <v-icon>mdi-magnify</v-icon>              
+                      </v-btn>
+                    </template>
+                    <span>Ver Examen</span>  
+                  </v-tooltip>
+                </template>
+              </v-text-field>    
           </div>
 
           <!--:disabled="!student.has_answer" 
@@ -65,7 +71,7 @@
 
 <script>
 import EvaluationStudent from "./EvaluationStudent";
-import { scoreEvaluation } from "@/services/evaluationResultService";
+import { scoreEvaluation, publishScores } from "@/services/evaluationResultService";
 import { getResults } from "@/services/evaluationService";
 
 
@@ -103,6 +109,18 @@ export default {
       this.showLoading("Registrando nota");
       try {
         await scoreEvaluation(evaluationResult.id, evaluationResult.score)
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
+    },
+    async publishScores() {
+      const studentEvaluationIds = this.selected.map(x => x.id)
+      this.showLoading("Publicando notas");
+      try {
+        await publishScores(studentEvaluationIds)
+        // refresh
+        this.students =  (await getResults(this.evaluation._id)).results
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
