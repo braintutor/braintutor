@@ -6,7 +6,7 @@
         v-model="selected"
         :headers="headers"
         :items="students"
-        item-key="_id"
+        item-key="id"
         show-select
         disable-pagination
         hide-default-footer
@@ -64,7 +64,7 @@
           </p>
         </div>
       </div>
-      <EvaluationStudent :evaluation="evaluation" />
+      <EvaluationStudent :student-evaluation-id="evaluation_result_selected.id" />
     </div>
   </div>
 </template>
