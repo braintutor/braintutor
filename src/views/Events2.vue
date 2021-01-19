@@ -9,6 +9,7 @@
           :events="events"
           color="primary"
           type="week"
+          @click:time="addEvent"
         ></v-calendar>
       </v-sheet>
     </v-col>
@@ -17,9 +18,14 @@
 
 <script>
 import range from "lodash/range";
+import { add, parse, format } from "date-fns/fp";
 
 const thursday = 10
 const friday = 11
+
+const parseDate = parse(new Date())("yyyy-MM-dd HH:mm")
+const formatDate = format("yyyy-MM-dd HH:mm")
+
 
 const mondayTo = (endDay, event) => range(7, endDay + 1).map(x => '2019-01-'+x)
     .map(date => ({
@@ -109,6 +115,26 @@ const mondayTo = (endDay, event) => range(7, endDay + 1).map(x => '2019-01-'+x)
     mounted () {
       this.$refs.calendar.scrollToTime('08:00')
     },
+    methods: {
+      addEvent(dateTime) {
+        const start = this.getStart(dateTime)
+        const end = add({ hours: 1 })(parseDate(start))
+
+        const newEvent = {
+          name: "Un curso",
+          start,
+          end: formatDate(end),
+          color: "blue"
+        }
+        console.log(newEvent)
+        this.events.push(newEvent)
+      },
+      getStart(dateTime) {
+        // round to 0, 30
+        const minute = dateTime.minute <= 30? 0: 30 
+        return dateTime.date + " " + dateTime.hour + ":" + minute
+      }
+    }
   }
 </script>
 
