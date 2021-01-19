@@ -132,14 +132,25 @@
             required
           ></v-text-field>
           <v-select
-            v-model="grade_id_form"
-            :items="grades"
+            v-model="level_form"
+            :items="levels"
             item-text="name"
             item-value="_id"
-            label="Aula"
+            label="Nivel"
             required
           ></v-select>
           <v-select
+            v-if="level_form"
+            v-model="grade_id_form"
+            :items="grades_form"
+            item-text="name"
+            item-value="_id"
+            label="Aula"
+            class="mt-4"
+            required
+          ></v-select>
+          <v-select
+            v-if="grade_id_form"
             v-model="entity.section_id"
             :items="sections_form"
             item-text="name"
@@ -411,6 +422,7 @@ export default {
     sections: [],
     section_id: "",
     sections_form: [],
+    level_form: null,
     levels: [
       {
         _id: "PRI",
@@ -445,6 +457,9 @@ export default {
   computed: {
     grades_f() {
       return this.grades.filter((g) => g.level === this.level_selected);
+    },
+    grades_form() {
+      return this.grades.filter((g) => g.level === this.level_form);
     },
   },
   watch: {
@@ -503,7 +518,15 @@ export default {
         this.hideLoading();
       }
     },
+    //
+    level_form() {
+      let grades = this.grades.filter((g) => g.level === this.level_form);
+      if (!grades.find((g) => g._id === this.grade_id_form))
+        this.grade_id_form = null;
+    },
     async grade_id_form() {
+      if (!this.grade_id_form) return;
+
       this.loading_btn = true;
       try {
         let sections = this.mongoArr(
@@ -678,6 +701,7 @@ export default {
       this.entity = {
         section_id: this.section_id,
       };
+      this.level_form = this.level_selected;
       this.grade_id_form = this.grade_id;
       this.action = "CREATE";
       this.dlg_edit = true;
