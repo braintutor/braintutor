@@ -192,7 +192,12 @@
     <v-dialog v-model="dialog_public" max-width="400">
       <div class="m-card">
         <div class="m-card__body">
-          <h3>Confirmar publicación</h3>
+          <div class="close-modal">
+            <h3>Confirmar publicación</h3>
+            <v-btn class="mx-2" icon small @click="dialog_public = false">
+              <v-icon> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
           <p class="mt-4">
             Una vez publicada la evaluación, no podrá modificar su contenido.
           </p>
@@ -200,10 +205,9 @@
         <div class="m-card__actions">
           <m-btn
             @click="dialog_public = false"
-            color="primary"
             small
             text
-            class="mr-2"
+            class="cancel-button"
             >Cancelar</m-btn
           >
           <m-btn
@@ -276,7 +280,7 @@ import {
 
 import EvaluationModel from "@/models/Evaluation";
 import QuestionModel from "@/models/Question";
-import DateTime from '@/components/globals/DateTime';
+import DateTime from "@/components/globals/DateTime";
 
 export default {
   props: ["evaluation", "unselect"],
@@ -369,7 +373,7 @@ export default {
   },
   components: {
     Files,
-    DateTime
+    DateTime,
   },
 };
 </script>

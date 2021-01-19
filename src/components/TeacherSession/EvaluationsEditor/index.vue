@@ -182,14 +182,19 @@
     <v-dialog v-model="dlg_remove_result" max-width="400">
       <div class="m-card">
         <div class="m-card__body">
-          <h3>Confirmar eliminación</h3>
+          <div class="close-modal">
+            <h3>Confirmar eliminación</h3>
+            <v-btn class="mx-2" icon small @click="dlg_remove_result = false">
+              <v-icon> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>          
           <p class="mt-4">
             Si elimina la nota actual, el alumno podrá realizar el examen otra
             vez.
           </p>
         </div>
         <div class="m-card__actions">
-          <m-btn @click="dlg_remove_result = false" color="primary" small
+          <m-btn @click="dlg_remove_result = false" small class="cancel-button"
             >Cancelar</m-btn
           >
           <m-btn
