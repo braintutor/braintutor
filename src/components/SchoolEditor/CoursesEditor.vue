@@ -27,8 +27,8 @@
           <tr>
             <th class="text-left">Nombre</th>
             <th class="text-left">Encargado</th>
-            <th class="text-left">N° Unidades</th>
-            <th class="text-left">N° Materiales</th>
+            <!-- <th class="text-left">N° Unidades</th>
+            <th class="text-left">N° Materiales</th> -->
             <th></th>
           </tr>
         </thead>
@@ -36,8 +36,8 @@
           <tr v-for="(e, e_idx) in entities_aux" :key="e_idx">
             <td>{{ e.name }}</td>
             <td>{{ e.teacher }}</td>
-            <td class="text-center">{{ e.units_count }}</td>
-            <td class="text-center">{{ e.materials_count }}</td>
+            <!-- <td class="text-center">{{ e.units_count }}</td>
+            <td class="text-center">{{ e.materials_count }}</td> -->
             <td class="text-center">
               <v-menu offset-y>
                 <template v-slot:activator="{ on, attrs }">
