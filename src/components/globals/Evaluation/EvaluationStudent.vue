@@ -1,7 +1,7 @@
 <template>
   <div class="evaluation">
     <div
-      v-for="(c, c_idx) in evaluation.content"
+      v-for="(c, c_idx) in studentEvaluation.evaluation.content"
       :key="c_idx"
       class="evaluation__question m-card mb-3"
     >
@@ -18,7 +18,7 @@
           <span
             class="alternative__checkbox mr-3"
             :class="{
-              'alternative__checkbox--active': a_idx === answers[c_idx],
+              'alternative__checkbox--active': a_idx === studentEvaluation.answers[c_idx],
             }"
           ></span>
           <span
@@ -26,7 +26,7 @@
             :class="{
               'alternative__text--correct': a_idx === c.correct,
               'alternative__text--incorrect':
-                a_idx !== c.correct && a_idx === answers[c_idx],
+                a_idx !== c.correct && a_idx === studentEvaluation.answers[c_idx],
             }"
             >{{ alternative }}</span
           >
@@ -37,20 +37,23 @@
 </template>
 
 <script>
+import { getStudentEvaluation } from "@/services/evaluationResultService";
+
 export default {
   props: {
-    evaluation: Object,
+    studentEvaluationId: String,
   },
   data: () => ({
-    answers: [],
+    studentEvaluation: [],
   }),
-  created() {
-    // TODO: 
-    // let result = this.evaluation.results.find(
-    //   (r) => r._id === this.student._id
-    // );
-    // if (result) this.answers = result.answers;
-  },
+  watch: {
+    studentEvaluationId: {
+      immediate: true,
+      handler: async function(id) {
+        this.studentEvaluation =  await getStudentEvaluation(id)
+      }
+    }
+  }
 };
 </script>
 
