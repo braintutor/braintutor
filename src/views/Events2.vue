@@ -21,17 +21,21 @@
 import { getEvents } from "./event"
 import { add, parse, format } from "date-fns/fp";
 
-
 const parseDate = parse(new Date())("yyyy-MM-dd HH:mm")
 const formatDate = format("yyyy-MM-dd HH:mm")
 
   export default {
     data: () => ({
       today: '2019-01-08',
-      events: getEvents({startDate: "", endDate: ""}),
+      events: [],
     }),
     mounted () {
       this.$refs.calendar.scrollToTime('08:00')
+      console.log("jjjjj")
+      getEvents({startDate: "", endDate: ""})
+      .then(x => {
+        this.events = x.results
+      })
     },
     methods: {
       addEvent(dateTime) {
