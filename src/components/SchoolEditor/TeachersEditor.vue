@@ -527,7 +527,6 @@ export default {
     },
     saveAll() {
       this.$refs.form_import.validate();
-      console.log("Guardando");
     },
     // async saveAll() {
     //   this.loading_btn = true;
