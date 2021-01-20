@@ -37,20 +37,27 @@
         <div class="m-card">
           <div class="m-card__body">
             <div class="close-modal">
-              <h3>Modificar Tiempo</h3>
+              <h3>Lenguaje y comunicación</h3>
               <v-btn class="mx-2" icon small @click="isEventSelected = false">
                 <v-icon> mdi-close-thick </v-icon>
               </v-btn>
             </div>
+            <p class="date-modal">
+              Jueves, 21 enero. 8:00 – 9:30am cada semana, el martes, jueves,
+              viernes, 13 veces
+            </p>
+            <v-avatar color="indigo">
+              <v-icon dark> mdi-account-circle </v-icon>
+            </v-avatar>
           </div>
           <div class="m-card__actions">
-            <m-btn
-              @click="isEventSelected = false"
-              class="cancel-button"
-              small
-              text
-              >Cancelar</m-btn
-            >
+            <!-- <m-btn
+            @click="isEventSelected = false"
+            class="cancel-button"
+            small
+            text
+            >Cancelar</m-btn
+          > -->
             <m-btn
               @click="
                 isEventSelected = false;
@@ -59,7 +66,7 @@
               color="primary"
               small
               class="ml-2"
-              >Guardar</m-btn
+              >Entrar a clase</m-btn
             >
           </div>
         </div>
@@ -75,7 +82,7 @@ export default {
   data: () => ({
     events: [],
     isEventSelected: false,
-    focus: ''
+    focus: "",
   }),
   async mounted() {
     this.$refs.calendar.scrollToTime("08:00");
@@ -83,7 +90,9 @@ export default {
 
   methods: {
     async fetchEvents(e) {
-      this.events = (await getEvents({ startDate: e.start.date, endDate: e.end.date })).results;
+      this.events = (
+        await getEvents({ startDate: e.start.date, endDate: e.end.date })
+      ).results;
     },
     getStart(dateTime) {
       // round to 0, 30
@@ -103,5 +112,14 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+.close-modal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.date-modal {
+  padding: 10px 0px 0px 0px;
+}
 </style>
