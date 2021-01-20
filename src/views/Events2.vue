@@ -2,6 +2,14 @@
   <v-row>
     <v-col>
       <v-sheet height="800">
+        <div class="d-flex justify-space-between mb-6">
+          <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
+            <v-icon>mdi-chevron-left</v-icon>
+          </v-btn>
+          <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
+            <v-icon>mdi-chevron-right</v-icon>
+          </v-btn>
+        </div>
         <v-calendar
           ref="calendar"
           :now="today"
@@ -20,20 +28,27 @@
       <div class="m-card">
         <div class="m-card__body">
           <div class="close-modal">
-            <h3>Modificar Tiempo</h3>
+            <h3>Lenguaje y comunicación</h3>
             <v-btn class="mx-2" icon small @click="isEventSelected = false">
               <v-icon> mdi-close-thick </v-icon>
             </v-btn>
           </div>
+          <p class="date-modal">
+            Jueves, 21 enero. 8:00 – 9:30am cada semana, el martes, jueves,
+            viernes, 13 veces
+          </p>
+          <v-avatar color="indigo">
+            <v-icon dark> mdi-account-circle </v-icon>
+          </v-avatar>
         </div>
         <div class="m-card__actions">
-          <m-btn
+          <!-- <m-btn
             @click="isEventSelected = false"
             class="cancel-button"
             small
             text
             >Cancelar</m-btn
-          >
+          > -->
           <m-btn
             @click="
               isEventSelected = false;
@@ -42,7 +57,7 @@
             color="primary"
             small
             class="ml-2"
-            >Guardar</m-btn
+            >Entrar a clase</m-btn
           >
         </div>
       </div>
@@ -81,5 +96,14 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+.close-modal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.date-modal {
+  padding: 10px 0px 0px 0px;
+}
 </style>
