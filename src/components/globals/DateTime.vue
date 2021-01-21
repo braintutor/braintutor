@@ -1,22 +1,30 @@
 <template>
-    <v-datetime-picker v-model="dateTime"
-        :date-picker-props="{'locale': 'es-ES'}"
-        :disabled="disabled"
-    >
-        <template slot="dateIcon">
-        <v-icon>mdi-calendar</v-icon>
-        </template>
-        <template slot="timeIcon">
-        <v-icon>mdi-clock-outline</v-icon>
-        </template>
-    </v-datetime-picker>
+  <v-datetime-picker
+    v-model="dateTime"
+    :date-picker-props="{ locale: 'es-ES' }"
+    :disabled="disabled"
+    :text-field-props="textFieldProps"
+  >
+    <template slot="dateIcon">
+      <v-icon>mdi-calendar</v-icon>
+    </template>
+    <template slot="timeIcon">
+      <v-icon>mdi-clock-outline</v-icon>
+    </template>
+  </v-datetime-picker>
 </template>
 
 <script>
 export default {
+    data() {
+        return {
+            textFieldProps: {prependInnerIcon: 'mdi-calendar'}
+        }
+    },
     props: {
         value: Date,
-        disabled: { type: Boolean, default: false }
+        disabled: { type: Boolean, default: false },
+        
     },
     computed: {
         dateTime: {
@@ -28,5 +36,4 @@ export default {
 </script>
 
 <style>
-
 </style>
