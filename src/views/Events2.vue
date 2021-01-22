@@ -20,6 +20,8 @@
       <v-col>
         <v-sheet height="800">
           <v-calendar
+            v-bind:interval-format="intervalFormat"
+            v-bind:weekdays="weekdays"
             v-model="focus"
             ref="calendar"
             color="primary"
@@ -83,16 +85,21 @@ export default {
     events: [],
     isEventSelected: false,
     focus: "",
+    weekdays: [ 1,2,3,4,5,6]
   }),
   async mounted() {
     this.$refs.calendar.scrollToTime("08:00");
   },
-
+  
   methods: {
     async fetchEvents(e) {
       this.events = (
         await getEvents({ startDate: e.start.date, endDate: e.end.date })
       ).results;
+    },
+    intervalFormat(date) {
+      console.log(date)
+      return date.time
     },
     getStart(dateTime) {
       // round to 0, 30
