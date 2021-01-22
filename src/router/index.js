@@ -79,6 +79,11 @@ const routes = [
         component: () => import("../components/SchoolEditor/DirectorEditor"),
       },
       {
+        path: "director",
+        name: "school-editor-school-cycle",
+        component: () => import("../components/SchoolEditor/SchoolCycleEditor"),
+      },
+      {
         path: "parents",
         name: "school-editor-parents",
         component: () => import("../components/SchoolEditor/ParentsEditor"),
