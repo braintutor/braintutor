@@ -20,6 +20,11 @@ export default {
         text: "Docentes",
         name: "school-editor-teachers",
       },
+       {
+        image: require(`@/assets/icons/icon-teacher.svg`),
+        text: "Horario Escolar",
+        name: "school-editor-schedule",
+      },
       {
         image: require(`@/assets/icons/icon-course.svg`),
         text: "Cursos",
