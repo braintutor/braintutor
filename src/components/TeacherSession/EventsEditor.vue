@@ -131,7 +131,7 @@
           </div>
           <div class="mt-5">
             <strong class="mr-3">Fecha:</strong>
-            <date-time v-model="date_selected"/>
+            <date-time v-model="date_selected"/>            
           </div>
           <div class="mt-4">
             <v-text-field
