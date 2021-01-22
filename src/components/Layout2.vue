@@ -149,6 +149,10 @@ $sidebar-spacing: 6px;
   }
 }
 
+.link__name {
+  text-align: center;
+}
+
 // @media only screen and (max-width: 2000px) {
 @media only screen and (max-width: 768px) {
   .app {

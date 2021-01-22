@@ -13,11 +13,16 @@
       <table class="m-table">
         <thead>
           <tr>
-            <th class="text-left">Marzo 2021</th>
+            <th class="text-left">Ciclo escolar</th>
+            <th class="text-left">Fecha de inicio</th>
+            <th class="text-left">Fecha de Fin</th>
           </tr>
         </thead>
         <tbody>
-          <tr>Bimestre 2021</tr>
+          <tr>
+            <td>Bimestre 2021</td>
+            <td></td>
+          </tr>
         </tbody>
       </table>
     </div>
