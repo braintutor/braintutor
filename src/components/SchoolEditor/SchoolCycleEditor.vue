@@ -5,7 +5,7 @@
         <h2>Ciclo académico escolar</h2>
         <strong class="ml-2 mt-1" style="opacity: 0.5"></strong>
       </div>
-      <m-btn color="primary" small>
+      <m-btn color="primary" small @click="isEditDialogVisible = true">
         <v-icon small class="mr-2">mdi-plus</v-icon>Crear
       </m-btn>
     </div>
@@ -17,15 +17,58 @@
           </tr>
         </thead>
         <tbody>
-          <tr>Bimestre 2021</tr>
+          <tr>
+            Bimestre 2021
+          </tr>
         </tbody>
       </table>
     </div>
+    <brain-dialog
+      v-model="isEditDialogVisible"
+      @submit="save"
+      :loading="loading_save"
+    >
+      <template #body>
+        <div class="close-modal">
+          <h3>Crear</h3>
+          <v-btn class="mx-2" icon small @click="isEditDialogVisible = false">
+            <v-icon> mdi-close-thick </v-icon>
+          </v-btn>
+        </div>
+        <date-input label="Inicio" v-model="start"/>
+        <date-input label="Fin" v-model="end"/>
+      </template>
+      <template #actions>
+        <m-btn color="primary" type="submit" :loading="loading_save" small
+          >Guardar</m-btn
+        >
+      </template>
+    </brain-dialog>
   </div>
 </template>
 
 <script>
-export default {};
+import BrainDialog from "./BrainDialog";
+import DateInput from './DateInput.vue';
+
+export default {
+  components: {
+    BrainDialog,
+    DateInput,
+  },
+  data() {
+    return {
+      isEditDialogVisible: false,
+      loading_save: false,
+      
+      start: '',
+      end: ''
+    };
+  },
+  methods: {
+    save() {},
+  },
+};
 </script>
 
 <style lang="scss">
@@ -43,5 +86,12 @@ export default {};
   &__content {
     overflow-x: auto;
   }
+}
+
+// TODO: move to brain-dialog
+.close-modal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>
