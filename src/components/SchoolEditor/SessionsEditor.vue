@@ -133,30 +133,6 @@
       </div>
     </v-dialog>
 
-    <!-- DLG REMOVE -->
-    <v-dialog v-model="dlg_remove" max-width="400">
-      <div class="m-card">
-        <div class="m-card__body">
-          <div class="close-modal">
-            <h3>¿Desea eliminar?</h3>
-            <v-btn class="mx-2" icon small @click="dlg_remove = false">
-              <v-icon> mdi-close-thick </v-icon>
-            </v-btn>
-          </div>
-          <p class="mt-4">
-            La sesión no debe tener evaluaciones ni tareas asignadas para
-            continuar con la eliminación.
-          </p>
-          <p>Los eventos creados dentro de la sesión serán eliminados.</p>
-        </div>
-        <div class="m-card__actions">
-          <m-btn @click="dlg_remove = false" small class="cancel-button"
-            >Cancelar</m-btn
-          >
-          <m-btn @click="remove()" color="error" small>Eliminar</m-btn>
-        </div>
-      </div>
-    </v-dialog>
   </div>
 </template>
 
@@ -171,7 +147,6 @@ export default {
     teachers: [],
     dlg_create: false,
     dlg_edit: false,
-    dlg_remove: false,
     ldg_save: false,
     query: {},
   }),
@@ -244,7 +219,6 @@ export default {
     },
     async remove() {
       this.showLoading("Eliminando");
-      this.dlg_remove = false;
       try {
         await this.$api.session.remove(this.entity._id);
         this.entities = this.entities.filter((e) => e._id !== this.entity._id);
@@ -264,7 +238,23 @@ export default {
     },
     async showRemove(e) {
       this.entity = e;
-      this.dlg_remove = true;
+      this.$confirm(
+        {
+          callback: (confirm) => {
+            if (confirm) {
+              this.remove()
+            }
+          },
+          message: `
+           <p class="mt-4">
+            La sesión no debe tener evaluaciones ni tareas asignadas para
+            continuar con la eliminación.
+          </p>
+          <p>Los eventos creados dentro de la sesión serán eliminados.</p>
+          `,
+        },
+        "delete"
+      );
     },
   },
 };
