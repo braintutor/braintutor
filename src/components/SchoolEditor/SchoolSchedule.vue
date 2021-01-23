@@ -1,36 +1,46 @@
 <template>
-  <form @submit.prevent="save()" class="school m-card">
-    <div class="m-card__body">
-      <h3>Horarios</h3>
-      <input
-        @change="onFileSelected($event)"
-        onclick="value = null"
-        type="file"
-      />
+  <div>
+    <h2>Horarios</h2>
+    <div class="d-flex justify-space-between">
+      <SessionFilter @query="filter"></SessionFilter>
+      <form @submit.prevent="save()">
+        <div class="m-card__body">
+          <input
+            @change="onFileSelected($event)"
+            onclick="value = null"
+            type="file"
+          />
+        </div>
+        <div class="m-card__actions">
+          <m-btn color="primary" small>Subir horarios</m-btn>
+        </div>
+      </form>
     </div>
-    <div class="m-card__actions">
-      <m-btn color="primary" small>Guardar</m-btn>
-    </div>
-  </form>
+
+    <Calendario :query=queryCalendar></Calendario>
+  </div>
 </template>
 
 <script>
 import { getSchool } from "@/services/schoolService";
 import { loadSchedule } from "@/services/scheduleService";
 import SchoolModel from "@/models/School";
+import Calendario from "@/components/Calendar";
+import SessionFilter from "@/components/globals/Session/Filter";
 
 export default {
+  components: { Calendario, SessionFilter },
   data: () => ({
-    links: [],
     school: {},
     SchoolModel,
     file: null,
+    queryCalendar : {}
   }),
   async mounted() {
     this.showLoading("Cargando Datos");
     try {
       this.school = await getSchool();
-      this.school = this.mongo(this.school)
+      this.school = this.mongo(this.school);
     } catch (error) {
       this.showMessage("", error.msg || error);
     }
@@ -50,35 +60,10 @@ export default {
     },
     async onFileSelected(e) {
       this.file = e.target.files[0];
-      // if (!file) return;
-
-      // this.showLoading("Guardando Cambios");
-      // var formData = new FormData();
-      // formData.append("file", file);
-
-      // try {
-      //   let { url } = await this.$api.school.updateImage(formData);
-      //   this.school.image = url;
-      // } catch (error) {
-      //   this.showMessage("", error.msg || error);
-      // }
-      // this.hideLoading();
+    },
+    filter(query) {
+      this.queryCalendar = query
     },
   },
 };
 </script>
-
-<style lang='scss' scoped>
-.school {
-  max-width: 600px;
-  margin: 0 auto;
-
-  &__image {
-    img {
-      display: block;
-      margin: 0 auto;
-      max-width: 100%;
-    }
-  }
-}
-</style>
