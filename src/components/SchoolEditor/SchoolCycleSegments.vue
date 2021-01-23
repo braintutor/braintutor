@@ -9,10 +9,11 @@
         <h4>{{ text }} {{ segment.number }}</h4>
       </v-col>
       <v-col>
-        <date-input label="Inicio" v-model="segment.start" />
+
+        <date-input label="Inicio"  v-model="segment.start" />
       </v-col>
       <v-col>
-        <date-input label="Fin" v-model="segment.end" />
+        <date-input label="Fin" :date-picker-props="{'min': segment.start}" v-model="segment.end" />
       </v-col>
     </v-row>
   </v-container>

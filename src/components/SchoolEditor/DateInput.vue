@@ -16,7 +16,7 @@
         v-on="on"
       ></v-text-field>
     </template>
-    <v-date-picker v-model="date" scrollable>
+    <v-date-picker v-model="date" scrollable v-bind="datePickerProps">
       <v-spacer></v-spacer>
       <v-btn text color="primary" @click="modal = false"> Cancel </v-btn>
       <v-btn text color="primary" @click="$refs.dialog.save(date)"> OK </v-btn>
@@ -29,6 +29,7 @@ export default {
   props: {
     value: String,
     label: String,
+    datePickerProps: Object
   },
   data() {
     return {
