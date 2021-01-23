@@ -78,8 +78,7 @@
 </template>
 
 <script>
-import { getEvents } from "./event";
-
+import { getEvents, generateColor } from "./event";
 export default {
   data: () => ({
     events: [],
@@ -96,9 +95,9 @@ export default {
       this.events = (
         await getEvents({ startDate: e.start.date, endDate: e.end.date })
       ).results;
+      this.events.map( e => { console.log(generateColor(e["color"])); e["color"] = generateColor(e["color"]) ; return e})
     },
     intervalFormat(date) {
-      console.log(date)
       return date.time
     },
     getStart(dateTime) {
