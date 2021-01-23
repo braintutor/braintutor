@@ -25,7 +25,7 @@ export default {
     props: {
         value: { type: Boolean, default: false },
         loading: { type: Boolean, default: false },
-        maxWidth:{ type: String, defualt: "600"}
+        maxWidth:{ type: String, default: "600"}
     },
     computed: {
         isVisible: {
