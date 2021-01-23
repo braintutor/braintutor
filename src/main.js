@@ -4,6 +4,7 @@ import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
 import "./plugins/api";
+import "./plugins/confirm/index";
 import "./mixins";
 import "./styles/main.scss";
 import "normalize.css";

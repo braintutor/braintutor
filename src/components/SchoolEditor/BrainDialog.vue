@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="isVisible" max-width="600" persistent>
+  <v-dialog v-model="isVisible" :max-width="maxWidth" persistent>
     <form @submit.prevent="$emit('submit')" class="m-card">
       <div class="m-card__body">
           <slot name="body"></slot>
@@ -25,6 +25,7 @@ export default {
     props: {
         value: { type: Boolean, default: false },
         loading: { type: Boolean, default: false },
+        maxWidth:{ type: String, defualt: "600"}
     },
     computed: {
         isVisible: {
@@ -40,7 +41,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 .cancel-button {
   background: none;
   border: 1px solid gray;

@@ -14,8 +14,6 @@
         <v-icon left small>mdi-plus</v-icon>Crear
       </m-btn>
     </div>
-
-    <!-- EDITOR Filter -->
     <SessionFilter @query="filter"></SessionFilter>
 
     <!-- SESSIONS -->
@@ -50,120 +48,75 @@
       </p>
     </div>
 
-    <!-- DLG CREATE -->
-    <v-dialog v-model="dlg_create" max-width="600" persistent>
-      <div class="m-card">
-        <div class="m-card__body">
-          <div class="close-modal">
-            <h3>Nueva Sesión</h3>
-            <v-btn class="mx-2" icon small @click="dlg_create = false">
-              <v-icon> mdi-close-thick </v-icon>
-            </v-btn>
-          </div>
-          <v-select
-            v-model="entity.course_id"
-            :items="courses"
-            item-text="name"
-            item-value="_id"
-            label="Curso"
-            class="mt-4"
-          ></v-select>
-          <v-select
-            v-model="entity.teacher_id"
-            :items="teachers"
-            item-text="name"
-            item-value="_id"
-            label="Profesor"
-            class="mt-4"
-          ></v-select>
+    <brain-dialog v-model="dlg_create" @submit="add" :loading="ldg_save">
+      <template #body>
+        <div class="close-modal">
+          <h3>Nueva Sesión</h3>
+          <v-btn class="mx-2" icon small @click="dlg_create = false">
+            <v-icon> mdi-close-thick </v-icon>
+          </v-btn>
         </div>
-        <div class="m-card__actions">
-          <m-btn
-            v-if="!ldg_save"
-            @click="dlg_create = false"
-            text
-            small
-            class="cancel-button"
-            >Cancelar</m-btn
-          >
-          <m-btn @click="add()" :loading="ldg_save" color="primary" small
-            >Guardar</m-btn
-          >
-        </div>
-      </div>
-    </v-dialog>
+        <v-select
+          v-model="entity.course_id"
+          :items="courses"
+          item-text="name"
+          item-value="_id"
+          label="Curso"
+          class="mt-4"
+        ></v-select>
+        <v-select
+          v-model="entity.teacher_id"
+          :items="teachers"
+          item-text="name"
+          item-value="_id"
+          label="Profesor"
+          class="mt-4"
+        ></v-select>
+      </template>
+      <template #actions>
+        <m-btn type="submit" :loading="ldg_save" color="primary" small
+          >Guardar</m-btn
+        >
+      </template>
+    </brain-dialog>
 
-    <!-- DLG EDIT -->
-    <v-dialog v-model="dlg_edit" max-width="600" persistent>
-      <div class="m-card">
-        <div class="m-card__body">
-          <div class="close-modal">
-            <h3>Asignar Docente</h3>
-            <v-btn class="mx-2" icon small @click="dlg_edit = false">
-              <v-icon> mdi-close-thick </v-icon>
-            </v-btn>
-          </div>
-          <p class="mt-4">
-            <strong>{{
-              (courses.find((c) => c._id === entity.course_id) || {}).name
-            }}</strong>
-          </p>
-          <v-select
-            v-model="entity.teacher_id"
-            :items="teachers"
-            item-text="name"
-            item-value="_id"
-            label="Profesor"
-            class="mt-4"
-          ></v-select>
+    <brain-dialog v-model="dlg_edit" @submit="update" :loading="ldg_save">
+      <template #body>
+        <div class="close-modal">
+          <h3>Asignar Docente</h3>
+          <v-btn class="mx-2" icon small @click="dlg_edit = false">
+            <v-icon> mdi-close-thick </v-icon>
+          </v-btn>
         </div>
-        <div class="m-card__actions">
-          <m-btn
-            v-if="!ldg_save"
-            @click="dlg_edit = false"
-            text
-            small
-            class="cancel-button"
-            >Cancelar</m-btn
-          >
-          <m-btn @click="update()" :loading="ldg_save" color="primary" small
-            >Guardar</m-btn
-          >
-        </div>
-      </div>
-    </v-dialog>
-
-    <!-- DLG REMOVE -->
-    <v-dialog v-model="dlg_remove" max-width="400">
-      <div class="m-card">
-        <div class="m-card__body">
-          <div class="close-modal">
-            <h3>¿Desea eliminar?</h3>
-            <v-btn class="mx-2" icon small @click="dlg_remove = false">
-              <v-icon> mdi-close-thick </v-icon>
-            </v-btn>
-          </div>
-          <p class="mt-4">
-            La sesión no debe tener evaluaciones ni tareas asignadas para
-            continuar con la eliminación.
-          </p>
-          <p>Los eventos creados dentro de la sesión serán eliminados.</p>
-        </div>
-        <div class="m-card__actions">
-          <m-btn @click="dlg_remove = false" small class="cancel-button"
-            >Cancelar</m-btn
-          >
-          <m-btn @click="remove()" color="error" small>Eliminar</m-btn>
-        </div>
-      </div>
-    </v-dialog>
+        <p class="mt-4">
+          <strong>{{
+            (courses.find((c) => c._id === entity.course_id) || {}).name
+          }}</strong>
+        </p>
+        <v-select
+          v-model="entity.teacher_id"
+          :items="teachers"
+          item-text="name"
+          item-value="_id"
+          label="Profesor"
+          class="mt-4"
+        ></v-select>
+      </template>
+      <template #actions>
+        <m-btn type="submit" :loading="ldg_save" color="primary" small
+          >Guardar</m-btn
+        >
+      </template>
+    </brain-dialog>
   </div>
 </template>
 
 <script>
 import SessionFilter from "@/components/globals/Session/Filter";
+import BrainDialog from "./BrainDialog";
+
 export default {
-  components: { SessionFilter },
+  components: { SessionFilter, BrainDialog },
   data: () => ({
     entities: [],
     entity: {},
@@ -171,7 +124,6 @@ export default {
     teachers: [],
     dlg_create: false,
     dlg_edit: false,
-    dlg_remove: false,
     ldg_save: false,
     query: {},
   }),
@@ -244,7 +196,6 @@ export default {
     },
     async remove() {
       this.showLoading("Eliminando");
-      this.dlg_remove = false;
       try {
         await this.$api.session.remove(this.entity._id);
         this.entities = this.entities.filter((e) => e._id !== this.entity._id);
@@ -264,7 +215,23 @@ export default {
     },
     async showRemove(e) {
       this.entity = e;
-      this.dlg_remove = true;
+      this.$confirm(
+        {
+          callback: (confirm) => {
+            if (confirm) {
+              this.remove();
+            }
+          },
+          message: `
+           <p class="mt-4">
+            La sesión no debe tener evaluaciones ni tareas asignadas para
+            continuar con la eliminación.
+          </p>
+          <p>Los eventos creados dentro de la sesión serán eliminados.</p>
+          `,
+        },
+        "delete"
+      );
     },
   },
 };
