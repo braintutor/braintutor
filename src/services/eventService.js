@@ -1,4 +1,4 @@
-import { fetch_post } from "./fetch";
+import { fetch_post, fetch_get } from "./fetch";
 
 function getEventsBySession(session_id) {
   return fetch_post("getEventsBySession", {
@@ -31,7 +31,21 @@ function removeEvent(event_id) {
   });
 }
 
+var randomColor = require('randomcolor');
+
+function generateColor(text){
+  return text.length > 20? randomColor({
+    seed: text
+  }) : text
+
+}
+function getEvents(rangeDate){
+  return fetch_get(`event2?startDate=${rangeDate.startDate}&endDate=${rangeDate.endDate}`)
+}
+
 export {
+  getEvents,
+  generateColor,
   getEventsBySession,
   getEventsBySessionStudent,
   addEvent,
