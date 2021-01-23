@@ -31,59 +31,24 @@
             @change="changeDate"
           ></v-calendar>
           <!-- @click:time="addEvent" -->
+          <CalendarItemDetail :item="eventSelected" @close="eventSelected = null"></CalendarItemDetail>
         </v-sheet>
       </v-col>
-
-      <!-- DLG SEE COURSE -->
-      <v-dialog v-model="isEventSelected" max-width="450" persistent>
-        <div class="m-card">
-          <div class="m-card__body">
-            <div class="close-modal">
-              <h3>Lenguaje y comunicación</h3>
-              <v-btn class="mx-2" icon small @click="isEventSelected = false">
-                <v-icon> mdi-close-thick </v-icon>
-              </v-btn>
-            </div>
-            <p class="date-modal">
-              Jueves, 21 enero. 8:00 – 9:30am cada semana, el martes, jueves,
-              viernes, 13 veces
-            </p>
-            <v-avatar color="indigo">
-              <v-icon dark> mdi-account-circle </v-icon>
-            </v-avatar>
-          </div>
-          <div class="m-card__actions">
-            <!-- <m-btn
-            @click="isEventSelected = false"
-            class="cancel-button"
-            small
-            text
-            >Cancelar</m-btn
-          > -->
-            <m-btn
-              @click="
-                isEventSelected = false;
-                updateTime();
-              "
-              color="primary"
-              small
-              class="ml-2"
-              >Entrar a clase</m-btn
-            >
-          </div>
-        </div>
-      </v-dialog>
     </v-row>
   </div>
 </template>
 
 <script>
 import { getEvents, generateColor } from "@/services/eventService";
-
+import CalendarItemDetail from "./CalendarItemDetail";
 export default {
+  components: {
+    CalendarItemDetail,
+  },
   data: () => ({
     events: [],
     isEventSelected: false,
+    eventSelected: null,
     focus: "",
     weekdays: [1, 2, 3, 4, 5, 6],
     range: {},
@@ -108,8 +73,11 @@ export default {
 
   methods: {
     async filterEvents() {
-      this.events = []
-      const response = await getEvents({ range: this.range, query: this.query })
+      this.events = [];
+      const response = await getEvents({
+        range: this.range,
+        query: this.query,
+      });
       this.events = response.results;
       this.events.map((e) => {
         e["color"] = generateColor(e["color"]);
@@ -127,8 +95,11 @@ export default {
       const minute = dateTime.minute <= 30 ? 0 : 30;
       return dateTime.date + " " + dateTime.hour + ":" + minute;
     },
-    seeDetail() {
+    seeDetail({ event }) {
+    
       this.isEventSelected = true;
+      this.eventSelected = event
+
     },
     prev() {
       this.$refs.calendar.prev();
