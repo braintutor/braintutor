@@ -64,14 +64,7 @@
           label="Curso"
           class="mt-4"
         ></v-select>
-        <v-select
-          v-model="entity.teacher_id"
-          :items="teachers"
-          item-text="name"
-          item-value="_id"
-          label="Profesor"
-          class="mt-4"
-        ></v-select>
+        <TeacherChooser @choose="chooseTeacher"></TeacherChooser>
       </template>
       <template #actions>
         <m-btn type="submit" :loading="ldg_save" color="primary" small
@@ -93,14 +86,7 @@
             (courses.find((c) => c._id === entity.course_id) || {}).name
           }}</strong>
         </p>
-        <v-select
-          v-model="entity.teacher_id"
-          :items="teachers"
-          item-text="name"
-          item-value="_id"
-          label="Profesor"
-          class="mt-4"
-        ></v-select>
+        <TeacherChooser @choose="chooseTeacher"></TeacherChooser>
       </template>
       <template #actions>
         <m-btn type="submit" :loading="ldg_save" color="primary" small
@@ -113,10 +99,11 @@
 
 <script>
 import SessionFilter from "@/components/globals/Session/Filter";
+import TeacherChooser from "@/components/globals/Teacher/Choose";
 import BrainDialog from "./BrainDialog";
 
 export default {
-  components: { SessionFilter, BrainDialog },
+  components: { SessionFilter, BrainDialog, TeacherChooser },
   data: () => ({
     entities: [],
     entity: {},
@@ -135,17 +122,17 @@ export default {
 
       this.courses = this.mongoArr(await this.$api.course.getAll({}));
       this.courses.sort((a, b) => a.name.localeCompare(b.name));
-      let teachers = this.mongoArr(await this.$api.teacher.getAll());
-      this.teachers = teachers.map((t) => ({
-        ...t,
-        name: `${t.last_name}, ${t.first_name}`,
-      }));
+
     } catch (error) {
       this.showMessage("", error.msg || error);
     }
     this.hideLoading();
   },
   methods: {
+    chooseTeacher(teacher) {
+      this.entity.teacher = teacher;
+      this.entity.teacher_id = teacher._id;
+    },
     async filter(query) {
       this.query = query;
       if (query["section_id"]) {
@@ -168,9 +155,6 @@ export default {
         this.entity.course = this.courses.find(
           (c) => c._id === this.entity.course_id
         );
-        this.entity.teacher = this.teachers.find(
-          (t) => t._id === this.entity.teacher_id
-        );
         this.entities.push(this.entity);
         this.dlg_create = false;
       } catch (error) {
@@ -182,9 +166,6 @@ export default {
       this.ldg_save = true;
       try {
         await this.$api.session.update(this.entity._id, this.entity);
-        this.entity.teacher = this.teachers.find(
-          (t) => t._id === this.entity.teacher_id
-        );
         let idx = this.entities.findIndex((e) => e._id === this.entity._id);
         this.entities[idx] = JSON.parse(JSON.stringify(this.entity));
         this.entities.splice(); // updates the array without modifying it
