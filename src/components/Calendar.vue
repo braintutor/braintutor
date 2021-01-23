@@ -28,7 +28,7 @@
             type="week"
             :events="events"
             @click:event="seeDetail"
-            @change="fetchEvents"
+            @change="changeDate"
           ></v-calendar>
           <!-- @click:time="addEvent" -->
         </v-sheet>
@@ -85,21 +85,42 @@ export default {
     events: [],
     isEventSelected: false,
     focus: "",
-    weekdays: [ 1,2,3,4,5,6]
+    weekdays: [1, 2, 3, 4, 5, 6],
+    range: {},
   }),
-  async mounted() {
-    this.$refs.calendar.scrollToTime("08:00");
+  props: {
+    query: {
+      type: Object,
+      default: () => ({}),
+    },
   },
-  
+  watch: {
+    range() {
+      this.filterEvents();
+    },
+    query() {
+      this.filterEvents();
+    },
+  },
+  async mounted() {
+    this.$refs.calendar.scrollToTime("07:00");
+  },
+
   methods: {
-    async fetchEvents(e) {
-      this.events = (
-        await getEvents({ startDate: e.start.date, endDate: e.end.date })
-      ).results;
-      this.events.map( e => { console.log(generateColor(e["color"])); e["color"] = generateColor(e["color"]) ; return e})
+    async filterEvents() {
+      this.events = []
+      const response = await getEvents({ range: this.range, query: this.query })
+      this.events = response.results;
+      this.events.map((e) => {
+        e["color"] = generateColor(e["color"]);
+        return e;
+      });
+    },
+    async changeDate(e) {
+      this.range = { startDate: e.start.date, endDate: e.end.date };
     },
     intervalFormat(date) {
-      return date.time
+      return date.time;
     },
     getStart(dateTime) {
       // round to 0, 30

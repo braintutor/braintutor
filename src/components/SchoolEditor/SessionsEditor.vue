@@ -6,7 +6,7 @@
         <h2>Sesiones</h2>
       </div>
       <m-btn
-        v-if="grade_id && section_id"
+        v-if="query.section_id"
         @click="showCreate()"
         color="primary"
         small
@@ -16,36 +16,7 @@
     </div>
 
     <!-- EDITOR Filter -->
-    <div class="row no-gutters mt-2">
-      <div class="col-4 pr-4">
-        <v-select
-          v-model="level_selected"
-          :items="levels"
-          item-text="name"
-          item-value="_id"
-          label="Nivel"
-        ></v-select>
-      </div>
-      <div class="col-4 pr-2">
-        <v-select
-          v-model="grade_id"
-          :items="grades_f"
-          item-text="name"
-          item-value="_id"
-          label="Grado"
-        ></v-select>
-      </div>
-      <div class="col-4 pl-2">
-        <v-select
-          v-show="sections.length > 0"
-          v-model="section_id"
-          :items="sections"
-          item-text="name"
-          item-value="_id"
-          label="Sección"
-        ></v-select>
-      </div>
-    </div>
+    <SessionFilter @query="filter"></SessionFilter>
 
     <!-- SESSIONS -->
     <div class="mt-3">
@@ -71,7 +42,10 @@
         </v-menu>
       </div>
 
-      <p v-show="section_id && entities.length <= 0" class="text-center my-4">
+      <p
+        v-show="query.section_id && entities.length <= 0"
+        class="text-center my-4"
+      >
         No hay Sesiones
       </p>
     </div>
@@ -187,91 +161,24 @@
 </template>
 
 <script>
+import SessionFilter from "@/components/globals/Session/Filter";
 export default {
+  components: { SessionFilter },
   data: () => ({
     entities: [],
     entity: {},
     courses: [],
     teachers: [],
-    //
-    grades: [],
-    grade_id: "",
-    sections: [],
-    section_id: "",
-    levels: [
-      {
-        _id: "PRI",
-        name: "Primaria",
-      },
-      {
-        _id: "SEC",
-        name: "Secundaria",
-      },
-    ],
-    level_selected: "PRI",
-    //
     dlg_create: false,
     dlg_edit: false,
     dlg_remove: false,
     ldg_save: false,
+    query: {},
   }),
-  computed: {
-    grades_f() {
-      return this.grades.filter((g) => g.level === this.level_selected);
-    },
-  },
-  watch: {
-    level_selected() {
-      this.grade_id = null;
-    },
-    async grade_id() {
-      this.section_id = null;
-      this.sections = [];
 
-      if (this.grade_id) {
-        this.showLoading("Cargando Aulas");
-        try {
-          this.sections = this.mongoArr(
-            await this.$api.section.getAll({
-              grade_id: this.grade_id,
-            })
-          );
-          this.sections.sort((a, b) => a.name.localeCompare(b.name));
-          this.section_id = this.sections[0] ? this.sections[0]._id : null;
-        } catch (error) {
-          this.showMessage("", error.msg || error);
-        }
-        this.hideLoading();
-      }
-    },
-    async section_id() {
-      this.entities = [];
-
-      if (this.section_id) {
-        this.showLoading("Cargando Sesiones");
-        try {
-          this.entities = this.mongoArr(
-            await this.$api.session.getAll({
-              grade_id: this.grade_id,
-              section_id: this.section_id,
-            })
-          );
-        } catch (error) {
-          this.showMessage("", error.msg || error);
-        }
-        this.hideLoading();
-      }
-    },
-  },
   async created() {
     this.showLoading("Cargando Aulas");
     try {
-      let grades = this.mongoArr(await this.$api.grade.getAll());
-      grades.sort((a, b) => a.name.localeCompare(b.name));
-      this.grades = [
-        ...grades.filter((g) => g.level === "PRI"),
-        ...grades.filter((g) => g.level === "SEC"),
-      ];
       // this.grade_id = this.grades[0] ? this.grades[0]._id : null;
 
       this.courses = this.mongoArr(await this.$api.course.getAll({}));
@@ -287,6 +194,20 @@ export default {
     this.hideLoading();
   },
   methods: {
+    async filter(query) {
+      this.query = query;
+      if (query["section_id"]) {
+        this.showLoading("Cargando Sesiones");
+        try {
+          this.entities = this.mongoArr(await this.$api.session.getAll(query));
+        } catch (error) {
+          this.showMessage("", error.msg || error);
+        }
+        this.hideLoading();
+      } else {
+        this.entities = [];
+      }
+    },
     async add() {
       this.ldg_save = true;
       try {
@@ -334,10 +255,7 @@ export default {
     },
     //
     async showCreate() {
-      this.entity = {
-        grade_id: this.grade_id,
-        section_id: this.section_id,
-      };
+      this.entity = this.query;
       this.dlg_create = true;
     },
     async showEdit(e) {
@@ -352,7 +270,7 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .editor {
   &__title {
     display: flex;
