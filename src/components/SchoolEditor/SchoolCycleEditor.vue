@@ -35,8 +35,35 @@
             <v-icon> mdi-close-thick </v-icon>
           </v-btn>
         </div>
-        <date-input label="Inicio" v-model="start"/>
-        <date-input label="Fin" v-model="end"/>
+        <date-input label="Inicio" v-model="start" />
+        <date-input label="Fin" v-model="end" />
+        <v-tabs v-model="tab" grow>
+          <v-tab key="bimester">Bimestral</v-tab>
+          <v-tab key="trimester">Trimestral</v-tab>
+        </v-tabs>
+        <v-tabs-items v-model="tab">
+          <v-tab-item key="bimester">
+            <v-card>
+              <v-card-text
+                >Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iure
+                maxime, reprehenderit vero voluptate impedit, voluptas aliquam
+                quas ad sapiente officia tempore, cupiditate nisi. Eaque vero
+                expedita, error sapiente officia quas!</v-card-text
+              >
+            </v-card>
+          </v-tab-item>
+          <v-tab-item key="trimester">
+            <v-card>
+              <v-card-text
+                >Trimestre Lorem, ipsum dolor sit amet consectetur adipisicing
+                elit. Odio non laboriosam quam consequatur quidem repellendus
+                nesciunt placeat error assumenda quia adipisci beatae, similique
+                voluptates quos quisquam minima nobis ullam
+                officiis!</v-card-text
+              >
+            </v-card>
+          </v-tab-item>
+        </v-tabs-items>
       </template>
       <template #actions>
         <m-btn color="primary" type="submit" :loading="loading_save" small
@@ -49,7 +76,7 @@
 
 <script>
 import BrainDialog from "./BrainDialog";
-import DateInput from './DateInput.vue';
+import DateInput from "./DateInput.vue";
 
 export default {
   components: {
@@ -60,9 +87,10 @@ export default {
     return {
       isEditDialogVisible: false,
       loading_save: false,
-      
-      start: '',
-      end: ''
+
+      start: "",
+      end: "",
+      tab: "",
     };
   },
   methods: {
