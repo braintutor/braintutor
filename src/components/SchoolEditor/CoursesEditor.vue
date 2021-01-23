@@ -74,9 +74,8 @@
     </div>
 
     <!-- DIALOG CREATE|EDIT -->
-    <v-dialog v-model="dialog_edit" max-width="600" persistent>
-      <form @submit.prevent="save()" class="m-card">
-        <div class="m-card__body">
+    <brain-dialog v-model="dialog_edit" @submit="save" :loading="loading_save">
+        <template #body>
           <div class="close-modal">
             <h3 v-if="action === 'create'">Crear</h3>
             <h3 v-else>Editar</h3>
@@ -99,23 +98,12 @@
             item-value="_id"
             label="Encargado"
           ></v-select>
-        </div>
-        <div class="m-card__actions">
-          <m-btn
-            v-if="!loading_save"
-            @click="dialog_edit = false"
-            type="button"
-            small
-            text
-            class="cancel-button"
-            >Cancelar</m-btn
-          >
+        </template>
+        <template #actions>
           <m-btn color="primary" type="submit" :loading="loading_save" small
-            >Guardar</m-btn
-          >
-        </div>
-      </form>
-    </v-dialog>
+            >Guardar</m-btn>
+        </template>
+    </brain-dialog>
 
     <!-- DIALOG REMOVE -->
     <v-dialog v-model="dialog_remove" max-width="400">
@@ -155,10 +143,14 @@ import {
   removeCourse,
 } from "@/services/courseService";
 import { getTeachersBySchool } from "@/services/teacherService";
+import BrainDialog from "./BrainDialog";
 
 import variables from "@/models/variables";
 
 export default {
+  components: {
+    BrainDialog
+  },
   data: () => ({
     entities: [],
     entity: {},
