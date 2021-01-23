@@ -1,4 +1,4 @@
-import { fetch_post, fetch_get } from "./fetch";
+import { fetch_post } from "./fetch";
 
 function getEventsBySession(session_id) {
   return fetch_post("getEventsBySession", {
@@ -39,8 +39,8 @@ function generateColor(text){
   }) : text
 
 }
-function getEvents(rangeDate){
-  return fetch_get(`event2?startDate=${rangeDate.startDate}&endDate=${rangeDate.endDate}`)
+function getEvents(query){
+  return fetch_post('event2', query)
 }
 
 export {
