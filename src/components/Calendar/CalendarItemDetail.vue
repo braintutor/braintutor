@@ -1,6 +1,7 @@
 <template>
   <div>
-    <brain-dialog v-model="isVisible" maxWidth="450">
+    <brain-dialog v-model="isVisible" maxWidth="450"
+    :showCancel="false">
       <template #body>
         <div class="close-modal">
           <h3>{{ itemDetail.name }}</h3>
