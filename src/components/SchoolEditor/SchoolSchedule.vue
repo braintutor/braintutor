@@ -2,7 +2,10 @@
   <div>
     <h2>Horarios</h2>
     <div class="d-flex justify-space-between">
-      <SessionFilter @query="filter"></SessionFilter>
+      <div>
+        <SessionFilter @query="filter"></SessionFilter>
+        <TeacherChooser @choose="filterByTeacher"></TeacherChooser>
+      </div>
       <form @submit.prevent="save()">
         <div class="m-card__body">
           <input
@@ -17,24 +20,25 @@
       </form>
     </div>
 
-    <Calendario :query=queryCalendar></Calendario>
+    <Calendario :query="queryCalendar"></Calendario>
   </div>
 </template>
 
 <script>
 import { getSchool } from "@/services/schoolService";
 import { loadSchedule } from "@/services/scheduleService";
+import TeacherChooser from "@/components/globals/Teacher/Choose";
 import SchoolModel from "@/models/School";
 import Calendario from "@/components/Calendar";
 import SessionFilter from "@/components/globals/Session/Filter";
 
 export default {
-  components: { Calendario, SessionFilter },
+  components: { Calendario, SessionFilter, TeacherChooser },
   data: () => ({
     school: {},
     SchoolModel,
     file: null,
-    queryCalendar : {}
+    queryCalendar: {},
   }),
   async mounted() {
     this.showLoading("Cargando Datos");
@@ -62,7 +66,11 @@ export default {
       this.file = e.target.files[0];
     },
     filter(query) {
-      this.queryCalendar = query
+      this.queryCalendar = { ...this.queryCalendar, ...query };
+    },
+    filterByTeacher({ _id }) {
+      console.log(_id)
+      this.queryCalendar = { ...this.queryCalendar, ...{ teacher_id: _id } };
     },
   },
 };
