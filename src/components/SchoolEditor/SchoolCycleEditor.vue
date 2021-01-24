@@ -2,7 +2,7 @@
   <div class="editor">
     <div class="editor__menu">
       <div class="editor__title">
-        <h2>Ciclo académico escolar</h2>
+        <h2>Ciclos escolares</h2>
         <strong class="ml-2 mt-1" style="opacity: 0.5"></strong>
       </div>
       <m-btn color="primary" small @click="isEditDialogVisible = true">
@@ -13,7 +13,7 @@
       <table class="m-table">
         <thead>
           <tr>
-            <th class="text-left">Ciclo escolar</th>
+            <th class="text-left">Año</th>
             <th class="text-left">Fecha de inicio</th>
             <th class="text-left">Fecha de Fin</th>
           </tr>
