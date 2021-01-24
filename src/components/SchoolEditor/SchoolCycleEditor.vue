@@ -19,9 +19,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Bimestre 2021</td>
-            <td></td>
+          <tr v-for="schoolCycle of schoolCycles" :key="schoolCycle.id">
+            <td>{{schoolCycle.year}}</td>
+            <td>{{schoolCycle.start}}</td>
+            <td>{{schoolCycle.end}}</td>
           </tr>
         </tbody>
       </table>
@@ -66,7 +67,7 @@
 <script>
 import BrainDialog from "./BrainDialog";
 import SchoolCycleSegments from './SchoolCycleSegments.vue';
-import { createSchoolCycle } from "@/services/schoolCycleService";
+import { createSchoolCycle, getSchoolCycles } from "@/services/schoolCycleService";
 
 export default {
   components: {
@@ -80,8 +81,13 @@ export default {
 
       tab: 0, // 0 == bimester, 1 == trimester
       segments: this.getSegments(0),
-      year: new Date().getFullYear().toString()
+      year: new Date().getFullYear().toString(),
+
+      schoolCycles: []
     };
+  },
+  mounted() {
+    getSchoolCycles().then(x => this.schoolCycles = x)
   },
   methods: {
     async save() {
