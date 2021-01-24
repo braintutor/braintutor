@@ -6,9 +6,9 @@
       </div>
       <div class="m-card__actions">
         <m-btn
-          v-if="!loading"
+          v-if="!loading && showCancel"
           @click="isVisible = false"
-          type="button"
+          type="button" 
           small
           text
           class="cancel-button"
@@ -25,7 +25,8 @@ export default {
     props: {
         value: { type: Boolean, default: false },
         loading: { type: Boolean, default: false },
-        maxWidth:{ type: String, default: "600"}
+        maxWidth:{ type: String, default: "600"},
+        showCancel: { type: Boolean, default: true}
     },
     computed: {
         isVisible: {
