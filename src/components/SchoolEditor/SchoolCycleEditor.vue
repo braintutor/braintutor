@@ -38,6 +38,9 @@
             <v-icon> mdi-close-thick </v-icon>
           </v-btn>
         </div>
+        <v-text-field label="Año escolar" 
+          v-model="year"
+        />
         <v-tabs v-model="tab" grow @change="changeSegments">
           <v-tab key="bimester">Bimestral</v-tab>
           <v-tab key="trimester">Trimestral</v-tab>
@@ -63,6 +66,7 @@
 <script>
 import BrainDialog from "./BrainDialog";
 import SchoolCycleSegments from './SchoolCycleSegments.vue';
+import { createSchoolCycle } from "@/services/schoolCycleService";
 
 export default {
   components: {
@@ -74,16 +78,24 @@ export default {
       isEditDialogVisible: false,
       loading_save: false,
 
-      start: "",
-      end: "",
       tab: 0, // 0 == bimester, 1 == trimester
-      segments: this.getSegments(0)
+      segments: this.getSegments(0),
+      year: new Date().getFullYear().toString()
     };
   },
   methods: {
-    save() {
-      console.log(this.segments)
-    },   
+    async save() {
+      this.showLoading("Registrando ciclo escolar");
+      try {
+        await createSchoolCycle(this.year, this.getSegmentType(), this.segments)
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
+    }, 
+    getSegmentType() {
+      return this.tab == 0? "bimester": "trimester"
+    },
     changeSegments(tab) {
       this.segments = this.getSegments(tab)
     },
