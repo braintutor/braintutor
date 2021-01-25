@@ -2,7 +2,7 @@
   <div class="editor">
     <div class="editor__menu">
       <div class="editor__title">
-        <h2>Ciclo académico escolar</h2>
+        <h2>Ciclos escolares</h2>
         <strong class="ml-2 mt-1" style="opacity: 0.5"></strong>
       </div>
       <m-btn color="primary" small @click="isEditDialogVisible = true">
@@ -13,15 +13,16 @@
       <table class="m-table">
         <thead>
           <tr>
-            <th class="text-left">Ciclo escolar</th>
+            <th class="text-left">Año</th>
             <th class="text-left">Fecha de inicio</th>
             <th class="text-left">Fecha de Fin</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Bimestre 2021</td>
-            <td></td>
+          <tr v-for="schoolCycle of schoolCycles" :key="schoolCycle.id">
+            <td>{{schoolCycle.year}}</td>
+            <td>{{schoolCycle.start}}</td>
+            <td>{{schoolCycle.end}}</td>
           </tr>
         </tbody>
       </table>
@@ -38,6 +39,9 @@
             <v-icon> mdi-close-thick </v-icon>
           </v-btn>
         </div>
+        <v-text-field label="Año escolar" 
+          v-model="year"
+        />
         <v-tabs v-model="tab" grow @change="changeSegments">
           <v-tab key="bimester">Bimestral</v-tab>
           <v-tab key="trimester">Trimestral</v-tab>
@@ -63,6 +67,7 @@
 <script>
 import BrainDialog from "./BrainDialog";
 import SchoolCycleSegments from './SchoolCycleSegments.vue';
+import { createSchoolCycle, getSchoolCycles } from "@/services/schoolCycleService";
 
 export default {
   components: {
@@ -74,16 +79,29 @@ export default {
       isEditDialogVisible: false,
       loading_save: false,
 
-      start: "",
-      end: "",
       tab: 0, // 0 == bimester, 1 == trimester
-      segments: this.getSegments(0)
+      segments: this.getSegments(0),
+      year: new Date().getFullYear().toString(),
+
+      schoolCycles: []
     };
   },
+  mounted() {
+    getSchoolCycles().then(x => this.schoolCycles = x)
+  },
   methods: {
-    save() {
-      console.log(this.segments)
-    },   
+    async save() {
+      this.showLoading("Registrando ciclo escolar");
+      try {
+        await createSchoolCycle(this.year, this.getSegmentType(), this.segments)
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
+    }, 
+    getSegmentType() {
+      return this.tab == 0? "bimester": "trimester"
+    },
     changeSegments(tab) {
       this.segments = this.getSegments(tab)
     },
