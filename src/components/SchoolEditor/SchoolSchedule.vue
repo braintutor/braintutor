@@ -26,13 +26,17 @@
 
     <Calendario :query="queryCalendar">
       <template v-slot:deleteSchedulePlan="{ item }">
-        <m-btn
+        <v-btn
           @click="removeScheduleItem(item)"
+          class="mx-1"
           color="error"
           small
-          class="ml-2"
-          >Eliminar</m-btn
+          icon
         >
+          <v-icon dark>
+            mdi-delete
+          </v-icon>
+        </v-btn>
       </template>
       <template v-slot:editSchedulePlan="{ item }">
         <div class="mt-5">
@@ -95,7 +99,7 @@
           </v-menu>
           <div class="d-flex">
             <v-checkbox
-            class="mx-1"
+              class="mx-1"
               v-for="(day, idx) in days"
               :key="idx"
               v-model="selectedDays"
@@ -130,7 +134,7 @@ export default {
     menuStart: null,
     menuEnd: null,
     days: days,
-    selectedDays: []
+    selectedDays: [],
   }),
   async mounted() {
     this.showLoading("Cargando Datos");
