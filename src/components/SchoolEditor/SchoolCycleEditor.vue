@@ -20,9 +20,9 @@
         </thead>
         <tbody>
           <tr v-for="schoolCycle of schoolCycles" :key="schoolCycle.id">
-            <td>{{schoolCycle.year}}</td>
-            <td>{{schoolCycle.start}}</td>
-            <td>{{schoolCycle.end}}</td>
+            <td>{{ schoolCycle.year }}</td>
+            <td>{{ formatDate(schoolCycle.start) }}</td>
+            <td>{{ formatDate(schoolCycle.end) }}</td>
           </tr>
         </tbody>
       </table>
@@ -39,9 +39,7 @@
             <v-icon> mdi-close-thick </v-icon>
           </v-btn>
         </div>
-        <v-text-field label="Año escolar" 
-          v-model="year"
-        />
+        <v-text-field label="Año escolar" v-model="year" />
         <v-tabs v-model="tab" grow @change="changeSegments">
           <v-tab key="bimester">Bimestral</v-tab>
           <v-tab key="trimester">Trimestral</v-tab>
@@ -66,8 +64,12 @@
 
 <script>
 import BrainDialog from "./BrainDialog";
-import SchoolCycleSegments from './SchoolCycleSegments.vue';
-import { createSchoolCycle, getSchoolCycles } from "@/services/schoolCycleService";
+import SchoolCycleSegments from "./SchoolCycleSegments.vue";
+import {
+  createSchoolCycle,
+  getSchoolCycles,
+} from "@/services/schoolCycleService";
+import { format } from "date-fns";
 
 export default {
   components: {
@@ -83,32 +85,41 @@ export default {
       segments: this.getSegments(0),
       year: new Date().getFullYear().toString(),
 
-      schoolCycles: []
+      schoolCycles: [],
     };
   },
   mounted() {
-    getSchoolCycles().then(x => this.schoolCycles = x)
+    getSchoolCycles().then((x) => (this.schoolCycles = x));
   },
   methods: {
     async save() {
       this.showLoading("Registrando ciclo escolar");
       try {
-        await createSchoolCycle(this.year, this.getSegmentType(), this.segments)
+        await createSchoolCycle(
+          this.year,
+          this.getSegmentType(),
+          this.segments
+        );
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
       this.hideLoading();
-    }, 
+    },
     getSegmentType() {
-      return this.tab == 0? "bimester": "trimester"
+      return this.tab == 0 ? "bimester" : "trimester";
     },
     changeSegments(tab) {
-      this.segments = this.getSegments(tab)
+      this.segments = this.getSegments(tab);
     },
     getSegments(tab) {
-      const numbers = tab == 0? ["I", "II", "III", "IV"]: ["I", "II", "III"]
-      return numbers.map(x => ({ number: x, start: null, end: null }))
-    }
+      const numbers = tab == 0 ? ["I", "II", "III", "IV"] : ["I", "II", "III"];
+      return numbers.map((x) => ({ number: x, start: null, end: null }));
+    },
+
+    formatDate(dateString) {
+      const date = new Date(dateString);
+      return format(date, "dd/MM");
+    },
   },
 };
 </script>
