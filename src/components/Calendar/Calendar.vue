@@ -31,7 +31,20 @@
             @change="changeDate"
           ></v-calendar>
           <!-- @click:time="addEvent" -->
-          <CalendarItemDetail :item="eventSelected" @close="eventSelected = null"></CalendarItemDetail>
+          <CalendarItemDetail
+            :item="eventSelected"
+            @close="eventSelected = null"
+          >
+            <template v-slot:deleteSchedulePlan="{ item }">
+              <slot name="deleteSchedulePlan" v-bind:item="item"></slot>
+            </template>
+            <template v-slot:editSchedulePlan="{ item }">
+              <slot name="editSchedulePlan" v-bind:item="item"></slot>
+            </template>
+            <template v-slot:reSchedule="{ item }">
+              <slot name="reSchedule" v-bind:item="item"></slot>
+            </template>
+          </CalendarItemDetail>
         </v-sheet>
       </v-col>
     </v-row>
@@ -96,10 +109,8 @@ export default {
       return dateTime.date + " " + dateTime.hour + ":" + minute;
     },
     seeDetail({ event }) {
-    
       this.isEventSelected = true;
-      this.eventSelected = event
-
+      this.eventSelected = event;
     },
     prev() {
       this.$refs.calendar.prev();

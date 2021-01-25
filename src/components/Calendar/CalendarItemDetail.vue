@@ -12,6 +12,10 @@
         <p class="date-modal">
           {{ itemDetail.description }}
         </p>
+
+         <slot name="deleteSchedulePlan"  v-bind:item="itemDetail"></slot>
+         <slot name="editSchedulePlan" v-bind:item="itemDetail"></slot>
+         <slot name="reSchedule" v-bind:item="itemDetail"></slot>
         <!-- <v-avatar color="indigo">
             <v-icon dark> mdi-account-circle </v-icon>
           </v-avatar> -->
