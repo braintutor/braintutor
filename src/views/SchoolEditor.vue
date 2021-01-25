@@ -21,7 +21,7 @@ export default {
         name: "school-editor-teachers",
       },
        {
-        image: require(`@/assets/icons/icon-teacher.svg`),
+        image: require(`@/assets/icons/icon-horario.svg`),
         text: "Horario Escolar",
         name: "school-editor-schedule",
       },
@@ -51,7 +51,7 @@ export default {
         name: "school-editor-director",
       },
       {
-        image: require(`@/assets/icons/icon-director.svg`),
+        image: require(`@/assets/icons/icon-ciclo.svg`),
         text: "Ciclos escolares",
         name: "school-editor-school-cycle",
       },
