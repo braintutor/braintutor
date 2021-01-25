@@ -57,12 +57,12 @@
     <!-- Quiz Content -->
     <div id="quiz-scroll" class="quiz-editor-content m-fullscreen-content">
       <div class="time-editor">
-        <span>Tiempo de Inicio:</span>
+        <span class="span-time">Tiempo de Inicio:</span>
         <date-time
           v-model="evaluation.time_start_f"
           :disabled="evaluation.public"
         />
-        <span>Tiempo de Fin:</span>
+        <span class="time-editor">Tiempo de Fin:</span>
         <date-time
           v-model="evaluation.time_end_f"
           :disabled="evaluation.public"
@@ -462,10 +462,14 @@ export default {
   margin-right: 8px;
 }
 
+.span-time {
+  display: flex;
+  align-items: center;
+}
+
 .time-editor {
   width: max-content;
   padding: 8px 10px 20px;
-
   display: grid;
   grid-template-columns: auto auto;
   row-gap: 4px;
