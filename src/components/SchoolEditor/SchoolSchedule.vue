@@ -7,14 +7,18 @@
         <TeacherChooser @choose="filterByTeacher"></TeacherChooser>
       </div>
       <form @submit.prevent="save()">
-        <div class="m-card__body">
+        <div class="">
           <input
             @change="onFileSelected($event)"
             onclick="value = null"
             type="file"
           />
         </div>
-        <div class="m-card__actions">
+        <div class="mt-2 d-flex justify-space-between">
+          <a  href="/files/plantilla_horario.csv" __target="blank"
+            >Descargar plantilla</a
+          >
+
           <m-btn color="primary" small>Subir horarios</m-btn>
         </div>
       </form>
@@ -69,7 +73,7 @@ export default {
       this.queryCalendar = { ...this.queryCalendar, ...query };
     },
     filterByTeacher({ _id }) {
-      console.log(_id)
+      console.log(_id);
       this.queryCalendar = { ...this.queryCalendar, ...{ teacher_id: _id } };
     },
   },
