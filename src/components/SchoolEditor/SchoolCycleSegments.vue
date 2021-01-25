@@ -5,7 +5,7 @@
       :key="segment.number"
       class="d-flex justify-space-around"
     >
-      <v-col cols="3">
+      <v-col cols="3" class="d-flex align-center">
         <h4>{{ text }} {{ segment.number }}</h4>
       </v-col>
       <v-col>
