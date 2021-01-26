@@ -4,6 +4,7 @@ import Evaluation from "./evaluation";
 import Event from "./event";
 import Session from "./session";
 import Course from "./course";
+import CourseMaterial from "./courseMaterial";
 import Student from "./student";
 import Teacher from "./teacher";
 import Task from "./task";
@@ -31,6 +32,7 @@ export default {
       file: File(_fetch),
       report: Report(_fetch),
       course: Course(_fetch),
+      courseMaterial: CourseMaterial(_fetch),
       grade: Grade(_fetch),
       section: Section(_fetch),
       // message: Message(_fetch),

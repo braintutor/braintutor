@@ -270,20 +270,20 @@
         <div class="m-card__actions">
           <m-btn
             v-if="!loading_btn"
-            color="primary"
-            type="submit"
-            small
-            class="mr-2"
-            >Guardar</m-btn
-          >
-          <m-btn
-            v-if="!loading_btn"
             @click="dlg_import = false"
             color="primary"
             type="button"
             small
             text
+            class="mr-2"
             >Cerrar</m-btn
+          >
+          <m-btn
+            v-if="!loading_btn"
+            color="primary"
+            type="submit"
+            small
+            >Guardar</m-btn
           >
         </div>
       </v-form>

@@ -161,7 +161,7 @@ const routes = [
       {
         path: "",
         name: "course-editor",
-        component: () => import("../components/CourseEditor/MaterialsEditor"),
+        component: () => import("../components/CourseEditor/CourseContentEditor/index"),
       },
       {
         path: "knowledge",
@@ -171,7 +171,7 @@ const routes = [
       {
         path: "preview",
         name: "course-editor-preview",
-        component: () => import("../components/CourseEditor/MaterialsPreview"),
+        component: () => import("../components/CourseEditor/CoursePreview"),
       },
       {
         path: "files",
