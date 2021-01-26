@@ -3,27 +3,27 @@
     <brain-dialog v-model="isVisible" maxWidth="450" :showCancel="false">
       <template #body>
         <div class="close-modal">
-          <h3>{{ itemDetail.name }}</h3>
-          <v-btn
-            @click="showEdit = !showEdit"
-            class="mx-1"
-            small
-            icon
-            v-if="role != 'STU'"
-          >
-            <v-icon dark>
-              mdi-pencil
-            </v-icon>
-          </v-btn>
-          <slot name="deleteSchedulePlan" v-bind:item="itemDetail"></slot>
+          <div>
+            <h3>{{ itemDetail.name }}</h3>
+          </div>
+          <div>
+            <v-btn
+              @click="showEdit = !showEdit"
+              class="mx-1"
+              small
+              icon
+              v-if="role != 'STU'"
+            >
+              <v-icon dark> mdi-pencil </v-icon>
+            </v-btn>
+            <slot name="deleteSchedulePlan" v-bind:item="itemDetail"></slot>
 
-          <v-btn class="mx-1" icon small @click="close">
-            <v-icon> mdi-close-thick </v-icon>
-          </v-btn>
+            <v-btn class="mx-1" icon small @click="close">
+              <v-icon> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
         </div>
-        <v-chip class="ma-2" label>
-          Clase
-        </v-chip>
+        <v-chip class="ma-2" label> Clase </v-chip>
 
         <p class="date-modal">
           {{ itemDetail.description }}
