@@ -7,3 +7,13 @@ export function createSchoolCycle(year, type, segments) {
 export function getSchoolCycles() {
     return fetch_get(`api/v1/school-cycle`)
 }
+
+export function getSchoolCycle(id) {
+    return fetch_get(`api/v1/school-cycle/${id}`)
+}
+
+export function formatSegment(type, number) {
+    return displayType(type) + " " + number 
+}
+
+export const displayType = type => (type === "bimester"? "Bimestre": "Trimestre") 

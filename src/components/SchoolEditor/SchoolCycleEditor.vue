@@ -23,6 +23,22 @@
             <td>{{ schoolCycle.year }}</td>
             <td>{{ formatDate(schoolCycle.start) }}</td>
             <td>{{ formatDate(schoolCycle.end) }}</td>
+            <td>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    color="primary"
+                    icon
+                    v-bind="attrs"
+                    v-on="on"
+                    :to="'schedulers/'+ schoolCycle.id"
+                  >
+                    <v-icon>mdi-magnify</v-icon>              
+                  </v-btn>
+                </template>
+                <span>Ver ciclo escolar</span>  
+              </v-tooltip>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -46,10 +62,10 @@
         </v-tabs>
         <v-tabs-items v-model="tab">
           <v-tab-item key="bimester">
-            <school-cycle-segments v-model="segments" text="Bimestre" />
+            <school-cycle-segments v-model="segments" type="bimester" />
           </v-tab-item>
           <v-tab-item key="trimester">
-            <school-cycle-segments v-model="segments" text="Trimestre" />
+            <school-cycle-segments v-model="segments" type="trimester" />
           </v-tab-item>
         </v-tabs-items>
       </template>

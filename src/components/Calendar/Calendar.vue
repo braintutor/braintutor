@@ -71,6 +71,9 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    start:{
+      type: String
+    }
   },
   watch: {
     range() {

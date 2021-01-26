@@ -1,10 +1,19 @@
 <template>
-  <div>
-    <h2>Horarios</h2>
+  <div v-if="cycle">
+    <h2>Horario del año {{ cycle.year }}</h2>
+    <div>
+      <v-select
+        :items="cycle.segments"
+        :label="displayType(cycle.segment_type)"
+        :item-text="displaySegment"
+        item-value="number"
+        @change="chooseSegment"
+      ></v-select>
+    </div>
+
     <div class="d-flex justify-space-between">
       <div>
         <SessionFilter @query="filter"></SessionFilter>
-        <TeacherChooser @choose="filterByTeacher"></TeacherChooser>
       </div>
       <form @submit.prevent="save()">
         <div class="">
@@ -24,7 +33,7 @@
       </form>
     </div>
 
-    <Calendario :query="queryCalendar">
+    <Calendario :query="queryCalendar" :start="calendarStart">
       <template v-slot:deleteSchedulePlan="{ item }">
         <v-btn
           @click="removeScheduleItem(item)"
@@ -33,9 +42,7 @@
           small
           icon
         >
-          <v-icon dark>
-            mdi-delete
-          </v-icon>
+          <v-icon dark> mdi-delete </v-icon>
         </v-btn>
       </template>
       <template v-slot:editSchedulePlan="{ item }">
@@ -115,14 +122,15 @@
 
 <script>
 import { getSchool } from "@/services/schoolService";
+import { getSchoolCycle, formatSegment, displayType } from "@/services/schoolCycleService";
 import { loadSchedule } from "@/services/scheduleService";
-import TeacherChooser from "@/components/globals/Teacher/Choose";
 import SchoolModel from "@/models/School";
 import Calendario from "@/components/Calendar";
 import SessionFilter from "@/components/globals/Session/Filter";
+
 const days = ["Lu", "Ma", "Mi", "Ju", "Vi", "Sa"];
 export default {
-  components: { Calendario, SessionFilter, TeacherChooser },
+  components: { Calendario, SessionFilter },
   data: () => ({
     school: {},
     SchoolModel,
@@ -134,8 +142,23 @@ export default {
     menuStart: null,
     menuEnd: null,
     days: days,
+    
+    calendarStart: null,
     selectedDays: [],
+
+    loadingCycle: false,
+    cycle: null,
   }),
+
+  watch: {
+    "$route.params": {
+      handler: async function ({ cycle_id }) {
+        console.log(cycle_id);
+        await this.getCycle(cycle_id);
+      },
+      immediate: true,
+    },
+  },
   async mounted() {
     this.showLoading("Cargando Datos");
     try {
@@ -147,6 +170,21 @@ export default {
     this.hideLoading();
   },
   methods: {
+    displayType,
+    displaySegment(segment) {
+      return formatSegment(this.cycle.segment_type, segment.number)
+    },
+    async getCycle(cycleId) {
+      this.showLoading("Cargando Datos");
+      this.loadingCycle = true;
+      try {
+        this.cycle = await getSchoolCycle(cycleId);
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
+      this.loadingCycle = false;
+    },
     async save() {
       this.showLoading("Guardando");
       try {
@@ -158,15 +196,16 @@ export default {
       }
       this.hideLoading();
     },
+    chooseSegment(segmentCycleNumber) {
+      const segment = this.cycle.segments.find( s => s["number"] == segmentCycleNumber)
+      console.log(segment);
+      this.calendarStart = 'hola'
+    },
     async onFileSelected(e) {
       this.file = e.target.files[0];
     },
     filter(query) {
       this.queryCalendar = { ...this.queryCalendar, ...query };
-    },
-    filterByTeacher({ _id }) {
-      console.log(_id);
-      this.queryCalendar = { ...this.queryCalendar, ...{ teacher_id: _id } };
     },
     removeScheduleItem(item) {
       console.log("del", item);

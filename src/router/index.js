@@ -54,7 +54,7 @@ const routes = [
         component: () => import("../components/SchoolEditor/TeachersEditor"),
       },
       {
-        path: "schedulers",
+        path: "schedulers/:cycle_id",
         name: "school-editor-schedule",
         component: () => import("../components/SchoolEditor/SchoolSchedule"),
       },
@@ -84,7 +84,7 @@ const routes = [
         component: () => import("../components/SchoolEditor/DirectorEditor"),
       },
       {
-        path: "director",
+        path: "school-cycle",
         name: "school-editor-school-cycle",
         component: () => import("../components/SchoolEditor/SchoolCycleEditor"),
       },
