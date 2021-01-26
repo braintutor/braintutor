@@ -13,6 +13,7 @@
                 </template>
               </v-radio>
             </v-radio-group>
+            <v-text-field label="Observación" counter maxlength="50" ></v-text-field>
           </div>
         </div>
       </template>
