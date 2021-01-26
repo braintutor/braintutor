@@ -6,7 +6,7 @@
       class="d-flex justify-space-around"
     >
       <v-col cols="3" class="d-flex align-center">
-        <h4>{{ text }} {{ segment.number }}</h4>
+        <h4>{{formatSegment(type, segment.number)}}</h4>
       </v-col>
       <v-col>
         <date-input label="Inicio" 
@@ -24,13 +24,15 @@
 
 <script>
 import DateInput from "./DateInput";
+import { formatSegment } from "@/services/schoolCycleService"
+
 export default {
   components: {
     DateInput,
   },
   props: {
     value: Array,
-    text: String,
+    type: String,
   },
   computed: {
     segments: {
@@ -43,6 +45,7 @@ export default {
     },
   },
   methods: {
+    formatSegment,
     showCurrent(segment) {
       const segmentIndex = this.segments.indexOf(segment)
       if(segmentIndex == 0) return true // if first return current date

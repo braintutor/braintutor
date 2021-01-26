@@ -26,6 +26,7 @@
             ref="calendar"
             color="primary"
             type="week"
+            :start ="start"
             :events="events"
             @click:event="seeDetail"
             @change="changeDate"
@@ -54,6 +55,7 @@
 <script>
 import { getEvents, generateColor } from "@/services/eventService";
 import CalendarItemDetail from "./CalendarItemDetail";
+
 export default {
   components: {
     CalendarItemDetail,
@@ -71,6 +73,8 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    start:{
+      type: String    }
   },
   watch: {
     range() {
