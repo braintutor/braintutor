@@ -1,18 +1,18 @@
 <template>
   <div v-if="cycle">
     <h2>Horario del año {{ cycle.year }}</h2>
-    <div>
-      <v-select
-        :items="cycle.segments"
-        :label="displayType(cycle.segment_type)"
-        :item-text="displaySegment"
-        item-value="number"
-        @change="chooseSegment"
-      ></v-select>
-    </div>
 
     <div class="d-flex justify-space-between">
-      <div>
+      <div class="mx-1">
+        <div>
+          <v-select
+            :items="cycle.segments"
+            :label="displayType(cycle.segment_type)"
+            :item-text="displaySegment"
+            item-value="number"
+            @change="chooseSegment"
+          ></v-select>
+        </div>
         <SessionFilter @query="filter"></SessionFilter>
       </div>
       <form @submit.prevent="save()">
@@ -25,15 +25,15 @@
         </div>
         <div class="mt-2 d-flex justify-space-between">
           <a href="/files/plantilla_horario.csv" __target="blank"
-            >Descargar plantilla</a
+            >Descargar plantilla de horario</a
           >
 
-          <m-btn color="primary" small>Subir horarios</m-btn>
+          <m-btn color="primary" small v-if="file">Subir horarios</m-btn>
         </div>
       </form>
     </div>
 
-    <Calendario :query="queryCalendar" :start="calendarStart">
+    <Calendario v-if="calendarStart" :query="queryCalendar" :start="calendarStart">
       <template v-slot:deleteSchedulePlan="{ item }">
         <v-btn
           @click="removeScheduleItem(item)"
@@ -122,7 +122,11 @@
 
 <script>
 import { getSchool } from "@/services/schoolService";
-import { getSchoolCycle, formatSegment, displayType } from "@/services/schoolCycleService";
+import {
+  getSchoolCycle,
+  formatSegment,
+  displayType,
+} from "@/services/schoolCycleService";
 import { loadSchedule } from "@/services/scheduleService";
 import SchoolModel from "@/models/School";
 import Calendario from "@/components/Calendar";
@@ -142,7 +146,7 @@ export default {
     menuStart: null,
     menuEnd: null,
     days: days,
-    
+
     calendarStart: null,
     selectedDays: [],
 
@@ -152,7 +156,7 @@ export default {
 
   watch: {
     "$route.params": {
-      handler: async function ({ cycle_id }) {
+      handler: async function({ cycle_id }) {
         console.log(cycle_id);
         await this.getCycle(cycle_id);
       },
@@ -172,7 +176,7 @@ export default {
   methods: {
     displayType,
     displaySegment(segment) {
-      return formatSegment(this.cycle.segment_type, segment.number)
+      return formatSegment(this.cycle.segment_type, segment.number);
     },
     async getCycle(cycleId) {
       this.showLoading("Cargando Datos");
@@ -197,9 +201,10 @@ export default {
       this.hideLoading();
     },
     chooseSegment(segmentCycleNumber) {
-      const segment = this.cycle.segments.find( s => s["number"] == segmentCycleNumber)
-      console.log(segment);
-      this.calendarStart = 'hola'
+      const segment = this.cycle.segments.find(
+        (s) => s["number"] == segmentCycleNumber
+      );
+      this.calendarStart = segment["start"];
     },
     async onFileSelected(e) {
       this.file = e.target.files[0];
