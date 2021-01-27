@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { getEvents, generateColor } from "@/services/eventService";
+import { getEvents, generateColor, join } from "@/services/eventService";
 import CalendarItemDetail from "./CalendarItemDetail";
 
 export default {
@@ -97,6 +97,7 @@ export default {
       });
       this.events = response.results;
       this.events.map((e) => {
+        e['session'] = e['color']
         e["color"] = generateColor(e["color"]);
         return e;
       });
@@ -112,9 +113,10 @@ export default {
       const minute = dateTime.minute <= 30 ? 0 : 30;
       return dateTime.date + " " + dateTime.hour + ":" + minute;
     },
-    seeDetail({ event }) {
+    async seeDetail({ event }) {
       this.isEventSelected = true;
-      this.eventSelected = event;
+      const { url } = await join({'meetingID': event['session']})
+      this.eventSelected = { ...event, meetingUrl: url };
     },
     prev() {
       this.$refs.calendar.prev();

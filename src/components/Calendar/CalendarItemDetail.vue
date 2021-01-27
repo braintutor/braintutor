@@ -37,16 +37,14 @@
           </v-avatar> -->
       </template>
       <template #actions>
-        <m-btn
+        <v-btn
           v-if="itemDetail.type == 'class'"
-          @click="
-            isEventSelected = false;
-            goMeeting();
-          "
           color="primary"
           small
           class="ml-2"
-          >Entrar a clase</m-btn
+          :href = "itemDetail.meetingUrl"
+          target='__blank'
+          >Entrar a clase</v-btn
         >
       </template>
     </brain-dialog>
@@ -88,7 +86,9 @@ export default {
         ...item,
       };
     },
-    goMeeting() {},
+    goMeeting() {
+
+    },
   },
 };
 </script>
