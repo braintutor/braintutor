@@ -152,12 +152,12 @@ export default {
 
     loadingCycle: false,
     cycle: null,
+    selectedCycleSegmentNumber: null
   }),
 
   watch: {
     "$route.params": {
       handler: async function({ cycle_id }) {
-        console.log(cycle_id);
         await this.getCycle(cycle_id);
       },
       immediate: true,
@@ -194,7 +194,10 @@ export default {
       try {
         var formData = new FormData();
         formData.append("file", this.file);
-        await loadSchedule(this.school._id, formData);
+        formData.append("school_cycle", this.cycle.id)
+        formData.append("school_cycle_segment", this.selectedCycleSegmentNumber)
+
+        await loadSchedule(formData);
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
@@ -204,6 +207,8 @@ export default {
       const segment = this.cycle.segments.find(
         (s) => s["number"] == segmentCycleNumber
       );
+      
+      this.selectedCycleSegmentNumber = segmentCycleNumber
       this.calendarStart = segment["start"];
     },
     async onFileSelected(e) {
