@@ -53,7 +53,12 @@
         </div>
         <div class="unit__content">
           <!-- Item -->
-          <div v-for="(item, idx) in unit.content" :key="idx" class="item">
+          <div
+            v-for="(item, idx) in unit.content"
+            :key="idx"
+            class="item"
+            :class="{ 'item--disabled': item.is_private }"
+          >
             <p class="item__name">
               <template v-if="item.type === 'adaptive'">
                 <v-icon style="font-size: 1.2rem" class="mb-1 mr-2"
@@ -69,12 +74,39 @@
               </template>
             </p>
             <div class="item__actions">
-              <v-btn @click="showItemEdit(item)" icon small>
-                <v-icon style="font-size: 1.2rem">mdi-pencil</v-icon>
-              </v-btn>
+              <v-tooltip bottom v-if="item.is_private">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon
+                    v-bind="attrs"
+                    v-on="on"
+                    icon
+                    small
+                    class="mr-4"
+                    style="font-size: 1.3rem"
+                  >
+                    mdi-eye-off-outline
+                  </v-icon>
+                </template>
+                <span>Privado</span>
+              </v-tooltip>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    @click="showItemEdit(item)"
+                    v-bind="attrs"
+                    v-on="on"
+                    icon
+                    small
+                    class="mr-2"
+                  >
+                    <v-icon style="font-size: 1.3rem">mdi-pencil</v-icon>
+                  </v-btn>
+                </template>
+                <span>Editar</span>
+              </v-tooltip>
               <v-menu offset-y>
                 <template v-slot:activator="{ on }">
-                  <v-btn class="ml-2" icon small v-on="on">
+                  <v-btn icon small v-on="on">
                     <v-icon>mdi-dots-vertical</v-icon>
                   </v-btn>
                 </template>
@@ -416,6 +448,7 @@ export default {
           course_id: this.$route.params["course_id"],
           unit_id: this.unit_selected._id,
           files: [],
+          is_private: true,
         };
         this.show_course_material_editor = true;
       }
@@ -603,7 +636,7 @@ export default {
 
 <style lang='scss' scoped>
 .unit {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   &__menu {
     display: flex;
     justify-content: space-between;
@@ -620,7 +653,7 @@ export default {
 .item {
   padding: 12px 20px;
   margin-top: 8px;
-  background: #e7e7e7;
+  background: #dfdfdf;
   border-radius: 12px;
 
   display: flex;
@@ -629,6 +662,14 @@ export default {
 
   &__name {
     margin: 0;
+    font-weight: bold;
+  }
+
+  &--disabled {
+    background: #f0f0f0e7;
+    .item__name {
+      opacity: 0.5;
+    }
   }
 }
 
