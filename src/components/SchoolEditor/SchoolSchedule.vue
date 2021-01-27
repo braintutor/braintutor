@@ -28,7 +28,7 @@
             >Descargar plantilla de horario</a
           >
 
-          <m-btn color="primary" small v-if="file">Subir horarios</m-btn>
+          <m-btn color="primary" small v-if="file">Subir horarios (por {{displayType(cycle.segment_type)}})</m-btn>
         </div>
       </form>
     </div>
