@@ -42,8 +42,12 @@ function generateColor(text){
 function getEvents(query){
   return fetch_post('event2', query)
 }
+function join(payload){
+  return fetch_post('event2/join', payload)
+}
 
 export {
+  join,
   getEvents,
   generateColor,
   getEventsBySession,
