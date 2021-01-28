@@ -126,6 +126,15 @@
                   >
                     <v-list-item-title>Cambiar Unidad</v-list-item-title>
                   </v-list-item>
+                  <v-list-item
+                    @click="
+                      unit_selected = unit;
+                      item_selected = Object.assign({}, item);
+                      dlg_remove_item = true;
+                    "
+                  >
+                    <v-list-item-title>Eliminar Unidad</v-list-item-title>
+                  </v-list-item>
                 </v-list>
               </v-menu>
             </div>
@@ -304,6 +313,37 @@
       </form>
     </v-dialog>
 
+    <!-- DAILOG REMOVE ITEM -->
+    <v-dialog v-model="dlg_remove_item" max-width="400">
+      <div class="m-card">
+        <div class="m-card__body">
+          <div class="close-modal">
+            <h3>Confirmar eliminación</h3>
+            <v-btn class="mx-2" icon small @click="dlg_remove_item = false">
+              <v-icon> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
+          <p class="mt-4">
+            Si elimina este contenido, no podrá revertir los cambios.
+          </p>
+        </div>
+        <div class="m-card__actions">
+          <m-btn @click="dlg_remove_item = false" small class="cancel-button"
+            >Cancelar</m-btn
+          >
+          <m-btn
+            @click="
+              dlg_remove_item = false;
+              removeItem();
+            "
+            color="error"
+            small
+            >Eliminar</m-btn
+          >
+        </div>
+      </div>
+    </v-dialog>
+
     <!-- DIALOG NEW COURSE ADAPTIVE -->
     <v-dialog v-model="dlg_new_course_adaptive" width="400" persistent>
       <form @submit.prevent="addCourseAdaptive()" class="m-card">
@@ -352,7 +392,7 @@ import {
 } from "@/services/unitService.js";
 import {
   updateMaterialUnit,
-  //   removeMaterial,
+  removeMaterial,
 } from "@/services/materialService.js";
 import { scrollDown } from "@/services/scroll";
 
@@ -368,6 +408,7 @@ export default {
     item_selected: {},
     dlg_edit_item: false,
     dlg_new_item: false,
+    dlg_remove_item: false,
     // Course Adaptive
     new_course_adaptive_name: "",
     dlg_new_course_adaptive: false,
@@ -425,33 +466,6 @@ export default {
         this.showMessage("", "Ha ocurrido un error");
       }
       this.hideLoading("");
-    },
-    showItemEdit(item) {
-      if (item.type === "adaptive") {
-        this.$router.push({
-          name: "material-editor",
-          params: { material_id: item._id },
-        });
-      } else if (item.type === "material") {
-        this.course_material = item;
-        this.show_course_material_editor = true;
-      }
-    },
-    showItemCreate(type) {
-      this.dlg_new_item = false;
-
-      if (type === "adaptive") {
-        this.new_course_adaptive_name = "";
-        this.dlg_new_course_adaptive = true;
-      } else if (type === "material") {
-        this.course_material = {
-          course_id: this.$route.params["course_id"],
-          unit_id: this.unit_selected._id,
-          files: [],
-          is_private: true,
-        };
-        this.show_course_material_editor = true;
-      }
     },
     // Unit
     async addUnit() {
@@ -569,6 +583,33 @@ export default {
       this.hideLoading();
     },
     // Item
+    showItemEdit(item) {
+      if (item.type === "adaptive") {
+        this.$router.push({
+          name: "material-editor",
+          params: { material_id: item._id },
+        });
+      } else if (item.type === "material") {
+        this.course_material = item;
+        this.show_course_material_editor = true;
+      }
+    },
+    showItemCreate(type) {
+      this.dlg_new_item = false;
+
+      if (type === "adaptive") {
+        this.new_course_adaptive_name = "";
+        this.dlg_new_course_adaptive = true;
+      } else if (type === "material") {
+        this.course_material = {
+          course_id: this.$route.params["course_id"],
+          unit_id: this.unit_selected._id,
+          files: [],
+          is_private: true,
+        };
+        this.show_course_material_editor = true;
+      }
+    },
     async updateItemUnit() {
       this.dlg_edit_item = false;
       if (this.unit_selected._id === this.item_selected.unit_id) return;
@@ -593,6 +634,24 @@ export default {
         );
         to_unit.content = to_unit.content || [];
         to_unit.content.push(this.item_selected);
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
+    },
+    async removeItem() {
+      this.dlg_remove_item = false;
+
+      this.showLoading("Guardando");
+      try {
+        if (this.item_selected.type === "adaptive")
+          await removeMaterial(this.item_selected._id);
+        else if (this.item_selected.type === "material")
+          await this.$api.courseMaterial.remove(this.item_selected._id);
+
+        this.unit_selected.content = this.unit_selected.content.filter(
+          (item) => item._id !== this.item_selected._id
+        );
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
