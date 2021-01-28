@@ -37,13 +37,14 @@
           </v-avatar> -->
       </template>
       <template #actions>
+        <v-btn small type="button" text class="cancel-button">Cancelar </v-btn>
         <v-btn
           v-if="itemDetail.type == 'class'"
           color="primary"
           small
           class="ml-2"
-          :href = "itemDetail.meetingUrl"
-          target='__blank'
+          :href="itemDetail.meetingUrl"
+          target="__blank"
           >Entrar a clase</v-btn
         >
       </template>
@@ -86,11 +87,14 @@ export default {
         ...item,
       };
     },
-    goMeeting() {
-
-    },
+    goMeeting() {},
   },
 };
 </script>
 
-<style></style>
+<style lang="scss">
+.cancel-button {
+  background: none;
+  border: 1px solid gray;
+}
+</style>
