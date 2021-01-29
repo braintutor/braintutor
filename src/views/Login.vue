@@ -43,7 +43,6 @@
 import { getSchoolByURL } from "@/services/schoolService";
 import { login } from "@/services/loginService";
 import { getParam, redirect } from "@/services/router.js";
-
 import UserModel from "@/models/User";
 
 export default {

@@ -42,7 +42,6 @@
           >
         </div>
       </div>
-
       <p v-show="courses.length <= 0" class="text-center ma-3">No hay Cursos</p>
     </div>
 
@@ -114,7 +113,6 @@
             <span>{{ report.time_start_f }} </span>
           </div>
         </div>
-
         <p v-show="reports.length <= 0" class="text-center ma-3">
           No hay reportes
         </p>

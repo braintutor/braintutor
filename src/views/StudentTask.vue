@@ -122,7 +122,6 @@
 
 <script>
 import TaskCard from "@/components/globals/Task/TaskCard";
-
 import { getTaskByStudent, updateTaskAnswer } from "@/services/taskService";
 import {current_size, max_task_size} from "@/models/variables";
 import { AnswerModel } from "@/models/Task";
