@@ -121,7 +121,7 @@ import {
   formatSegment,
   displayType,
 } from "@/services/schoolCycleService";
-import { loadSchedule } from "@/services/scheduleService";
+import { deleteProposed } from "@/services/scheduleService";
 import SchoolModel from "@/models/School";
 import Calendario from "@/components/Calendar";
 import UploadFileSchedule from "@/components/Schedule/Upload";
@@ -185,23 +185,7 @@ export default {
       this.hideLoading();
       this.loadingCycle = false;
     },
-    async save() {
-      this.showLoading("Guardando");
-      try {
-        var formData = new FormData();
-        formData.append("file", this.file);
-        formData.append("school_cycle", this.cycle.id);
-        formData.append(
-          "school_cycle_segment",
-          this.selectedCycleSegmentNumber
-        );
 
-        await loadSchedule(formData);
-      } catch (error) {
-        this.showMessage("", error.msg || error);
-      }
-      this.hideLoading();
-    },
     chooseSegment(segmentCycleNumber) {
       const segment = this.cycle.segments.find(
         (s) => s["number"] == segmentCycleNumber
@@ -216,8 +200,8 @@ export default {
     filter(query) {
       this.queryCalendar = { ...this.queryCalendar, ...query };
     },
-    removeScheduleItem(item) {
-      console.log("del", item);
+    async removeScheduleItem(item) {
+      deleteProposed(item["id"])
     },
     updateScheduleDate(date, item) {
       console.log(item, date);

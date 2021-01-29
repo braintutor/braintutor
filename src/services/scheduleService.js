@@ -1,8 +1,12 @@
 import { _fetchTemp } from "../api/helpers";
-
+import { fetch_delete } from "./fetch";
 
 function loadSchedule(body) {
-    return _fetchTemp('POST', `event2/load`, body, false)
+  return _fetchTemp("POST", `event2/load`, body, false);
 }
 
-export { loadSchedule }
+function deleteProposed(id) {
+  return fetch_delete(`api/v1/proposed-action/${id}`);
+}
+
+export { loadSchedule, deleteProposed };
