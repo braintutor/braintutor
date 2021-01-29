@@ -33,7 +33,7 @@
       </form>
     </div>
 
-    <Calendario v-if="calendarStart" :query="queryCalendar" :start="calendarStart">
+    <Calendario v-if="calendarStart !=null && queryCalendar" :query="queryCalendar" :start="calendarStart">
       <template v-slot:deleteSchedulePlan="{ item }">
         <v-btn
           @click="removeScheduleItem(item)"
@@ -139,7 +139,7 @@ export default {
     school: {},
     SchoolModel,
     file: null,
-    queryCalendar: {},
+    queryCalendar: null,
     dateItem: new Date(),
     start: null,
     end: null,
@@ -215,7 +215,8 @@ export default {
       this.file = e.target.files[0];
     },
     filter(query) {
-      this.queryCalendar = { ...this.queryCalendar, ...query };
+      if(query.section_id)
+        this.queryCalendar = query;
     },
     removeScheduleItem(item) {
       console.log("del", item);
