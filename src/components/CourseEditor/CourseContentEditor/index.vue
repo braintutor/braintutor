@@ -121,6 +121,15 @@
                     @click="
                       unit_selected = unit;
                       item_selected = Object.assign({}, item);
+                      dlg_edit_item_name = true;
+                    "
+                  >
+                    <v-list-item-title>Editar Nombre</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item
+                    @click="
+                      unit_selected = unit;
+                      item_selected = Object.assign({}, item);
                       dlg_edit_item = true;
                     "
                   >
@@ -133,7 +142,7 @@
                       dlg_remove_item = true;
                     "
                   >
-                    <v-list-item-title>Eliminar Unidad</v-list-item-title>
+                    <v-list-item-title>Eliminar Material</v-list-item-title>
                   </v-list-item>
                 </v-list>
               </v-menu>
@@ -313,6 +322,45 @@
       </form>
     </v-dialog>
 
+    <!-- DIALOG EDIT ITEM NAME -->
+    <v-dialog v-model="dlg_edit_item_name" width="400" persistent>
+      <form @submit.prevent="updateItemName()" class="m-card">
+        <div class="m-card__body">
+          <div class="close-modal">
+            <h3>Crear Unidad</h3>
+            <v-btn class="mx-2" icon small @click="dlg_edit_item_name = false">
+              <v-icon> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
+          <v-text-field
+            v-if="item_selected.type === 'adaptive'"
+            v-model="item_selected.name"
+            label="Nombre"
+            required
+            class="mt-4"
+          ></v-text-field>
+          <v-text-field
+            v-else-if="item_selected.type === 'material'"
+            v-model="item_selected.title"
+            label="Nombre"
+            required
+            class="mt-4"
+          ></v-text-field>
+        </div>
+        <div class="m-card__actions">
+          <m-btn
+            @click="dlg_edit_item_name = false"
+            type="button"
+            text
+            small
+            class="cancel-button"
+            >Cancelar</m-btn
+          >
+          <m-btn type="submit" color="primary" small>Guardar</m-btn>
+        </div>
+      </form>
+    </v-dialog>
+
     <!-- DAILOG REMOVE ITEM -->
     <v-dialog v-model="dlg_remove_item" max-width="400">
       <div class="m-card">
@@ -391,6 +439,7 @@ import {
   removeUnit,
 } from "@/services/unitService.js";
 import {
+  updateMaterial,
   updateMaterialUnit,
   removeMaterial,
 } from "@/services/materialService.js";
@@ -407,6 +456,7 @@ export default {
     // Item
     item_selected: {},
     dlg_edit_item: false,
+    dlg_edit_item_name: false,
     dlg_new_item: false,
     dlg_remove_item: false,
     // Course Adaptive
@@ -634,6 +684,34 @@ export default {
         );
         to_unit.content = to_unit.content || [];
         to_unit.content.push(this.item_selected);
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
+    },
+    async updateItemName() {
+      this.dlg_edit_item_name = false;
+
+      this.showLoading("Guardando");
+      try {
+        if (this.item_selected.type === "adaptive")
+          await updateMaterial(
+            this.item_selected._id,
+            this.item_selected.name,
+            this.item_selected.is_private
+          );
+        else if (this.item_selected.type === "material")
+          await this.$api.courseMaterial.update(this.item_selected._id, {
+            title: this.item_selected.title,
+          });
+
+        let item = this.unit_selected.content.find(
+          (item) => item._id === this.item_selected._id
+        );
+        if (this.item_selected.type === "adaptive")
+          item.name = this.item_selected.name;
+        else if (this.item_selected.type === "material")
+          item.title = this.item_selected.title;
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
