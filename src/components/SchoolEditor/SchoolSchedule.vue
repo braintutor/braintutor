@@ -15,22 +15,11 @@
         </div>
         <SessionFilter @query="filter"></SessionFilter>
       </div>
-      <form @submit.prevent="save()">
-        <div class="">
-          <input
-            @change="onFileSelected($event)"
-            onclick="value = null"
-            type="file"
-          />
-        </div>
-        <div class="mt-2 d-flex justify-space-between">
-          <a href="/files/plantilla_horario.csv" __target="blank"
-            >Descargar plantilla de horario</a
-          >
-
-          <m-btn color="primary" small v-if="file">Subir horarios (por {{displayType(cycle.segment_type)}})</m-btn>
-        </div>
-      </form>
+      <div>
+        <m-btn @click="showImportFile" color="dark" small class="mr-2">
+          <v-icon left small>mdi-file-excel</v-icon>Importar
+        </m-btn>
+      </div>
     </div>
 
     <Calendario v-if="calendarStart !=null && queryCalendar" :query="queryCalendar" :start="calendarStart">
@@ -117,6 +106,7 @@
         </div>
       </template>
     </Calendario>
+    <UploadFileSchedule :isVisible="isVisibleUpload" :cycle="cycle" @close="isVisibleUpload=false"></UploadFileSchedule>
   </div>
 </template>
 
@@ -130,11 +120,12 @@ import {
 import { loadSchedule } from "@/services/scheduleService";
 import SchoolModel from "@/models/School";
 import Calendario from "@/components/Calendar";
+import UploadFileSchedule from "@/components/Schedule/Upload";
 import SessionFilter from "@/components/globals/Session/Filter";
 
 const days = ["Lu", "Ma", "Mi", "Ju", "Vi", "Sa"];
 export default {
-  components: { Calendario, SessionFilter },
+  components: { Calendario, SessionFilter, UploadFileSchedule },
   data: () => ({
     school: {},
     SchoolModel,
@@ -152,7 +143,8 @@ export default {
 
     loadingCycle: false,
     cycle: null,
-    selectedCycleSegmentNumber: null
+    selectedCycleSegmentNumber: null,
+    isVisibleUpload: false,
   }),
 
   watch: {
@@ -194,8 +186,11 @@ export default {
       try {
         var formData = new FormData();
         formData.append("file", this.file);
-        formData.append("school_cycle", this.cycle.id)
-        formData.append("school_cycle_segment", this.selectedCycleSegmentNumber)
+        formData.append("school_cycle", this.cycle.id);
+        formData.append(
+          "school_cycle_segment",
+          this.selectedCycleSegmentNumber
+        );
 
         await loadSchedule(formData);
       } catch (error) {
@@ -207,8 +202,8 @@ export default {
       const segment = this.cycle.segments.find(
         (s) => s["number"] == segmentCycleNumber
       );
-      
-      this.selectedCycleSegmentNumber = segmentCycleNumber
+
+      this.selectedCycleSegmentNumber = segmentCycleNumber;
       this.calendarStart = segment["start"];
     },
     async onFileSelected(e) {
@@ -223,6 +218,9 @@ export default {
     },
     updateScheduleDate(date, item) {
       console.log(item, date);
+    },
+    showImportFile() {
+      this.isVisibleUpload = true;
     },
   },
 };

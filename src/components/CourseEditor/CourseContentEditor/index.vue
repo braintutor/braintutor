@@ -53,7 +53,12 @@
         </div>
         <div class="unit__content">
           <!-- Item -->
-          <div v-for="(item, idx) in unit.content" :key="idx" class="item">
+          <div
+            v-for="(item, idx) in unit.content"
+            :key="idx"
+            class="item"
+            :class="{ 'item--disabled': item.is_private }"
+          >
             <p class="item__name">
               <template v-if="item.type === 'adaptive'">
                 <v-icon style="font-size: 1.2rem" class="mb-1 mr-2"
@@ -69,12 +74,39 @@
               </template>
             </p>
             <div class="item__actions">
-              <v-btn @click="showItemEdit(item)" icon small>
-                <v-icon style="font-size: 1.2rem">mdi-pencil</v-icon>
-              </v-btn>
+              <v-tooltip bottom v-if="item.is_private">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon
+                    v-bind="attrs"
+                    v-on="on"
+                    icon
+                    small
+                    class="mr-4"
+                    style="font-size: 1.3rem"
+                  >
+                    mdi-eye-off-outline
+                  </v-icon>
+                </template>
+                <span>Privado</span>
+              </v-tooltip>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    @click="showItemEdit(item)"
+                    v-bind="attrs"
+                    v-on="on"
+                    icon
+                    small
+                    class="mr-2"
+                  >
+                    <v-icon style="font-size: 1.3rem">mdi-pencil</v-icon>
+                  </v-btn>
+                </template>
+                <span>Editar</span>
+              </v-tooltip>
               <v-menu offset-y>
                 <template v-slot:activator="{ on }">
-                  <v-btn class="ml-2" icon small v-on="on">
+                  <v-btn icon small v-on="on">
                     <v-icon>mdi-dots-vertical</v-icon>
                   </v-btn>
                 </template>
@@ -93,6 +125,15 @@
                     "
                   >
                     <v-list-item-title>Cambiar Unidad</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item
+                    @click="
+                      unit_selected = unit;
+                      item_selected = Object.assign({}, item);
+                      dlg_remove_item = true;
+                    "
+                  >
+                    <v-list-item-title>Eliminar Unidad</v-list-item-title>
                   </v-list-item>
                 </v-list>
               </v-menu>
@@ -272,6 +313,37 @@
       </form>
     </v-dialog>
 
+    <!-- DAILOG REMOVE ITEM -->
+    <v-dialog v-model="dlg_remove_item" max-width="400">
+      <div class="m-card">
+        <div class="m-card__body">
+          <div class="close-modal">
+            <h3>Confirmar eliminación</h3>
+            <v-btn class="mx-2" icon small @click="dlg_remove_item = false">
+              <v-icon> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
+          <p class="mt-4">
+            Si elimina este contenido, no podrá revertir los cambios.
+          </p>
+        </div>
+        <div class="m-card__actions">
+          <m-btn @click="dlg_remove_item = false" small class="cancel-button"
+            >Cancelar</m-btn
+          >
+          <m-btn
+            @click="
+              dlg_remove_item = false;
+              removeItem();
+            "
+            color="error"
+            small
+            >Eliminar</m-btn
+          >
+        </div>
+      </div>
+    </v-dialog>
+
     <!-- DIALOG NEW COURSE ADAPTIVE -->
     <v-dialog v-model="dlg_new_course_adaptive" width="400" persistent>
       <form @submit.prevent="addCourseAdaptive()" class="m-card">
@@ -320,7 +392,7 @@ import {
 } from "@/services/unitService.js";
 import {
   updateMaterialUnit,
-  //   removeMaterial,
+  removeMaterial,
 } from "@/services/materialService.js";
 import { scrollDown } from "@/services/scroll";
 
@@ -336,6 +408,7 @@ export default {
     item_selected: {},
     dlg_edit_item: false,
     dlg_new_item: false,
+    dlg_remove_item: false,
     // Course Adaptive
     new_course_adaptive_name: "",
     dlg_new_course_adaptive: false,
@@ -393,32 +466,6 @@ export default {
         this.showMessage("", "Ha ocurrido un error");
       }
       this.hideLoading("");
-    },
-    showItemEdit(item) {
-      if (item.type === "adaptive") {
-        this.$router.push({
-          name: "material-editor",
-          params: { material_id: item._id },
-        });
-      } else if (item.type === "material") {
-        this.course_material = item;
-        this.show_course_material_editor = true;
-      }
-    },
-    showItemCreate(type) {
-      this.dlg_new_item = false;
-
-      if (type === "adaptive") {
-        this.new_course_adaptive_name = "";
-        this.dlg_new_course_adaptive = true;
-      } else if (type === "material") {
-        this.course_material = {
-          course_id: this.$route.params["course_id"],
-          unit_id: this.unit_selected._id,
-          files: [],
-        };
-        this.show_course_material_editor = true;
-      }
     },
     // Unit
     async addUnit() {
@@ -536,6 +583,33 @@ export default {
       this.hideLoading();
     },
     // Item
+    showItemEdit(item) {
+      if (item.type === "adaptive") {
+        this.$router.push({
+          name: "material-editor",
+          params: { material_id: item._id },
+        });
+      } else if (item.type === "material") {
+        this.course_material = item;
+        this.show_course_material_editor = true;
+      }
+    },
+    showItemCreate(type) {
+      this.dlg_new_item = false;
+
+      if (type === "adaptive") {
+        this.new_course_adaptive_name = "";
+        this.dlg_new_course_adaptive = true;
+      } else if (type === "material") {
+        this.course_material = {
+          course_id: this.$route.params["course_id"],
+          unit_id: this.unit_selected._id,
+          files: [],
+          is_private: true,
+        };
+        this.show_course_material_editor = true;
+      }
+    },
     async updateItemUnit() {
       this.dlg_edit_item = false;
       if (this.unit_selected._id === this.item_selected.unit_id) return;
@@ -560,6 +634,24 @@ export default {
         );
         to_unit.content = to_unit.content || [];
         to_unit.content.push(this.item_selected);
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
+    },
+    async removeItem() {
+      this.dlg_remove_item = false;
+
+      this.showLoading("Guardando");
+      try {
+        if (this.item_selected.type === "adaptive")
+          await removeMaterial(this.item_selected._id);
+        else if (this.item_selected.type === "material")
+          await this.$api.courseMaterial.remove(this.item_selected._id);
+
+        this.unit_selected.content = this.unit_selected.content.filter(
+          (item) => item._id !== this.item_selected._id
+        );
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
@@ -603,7 +695,7 @@ export default {
 
 <style lang='scss' scoped>
 .unit {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   &__menu {
     display: flex;
     justify-content: space-between;
@@ -620,7 +712,7 @@ export default {
 .item {
   padding: 12px 20px;
   margin-top: 8px;
-  background: #e7e7e7;
+  background: #dfdfdf;
   border-radius: 12px;
 
   display: flex;
@@ -629,6 +721,14 @@ export default {
 
   &__name {
     margin: 0;
+    font-weight: bold;
+  }
+
+  &--disabled {
+    background: #f0f0f0e7;
+    .item__name {
+      opacity: 0.5;
+    }
   }
 }
 
