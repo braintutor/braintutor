@@ -49,27 +49,40 @@
             @click="selectMaterial(m)"
             class="link"
             :class="{
-              'link--active': m && material && m._id.$oid === material._id.$oid,
+              'link--active': m && material && m._id === material._id,
             }"
           >
-            <div
-              v-if="progress_materials.includes(m._id.$oid)"
-              class="progress progress--complete"
-            >
-              <v-icon style="font-size: 1.25rem; opacity: 0.7"
-                >mdi-check</v-icon
-              >
-            </div>
             <div class="material-name">
-              <span>{{ m.name }}</span>
+              <div style="display: flex; justify-content: center; align-items: center">
+                <template v-if="m.type === 'adaptive'">
+                  <v-icon style="font-size: 1.2rem" class="mr-2 mb-1"
+                    >mdi-robot</v-icon
+                  >
+                  <span> {{ m.name }}</span>
+                </template>
+                <template v-else-if="m.type === 'material'">
+                  <v-icon style="font-size: 1.2rem" class="mr-2 mb-1"
+                    >mdi-paperclip</v-icon
+                  >
+                  <span>{{ m.title }}</span>
+                </template>
+              </div>
               <v-tooltip bottom v-if="m.is_private">
                 <template v-slot:activator="{ on, attrs }">
-                  <v-icon v-bind="attrs" v-on="on">
+                  <v-icon v-bind="attrs" v-on="on" style="font-size: 1.3rem">
                     mdi-eye-off-outline
                   </v-icon>
                 </template>
                 <span>Privado</span>
               </v-tooltip>
+            </div>
+            <div
+              v-if="progress_materials.includes(m._id)"
+              class="progress progress--complete"
+            >
+              <v-icon style="font-size: 1.25rem; opacity: 0.7"
+                >mdi-check</v-icon
+              >
             </div>
           </section>
         </div>
@@ -78,7 +91,16 @@
 
     <section class="list2">
       <div v-if="material" @click="show = !show" class="list2__menu">
-        <span>{{ material.name }}</span>
+        <template v-if="material.type === 'adaptive'">
+          <v-icon style="font-size: 1.2rem" class="mb-1 mr-2">mdi-robot</v-icon>
+          {{ material.name }}
+        </template>
+        <template v-else-if="material.type === 'material'">
+          <v-icon style="font-size: 1.2rem" class="mb-1 mr-2"
+            >mdi-paperclip</v-icon
+          >
+          {{ material.title }}
+        </template>
         <v-icon class="list__show" :class="{ 'list__show--active': show }"
           >mdi-chevron-down</v-icon
         >
@@ -95,7 +117,18 @@
             class="link"
             :class="{ 'link--active': m === material }"
           >
-            {{ m.name }}
+            <template v-if="m.type === 'adaptive'">
+              <v-icon style="font-size: 1.2rem" class="mb-1 mr-2"
+                >mdi-robot</v-icon
+              >
+              {{ m.name }}
+            </template>
+            <template v-else-if="m.type === 'material'">
+              <v-icon style="font-size: 1.2rem" class="mb-1 mr-2"
+                >mdi-paperclip</v-icon
+              >
+              {{ m.title }}
+            </template>
           </section>
         </section>
       </div>
@@ -108,9 +141,15 @@
           <span class="material__name">{{material.name}}</span>
         </div>-->
         <FS
-          v-if="course.adaptive"
+          v-if="material.type === 'adaptive'"
           :material="material"
           :categories="categories"
+          @finish="saveProgress"
+          @next="showNextMaterial"
+        />
+        <course-material
+          v-if="material.type === 'material'"
+          :material="material"
           @finish="saveProgress"
           @next="showNextMaterial"
         />
@@ -121,22 +160,13 @@
     <v-dialog v-model="dlg_remove" max-width="400">
       <div class="m-card">
         <div class="m-card__body">
-          <div class="cancel-modal">
             <h3>¿Quieres reiniciar el progreso?</h3>
-            <v-btn class="mx-2" icon small @click="dlg_remove = false">
-              <v-icon> mdi-close-thick </v-icon>
-            </v-btn>
-          </div>
           <p class="mt-4">
             El progreso de este curso se reiniciará. ¿Quieres continuar?
           </p>
         </div>
         <div class="m-card__actions">
-          <m-btn
-            @click="dlg_remove = false"
-            small
-            text
-            class="cancel-button"
+          <m-btn @click="dlg_remove = false" small text class="cancel-button"
             >Cancelar</m-btn
           >
           <m-btn
@@ -156,6 +186,7 @@
 
 <script>
 import FS from "./FS/index";
+import CourseMaterial from "./CourseMaterial";
 
 // import { getQuestionTemplate } from "@/services/chatService";
 import {
@@ -193,8 +224,26 @@ export default {
         this.showLoading("Cargando Material");
         let course_id = this.course._id.$oid;
         try {
-          let units = await this.$api.unit.getAll(course_id);
-          this.materials = await this.$api.material.getAll(course_id);
+          let [
+            units,
+            course_adaptive_arr,
+            course_material_arr,
+          ] = await Promise.all([
+            this.$api.unit.getAll(course_id),
+            this.$api.material.getAll(course_id),
+            this.$api.courseMaterial.getAll(course_id),
+          ]);
+
+          units = this.mongoArr(units);
+          course_adaptive_arr = this.mongoArr(course_adaptive_arr).map((i) => ({
+            ...i,
+            type: "adaptive",
+          }));
+          course_material_arr = this.mongoArr(course_material_arr).map((i) => ({
+            ...i,
+            type: "material",
+          }));
+          this.materials = course_adaptive_arr.concat(course_material_arr);
 
           // Validate Materials
           let progress_materials = (
@@ -205,7 +254,7 @@ export default {
             ).materials || []
           ).map((p) => p.$oid); // get progress by course
           progress_materials = progress_materials.filter((pm) =>
-            this.materials.map((m) => m._id.$oid).includes(pm)
+            this.materials.map((m) => m._id).includes(pm)
           ); // map to only ids
           this.progress_materials = [...new Set(progress_materials)]; // remove duplicates
 
@@ -230,13 +279,13 @@ export default {
             u.show = true;
             // Find Materials
             let materials = this.materials.filter((m) => {
-              return m.unit_id.$oid === u._id.$oid;
+              return m.unit_id === u._id;
             });
             // Sorting Materials
             let order = (u.order || []).reverse();
             materials.sort((a, b) => {
-              let a_order = order.indexOf(a._id.$oid);
-              let b_order = order.indexOf(b._id.$oid);
+              let a_order = order.indexOf(a._id);
+              let b_order = order.indexOf(b._id);
               return b_order - a_order;
             });
             u.materials = materials;
@@ -270,7 +319,7 @@ export default {
               //             text: "Ver información",
               //             action: () =>
               //               this.selectMaterialByID(
-              //                 material._id.$oid,
+              //                 material._id,
               //                 category
               //               ),
               //           },
@@ -280,19 +329,20 @@ export default {
               //   }
               // );
               // FS
-              material.data_fs.faq.forEach(({ question, answer }) => {
-                knowledge.push({
-                  questions: [question],
-                  answers: [answer],
-                  actions: [
-                    {
-                      text: "Ver información",
-                      action: () =>
-                        this.selectMaterialByID(material._id.$oid, null),
-                    },
-                  ],
+              if (material.type === "adaptive")
+                material.data_fs.faq.forEach(({ question, answer }) => {
+                  knowledge.push({
+                    questions: [question],
+                    answers: [answer],
+                    actions: [
+                      {
+                        text: "Ver información",
+                        action: () =>
+                          this.selectMaterialByID(material._id, null),
+                      },
+                    ],
+                  });
                 });
-              });
             });
           } else {
             let questions = [
@@ -301,22 +351,22 @@ export default {
               "Explícame sobre @.",
             ];
             this.materials.forEach((material) => {
-              knowledge.push({
-                questions: questions.map((question) =>
-                  question.replace(/@/, material.name)
-                ),
-                answers: [
-                  "Esto te puede servir.",
-                  "He encontrado esta información.",
-                ],
-                actions: [
-                  {
-                    text: "Ver información",
-                    action: () =>
-                      this.selectMaterialByID(material._id.$oid, null),
-                  },
-                ],
-              });
+              if (material.type === "adaptive")
+                knowledge.push({
+                  questions: questions.map((question) =>
+                    question.replace(/@/, material.name)
+                  ),
+                  answers: [
+                    "Esto te puede servir.",
+                    "He encontrado esta información.",
+                  ],
+                  actions: [
+                    {
+                      text: "Ver información",
+                      action: () => this.selectMaterialByID(material._id, null),
+                    },
+                  ],
+                });
             });
           }
           this.knowledge(knowledge);
@@ -329,7 +379,7 @@ export default {
     async saveProgress(material) {
       if (this.user.role === "STU") {
         let course_id = this.course._id.$oid;
-        let new_material_id = material._id.$oid;
+        let new_material_id = material._id;
         let materials = this.progress_materials;
 
         if (!materials.includes(new_material_id))
@@ -356,13 +406,9 @@ export default {
       }
     },
     showNextMaterial(material) {
-      let unit_idx = this.units.findIndex(
-        (c) => c._id.$oid === material.unit_id.$oid
-      );
+      let unit_idx = this.units.findIndex((c) => c._id === material.unit_id);
       let { materials } = this.units[unit_idx];
-      let material_idx = materials.findIndex(
-        (m) => m._id.$oid === material._id.$oid
-      );
+      let material_idx = materials.findIndex((m) => m._id === material._id);
 
       if (materials.length > material_idx + 1) {
         this.selectMaterial(materials[material_idx + 1]);
@@ -382,13 +428,13 @@ export default {
       }, 100);
     },
     selectMaterialByID(material_id, category) {
-      // if (this.material && this.material._id.$oid === material_id) return;
+      // if (this.material && this.material._id === material_id) return;
 
       this.setMaterial(null);
       // this.material = null;
       this.show = false;
       setTimeout(() => {
-        let material = this.materials.find((m) => m._id.$oid === material_id);
+        let material = this.materials.find((m) => m._id === material_id);
         material.default = category;
         this.setMaterial(material);
         // this.material = material
@@ -402,6 +448,7 @@ export default {
   },
   components: {
     FS,
+    CourseMaterial,
   },
 };
 </script>
@@ -415,7 +462,7 @@ export default {
   overflow-y: auto;
   flex-shrink: 0;
   height: 100%;
-  width: 280px;
+  width: 320px;
 
   &__title {
     font-weight: bold;
@@ -477,7 +524,6 @@ export default {
 .link {
   margin: 6px;
   padding: 10px 12px;
-  padding-left: 18px;
   color: #414141;
   border-radius: 6px;
   font-size: 0.85rem;

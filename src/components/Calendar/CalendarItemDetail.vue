@@ -37,13 +37,14 @@
           </v-avatar> -->
       </template>
       <template #actions>
+        <v-btn small color="error" @click="close">Salir de la clase</v-btn>
         <v-btn
           v-if="itemDetail.type == 'class'"
           color="primary"
           small
           class="ml-2"
-          :href = "itemDetail.meetingUrl"
-          target='__blank'
+          :href="itemDetail.meetingUrl"
+          target="__blank"
           >Entrar a clase</v-btn
         >
       </template>
@@ -86,11 +87,11 @@ export default {
         ...item,
       };
     },
-    goMeeting() {
-
-    },
+    goMeeting() {},
   },
 };
 </script>
 
-<style></style>
+<style lang="scss">
+
+</style>

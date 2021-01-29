@@ -74,10 +74,18 @@
             No hay Archivos.
           </p>
         </div>
+
+        <div class="mt-5">
+          <label>
+            <input v-model="material.is_private" type="checkbox" class="mr-3" />
+            <span>Privado (Los alumnos no podrán ver este contenido)</span>
+          </label>
+        </div>
       </div>
 
-      <div class="m-card__actions mt-3">
+      <div class="m-card__actions">
         <m-btn
+          v-if="material._id"
           @click="show_remove = true"
           type="button"
           color="error"
@@ -130,7 +138,15 @@
             <m-btn @click="show_remove = false" small class="cancel-button"
               >Cancelar</m-btn
             >
-            <m-btn @click="show_remove = false; remove()" color="error" small>Eliminar</m-btn>
+            <m-btn
+              @click="
+                show_remove = false;
+                remove();
+              "
+              color="error"
+              small
+              >Eliminar</m-btn
+            >
           </div>
         </div>
       </v-dialog>
@@ -186,6 +202,7 @@ export default {
             title: this.material.title,
             description: this.material.description,
             files: this.material.files,
+            is_private: this.material.is_private,
           };
           await this.$api.courseMaterial.update(
             this.material._id,
@@ -193,8 +210,8 @@ export default {
           );
         } else {
           await this.$api.courseMaterial.add(this.material);
-          this.$emit("exit");
         }
+        this.$emit("exit");
       } catch (error) {
         this.showMessage("", "Ha ocurrido un error");
       }
