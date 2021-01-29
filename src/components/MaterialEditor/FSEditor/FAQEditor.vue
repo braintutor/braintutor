@@ -1,14 +1,23 @@
 <template>
   <section class="editor">
     <div class="editor__menu">
-      <strong class="mt-1" style="opacity: 0.5">({{`${data.length}/${maxlength}`}})</strong>
+      <div></div>
       <div>
-        <v-btn v-if="show_edit" @click="$emit('submit', data)" text small rounded>
+        <v-btn
+          v-if="show_edit"
+          @click="$emit('submit', data)"
+          text
+          small
+          rounded
+        >
           <v-icon class="mr-2" small>mdi-content-save</v-icon>Guardar
         </v-btn>
         <v-btn
           v-if="show_edit"
-          @click="show_edit = false; $emit('submit', data)"
+          @click="
+            show_edit = false;
+            $emit('submit', data);
+          "
           text
           small
           rounded
@@ -27,26 +36,30 @@
           v-if="show_edit"
           style="font-size: 1rem; font-weight: bold"
           v-model="d.question"
-          :maxlength="FAQModel.question.max_length"
-          :counter="FAQModel.question.max_length"
           hide-details
           placeholder="Pregunta"
           dense
         />
-        <div style="font-size: 1rem; font-weight: bold" v-else>{{d.question}}</div>
+        <div style="font-size: 1rem; font-weight: bold" v-else>
+          {{ d.question }}
+        </div>
         <v-textarea
           v-if="show_edit"
           class="mt-3"
-          style="font-size: .9rem"
+          style="font-size: 0.9rem"
           v-model="d.answer"
-          :maxlength="FAQModel.answer.max_length"
-          :counter="FAQModel.answer.max_length"
           placeholder="Respuesta"
           dense
           rows="1"
           auto-grow
         />
-        <div class="mt-3" style="font-size: .9rem; white-space: pre-line" v-else>{{d.answer}}</div>
+        <div
+          class="mt-3"
+          style="font-size: 0.9rem; white-space: pre-line"
+          v-else
+        >
+          {{ d.answer }}
+        </div>
       </div>
       <v-menu v-if="show_edit" offset-y>
         <template v-slot:activator="{ on, attrs }">
@@ -61,7 +74,10 @@
           <v-list-item @click="moveDown(data, idx)">
             <v-list-item-title>Mover Abajo</v-list-item-title>
           </v-list-item>
-          <v-list-item @click="removeQuestion(data, idx)" :disabled="data.length <= 1">
+          <v-list-item
+            @click="removeQuestion(data, idx)"
+            :disabled="data.length <= 1"
+          >
             <v-list-item-title>Eliminar</v-list-item-title>
           </v-list-item>
         </v-list>
@@ -78,14 +94,11 @@
 </template>
 
 <script>
-import FAQModel from "@/models/FAQ";
-
 export default {
   props: ["faq", "maxlength"],
   data: () => ({
     data: [],
     show_edit: false,
-    FAQModel,
   }),
   mounted() {
     this.data = JSON.parse(JSON.stringify(this.faq));
