@@ -11,7 +11,6 @@
       <span class="m-path__icon">></span>
       <span class="m-path__name">{{ material.name }}</span>
     </section>
-
     <ContentEditor :slot="0" v-if="material._id" :material="material" />
     <!-- <QuizzesEditor :slot="1" :material="material" /> -->
     <Report :slot="1" />
@@ -25,7 +24,6 @@ import ContentEditor from "@/components/MaterialEditor/ContentEditor";
 // import QuizzesEditor from "@/components/MaterialEditor/QuizzesEditor";
 import Report from "@/components/MaterialEditor/Report";
 import MaterialSettings from "@/components/MaterialEditor/MaterialSettings";
-
 import { getParam, redirect } from "@/services/router.js";
 import { getCourseByTeacher } from "@/services/courseService";
 

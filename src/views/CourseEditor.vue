@@ -16,7 +16,6 @@
 
 <script>
 import Layout from "@/components/Layout2";
-
 import {
   getCourseByTeacher,
   updateCourseKnowledge,

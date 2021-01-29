@@ -269,7 +269,6 @@ import { updateLearningStyle } from "@/services/studentService";
 import { getUser, updatePassword } from "@/services/userService";
 import { scrollTop } from "@/services/scroll";
 import { TextToSpeech } from "@/services/speech";
-
 import User from "@/models/User";
 
 class PreguntaTest {
