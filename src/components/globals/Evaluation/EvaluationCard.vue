@@ -7,7 +7,10 @@
     ></v-progress-linear>
 
     <div class="m-card__body">
-      <div class="mb-3" style="display: flex; justify-content: center; align-items: center">
+      <div
+        class="mb-3"
+        style="display: flex; justify-content: center; align-items: center"
+      >
         <div class="evaluation__public mr-3" v-show="!isPublic">Privado</div>
         <div class="evaluation__name">{{ name }}</div>
       </div>
@@ -29,6 +32,11 @@
           <p class="evaluation__value">
             {{ item.value }}
           </p>
+        </div>
+        <div class="d-flex align-center">
+          <m-btn color="primary" small
+            >Entrar al Exámen
+          </m-btn>
         </div>
       </div>
 
