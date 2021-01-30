@@ -1,16 +1,11 @@
 <template>
-  <v-card elevation="0">
-    <v-card-title>
-      {{ name }}
-    </v-card-title>
-    <v-card-subtitle v-if="currentDate < start">
-      Proximo inicio de clases
-    </v-card-subtitle>
-    <v-card-text>
+  <div>
+    <h4>{{ name }}</h4>
+    <p>
       Inicio: {{ formatDate(start) }} - Fin:
       {{ formatDate(end) }}
-    </v-card-text>
-  </v-card>
+    </p>
+  </div>
 </template>
 
 <script>
@@ -18,10 +13,10 @@ import { formatSegment } from "@/services/schoolCycleService";
 import { parse, format } from "date-fns/fp";
 
 const dateFormat = "yyyy-MM-dd";
-const parseDate = parse(new Date())(dateFormat)
+const parseDate = parse(new Date())(dateFormat);
 
-const prettyFormat = "dd/MM"
-const formatDate = format(prettyFormat)
+const prettyFormat = "dd/MM";
+const formatDate = format(prettyFormat);
 
 export default {
   props: {
@@ -29,11 +24,11 @@ export default {
     type: String,
   },
   data() {
-    return { currentDate: new Date() }
+    return { currentDate: new Date() };
   },
   methods: {
     formatSegment,
-    formatDate
+    formatDate,
   },
   computed: {
     start() {

@@ -1,5 +1,10 @@
 <template>
   <div class="m-container">
+    <school-cycle-segment-card 
+      v-if="segment"
+      :segment="segment"
+      :type="segment.type"
+       />
     <Calendario>
       <template v-slot:reSchedule="{ item }">
         <div >
@@ -24,17 +29,21 @@
 <script>
 import Calendario from "@/components/Calendar";
 import DateTime from "@/components/globals/DateTime";
+import SchoolCycleSegmentCard from "@/components/SchoolEditor/SchoolCycleSegmentCard";
+import { getCurrentOrNextSegment } from '@/services/schoolCycleService'
 
 export default {
-  components: { Calendario, DateTime },
+  components: { Calendario, DateTime, SchoolCycleSegmentCard },
   data: () => ({
     role: "",
     newDate: null,
     showEdit: false,
     selectedAction: "cancel",
+    segment: null
   }),
   mounted() {
     this.role = localStorage.getItem("role");
+    getCurrentOrNextSegment().then(x => this.segment = x)
   },
   methods: {},
 };
