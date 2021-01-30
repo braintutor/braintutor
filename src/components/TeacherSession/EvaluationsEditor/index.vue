@@ -227,7 +227,6 @@ import {
 import { getStudentsBySession } from "@/services/studentService";
 import { getParam } from "@/services/router.js";
 import { copy } from "@/services/object.js";
-
 import variables from "@/models/variables";
 import DateTime from '@/components/globals/DateTime';
 

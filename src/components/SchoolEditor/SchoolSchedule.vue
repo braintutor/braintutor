@@ -22,11 +22,13 @@
       </div>
     </div>
 
-    <Calendario
-      v-if="calendarStart"
-      :query="queryCalendar"
-      :start="calendarStart"
-    >
+    <school-cycle-segment-card 
+      v-if="selectedCycleSegment"
+      :segment="selectedCycleSegment"
+      :type="cycle.segment_type"
+       />
+    
+    <Calendario v-if="calendarStart !=null && queryCalendar" :query="queryCalendar" :start="calendarStart">
       <template v-slot:deleteSchedulePlan="{ item }">
         <v-btn
           @click="removeScheduleItem(item)"
@@ -126,15 +128,16 @@ import SchoolModel from "@/models/School";
 import Calendario from "@/components/Calendar";
 import UploadFileSchedule from "@/components/Schedule/Upload";
 import SessionFilter from "@/components/globals/Session/Filter";
+import SchoolCycleSegmentCard from "./SchoolCycleSegmentCard";
 
 const days = ["Lu", "Ma", "Mi", "Ju", "Vi", "Sa"];
 export default {
-  components: { Calendario, SessionFilter, UploadFileSchedule },
+  components: { Calendario, SessionFilter, UploadFileSchedule, SchoolCycleSegmentCard },
   data: () => ({
     school: {},
     SchoolModel,
     file: null,
-    queryCalendar: {},
+    queryCalendar: null,
     dateItem: new Date(),
     start: null,
     end: null,
@@ -147,7 +150,7 @@ export default {
 
     loadingCycle: false,
     cycle: null,
-    selectedCycleSegmentNumber: null,
+    selectedCycleSegment: null,
     isVisibleUpload: false,
   }),
 
@@ -187,18 +190,17 @@ export default {
     },
 
     chooseSegment(segmentCycleNumber) {
-      const segment = this.cycle.segments.find(
+      this.selectedCycleSegment = this.cycle.segments.find(
         (s) => s["number"] == segmentCycleNumber
       );
-
-      this.selectedCycleSegmentNumber = segmentCycleNumber;
-      this.calendarStart = segment["start"];
+      this.calendarStart = this.selectedCycleSegment["start"];
     },
     async onFileSelected(e) {
       this.file = e.target.files[0];
     },
     filter(query) {
-      this.queryCalendar = { ...this.queryCalendar, ...query };
+      if(query.section_id)
+        this.queryCalendar = query;
     },
     async removeScheduleItem(item) {
       deleteProposed(item["id"])

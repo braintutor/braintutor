@@ -31,7 +31,6 @@
 <script>
 import { getCoursesByTeacher } from "@/services/courseService";
 import { redirect } from "@/services/router.js";
-
 import { mapState } from "vuex";
 
 export default {

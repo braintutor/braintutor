@@ -62,7 +62,6 @@
 
 <script>
 import Footer from "@/components/Footer";
-
 import { redirect } from "@/services/router.js";
 
 export default {

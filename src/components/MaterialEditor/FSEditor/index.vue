@@ -30,14 +30,14 @@
       <TextEditor
         v-if="category === 'overview'"
         :text="material.data_fs[category]"
-        :maxlength="MaterialModel.data_fs.overview.max_length"
+        :maxlength="false"
         @submit="save"
       />
       <!-- Exercises -->
       <QuizEditor
         v-else-if="category === 'exercises'"
         :quiz="material.data_fs[category]"
-        :maxlength="MaterialModel.data_fs.exercises.max_length"
+        :maxlength="100"
         document_type="course"
         :document_id="material.course_id.$oid"
         @submit="save"
@@ -46,7 +46,7 @@
       <FAQEditor
         v-else-if="category === 'faq'"
         :faq="material.data_fs[category]"
-        :maxlength="MaterialModel.data_fs.faq.max_length"
+        :maxlength="100"
         @submit="save"
       />
       <!-- Default -->
@@ -68,8 +68,6 @@ import FAQEditor from "./FAQEditor";
 import DocumentEditor from "@/components/globals/DocumentEditor/index";
 
 import { updateMaterialCategory } from "@/services/materialService";
-
-import MaterialModel from "@/models/Material";
 
 export default {
   props: ["material"],
@@ -111,8 +109,6 @@ export default {
       },
       // https://iconos8.es/icons
     },
-    //
-    MaterialModel,
   }),
   methods: {
     selectCategory(category) {
@@ -123,8 +119,6 @@ export default {
       let material_id = this.material._id.$oid;
       let category = this.category;
       try {
-        if (data.length > MaterialModel.data_fs.document.max_length)
-          throw { msg: "Ha sobrepasado el tamaño permitido." };
         await updateMaterialCategory(material_id, category, data);
         this.material.data_fs[category] = data;
       } catch (error) {

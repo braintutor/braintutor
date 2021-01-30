@@ -3,9 +3,7 @@
   <section class="quiz">
     <!-- QUIZ MENU -->
     <div class="quiz__menu">
-      <strong class="mt-1" style="opacity: 0.5"
-        >({{ `${data.length}/${maxlength}` }})</strong
-      >
+      <div></div>
       <div class="quiz__actions">
         <v-btn v-if="edit" @click="$emit('submit', data)" text small rounded>
           <v-icon class="mr-2" small>mdi-content-save</v-icon>Guardar
@@ -33,8 +31,6 @@
         <div v-if="edit" class="question__statement">
           <v-textarea
             v-model="d.question"
-            :maxlength="QuestionModel.question.max_length"
-            :counter="QuestionModel.question.max_length"
             class="mb-3"
             rows="1"
             auto-grow
@@ -78,8 +74,6 @@
           <v-textarea
             v-model="d.alternatives[a_idx]"
             :disabled="!edit"
-            :maxlength="QuestionModel.alternative.max_length"
-            :counter="QuestionModel.alternative.max_length"
             hide-details
             rows="1"
             append.click
@@ -99,13 +93,7 @@
           </v-btn>
         </div>
         <!-- ALTERNATIVE ADD -->
-        <div
-          v-if="
-            edit &&
-            d.alternatives.length < QuestionModel.alternatives.max_length
-          "
-          class="alternative"
-        >
+        <div v-if="edit" class="alternative">
           <input
             type="radio"
             style="pointer-events: none; opacity: 0"
@@ -177,8 +165,6 @@
 <script>
 import Files from "@/components/globals/File/Files";
 
-import QuestionModel from "@/models/Question";
-
 export default {
   props: ["quiz", "maxlength", "document_type", "document_id"],
   data: () => ({
@@ -187,8 +173,6 @@ export default {
     question_selected: -1,
     //
     dlg_files: false,
-    //
-    QuestionModel,
   }),
   watch: {
     quiz() {

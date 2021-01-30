@@ -47,7 +47,6 @@
 
 <script>
 import SessionCard from "@/components/globals/Session/SessionCard";
-
 // import { redirect } from "@/services/router.js";
 
 export default {
