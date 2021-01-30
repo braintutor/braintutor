@@ -1,9 +1,9 @@
 <template>
   <div v-if="cycle">
     <h2>Horario del año {{ cycle.year }}</h2>
-
     <div class="d-flex justify-space-between">
       <div class="mx-1">
+        <div class="pb-2">Busque e importe horarios, según:</div>
         <div>
           <v-select
             :items="cycle.segments"
@@ -15,7 +15,7 @@
         </div>
         <SessionFilter @query="filter"></SessionFilter>
       </div>
-      <div>
+      <div v-if="selectedCycleSegment">
         <m-btn @click="showImportFile" color="dark" small class="mr-2">
           <v-icon left small>mdi-file-excel</v-icon>Importar
         </m-btn>
@@ -114,7 +114,12 @@
         </div>
       </template>
     </Calendario>
-    <UploadFileSchedule :isVisible="isVisibleUpload" :cycle="cycle" @close="isVisibleUpload=false"></UploadFileSchedule>
+    <UploadFileSchedule 
+      v-if="selectedCycleSegment"
+      :isVisible="isVisibleUpload" 
+      :cycle="cycle" 
+      :cycleNumber="selectedCycleSegment.number"
+      @close="isVisibleUpload=false"></UploadFileSchedule>
   </div>
 </template>
 
