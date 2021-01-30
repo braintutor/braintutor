@@ -16,4 +16,13 @@ export function formatSegment(type, number) {
     return displayType(type) + " " + number 
 }
 
+export async function getCurrentOrNextSegment() {
+    return {
+        end: "2021-04-16",
+        type: "bimester",
+        number: "I",
+        start: "2021-02-23",
+      }
+}
+
 export const displayType = type => (type === "bimester"? "Bimestre": "Trimestre") 

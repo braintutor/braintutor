@@ -22,6 +22,8 @@
       </div>
     </div>
 
+    <v-divider class="my-4"></v-divider>
+
     <school-cycle-segment-card 
       v-if="selectedCycleSegment"
       :segment="selectedCycleSegment"
