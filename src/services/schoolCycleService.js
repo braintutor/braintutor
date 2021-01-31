@@ -17,12 +17,7 @@ export function formatSegment(type, number) {
 }
 
 export async function getCurrentOrNextSegment() {
-    return {
-        end: "2021-04-16",
-        type: "bimester",
-        number: "I",
-        start: "2021-02-23",
-      }
+    return fetch_get(`api/v1/school-cycle/segment`)
 }
 
 export const displayType = type => (type === "bimester"? "Bimestre": "Trimestre") 
