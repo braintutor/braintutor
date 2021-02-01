@@ -25,7 +25,7 @@
           </div>
         </div>
         <v-chip class="ma-2" label> Clase </v-chip>
-
+        <input type="text" value="https://test-braintutor.netlify.app/">
         <p class="date-modal">
           {{ itemDetail.description }}
         </p>
