@@ -14,7 +14,8 @@
               icon
               v-if="role != 'STU'"
             >
-              <v-icon dark> mdi-pencil </v-icon>
+              <v-icon dark v-if="!showEdit"> mdi-pencil </v-icon>
+              <v-icon dark v-else-if="showEdit"> mdi-eye </v-icon>
             </v-btn>
             <slot name="deleteSchedulePlan" v-bind:item="itemDetail"></slot>
 
