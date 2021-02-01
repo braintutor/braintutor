@@ -62,7 +62,7 @@
           v-model="evaluation.time_start_f"
           :disabled="evaluation.public"
         />
-        <span class="time-editor">Tiempo de Fin:</span>
+        <span class="time-editor span-time">Tiempo de Fin:</span>
         <date-time
           v-model="evaluation.time_end_f"
           :disabled="evaluation.public"
