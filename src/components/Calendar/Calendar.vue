@@ -28,6 +28,9 @@
             type="week"
             :start ="start"
             :events="events"
+            :interval-minutes="30"
+            first-time="06:00"
+            :interval-count="intervalCount"
             @click:event="seeDetail"
             @change="changeDate"
           ></v-calendar>
@@ -67,6 +70,8 @@ export default {
     focus: "",
     weekdays: [1, 2, 3, 4, 5, 6],
     range: {},
+    // desde las 6 hasta las 22, son 16 horas, si el intervalo es de 30 min, entonces es 32
+    intervalCount: 32
   }),
   props: {
     query: {
@@ -129,6 +134,11 @@ export default {
 </script>
 
 <style lang="scss">
+
+.v-calendar .v-event-timed {
+  white-space: initial;
+}
+
 .close-modal {
   display: flex;
   justify-content: space-between;
