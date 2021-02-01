@@ -37,7 +37,7 @@
           </v-avatar> -->
       </template>
       <template #actions>
-        <v-btn small color="error" @click="close">Salir de la clase</v-btn>
+        <v-btn small color="error" @click="close">Finalizar clase</v-btn>
         <v-btn
           v-if="itemDetail.type == 'class'"
           color="primary"
