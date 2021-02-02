@@ -26,10 +26,6 @@
         </div>
         <div>
           <v-chip class="my-2" label>Clase</v-chip>
-          <div class="my-2">
-            <label class="font-weight-bold">Link: </label>
-            <input type="text" value="https://test-braintutor.netlify.app/" />
-          </div>
           <v-btn small outlined color="teal">Marcar Asistencia</v-btn>
         </div>
         <p class="date-modal">

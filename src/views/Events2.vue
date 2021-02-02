@@ -7,8 +7,13 @@
        />
     <Calendario>
       <template v-slot:reSchedule="{ item }">
-        <div >
-          <p>Cambiar clase: </p >
+        <div>
+          <h3>Cambiar clase:</h3>
+          <div class="my-2">
+            <v-text-field label="Link de videollamada" 
+              placeholder="Ingrese el link de zoom, google meet o teams aquí" />
+          </div>
+          
           <div class="ma-2">
             <v-radio-group v-model="selectedAction">
               <v-radio label="Suspender" value="cancel"></v-radio>
