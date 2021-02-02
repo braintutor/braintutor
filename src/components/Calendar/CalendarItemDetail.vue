@@ -35,9 +35,6 @@
           <slot name="editSchedulePlan" v-bind:item="itemDetail"></slot>
           <slot name="reSchedule" v-bind:item="itemDetail"></slot>
         </div>
-        <!-- <v-avatar color="indigo">
-            <v-icon dark> mdi-account-circle </v-icon>
-          </v-avatar> -->
       </template>
       <template #actions>
         <v-btn small color="error" @click="close">Finalizar clase</v-btn>

@@ -23,7 +23,7 @@
                 </template>
               </v-radio>
             </v-radio-group>
-            <v-text-field label="Motivo" counter maxlength="50" ></v-text-field>
+            <v-text-area label="Motivo" counter maxlength="50" />
           </div>
         </div>
       </template>
