@@ -212,7 +212,23 @@ export default {
       if (query.section_id) this.queryCalendar = query;
     },
     async removeScheduleItem(item) {
-      deleteProposed(item["id"]);
+      this.$confirm(
+        {
+          callback: (confirm) => {
+            if (confirm) {
+               deleteProposed(item["schedule"]);
+            }
+          },
+          message: `
+           <p class="mt-4">
+            Al eliminar este horario, se eliminaran todos las clases pertenecientes.
+          </p>
+          `,
+        },
+        "delete"
+      );
+
+     
     },
     updateScheduleDate(date, item) {
       console.log(item, date);
