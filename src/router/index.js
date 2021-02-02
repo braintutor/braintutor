@@ -151,6 +151,11 @@ const routes = [
         name: "teacher-session-files",
         component: () => import("../components/TeacherSession/Files"),
       },
+      {
+        path:"assistance",
+        name:"teacher-session-assistance",
+        component: () => import("../components/TeacherSession/Assistance"),
+      }
     ],
   },
   {

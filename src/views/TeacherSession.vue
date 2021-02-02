@@ -56,6 +56,11 @@ export default {
         text: "Multimedia",
         name: "teacher-session-files",
       },
+      {
+        image: require("@/assets/icons/icon-assistance.svg"),
+        text: "Asistencia",
+        name: "teacher-session-assistance"
+      }
     ],
   }),
   async created() {
