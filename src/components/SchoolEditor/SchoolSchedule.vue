@@ -1,36 +1,33 @@
 <template>
   <div v-if="cycle">
-    <h2>Horario del año {{ cycle.year }}</h2>
     <div class="d-flex justify-space-between">
-      <div class="mx-1">
-        <div class="pb-2">Busque e importe horarios, según:</div>
-        <div>
-          <v-select
-            :items="cycle.segments"
-            :label="displayType(cycle.segment_type)"
-            :item-text="displaySegment"
-            item-value="number"
-            @change="chooseSegment"
-          ></v-select>
-        </div>
-        <SessionFilter @query="filter"></SessionFilter>
-      </div>
+      <h2>Horario del año {{ cycle.year }}</h2>
       <div v-if="selectedCycleSegment">
         <m-btn @click="showImportFile" color="dark" small class="mr-2">
           <v-icon left small>mdi-file-excel</v-icon>Importar
         </m-btn>
       </div>
     </div>
-
-    <v-divider class="my-4"></v-divider>
-
-    <school-cycle-segment-card 
-      v-if="selectedCycleSegment"
-      :segment="selectedCycleSegment"
-      :type="cycle.segment_type"
-       />
-    
-    <Calendario v-if="calendarStart !=null && queryCalendar" :query="queryCalendar" :start="calendarStart">
+    <v-select
+      class="mt-3"
+      :items="cycle.segments"
+      :label="'Seleccione un ' + displayType(cycle.segment_type)"
+      :item-text="displaySegment"
+      item-value="number"
+      @change="chooseSegment"
+    ></v-select>
+    <div v-if="selectedCycleSegment" class="mt-4 box">
+      <school-cycle-segment-card
+        :segment="selectedCycleSegment"
+        :type="cycle.segment_type"
+      />
+      <SessionFilter @query="filter"></SessionFilter>
+    </div>
+    <Calendario
+      v-if="calendarStart != null && queryCalendar"
+      :query="queryCalendar"
+      :start="calendarStart"
+    >
       <template v-slot:deleteSchedulePlan="{ item }">
         <v-btn
           @click="removeScheduleItem(item)"
@@ -114,12 +111,13 @@
         </div>
       </template>
     </Calendario>
-    <UploadFileSchedule 
+    <UploadFileSchedule
       v-if="selectedCycleSegment"
-      :isVisible="isVisibleUpload" 
-      :cycle="cycle" 
+      :isVisible="isVisibleUpload"
+      :cycle="cycle"
       :cycleNumber="selectedCycleSegment.number"
-      @close="isVisibleUpload=false"></UploadFileSchedule>
+      @close="isVisibleUpload = false"
+    ></UploadFileSchedule>
   </div>
 </template>
 
@@ -139,7 +137,12 @@ import SchoolCycleSegmentCard from "./SchoolCycleSegmentCard";
 
 const days = ["Lu", "Ma", "Mi", "Ju", "Vi", "Sa"];
 export default {
-  components: { Calendario, SessionFilter, UploadFileSchedule, SchoolCycleSegmentCard },
+  components: {
+    Calendario,
+    SessionFilter,
+    UploadFileSchedule,
+    SchoolCycleSegmentCard,
+  },
   data: () => ({
     school: {},
     SchoolModel,
@@ -206,11 +209,10 @@ export default {
       this.file = e.target.files[0];
     },
     filter(query) {
-      if(query.section_id)
-        this.queryCalendar = query;
+      if (query.section_id) this.queryCalendar = query;
     },
     async removeScheduleItem(item) {
-      deleteProposed(item["id"])
+      deleteProposed(item["id"]);
     },
     updateScheduleDate(date, item) {
       console.log(item, date);
