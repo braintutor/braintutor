@@ -120,7 +120,8 @@ export default {
     },
     async seeDetail({ event }) {
       this.isEventSelected = true;
-      const { url } = await join({'meetingID': event['session']})
+      console.log('eee',event )
+      const { url } = await join({'meetingName': event['name'] ,'meetingID': event['id']})
       this.eventSelected = { ...event, meetingUrl: url };
     },
     prev() {
