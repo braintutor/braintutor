@@ -25,7 +25,6 @@
           </div>
         </div>
         <div>
-          <v-chip class="my-2" label>Clase</v-chip>
           <v-btn small outlined color="teal">Marcar Asistencia</v-btn>
         </div>
         <p class="date-modal">
