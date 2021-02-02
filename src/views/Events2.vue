@@ -23,7 +23,7 @@
                 </template>
               </v-radio>
             </v-radio-group>
-            <v-text-area label="Motivo" counter maxlength="50" />
+            <v-textarea  label="Motivo" placeholder="Problema de salud, sucedio un evento inesperado..." ></v-textarea>
           </div>
         </div>
       </template>
