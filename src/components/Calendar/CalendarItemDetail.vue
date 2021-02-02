@@ -12,7 +12,7 @@
               class="mx-1"
               small
               icon
-              v-if="role != 'STU'"
+              v-if="user.role != 'STU'"
             >
               <v-icon dark v-if="!showEdit"> mdi-pencil </v-icon>
               <v-icon dark v-else-if="showEdit"> mdi-eye </v-icon>
@@ -26,10 +26,6 @@
         </div>
         <div>
           <v-chip class="my-2" label>Clase</v-chip>
-          <div class="my-2">
-            <label class="font-weight-bold">Link: </label>
-            <input type="text" value="https://test-braintutor.netlify.app/" />
-          </div>
           <v-btn small outlined color="teal">Marcar Asistencia</v-btn>
         </div>
         <p class="date-modal">
@@ -39,9 +35,6 @@
           <slot name="editSchedulePlan" v-bind:item="itemDetail"></slot>
           <slot name="reSchedule" v-bind:item="itemDetail"></slot>
         </div>
-        <!-- <v-avatar color="indigo">
-            <v-icon dark> mdi-account-circle </v-icon>
-          </v-avatar> -->
       </template>
       <template #actions>
         <v-btn small color="error" @click="close">Finalizar clase</v-btn>
@@ -61,6 +54,9 @@
 
 <script>
 import BrainDialog from "../SchoolEditor/BrainDialog";
+
+import { mapState } from "vuex";
+
 const itemDetail = {
   type: "", // clase, tarea, evaluacion
   name: "",
@@ -70,13 +66,17 @@ export default {
   data: () => ({
     itemDetail: itemDetail,
     isVisible: false,
-    role: localStorage.getItem("role"),
     showEdit: false,
   }),
   props: {
     item: {
       type: Object,
     },
+  },
+  computed: {
+    ...mapState([
+      "user"
+    ])
   },
   watch: {
     item(value) {
