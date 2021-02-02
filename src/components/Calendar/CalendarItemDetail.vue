@@ -14,7 +14,8 @@
               icon
               v-if="role != 'STU'"
             >
-              <v-icon dark> mdi-pencil </v-icon>
+              <v-icon dark v-if="!showEdit"> mdi-pencil </v-icon>
+              <v-icon dark v-else-if="showEdit"> mdi-eye </v-icon>
             </v-btn>
             <slot name="deleteSchedulePlan" v-bind:item="itemDetail"></slot>
 
@@ -23,8 +24,13 @@
             </v-btn>
           </div>
         </div>
-        <v-chip class="ma-2" label> Clase </v-chip>
-
+        <div>
+          <v-chip class="my-2" label>Clase</v-chip>
+          <div class="my-2">
+            <label class="font-weight-bold">Link: </label>
+            <input type="text" value="https://test-braintutor.netlify.app/" />
+          </div>
+        </div>
         <p class="date-modal">
           {{ itemDetail.description }}
         </p>
@@ -37,7 +43,7 @@
           </v-avatar> -->
       </template>
       <template #actions>
-        <v-btn small color="error" @click="close">Salir de la clase</v-btn>
+        <v-btn small color="error" @click="close">Finalizar clase</v-btn>
         <v-btn
           v-if="itemDetail.type == 'class'"
           color="primary"
@@ -93,5 +99,4 @@ export default {
 </script>
 
 <style lang="scss">
-
 </style>

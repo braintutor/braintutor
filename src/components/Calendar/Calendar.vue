@@ -29,7 +29,7 @@
             :start ="start"
             :events="events"
             :interval-minutes="30"
-            first-time="06:00"
+            :first-interval= "16"
             :interval-count="intervalCount"
             @click:event="seeDetail"
             @change="changeDate"
