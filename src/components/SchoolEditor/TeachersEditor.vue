@@ -211,6 +211,16 @@
     <v-dialog v-model="dlg_import" width="1200" persistent>
       <v-form ref="form_import" @submit.prevent="saveAll()" class="m-card">
         <div class="m-card__body">
+          <div class="m-card__actions px-0">
+            <m-btn
+              type="button"
+              @click="generatePasswords()"
+              color="dark"
+              text
+              small
+              >Generar Contraseñas</m-btn
+            >
+          </div>
           <table class="m-table">
             <thead>
               <tr>
@@ -218,7 +228,19 @@
                 <th>Apellidos</th>
                 <th>Correo</th>
                 <th>Usuario</th>
-                <th>Contraseña</th>
+                <th>
+                  <span>Contraseña</span>
+                  <v-btn
+                    class="ml-1"
+                    @click="show_passwords = !show_passwords"
+                    icon
+                  >
+                    <v-icon style="font-size: 1.3rem">{{
+                      show_passwords ? "mdi-eye" : "mdi-eye-off"
+                    }}</v-icon>
+                  </v-btn>
+                </th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -259,9 +281,15 @@
                   <v-text-field
                     v-model="entity.password"
                     :rules="passwordRules"
+                    :type="show_passwords ? 'text' : 'password'"
                     dense
                     autocomplete="off"
                   ></v-text-field>
+                </td>
+                <td>
+                  <v-btn class="mb-2" @click="new_data.splice(idx, 1)" icon>
+                    <v-icon style="font-size: 1.3rem">mdi-close</v-icon>
+                  </v-btn>
                 </td>
               </tr>
             </tbody>
@@ -269,7 +297,6 @@
         </div>
         <div class="m-card__actions">
           <m-btn
-            v-if="!loading_btn"
             @click="dlg_import = false"
             color="primary"
             type="button"
@@ -278,105 +305,169 @@
             class="mr-2"
             >Cerrar</m-btn
           >
-          <m-btn
-            v-if="!loading_btn"
-            color="primary"
-            type="submit"
-            small
-            >Guardar</m-btn
-          >
+          <m-btn color="primary" type="submit" small>Guardar</m-btn>
         </div>
       </v-form>
     </v-dialog>
 
-    <!-- <v-dialog v-model="dlg_import" width="1200" persistent>
-      <div class="import m-card">
-        <div class="import__body m-card__body">
+    <v-dialog v-model="dlg_import_result" width="1200" persistent>
+      <div class="m-card">
+        <div class="m-card__body">
+          <div class="close-modal">
+            <div></div>
+            <v-btn class="mx-2" icon small @click="dlg_import_result = false">
+              <v-icon dark> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
           <div class="mt-4">
-            <table class="m-table">
-              <thead>
-                <tr>
-                  <th>Nombres</th>
-                  <th>Apellidos</th>
-                  <th>Correo</th>
-                  <th>Usuario</th>
-                  <th>Contraseña</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(entity, idx) in new_data" :key="idx">
-                  <td>
-                    <v-text-field
-                      v-model="entity.first_name"
-                      :maxlength="UserModel.first_name.max_length"
-                      dense
-                      hide-details
-                      autocomplete="off"
-                    ></v-text-field>
-                  </td>
-                  <td>
-                    <v-text-field
-                      v-model="entity.last_name"
-                      :maxlength="UserModel.last_name.max_length"
-                      dense
-                      hide-details
-                      autocomplete="off"
-                    ></v-text-field>
-                  </td>
-                  <td>
-                    <v-text-field
-                      v-model="entity.email"
-                      :maxlength="UserModel.email.max_length"
-                      dense
-                      hide-details
-                      autocomplete="off"
-                    ></v-text-field>
-                  </td>
-                  <td>
-                    <v-text-field
-                      v-model="entity.username"
-                      :maxlength="UserModel.username.max_length"
-                      dense
-                      hide-details
-                      autocomplete="off"
-                    ></v-text-field>
-                  </td>
-                  <td>
-                    <v-text-field
-                      :type="entity.showPassword ? 'text' : 'password'"
-                      v-model="entity.password"
-                      :maxlength="UserModel.password.max_length"
-                      dense
-                      hide-details
-                      autocomplete="off"
-                      :append-icon="
-                        entity.showPassword ? 'mdi-eye' : 'mdi-eye-off'
-                      "
-                      @click:append="toogleShowPassword(entity)"
-                    ></v-text-field>
-                  </td>
-                  <td style="color: red; font-size: 0.8rem">
-                    {{ entity.response }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <div style="display: flex">
+              <h3>Usuarios Creados</h3>
+              <m-btn
+                @click="exportExcel(import_success, 'success')"
+                color="primary"
+                type="submit"
+                small
+                text
+                class="ml-3 pa-1"
+              >
+                <v-icon style="font-size: 1.2rem">mdi-download</v-icon>
+              </m-btn>
+            </div>
+            <div class="mt-3 py-2 px-3" style="border: 1px solid #ccc">
+              <table class="m-table">
+                <thead>
+                  <tr>
+                    <th class="text-left">Nombres</th>
+                    <th class="text-left">Apellidos</th>
+                    <th class="text-left">Correo</th>
+                    <th class="text-left">Usuario</th>
+                    <th class="text-left">
+                      <span>Contraseña</span>
+                      <v-btn
+                        class="ml-1"
+                        @click="
+                          show_passwords_success = !show_passwords_success
+                        "
+                        icon
+                      >
+                        <v-icon style="font-size: 1.3rem">{{
+                          show_passwords_success ? "mdi-eye" : "mdi-eye-off"
+                        }}</v-icon>
+                      </v-btn>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(entity, idx) in import_success" :key="idx">
+                    <td class="px-1">
+                      <span>{{ entity.first_name }}</span>
+                    </td>
+                    <td class="px-1">
+                      <span>{{ entity.last_name }}</span>
+                    </td>
+                    <td class="px-1">
+                      <span>{{ entity.email }}</span>
+                    </td>
+                    <td class="px-1">
+                      <span>{{ entity.username }}</span>
+                    </td>
+                    <td class="px-1">
+                      <span v-if="show_passwords_success">{{
+                        entity.password
+                      }}</span>
+                      <span v-else>******</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <p v-if="import_success.length <= 0" class="text-center mt-2">
+                No hay información
+              </p>
+            </div>
+          </div>
+          <div class="mt-4">
+            <div>
+              <div style="display: flex">
+                <h3>Errores</h3>
+                <m-btn
+                  @click="exportExcel(import_errors, 'errors')"
+                  color="primary"
+                  type="submit"
+                  small
+                  text
+                  class="ml-3 pa-1"
+                >
+                  <v-icon style="font-size: 1.2rem">mdi-download</v-icon>
+                </m-btn>
+              </div>
+              <ul class="mt-2">
+                <li>Verifique que el nombre de usuario no esté en uso</li>
+              </ul>
+            </div>
+            <div class="mt-3 py-2 px-3" style="border: 1px solid #ccc">
+              <table class="m-table">
+                <thead>
+                  <tr>
+                    <th class="text-left">Nombres</th>
+                    <th class="text-left">Apellidos</th>
+                    <th class="text-left">Correo</th>
+                    <th class="text-left">Usuario</th>
+                    <th class="text-left">
+                      <span>Contraseña</span>
+                      <v-btn
+                        class="ml-1"
+                        @click="show_passwords_errors = !show_passwords_errors"
+                        icon
+                      >
+                        <v-icon style="font-size: 1.3rem">{{
+                          show_passwords_errors ? "mdi-eye" : "mdi-eye-off"
+                        }}</v-icon>
+                      </v-btn>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(entity, idx) in import_errors" :key="idx">
+                    <td class="px-1">
+                      <span>{{ entity.first_name }}</span>
+                    </td>
+                    <td class="px-1">
+                      <span>{{ entity.last_name }}</span>
+                    </td>
+                    <td class="px-1">
+                      <span>{{ entity.email }}</span>
+                    </td>
+                    <td class="px-1">
+                      <span>{{ entity.username }}</span>
+                    </td>
+                    <td class="px-1">
+                      <span v-if="show_passwords_errors">{{
+                        entity.password
+                      }}</span>
+                      <span v-else>******</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <p v-if="import_errors.length <= 0" class="text-center mt-2">
+                No hay información
+              </p>
+            </div>
           </div>
         </div>
         <div class="m-card__actions">
           <m-btn
-            v-if="!loading_btn"
-            @click="dlg_import = false"
+            @click="dlg_import_result = false"
             color="primary"
+            type="button"
             small
             text
             class="mr-2"
             >Cerrar</m-btn
           >
-          <m-btn @click="saveAll()" :loading="loading_btn" color="primary" small>Guardar</m-btn>
         </div>
       </div>
-    </v-dialog> -->
+    </v-dialog>
   </div>
 </template>
 
@@ -427,18 +518,27 @@ export default {
       (v) => !!v || "Contraseña requerida",
       (v) => /^\S+$/.test(v) || "Contraseña inválida",
     ],
+    show_passwords: false,
+    show_passwords_success: false,
+    show_passwords_errors: false,
+    import_success: [],
+    import_errors: [],
     dlg_import: false,
+    dlg_import_result: false,
   }),
   async created() {
-    this.showLoading("Cargando Datos");
-    try {
-      this.entities = this.mongoArr(await getTeachersBySchool());
-    } catch (error) {
-      this.showMessage("", error.msg || error);
-    }
-    this.hideLoading();
+    await this.init();
   },
   methods: {
+    async init() {
+      this.showLoading("Cargando Datos");
+      try {
+        this.entities = this.mongoArr(await getTeachersBySchool());
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
+    },
     async save() {
       this.loading_btn = true;
       try {
@@ -525,29 +625,48 @@ export default {
       };
       reader.readAsBinaryString(file);
     },
-    saveAll() {
-      this.$refs.form_import.validate();
+    async saveAll() {
+      if (this.new_data.length <= 0) return;
+      if (!this.$refs.form_import.validate()) return;
+
+      this.dlg_import = false;
+      this.showLoading("Guardando");
+      try {
+        let users = this.new_data.map((user) => ({
+          ...user,
+          password: user.password + "",
+        }));
+        let { success, errors } = await this.$api.teacher.createMassive({
+          users,
+        });
+        await this.init();
+        this.import_success = success;
+        this.import_errors = errors;
+        this.dlg_import_result = true;
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
     },
-    // async saveAll() {
-    //   this.loading_btn = true;
-    //   let i = 0;
-    //   while (i < this.new_data.length) {
-    //     let entity = this.new_data[i];
-    //     entity.classroom_id = this.classroom_id_import;
-    //     // entity.pass = generatePassword();
-    //     try {
-    //       let { _id } = await addTeacher(entity);
-    //       entity._id = _id;
-    //       this.entities.push(entity);
-    //       this.new_data.splice(i, 1);
-    //     } catch (error) {
-    //       entity.response = error.msg || error;
-    //       i++;
-    //     }
-    //   }
-    //   if (this.new_data.length <= 0) this.dlg_import = false;
-    //   this.loading_btn = false;
-    // },
+    exportExcel(rows, filename) {
+      var data = XLSX.utils.json_to_sheet(rows);
+
+      var wb = XLSX.utils.book_new();
+
+      XLSX.utils.book_append_sheet(wb, data, "Hoja 1");
+
+      XLSX.writeFile(wb, `${filename}.xlsx`);
+    },
+    generatePasswords() {
+      this.new_data = this.new_data.map((item) => ({
+        ...item,
+        password: this.generatePassword(),
+      }));
+    },
+    generatePassword() {
+      return Math.random().toString(36).slice(-8);
+    },
+    //
     toogleShowPassword(e) {
       e.showPassword = !e.showPassword;
       this.$forceUpdate();
