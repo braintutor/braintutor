@@ -26,18 +26,37 @@
         </div>
         <div>
           <v-chip class="my-2" label>Clase</v-chip>
-          <v-btn small outlined color="teal">Marcar Asistencia</v-btn>
         </div>
         <p class="date-modal">
           {{ itemDetail.description }}
         </p>
+        
         <div v-if="showEdit">
           <slot name="editSchedulePlan" v-bind:item="itemDetail"></slot>
           <slot name="reSchedule" v-bind:item="itemDetail"></slot>
         </div>
+        <div v-else-if="user.role == 'TEA'">
+          <div class="my-2">
+            <v-text-field label="Link de videollamada" 
+              placeholder="Ingrese el link de zoom, google meet o teams aquí" />
+            <label for="attendance">Marcar Asistencia</label>
+            <v-btn
+              id="attendance"
+              class="mx-2"
+              fab
+              dark
+              small
+              color="primary"
+            >
+              <v-icon dark>
+                mdi-account-check
+              </v-icon>
+            </v-btn>
+          </div>
+        </div>
       </template>
       <template #actions>
-        <v-btn small color="error" @click="close">Finalizar clase</v-btn>
+        <v-btn small  @click="close" v-if="user.role == 'TEA'">Finalizar clase</v-btn>
         <v-btn
           v-if="itemDetail.type == 'class'"
           color="primary"
