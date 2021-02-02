@@ -36,6 +36,12 @@
           color: 'warning',
           action: () => selectSession(session, 'evaluations'),
         },
+        {
+          text: 'Clases',
+          icon: 'mdi-list-status',
+          color: 'warning',
+          action: () => selectSession(session, 'lessons'),
+        },
       ]"
     />
 
