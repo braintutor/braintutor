@@ -12,7 +12,7 @@
               class="mx-1"
               small
               icon
-              v-if="role != 'STU'"
+              v-if="user.role != 'STU'"
             >
               <v-icon dark v-if="!showEdit"> mdi-pencil </v-icon>
               <v-icon dark v-else-if="showEdit"> mdi-eye </v-icon>
@@ -57,6 +57,9 @@
 
 <script>
 import BrainDialog from "../SchoolEditor/BrainDialog";
+
+import { mapState } from "vuex";
+
 const itemDetail = {
   type: "", // clase, tarea, evaluacion
   name: "",
@@ -66,13 +69,17 @@ export default {
   data: () => ({
     itemDetail: itemDetail,
     isVisible: false,
-    role: localStorage.getItem("role"),
     showEdit: false,
   }),
   props: {
     item: {
       type: Object,
     },
+  },
+  computed: {
+    ...mapState([
+      "user"
+    ])
   },
   watch: {
     item(value) {
