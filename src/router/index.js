@@ -214,6 +214,11 @@ const routes = [
         component: () => import("../components/StudentSession/Tasks"),
       },
       {
+        path: "lessons",
+        name: "student-session-lessons",
+        component: () => import("../modules/SchoolClass/SchoolClass"),
+      },
+      {
         path: "events",
         name: "student-session-events",
         component: () => import("../components/StudentSession/Events"),

@@ -16,6 +16,11 @@ export default {
         name: "school-editor",
       },
       {
+        image: require(`@/assets/icons/icon-ciclo.svg`),
+        text: "Ciclos escolares",
+        name: "school-editor-school-cycle",
+      },
+      {
         image: require(`@/assets/icons/icon-teacher.svg`),
         text: "Docentes",
         name: "school-editor-teachers",
@@ -44,11 +49,6 @@ export default {
         image: require(`@/assets/icons/icon-director.svg`),
         text: "Director",
         name: "school-editor-director",
-      },
-      {
-        image: require(`@/assets/icons/icon-ciclo.svg`),
-        text: "Ciclos escolares",
-        name: "school-editor-school-cycle",
       },
       {
         image: require(`@/assets/icons/icon-parent.svg`),
