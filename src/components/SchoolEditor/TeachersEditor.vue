@@ -208,118 +208,16 @@
       </form>
     </v-dialog>
 
-    <v-dialog v-model="dlg_import" width="1200" persistent>
-      <v-form ref="form_import" @submit.prevent="saveAll()" class="m-card">
-        <div class="m-card__body">
-          <div class="m-card__actions px-0">
-            <m-btn
-              type="button"
-              @click="generatePasswords()"
-              color="dark"
-              text
-              small
-              >Generar Contraseñas</m-btn
-            >
-          </div>
-          <table class="m-table">
-            <thead>
-              <tr>
-                <th>Nombres</th>
-                <th>Apellidos</th>
-                <th>Correo</th>
-                <th>Usuario</th>
-                <th>
-                  <span>Contraseña</span>
-                  <v-btn
-                    class="ml-1"
-                    @click="show_passwords = !show_passwords"
-                    icon
-                  >
-                    <v-icon style="font-size: 1.3rem">{{
-                      show_passwords ? "mdi-eye" : "mdi-eye-off"
-                    }}</v-icon>
-                  </v-btn>
-                </th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(entity, idx) in new_data" :key="idx">
-                <td class="px-1">
-                  <v-text-field
-                    v-model="entity.first_name"
-                    :rules="nameRules"
-                    dense
-                    autocomplete="off"
-                  ></v-text-field>
-                </td>
-                <td class="px-1">
-                  <v-text-field
-                    v-model="entity.last_name"
-                    :rules="nameRules"
-                    dense
-                    autocomplete="off"
-                  ></v-text-field>
-                </td>
-                <td class="px-1">
-                  <v-text-field
-                    v-model="entity.email"
-                    :rules="emailRules"
-                    dense
-                    autocomplete="off"
-                  ></v-text-field>
-                </td>
-                <td class="px-1">
-                  <v-text-field
-                    v-model="entity.username"
-                    :rules="usernameRules"
-                    dense
-                    autocomplete="off"
-                  ></v-text-field>
-                </td>
-                <td class="px-1">
-                  <v-text-field
-                    v-model="entity.password"
-                    :rules="passwordRules"
-                    :type="show_passwords ? 'text' : 'password'"
-                    dense
-                    autocomplete="off"
-                  ></v-text-field>
-                </td>
-                <td>
-                  <v-btn class="mb-2" @click="new_data.splice(idx, 1)" icon>
-                    <v-icon style="font-size: 1.3rem">mdi-close</v-icon>
-                  </v-btn>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="m-card__actions">
-          <m-btn
-            @click="dlg_import = false"
-            color="primary"
-            type="button"
-            small
-            text
-            class="mr-2"
-            >Cerrar</m-btn
-          >
-          <m-btn color="primary" type="submit" small>Guardar</m-btn>
-        </div>
-      </v-form>
-    </v-dialog>
-
-    <v-dialog v-model="dlg_import_result" width="1200" persistent>
+    <v-dialog v-model="dlg_import" width="1600" persistent>
       <div class="m-card">
         <div class="m-card__body">
           <div class="close-modal">
             <div></div>
-            <v-btn class="mx-2" icon small @click="dlg_import_result = false">
+            <v-btn class="mx-2" icon small @click="dlg_import = false">
               <v-icon dark> mdi-close-thick </v-icon>
             </v-btn>
           </div>
-          <div class="mt-4">
+          <div v-if="!is_first_import" class="mb-4">
             <div style="display: flex">
               <h3>Usuarios Creados</h3>
               <m-btn
@@ -385,12 +283,13 @@
               </p>
             </div>
           </div>
-          <div class="mt-4">
+          <div>
             <div>
               <div style="display: flex">
-                <h3>Errores</h3>
+                <h3 v-if="is_first_import">Nuevos Usuarios</h3>
+                <h3 v-else>Errores</h3>
                 <m-btn
-                  @click="exportExcel(import_errors, 'errors')"
+                  @click="exportExcel(new_data, 'errors')"
                   color="primary"
                   type="submit"
                   small
@@ -400,11 +299,16 @@
                   <v-icon style="font-size: 1.2rem">mdi-download</v-icon>
                 </m-btn>
               </div>
-              <ul class="mt-2">
+              <!-- <ul class="mt-2">
                 <li>Verifique que el nombre de usuario no esté en uso</li>
-              </ul>
+              </ul> -->
             </div>
-            <div class="mt-3 py-2 px-3" style="border: 1px solid #ccc">
+            <v-form
+              ref="form_import"
+              @submit.prevent="saveAll()"
+              class="mt-3 py-2 px-3"
+              style="border: 1px solid #ccc"
+            >
               <table class="m-table">
                 <thead>
                   <tr>
@@ -424,47 +328,103 @@
                         }}</v-icon>
                       </v-btn>
                     </th>
+                    <th v-if="!is_first_import">Observación</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(entity, idx) in import_errors" :key="idx">
+                  <tr v-for="(entity, idx) in new_data" :key="idx">
                     <td class="px-1">
-                      <span>{{ entity.first_name }}</span>
+                      <v-text-field
+                        v-model="entity.first_name"
+                        :rules="nameRules"
+                        dense
+                        autocomplete="off"
+                      ></v-text-field>
                     </td>
                     <td class="px-1">
-                      <span>{{ entity.last_name }}</span>
+                      <v-text-field
+                        v-model="entity.last_name"
+                        :rules="nameRules"
+                        dense
+                        autocomplete="off"
+                      ></v-text-field>
                     </td>
                     <td class="px-1">
-                      <span>{{ entity.email }}</span>
+                      <v-text-field
+                        v-model="entity.email"
+                        :rules="emailRules"
+                        dense
+                        autocomplete="off"
+                      ></v-text-field>
                     </td>
                     <td class="px-1">
-                      <span>{{ entity.username }}</span>
+                      <v-text-field
+                        v-model="entity.username"
+                        :rules="usernameRules"
+                        dense
+                        autocomplete="off"
+                      ></v-text-field>
                     </td>
                     <td class="px-1">
-                      <span v-if="show_passwords_errors">{{
-                        entity.password
-                      }}</span>
-                      <span v-else>******</span>
+                      <v-text-field
+                        v-model="entity.password"
+                        :rules="passwordRules"
+                        :type="show_passwords_errors ? 'text' : 'password'"
+                        dense
+                        autocomplete="off"
+                      ></v-text-field>
+                    </td>
+                    <td v-if="!is_first_import" class="text-center" style="font-size: .8rem">{{ entity.error }}</td>
+                    <td>
+                      <v-btn class="mb-2" @click="new_data.splice(idx, 1)" icon>
+                        <v-icon style="font-size: 1.3rem">mdi-close</v-icon>
+                      </v-btn>
                     </td>
                   </tr>
                 </tbody>
               </table>
-              <p v-if="import_errors.length <= 0" class="text-center mt-2">
+              <p v-if="new_data.length <= 0" class="text-center mt-2">
                 No hay información
               </p>
-            </div>
+              <div style="display: flex; justify-content: flex-end" class="mt-3">
+                <m-btn
+                  type="button"
+                  @click="generatePasswords()"
+                  color="dark"
+                  text
+                  small
+                >
+                  <v-icon style="font-size: 1.1rem" class="mr-2"
+                    >mdi-lock-reset</v-icon
+                  ><span>Generar Contraseñas</span></m-btn
+                >
+                <m-btn
+                  type="button"
+                  @click="new_data.push({})"
+                  color="dark"
+                  text
+                  small
+                  class="ml-2"
+                >
+                  <v-icon style="font-size: 1.1rem" class="mr-2"
+                    >mdi-plus</v-icon
+                  >
+                  <span>Añadir Usuario</span>
+                </m-btn>
+              </div>
+              <div
+                v-if="new_data.length > 0"
+                style="display: flex; justify-content: flex-end"
+                class="mt-3"
+              >
+                <m-btn type="button" color="primary" small text>Cerrar</m-btn>
+                <m-btn type="submit" color="primary" small class="ml-2"
+                  >Guardar</m-btn
+                >
+              </div>
+            </v-form>
           </div>
-        </div>
-        <div class="m-card__actions">
-          <m-btn
-            @click="dlg_import_result = false"
-            color="primary"
-            type="button"
-            small
-            text
-            class="mr-2"
-            >Cerrar</m-btn
-          >
         </div>
       </div>
     </v-dialog>
@@ -518,13 +478,11 @@ export default {
       (v) => !!v || "Contraseña requerida",
       (v) => /^\S+$/.test(v) || "Contraseña inválida",
     ],
-    show_passwords: false,
     show_passwords_success: false,
     show_passwords_errors: false,
     import_success: [],
-    import_errors: [],
+    is_first_import: true,
     dlg_import: false,
-    dlg_import_result: false,
   }),
   async created() {
     await this.init();
@@ -587,6 +545,8 @@ export default {
     onLoadFile(e) {
       let file = e.target.files[0];
       this.new_data = [];
+      this.import_success = [];
+      this.is_first_import = true;
       if (!file) return;
 
       let reader = new FileReader();
@@ -640,9 +600,10 @@ export default {
           users,
         });
         await this.init();
-        this.import_success = success;
-        this.import_errors = errors;
-        this.dlg_import_result = true;
+        this.import_success = this.import_success.concat(success);
+        this.new_data = errors;
+        this.dlg_import = true;
+        this.is_first_import = false;
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
