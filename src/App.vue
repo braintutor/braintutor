@@ -31,7 +31,6 @@
 import Header from "./components/Header";
 import loading from "./components/loading";
 import Chatbot from "@/components/MChatbot/index";
-
 import { updateStudentTime } from "@/services/studentService";
 
 import { mapState } from "vuex";
@@ -91,10 +90,11 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
-
+  
   &__body {
     height: calc(100vh - 56px);
     overflow-y: overlay;
+    
   }
 }
 
