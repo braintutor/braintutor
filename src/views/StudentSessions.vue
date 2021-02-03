@@ -38,8 +38,8 @@
         },
         {
           text: 'Clases',
-          icon: 'mdi-list-status',
-          color: 'warning',
+          icon: 'mdi-format-list-checks',
+          color: 'success',
           action: () => selectSession(session, 'lessons'),
         },
       ]"

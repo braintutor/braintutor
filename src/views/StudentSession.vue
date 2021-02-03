@@ -52,7 +52,7 @@ export default {
         name: "student-session-students",
       },
        {
-        image: require("@/assets/icons/icon-student.svg"),
+        image: require("@/assets/icons/icon-task.svg"),
         text: "Clases",
         name: "student-session-lessons",
       },
