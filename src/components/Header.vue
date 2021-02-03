@@ -202,6 +202,12 @@ export default {
         icon: "mdi-calendar",
         session_roles: ["TEA", "STU"],
       },
+       {
+        title: "Horario escolar",
+        name: "schedule",
+        icon: "mdi-calendar",
+        session_roles: ["TEA", "STU"],
+      },
     ],
     roles: {
       ADM: "ADMINISTRADOR",

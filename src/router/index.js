@@ -35,6 +35,12 @@ const routes = [
     path: "/events",
     name: "events",
     meta: { roles: ["TEA", "STU"] },
+    component: () => import("../views/Events.vue"),
+  },
+  {
+    path: "/schedule",
+    name: "schedule",
+    meta: { roles: ["TEA", "STU"] },
     component: () => import("../views/Events2.vue"),
   },
   // ADM
