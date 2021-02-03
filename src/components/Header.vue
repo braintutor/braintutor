@@ -197,7 +197,7 @@ export default {
       },
       // *
       {
-        title: "Agenda",
+        title: "Horario",
         name: "events",
         icon: "mdi-calendar",
         session_roles: ["TEA", "STU"],
