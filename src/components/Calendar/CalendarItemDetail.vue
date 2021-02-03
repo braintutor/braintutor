@@ -62,7 +62,7 @@
           color="primary"
           small
           class="ml-2"
-          :href="itemDetail.meetingUrl"
+          @click="enterClass"
           target="__blank"
           >Entrar a clase</v-btn
         >
@@ -73,6 +73,7 @@
 
 <script>
 import BrainDialog from "../SchoolEditor/BrainDialog";
+import { join } from "@/services/eventService";
 
 import { mapState } from "vuex";
 
@@ -114,6 +115,10 @@ export default {
       };
     },
     goMeeting() {},
+    async enterClass() {
+      const { url } = await join({'meetingName': this.itemDetail['name'] ,'meetingID': this.itemDetail['id']})
+      window.open(url)
+    }
   },
 };
 </script>
