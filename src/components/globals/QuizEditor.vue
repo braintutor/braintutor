@@ -40,9 +40,12 @@
             <v-icon>mdi-image</v-icon>
           </v-btn>
         </div>
-        <p v-else class="mb-3" style="white-space: pre-line">
-          {{ d.question }}
-        </p>
+        <p
+          v-else
+          class="mb-3"
+          style="white-space: pre-line"
+          v-html="toHTML(d.question)"
+        ></p>
         <!-- QUESTION IMAGE -->
         <div v-if="d.image" class="question__image">
           <img :src="d.image" />
