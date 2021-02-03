@@ -51,6 +51,11 @@ export default {
         text: "Alumnos",
         name: "student-session-students",
       },
+       {
+        image: require("@/assets/icons/icon-task.svg"),
+        text: "Clases",
+        name: "student-session-lessons",
+      },
     ],
   }),
   async created() {

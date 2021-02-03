@@ -5,35 +5,32 @@
       :segment="segment"
       :type="segment.type"
        />
-    <Calendario>
+    <calendar>
       <template v-slot:reSchedule="{ item }">
-        <div >
-          <p>Cambiar clase: </p >
-          <div class="ma-2">
-            <v-radio-group v-model="selectedAction">
-              <v-radio label="Suspender" value="cancel"></v-radio>
-              <v-radio value="reschedule">
-                <template v-slot:label>
-                  <div class="d-flex align-center">Reprogramar <date-time class="mx-2" v-model="newDate" /></div>
-                </template>
-              </v-radio>
-            </v-radio-group>
-            <v-text-field label="Motivo" counter maxlength="50" ></v-text-field>
-          </div>
+        <div class="ma-2">
+          <v-radio-group v-model="selectedAction">
+            <v-radio label="Suspender" value="cancel"></v-radio>
+            <v-radio value="reschedule">
+              <template v-slot:label>
+                <div class="d-flex align-center">Reprogramar <date-time class="mx-2" v-model="newDate" /></div>
+              </template>
+            </v-radio>
+          </v-radio-group>
+          <v-textarea  label="Motivo" placeholder="Problema de salud, sucedio un evento inesperado..." ></v-textarea>
         </div>
       </template>
-    </Calendario>
+    </calendar>
   </div>
 </template>
 
 <script>
-import Calendario from "@/components/Calendar";
+import Calendar from "@/components/Calendar";
 import DateTime from "@/components/globals/DateTime";
 import SchoolCycleSegmentCard from "@/components/SchoolEditor/SchoolCycleSegmentCard";
 import { getCurrentOrNextSegment } from '@/services/schoolCycleService'
 
 export default {
-  components: { Calendario, DateTime, SchoolCycleSegmentCard },
+  components: { Calendar, DateTime, SchoolCycleSegmentCard },
   data: () => ({
     role: "",
     newDate: null,

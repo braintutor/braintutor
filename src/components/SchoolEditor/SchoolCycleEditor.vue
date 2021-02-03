@@ -9,7 +9,7 @@
         <v-icon small class="mr-2">mdi-plus</v-icon>Crear
       </m-btn>
     </div>
-    <div class="editor__content m-4">
+    <div class="editor__content mt-4">
       <table class="m-table">
         <thead>
           <tr>

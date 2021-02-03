@@ -29,3 +29,22 @@
     }
   }
 }
+
+.title {
+  font-size: 1.3rem;
+  font-weight: bold;
+  word-wrap: break-word;
+}
+.time {
+  margin-bottom: 0;
+  color: var(--color-subtitle);
+  font-size: 0.9rem;
+  font-weight: bold;
+
+  display: flex;
+  align-items: center;
+
+  & * {
+    color: var(--color-subtitle);
+  }
+}

@@ -151,6 +151,11 @@ const routes = [
         name: "teacher-session-files",
         component: () => import("../components/TeacherSession/Files"),
       },
+      {
+        path:"assistance",
+        name:"teacher-session-assistance",
+        component: () => import("../components/TeacherSession/Assistance"),
+      }
     ],
   },
   {
@@ -207,6 +212,11 @@ const routes = [
         path: "tasks",
         name: "student-session-tasks",
         component: () => import("../components/StudentSession/Tasks"),
+      },
+      {
+        path: "lessons",
+        name: "student-session-lessons",
+        component: () => import("../modules/SchoolClass/SchoolClass"),
       },
       {
         path: "events",

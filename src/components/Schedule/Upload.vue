@@ -4,7 +4,10 @@
       <template #body>
         <div class="close-modal">
           <div>
-            <h3>Importar horario para el {{formatSegment(cycle.segment_type, cycleNumber)}}</h3>
+            <h3>
+              Importar horario para el
+              {{ formatSegment(cycle.segment_type, cycleNumber) }}
+            </h3>
           </div>
           <div>
             <v-btn class="mx-1" icon small @click="close">
@@ -16,24 +19,20 @@
         <div class="mt-2 d-flex justify-space-between">
           <form @submit.prevent="save()">
             <p>
-              Importe el horario de un archivo siguiendo la
+              Importe el horario desde un archivo, siguiendo
               <a
                 class="mx-1"
                 href="/files/plantilla_horario.csv"
                 __target="blank"
-                >plantilla siguiente.</a
+                >esta plantilla.</a
               >
             </p>
-            <input
-              @change="onFileSelected($event)"
-              onclick="value = null"
-              type="file"
-            />
+            <input @change="onFileSelected($event)" type="file" />
           </form>
         </div>
       </template>
       <template #actions>
-        <m-btn @click="save" color="primary" small v-if="file">Importar</m-btn>
+        <m-btn @click="save" :loading="loading" color="primary" small v-if="file">Importar</m-btn>
       </template>
     </brain-dialog>
   </div>
@@ -47,7 +46,8 @@ import BrainDialog from "@/components/SchoolEditor/BrainDialog";
 export default {
   components: { BrainDialog },
   data: () => ({
-    file: null
+    file: null,
+    loading: false
   }),
   props: ["isVisible", "cycle", "cycleNumber"],
   async mounted() {},
@@ -56,19 +56,27 @@ export default {
     close() {
       this.$emit("close");
     },
-    async save() {
+    save() {
+      this.loading = true
       this.showLoading("Guardando");
-      try {
-        const formData = new FormData();
-        formData.append("file", this.file);
-        formData.append("school_cycle", this.cycle.id);
-        formData.append("school_cycle_segment", this.cycleNumber);
 
-        await loadSchedule(formData);
-      } catch (error) {
-        this.showMessage("", error.msg || error);
-      }
-      this.hideLoading();
+      const formData = new FormData();
+      formData.append("file", this.file);
+      formData.append("school_cycle", this.cycle.id);
+      formData.append("school_cycle_segment", this.cycleNumber);
+
+      loadSchedule(formData)
+        .then(() => {
+          this.showMessage("", "Horario cargado");
+          this.close()
+        })
+        .catch(() => {
+          this.showMessage("", "Errores al subir el horario");
+        })
+        .finally( () => {
+          this.hideLoading()
+          this.loading = false
+          });
     },
     async onFileSelected(e) {
       this.file = e.target.files[0];
