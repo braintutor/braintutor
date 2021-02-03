@@ -575,6 +575,9 @@ export default {
       this.dlg_new_course_adaptive = false;
       if (!this.new_course_adaptive_name) return;
 
+      let overview = JSON.stringify({
+        blocks: [{ type: "header", data: { text: "Resumen", level: 2 } }],
+      });
       let explanation = JSON.stringify({
         blocks: [{ type: "header", data: { text: "Título", level: 2 } }],
       });
@@ -608,7 +611,7 @@ export default {
         unit_id: this.unit_selected._id,
         name: this.new_course_adaptive_name,
         data_fs: {
-          overview: "Resumen",
+          overview,
           explanation,
           movies,
           images,

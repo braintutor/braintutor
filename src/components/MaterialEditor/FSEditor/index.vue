@@ -27,11 +27,18 @@
         <span class="editor__title">{{ categories[category].name }}</span>
       </div>
       <!-- Overview -->
-      <TextEditor
+      <!-- <TextEditor
         v-if="category === 'overview'"
         :text="material.data_fs[category]"
         :maxlength="false"
         @submit="save"
+      /> -->
+      <DocumentEditor
+        v-if="category === 'overview'"
+        :data="material.data_fs[category]"
+        @submit="save"
+        :document_type="'course'"
+        :document_id="material.course_id.$oid"
       />
       <!-- Exercises -->
       <QuizEditor
@@ -62,7 +69,7 @@
 </template>
 
 <script>
-import TextEditor from "./TextEditor";
+// import TextEditor from "./TextEditor";
 import QuizEditor from "@/components/globals/QuizEditor";
 import FAQEditor from "./FAQEditor";
 import DocumentEditor from "@/components/globals/DocumentEditor/index";
@@ -128,7 +135,7 @@ export default {
     },
   },
   components: {
-    TextEditor,
+    // TextEditor,
     QuizEditor,
     FAQEditor,
     DocumentEditor,
