@@ -48,6 +48,9 @@
             <template v-slot:reSchedule="{ item }">
               <slot name="reSchedule" v-bind:item="item"></slot>
             </template>
+             <template v-slot:meeting="{ item }">
+              <slot name="meeting" v-bind:item="item"></slot>
+            </template>
           </CalendarItemDetail>
         </v-sheet>
       </v-col>

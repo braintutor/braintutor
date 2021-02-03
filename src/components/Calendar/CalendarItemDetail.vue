@@ -1,6 +1,6 @@
 <template>
   <div>
-    <brain-dialog v-model="isVisible" maxWidth="450" :showCancel="false">
+    <brain-dialog v-model="isVisible" maxWidth="500" :showCancel="false">
       <template #body>
         <div class="close-modal">
           <div>
@@ -30,24 +30,16 @@
         <p class="date-modal">
           {{ itemDetail.description }}
         </p>
-        
+
         <div v-if="showEdit">
+          <slot name="meeting" v-bind:item="itemDetail"></slot>
           <slot name="editSchedulePlan" v-bind:item="itemDetail"></slot>
           <slot name="reSchedule" v-bind:item="itemDetail"></slot>
         </div>
         <div v-else-if="user.role == 'TEA'">
           <div class="my-2">
-            <v-text-field label="Link de videollamada" 
-              placeholder="Ingrese el link de zoom, google meet o teams aquí" />
             <label for="attendance">Marcar Asistencia</label>
-            <v-btn
-              id="attendance"
-              class="mx-2"
-              fab
-              dark
-              small
-              color="primary"
-            >
+            <v-btn id="attendance" class="mx-2" fab dark small color="primary">
               <v-icon dark>
                 mdi-account-check
               </v-icon>
@@ -56,7 +48,9 @@
         </div>
       </template>
       <template #actions>
-        <v-btn small  @click="close" v-if="user.role == 'TEA'">Finalizar clase</v-btn>
+        <v-btn small @click="close" v-if="user.role == 'TEA'"
+          >Finalizar clase</v-btn
+        >
         <v-btn
           v-if="itemDetail.type == 'class'"
           color="primary"
@@ -94,9 +88,7 @@ export default {
     },
   },
   computed: {
-    ...mapState([
-      "user"
-    ])
+    ...mapState(["user"]),
   },
   watch: {
     item(value) {
@@ -116,12 +108,14 @@ export default {
     },
     goMeeting() {},
     async enterClass() {
-      const { url } = await join({'meetingName': this.itemDetail['name'] ,'meetingID': this.itemDetail['id']})
-      window.open(url)
-    }
+      const { url } = await join({
+        meetingName: this.itemDetail["name"],
+        meetingID: this.itemDetail["id"],
+      });
+      window.open(url);
+    },
   },
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>
