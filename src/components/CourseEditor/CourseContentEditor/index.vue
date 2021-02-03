@@ -10,7 +10,7 @@
           class="ml-2"
           color="primary"
           small
-          ><v-icon class="mr-2" small>mdi-plus</v-icon>Crear Unidad</m-btn
+          ><v-icon class="mr-2" small>mdi-plus</v-icon>Crear Tema</m-btn
         >
       </div>
       <!-- Unit -->
@@ -46,7 +46,7 @@
                   dlg_remove_unit = true;
                 "
               >
-                <v-list-item-title>Eliminar Unidad</v-list-item-title>
+                <v-list-item-title>Eliminar Tema</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-menu>
@@ -133,7 +133,7 @@
                       dlg_edit_item = true;
                     "
                   >
-                    <v-list-item-title>Cambiar Unidad</v-list-item-title>
+                    <v-list-item-title>Cambiar Tema</v-list-item-title>
                   </v-list-item>
                   <v-list-item
                     @click="
@@ -166,7 +166,7 @@
       <form @submit.prevent="addUnit()" class="m-card">
         <div class="m-card__body">
           <div class="close-modal">
-            <h3>Crear Unidad</h3>
+            <h3>Crear Tema</h3>
             <v-btn class="mx-2" icon small @click="dlg_new_unit = false">
               <v-icon> mdi-close-thick </v-icon>
             </v-btn>
@@ -197,7 +197,7 @@
       <form @submit.prevent="updateUnit()" class="m-card">
         <div class="m-card__body">
           <div class="close-modal">
-            <h3>Editar Unidad</h3>
+            <h3>Editar Tema</h3>
             <v-btn class="mx-2" icon small @click="dlg_edit_unit = false">
               <v-icon> mdi-close-thick </v-icon>
             </v-btn>
@@ -294,7 +294,7 @@
       <form @submit.prevent="updateItemUnit()" class="m-card">
         <div class="m-card__body">
           <div class="close-modal">
-            <h3>Cambiar Unidad</h3>
+            <h3>Cambiar Tema</h3>
             <v-btn class="mx-2" icon small @click="dlg_edit_item = false">
               <v-icon> mdi-close-thick </v-icon>
             </v-btn>
@@ -304,7 +304,7 @@
             :items="units"
             item-text="name"
             item-value="_id"
-            label="Unidad"
+            label="Tema"
             class="mt-4"
           ></v-select>
         </div>
@@ -327,7 +327,7 @@
       <form @submit.prevent="updateItemName()" class="m-card">
         <div class="m-card__body">
           <div class="close-modal">
-            <h3>Crear Unidad</h3>
+            <h3>Crear Tema</h3>
             <v-btn class="mx-2" icon small @click="dlg_edit_item_name = false">
               <v-icon> mdi-close-thick </v-icon>
             </v-btn>
@@ -559,7 +559,7 @@ export default {
       this.hideLoading();
     },
     async removeUnit() {
-      this.showLoading("Eliminando Unidad");
+      this.showLoading("Eliminando Tema");
       try {
         await removeUnit(this.unit_selected._id);
         this.units = this.units.filter(
