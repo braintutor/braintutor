@@ -418,7 +418,7 @@
                 style="display: flex; justify-content: flex-end"
                 class="mt-3"
               >
-                <m-btn type="button" color="primary" small text>Cerrar</m-btn>
+                <m-btn @click="dlg_import = false" type="button" color="primary" small text>Cerrar</m-btn>
                 <m-btn type="submit" color="primary" small class="ml-2"
                   >Guardar</m-btn
                 >
