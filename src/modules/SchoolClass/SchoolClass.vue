@@ -5,7 +5,14 @@
         >{{ item.start }} - {{ item.end }}
       </v-card-title>
       <v-card-actions>
-        <v-btn @click="seeRecord(item)" color="primary" small rounded>
+        <v-btn
+          v-if="item.recording"
+          :href="item.recording.url"
+          target="__blank"
+          color="primary"
+          small
+          rounded
+        >
           <v-icon small class="mr-2">mdi-eye</v-icon>Ver grabación
         </v-btn>
       </v-card-actions>
