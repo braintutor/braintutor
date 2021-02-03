@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { getEvents, generateColor, join } from "@/services/eventService";
+import { getEvents, generateColor } from "@/services/eventService";
 import CalendarItemDetail from "./CalendarItemDetail";
 
 export default {
@@ -65,7 +65,6 @@ export default {
   },
   data: () => ({
     events: [],
-    isEventSelected: false,
     eventSelected: null,
     focus: "",
     weekdays: [1, 2, 3, 4, 5, 6],
@@ -119,10 +118,7 @@ export default {
       return dateTime.date + " " + dateTime.hour + ":" + minute;
     },
     async seeDetail({ event }) {
-      this.isEventSelected = true;
-      console.log('eee',event )
-      const { url } = await join({'meetingName': event['name'] ,'meetingID': event['id']})
-      this.eventSelected = { ...event, meetingUrl: url };
+      this.eventSelected = event
     },
     prev() {
       this.$refs.calendar.prev();
