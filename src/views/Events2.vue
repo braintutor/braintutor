@@ -81,7 +81,9 @@ export default {
   methods: {
     saveLink({ id }){
       editMeetingUrl(id, this.meetingUrl).then( r => {
+        /*eslint-disable */
         console.log(r)
+        /*eslint-enable */
       })
     }
   },
