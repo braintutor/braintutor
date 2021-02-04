@@ -45,7 +45,6 @@ export default {
 .app {
   height: calc(100vh - 56px);
   display: grid;
-
   grid-template-columns: auto 1fr;
   grid-template-rows: auto 1fr;
 
@@ -126,7 +125,6 @@ export default {
   .sidebar {
     width: 100%;
     border: none;
-
     display: flex;
     justify-content: center;
   }

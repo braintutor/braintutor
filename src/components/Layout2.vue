@@ -73,7 +73,6 @@ $sidebar-spacing: 6px;
 .app {
   height: calc(100vh - 56px);
   display: grid;
-
   grid-template-columns: auto 1fr;
   grid-template-rows: auto 1fr;
 
@@ -168,7 +167,6 @@ $sidebar-spacing: 6px;
   .sidebar {
     width: 100%;
     border: none;
-
     display: flex;
     justify-content: center;
   }
