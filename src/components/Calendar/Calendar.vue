@@ -105,7 +105,7 @@ export default {
       this.events = response.results;
       this.events.map((e) => {
         e['session'] = e['color']
-        e["color"] = generateColor(e["color"]);
+        e["color"] = generateColor(e["color"]+'a1');
         return e;
       });
     },
