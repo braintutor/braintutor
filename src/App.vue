@@ -2,7 +2,7 @@
   <v-app class="m-app" id="braintutor">
      <vue-confirm></vue-confirm>
     <Header />
-    <v-main class="m-app__body px-4">
+    <v-main class="m-app__body">
       <router-view></router-view>
     </v-main>
     <loading :active="loading" :message="loading_msg" />
