@@ -50,11 +50,9 @@
         </div>
       </template>
       <template #actions>
-        <v-btn small @click="close" v-if="featureFlag"
-          >Finalizar clase</v-btn
-        >
+        <v-btn small @click="close" v-if="featureFlag">Finalizar clase</v-btn>
         <v-btn
-          v-if="itemDetail.type == 'class'"
+          v-if="itemDetail.type == 'class' && itemDetail.isActive"
           color="primary"
           small
           class="ml-2"
@@ -71,12 +69,13 @@
 import BrainDialog from "../SchoolEditor/BrainDialog";
 import { join } from "@/services/eventService";
 import { mapState } from "vuex";
-import { format } from "date-fns";
+import { format, differenceInMinutes } from "date-fns";
 
 const itemDetail = {
   type: "", // clase, tarea, evaluacion
   name: "",
   color: "",
+  start: null
 };
 export default {
   components: { BrainDialog },
@@ -85,6 +84,7 @@ export default {
     itemDetail: itemDetail,
     isVisible: false,
     showEdit: false,
+    isActive: true,
   }),
   props: {
     item: {
@@ -100,24 +100,35 @@ export default {
       this.isVisible = !!value;
     },
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     formatRange(start, end) {
       if (start && end) {
-        return `${format(new Date(start), "HH:m")} a ${format(new Date(end), "HH:m")}`;
+        return `${format(new Date(start), "HH:m")} a ${format(
+          new Date(end),
+          "HH:m"
+        )}`;
       }
     },
     close() {
       this.$emit("close");
     },
     get(item) {
-      this.itemDetail = {
-        type: "class",
-        ...item,
-      };
+      if (item) {
+      
+
+        this.itemDetail = {
+          isActive: this.meetingIsActive(item),
+          type: "class",
+          ...item,
+        };
+      }
     },
-    goMeeting() {},
+    meetingIsActive(item){
+      const isCurrent = differenceInMinutes(new Date(item.end), new Date()) >= -30
+      return  isCurrent
+    },
+        goMeeting() {},
     async enterClass() {
       const { url } = await join({
         meetingName: this.itemDetail["name"],
