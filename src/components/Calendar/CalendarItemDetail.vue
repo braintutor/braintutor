@@ -6,7 +6,7 @@
           <div>
             <h3>{{ itemDetail.name }}</h3>
           </div>
-          <div>
+          <div class="d-flex">
             <v-btn
               @click="showEdit = !showEdit"
               class="mx-1"
@@ -18,7 +18,6 @@
               <v-icon dark v-else-if="showEdit"> mdi-eye </v-icon>
             </v-btn>
             <slot name="deleteSchedulePlan" v-bind:item="itemDetail"></slot>
-
             <v-btn class="mx-1" icon small @click="close">
               <v-icon> mdi-close-thick </v-icon>
             </v-btn>
@@ -30,7 +29,6 @@
         <p class="date-modal">
           {{ itemDetail.description }}
         </p>
-
         <div v-if="showEdit">
           <slot name="meeting" v-bind:item="itemDetail"></slot>
           <slot name="editSchedulePlan" v-bind:item="itemDetail"></slot>
@@ -38,12 +36,12 @@
         </div>
         <div v-else-if="user.role == 'TEA'">
           <div class="my-2">
-            <label for="attendance">Marcar Asistencia</label>
             <v-btn id="attendance" class="mx-2" fab dark small color="primary">
               <v-icon dark>
                 mdi-account-check
               </v-icon>
             </v-btn>
+            <label for="attendance">Marcar Asistencia</label>
           </div>
         </div>
       </template>
@@ -68,7 +66,6 @@
 <script>
 import BrainDialog from "../SchoolEditor/BrainDialog";
 import { join } from "@/services/eventService";
-
 import { mapState } from "vuex";
 
 const itemDetail = {

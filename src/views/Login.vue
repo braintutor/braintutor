@@ -106,7 +106,6 @@ export default {
   color: rgb(255, 130, 130);
   font-size: 0.9rem;
   border-radius: 20px;
-
   display: flex;
   justify-content: space-between;
   align-items: center;

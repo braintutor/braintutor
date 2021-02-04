@@ -264,9 +264,7 @@ export default {
 <style lang='scss' scoped>
 .header {
   height: 56px;
-  padding: 0 14px;
-  padding-right: 10px;
-
+  padding: 0 16px;
   display: flex;
   align-items: center;
 
@@ -344,7 +342,6 @@ export default {
     font-size: 0.9rem;
     border-radius: 4px;
     box-shadow: 0 2px 6px #c7c7c7;
-    //
     display: flex;
     flex-direction: column;
   }
