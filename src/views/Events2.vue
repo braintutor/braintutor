@@ -1,5 +1,5 @@
 <template>
-  <div class="m-container">
+  <div class="m-container px-4">
     <school-cycle-segment-card
       v-if="segment"
       :segment="segment"

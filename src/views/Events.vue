@@ -41,7 +41,6 @@
         ></div>
       </div>
     </div>
-
     <m-calendar :events="events_f">
       <template v-slot:event_info="{ event }">
         <div v-if="event.type === 'task'" class="m-card__actions pa-0 pt-4">

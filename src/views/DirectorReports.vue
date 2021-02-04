@@ -264,7 +264,6 @@ $width-list: 360px;
 
 .reports {
   height: 100%;
-
   display: grid;
   grid-template-columns: $width-list 1fr;
   grid-template-rows: auto 1fr;

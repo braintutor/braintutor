@@ -74,7 +74,6 @@ export default {
   overflow: hidden;
   transition: 0.4s;
   cursor: pointer;
-
   display: flex;
   flex-direction: column;
 
