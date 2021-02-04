@@ -15,6 +15,11 @@ const routes =  {
           import("../components/TeacherSession/TasksEditor/index"),
       },
       {
+        path: "lessons",
+        name: "teacher-session-lessons",
+        component: () => import("../modules/SchoolClass/SchoolClass"),
+      },
+      {
         path: "events",
         name: "teacher-session-events",
         component: () => import("../components/TeacherSession/EventsEditor"),
