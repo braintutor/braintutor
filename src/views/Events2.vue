@@ -33,18 +33,18 @@
       </template>
       <template v-slot:meeting="{ item }">
         <div class="ma-2">
-          <p>Videollamada:</p>
+          <p>Realizar videollamada:</p>
           <v-radio-group v-model="selectedMeeting">
-            <v-radio label="Usar BBB" value="bbb"></v-radio>
+            <v-radio label="Usando BBB" value="bbb"></v-radio>
             <v-radio value="other">
               <template v-slot:label>
-                <div class="d-flex align-center">
-                  Usar link:
+                <div class="all d-flex justify-space-between align-center">
+                  Usando link:
                   <v-text-field
                     class="ml-2"
                     v-model="meetingUrl"
                     @blur="saveLink(item)"
-                    placeholder="Ingrese el link de zoom, google meet o teams aquí"
+                    placeholder="De zoom, google meet,teams u otros"
                   />
                 </div>
               </template>
@@ -89,3 +89,8 @@ export default {
   },
 };
 </script>
+<style  lang="scss"  scoped>
+.all{
+  width: 100%
+}
+</style>
