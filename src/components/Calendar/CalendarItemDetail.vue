@@ -24,7 +24,7 @@
           </div>
         </div>
         <div>
-          <v-chip class="my-2" label :color="itemDetail.color">
+          <v-chip class="my-2" label :color="itemDetail.color" text-color="white">
             Clase de {{ formatRange(itemDetail.start, itemDetail.end) }}</v-chip
           >
         </div>
