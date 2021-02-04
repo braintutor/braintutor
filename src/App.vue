@@ -2,7 +2,7 @@
   <v-app class="m-app" id="braintutor">
      <vue-confirm></vue-confirm>
     <Header />
-    <v-main class="m-app__body">
+    <v-main class="m-app__body px-4">
       <router-view></router-view>
     </v-main>
     <loading :active="loading" :message="loading_msg" />
@@ -32,7 +32,6 @@ import Header from "./components/Header";
 import loading from "./components/loading";
 import Chatbot from "@/components/MChatbot/index";
 import { updateStudentTime } from "@/services/studentService";
-
 import { mapState } from "vuex";
 
 export default {
