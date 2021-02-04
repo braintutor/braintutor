@@ -24,17 +24,21 @@
           </div>
         </div>
         <div>
-          <v-chip class="my-2" label>Clase</v-chip>
+          <v-chip class="my-2" label :color="itemDetail.color">
+            Clase de {{ formatRange(itemDetail.start, itemDetail.end) }}</v-chip
+          >
         </div>
         <p class="date-modal">
           {{ itemDetail.description }}
         </p>
         <div v-if="showEdit">
           <slot name="meeting" v-bind:item="itemDetail"></slot>
-          <slot name="editSchedulePlan" v-bind:item="itemDetail"></slot>
-          <slot name="reSchedule" v-bind:item="itemDetail"></slot>
+          <div v-if="featureFlag">
+            <slot name="editSchedulePlan" v-bind:item="itemDetail"></slot>
+            <slot name="reSchedule" v-bind:item="itemDetail"></slot>
+          </div>
         </div>
-        <div v-else-if="user.role == 'TEA'">
+        <div v-else-if="user.role == 'TEA' && featureFlag">
           <div class="my-2">
             <v-btn id="attendance" class="mx-2" fab dark small color="primary">
               <v-icon dark>
@@ -46,7 +50,7 @@
         </div>
       </template>
       <template #actions>
-        <v-btn small @click="close" v-if="user.role == 'TEA'"
+        <v-btn small @click="close" v-if="user.role == 'TEA' && featureFlag"
           >Finalizar clase</v-btn
         >
         <v-btn
@@ -67,14 +71,17 @@
 import BrainDialog from "../SchoolEditor/BrainDialog";
 import { join } from "@/services/eventService";
 import { mapState } from "vuex";
+import { format } from "date-fns";
 
 const itemDetail = {
   type: "", // clase, tarea, evaluacion
   name: "",
+  color: "",
 };
 export default {
   components: { BrainDialog },
   data: () => ({
+    featureFlag: !!parseInt(process.env.VUE_APP_FEATURE_ADVANCED_SCHEDULE),
     itemDetail: itemDetail,
     isVisible: false,
     showEdit: false,
@@ -93,7 +100,14 @@ export default {
       this.isVisible = !!value;
     },
   },
+  mounted() {
+  },
   methods: {
+    formatRange(start, end) {
+      if (start && end) {
+        return `${format(new Date(start), "HH:m")} a ${format(new Date(end), "HH:m")}`;
+      }
+    },
     close() {
       this.$emit("close");
     },
