@@ -3,12 +3,18 @@
     <div class="footer-content m-container-plus">
       <span>Diseñado por</span>
       <span class="footer-author">Mitsuo</span>
+
+      <span class="mx-4"> Version {{ version }}</span>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  data: () => ({
+    version: process.env.VUE_APP_VERSION
+  }),
+};
 </script>
 
 <style lang="scss" scoped>
