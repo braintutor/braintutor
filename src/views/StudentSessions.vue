@@ -39,7 +39,7 @@
         {
           text: 'Clases',
           icon: 'mdi-format-list-checks',
-          color: 'success',
+          color: 'dark',
           action: () => selectSession(session, 'lessons'),
         },
       ]"
