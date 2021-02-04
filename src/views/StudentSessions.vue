@@ -1,5 +1,5 @@
 <template>
-  <div class="mcontainer">
+  <div class="mcontainer px-4">
     <h1 class="mtitle mb-4">
       <v-icon class="mr-3" style="font-size: 2.4rem">mdi-bookshelf</v-icon>
       <span>Mis Cursos</span>

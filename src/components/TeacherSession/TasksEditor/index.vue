@@ -57,11 +57,9 @@
       disabled
       class="mb-3"
     />
-
     <div class="text-center" v-show="tasks_ordered.length === 0">
       No hay tareas.
     </div>
-
     <!-- DIALOG NEW -->
     <v-dialog v-model="dlg_new" persistent max-width="750">
       <form @submit.prevent="create()" class="m-card">
@@ -219,7 +217,6 @@
       </div>
     </v-dialog>
   </div>
-
   <!-- TASK -->
   <Task
     v-else
