@@ -12,7 +12,7 @@
               class="mx-1"
               small
               icon
-              v-if="user.role != 'STU'"
+              v-if="user && user.role != 'STU'"
             >
               <v-icon dark v-if="!showEdit"> mdi-pencil </v-icon>
               <v-icon dark v-else-if="showEdit"> mdi-eye </v-icon>
@@ -38,7 +38,7 @@
             <slot name="reSchedule" v-bind:item="itemDetail"></slot>
           </div>
         </div>
-        <div v-else-if="user.role == 'TEA' && featureFlag">
+        <div v-else-if="user && user.role == 'TEA' && featureFlag">
           <div class="my-2">
             <v-btn id="attendance" class="mx-2" fab dark small color="primary">
               <v-icon dark>
@@ -50,7 +50,7 @@
         </div>
       </template>
       <template #actions>
-        <v-btn small @click="close" v-if="user.role == 'TEA' && featureFlag"
+        <v-btn small @click="close" v-if="featureFlag"
           >Finalizar clase</v-btn
         >
         <v-btn
