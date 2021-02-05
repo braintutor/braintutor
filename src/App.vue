@@ -92,8 +92,7 @@ export default {
   
   &__body {
     height: calc(100vh - 56px);
-    overflow-y: overlay;
-    
+    // overflow-y: overlay;
   }
 }
 
