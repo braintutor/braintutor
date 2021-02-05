@@ -263,7 +263,7 @@ export default {
 
 <style lang='scss' scoped>
 .header {
-  height: 70px;
+  height: 56px;
   padding: 0 16px;
   display: flex;
   align-items: center;
