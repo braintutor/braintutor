@@ -1,7 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Alata&family=Comfortaa:wght@300;400;500;600;700&display=swap");
 
 @import "./variables.scss";
-
 @import "./animation.scss";
 @import "./layout.scss";
 @import "./m-table.scss";
@@ -25,7 +24,6 @@ body * {
   padding-top: 0;
   color: #7a7a7a;
   font-size: 0.9rem;
-
   display: flex;
   align-items: center;
 
@@ -51,14 +49,14 @@ body * {
 
 /*Scrollbar*/
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
   height: 8px;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgb(224, 223, 223);
+  background: rgb(195, 195, 195);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgb(206, 206, 206);
+  background: rgb(183, 183, 183);
 }
 
 // Medium devices (tablets, 768px and up)
