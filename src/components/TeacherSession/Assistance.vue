@@ -10,14 +10,14 @@
       <table class="m-table">
         <thead>
           <tr>
-            <th class="text-left">Alumnos</th>
-            <th class="text-left">Asistencia</th>
+            <th class="text-left"><h3>Alumnos</h3></th>
+            <th class="text-left"><h3>Asistencia</h3></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="student of students" :key="student.id">
-            <td>Luis</td>
-            <td>asistió</td>
+            <td>{{student.name}}</td>
+            <td width="22%"><v-select :items="items" label="Asistencia"></v-select></td>
           </tr>
         </tbody>
       </table>
@@ -29,7 +29,8 @@
 export default {
   data() {
     return {
-      students: [],
+      students: [{name:"Arthur"}, {name:"Diana"}],
+      items: ["Asistió", "Tardanza", "Falta"]
     };
   },
 };
@@ -43,4 +44,9 @@ export default {
     overflow-x: auto;
   }
 }
+
+.m-table {
+  width: 340px;
+}
+
 </style>
