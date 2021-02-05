@@ -12,7 +12,7 @@
       :session="session"
       :buttons="[
         {
-          text: 'Aprender',
+          text: 'Material',
           icon: 'mdi-book',
           color: 'primary',
           action: () => selectSession(session, 'learn'),
