@@ -33,19 +33,21 @@
 </template>
 
 <script>
+import { getAttendanceRecords } from "@/services/attendanceService";
+
 export default {
   data() {
     return {
-      attendanceRecords: [
-        { student: "Arthur", status: "missed" }, 
-        { student: "Diana", status: "attended" }
-      ],
+      attendanceRecords: [],
       items: [
         { text: "Asistió", value: "attended" }, 
-        { text: "Tardanza", value: "delay" }, 
-        { text: "Falta", value: "missed" }],
+        { text: "Tardanza", value: "late" }, 
+        { text: "Falta", value: "absence" }],
     };
   },
+  mounted() {
+    getAttendanceRecords().then(x => this.attendanceRecords = x)
+  }
 };
 </script>
 
