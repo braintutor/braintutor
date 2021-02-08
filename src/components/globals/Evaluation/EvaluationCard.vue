@@ -66,7 +66,7 @@
 
 <script>
 import { toDateTimeString } from "@/services/date";
-import { mapState } from "vuex";
+// import { mapState } from "vuex";
 
 export default {
   props: {
@@ -85,7 +85,7 @@ export default {
     now: new Date(),
   }),
   computed: {
-    ...mapState(["user"]),
+    // ...mapState(["user"]),
     progress() {
       var dif_total = this.time_end.getTime() - this.time_start.getTime();
       var dif_current = this.now.getTime() - this.time_start.getTime();
