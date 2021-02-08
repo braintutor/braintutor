@@ -35,29 +35,38 @@ import { getParam, redirect } from "@/services/router.js";
 export default {
   data: () => ({
     session_id: "",
+    page: 1,
     classes: [],
     loading: true,
   }),
   mounted() {
     this.showLoading("Cargando Clases");
     this.loading = true;
-    getAll({ session: this.session_id })
-      .then(({ results }) => {
-        this.classes = results;
-        this.loading = false;
-        this.hideLoading();
-      })
-      .catch((error) => {
-        this.loading = false;
-        this.hideLoading();
-        this.showMessage("", error.msg || error);
-      });
+    this.getData();
   },
   async created() {
     this.session_id = getParam("session_id");
   },
   computed: {},
   methods: {
+    getData() {
+      getAll({ session: this.session_id, page: this.page })
+        .then(({ items, page }) => {
+          this.classes = items;
+          this.page = page;
+          this.loading = false;
+          this.hideLoading();
+        })
+        .catch((error) => {
+          this.loading = false;
+          this.hideLoading();
+          this.showMessage("", error.msg || error);
+        });
+    },
+    next() {
+      this.page = this.page + 1
+      this.getData();
+    },
     seeRecord({ url }) {
       redirect(url);
     },
