@@ -33,11 +33,11 @@
             {{ item.value }}
           </p>
         </div>
-        <div class="d-flex align-center">
+        <!-- <div class="d-flex align-center">
           <m-btn v-if="user && user.role == 'STU'" color="primary" small
             >Entrar al Exámen
           </m-btn>
-        </div>
+        </div> -->
       </div>
 
       <slot></slot>
