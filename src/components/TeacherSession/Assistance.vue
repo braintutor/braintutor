@@ -15,9 +15,16 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="student of students" :key="student.id">
-            <td>{{student.name}}</td>
-            <td width="22%"><v-select :items="items" label="Asistencia"></v-select></td>
+          <tr v-for="attendanceRecord of attendanceRecords" :key="attendanceRecord.id">
+            <td>{{ attendanceRecord.student }}</td>
+            <td width="22%">
+              <v-select
+                v-model="attendanceRecord.status"
+                :items="items"
+                item-text="text"
+                item-value="value"
+              ></v-select>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -29,8 +36,14 @@
 export default {
   data() {
     return {
-      students: [{name:"Arthur"}, {name:"Diana"}],
-      items: ["Asistió", "Tardanza", "Falta"]
+      attendanceRecords: [
+        { student: "Arthur", status: "missed" }, 
+        { student: "Diana", status: "attended" }
+      ],
+      items: [
+        { text: "Asistió", value: "attended" }, 
+        { text: "Tardanza", value: "delay" }, 
+        { text: "Falta", value: "missed" }],
     };
   },
 };
@@ -48,5 +61,4 @@ export default {
 .m-table {
   width: 340px;
 }
-
 </style>
