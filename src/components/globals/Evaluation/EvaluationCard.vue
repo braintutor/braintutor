@@ -33,11 +33,11 @@
             {{ item.value }}
           </p>
         </div>
-        <!-- <div class="d-flex align-center">
-          <m-btn color="primary" small
+        <div class="d-flex align-center">
+          <m-btn v-if="user && user.role == 'STU'" color="primary" small
             >Entrar al Exámen
           </m-btn>
-        </div> -->
+        </div>
       </div>
 
       <slot></slot>
@@ -66,6 +66,7 @@
 
 <script>
 import { toDateTimeString } from "@/services/date";
+import { mapState } from "vuex";
 
 export default {
   props: {
@@ -84,6 +85,7 @@ export default {
     now: new Date(),
   }),
   computed: {
+    ...mapState(["user"]),
     progress() {
       var dif_total = this.time_end.getTime() - this.time_start.getTime();
       var dif_current = this.now.getTime() - this.time_start.getTime();
