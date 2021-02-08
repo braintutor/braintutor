@@ -9,6 +9,9 @@ import "./mixins";
 import "./styles/main.scss";
 import "normalize.css";
 import "./mvuecss/index.js";
+
+import "./filters/date"
+
 // import firebase from 'firebase/app'
 
 Vue.config.productionTip = false;
