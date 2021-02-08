@@ -1,57 +1,43 @@
 <template>
   <div class="m-container">
-    <div v-if="!evaluation" class="evaluations">
-      <!-- MENU -->
-      <div class="evaluations__menu mb-3">
-        <m-btn
-          @click="showAvailable = true"
-          :text="!showAvailable"
-          color="primary"
-          small
-          class="mr-2"
-          >Por Realizar</m-btn
-        >
-        <m-btn
-          @click="showAvailable = false"
-          :text="showAvailable"
-          color="dark"
-          small
-          >Otros</m-btn
-        >
+    <div v-show="!evaluation_to_start">
+      <div class="header">
+        <span class="header__name">Nombre</span>
+        <span class="header__name">Inicio</span>
+        <span class="header__name">Fin</span>
+        <span class="header__name">Puntaje</span>
+        <v-btn style="opacity: 0; pointer-events: none'" color="primary" icon>
+          <v-icon>mdi-arrow-right-drop-circle</v-icon>
+        </v-btn>
       </div>
-      <!-- EVALUATIONS -->
-      <EvaluationCard
-        v-for="(evaluation, c_idx) in evaluations_filtered"
-        v-model="evaluation.dateState"
-        :key="c_idx"
-        :name="evaluation.name"
-        :time_start="evaluation.time_start"
-        :time_end="evaluation.time_end"
-        :items="[
-          {
-            label: 'Estado',
-            value: !!evaluation.result ? 'Completado' : 'Sin Realizar',
-          },
-        ]"
-        @click="showDialogStart(evaluation)"
-        :class="[showAvailable ? 'levitation' : 'evaluation--disabled']"
-        class="evaluation mb-3"
-      />
-
-      <p class="text-center" v-show="evaluations_filtered.length === 0">
-        No hay evaluaciones.
-      </p>
+      <div
+        v-for="(item, idx) in evaluations_filtered"
+        :key="idx"
+        @click="
+          dlg_start = true;
+          evaluation_selected = item;
+        "
+        class="evaluation mb-2"
+        :class="{ 'evaluation--disabled': !isAvailable(item) }"
+      >
+        <span class="evaluation__name">{{ item.name }}</span>
+        <span class="evaluation__date">{{ toDate(item.time_start) }}</span>
+        <span class="evaluation__date">{{ toDate(item.time_end) }}</span>
+        <span class="evaluation__score">{{ getScore(item) }}</span>
+        <v-btn
+          :style="isAvailable(item) ? '' : 'opacity: 0; pointer-events: none'"
+          color="primary"
+          icon
+        >
+          <v-icon>mdi-arrow-right-drop-circle</v-icon>
+        </v-btn>
+      </div>
 
       <!-- Dialog Start Evaluation -->
-      <v-dialog v-model="dialog_start" persistent max-width="400">
+      <v-dialog v-model="dlg_start" persistent max-width="400">
         <div class="m-card">
           <div class="m-card__body">
-            <div class="close-modal">
-              <h3>Iniciar Evaluación</h3>
-              <v-btn class="mx-2" icon small @click="dialog_start = false">
-                <v-icon>mdi-close-thick</v-icon>
-              </v-btn>
-            </div>
+            <h3>Iniciar Evaluación</h3>
             <p class="mt-4">
               Una vez que inicias una evaluación, solo tendrás una oportunidad
               para responderla.
@@ -59,13 +45,13 @@
             <p class="mt-4">No cierres la pestaña o cambies de página.</p>
           </div>
           <div class="m-card__actions">
-            <m-btn @click="dialog_start = false" small text class="cancel-button"
+            <m-btn @click="dlg_start = false" small text color="dark"
               >Cancelar</m-btn
             >
             <m-btn
               @click="
-                dialog_start = false;
-                select(evaluation_to_start);
+                dlg_start = false;
+                startEvaluation(evaluation_selected);
               "
               color="primary"
               small
@@ -77,108 +63,148 @@
       </v-dialog>
     </div>
 
-    <Evaluation v-else :evaluation="evaluation" :unselect="unselect" />
+    <Evaluation
+      v-if="evaluation_to_start"
+      :evaluation="evaluation_to_start"
+      :unselect="
+        () => {
+          evaluation_to_start = null;
+          init();
+        }
+      "
+    />
   </div>
 </template>
 
 <script>
-import EvaluationCard from "@/components/globals/Evaluation/EvaluationCard";
 import Evaluation from "./Evaluation";
-
 import {
   getEvaluationsBySessionStudent,
   getEvaluationByStudent,
 } from "@/services/evaluationService";
-import { getParam } from "@/services/router.js";
-import { copy } from "@/services/object.js";
 
 export default {
   data: () => ({
-    session_id: "",
-    evaluation_to_start: null,
-    evaluation: null,
     evaluations: [],
+    results: [],
+    evaluation_selected: null,
+    evaluation_to_start: null,
     //
-    showAvailable: true,
-    dialog_start: false,
+    dlg_start: false,
   }),
   computed: {
     evaluations_filtered() {
-      let evaluations = this.evaluations.filter(
-        (evaluation) => this.showAvailable === this.isAvailable(evaluation)
-      );
-      return this.orderObjectsByDate(evaluations, "time_start");
+      let evaluations = this.evaluations.map((e) => e);
+      evaluations.sort((a, b) => b.time_start - a.time_start);
+      return evaluations;
     },
   },
-  async mounted() {
-    this.session_id = getParam("session_id");
-    this.getEvaluations();
+  async created() {
+    await this.init();
   },
   methods: {
-    async getEvaluations() {
+    async init() {
+      let session_id = this.$route.params["session_id"];
+
       this.showLoading("Cargando Evaluaciones");
       try {
         this.evaluations = this.mongoArr(
-          await getEvaluationsBySessionStudent(this.session_id)
+          await getEvaluationsBySessionStudent(session_id)
         );
+        this.results = (
+          await this.$api.evaluation.getSessionResults(session_id)
+        ).results;
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
-    async select(evaluation) {
+    async startEvaluation(evaluation) {
       this.showLoading("Cargando Evaluación");
       try {
-        evaluation = await getEvaluationByStudent(evaluation._id);
-        this.evaluation = copy(evaluation);
+        this.evaluation_to_start = await getEvaluationByStudent(evaluation._id);
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
-    async unselect() {
-      this.evaluation = null;
-      await this.getEvaluations();
-    },
-    showDialogStart(evaluation) {
-      this.evaluation_to_start = evaluation;
-      this.dialog_start = true;
+    //
+    getScore(evaluation) {
+      let result = this.results.find(
+        (result) => result.evaluation.id === evaluation._id
+      );
+      if (result) return result.score;
+      return "-";
     },
     isAvailable(evaluation) {
-      return !evaluation.result && evaluation.dateState !== -1; // -1:past 0:current 1:future
+      return new Date() < evaluation.time_end;
+    },
+    //
+    toDate(date) {
+      let date_format = date.toLocaleDateString("es-ES", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      return date_format;
     },
   },
   components: {
-    EvaluationCard,
     Evaluation,
   },
 };
 </script>
 
 <style lang='scss' scoped>
-.evaluations {
-  &__menu {
-    width: max-content;
-    margin: 0 auto;
+$grid-template-columns: 1fr 0.75fr 0.75fr 0.5fr auto;
+
+.header {
+  padding: 0 20px;
+  font-size: 1rem;
+
+  display: grid;
+  grid-template-columns: $grid-template-columns;
+
+  &__name {
+    font-weight: bold;
   }
 }
+
 .evaluation {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  background: #e8e8ff;
+  border-radius: 12px;
+  transition: 0.3s;
+  cursor: pointer;
+
+  display: grid;
+  grid-template-columns: $grid-template-columns;
+  align-items: center;
+
+  &__name {
+    font-weight: bold;
+  }
+  &__date {
+  }
+  &__score {
+    font-weight: bold;
+  }
+
+  &:hover {
+    background: #e1e1ff;
+  }
+
   &--disabled {
+    background: #f7f7f7;
     pointer-events: none;
-    opacity: 0.75;
+
+    .evaluation__name,
+    .evaluation__date {
+      color: #8a8a8a;
+    }
   }
 }
-
-.close-modal {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.cancel-button {
-  background: none;
-  border: 1px solid gray;
-  margin-right: 8px;
-}
-
 </style>
