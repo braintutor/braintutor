@@ -25,8 +25,8 @@
         </div>
         <div>
           <v-chip class="my-2" label :color="itemDetail.color" text-color="white">
-            Clase de {{ formatRange(itemDetail.start, itemDetail.end) }}</v-chip
-          >
+            Clase de {{ itemDetail.start | time }} a {{ itemDetail.end | time }}
+          </v-chip>
         </div>
         <p class="date-modal">
           {{ itemDetail.description }}
@@ -69,7 +69,7 @@
 import BrainDialog from "../SchoolEditor/BrainDialog";
 import { join } from "@/services/eventService";
 import { mapState } from "vuex";
-import { format, differenceInMinutes } from "date-fns";
+import { differenceInMinutes } from "date-fns";
 
 const itemDetail = {
   type: "", // clase, tarea, evaluacion
@@ -102,14 +102,6 @@ export default {
   },
   mounted() {},
   methods: {
-    formatRange(start, end) {
-      if (start && end) {
-        return `${format(new Date(start), "HH:m")} a ${format(
-          new Date(end),
-          "HH:m"
-        )}`;
-      }
-    },
     close() {
       this.$emit("close");
     },

@@ -5,9 +5,9 @@
         >Clase del dia {{ item.start | date }}
       </v-card-title>
       <v-card-text v-if="item.recording">
-        Inicio: {{ formatHour(item.recording.startTime) }} 
+        Inicio: {{ item.recording.startTime | parseDate | time }} 
         <p> </p>
-        Fin: {{ formatHour(item.recording.endTime) }}
+        Fin: {{ item.recording.endTime | parseDate | time }}
       </v-card-text>
       <v-card-actions>
         <v-btn
@@ -31,7 +31,6 @@
 <script>
 import { getAll } from "./service";
 import { getParam, redirect } from "@/services/router.js";
-import { format } from "date-fns";
 
 export default {
   data: () => ({
@@ -59,13 +58,14 @@ export default {
   },
   computed: {},
   methods: {
-    formatHour(timestamp) {
-      const date = new Date(parseInt(timestamp));
-      return format(date, "HH:m");
-    },
     seeRecord({ url }) {
       redirect(url);
     },
+  },
+  filters: {
+    parseDate(timestamp) {
+      return new Date(parseInt(timestamp));
+    }
   },
   components: {},
 };
