@@ -24,7 +24,8 @@
           </div>
         </div>
         <div>
-          <v-chip class="my-2" label :color="itemDetail.color" text-color="white">
+          <v-chip class="my-2" label :color="itemDetail.color" text-color="white" 
+            v-if="itemDetail.start && itemDetail.end">
             Clase de {{ itemDetail.start | time }} a {{ itemDetail.end | time }}
           </v-chip>
         </div>
@@ -40,7 +41,8 @@
         </div>
         <div v-else-if="user && user.role == 'TEA' && featureFlag">
           <div class="my-2">
-            <v-btn id="attendance" class="mx-2" fab dark small color="primary">
+            <v-btn id="attendance" class="mx-2" fab dark small color="primary"
+              :to="'/assistance/'+ itemDetail.id">
               <v-icon dark>
                 mdi-account-check
               </v-icon>

@@ -57,11 +57,6 @@ export default {
         name: "teacher-session-files",
       },
       {
-        image: require("@/assets/icons/icon-assistance.svg"),
-        text: "Asistencia",
-        name: "teacher-session-assistance"
-      },
-      {
         image: require("@/assets/icons/icon-lessons.svg"),
         text: "Clases",
         name: "teacher-session-lessons",

@@ -73,6 +73,12 @@ const routes = [
     meta: { roles: ["PAR"] },
     component: () => import("../views/ParentSessions.vue"),
   },
+  {
+    path:"/assistance/:class_id",
+    name:"teacher-session-assistance",
+    meta: { roles: ["TEA"] },
+    component: () => import("../components/TeacherSession/Assistance"),
+  },
   routesTeacherSession,
   routesStudentSession,
   routesDirectorSession,

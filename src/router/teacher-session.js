@@ -45,11 +45,6 @@ const routes =  {
         path: "files",
         name: "teacher-session-files",
         component: () => import("../components/TeacherSession/Files"),
-      },
-      {
-        path:"assistance",
-        name:"teacher-session-assistance",
-        component: () => import("../components/TeacherSession/Assistance"),
       }
     ],
   }
