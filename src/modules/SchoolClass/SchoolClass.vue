@@ -2,7 +2,7 @@
   <div class="m-container">
     <v-card v-for="(item, idx) in classes" :key="idx" class="mx-auto my-12">
       <v-card-title class="time"
-        >Clase del dia {{ formatDate(item.start) }}
+        >Clase del dia {{ item.start | date }}
       </v-card-title>
       <v-card-text v-if="item.recording">
         Inicio: {{ formatHour(item.recording.startTime) }} 
@@ -59,10 +59,6 @@ export default {
   },
   computed: {},
   methods: {
-    formatDate(dateString) {
-      const date = new Date(dateString);
-      return format(date, "dd/MM");
-    },
     formatHour(timestamp) {
       const date = new Date(parseInt(timestamp));
       return format(date, "HH:m");
