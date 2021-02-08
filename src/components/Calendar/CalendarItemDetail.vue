@@ -65,7 +65,7 @@
         <div v-if="itemDetail.type == 'class'">
           <v-btn small @click="close" v-if="featureFlag && user && user.role == 'TEA'">Finalizar clase</v-btn>
           <v-btn
-            v-if="itemDetail.isActive"
+            v-if="isActive(itemDetail)"
             color="primary"
             small
             class="ml-2"
@@ -98,7 +98,6 @@ export default {
     itemDetail: itemDetail,
     isVisible: false,
     showEdit: false,
-    isActive: true,
   }),
   props: {
     item: {
@@ -122,13 +121,12 @@ export default {
     get(item) {
       if (item) {
         this.itemDetail = {
-          isActive: this.meetingIsActive(item),
           type: "class",
           ...item,
         };
       }
     },
-    meetingIsActive(item) {
+    isActive(item) {
       const isCurrent =
         differenceInMinutes(new Date(item.end), new Date()) >= -30;
       return isCurrent;
