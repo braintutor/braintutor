@@ -5,7 +5,7 @@
         <span class="header__name">Nombre</span>
         <span class="header__name">Inicio</span>
         <span class="header__name">Fin</span>
-        <span class="header__name">Puntaje</span>
+        <span class="header__name">Nota</span>
         <v-btn style="opacity: 0; pointer-events: none'" color="primary" icon>
           <v-icon>mdi-arrow-right-drop-circle</v-icon>
         </v-btn>
