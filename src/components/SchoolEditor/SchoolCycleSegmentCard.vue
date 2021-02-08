@@ -2,21 +2,19 @@
   <div>
     <h4>{{ name }}</h4>
     <p>
-      Inicio: {{ formatDate(start) }} - Fin:
-      {{ formatDate(end) }}
+      Inicio: {{ start | date }} - Fin:
+      {{ end | date }}
     </p>
   </div>
 </template>
 
 <script>
 import { formatSegment } from "@/services/schoolCycleService";
-import { parse, format } from "date-fns/fp";
+import { parse } from "date-fns/fp";
 
 const dateFormat = "yyyy-MM-dd";
 const parseDate = parse(new Date())(dateFormat);
 
-const prettyFormat = "dd/MM";
-const formatDate = format(prettyFormat);
 
 export default {
   props: {
@@ -27,8 +25,7 @@ export default {
     return { currentDate: new Date() };
   },
   methods: {
-    formatSegment,
-    formatDate,
+    formatSegment
   },
   computed: {
     start() {

@@ -2,12 +2,12 @@
   <div class="m-container">
     <v-card v-for="(item, idx) in classes" :key="idx" class="mx-auto my-12">
       <v-card-title class="time"
-        >Clase del dia {{ formatDate(item.start) }}
+        >Clase del dia {{ item.start | date }}
       </v-card-title>
       <v-card-text v-if="item.recording">
-        Inicio: {{ formatHour(item.recording.startTime) }}
-        <p></p>
-        Fin: {{ formatHour(item.recording.endTime) }}
+        Inicio: {{ item.recording.startTime | parseDate | time }} 
+        <p> </p>
+        Fin: {{ item.recording.endTime | parseDate | time }}
       </v-card-text>
       <v-card-actions>
         <v-btn
@@ -31,7 +31,6 @@
 <script>
 import { getAll } from "./service";
 import { getParam, redirect } from "@/services/router.js";
-import { format } from "date-fns";
 
 export default {
   data: () => ({
@@ -68,17 +67,14 @@ export default {
       this.page = this.page + 1
       this.getData();
     },
-    formatDate(dateString) {
-      const date = new Date(dateString);
-      return format(date, "dd/MM");
-    },
-    formatHour(timestamp) {
-      const date = new Date(parseInt(timestamp));
-      return format(date, "HH:m");
-    },
     seeRecord({ url }) {
       redirect(url);
     },
+  },
+  filters: {
+    parseDate(timestamp) {
+      return new Date(parseInt(timestamp));
+    }
   },
   components: {},
 };

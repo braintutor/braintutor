@@ -4,4 +4,7 @@ export default (_fetch) => ({
       id, time_end
     });
   },
+  getSessionResults(session_id) {
+    return _fetch('GET', `evaluation2/session-result/${session_id}`);
+  }
 });

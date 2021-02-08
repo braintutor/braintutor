@@ -21,8 +21,8 @@
         <tbody>
           <tr v-for="schoolCycle of schoolCycles" :key="schoolCycle.id">
             <td>{{ schoolCycle.year }}</td>
-            <td>{{ formatDate(schoolCycle.start) }}</td>
-            <td>{{ formatDate(schoolCycle.end) }}</td>
+            <td>{{ schoolCycle.start | date }}</td>
+            <td>{{ schoolCycle.end | date }}</td>
             <td>
               <v-tooltip bottom>
                 <template v-slot:activator="{ on, attrs }">
@@ -85,7 +85,6 @@ import {
   createSchoolCycle,
   getSchoolCycles,
 } from "@/services/schoolCycleService";
-import { format } from "date-fns";
 
 export default {
   components: {
@@ -128,12 +127,7 @@ export default {
     getSegments(tab) {
       const numbers = tab == 0 ? ["I", "II", "III", "IV"] : ["I", "II", "III"];
       return numbers.map((x) => ({ number: x, start: null, end: null }));
-    },
-
-    formatDate(dateString) {
-      const date = new Date(dateString);
-      return format(date, "dd/MM");
-    },
+    }
   },
 };
 </script>
