@@ -24,8 +24,13 @@
           </div>
         </div>
         <div>
-          <v-chip class="my-2" label :color="itemDetail.color" text-color="white" 
-            v-if="itemDetail.start && itemDetail.end">
+          <v-chip
+            class="my-2"
+            label
+            :color="itemDetail.color"
+            text-color="white"
+            v-if="itemDetail.start && itemDetail.end"
+          >
             Clase de {{ itemDetail.start | time }} a {{ itemDetail.end | time }}
           </v-chip>
         </div>
@@ -41,8 +46,15 @@
         </div>
         <div v-else-if="user && user.role == 'TEA' && featureFlag">
           <div class="my-2">
-            <v-btn id="attendance" class="mx-2" fab dark small color="primary"
-              :to="'/assistance/'+ itemDetail.id">
+            <v-btn
+              id="attendance"
+              class="mx-2"
+              fab
+              dark
+              small
+              color="primary"
+              :to="'/assistance/' + itemDetail.id"
+            >
               <v-icon dark>
                 mdi-account-check
               </v-icon>
@@ -58,6 +70,7 @@
           color="primary"
           small
           class="ml-2"
+          :loading="loadingMeeting"
           @click="enterClass"
           target="__blank"
           >Entrar a clase</v-btn
@@ -77,7 +90,7 @@ const itemDetail = {
   type: "", // clase, tarea, evaluacion
   name: "",
   color: "",
-  start: null
+  start: null,
 };
 export default {
   components: { BrainDialog },
@@ -87,6 +100,7 @@ export default {
     isVisible: false,
     showEdit: false,
     isActive: true,
+    loadingMeeting: false,
   }),
   props: {
     item: {
@@ -109,8 +123,6 @@ export default {
     },
     get(item) {
       if (item) {
-      
-
         this.itemDetail = {
           isActive: this.meetingIsActive(item),
           type: "class",
@@ -118,16 +130,22 @@ export default {
         };
       }
     },
-    meetingIsActive(item){
-      const isCurrent = differenceInMinutes(new Date(item.end), new Date()) >= -30
-      return  isCurrent
+    meetingIsActive(item) {
+      const isCurrent =
+        differenceInMinutes(new Date(item.end), new Date()) >= -30;
+      return isCurrent;
     },
-        goMeeting() {},
+    goMeeting() {},
     async enterClass() {
+      this.loadingMeeting = true;
       const { url } = await join({
         meetingName: this.itemDetail["name"],
         meetingID: this.itemDetail["id"],
+      }).catch(({ message }) => {
+        this.showMessage('Error',message);
+        this.loadingMeeting = false;
       });
+      this.loadingMeeting = false;
       window.open(url);
     },
   },
