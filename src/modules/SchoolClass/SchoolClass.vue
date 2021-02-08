@@ -5,8 +5,8 @@
         >Clase del dia {{ formatDate(item.start) }}
       </v-card-title>
       <v-card-text v-if="item.recording">
-        Inicio: {{ formatHour(item.recording.startTime) }} 
-        <p> </p>
+        Inicio: {{ formatHour(item.recording.startTime) }}
+        <p></p>
         Fin: {{ formatHour(item.recording.endTime) }}
       </v-card-text>
       <v-card-actions>
@@ -36,29 +36,38 @@ import { format } from "date-fns";
 export default {
   data: () => ({
     session_id: "",
+    page: 1,
     classes: [],
     loading: true,
   }),
   mounted() {
     this.showLoading("Cargando Clases");
     this.loading = true;
-    getAll({ session: this.session_id })
-      .then(({ results }) => {
-        this.classes = results;
-        this.loading = false;
-        this.hideLoading();
-      })
-      .catch((error) => {
-        this.loading = false;
-        this.hideLoading();
-        this.showMessage("", error.msg || error);
-      });
+    this.getData();
   },
   async created() {
     this.session_id = getParam("session_id");
   },
   computed: {},
   methods: {
+    getData() {
+      getAll({ session: this.session_id, page: this.page })
+        .then(({ items, page }) => {
+          this.classes = items;
+          this.page = page;
+          this.loading = false;
+          this.hideLoading();
+        })
+        .catch((error) => {
+          this.loading = false;
+          this.hideLoading();
+          this.showMessage("", error.msg || error);
+        });
+    },
+    next() {
+      this.page = this.page + 1
+      this.getData();
+    },
     formatDate(dateString) {
       const date = new Date(dateString);
       return format(date, "dd/MM");
