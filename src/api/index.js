@@ -1,6 +1,7 @@
 import { _fetch } from "./helpers";
 
 import Evaluation from "./evaluation";
+import EvaluationResult from "./evaluationResult";
 import Event from "./event";
 import Session from "./session";
 import Course from "./course";
@@ -21,6 +22,7 @@ export default {
   install(Vue) {
     const repositories = {
       evaluation: Evaluation(_fetch),
+      evaluation_result: EvaluationResult(_fetch),
       event: Event(_fetch),
       session: Session(_fetch),
       student: Student(_fetch),

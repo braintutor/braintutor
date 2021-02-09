@@ -18,7 +18,8 @@
           <span
             class="alternative__checkbox mr-3"
             :class="{
-              'alternative__checkbox--active': a_idx === studentEvaluation.answers[c_idx],
+              'alternative__checkbox--active':
+                a_idx === studentEvaluation.answers[c_idx],
             }"
           ></span>
           <span
@@ -26,11 +27,26 @@
             :class="{
               'alternative__text--correct': a_idx === c.correct,
               'alternative__text--incorrect':
-                a_idx !== c.correct && a_idx === studentEvaluation.answers[c_idx],
+                a_idx !== c.correct &&
+                a_idx === studentEvaluation.answers[c_idx],
             }"
             >{{ alternative }}</span
           >
         </div>
+      </div>
+    </div>
+
+    <div class="m-card mt-5">
+      <div class="m-card__body">
+        <v-textarea
+          v-model="studentEvaluation.comment"
+          placeholder="Añadir comentario"
+          dense
+          hide-details
+        />
+      </div>
+      <div class="m-card__actions">
+        <m-btn @click="saveComment()" color="primary" small>Guardar</m-btn>
       </div>
     </div>
   </div>
@@ -45,13 +61,27 @@ export default {
   },
   data: () => ({
     studentEvaluation: [],
+    comment: "",
   }),
   watch: {
     studentEvaluationId: {
       immediate: true,
-      handler: async function(id) {
-        this.studentEvaluation =  await getStudentEvaluation(id)
+      handler: async function (id) {
+        this.studentEvaluation = await getStudentEvaluation(id);
+      },
+    },
+  },
+  methods: {
+    async saveComment() {
+      this.showLoading('Guardando')
+      try {
+        await this.$api.evaluation_result.updateComment(this.studentEvaluationId, {
+          comment: this.studentEvaluation.comment
+        })
+      } catch (error) {
+        this.showMessage("", "Ha ocurrido un error");
       }
+      this.hideLoading()
     }
   }
 };

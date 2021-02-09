@@ -6,31 +6,58 @@
         <span class="header__name">Inicio</span>
         <span class="header__name">Fin</span>
         <span class="header__name">Nota</span>
-        <v-btn style="opacity: 0; pointer-events: none'" color="primary" icon>
-          <v-icon>mdi-arrow-right-drop-circle</v-icon>
-        </v-btn>
       </div>
       <div
         v-for="(item, idx) in evaluations_filtered"
         :key="idx"
-        @click="
-          dlg_start = true;
-          evaluation_selected = item;
-        "
         class="evaluation mb-2"
         :class="{ 'evaluation--disabled': !isAvailable(item) }"
       >
         <span class="evaluation__name">{{ item.name }}</span>
-        <span class="evaluation__date">{{ toDate(item.time_start) }}</span>
-        <span class="evaluation__date">{{ toDate(item.time_end) }}</span>
-        <span class="evaluation__score">{{ getScore(item) }}</span>
-        <v-btn
-          :style="isAvailable(item) ? '' : 'opacity: 0; pointer-events: none'"
-          color="primary"
-          icon
-        >
-          <v-icon>mdi-arrow-right-drop-circle</v-icon>
-        </v-btn>
+        <span class="evaluation__date">{{
+          toDateString(item.time_start)
+        }}</span>
+        <span class="evaluation__date">{{ toDateString(item.time_end) }}</span>
+        <span v-if="item.result" class="evaluation__score">{{
+          item.result.score || "-"
+        }}</span>
+        <span v-else>-</span>
+        <div class="evaluation__options">
+          <v-tooltip v-if="item.result && item.result.comment" bottom>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                @click="showResult(item.result)"
+                v-on="on"
+                color="primary"
+                icon
+                small
+              >
+                <v-icon style="font-size: 1.3rem">mdi-eye</v-icon>
+              </v-btn>
+            </template>
+            <span style="font-size: 0.75rem">Ver Comentario</span>
+          </v-tooltip>
+          <v-tooltip bottom>
+            <template v-if="isAvailable(item)" v-slot:activator="{ on }">
+              <v-btn
+                @click="
+                  dlg_start = true;
+                  evaluation_selected = item;
+                "
+                v-on="on"
+                color="primary"
+                icon
+                small
+                class="ml-2"
+              >
+                <v-icon style="font-size: 1.3rem"
+                  >mdi-arrow-right-drop-circle</v-icon
+                >
+              </v-btn>
+            </template>
+            <span style="font-size: 0.75rem">Ingresar</span>
+          </v-tooltip>
+        </div>
       </div>
 
       <!-- Dialog Start Evaluation -->
@@ -47,7 +74,7 @@
               Una vez que inicias una evaluación, solo tendrás una oportunidad
               para responderla.
             </p>
-            <p class="mt-4">No cierres la pestaña o cambies de página.</p>
+            <!-- <p class="mt-4">No cierres la pestaña o cambies de página.</p> -->
           </div>
           <div class="m-card__actions">
             <m-btn @click="dlg_start = false" small text color="dark"
@@ -62,6 +89,28 @@
               small
               class="ml-2"
               >Iniciar</m-btn
+            >
+          </div>
+        </div>
+      </v-dialog>
+
+      <!-- Dialog Result Comment -->
+      <v-dialog v-model="dlg_result" persistent max-width="400">
+        <div class="result m-card">
+          <div class="m-card__body">
+            <div class="close-modal">
+              <h3>Comentario</h3>
+              <v-btn class="mx-2" icon small @click="dlg_result = false">
+                <v-icon dark> mdi-close-thick </v-icon>
+              </v-btn>
+            </div>
+            <p class="result__text mt-4">
+              {{ result_selected.comment }}
+            </p>
+          </div>
+          <div class="m-card__actions">
+            <m-btn @click="dlg_result = false" small text color="dark"
+              >Cerrar</m-btn
             >
           </div>
         </div>
@@ -91,11 +140,12 @@ import {
 export default {
   data: () => ({
     evaluations: [],
-    results: [],
     evaluation_selected: null,
     evaluation_to_start: null,
+    result_selected: null,
     //
     dlg_start: false,
+    dlg_result: false,
   }),
   computed: {
     evaluations_filtered() {
@@ -113,12 +163,15 @@ export default {
 
       this.showLoading("Cargando Evaluaciones");
       try {
-        this.evaluations = this.mongoArr(
+        let evaluations = this.mongoArr(
           await getEvaluationsBySessionStudent(session_id)
         );
-        this.results = (
-          await this.$api.evaluation.getSessionResults(session_id)
-        ).results;
+        let results = (await this.$api.evaluation.getSessionResults(session_id))
+          .results;
+        evaluations.forEach((evaluation) => {
+          evaluation.result = this.getResult(evaluation, results);
+        });
+        this.evaluations = evaluations;
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
@@ -133,19 +186,25 @@ export default {
       }
       this.hideLoading();
     },
+    showResult(result) {
+      this.dlg_result = true;
+      this.result_selected = result;
+    },
     //
-    getScore(evaluation) {
-      let result = this.results.find(
+    getResult(evaluation, results) {
+      let result = results.find(
         (result) => result.evaluation.id === evaluation._id
       );
-      if (result) return result.score;
-      return "-";
+      return result;
     },
     isAvailable(evaluation) {
-      return new Date() < evaluation.time_end;
+      // let result = this.getResult(evaluation);
+      // if (result && result.time_end) return false;
+      if (new Date() >= evaluation.time_end) return false;
+      return true;
     },
     //
-    toDate(date) {
+    toDateString(date) {
       let date_format = date.toLocaleDateString("es-ES", {
         day: "2-digit",
         month: "2-digit",
@@ -163,10 +222,10 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-$grid-template-columns: 1fr 0.75fr 0.75fr 0.5fr auto;
+$grid-template-columns: 4fr 3fr 3fr 1fr 100px;
 
 .header {
-  padding: 0 20px;
+  padding: 10px 20px;
   font-size: 1rem;
   display: grid;
   grid-template-columns: $grid-template-columns;
@@ -195,6 +254,12 @@ $grid-template-columns: 1fr 0.75fr 0.75fr 0.5fr auto;
     font-weight: bold;
   }
 
+  &__options {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
   &:hover {
     background: #e1e1ff;
   }
@@ -206,6 +271,12 @@ $grid-template-columns: 1fr 0.75fr 0.75fr 0.5fr auto;
     .evaluation__date {
       color: #8a8a8a;
     }
+  }
+}
+
+.result {
+  &__text {
+    white-space: pre-line;
   }
 }
 
