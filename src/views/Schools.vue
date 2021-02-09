@@ -56,7 +56,6 @@ export default {
   transition: 0.3s;
   box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.15);
   cursor: pointer;
-
   display: flex;
   flex-direction: column;
 
@@ -67,7 +66,6 @@ export default {
 
   &__image {
     flex-grow: 1;
-
     display: flex;
     justify-content: center;
     align-items: center;

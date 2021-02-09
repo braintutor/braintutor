@@ -7,7 +7,6 @@
       <span class="m-path__icon">></span>
       <span class="m-path__name">{{ course.name }}</span>
     </section>
-
     <router-view v-if="course._id" :course="course" />
   </Layout>
 </template>
