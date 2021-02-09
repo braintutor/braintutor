@@ -3,7 +3,6 @@
     <div class="editor__menu d-flex justify-space-between align-center">
       <div class="editor__title d-flex align-center">
         <h2>Ciclos escolares</h2>
-        <strong class="ml-2 mt-1" style="opacity: 0.5"></strong>
       </div>
       <m-btn color="primary" small @click="isEditDialogVisible = true">
         <v-icon small class="mr-2">mdi-plus</v-icon>Crear

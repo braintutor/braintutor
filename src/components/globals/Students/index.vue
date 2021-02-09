@@ -63,7 +63,6 @@
 
 <script>
 import Chart from "chart.js";
-
 import Student from "./Student";
 
 export default {
