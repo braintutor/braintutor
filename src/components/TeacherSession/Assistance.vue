@@ -4,7 +4,6 @@
       <div class="editor__title align-center">
         <h2 class="pb-3">Asistencia</h2>
         <h3>Matemáticas - Primaria 1er Grado de Primaria Sección A</h3>
-        <strong class="ml-2 mt-1" style="opacity: 0.5"></strong>
       </div>
     </div>
     <div class="editor__content mt-4">
@@ -20,25 +19,6 @@
           <tr v-for="attendanceRecord of attendanceRecords" :key="attendanceRecord.id">
             <td class="student-td">{{ attendanceRecord.student }}</td>
             <td class="assistance-td">
-              <!-- <v-btn-toggle
-                v-model="attendanceRecord.status"
-                tile
-                borderless
-                                
-              >
-                <v-btn value="left">
-                  Asistencia
-                </v-btn>
-
-                <v-btn value="center">
-                  Tardanza
-                </v-btn>
-
-                <v-btn value="right">
-                  Falta
-                </v-btn>
-              
-              </v-btn-toggle> -->
               <v-select
                 v-model="attendanceRecord.status"
                 :items="items"
@@ -101,7 +81,7 @@ export default {
   text-align: center;
   width: 46%;
 }
-// .m-table {
-//   width: 340px;
-// }
+.m-table {
+  background-color: #F1F8E9;
+}
 </style>
