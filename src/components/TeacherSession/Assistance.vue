@@ -3,7 +3,7 @@
     <div class="editor__menu d-flex justify-space-between align-center">
       <div class="editor__title align-center">
         <h2 class="pb-3">Asistencia</h2>
-        <h3>Matemáticas - Primaria 1er Grado de Primaria Sección A</h3>
+        <h3 class="pb-3">Matemáticas - Primaria 1er Grado de Primaria Sección A</h3>
       </div>
     </div>
     <div class="editor__content mt-4">
@@ -84,4 +84,9 @@ export default {
 .m-table {
   background-color: #F1F8E9;
 }
+
+.theme--light.v-data-table > .v-data-table__wrapper > table > thead > tr > th {
+  color: black;
+}
+
 </style>

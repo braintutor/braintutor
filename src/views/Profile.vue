@@ -264,7 +264,6 @@
 
 <script>
 import Chart from "chart.js";
-
 import { updateLearningStyle } from "@/services/studentService";
 import { getUser, updatePassword } from "@/services/userService";
 import { scrollTop } from "@/services/scroll";
