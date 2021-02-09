@@ -111,8 +111,8 @@ export default {
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
-      this.unselect();
       this.hideLoading();
+      this.unselect();
     },
     saveAction() {
       let answer = this.evaluation.content.map((c) => c.answer);

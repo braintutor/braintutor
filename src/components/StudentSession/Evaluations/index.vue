@@ -11,7 +11,7 @@
         v-for="(item, idx) in evaluations_filtered"
         :key="idx"
         class="evaluation mb-2"
-        :class="{ 'evaluation--disabled': !isAvailable(item) }"
+        :class="{ 'evaluation--disabled': !item.isAvailable }"
       >
         <span class="evaluation__name">{{ item.name }}</span>
         <span class="evaluation__date">{{
@@ -38,7 +38,7 @@
             <span style="font-size: 0.75rem">Ver Comentario</span>
           </v-tooltip>
           <v-tooltip bottom>
-            <template v-if="isAvailable(item)" v-slot:activator="{ on }">
+            <template v-if="item.isAvailable" v-slot:activator="{ on }">
               <v-btn
                 @click="
                   dlg_start = true;
@@ -56,6 +56,21 @@
               </v-btn>
             </template>
             <span style="font-size: 0.75rem">Ingresar</span>
+          </v-tooltip>
+          <v-tooltip bottom>
+            <template v-if="!item.isAvailable" v-slot:activator="{ on }">
+              <v-btn
+                v-on="on"
+                color="primary"
+                icon
+                small
+                class="ml-2"
+                style="cursor: initial"
+              >
+                <v-icon v-on="on" style="font-size: 1.3rem">mdi-check</v-icon>
+              </v-btn>
+            </template>
+            <span style="font-size: 0.75rem">Finalizado</span>
           </v-tooltip>
         </div>
       </div>
@@ -104,7 +119,7 @@
                 <v-icon dark> mdi-close-thick </v-icon>
               </v-btn>
             </div>
-            <p class="result__text mt-4">
+            <p v-if="result_selected" class="result__text mt-4">
               {{ result_selected.comment }}
             </p>
           </div>
@@ -160,6 +175,7 @@ export default {
   methods: {
     async init() {
       let session_id = this.$route.params["session_id"];
+      this.evaluations = [];
 
       this.showLoading("Cargando Evaluaciones");
       try {
@@ -168,9 +184,12 @@ export default {
         );
         let results = (await this.$api.evaluation.getSessionResults(session_id))
           .results;
+
         evaluations.forEach((evaluation) => {
           evaluation.result = this.getResult(evaluation, results);
+          evaluation.isAvailable = this.isAvailable(evaluation);
         });
+
         this.evaluations = evaluations;
       } catch (error) {
         this.showMessage("", error.msg || error);
@@ -197,10 +216,9 @@ export default {
       );
       return result;
     },
-    isAvailable(evaluation) {
-      // let result = this.getResult(evaluation);
-      // if (result && result.time_end) return false;
-      if (new Date() >= evaluation.time_end) return false;
+    isAvailable({ result, time_end }) {
+      if (result && result.time_end) return false;
+      if (new Date() >= time_end) return false;
       return true;
     },
     //
@@ -225,7 +243,7 @@ export default {
 $grid-template-columns: 4fr 3fr 3fr 1fr 100px;
 
 .header {
-  padding: 10px 20px;
+  padding: 12px 20px;
   font-size: 1rem;
   display: grid;
   grid-template-columns: $grid-template-columns;
@@ -236,12 +254,12 @@ $grid-template-columns: 4fr 3fr 3fr 1fr 100px;
 }
 
 .evaluation {
-  padding: 10px 20px;
+  padding: 12px 20px;
   font-size: 0.9rem;
   background: #e8e8ff;
   border-radius: 12px;
   transition: 0.3s;
-  cursor: pointer;
+
   display: grid;
   grid-template-columns: $grid-template-columns;
   align-items: center;
@@ -260,13 +278,12 @@ $grid-template-columns: 4fr 3fr 3fr 1fr 100px;
     align-items: center;
   }
 
-  &:hover {
-    background: #e1e1ff;
-  }
+  // &:hover {
+  //   background: #e1e1ff;
+  // }
 
   &--disabled {
     background: #f7f7f7;
-    pointer-events: none;
     .evaluation__name,
     .evaluation__date {
       color: #8a8a8a;
