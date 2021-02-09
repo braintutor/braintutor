@@ -67,8 +67,16 @@ export default {
         { text: "Falta", value: "absence" }],
     };
   },
-  mounted() {
-    getAttendanceRecords().then(x => this.attendanceRecords = x)
+  created () {
+    this.fetchData()
+  },
+  watch: {
+    '$route': 'fetchData'
+  },
+  methods: {
+    fetchData() {
+      getAttendanceRecords(this.$route.params.class_id).then(x => this.attendanceRecords = x.results)
+    }
   }
 };
 </script>
