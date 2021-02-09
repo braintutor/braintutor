@@ -37,7 +37,12 @@
       <v-dialog v-model="dlg_start" persistent max-width="400">
         <div class="m-card">
           <div class="m-card__body">
-            <h3>Iniciar Evaluación</h3>
+            <div class="close-modal">
+              <h3>Iniciar Evaluación</h3>
+              <v-btn class="mx-2" icon small @click="dlg_start = false">
+                <v-icon dark> mdi-close-thick </v-icon>
+              </v-btn>
+            </div>
             <p class="mt-4">
               Una vez que inicias una evaluación, solo tendrás una oportunidad
               para responderla.
@@ -163,7 +168,6 @@ $grid-template-columns: 1fr 0.75fr 0.75fr 0.5fr auto;
 .header {
   padding: 0 20px;
   font-size: 1rem;
-
   display: grid;
   grid-template-columns: $grid-template-columns;
 
@@ -179,7 +183,6 @@ $grid-template-columns: 1fr 0.75fr 0.75fr 0.5fr auto;
   border-radius: 12px;
   transition: 0.3s;
   cursor: pointer;
-
   display: grid;
   grid-template-columns: $grid-template-columns;
   align-items: center;
@@ -187,8 +190,7 @@ $grid-template-columns: 1fr 0.75fr 0.75fr 0.5fr auto;
   &__name {
     font-weight: bold;
   }
-  &__date {
-  }
+
   &__score {
     font-weight: bold;
   }
@@ -200,11 +202,16 @@ $grid-template-columns: 1fr 0.75fr 0.75fr 0.5fr auto;
   &--disabled {
     background: #f7f7f7;
     pointer-events: none;
-
     .evaluation__name,
     .evaluation__date {
       color: #8a8a8a;
     }
   }
+}
+
+.close-modal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>

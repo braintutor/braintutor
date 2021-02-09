@@ -69,6 +69,7 @@
             color="primary"
             small
             class="ml-2"
+            :loading="loadingMeeting"
             @click="enterClass"
             target="__blank"
             >Entrar a clase</v-btn
@@ -98,6 +99,7 @@ export default {
     itemDetail: itemDetail,
     isVisible: false,
     showEdit: false,
+    loadingMeeting: false
   }),
   props: {
     item: {
@@ -133,10 +135,15 @@ export default {
     },
     goMeeting() {},
     async enterClass() {
+      this.loadingMeeting = true;
       const { url } = await join({
         meetingName: this.itemDetail["name"],
         meetingID: this.itemDetail["id"],
+      }).catch(({ message }) => {
+        this.showMessage('Error',message);
+        this.loadingMeeting = false;
       });
+      this.loadingMeeting = false;
       window.open(url);
     },
   },
