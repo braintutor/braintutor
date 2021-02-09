@@ -1,18 +1,19 @@
 <template>
   <div class="editor">
     <div class="editor__menu d-flex justify-space-between align-center">
-      <div class="editor__title d-flex align-center">
-        <h2>Asistencia</h2>
+      <div class="editor__title align-center">
+        <h2 class="pb-3">Asistencia</h2>
+        <h3>Matemáticas - Primaria 1er Grado de Primaria Sección A</h3>
         <strong class="ml-2 mt-1" style="opacity: 0.5"></strong>
       </div>
     </div>
     <div class="editor__content mt-4">
-      <v-simple-table class="m-table">
+      <v-simple-table class="m-table" dense>
         <thead>
           <tr>
-            <th class="text-center"><h3>Alumnos</h3></th>
-            <th class="text-center"><h3>Marcar Asistencia</h3></th>
-            <th class="text-center"><h3>Observaciones</h3></th>
+            <th class="text-center"><v-icon>mdi-account-group</v-icon><h3>Alumnos</h3></th>
+            <th class="text-center"><v-icon>mdi-pencil</v-icon><h3>Asistencia</h3></th>
+            <th class="text-center"><v-icon>mdi-file-find-outline</v-icon><h3>Observaciones</h3></th>
           </tr>
         </thead>
         <tbody>
@@ -45,6 +46,7 @@
                 item-value="value"
               ></v-select>
             </td>
+            <td class="observaciones-td">Observaciones</td>
           </tr>
         </tbody>
       </v-simple-table>
@@ -87,6 +89,10 @@ export default {
   text-align: center;
 }
 
+.observaciones-td {
+  text-align: center;
+  width: 46%;
+}
 // .m-table {
 //   width: 340px;
 // }
