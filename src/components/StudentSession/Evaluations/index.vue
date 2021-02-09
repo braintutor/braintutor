@@ -5,7 +5,7 @@
         <span class="header__name">Nombre</span>
         <span class="header__name">Inicio</span>
         <span class="header__name">Fin</span>
-        <span class="header__name">Puntaje</span>
+        <span class="header__name">Nota</span>
         <v-btn style="opacity: 0; pointer-events: none'" color="primary" icon>
           <v-icon>mdi-arrow-right-drop-circle</v-icon>
         </v-btn>
@@ -21,16 +21,28 @@
         :class="{ 'evaluation--disabled': !isAvailable(item) }"
       >
         <span class="evaluation__name">{{ item.name }}</span>
-        <span class="evaluation__date">{{ toDate(item.time_start) }}</span>
-        <span class="evaluation__date">{{ toDate(item.time_end) }}</span>
-        <span class="evaluation__score">{{ getScore(item) }}</span>
-        <v-btn
-          :style="isAvailable(item) ? '' : 'opacity: 0; pointer-events: none'"
-          color="primary"
-          icon
-        >
-          <v-icon>mdi-arrow-right-drop-circle</v-icon>
-        </v-btn>
+        <span class="evaluation__date">{{
+          toDateString(item.time_start)
+        }}</span>
+        <span class="evaluation__date">{{ toDateString(item.time_end) }}</span>
+        <span class="evaluation__score">{{
+          (getResult(item) || { score: "-" }).score
+        }}</span>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              v-on="on"
+              :style="
+                isAvailable(item) ? '' : 'opacity: 0; pointer-events: none'
+              "
+              color="primary"
+              icon
+            >
+              <v-icon>mdi-arrow-right-drop-circle</v-icon>
+            </v-btn>
+          </template>
+          <span>Ingresar</span>
+        </v-tooltip>
       </div>
 
       <!-- Dialog Start Evaluation -->
@@ -42,7 +54,7 @@
               Una vez que inicias una evaluación, solo tendrás una oportunidad
               para responderla.
             </p>
-            <p class="mt-4">No cierres la pestaña o cambies de página.</p>
+            <!-- <p class="mt-4">No cierres la pestaña o cambies de página.</p> -->
           </div>
           <div class="m-card__actions">
             <m-btn @click="dlg_start = false" small text color="dark"
@@ -129,18 +141,20 @@ export default {
       this.hideLoading();
     },
     //
-    getScore(evaluation) {
+    getResult(evaluation) {
       let result = this.results.find(
         (result) => result.evaluation.id === evaluation._id
       );
-      if (result) return result.score;
-      return "-";
+      return result;
     },
     isAvailable(evaluation) {
-      return new Date() < evaluation.time_end;
+      // let result = this.getResult(evaluation);
+      // if (result && result.time_end) return false;
+      if (new Date() >= evaluation.time_end) return false;
+      return true;
     },
     //
-    toDate(date) {
+    toDateString(date) {
       let date_format = date.toLocaleDateString("es-ES", {
         day: "2-digit",
         month: "2-digit",
