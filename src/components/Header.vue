@@ -269,11 +269,7 @@ export default {
   align-items: center;
 
   &__logo {
-    transition: 0.3s;
     cursor: pointer;
-    &:hover {
-      transform: scale(1.05);
-    }
   }
 
   &__actions {
