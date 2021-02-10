@@ -83,7 +83,7 @@ export default {
 .alternative {
   padding: 8px 16px;
   border-radius: 12px;
-  border: 1px solid #ccc;
+  background: rgb(241, 241, 241);
 
   &__text {
     font-size: 0.9rem;
@@ -91,8 +91,8 @@ export default {
   }
 
   &--selected {
-    background: rgb(195, 199, 255);
-    border: none;
+    background: rgba(72, 121, 255, 0.25);
+    color: rgb(72, 121, 255);
     font-weight: bold;
   }
 }
