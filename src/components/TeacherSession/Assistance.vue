@@ -24,7 +24,7 @@
                 :items="items"
                 item-text="text"
                 item-value="value"
-                @change="markAttendance($event, attendanceRecord.id)"
+                @change="markAttendance($event, attendanceRecord)"
                 :loading="loading"
                 :readonly="loading"
               ></v-select>
@@ -60,17 +60,17 @@ export default {
   },
   methods: {
     fetchData() {
-      getAttendanceRecords(this.$route.params.class_id).then(x => this.attendanceRecords = x.results)
+      getAttendanceRecords(this.$route.params.class_id)
+        .then(x => this.attendanceRecords = x.results)
     },
-    markAttendance(newStatus, attendanceRecordId) {
-      const attendanceRecord = this.attendanceRecords.find(x => x.id === attendanceRecordId)
+    markAttendance(newStatus, attendanceRecord) {
       const oldStatus = attendanceRecord.status
 
       const classId = this.$route.params.class_id
       this.loading = true
       
       attendanceRecord.status = newStatus
-      markAttendance(classId, attendanceRecordId, newStatus)
+      markAttendance(classId, attendanceRecord.id, newStatus)
         .catch(() => {
           alert("Algo salio mal!")
           attendanceRecord.status = oldStatus
