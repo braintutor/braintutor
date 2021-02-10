@@ -53,7 +53,6 @@ async function fetch_delete(name) {
   return sendRequest(name, 'DELETE')
 }
 
-
 function handlerCode(code) {
   if (code) {
     // TOKEN EXPIRED

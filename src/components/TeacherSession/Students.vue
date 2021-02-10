@@ -30,7 +30,6 @@
 <script>
 import Students from "@/components/globals/Students/index";
 import EventsSessions from "@/components/globals/Event/EventsSessions";
-
 import { getStudentsBySession } from "@/services/studentService";
 
 export default {

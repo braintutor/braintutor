@@ -53,7 +53,6 @@
         </v-tooltip>
       </div>
     </div>
-
     <!-- Quiz Content -->
     <div id="quiz-scroll" class="quiz-editor-content m-fullscreen-content">
       <div class="time-editor">
@@ -187,7 +186,6 @@
         >
       </div>
     </div>
-
     <!-- Dialog Public -->
     <v-dialog v-model="dialog_public" max-width="400">
       <div class="m-card">
@@ -222,7 +220,6 @@
         </div>
       </div>
     </v-dialog>
-
     <!-- Dialog Delete -->
     <v-dialog v-model="dialog_delete" max-width="400">
       <div class="m-card">
@@ -253,7 +250,6 @@
         </div>
       </div>
     </v-dialog>
-
     <!-- DLG FILES -->
     <v-dialog v-model="dlg_files" max-width="1000">
       <Files
@@ -269,7 +265,6 @@
 
 <script>
 import Files from "@/components/globals/File/Files";
-
 import { scrollDown } from "@/services/scroll";
 import {
   updateEvaluationByTeacher,
@@ -277,7 +272,6 @@ import {
   deleteEvaluation,
 } from "@/services/evaluationService";
 // import { toDateTimeString } from "@/services/date";
-
 import EvaluationModel from "@/models/Evaluation";
 import QuestionModel from "@/models/Question";
 import DateTime from "@/components/globals/DateTime";

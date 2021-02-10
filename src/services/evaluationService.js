@@ -4,14 +4,11 @@ function getEvaluationsBySession(session_id) {
   return fetch_get(`api/v1/evaluation2?session_id=${session_id}`)
 }
 
-
-
 function getEvaluationsBySessionStudent(id) {
   return fetch_post('getEvaluationsBySessionStudent', {
     id
   })
 }
-
 
 function addEvaluation(session_id, evaluation) {
   return fetch_post('api/v1/evaluation2', {

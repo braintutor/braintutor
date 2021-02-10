@@ -234,7 +234,6 @@ import { TaskModel } from "@/models/Task";
 import variables from "@/models/variables";
 import DateTime from '@/components/globals/DateTime';
 
-
 export default {
   data: () => ({
     session_id: "",

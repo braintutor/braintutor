@@ -39,9 +39,11 @@ function generateColor(text){
   }) : text
 
 }
+
 function getEvents(query){
   return fetch_post('event2', query)
 }
+
 function join(payload){
   return fetch_post('api/v1/meeting', payload)
 }

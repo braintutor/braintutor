@@ -255,7 +255,6 @@ import { getParam, redirect } from "@/services/router.js";
 import { 
   addEvent, updateEvent, 
 removeEvent } from "@/services/eventService";
-
 import EventModel from "@/models/Event";
 import variables from "@/models/variables";
 import DateTime from "@/components/globals/DateTime"

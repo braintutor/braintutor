@@ -30,7 +30,6 @@
         ></v-select>
       </v-col>
     </v-row>
-
     <!-- Sessions -->
     <SessionCard
       v-for="session in sessions"
