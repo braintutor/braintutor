@@ -25,8 +25,8 @@
                 item-text="text"
                 item-value="value"
                 @change="markAttendance($event, attendanceRecord)"
-                :loading="loading"
-                :readonly="loading"
+                :loading="attendanceRecord.loading"
+                :readonly="attendanceRecord.loading"
               ></v-select>
             </td>
             <td class="observaciones-td">Observaciones</td>
@@ -48,8 +48,7 @@ export default {
         { text: "Asistió", value: "attended" }, 
         { text: "Tardanza", value: "late" }, 
         { text: "Falta", value: "absence" }
-      ],
-      loading: false
+      ]
     };
   },
   created () {
@@ -61,13 +60,13 @@ export default {
   methods: {
     fetchData() {
       getAttendanceRecords(this.$route.params.class_id)
-        .then(x => this.attendanceRecords = x.results)
+        .then(x => this.attendanceRecords = x.results.map(item => ({...item, loading: false})))
     },
     markAttendance(newStatus, attendanceRecord) {
       const oldStatus = attendanceRecord.status
 
       const classId = this.$route.params.class_id
-      this.loading = true
+      attendanceRecord.loading = true
       
       attendanceRecord.status = newStatus
       markAttendance(classId, attendanceRecord.id, newStatus)
@@ -75,7 +74,7 @@ export default {
           alert("Algo salio mal!")
           attendanceRecord.status = oldStatus
         }).finally(() => {
-          this.loading = false
+          attendanceRecord.loading = false
         })
     }
   }
