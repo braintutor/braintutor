@@ -23,10 +23,13 @@
         }}</span>
         <span v-else>-</span>
         <div class="evaluation__options">
-          <v-tooltip v-if="item.result && item.result.comment" bottom>
+          <v-tooltip
+            v-if="item.result && item.result.is_score_published"
+            bottom
+          >
             <template v-slot:activator="{ on }">
               <v-btn
-                @click="showResult(item.result)"
+                @click="showResult(item)"
                 v-on="on"
                 color="primary"
                 icon
@@ -35,7 +38,7 @@
                 <v-icon style="font-size: 1.3rem">mdi-eye</v-icon>
               </v-btn>
             </template>
-            <span style="font-size: 0.75rem">Ver Comentario</span>
+            <span style="font-size: 0.75rem">Ver Resultados</span>
           </v-tooltip>
           <v-tooltip bottom>
             <template v-if="item.isAvailable" v-slot:activator="{ on }">
@@ -110,18 +113,20 @@
       </v-dialog>
 
       <!-- Dialog Result Comment -->
-      <v-dialog v-model="dlg_result" persistent max-width="400">
-        <div class="result m-card">
+      <v-dialog v-model="dlg_result" persistent max-width="1200">
+        <div class="m-card">
           <div class="m-card__body">
-            <div class="close-modal">
-              <h3>Comentario</h3>
+            <div v-if="evaluation_selected" class="close-modal">
+              <h3>{{ evaluation_selected.name }}</h3>
               <v-btn class="mx-2" icon small @click="dlg_result = false">
                 <v-icon dark> mdi-close-thick </v-icon>
               </v-btn>
             </div>
-            <p v-if="result_selected" class="result__text mt-4">
-              {{ result_selected.comment }}
-            </p>
+            <EvaluationResult
+              v-if="evaluation_selected && result_selected"
+              :evaluation="evaluation_selected"
+              :result="result_selected"
+            />
           </div>
           <div class="m-card__actions">
             <m-btn @click="dlg_result = false" small text color="dark"
@@ -147,6 +152,7 @@
 
 <script>
 import Evaluation from "./Evaluation";
+import EvaluationResult from "./EvaluationResult";
 import {
   getEvaluationsBySessionStudent,
   getEvaluationByStudent,
@@ -205,9 +211,16 @@ export default {
       }
       this.hideLoading();
     },
-    showResult(result) {
-      this.dlg_result = true;
-      this.result_selected = result;
+    async showResult(evaluation) {
+      this.showLoading("Cargando Resultados");
+      try {
+        this.evaluation_selected = await getEvaluationByStudent(evaluation._id);
+        this.dlg_result = true;
+        this.result_selected = evaluation.result;
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
     },
     //
     getResult(evaluation, results) {
@@ -235,6 +248,7 @@ export default {
   },
   components: {
     Evaluation,
+    EvaluationResult,
   },
 };
 </script>
@@ -288,12 +302,6 @@ $grid-template-columns: 4fr 3fr 3fr 1fr 100px;
     .evaluation__date {
       color: #8a8a8a;
     }
-  }
-}
-
-.result {
-  &__text {
-    white-space: pre-line;
   }
 }
 
