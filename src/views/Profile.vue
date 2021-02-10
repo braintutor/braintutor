@@ -68,7 +68,12 @@
     <!-- DLG TEST -->
     <v-dialog v-model="dialog_test" max-width="1000">
       <div id="test" class="test m-card">
-        <h2 class="test__title">Cuestionario de Estilos de Aprendizaje</h2>
+        <div class="d-flex justify-space-between align-center close-m">
+          <h2 class="test__title">Cuestionario de Estilos de Aprendizaje</h2>
+          <v-btn icon small @click="dialog_test =false">
+            <v-icon>mdi-close-thick</v-icon>
+          </v-btn>
+        </div>        
         <p class="test__page">Página {{ questions_page + 1 }} de 4</p>
         <div class="test__content">
           <div
@@ -832,6 +837,10 @@ export default {
   align-items: center;
 }
 
+.close-m {
+  margin-left: 28%;
+}
+
 .learn-md {
   padding: 10px 0px;
 }
@@ -840,6 +849,34 @@ export default {
   background: none;
   border: 1px solid gray;
   margin-right: 8px;
+}
+
+@media (max-width: 860px) {
+  .close-m {
+  margin-left: 25%;
+  }
+}
+
+@media (max-width: 680px) {
+  .close-m {
+  margin-left: 19%;
+  }
+}
+
+@media (max-width: 580px) {
+  .close-m {
+  margin-left: 12%;
+  }
+}
+
+@media (max-width: 440px) {
+  .close-m {
+  margin-left: 8%;
+  }
+
+  .test {
+    padding: 20px 20px;
+  }
 }
 
 </style>
