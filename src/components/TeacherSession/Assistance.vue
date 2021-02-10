@@ -20,10 +20,13 @@
             <td class="student-td">{{ attendanceRecord.student }}</td>
             <td class="assistance-td">
               <v-select
-                v-model="attendanceRecord.status"
+                :value="attendanceRecord.status"
                 :items="items"
                 item-text="text"
                 item-value="value"
+                @change="markAttendance($event, attendanceRecord)"
+                :loading="attendanceRecord.loading"
+                :readonly="attendanceRecord.loading"
               ></v-select>
             </td>
             <td class="observaciones-td">Observaciones</td>
@@ -35,7 +38,7 @@
 </template>
 
 <script>
-import { getAttendanceRecords } from "@/services/attendanceService";
+import { getAttendanceRecords, markAttendance } from "@/services/attendanceService";
 
 export default {
   data() {
@@ -44,7 +47,8 @@ export default {
       items: [
         { text: "Asistió", value: "attended" }, 
         { text: "Tardanza", value: "late" }, 
-        { text: "Falta", value: "absence" }],
+        { text: "Falta", value: "absence" }
+      ]
     };
   },
   created () {
@@ -55,7 +59,23 @@ export default {
   },
   methods: {
     fetchData() {
-      getAttendanceRecords(this.$route.params.class_id).then(x => this.attendanceRecords = x.results)
+      getAttendanceRecords(this.$route.params.class_id)
+        .then(x => this.attendanceRecords = x.results.map(item => ({...item, loading: false})))
+    },
+    markAttendance(newStatus, attendanceRecord) {
+      const oldStatus = attendanceRecord.status
+
+      const classId = this.$route.params.class_id
+      attendanceRecord.loading = true
+      
+      attendanceRecord.status = newStatus
+      markAttendance(classId, attendanceRecord.id, newStatus)
+        .catch(() => {
+          alert("Algo salio mal!")
+          attendanceRecord.status = oldStatus
+        }).finally(() => {
+          attendanceRecord.loading = false
+        })
     }
   }
 };

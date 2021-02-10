@@ -11,7 +11,7 @@
         v-for="(item, idx) in evaluations_filtered"
         :key="idx"
         class="evaluation mb-2"
-        :class="{ 'evaluation--disabled': !isAvailable(item) }"
+        :class="{ 'evaluation--disabled': !item.isAvailable }"
       >
         <span class="evaluation__name">{{ item.name }}</span>
         <span class="evaluation__date">{{
@@ -23,10 +23,13 @@
         }}</span>
         <span v-else>-</span>
         <div class="evaluation__options">
-          <v-tooltip v-if="item.result && item.result.comment" bottom>
+          <v-tooltip
+            v-if="item.result && item.result.is_score_published"
+            bottom
+          >
             <template v-slot:activator="{ on }">
               <v-btn
-                @click="showResult(item.result)"
+                @click="showResult(item)"
                 v-on="on"
                 color="primary"
                 icon
@@ -35,10 +38,10 @@
                 <v-icon style="font-size: 1.3rem">mdi-eye</v-icon>
               </v-btn>
             </template>
-            <span style="font-size: 0.75rem">Ver Comentario</span>
+            <span style="font-size: 0.75rem">Ver Resultados</span>
           </v-tooltip>
           <v-tooltip bottom>
-            <template v-if="isAvailable(item)" v-slot:activator="{ on }">
+            <template v-if="item.isAvailable" v-slot:activator="{ on }">
               <v-btn
                 @click="
                   dlg_start = true;
@@ -56,6 +59,21 @@
               </v-btn>
             </template>
             <span style="font-size: 0.75rem">Ingresar</span>
+          </v-tooltip>
+          <v-tooltip bottom>
+            <template v-if="!item.isAvailable" v-slot:activator="{ on }">
+              <v-btn
+                v-on="on"
+                color="primary"
+                icon
+                small
+                class="ml-2"
+                style="cursor: initial"
+              >
+                <v-icon v-on="on" style="font-size: 1.3rem">mdi-check</v-icon>
+              </v-btn>
+            </template>
+            <span style="font-size: 0.75rem">Finalizado</span>
           </v-tooltip>
         </div>
       </div>
@@ -95,18 +113,20 @@
       </v-dialog>
 
       <!-- Dialog Result Comment -->
-      <v-dialog v-model="dlg_result" persistent max-width="400">
-        <div class="result m-card">
+      <v-dialog v-model="dlg_result" persistent max-width="1200">
+        <div class="m-card">
           <div class="m-card__body">
-            <div class="close-modal">
-              <h3>Comentario</h3>
+            <div v-if="evaluation_selected" class="close-modal">
+              <h3>{{ evaluation_selected.name }}</h3>
               <v-btn class="mx-2" icon small @click="dlg_result = false">
                 <v-icon dark> mdi-close-thick </v-icon>
               </v-btn>
             </div>
-            <p class="result__text mt-4">
-              {{ result_selected.comment }}
-            </p>
+            <EvaluationResult
+              v-if="evaluation_selected && result_selected"
+              :evaluation="evaluation_selected"
+              :result="result_selected"
+            />
           </div>
           <div class="m-card__actions">
             <m-btn @click="dlg_result = false" small text color="dark"
@@ -132,6 +152,7 @@
 
 <script>
 import Evaluation from "./Evaluation";
+import EvaluationResult from "./EvaluationResult";
 import {
   getEvaluationsBySessionStudent,
   getEvaluationByStudent,
@@ -160,6 +181,7 @@ export default {
   methods: {
     async init() {
       let session_id = this.$route.params["session_id"];
+      this.evaluations = [];
 
       this.showLoading("Cargando Evaluaciones");
       try {
@@ -168,9 +190,12 @@ export default {
         );
         let results = (await this.$api.evaluation.getSessionResults(session_id))
           .results;
+
         evaluations.forEach((evaluation) => {
           evaluation.result = this.getResult(evaluation, results);
+          evaluation.isAvailable = this.isAvailable(evaluation);
         });
+
         this.evaluations = evaluations;
       } catch (error) {
         this.showMessage("", error.msg || error);
@@ -186,9 +211,16 @@ export default {
       }
       this.hideLoading();
     },
-    showResult(result) {
-      this.dlg_result = true;
-      this.result_selected = result;
+    async showResult(evaluation) {
+      this.showLoading("Cargando Resultados");
+      try {
+        this.evaluation_selected = await getEvaluationByStudent(evaluation._id);
+        this.dlg_result = true;
+        this.result_selected = evaluation.result;
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
     },
     //
     getResult(evaluation, results) {
@@ -197,10 +229,9 @@ export default {
       );
       return result;
     },
-    isAvailable(evaluation) {
-      // let result = this.getResult(evaluation);
-      // if (result && result.time_end) return false;
-      if (new Date() >= evaluation.time_end) return false;
+    isAvailable({ result, time_end }) {
+      if (result && result.time_end) return false;
+      if (new Date() >= time_end) return false;
       return true;
     },
     //
@@ -217,6 +248,7 @@ export default {
   },
   components: {
     Evaluation,
+    EvaluationResult,
   },
 };
 </script>
@@ -225,7 +257,7 @@ export default {
 $grid-template-columns: 4fr 3fr 3fr 1fr 100px;
 
 .header {
-  padding: 10px 20px;
+  padding: 12px 20px;
   font-size: 1rem;
   display: grid;
   grid-template-columns: $grid-template-columns;
@@ -236,12 +268,12 @@ $grid-template-columns: 4fr 3fr 3fr 1fr 100px;
 }
 
 .evaluation {
-  padding: 10px 20px;
+  padding: 12px 20px;
   font-size: 0.9rem;
   background: #e8e8ff;
   border-radius: 12px;
   transition: 0.3s;
-  cursor: pointer;
+
   display: grid;
   grid-template-columns: $grid-template-columns;
   align-items: center;
@@ -260,23 +292,16 @@ $grid-template-columns: 4fr 3fr 3fr 1fr 100px;
     align-items: center;
   }
 
-  &:hover {
-    background: #e1e1ff;
-  }
+  // &:hover {
+  //   background: #e1e1ff;
+  // }
 
   &--disabled {
     background: #f7f7f7;
-    pointer-events: none;
     .evaluation__name,
     .evaluation__date {
       color: #8a8a8a;
     }
-  }
-}
-
-.result {
-  &__text {
-    white-space: pre-line;
   }
 }
 
