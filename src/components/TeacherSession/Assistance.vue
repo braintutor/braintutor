@@ -3,7 +3,13 @@
     <div class="editor__menu d-flex justify-space-between align-center">
       <div class="editor__title align-center">
         <h2 class="pb-3">Asistencia</h2>
-        <h3 class="pb-3">Matemáticas - Primaria 1er Grado de Primaria Sección A</h3>
+        <h3 class="pb-3">{{ school_class.full_name }}</h3>
+        <h3>
+          {{school_class.proposed_range.start | date }}, 
+          {{school_class.proposed_range.start | time }} - 
+          {{school_class.proposed_range.end | time }}
+
+        </h3>
       </div>
     </div>
     <div class="editor__content mt-4">
@@ -16,7 +22,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="attendanceRecord of attendanceRecords" :key="attendanceRecord.id">
+          <tr v-for="attendanceRecord of school_class.attendance_records" :key="attendanceRecord.id">
             <td class="student-td">{{ attendanceRecord.student }}</td>
             <td class="assistance-td">
               <v-select
@@ -29,7 +35,11 @@
                 :readonly="attendanceRecord.loading"
               ></v-select>
             </td>
-            <td class="observaciones-td">Observaciones</td>
+            <td class="observaciones-td">
+              <span v-if="attendanceRecord.created_at">
+                Asistio a las {{ attendanceRecord.created_at | time }}
+              </span>
+            </td>
           </tr>
         </tbody>
       </v-simple-table>
@@ -43,7 +53,7 @@ import { getAttendanceRecords, markAttendance } from "@/services/attendanceServi
 export default {
   data() {
     return {
-      attendanceRecords: [],
+      school_class: {},
       items: [
         { text: "Asistió", value: "attended" }, 
         { text: "Tardanza", value: "late" }, 
@@ -60,7 +70,10 @@ export default {
   methods: {
     fetchData() {
       getAttendanceRecords(this.$route.params.class_id)
-        .then(x => this.attendanceRecords = x.results.map(item => ({...item, loading: false})))
+        .then(x => {
+          x.attendance_records = x.attendance_records.map(item => ({...item, loading: false}))
+          this.school_class = x
+          })
     },
     markAttendance(newStatus, attendanceRecord) {
       const oldStatus = attendanceRecord.status
