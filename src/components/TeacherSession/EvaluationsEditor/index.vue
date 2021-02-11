@@ -216,7 +216,7 @@
 <script>
 import EvaluationCard from "@/components/globals/Evaluation/EvaluationCard";
 import EvaluationEditor from "./EvaluationEditor";
-import EvaluationResults from "@/components/globals/Evaluation/EvaluationResults";
+import EvaluationResults from "./EvaluationResults";
 
 import {
   getEvaluationsBySession,
