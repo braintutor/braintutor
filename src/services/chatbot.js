@@ -2,6 +2,9 @@ import { CountVectorizer } from "machinelearn/feature_extraction";
 
 export default class Chatbot {
   constructor() {
+    this.stop_words = ['es', 'el', 'la', 'un', 'una']
+    this.umbral = 0.6
+
     this.x = [];
     this.y = [];
     this.model = null;
@@ -41,7 +44,15 @@ export default class Chatbot {
         let similarity = this._cosinesim(vector, vectorK);
         sim_arr.push(similarity);
       });
-      let idx_max_sim = sim_arr.indexOf(Math.max(...sim_arr));
+
+      let max_sim = Math.max(...sim_arr)
+      if (max_sim <= this.umbral) {
+        return {
+          answers: ['No pude entender tu pregunta.']
+        }
+      }
+
+      let idx_max_sim = sim_arr.indexOf(max_sim);
 
       let res = this.knowledge[this.y[idx_max_sim]];
       res.answers = this.setEntities(res.answers);
@@ -67,7 +78,7 @@ export default class Chatbot {
     });
   }
 
-  talk(text, onend = () => {}) {
+  talk(text, onend = () => { }) {
     this.msg.text = text;
     let synth = window.speechSynthesis;
     synth.cancel();
@@ -80,6 +91,7 @@ export default class Chatbot {
     text = text.replace(/[^@_a-zá-úñÑ0-9\s]/g, " "); // remove other characters
     text = text.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // remove accent
     text = text.trim().split(/\s+/); // remove extra spaces
+    text = text.filter(word => !this.stop_words.includes(word))
     return `_${text.join("_")}_`; // adding '_'
   }
 
