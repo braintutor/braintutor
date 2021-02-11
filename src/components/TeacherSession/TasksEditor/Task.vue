@@ -8,7 +8,6 @@
         <span class="m-menu__title">Ver Tareas</span>
       </div>
     </div>
-
     <div v-if="task">
       <!-- TASK -->
       <TaskCard
@@ -18,7 +17,6 @@
         disabled
         class="mb-4"
       />
-
       <div class="answers m-card">
         <!-- STUDENTS -->
         <div class="students">
@@ -77,7 +75,6 @@
                 <span class="file__name">{{ file.name_f }}</span>
               </a>
             </a>
-
             <!-- ANSWER EMPTY -->
             <p
               v-if="!((answer && answer.text) || files_f.length > 0)"
@@ -200,7 +197,6 @@ $background-active: #e4e9ff;
   border-radius: 8px;
   user-select: none;
   cursor: pointer;
-
   display: flex;
   align-items: center;
 

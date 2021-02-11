@@ -26,6 +26,8 @@
         <thead>
           <tr>
             <th class="text-left">Nombre</th>
+            <!-- <th class="text-left">Nivel</th>
+            <th class="text-left">Grado</th>  -->
             <th class="text-left">Encargado</th>
             <!-- <th class="text-left">N° Unidades</th>
             <th class="text-left">N° Materiales</th> -->
@@ -35,6 +37,8 @@
         <tbody>
           <tr v-for="(e, e_idx) in entities_aux" :key="e_idx">
             <td>{{ e.name }}</td>
+            <!-- <td>Primaria</td>
+            <td>3</td> -->
             <td>{{ e.teacher }}</td>
             <!-- <td class="text-center">{{ e.units_count }}</td>
             <td class="text-center">{{ e.materials_count }}</td> -->
@@ -144,7 +148,6 @@ import {
 } from "@/services/courseService";
 import { getTeachersBySchool } from "@/services/teacherService";
 import BrainDialog from "./BrainDialog";
-
 import variables from "@/models/variables";
 
 export default {

@@ -16,7 +16,6 @@
           >{{ `${student.last_name}, ${student.first_name}` }}</m-btn
         >
       </div>
-
       <!-- MESSAGES -->
       <div class="chat col-9" v-if="student_selected">
         <div class="chat__messages">
@@ -54,7 +53,6 @@
 
 <script>
 import { getStudentsBySession } from "@/services/studentService";
-
 import MessageModel from "@/models/Message";
 
 export default {
@@ -163,7 +161,6 @@ export default {
     background: var(--color-active);
     color: #fff;
   }
-  &--1 {
-  }
+  
 }
 </style>

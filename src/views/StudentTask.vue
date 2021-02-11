@@ -9,7 +9,6 @@
           <span class="m-menu__title">Volver</span>
         </div>
       </div>
-
       <!-- TASK -->
       <TaskCard
         :time_start="task.time_start"
@@ -17,7 +16,6 @@
         :description="task.description"
         disabled
       />
-
       <!-- ANSWER -->
       <div class="m-card mt-3">
         <div class="m-card__body">
@@ -86,7 +84,6 @@
           <m-btn @click="save()" color="primary" small>Guardar</m-btn>
         </div>
       </div>
-
       <!-- DLG REMOVE -->
       <v-dialog v-model="dlg_remove" max-width="400">
         <div class="m-card">
