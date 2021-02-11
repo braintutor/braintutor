@@ -286,6 +286,7 @@ export default {
             question: "Pregunta",
             alternatives: ["Alternativa 1", "Alternativa 2"],
             correct: 0,
+            score: 0
           },
         ],
       };
