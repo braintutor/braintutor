@@ -1,6 +1,6 @@
 <template>
   <div>
-    <brain-dialog v-model="isVisible" maxWidth="500" :showCancel="false">
+    <brain-dialog v-model="isVisible" maxWidth="520" :showCancel="false">
       <template #body>
         <div class="close-modal">
           <div>

@@ -76,7 +76,6 @@
         No hay cursos.
       </p>
     </div>
-
     <!-- DIALOG CREATE|EDIT -->
     <brain-dialog v-model="dialog_edit" @submit="save" :loading="loading_save">
         <template #body>
@@ -102,13 +101,21 @@
             item-value="_id"
             label="Encargado"
           ></v-select>
+          <v-color-picker
+            class="ma-2"
+            width=560
+            show-swatches
+            hide-canvas
+            hide-sliders
+            hide-inputs
+            flat
+          ></v-color-picker>
         </template>
         <template #actions>
           <m-btn color="primary" type="submit" :loading="loading_save" small
             >Guardar</m-btn>
         </template>
     </brain-dialog>
-
     <!-- DIALOG REMOVE -->
     <v-dialog v-model="dialog_remove" max-width="400">
       <div class="m-card">
@@ -285,4 +292,5 @@ export default {
   border: 1px solid gray;
   margin-right: 8px;
 }
+
 </style>
