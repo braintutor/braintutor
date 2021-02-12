@@ -44,7 +44,6 @@
         @click="drawer = true"
       ></v-app-bar-nav-icon>
     </header>
-
     <v-navigation-drawer
       style="z-index: var(--z-nav) !important"
       v-model="drawer"

@@ -113,7 +113,6 @@ $sidebar-spacing: 6px;
   opacity: 0.4;
   transition: 0.3s;
   cursor: pointer;
-
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -77,7 +77,6 @@
           </v-tooltip>
         </div>
       </div>
-
       <!-- Dialog Start Evaluation -->
       <v-dialog v-model="dlg_start" persistent max-width="400">
         <div class="m-card">
@@ -111,7 +110,6 @@
           </div>
         </div>
       </v-dialog>
-
       <!-- Dialog Result Comment -->
       <v-dialog v-model="dlg_result" persistent max-width="1200">
         <div class="m-card">
@@ -136,7 +134,6 @@
         </div>
       </v-dialog>
     </div>
-
     <Evaluation
       v-if="evaluation_to_start"
       :evaluation="evaluation_to_start"
@@ -273,7 +270,6 @@ $grid-template-columns: 4fr 3fr 3fr 1fr 100px;
   background: #e8e8ff;
   border-radius: 12px;
   transition: 0.3s;
-
   display: grid;
   grid-template-columns: $grid-template-columns;
   align-items: center;
@@ -292,11 +288,7 @@ $grid-template-columns: 4fr 3fr 3fr 1fr 100px;
     align-items: center;
   }
 
-  // &:hover {
-  //   background: #e1e1ff;
-  // }
-
-  &--disabled {
+   &--disabled {
     background: #f7f7f7;
     .evaluation__name,
     .evaluation__date {
