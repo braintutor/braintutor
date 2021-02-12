@@ -9,7 +9,6 @@
       <span class="m-path__icon">></span>
       <span class="m-path__name">{{ course.name }}</span>
     </section>
-
     <router-view :get="getKnowledge" :update="updateKnowledge" />
   </Layout>
 </template>

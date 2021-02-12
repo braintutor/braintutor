@@ -39,7 +39,6 @@
         </div>
       </div>
     </div>
-
     <div class="m-card mt-5">
       <div class="m-card__body">
         <div>

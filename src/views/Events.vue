@@ -27,7 +27,6 @@
         />Evaluaciones
       </label>
     </div>
-
     <div class="m-legend">
       <div
         class="m-legend__item"

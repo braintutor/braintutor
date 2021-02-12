@@ -23,7 +23,6 @@
         ></div>
       </div>
     </div>
-
     <m-calendar
       :events="events"
       :show_options="(event) => event.type === 'event'"
@@ -107,7 +106,6 @@
         </div>
       </template>
     </m-calendar>
-
     <!-- DLG CREATE -->
     <v-dialog
       v-model="dlg_create"
@@ -204,7 +202,6 @@
         </div>
         <div class="m-card__actions">
           <m-btn
-            
             small
             type="button"
             @click="dlg_create = false"
@@ -216,7 +213,6 @@
         </div>
       </form>
     </v-dialog>
-
     <!-- DLG DELETE -->
     <v-dialog v-model="dlg_delete" max-width="400">
       <div class="m-card">
