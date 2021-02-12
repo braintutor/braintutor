@@ -118,7 +118,6 @@ export default {
     background: var(--color-active);
     color: #fff;
   }
-  &--1 {
-  }
+  
 }
 </style>

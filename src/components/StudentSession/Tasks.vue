@@ -36,7 +36,6 @@
 
 <script>
 import TaskCard from "@/components/globals/Task/TaskCard";
-
 import { getParam, redirect } from "@/services/router.js";
 
 export default {

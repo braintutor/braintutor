@@ -83,7 +83,6 @@ export default {
   opacity: 0.5;
   transition: 0.3s;
   cursor: pointer;
-
   display: flex;
   flex-direction: column;
   align-items: center;

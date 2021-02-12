@@ -61,7 +61,8 @@ import Calendar from "@/components/Calendar";
 import DateTime from "@/components/globals/DateTime";
 import SchoolCycleSegmentCard from "@/components/SchoolEditor/SchoolCycleSegmentCard";
 import { getCurrentOrNextSegment } from "@/services/schoolCycleService";
-import { editMeetingUrl } from "@/modules/SchoolClass/service"
+import { editMeetingUrl } from "@/modules/SchoolClass/service";
+
 export default {
   components: { Calendar, DateTime, SchoolCycleSegmentCard },
   data: () => ({

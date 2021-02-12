@@ -76,12 +76,11 @@
         No hay cursos.
       </p>
     </div>
-
     <!-- DIALOG CREATE|EDIT -->
     <brain-dialog v-model="dialog_edit" @submit="save" :loading="loading_save">
         <template #body>
           <div class="close-modal">
-            <h3 v-if="action === 'create'">Crear</h3>
+            <h3 v-if="action === 'create'">Crear curso</h3>
             <h3 v-else>Editar</h3>
             <v-btn class="mx-2" icon small @click="dialog_edit = false">
               <v-icon> mdi-close-thick </v-icon>
@@ -102,13 +101,22 @@
             item-value="_id"
             label="Encargado"
           ></v-select>
+          <!-- <label>Elegir el color del curso:</label> -->
+          <!-- <v-color-picker
+            class="ma-2"
+            width=560
+            show-swatches
+            hide-canvas
+            hide-sliders
+            hide-inputs
+            flat
+          ></v-color-picker> -->
         </template>
         <template #actions>
           <m-btn color="primary" type="submit" :loading="loading_save" small
             >Guardar</m-btn>
         </template>
     </brain-dialog>
-
     <!-- DIALOG REMOVE -->
     <v-dialog v-model="dialog_remove" max-width="400">
       <div class="m-card">
@@ -285,4 +293,5 @@ export default {
   border: 1px solid gray;
   margin-right: 8px;
 }
+
 </style>

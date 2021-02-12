@@ -4,7 +4,6 @@
 
 <script>
 import Students from "@/components/globals/Students/index";
-
 import { getStudentsBySessionStudent } from "@/services/studentService";
 
 export default {
