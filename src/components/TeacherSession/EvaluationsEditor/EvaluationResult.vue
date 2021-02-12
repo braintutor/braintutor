@@ -141,8 +141,13 @@ export default {
     getNote(evaluation, score) {
       let { map_score_to_note } = evaluation;
 
-      for (let rule of map_score_to_note) {
-        if (score <= rule.max) return rule.note;
+      for (let [idx, rule] of map_score_to_note.entries()) {
+        if (idx === map_score_to_note.length - 1) return rule.note;
+        if (rule.is_equal) {
+          if (score <= rule.max) return rule.note;
+        } else {
+          if (score < rule.max) return rule.note;
+        }
       }
 
       return "-";
