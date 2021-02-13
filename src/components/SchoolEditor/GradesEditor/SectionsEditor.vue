@@ -58,6 +58,7 @@
             v-model="section.name"
             :maxlength="SectionModel.name.max_length"
             label="Nombre"
+            placeholder="e.g, A o B (no escriba Sección A o 6A, solo escriba A)"
             autocomplete="off"
             required
             class="mt-4"
