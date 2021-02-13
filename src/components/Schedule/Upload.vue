@@ -25,6 +25,7 @@
             <download-excel
               v-if="scheduleItems.length > 0"
               :name="nameFile"
+              :type="type"
               :fields="scheduleFields"
               :data="scheduleItems"
             >
@@ -35,7 +36,7 @@
 
           <form @submit.prevent="save()" class="mt-1 pa-4 box">
             <p>Suba el archivo con los horarios:</p>
-            <input @change="onFileSelected($event)" type="file" />
+            <input @change="onFileSelected($event)" accept=".xlsx" type="file" />
           </form>
         </div>
       </template>
@@ -63,6 +64,7 @@ export default {
   components: { BrainDialog, downloadExcel },
   data: () => ({
     file: null,
+    type: "xlsx",
     nameFile: null,
     loading: false,
     scheduleItems: [],
@@ -79,9 +81,12 @@ export default {
   props: ["isVisible", "cycle", "cycleNumber"],
   async mounted() {
     this.nameFile =
-      formatSegment(this.cycle.segment_type, this.cycleNumber) + ".xls";
+      formatSegment(this.cycle.segment_type, this.cycleNumber) + '.' + this.type;
     getAllSessions().then((r) => {
       this.scheduleItems = r;
+      this.scheduleItems[0]["dia"] = "lunes"
+      this.scheduleItems[0]["inicio"] = "22:00"
+      this.scheduleItems[0]["fin"] = "22:30"
     });
   },
   methods: {
