@@ -5,14 +5,12 @@
         <!-- <img :src="require('@/assets/logo/logo-long.jpg')" width="100%" /> -->
         <img :src="school.image" width="100%" />
       </div>
-
       <div v-if="show_error" class="alert">
         <span>Datos incorrectos.</span>
         <v-icon @click="show_error = false" class="alert__icon"
           >mdi-close</v-icon
         >
       </div>
-
       <v-text-field
         v-model="username"
         :rules="usernameRules"

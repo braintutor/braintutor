@@ -8,7 +8,6 @@
           {{school_class.proposed_range.start | date }}, 
           {{school_class.proposed_range.start | time }} - 
           {{school_class.proposed_range.end | time }}
-
         </h3>
       </div>
     </div>

@@ -62,8 +62,9 @@
             </div>
             <v-text-field
               v-model="grade.name"
-              :maxlength="GradeModel.name.max_length"
-              label="Nombre"
+              placeholder="e.g, 1 o 2 (no escriba 1ro o 1er Grado o 1°, solo 1 o 2)"
+              type="number"
+              label="Número"
               autocomplete="off"
               required
               class="mt-4"

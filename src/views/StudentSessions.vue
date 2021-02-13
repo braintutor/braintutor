@@ -4,7 +4,6 @@
       <v-icon class="mr-3" style="font-size: 2.4rem">mdi-bookshelf</v-icon>
       <span>Mis Cursos</span>
     </h1>
-
     <!-- Sessions -->
     <SessionCard
       v-for="session in sessions"
@@ -44,7 +43,6 @@
         },
       ]"
     />
-
     <div v-show="sessions.length <= 0" class="text-center mt-3">
       No hay Sesiones
     </div>

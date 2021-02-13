@@ -17,7 +17,6 @@
         >Ver Calendario</m-btn
       >
     </div>
-
     <Students v-show="showStudents" :students="students" class="m-container" />
     <EventsSessions
       v-show="!showStudents"

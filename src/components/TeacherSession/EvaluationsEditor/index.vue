@@ -77,11 +77,9 @@
         ]"
         class="mb-3"
       />
-
       <div class="text-center" v-show="evaluations_filtered.length === 0">
         No hay evaluaciones.
       </div>
-
       <!-- DLG UPDATE TIME -->
       <v-dialog v-model="dlg_update_time" max-width="450" persistent>
         <div class="m-card">
@@ -116,7 +114,6 @@
           </div>
         </div>
       </v-dialog>
-
       <!-- Dialog Remove -->
       <v-dialog v-model="dlg_remove" max-width="400">
         <div class="m-card">
@@ -149,13 +146,11 @@
         </div>
       </v-dialog>
     </div>
-
     <EvaluationEditor
       v-else-if="edit"
       :evaluation="evaluation"
       :unselect="unselect"
     />
-
     <!-- EVALUATION RESULTS -->
     <div v-else>
       <div class="m-menu mb-3">
@@ -177,7 +172,6 @@
         ]"
       />
     </div>
-
     <!-- DLG REMOVE RESULT -->
     <v-dialog v-model="dlg_remove_result" max-width="400">
       <div class="m-card">
