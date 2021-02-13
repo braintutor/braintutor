@@ -47,7 +47,6 @@
               </template>
             </v-text-field>
           </div>
-
           <!--:disabled="!student.has_answer" 
              <td v-for="(button, idx) in buttons" :key="idx" @click="button.action(student)">
             <v-btn>{{ button.text }}</v-btn>
@@ -55,7 +54,6 @@
         </template>
       </v-data-table>
     </div>
-
     <div v-if="show_evaluation_result">
       <div class="m-menu mb-3">
         <div class="m-menu__left">
@@ -104,7 +102,6 @@ export default {
   data: () => ({
     evaluation_result_selected: null,
     show_evaluation_result: false,
-
     selected: [],
     students: [],
     headers: [
@@ -188,7 +185,6 @@ $size-box-sm: 20px;
   width: $size-icon;
   height: $size-icon;
   border-radius: 8px;
-
   display: flex;
   justify-content: center;
   align-items: center;

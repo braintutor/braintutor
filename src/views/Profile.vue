@@ -32,7 +32,6 @@
         >
       </div>
     </div>
-
     <div v-show="user_role === 'STU'" class="diagram m-card">
       <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
@@ -64,7 +63,6 @@
         <m-btn @click="newTest()" small color="primary" text>Nuevo Test</m-btn>
       </div>
     </div>
-
     <!-- DLG TEST -->
     <v-dialog v-model="dialog_test" max-width="1000">
       <div id="test" class="test m-card">
@@ -123,7 +121,6 @@
         </div>
       </div>
     </v-dialog>
-
     <!-- DLG PASSWORD -->
     <v-dialog v-model="dialog_password" max-width="400">
       <form @submit.prevent="updatePassword()" class="m-card">
@@ -173,7 +170,6 @@
         </div>
       </form>
     </v-dialog>
-
     <!-- DLG TEST 2 -->
     <v-dialog v-model="dialog_test_2" max-width="1000">
       <div v-if="profile.learning_style" class="m-card">

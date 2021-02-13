@@ -22,7 +22,6 @@
           ></v-select>
         </v-col>
       </v-row>
-
       <div
         v-for="(course, idx) in courses"
         :key="idx"
@@ -44,7 +43,6 @@
       </div>
       <p v-show="courses.length <= 0" class="text-center ma-3">No hay Cursos</p>
     </div>
-
     <!-- REPORTS -->
     <div v-if="course_selected" class="reports">
       <div class="reports__menu">
@@ -94,7 +92,6 @@
           </div>
         </div>
       </div>
-
       <div class="reports__list">
         <div
           v-for="(report, idx) in reports"
@@ -117,7 +114,6 @@
           No hay reportes
         </p>
       </div>
-
       <div class="reports__body py-3">
         <ReportEditor
           v-if="report_selected"
