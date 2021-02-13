@@ -16,23 +16,38 @@
           </div>
         </div>
 
-        <div class="mt-2 d-flex justify-space-between">
-          <form @submit.prevent="save()">
-            <p>
-              Importe el horario desde un archivo, siguiendo
-              <a
-                class="mx-1"
-                href="/files/plantilla_horario.csv"
-                __target="blank"
-                >esta plantilla.</a
-              >
-            </p>
+        <div class="mt-2 ">
+          <div class="mt-4 box">
+            <div v-if="scheduleItems.length == 0">
+              Construyendo plantilla de horarios 
+              <v-btn loading text></v-btn>
+            </div>
+            <download-excel
+              v-if="scheduleItems.length > 0"
+              :name="nameFile"
+              :fields="scheduleFields"
+              :data="scheduleItems"
+            >
+              Descargue la plantilla de horarios
+              <v-icon>mdi-download</v-icon>
+            </download-excel>
+          </div>
+
+          <form @submit.prevent="save()" class="mt-1 pa-4 box">
+            <p>Suba el archivo con los horarios:</p>
             <input @change="onFileSelected($event)" type="file" />
           </form>
         </div>
       </template>
       <template #actions>
-        <m-btn @click="save" :loading="loading" color="primary" small v-if="file">Importar</m-btn>
+        <m-btn
+          @click="save"
+          :loading="loading"
+          color="primary"
+          small
+          v-if="file"
+          >Importar</m-btn
+        >
       </template>
     </brain-dialog>
   </div>
@@ -40,24 +55,42 @@
 
 <script>
 import { formatSegment } from "@/services/schoolCycleService";
-import { loadSchedule } from "@/services/scheduleService";
+import { loadSchedule, getAllSessions } from "@/services/scheduleService";
 import BrainDialog from "@/components/SchoolEditor/BrainDialog";
+import downloadExcel from "vue-json-excel";
 
 export default {
-  components: { BrainDialog },
+  components: { BrainDialog, downloadExcel },
   data: () => ({
     file: null,
-    loading: false
+    nameFile: null,
+    loading: false,
+    scheduleItems: [],
+    scheduleFields: {
+      nivel: "nivel",
+      grado: "grado",
+      seccion: "seccion",
+      curso: "curso",
+      dia: "dia",
+      inicio: "inicio",
+      fin: "fin",
+    },
   }),
   props: ["isVisible", "cycle", "cycleNumber"],
-  async mounted() {},
+  async mounted() {
+    this.nameFile =
+      formatSegment(this.cycle.segment_type, this.cycleNumber) + ".xls";
+    getAllSessions().then((r) => {
+      this.scheduleItems = r;
+    });
+  },
   methods: {
     formatSegment,
     close() {
       this.$emit("close");
     },
     save() {
-      this.loading = true
+      this.loading = true;
       this.showLoading("Guardando");
 
       const formData = new FormData();
@@ -68,15 +101,15 @@ export default {
       loadSchedule(formData)
         .then(() => {
           this.showMessage("", "Horario cargado");
-          this.close()
+          this.close();
         })
         .catch(() => {
           this.showMessage("", "Errores al subir el horario");
         })
-        .finally( () => {
-          this.hideLoading()
-          this.loading = false
-          });
+        .finally(() => {
+          this.hideLoading();
+          this.loading = false;
+        });
     },
     async onFileSelected(e) {
       this.file = e.target.files[0];
