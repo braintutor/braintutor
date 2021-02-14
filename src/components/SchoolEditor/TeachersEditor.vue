@@ -439,7 +439,7 @@ import {
   removeTeacher,
 } from "@/services/teacherService";
 import { updatePasswordByAdmin } from "@/services/userService";
-
+import { exportExcel } from "@/services/excel";
 import * as XLSX from "xlsx";
 
 import UserModel from "@/models/User";
@@ -609,15 +609,7 @@ export default {
       }
       this.hideLoading();
     },
-    exportExcel(rows, filename) {
-      var data = XLSX.utils.json_to_sheet(rows);
-
-      var wb = XLSX.utils.book_new();
-
-      XLSX.utils.book_append_sheet(wb, data, "Hoja 1");
-
-      XLSX.writeFile(wb, `${filename}.xlsx`);
-    },
+    exportExcel,
     generatePasswords() {
       this.new_data = this.new_data.map((item) => ({
         ...item,

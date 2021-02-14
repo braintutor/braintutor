@@ -22,16 +22,10 @@
               Construyendo plantilla de horarios 
               <v-btn loading text></v-btn>
             </div>
-            <download-excel
-              v-if="scheduleItems.length > 0"
-              :name="nameFile"
-              :type="type"
-              :fields="scheduleFields"
-              :data="scheduleItems"
-            >
+            <div v-if="scheduleItems.length > 0" @click="downloadTemplate">
               Descargue la plantilla de horarios
               <v-icon>mdi-download</v-icon>
-            </download-excel>
+            </div>
           </div>
 
           <form @submit.prevent="save()" class="mt-1 pa-4 box">
@@ -58,30 +52,17 @@
 import { formatSegment } from "@/services/schoolCycleService";
 import { loadSchedule, getAllSessions } from "@/services/scheduleService";
 import BrainDialog from "@/components/SchoolEditor/BrainDialog";
-import downloadExcel from "vue-json-excel";
+import { exportExcel } from "@/services/excel";
 
 export default {
-  components: { BrainDialog, downloadExcel },
+  components: { BrainDialog },
   data: () => ({
     file: null,
-    type: "xlsx",
-    nameFile: null,
     loading: false,
     scheduleItems: [],
-    scheduleFields: {
-      nivel: "nivel",
-      grado: "grado",
-      seccion: "seccion",
-      curso: "curso",
-      dia: "dia",
-      inicio: "inicio",
-      fin: "fin",
-    },
   }),
   props: ["isVisible", "cycle", "cycleNumber"],
   async mounted() {
-    this.nameFile =
-      formatSegment(this.cycle.segment_type, this.cycleNumber) + '.' + this.type;
     getAllSessions().then((r) => {
       this.scheduleItems = r;
       this.scheduleItems[0]["dia"] = "lunes"
@@ -90,6 +71,10 @@ export default {
     });
   },
   methods: {
+    downloadTemplate() {
+      const nameFile =  formatSegment(this.cycle.segment_type, this.cycleNumber);
+      exportExcel(this.scheduleItems, nameFile)
+    },
     formatSegment,
     close() {
       this.$emit("close");
