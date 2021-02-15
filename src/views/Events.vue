@@ -1,5 +1,5 @@
 <template>
-  <div class="m-container py-3">
+  <div class="m-container py-3 px-4">
     <div class="filter">
       <span class="filter__text">Mostrar:</span>
       <label class="filter__item">
