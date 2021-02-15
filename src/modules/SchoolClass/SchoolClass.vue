@@ -6,7 +6,6 @@
         <p>12 Marzo | Viernes</p>
       </v-card-title>
       <v-card-text>
-        <!-- <p class="desc">clase de sumas y restas</p> -->
         <div class="d-flex">
           <canvas></canvas>
           <div style="width: 100%">
@@ -14,14 +13,14 @@
             <h3 class="p-canvas">Clase de sumas y restas</h3>
             <div class="d-flex justify-end">
               <v-btn
-                class="mx-4 bt-pencil"
+                class="mx-4"
                 fab
                 dark
                 small
                 color="teal"
               >
                 <v-icon dark>
-                  mdi-pencil
+                  mdi-notebook-edit-outline
                 </v-icon>
               </v-btn>
               <!-- <v-btn
@@ -133,7 +132,7 @@ canvas {
 }
 
 .p-canvas {
-    margin-left: 20px;
+  margin-left: 20px;
 }
 
 .v-card__title {
@@ -144,11 +143,4 @@ canvas {
   padding: 0px 16px 10px;
 }
 
-// .desc {
-//   padding-bottom: 10px;
-// }
-
-// .bt-pencil {
-
-// }
 </style>
