@@ -18,7 +18,6 @@
           class="question mt-5"
         >
           <p class="question__text ma-0 mb-3">
-            <strong>{{ idx + 1 }}.</strong>
             <span class="ml-2">{{ question.question }}</span>
           </p>
           <div v-if="question.image" class="question__image mt-2">
