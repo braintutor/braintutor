@@ -14,16 +14,27 @@
             <h3 class="p-canvas">Clase de sumas y restas</h3>
             <div class="d-flex justify-end">
               <v-btn
-              class="mx-4 bt-pencil"
-              fab
-              dark
-              small
-              color="teal"
-            >
-              <v-icon dark>
-                mdi-pencil
-              </v-icon>
-            </v-btn>
+                class="mx-4 bt-pencil"
+                fab
+                dark
+                small
+                color="teal"
+              >
+                <v-icon dark>
+                  mdi-pencil
+                </v-icon>
+              </v-btn>
+              <!-- <v-btn
+                class="mx-4 bt-pencil"
+                fab
+                dark
+                small
+                color="teal"
+              >
+                <v-icon dark>
+                  mdi-book-open-variant
+                </v-icon>
+              </v-btn> -->
             </div>            
           </div>          
         </div>        
