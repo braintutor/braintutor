@@ -89,14 +89,6 @@
         <SubjectChooser @choose="chooseSubject"></SubjectChooser>
         <GradeChooser @choose="chooseGrade"></GradeChooser>
 
-        <v-text-field
-          v-model="entity.name"
-          :maxlength="CourseModel.name.max_length"
-          label="Nombre"
-          autocomplete="off"
-          required
-          class="mt-4"
-        ></v-text-field>
         <v-select
           v-model="entity.teacher_id"
           :items="teachers_aux"
@@ -166,7 +158,9 @@ import variables from "@/models/variables";
 
 export default {
   components: {
-    BrainDialog,SubjectChooser, GradeChooser
+    BrainDialog,
+    SubjectChooser,
+    GradeChooser,
   },
   data: () => ({
     entities: [],
@@ -214,11 +208,11 @@ export default {
     },
   },
   methods: {
-    chooseGrade(){
-
+    chooseGrade(grade) {
+      this.entity.grade_id = grade._id;
     },
-    chooseSubject(){
-
+    chooseSubject(subject) {
+      this.entity.subject_id = subject.id;
     },
     add() {
       this.action = "create";

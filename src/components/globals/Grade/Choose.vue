@@ -7,6 +7,7 @@
       item-value="_id"
       label="Grado"
       class="mt-4"
+      return-object
     ></v-select>
   </div>
 </template>
@@ -27,8 +28,7 @@ export default {
   },
   methods: {
     choose(item) {
-      const choosed = this.items.find((t) => t._id === item);
-      this.$emit("choose", choosed);
+      this.$emit("choose", item);
     },
   },
 };

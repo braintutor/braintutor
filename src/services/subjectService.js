@@ -4,7 +4,7 @@ function index() {
   //return fetch_get('api/v1/subject')
   return new Promise((resolve) => {
 
-      resolve([ { name: "Matematicas "}]); // ¡Todo salió bien!
+      resolve([ { id: "aa", name: "Matematicas "}]); // ¡Todo salió bien!
   
   });
 }
