@@ -48,12 +48,7 @@
                   >
                     <v-list-item-title>Editar Materia</v-list-item-title>
                   </v-list-item>
-                  <v-list-item
-                    @click="
-                      dialog_remove = true;
-                      entity = e;
-                    "
-                  >
+                  <v-list-item @click="showRemove(e)">
                     <v-list-item-title>Eliminar Materia</v-list-item-title>
                   </v-list-item>
                 </v-list>
@@ -76,21 +71,13 @@
             <v-icon> mdi-close-thick </v-icon>
           </v-btn>
         </div>
-        <v-text-field
-          v-model="entity.name"
-          label="Nombre"
-          required
-        ></v-text-field>
-        <!-- <label>Elegir el color del curso:</label> -->
-        <!-- <v-color-picker
-            class="ma-2"
-            width=560
-            show-swatches
-            hide-canvas
-            hide-sliders
-            hide-inputs
-            flat
-          ></v-color-picker> -->
+        <div class="pa-4">
+          <v-text-field
+            v-model="entity.name"
+            label="Nombre"
+            required
+          ></v-text-field>
+        </div>
       </template>
       <template #actions>
         <m-btn color="primary" type="submit" :loading="loading_save" small
@@ -98,48 +85,17 @@
         >
       </template>
     </brain-dialog>
-    <!-- DIALOG REMOVE -->
-    <v-dialog v-model="dialog_remove" max-width="400">
-      <div class="m-card">
-        <div class="m-card__body close-modal">
-          <h3>¿Desea eliminar?</h3>
-          <v-btn class="mx-2" icon small @click="dialog_remove = false">
-            <v-icon>mdi-close-thick</v-icon>
-          </v-btn>
-        </div>
-        <div class="m-card__actions">
-          <m-btn @click="dialog_remove = false" small class="cancel-button"
-            >Cancelar</m-btn
-          >
-          <m-btn
-            @click="
-              remove();
-              dialog_remove = false;
-            "
-            color="error"
-            small
-            >Eliminar</m-btn
-          >
-        </div>
-      </div>
-    </v-dialog>
   </div>
 </template>
 
 <script>
-
-import {
-  index,
-  add,
-  update,
-  remove,
-} from "@/services/subjectService";
+import { index, add, update, remove } from "@/services/subjectService";
 import BrainDialog from "./BrainDialog";
 import variables from "@/models/variables";
 
 export default {
   components: {
-    BrainDialog
+    BrainDialog,
   },
   data: () => ({
     subjects: [],
@@ -149,13 +105,31 @@ export default {
     dialog_edit: false,
     dialog_remove: false,
     loading_save: false,
-   
+
     variables,
   }),
   async mounted() {
     this.getData();
   },
   methods: {
+    async showRemove(e) {
+      this.entity = e;
+      this.$confirm(
+        {
+          callback: (confirm) => {
+            if (confirm) {
+              this.remove();
+            }
+          },
+          message: `
+           <p class="mt-4">
+            Para eliminar una materia, no deben existir cursos, sessiones que se relacionen a esta.
+          </p>
+          `,
+        },
+        "delete"
+      );
+    },
     async getData() {
       this.showLoading("Cargando materias");
       try {
@@ -180,12 +154,9 @@ export default {
       if (this.action === "create") {
         // Create
         try {
-          this.entity.knowledge = [];
           let entity_id = await add(this.entity);
           this.getData();
           this.entity._id = entity_id;
-          this.entity.units_count = 0;
-          this.entity.materials_count = 0;
           this.dialog_edit = false;
         } catch (error) {
           this.showMessage("", error.msg || error);
