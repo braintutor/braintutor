@@ -78,25 +78,36 @@
             <v-icon> mdi-close-thick </v-icon>
           </v-btn>
         </div>
-        <SubjectChooser @choose="chooseSubject" :value="entity.subject_id"></SubjectChooser>
-        <GradeChooser @choose="chooseGrade" :value="entity.grade_id"></GradeChooser>
-        <TeacherChooser @choose="chooseTeacher" :value="entity.teacher_id" label="Encargado"></TeacherChooser>
+        <SubjectChooser
+          @choose="chooseSubject"
+          :value="entity.subject_id"
+        ></SubjectChooser>
+        <GradeChooser
+          @choose="chooseGrade"
+          :value="entity.grade_id"
+        ></GradeChooser>
+        <TeacherChooser
+          @choose="chooseTeacher"
+          :value="entity.teacher_id"
+          label="Encargado"
+        ></TeacherChooser>
         <label>Elegir el color del curso:</label>
         <v-color-picker
-            class="ma-2"
-            width="350"
-            :swatches="swatches"
-            show-swatches
-            hide-canvas
-            hide-sliders
-            hide-inputs
-            flat
-          ></v-color-picker>
-        </template>
-        <template #actions>
-          <m-btn color="primary" type="submit" :loading="loading_save" small
-            >Guardar</m-btn>
-        </template>
+          class="ma-2"
+          width="350"
+          :swatches="swatches"
+          show-swatches
+          hide-canvas
+          hide-sliders
+          hide-inputs
+          flat
+        ></v-color-picker>
+      </template>
+      <template #actions>
+        <m-btn color="primary" type="submit" :loading="loading_save" small
+          >Guardar</m-btn
+        >
+      </template>
     </brain-dialog>
     <!-- DIALOG REMOVE -->
     <v-dialog v-model="dialog_remove" max-width="400">
@@ -140,10 +151,10 @@ import variables from "@/models/variables";
 
 export default {
   components: {
-    BrainDialog
+    BrainDialog,
   },
   data: () => ({
-    courses:[],
+    courses: [],
     entity: {},
     //
     action: "",
@@ -153,24 +164,24 @@ export default {
     CourseModel,
     variables,
     swatches: [
-      ['#FF0000', '#add8e6', '#FFFF00', '#FFFF00'],
-      ['#FF69B4', '#00FFFF', '#555500', '#555500'],
-      ['#800080', '#008080', '#FFBF00', '#FFBF00'],
-      ['#30106b', '#00FF00', '#FFA500', '#FFA500'],
-      ['#4b0082', '#90ee90', '#ff8c00', '#ff8c00'],
-      ['#0000FF', '#BFFF00', '#A52A2A', '#A52A2A'],
-    ]
+      ["#f00",    "#80ff00", "#0af", "#a0f" ],
+      ["#ff4d00", "#08ff00", "#08f", "#f600ff" ],
+      ["#f90",       "#0f4", "#003bff", "#f0b" ],
+      ["#ffe500", "#00ff91", "#4000ff", "#ff006e" ],
+      ["#cf0",       "#0fd", "#5e00ff", "#000" ],
+      
+    ],
   }),
   async mounted() {
-    this.getData()
+    this.getData();
   },
   methods: {
-    async getData(){
+    async getData() {
       this.showLoading("Cargando Cursos");
       try {
         this.courses = await getCoursesBySchool();
       } catch (error) {
-      this.showMessage("", error.msg || error);
+        this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
@@ -199,7 +210,7 @@ export default {
         try {
           this.entity.knowledge = [];
           let entity_id = await addCourse(this.entity);
-          this.getData()
+          this.getData();
           this.entity._id = entity_id;
           this.entity.units_count = 0;
           this.entity.materials_count = 0;
@@ -211,7 +222,7 @@ export default {
         // Update
         try {
           await updateCourse(this.entity);
-          this.getData()// updates the array without modifying it
+          this.getData(); // updates the array without modifying it
           this.dialog_edit = false;
         } catch (error) {
           this.showMessage("", error.msg || error);
@@ -224,7 +235,7 @@ export default {
       this.dialog_edit = false;
       try {
         await removeCourse(this.entity.id);
-        this.getData()
+        this.getData();
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
@@ -263,4 +274,8 @@ export default {
   margin-right: 8px;
 }
 
+.theme--light.v-color-picker .v-color-picker__dot,
+.theme--light.v-color-picker .v-color-picker__color {
+  height: 36px;
+}
 </style>
