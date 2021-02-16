@@ -101,16 +101,17 @@
             item-value="_id"
             label="Encargado"
           ></v-select>
-          <!-- <label>Elegir el color del curso:</label> -->
-          <!-- <v-color-picker
+          <label>Elegir el color del curso:</label>
+          <v-color-picker
             class="ma-2"
-            width=560
+            width="350"
+            :swatches="swatches"
             show-swatches
             hide-canvas
             hide-sliders
             hide-inputs
             flat
-          ></v-color-picker> -->
+          ></v-color-picker>
         </template>
         <template #actions>
           <m-btn color="primary" type="submit" :loading="loading_save" small
@@ -173,6 +174,14 @@ export default {
     loading_save: false,
     CourseModel,
     variables,
+    swatches: [
+      ['#FF0000', '#add8e6', '#FFFF00', '#FFFF00'],
+      ['#FF69B4', '#00FFFF', '#555500', '#555500'],
+      ['#800080', '#008080', '#FFBF00', '#FFBF00'],
+      ['#30106b', '#00FF00', '#FFA500', '#FFA500'],
+      ['#4b0082', '#90ee90', '#ff8c00', '#ff8c00'],
+      ['#0000FF', '#BFFF00', '#A52A2A', '#A52A2A'],
+    ]
   }),
   async mounted() {
     this.showLoading("Cargando Cursos");
