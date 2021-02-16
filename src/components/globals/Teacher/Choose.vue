@@ -2,11 +2,13 @@
   <div>
     <v-select
       @change="choose"
+      :value="value"
       :items="teachers"
       item-text="name"
       item-value="_id"
-      label="Profesor"
+      :label="label"
       class="mt-4"
+      return-object
     ></v-select>
   </div>
 </template>
@@ -16,6 +18,13 @@ export default {
   data: () => ({
     teachers: [],
   }),
+  props: {
+    "value": String,
+    "label": {
+      type: String,
+      default: "Profesor",
+    },
+  },
   async created() {
     let teachers = this.mongoArr(await this.$api.teacher.getAll());
     this.teachers = teachers.map((t) => ({
@@ -25,8 +34,7 @@ export default {
   },
   methods: {
     choose(item) {
-      const choosed = this.teachers.find((t) => t._id === item);
-      this.$emit("choose", choosed);
+      this.$emit("choose", item);
     },
   },
 };

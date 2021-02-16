@@ -2,6 +2,7 @@
   <div>
     <v-select
       @change="choose"
+      :value="value"
       :items="items"
       item-text="name"
       item-value="id"
@@ -18,6 +19,7 @@ export default {
   data: () => ({
     items: [],
   }),
+  props: ["value"],
   async created() {
     this.items = await index()
   },
