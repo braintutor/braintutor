@@ -5,7 +5,7 @@
         <h2>Cursos</h2>
         <strong class="ml-2 mt-1" style="opacity: 0.5"
           >({{
-            `${entities.length}/${variables.max_courses_per_school}`
+            `${courses.length}/${variables.max_courses_per_school}`
           }})</strong
         >
       </div>
@@ -14,7 +14,7 @@
           dialog_edit = true;
           add();
         "
-        :disabled="entities.length >= variables.max_courses_per_school"
+        :disabled="courses.length >= variables.max_courses_per_school"
         color="primary"
         small
       >
@@ -26,22 +26,14 @@
         <thead>
           <tr>
             <th class="text-left">Nombre</th>
-            <!-- <th class="text-left">Nivel</th>
-            <th class="text-left">Grado</th>  -->
             <th class="text-left">Encargado</th>
-            <!-- <th class="text-left">N° Unidades</th>
-            <th class="text-left">N° Materiales</th> -->
             <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(e, e_idx) in entities_aux" :key="e_idx">
+          <tr v-for="(e, e_idx) in courses" :key="e_idx">
             <td>{{ e.name }}</td>
-            <!-- <td>Primaria</td>
-            <td>3</td> -->
-            <td>{{ e.teacher }}</td>
-            <!-- <td class="text-center">{{ e.units_count }}</td>
-            <td class="text-center">{{ e.materials_count }}</td> -->
+            <td>{{ e.teacher_name }}</td>
             <td class="text-center">
               <v-menu offset-y>
                 <template v-slot:activator="{ on, attrs }">
@@ -72,7 +64,7 @@
           </tr>
         </tbody>
       </table>
-      <p class="text-center mt-2" v-show="entities_aux.length === 0">
+      <p class="text-center mt-2" v-show="courses.length === 0">
         No hay cursos.
       </p>
     </div>
@@ -86,17 +78,10 @@
             <v-icon> mdi-close-thick </v-icon>
           </v-btn>
         </div>
-        <SubjectChooser @choose="chooseSubject"></SubjectChooser>
-        <GradeChooser @choose="chooseGrade"></GradeChooser>
-        <TeacherChooser @choose="chooseTeacher" label="Encargado"></TeacherChooser>
+        <SubjectChooser @choose="chooseSubject" :value="entity.subject_id"></SubjectChooser>
+        <GradeChooser @choose="chooseGrade" :value="entity.grade_id"></GradeChooser>
+        <TeacherChooser @choose="chooseTeacher" :value="entity.teacher_id" label="Encargado"></TeacherChooser>
 
-        <!-- <v-select
-          v-model="entity.teacher_id"
-          :items="teachers_aux"
-          item-text="name"
-          item-value="_id"
-          label="Encargado"
-        ></v-select> -->
         <!-- <label>Elegir el color del curso:</label> -->
         <!-- <v-color-picker
             class="ma-2"
@@ -154,7 +139,6 @@ import {
   updateCourse,
   removeCourse,
 } from "@/services/courseService";
-import { getTeachersBySchool } from "@/services/teacherService";
 import BrainDialog from "./BrainDialog";
 import variables from "@/models/variables";
 
@@ -166,9 +150,8 @@ export default {
     TeacherChooser
   },
   data: () => ({
-    entities: [],
+    courses:[],
     entity: {},
-    teachers: [],
     //
     action: "",
     dialog_edit: false,
@@ -178,39 +161,18 @@ export default {
     variables,
   }),
   async mounted() {
-    this.showLoading("Cargando Cursos");
-    try {
-      this.teachers = await getTeachersBySchool();
-      this.entities = await getCoursesBySchool();
-    } catch (error) {
-      this.showMessage("", error.msg || error);
-    }
-    this.hideLoading();
-  },
-  computed: {
-    teachers_aux() {
-      let teachers = this.teachers.map((t) => ({
-        ...t,
-        name: `${t.last_name}, ${t.first_name}`,
-      }));
-      return teachers;
-    },
-    entities_aux() {
-      let entities = this.entities.map((e) => {
-        let teacher_id = e.teacher_id;
-        if (teacher_id) {
-          let teacher = this.teachers_aux.find(
-            (t) => t._id.$oid === teacher_id.$oid
-          );
-          if (teacher) e.teacher = teacher.name;
-        }
-        return e;
-      });
-      entities.sort((a, b) => a.name.localeCompare(b.name));
-      return entities;
-    },
+    this.getData()
   },
   methods: {
+    async getData(){
+      this.showLoading("Cargando Cursos");
+      try {
+        this.courses = await getCoursesBySchool();
+      } catch (error) {
+      this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
+    },
     chooseGrade(grade) {
       this.entity.grade_id = grade._id;
     },
@@ -226,8 +188,8 @@ export default {
     },
     edit(entity) {
       this.action = "edit";
-      this.entity = JSON.parse(JSON.stringify(entity));
-      this.entity.id = this.entity._id.$oid;
+      this.entity = entity;
+      this.entity.id = this.entity.id;
     },
     async save() {
       this.loading_save = true;
@@ -236,10 +198,10 @@ export default {
         try {
           this.entity.knowledge = [];
           let entity_id = await addCourse(this.entity);
+          this.getData()
           this.entity._id = entity_id;
           this.entity.units_count = 0;
           this.entity.materials_count = 0;
-          this.entities.push(this.entity);
           this.dialog_edit = false;
         } catch (error) {
           this.showMessage("", error.msg || error);
@@ -248,11 +210,7 @@ export default {
         // Update
         try {
           await updateCourse(this.entity);
-          let entity_idx = this.entities.findIndex(
-            (entity) => entity._id.$oid === this.entity.id
-          );
-          this.entities[entity_idx] = JSON.parse(JSON.stringify(this.entity));
-          this.entities.splice(); // updates the array without modifying it
+          this.getData()// updates the array without modifying it
           this.dialog_edit = false;
         } catch (error) {
           this.showMessage("", error.msg || error);
@@ -264,10 +222,8 @@ export default {
       this.showLoading("Eliminando Curso");
       this.dialog_edit = false;
       try {
-        await removeCourse(this.entity._id.$oid);
-        this.entities = this.entities.filter(
-          (e) => e._id.$oid !== this.entity._id.$oid
-        );
+        await removeCourse(this.entity.id);
+        this.getData()
       } catch (error) {
         this.showMessage("", error.msg || error);
       }

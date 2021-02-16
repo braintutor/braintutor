@@ -2,10 +2,11 @@
   <div>
     <v-select
       @change="choose"
+      :value="value"
       :items="items"
       item-text="fullName"
       item-value="_id"
-      label="Grado"
+      :label="label"
       class="mt-4"
       return-object
     ></v-select>
@@ -17,6 +18,10 @@ export default {
   data: () => ({
     items: [],
   }),
+  props: { 
+    "value": String, 
+    "label": { type: String, default: 'Grado' }
+  },
   async created() {
     let grades = this.mongoArr(await this.$api.grade.getAll());
     grades.sort((a, b) => a.name.localeCompare(b.name));
@@ -24,7 +29,6 @@ export default {
       ...grades.filter((g) => g.level === "PRI"),
       ...grades.filter((g) => g.level === "SEC"),
     ].map( x =>  { return {...x, fullName: x["name"] + '° ' + x["level"] }})
-    console.log(this.items)
   },
   methods: {
     choose(item) {
