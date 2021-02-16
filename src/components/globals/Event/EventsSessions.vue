@@ -27,7 +27,6 @@
         />Evaluaciones
       </label>
     </div>
-
     <div class="m-legend">
       <div
         class="m-legend__item"
@@ -41,7 +40,6 @@
         ></div>
       </div>
     </div>
-
     <m-calendar :events="events_f">
       <template v-slot:event_info="{ event }">
         <div>
@@ -177,7 +175,6 @@ export default {
   },
 };
 </script>
-
 
 <style lang='scss' scoped>
 .filter {

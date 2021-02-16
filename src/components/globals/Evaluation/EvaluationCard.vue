@@ -5,7 +5,6 @@
       :height="4"
       color="#84b5ff"
     ></v-progress-linear>
-
     <div class="m-card__body">
       <div
         class="mb-3"
@@ -42,7 +41,6 @@
 
       <slot></slot>
     </div>
-
     <div v-if="buttons" class="evaluation__actions m-card__actions">
       <v-tooltip v-for="(button, idx) in buttons" :key="idx" bottom>
         <template v-slot:activator="{ on }">

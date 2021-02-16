@@ -21,7 +21,6 @@
           required
           rows="3"
         ></v-textarea>
-
         <!-- FILES -->
         <div class="files mt-4">
           <div class="files__menu mb-4">
@@ -74,7 +73,6 @@
             No hay Archivos.
           </p>
         </div>
-
         <div class="mt-5">
           <label>
             <input v-model="material.is_private" type="checkbox" class="mr-3" />
@@ -82,7 +80,6 @@
           </label>
         </div>
       </div>
-
       <div class="m-card__actions">
         <m-btn
           v-if="material._id"
@@ -105,7 +102,6 @@
           >Guardar</m-btn
         >
       </div>
-
       <v-dialog
         v-model="show_files"
         v-if="document_type && document_id"
@@ -120,7 +116,6 @@
           style="height: 75vh"
         />
       </v-dialog>
-
       <v-dialog v-model="show_remove" max-width="400">
         <div class="m-card">
           <div class="m-card__body">
@@ -150,7 +145,6 @@
           </div>
         </div>
       </v-dialog>
-
       <v-dialog v-model="show_date" width="320">
         <form @submit.prevent="show_date = false" class="m-card">
           <div class="m-card__body">
@@ -266,7 +260,6 @@ export default {
   display: block;
   background: rgba(0, 0, 255, 0.07);
   border-radius: 6px;
-
   display: flex;
   align-items: center;
 
@@ -275,7 +268,6 @@ export default {
     flex-grow: 1;
     color: rgba(0, 0, 0, 0.75);
     text-decoration: none;
-
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -288,7 +280,6 @@ export default {
   &__type {
     padding: 16px;
     opacity: 0.6;
-
     display: flex;
     align-items: center;
 

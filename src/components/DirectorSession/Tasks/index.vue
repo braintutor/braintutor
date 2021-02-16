@@ -22,7 +22,6 @@
         No hay Tareas
       </div>
     </div>
-
     <!-- TASK -->
     <Task
       v-if="task_show_id"

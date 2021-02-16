@@ -30,7 +30,6 @@
         No hay Evaluaciones
       </div>
     </div>
-
     <div v-if="evaluation_selected">
       <div class="m-menu mb-3">
         <div class="m-menu__left">

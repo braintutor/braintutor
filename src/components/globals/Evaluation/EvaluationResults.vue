@@ -33,7 +33,6 @@
                         v-bind="attrs"
                         v-on="on"
                         @click="showEvaluationStudent(item)"
-                        
                       >
                         <v-icon>mdi-magnify</v-icon>              
                       </v-btn>
@@ -43,16 +42,13 @@
                 </template>
               </v-text-field>    
           </div>
-
           <!--:disabled="!student.has_answer" 
              <td v-for="(button, idx) in buttons" :key="idx" @click="button.action(student)">
             <v-btn>{{ button.text }}</v-btn>
           </td> -->
-
         </template>
       </v-data-table>
     </div>
-
     <div v-if="show_evaluation_result">
       <div class="m-menu mb-3">
         <div class="m-menu__left">
@@ -73,7 +69,6 @@
 import EvaluationStudent from "./EvaluationStudent";
 import { scoreEvaluation, publishScores } from "@/services/evaluationResultService";
 import { getResults } from "@/services/evaluationService";
-
 
 export default {
   props: {
@@ -167,7 +162,6 @@ $size-box-sm:20px;
   width: $size-icon;
   height: $size-icon;
   border-radius: 8px;
-
   display: flex;
   justify-content: center;
   align-items: center;

@@ -160,7 +160,6 @@
       "
       :material="course_material"
     />
-
     <!-- DIALOG NEW UNIT -->
     <v-dialog v-model="dlg_new_unit" width="400" persistent>
       <form @submit.prevent="addUnit()" class="m-card">
@@ -191,7 +190,6 @@
         </div>
       </form>
     </v-dialog>
-
     <!-- DIALOG EDIT UNIT -->
     <v-dialog v-model="dlg_edit_unit" width="400" persistent>
       <form @submit.prevent="updateUnit()" class="m-card">
@@ -222,7 +220,6 @@
         </div>
       </form>
     </v-dialog>
-
     <!-- DIALOG REMOVE UNIT -->
     <v-dialog v-model="dlg_remove_unit" max-width="400">
       <div class="m-card">
@@ -253,7 +250,6 @@
         </div>
       </div>
     </v-dialog>
-
     <!-- DIALOG NEW ITEM -->
     <v-dialog v-model="dlg_new_item" width="400" persistent>
       <div class="m-card">
@@ -288,7 +284,6 @@
         </div>
       </div>
     </v-dialog>
-
     <!-- DIALOG EDIT ITEM -->
     <v-dialog v-model="dlg_edit_item" width="400" persistent>
       <form @submit.prevent="updateItemUnit()" class="m-card">
@@ -321,7 +316,6 @@
         </div>
       </form>
     </v-dialog>
-
     <!-- DIALOG EDIT ITEM NAME -->
     <v-dialog v-model="dlg_edit_item_name" width="400" persistent>
       <form @submit.prevent="updateItemName()" class="m-card">
@@ -360,7 +354,6 @@
         </div>
       </form>
     </v-dialog>
-
     <!-- DAILOG REMOVE ITEM -->
     <v-dialog v-model="dlg_remove_item" max-width="400">
       <div class="m-card">
@@ -391,7 +384,6 @@
         </div>
       </div>
     </v-dialog>
-
     <!-- DIALOG NEW COURSE ADAPTIVE -->
     <v-dialog v-model="dlg_new_course_adaptive" width="400" persistent>
       <form @submit.prevent="addCourseAdaptive()" class="m-card">
@@ -795,7 +787,6 @@ export default {
   margin-top: 8px;
   background: #dfdfdf;
   border-radius: 12px;
-
   display: flex;
   justify-content: space-between;
   align-items: center;

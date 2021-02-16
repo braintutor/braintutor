@@ -5,9 +5,7 @@
         <v-icon class="mr-2" small>mdi-content-save</v-icon>Guardar
       </v-btn>
     </div>
-
     <div :id="id"></div>
-
     <v-dialog
       v-model="showFiles"
       v-if="document_type && document_id"
@@ -27,7 +25,6 @@
 
 <script>
 import Files from "@/components/globals/File/Files";
-
 import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
 import List from "@editorjs/list";
@@ -37,10 +34,8 @@ import Marker from "@editorjs/marker";
 import LinkTool from "@editorjs/link";
 import Delimiter from "@editorjs/delimiter";
 import Table from "@editorjs/table";
-
 import Image from "./Image";
 import Embed from "./Embed";
-
 import { convertToHMTL } from "@/services/editor";
 
 export default {

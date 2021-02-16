@@ -18,7 +18,6 @@
       >
       <p class="ma-0 mt-3">{{ size }}</p>
     </div>
-
     <div class="files__body pb-3">
       <div v-show="loading" style="width: max-content" class="pa-4 mx-auto">
         <v-progress-circular
@@ -28,7 +27,6 @@
           color="var(--color-subtitle)"
         ></v-progress-circular>
       </div>
-
       <div v-show="!loading">
         <div v-show="show === 'LIST'">
           <p v-show="files_f.length <= 0" class="text-center my-3">
@@ -101,7 +99,6 @@
         </div>
       </div>
     </div>
-
     <!-- DLG REMOVE -->
     <v-dialog v-model="dlg_remove" max-width="400">
       <div class="m-card">
