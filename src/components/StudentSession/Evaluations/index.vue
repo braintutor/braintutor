@@ -137,11 +137,9 @@
     <Evaluation
       v-if="evaluation_to_start"
       :evaluation="evaluation_to_start"
-      :unselect="
-        () => {
-          evaluation_to_start = null;
-          init();
-        }
+      @onExit="
+        evaluation_to_start = null;
+        init();
       "
     />
   </div>
@@ -150,10 +148,6 @@
 <script>
 import Evaluation from "./Evaluation";
 import EvaluationResult from "./EvaluationResult";
-import {
-  getEvaluationsBySessionStudent,
-  getEvaluationByStudent,
-} from "@/services/evaluationService";
 
 export default {
   data: () => ({
@@ -182,11 +176,8 @@ export default {
 
       this.showLoading("Cargando Evaluaciones");
       try {
-        let evaluations = this.mongoArr(
-          await getEvaluationsBySessionStudent(session_id)
-        );
-        let results = (await this.$api.evaluation.getSessionResults(session_id))
-          .results;
+        let evaluations = await this.$api.evaluation.getAll(session_id);
+        let results = await this.$api.evaluation.getSessionResults(session_id);
 
         evaluations.forEach((evaluation) => {
           evaluation.result = this.getResult(evaluation, results);
@@ -202,7 +193,9 @@ export default {
     async startEvaluation(evaluation) {
       this.showLoading("Cargando Evaluación");
       try {
-        this.evaluation_to_start = await getEvaluationByStudent(evaluation._id);
+        this.evaluation_to_start = this.mongo(
+          await this.$api.evaluation.takeExam(evaluation.id)
+        );
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
@@ -211,7 +204,9 @@ export default {
     async showResult(evaluation) {
       this.showLoading("Cargando Resultados");
       try {
-        this.evaluation_selected = await getEvaluationByStudent(evaluation._id);
+        this.evaluation_selected = this.mongo(
+          await this.$api.evaluation.takeExam(evaluation.id)
+        );
         this.dlg_result = true;
         this.result_selected = evaluation.result;
       } catch (error) {
@@ -222,7 +217,7 @@ export default {
     //
     getResult(evaluation, results) {
       let result = results.find(
-        (result) => result.evaluation.id === evaluation._id
+        (result) => result.evaluation.id === evaluation.id
       );
       return result;
     },
@@ -233,6 +228,7 @@ export default {
     },
     //
     toDateString(date) {
+      date = new Date(date + "Z");
       let date_format = date.toLocaleDateString("es-ES", {
         day: "2-digit",
         month: "2-digit",
@@ -288,7 +284,7 @@ $grid-template-columns: 4fr 3fr 3fr 1fr 100px;
     align-items: center;
   }
 
-   &--disabled {
+  &--disabled {
     background: #f7f7f7;
     .evaluation__name,
     .evaluation__date {

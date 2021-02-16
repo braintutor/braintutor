@@ -25,6 +25,7 @@ const variables = {
   max_users_per_school: 1000, // addStudent, addTeacher
   max_courses_per_school: 100, // addCourse
   max_sessions_per_school: 100, // addSession
+  max_subjects_per_school: 100,
 
   max_units_per_course: 20, // addUnit
   max_materials_per_course: 100, // addMaterial

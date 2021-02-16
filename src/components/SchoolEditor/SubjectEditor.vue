@@ -2,11 +2,9 @@
   <div class="editor">
     <div class="editor__menu">
       <div class="editor__title">
-        <h2>Cursos</h2>
+        <h2>Materias</h2>
         <strong class="ml-2 mt-1" style="opacity: 0.5"
-          >({{
-            `${courses.length}/${variables.max_courses_per_school}`
-          }})</strong
+          >({{ `${subjects.length}` }})</strong
         >
       </div>
       <m-btn
@@ -14,7 +12,7 @@
           dialog_edit = true;
           add();
         "
-        :disabled="courses.length >= variables.max_courses_per_school"
+        :disabled="subjects.length >= variables.max_subjects_per_school"
         color="primary"
         small
       >
@@ -26,14 +24,14 @@
         <thead>
           <tr>
             <th class="text-left">Nombre</th>
-            <th class="text-left">Encargado</th>
+            <th class="text-left">Color</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(e, e_idx) in courses" :key="e_idx">
+          <tr v-for="(e, e_idx) in subjects" :key="e_idx">
             <td>{{ e.name }}</td>
-            <td>{{ e.teacher_name }}</td>
+            <td>{{ e.color }}</td>
             <td class="text-center">
               <v-menu offset-y>
                 <template v-slot:activator="{ on, attrs }">
@@ -48,15 +46,10 @@
                       edit(e);
                     "
                   >
-                    <v-list-item-title>Editar Curso</v-list-item-title>
+                    <v-list-item-title>Editar Materia</v-list-item-title>
                   </v-list-item>
-                  <v-list-item
-                    @click="
-                      dialog_remove = true;
-                      entity = e;
-                    "
-                  >
-                    <v-list-item-title>Eliminar Curso</v-list-item-title>
+                  <v-list-item @click="showRemove(e)">
+                    <v-list-item-title>Eliminar Materia</v-list-item-title>
                   </v-list-item>
                 </v-list>
               </v-menu>
@@ -64,44 +57,27 @@
           </tr>
         </tbody>
       </table>
-      <p class="text-center mt-2" v-show="courses.length === 0">
-        No hay cursos.
+      <p class="text-center mt-2" v-show="subjects.length === 0">
+        No hay materias.
       </p>
     </div>
     <!-- DIALOG CREATE|EDIT -->
     <brain-dialog v-model="dialog_edit" @submit="save" :loading="loading_save">
       <template #body>
         <div class="close-modal">
-          <h3 v-if="action === 'create'">Crear curso</h3>
+          <h3 v-if="action === 'create'">Crear materia</h3>
           <h3 v-else>Editar</h3>
           <v-btn class="mx-2" icon small @click="dialog_edit = false">
             <v-icon> mdi-close-thick </v-icon>
           </v-btn>
         </div>
-        <SubjectChooser
-          @choose="chooseSubject"
-          :value="entity.subject_id"
-        ></SubjectChooser>
-        <GradeChooser
-          @choose="chooseGrade"
-          :value="entity.grade_id"
-        ></GradeChooser>
-        <TeacherChooser
-          @choose="chooseTeacher"
-          :value="entity.teacher_id"
-          label="Encargado"
-        ></TeacherChooser>
-        <label>Elegir el color del curso:</label>
-        <v-color-picker
-          class="ma-2"
-          width="350"
-          :swatches="swatches"
-          show-swatches
-          hide-canvas
-          hide-sliders
-          hide-inputs
-          flat
-        ></v-color-picker>
+        <div class="pa-4">
+          <v-text-field
+            v-model="entity.name"
+            label="Nombre"
+            required
+          ></v-text-field>
+        </div>
       </template>
       <template #actions>
         <m-btn color="primary" type="submit" :loading="loading_save" small
@@ -109,98 +85,61 @@
         >
       </template>
     </brain-dialog>
-    <!-- DIALOG REMOVE -->
-    <v-dialog v-model="dialog_remove" max-width="400">
-      <div class="m-card">
-        <div class="m-card__body close-modal">
-          <h3>¿Desea eliminar?</h3>
-          <v-btn class="mx-2" icon small @click="dialog_remove = false">
-            <v-icon>mdi-close-thick</v-icon>
-          </v-btn>
-        </div>
-        <div class="m-card__actions">
-          <m-btn @click="dialog_remove = false" small class="cancel-button"
-            >Cancelar</m-btn
-          >
-          <m-btn
-            @click="
-              remove();
-              dialog_remove = false;
-            "
-            color="error"
-            small
-            >Eliminar</m-btn
-          >
-        </div>
-      </div>
-    </v-dialog>
   </div>
 </template>
 
 <script>
-import CourseModel from "@/models/Course";
-
-import {
-  getCoursesBySchool,
-  addCourse,
-  updateCourse,
-  removeCourse,
-} from "@/services/courseService";
+import { index, add, update, remove } from "@/services/subjectService";
 import BrainDialog from "./BrainDialog";
 import variables from "@/models/variables";
-
-import TeacherChooser from "@/components/globals/Teacher/Choose"
-import SubjectChooser from "@/components/globals/Subject/Choose"
-import GradeChooser from "@/components/globals/Grade/Choose"
 
 export default {
   components: {
     BrainDialog,
-    SubjectChooser,
-    GradeChooser,
-    TeacherChooser
   },
   data: () => ({
-    courses: [],
+    subjects: [],
     entity: {},
     //
     action: "",
     dialog_edit: false,
     dialog_remove: false,
     loading_save: false,
-    CourseModel,
+
     variables,
-    swatches: [
-      ["#f00",    "#80ff00", "#0af", "#a0f" ],
-      ["#ff4d00", "#08ff00", "#08f", "#f600ff" ],
-      ["#f90",       "#0f4", "#003bff", "#f0b" ],
-      ["#ffe500", "#00ff91", "#4000ff", "#ff006e" ],
-      ["#cf0",       "#0fd", "#5e00ff", "#000" ],
-      
-    ],
   }),
   async mounted() {
     this.getData();
   },
   methods: {
+    async showRemove(e) {
+      this.entity = e;
+      this.$confirm(
+        {
+          callback: (confirm) => {
+            if (confirm) {
+              this.remove();
+            }
+          },
+          message: `
+           <p class="mt-4">
+            Para eliminar una materia, no deben existir cursos, sessiones que se relacionen a esta.
+          </p>
+          `,
+        },
+        "delete"
+      );
+    },
     async getData() {
-      this.showLoading("Cargando Cursos");
+      this.showLoading("Cargando materias");
       try {
-        this.courses = await getCoursesBySchool();
+        this.subjects = await index();
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
-    chooseGrade(grade) {
-      this.entity.grade_id = grade._id;
-    },
-    chooseSubject(subject) {
-      this.entity.subject_id = subject.id;
-    },
-    chooseTeacher(teacher) {
-      this.entity.teacher_id = teacher._id;
-    },
+
     add() {
       this.action = "create";
       this.entity = {};
@@ -215,12 +154,9 @@ export default {
       if (this.action === "create") {
         // Create
         try {
-          this.entity.knowledge = [];
-          let entity_id = await addCourse(this.entity);
+          let entity_id = await add(this.entity);
           this.getData();
           this.entity._id = entity_id;
-          this.entity.units_count = 0;
-          this.entity.materials_count = 0;
           this.dialog_edit = false;
         } catch (error) {
           this.showMessage("", error.msg || error);
@@ -228,7 +164,7 @@ export default {
       } else if (this.action === "edit") {
         // Update
         try {
-          await updateCourse(this.entity);
+          await update(this.entity);
           this.getData(); // updates the array without modifying it
           this.dialog_edit = false;
         } catch (error) {
@@ -241,7 +177,7 @@ export default {
       this.showLoading("Eliminando Curso");
       this.dialog_edit = false;
       try {
-        await removeCourse(this.entity.id);
+        await remove(this.entity.id);
         this.getData();
       } catch (error) {
         this.showMessage("", error.msg || error);
@@ -252,7 +188,7 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .editor {
   padding: 10px 16px;
   &__menu {
@@ -279,10 +215,5 @@ export default {
   background: none;
   border: 1px solid gray;
   margin-right: 8px;
-}
-
-.theme--light.v-color-picker .v-color-picker__dot,
-.theme--light.v-color-picker .v-color-picker__color {
-  height: 36px;
 }
 </style>

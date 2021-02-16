@@ -16,7 +16,7 @@
           <div v-if="c.image" class="question__image">
             <img :src="c.image" />
           </div>
-          <v-radio-group v-model="c.answer">
+          <v-radio-group v-model="answers[c_idx].alternative">
             <v-radio
               class="question__alternative"
               v-for="(alternative, a_idx) in c.alternatives"
@@ -73,46 +73,41 @@
 </template>
 
 <script>
-import {
-  updateEvaluationAnswers,
-  finishEvaluation,
-} from "@/services/evaluationService";
-
 export default {
-  props: ["evaluation", "unselect"],
+  props: ["evaluation"],
   data: () => ({
     time_remaining: 0,
     time_total: 0,
+    answers: [],
     //
     dlg_save: false,
     dlg_save_msg: "",
   }),
+  created() {
+    this.answers = Array(this.evaluation.content.length).fill({});
+  },
   methods: {
     async save() {
       this.showLoading("Guardando Respuestas");
-      let evaluation_id = this.evaluation._id.$oid;
-      let answers = this.evaluation.content.map((c) => {
-        return c.answer != null ? c.answer : -1;
-      });
       try {
-        await updateEvaluationAnswers(evaluation_id, answers);
+        await this.$api.evaluation.updateAnswers(this.evaluation._id, {
+          answers: this.answers,
+        });
       } catch (error) {
         this.showMessage("", error.msg || error);
-        this.unselect();
       }
       this.hideLoading();
     },
     async finish() {
       await this.save();
       this.showLoading("Finalizando Evaluación");
-      let evaluation_id = this.evaluation._id.$oid;
       try {
-        await finishEvaluation(evaluation_id);
+        await this.$api.evaluation.finishExam(this.evaluation._id);
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
       this.hideLoading();
-      this.unselect();
+      this.$emit("onExit");
     },
     saveAction() {
       let answer = this.evaluation.content.map((c) => c.answer);

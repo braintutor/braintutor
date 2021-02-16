@@ -1,122 +1,63 @@
 <template>
   <div style="height: 100%">
-    <div class="m-container" v-if="!evaluation">
+    <div v-show="!show_editor" class="list m-container">
       <!-- MENU -->
-      <div class="evaluations__menu mb-3">
-        <strong
-          v-show="$store.state.show_limits"
-          class="mt-1"
-          style="opacity: 0.5"
-          >({{
-            `${evaluations.length}/${variables.max_evaluations_per_session}`
-          }})</strong
-        >
-        <div></div>
-        <m-btn
-          @click="create()"
-          :disabled="
-            evaluations.length >= variables.max_evaluations_per_session
-          "
-          color="primary"
-          small
-        >
+      <div class="list__menu">
+        <m-btn @click="create()" color="primary" small>
           <v-icon left style="font-size: 0.9rem">mdi-plus</v-icon>Crear
-          Evaluación
-        </m-btn>
+          Evaluación</m-btn
+        >
       </div>
       <!-- EVALUATIONS -->
-      <EvaluationCard
-        v-for="evaluation in evaluations_filtered"
-        :key="evaluation._id"
-        :name="evaluation.name"
-        :time_start="evaluation.time_start"
-        :time_end="evaluation.time_end"
-        :isPublic="evaluation.public"
-        :items="[
-          {
-            label: 'N° Preguntas',
-            value: `${evaluation.content.length} preguntas`,
-          },
-        ]"
-        :buttons="[
-          {
-            text: evaluation.public ? 'Ver Evaluación' : 'Editar',
-            icon: evaluation.public ? 'mdi-eye' : 'mdi-pencil',
-            color: 'primary',
-            action: () => {
-              select(evaluation);
-            },
-          },
-          {
-            text: 'Resultados',
-            icon: 'mdi-poll',
-            color: 'primary',
-            action: () => {
-              results(evaluation);
-            },
-            disabled: !evaluation.public,
-          },
-          {
-            text: 'Modificar Tiempo',
-            icon: 'mdi-clock-time-two-outline',
-            color: 'success',
-            action: () => {
-              showUpdateTime(evaluation);
-            },
-            disabled: !evaluation.public,
-          },
-          {
-            text: 'Eliminar',
-            icon: 'mdi-delete',
-            color: 'error',
-            action: () => {
-              dlg_remove = true;
-              evaluation_selected = evaluation;
-            },
-          },
-        ]"
-        class="mb-3"
-      />
-      <div class="text-center" v-show="evaluations_filtered.length === 0">
-        No hay evaluaciones.
+      <div class="header">
+        <span class="header__name">Nombre</span>
+        <span class="header__name">Inicio</span>
+        <span class="header__name">Fin</span>
       </div>
-      <!-- DLG UPDATE TIME -->
-      <v-dialog v-model="dlg_update_time" max-width="450" persistent>
-        <div class="m-card">
-          <div class="m-card__body">
-            <div class="close-modal">
-              <h3>Modificar Tiempo</h3>
-              <v-btn class="mx-2" icon small @click="dlg_update_time = false">
-                <v-icon> mdi-close-thick </v-icon>
+      <div
+        v-for="(evaluation, idx) in evaluations_filtered"
+        :key="idx"
+        class="evaluation mb-2"
+        :class="{ 'evaluation--disabled': !evaluation.is_public }"
+      >
+        <span class="evaluation__name">{{ evaluation.name }}</span>
+        <span class="evaluation__date">{{
+          toDateString(evaluation.time_start)
+        }}</span>
+        <span class="evaluation__date">{{
+          toDateString(evaluation.time_end)
+        }}</span>
+        <div class="evaluation__options">
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+              <v-btn @click="showEditor(evaluation)" v-on="on" icon small>
+                <v-icon style="font-size: 1.3rem">
+                  {{ evaluation.is_public ? "mdi-eye" : "mdi-pencil" }}
+                </v-icon>
               </v-btn>
-            </div>
-            <div v-if="evaluation_selected" class="mt-4">
-              <span class="mr-4">Tiempo de Fin:</span>
-              <date-time v-model="evaluation_selected.time_end_f" />
-            </div>
-          </div>
-          <div class="m-card__actions">
-            <m-btn
-              @click="dlg_update_time = false"
-              class="cancel-button"
-              small
-              text
-              >Cancelar</m-btn
-            >
-            <m-btn
-              @click="
-                dlg_update_time = false;
-                updateTime();
-              "
-              color="primary"
-              small
-              class="ml-2"
-              >Guardar</m-btn
-            >
-          </div>
+            </template>
+            <span style="font-size: 0.75rem">{{
+              evaluation.is_public ? "Ver" : "Editar"
+            }}</span>
+          </v-tooltip>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                @click="showRemove(evaluation)"
+                v-on="on"
+                icon
+                small
+                class="ml-2"
+              >
+                <v-icon style="font-size: 1.3rem"> mdi-delete </v-icon>
+              </v-btn>
+            </template>
+            <span style="font-size: 0.75rem">Eliminar</span>
+          </v-tooltip>
         </div>
-      </v-dialog>
-      <!-- Dialog Remove -->
+      </div>
+
+      <!-- DLG REMOVE -->
       <v-dialog v-model="dlg_remove" max-width="400">
         <div class="m-card">
           <div class="m-card__body">
@@ -135,10 +76,7 @@
               >Cancelar</m-btn
             >
             <m-btn
-              @click="
-                dlg_remove = false;
-                remove();
-              "
+              @click="remove(evaluation_selected)"
               color="error"
               small
               class="ml-2"
@@ -148,114 +86,53 @@
         </div>
       </v-dialog>
     </div>
+
+    <!-- EVALUATION EDITOR -->
     <EvaluationEditor
-      v-else-if="edit"
-      :evaluation="evaluation"
-      :unselect="unselect"
+      v-if="show_editor"
+      :evaluation="evaluation_selected"
+      @onClose="
+        show_editor = false;
+        init();
+      "
     />
-    <!-- EVALUATION RESULTS -->
-    <div class="m-container" v-else>
-      <div class="m-menu mb-3">
-        <div class="m-menu__left">
-          <v-btn icon @click="unselect()">
-            <v-icon style="font-size: 1.4rem">mdi-arrow-left</v-icon>
-          </v-btn>
-          <span class="m-menu__title">{{ evaluation.name }}</span>
-        </div>
-      </div>
-      <EvaluationResults
-        ref="evaluation_results"
-        :evaluation="evaluation"
-        :buttons="[
-          {
-            text: 'Eliminar Nota',
-            action: showRemoveResult,
-          },
-        ]"
-      />
-    </div>
-    <!-- DLG REMOVE RESULT -->
-    <v-dialog v-model="dlg_remove_result" max-width="400">
-      <div class="m-card">
-        <div class="m-card__body">
-          <div class="close-modal">
-            <h3>Confirmar eliminación</h3>
-            <v-btn class="mx-2" icon small @click="dlg_remove_result = false">
-              <v-icon> mdi-close-thick </v-icon>
-            </v-btn>
-          </div>
-          <p class="mt-4">
-            Si elimina la nota actual, el alumno podrá realizar el examen otra
-            vez.
-          </p>
-        </div>
-        <div class="m-card__actions">
-          <m-btn @click="dlg_remove_result = false" small class="cancel-button"
-            >Cancelar</m-btn
-          >
-          <m-btn
-            @click="
-              dlg_remove_result = false;
-              removeResult();
-            "
-            color="error"
-            small
-            class="ml-2"
-            >Eliminar</m-btn
-          >
-        </div>
-      </div>
-    </v-dialog>
   </div>
 </template>
 
 <script>
-import EvaluationCard from "@/components/globals/Evaluation/EvaluationCard";
 import EvaluationEditor from "./EvaluationEditor";
-import EvaluationResults from "./EvaluationResults";
 
-import {
-  getEvaluationsBySession,
-  addEvaluation,
-  deleteEvaluation,
-  removeResult,
-} from "@/services/evaluationService";
 import { getStudentsBySession } from "@/services/studentService";
-import { getParam } from "@/services/router.js";
-import { copy } from "@/services/object.js";
-import variables from "@/models/variables";
-import DateTime from "@/components/globals/DateTime";
 
 export default {
   data: () => ({
     session_id: "",
-    evaluation: null,
-    evaluation_selected: null,
     evaluations: [],
-    students: [],
-    student_selected: null,
-    edit: false,
-    dlg_update_time: false,
+    evaluation_selected: null,
+    //
+    show_editor: false,
     dlg_remove: false,
-    dlg_remove_result: false,
-    variables,
   }),
-  async mounted() {
-    this.session_id = getParam("session_id");
-    this.getEvaluations();
-  },
   computed: {
     evaluations_filtered() {
-      return this.orderObjectsByDate(this.evaluations, "time_start");
+      let evaluations = this.evaluations.map((e) => e);
+      evaluations.sort(
+        (a, b) => new Date(b.time_start) - new Date(a.time_start)
+      );
+      return evaluations;
     },
   },
+  async created() {
+    this.session_id = this.$route.params["session_id"];
+    await this.init();
+  },
   methods: {
-    async getEvaluations() {
+    async init() {
+      this.evaluations = [];
+
       this.showLoading("Cargando Evaluaciones");
       try {
-        this.evaluations = this.mongoArr(
-          await getEvaluationsBySession(this.session_id)
-        );
+        this.evaluations = await this.$api.evaluation.getAll(this.session_id);
         this.students = this.mongoArr(
           await getStudentsBySession(this.session_id)
         );
@@ -265,8 +142,6 @@ export default {
       this.hideLoading();
     },
     async create() {
-      this.showLoading("Creando Evaluación");
-
       let now = () => {
         let date = new Date();
         date.setSeconds(0, 0);
@@ -288,100 +163,119 @@ export default {
           },
         ],
       };
+
+      this.showLoading("Creando Evaluación");
       try {
-        let evaluation_id = await addEvaluation(
-          this.session_id,
-          new_evaluation
-        );
-        new_evaluation._id = evaluation_id.$oid;
-        this.evaluations.push(new_evaluation);
-        this.select(new_evaluation);
+        let { id } = await this.$api.evaluation.add({
+          session: this.session_id,
+          ...new_evaluation,
+        });
+        new_evaluation.id = id;
+        await this.showEditor(new_evaluation);
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
-    async remove() {
+    async remove(evaluation) {
+      this.dlg_remove = false;
       this.showLoading("Eliminando");
       try {
-        await deleteEvaluation(this.evaluation_selected._id);
+        await this.$api.evaluation.remove(evaluation.id);
         this.evaluations = this.evaluations.filter(
-          (e) => e._id !== this.evaluation_selected._id
+          (e) => e.id !== evaluation.id
         );
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
-    async removeResult() {
-      this.showLoading("Eliminando Resultado");
-      let student_id = this.student_selected._id;
+    async showEditor(evaluation) {
+      this.showLoading("Cargando Evaluación");
       try {
-        await removeResult(this.evaluation._id, student_id);
-        this.evaluation.results = this.evaluation.results.filter(
-          (result) => result._id !== student_id
+        this.evaluation_selected = this.mongo(
+          await this.$api.evaluation.get(evaluation.id)
         );
-        this.$refs.evaluation_results.init();
+        this.show_editor = true;
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
-    async updateTime() {
-      this.showLoading("Guardando Cambios");
-      let evaluation_id = this.evaluation_selected._id;
-      let evaluation_time_end = new Date(this.evaluation_selected.time_end_f);
-      try {
-        await this.$api.evaluation.update(evaluation_id, evaluation_time_end);
-        this.evaluation_selected.time_end = evaluation_time_end;
-      } catch (error) {
-        this.showMessage("", error.msg || error);
-      }
-      this.hideLoading();
-    },
-    showUpdateTime(evaluation) {
-      this.dlg_update_time = true;
+    async showRemove(evaluation) {
       this.evaluation_selected = evaluation;
-      this.evaluation_selected.time_end_f = new Date(
-        this.evaluation_selected.time_end
-      );
+      this.dlg_remove = true;
     },
-    showRemoveResult(student) {
-      this.dlg_remove_result = true;
-      this.student_selected = student;
-    },
-    select(evaluation) {
-      this.edit = true;
-      this.evaluation = Object.assign({}, evaluation);
-    },
-    unselect() {
-      this.evaluation = null;
-      this.getEvaluations();
-    },
-    results(evaluation) {
-      this.edit = false;
-      this.evaluation = copy(evaluation);
-    },
-    formatDate(date) {
-      let date_f = new Date();
-      date_f.setTime(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
-      date_f = date_f.toISOString().substring(0, 16);
-      return date_f;
+    //
+    toDateString(date) {
+      date = new Date(date + "Z");
+      let date_format = date.toLocaleDateString("es-ES", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      return date_format;
     },
   },
   components: {
-    EvaluationCard,
     EvaluationEditor,
-    EvaluationResults,
-    DateTime,
   },
 };
 </script>
 
 <style lang='scss' scoped>
-.evaluations__menu {
-  display: flex;
-  justify-content: space-between;
+.list {
+  &__menu {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+$grid-template-columns: 4fr 3fr 3fr 100px;
+
+.header {
+  padding: 12px 20px;
+  font-size: 1rem;
+  display: grid;
+  grid-template-columns: $grid-template-columns;
+
+  &__name {
+    font-weight: bold;
+  }
+}
+
+.evaluation {
+  padding: 12px 20px;
+  font-size: 0.9rem;
+  background: #e8e8ff;
+  border-radius: 12px;
+  transition: 0.3s;
+  display: grid;
+  grid-template-columns: $grid-template-columns;
   align-items: center;
+
+  &__name {
+    font-weight: bold;
+  }
+
+  &__score {
+    font-weight: bold;
+  }
+
+  &__options {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  &--disabled {
+    background: #f7f7f7;
+    .evaluation__name,
+    .evaluation__date {
+      color: #8a8a8a;
+    }
+  }
 }
 </style>
