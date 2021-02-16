@@ -26,6 +26,11 @@ export default {
         name: "school-editor-teachers",
       },
       {
+        image: require(`@/assets/icons/open-book.svg`),
+        text: "Materia",
+        name: "school-editor-subjects",
+      },
+      {
         image: require(`@/assets/icons/icon-course.svg`),
         text: "Cursos",
         name: "school-editor-courses",
