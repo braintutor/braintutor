@@ -138,9 +138,16 @@ import {
 import BrainDialog from "./BrainDialog";
 import variables from "@/models/variables";
 
+import TeacherChooser from "@/components/globals/Teacher/Choose"
+import SubjectChooser from "@/components/globals/Subject/Choose"
+import GradeChooser from "@/components/globals/Grade/Choose"
+
 export default {
   components: {
-    BrainDialog
+    BrainDialog,
+    SubjectChooser,
+    GradeChooser,
+    TeacherChooser
   },
   data: () => ({
     courses:[],
