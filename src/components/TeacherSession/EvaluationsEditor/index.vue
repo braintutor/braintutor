@@ -1,6 +1,6 @@
 <template>
-  <div class="m-container">
-    <div v-if="!evaluation">
+  <div style="height: 100%">
+    <div class="m-container" v-if="!evaluation">
       <!-- MENU -->
       <div class="evaluations__menu mb-3">
         <strong
@@ -86,19 +86,21 @@
           <div class="m-card__body">
             <div class="close-modal">
               <h3>Modificar Tiempo</h3>
-              <v-btn class="mx-2" icon small @click="dlg_update_time= false">
+              <v-btn class="mx-2" icon small @click="dlg_update_time = false">
                 <v-icon> mdi-close-thick </v-icon>
               </v-btn>
             </div>
             <div v-if="evaluation_selected" class="mt-4">
               <span class="mr-4">Tiempo de Fin:</span>
-              <date-time
-                v-model="evaluation_selected.time_end_f"
-              />
+              <date-time v-model="evaluation_selected.time_end_f" />
             </div>
           </div>
           <div class="m-card__actions">
-            <m-btn @click="dlg_update_time = false" class="cancel-button" small text
+            <m-btn
+              @click="dlg_update_time = false"
+              class="cancel-button"
+              small
+              text
               >Cancelar</m-btn
             >
             <m-btn
@@ -152,7 +154,7 @@
       :unselect="unselect"
     />
     <!-- EVALUATION RESULTS -->
-    <div v-else>
+    <div class="m-container" v-else>
       <div class="m-menu mb-3">
         <div class="m-menu__left">
           <v-btn icon @click="unselect()">
@@ -181,7 +183,7 @@
             <v-btn class="mx-2" icon small @click="dlg_remove_result = false">
               <v-icon> mdi-close-thick </v-icon>
             </v-btn>
-          </div>          
+          </div>
           <p class="mt-4">
             Si elimina la nota actual, el alumno podrá realizar el examen otra
             vez.
@@ -222,7 +224,7 @@ import { getStudentsBySession } from "@/services/studentService";
 import { getParam } from "@/services/router.js";
 import { copy } from "@/services/object.js";
 import variables from "@/models/variables";
-import DateTime from '@/components/globals/DateTime';
+import DateTime from "@/components/globals/DateTime";
 
 export default {
   data: () => ({
@@ -275,12 +277,14 @@ export default {
         name: "Nombre",
         time_start: now().addHours(1),
         time_end: now().addHours(2),
+        map_score_to_note: [],
         content: [
           {
             question: "Pregunta",
-            alternatives: ["Alternativa 1", "Alternativa 2"],
+            alternatives: ["Alternativa", "Alternativa"],
             correct: 0,
-            score: 0
+            score: 0,
+            type: "closed",
           },
         ],
       };
@@ -369,7 +373,7 @@ export default {
     EvaluationCard,
     EvaluationEditor,
     EvaluationResults,
-    DateTime
+    DateTime,
   },
 };
 </script>
