@@ -78,31 +78,34 @@
     </div>
     <!-- DIALOG CREATE|EDIT -->
     <brain-dialog v-model="dialog_edit" @submit="save" :loading="loading_save">
-        <template #body>
-          <div class="close-modal">
-            <h3 v-if="action === 'create'">Crear curso</h3>
-            <h3 v-else>Editar</h3>
-            <v-btn class="mx-2" icon small @click="dialog_edit = false">
-              <v-icon> mdi-close-thick </v-icon>
-            </v-btn>
-          </div>
-          <v-text-field
-            v-model="entity.name"
-            :maxlength="CourseModel.name.max_length"
-            label="Nombre"
-            autocomplete="off"
-            required
-            class="mt-4"
-          ></v-text-field>
-          <v-select
-            v-model="entity.teacher_id"
-            :items="teachers_aux"
-            item-text="name"
-            item-value="_id"
-            label="Encargado"
-          ></v-select>
-          <!-- <label>Elegir el color del curso:</label> -->
-          <!-- <v-color-picker
+      <template #body>
+        <div class="close-modal">
+          <h3 v-if="action === 'create'">Crear curso</h3>
+          <h3 v-else>Editar</h3>
+          <v-btn class="mx-2" icon small @click="dialog_edit = false">
+            <v-icon> mdi-close-thick </v-icon>
+          </v-btn>
+        </div>
+        <SubjectChooser @choose="chooseSubject"></SubjectChooser>
+        <GradeChooser @choose="chooseGrade"></GradeChooser>
+
+        <v-text-field
+          v-model="entity.name"
+          :maxlength="CourseModel.name.max_length"
+          label="Nombre"
+          autocomplete="off"
+          required
+          class="mt-4"
+        ></v-text-field>
+        <v-select
+          v-model="entity.teacher_id"
+          :items="teachers_aux"
+          item-text="name"
+          item-value="_id"
+          label="Encargado"
+        ></v-select>
+        <!-- <label>Elegir el color del curso:</label> -->
+        <!-- <v-color-picker
             class="ma-2"
             width=560
             show-swatches
@@ -111,11 +114,12 @@
             hide-inputs
             flat
           ></v-color-picker> -->
-        </template>
-        <template #actions>
-          <m-btn color="primary" type="submit" :loading="loading_save" small
-            >Guardar</m-btn>
-        </template>
+      </template>
+      <template #actions>
+        <m-btn color="primary" type="submit" :loading="loading_save" small
+          >Guardar</m-btn
+        >
+      </template>
     </brain-dialog>
     <!-- DIALOG REMOVE -->
     <v-dialog v-model="dialog_remove" max-width="400">
@@ -147,6 +151,8 @@
 
 <script>
 import CourseModel from "@/models/Course";
+import GradeChooser from "@/components/globals/Grade/Choose";
+import SubjectChooser from "@/components/globals/Subject/Choose";
 
 import {
   getCoursesBySchool,
@@ -160,7 +166,7 @@ import variables from "@/models/variables";
 
 export default {
   components: {
-    BrainDialog
+    BrainDialog,SubjectChooser, GradeChooser
   },
   data: () => ({
     entities: [],
@@ -208,6 +214,12 @@ export default {
     },
   },
   methods: {
+    chooseGrade(){
+
+    },
+    chooseSubject(){
+
+    },
     add() {
       this.action = "create";
       this.entity = {};
@@ -265,7 +277,7 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .editor {
   padding: 10px 16px;
   &__menu {
@@ -293,5 +305,4 @@ export default {
   border: 1px solid gray;
   margin-right: 8px;
 }
-
 </style>
