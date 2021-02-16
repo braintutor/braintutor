@@ -1,15 +1,15 @@
 <template>
   <div class="editor">
     <div class="editor__menu">
-      <v-btn icon @click="unselect()">
+      <v-btn icon @click="$emit('onClose')">
         <v-icon>mdi-close</v-icon>
       </v-btn>
 
-      <div>
+      <div v-if="!evaluation.is_public">
         <m-btn @click="save()" color="primary" small class="mr-2"
           >Guardar</m-btn
         >
-        <m-btn color="dark" small>Publicar</m-btn>
+        <m-btn @click="dlg_publish = true" color="dark" small>Publicar</m-btn>
       </div>
     </div>
 
@@ -21,6 +21,7 @@
             <h3 class="mb-3"><strong>Nombre:</strong></h3>
             <v-text-field
               v-model="evaluation.name"
+              :disabled="evaluation.is_public"
               autocomplete="off"
               dense
               hide-details
@@ -33,9 +34,15 @@
           <div class="m-card__body">
             <h3 class="mb-3"><strong>Fecha:</strong></h3>
             <span>Tiempo de Inicio:</span>
-            <date-time v-model="evaluation.time_start" />
+            <date-time
+              v-model="evaluation.time_start"
+              :disabled="evaluation.is_public"
+            />
             <span>Tiempo de Fin:</span>
-            <date-time v-model="evaluation.time_end" />
+            <date-time
+              v-model="evaluation.time_end"
+              :disabled="evaluation.is_public"
+            />
           </div>
         </div>
 
@@ -49,6 +56,7 @@
             <div class="question__text">
               <v-textarea
                 v-model="c.question"
+                :disabled="evaluation.is_public"
                 rows="1"
                 auto-grow
                 dense
@@ -58,6 +66,7 @@
               <div v-if="c.type === 'closed'" class="ml-2">
                 <v-text-field
                   v-model="c.score"
+                  :disabled="evaluation.is_public"
                   label="Puntaje"
                   type="number"
                   autocomplete="off"
@@ -67,7 +76,7 @@
                   class="question__score"
                 ></v-text-field>
               </div>
-              <v-tooltip bottom>
+              <v-tooltip v-if="!evaluation.is_public" bottom>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
                     @click="
@@ -87,7 +96,7 @@
             </div>
             <div v-if="c.image" class="question__image mt-4">
               <img :src="c.image" />
-              <v-tooltip bottom>
+              <v-tooltip v-if="!evaluation.is_public" bottom>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
                     @click="c.image = ''"
@@ -111,9 +120,14 @@
                   :key="a_idx"
                   class="alternative mt-4"
                 >
-                  <v-radio :value="a_idx" class="mr-2"></v-radio>
+                  <v-radio
+                    :value="a_idx"
+                    :disabled="evaluation.is_public"
+                    class="mr-2"
+                  ></v-radio>
                   <v-textarea
                     v-model="c.alternatives[a_idx]"
+                    :disabled="evaluation.is_public"
                     rows="1"
                     auto-grow
                     dense
@@ -121,7 +135,7 @@
                   ></v-textarea>
                   <v-tooltip bottom>
                     <template
-                      v-if="c.alternatives.length > 2"
+                      v-if="c.alternatives.length > 2 && !evaluation.is_public"
                       v-slot:activator="{ on, attrs }"
                     >
                       <v-btn
@@ -143,6 +157,7 @@
               <!-- ALTERNATIVE ADD -->
               <div
                 @click="addQuestionAlternative(c.alternatives)"
+                v-if="!evaluation.is_public"
                 class="alternative-add mt-4"
               >
                 <v-icon>mdi-plus</v-icon>
@@ -152,6 +167,7 @@
           <div class="question__actions">
             <v-select
               v-model="c.type"
+              :disabled="evaluation.is_public"
               :items="types"
               item-text="text"
               item-value="value"
@@ -161,7 +177,7 @@
               outlined
               class="mr-1"
             ></v-select>
-            <div>
+            <div v-if="!evaluation.is_public">
               <v-tooltip bottom>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
@@ -225,7 +241,11 @@
         </div>
 
         <!-- QUESTION ADD -->
-        <div @click="addQuestion()" class="question-add my-5">
+        <div
+          v-if="!evaluation.is_public"
+          @click="addQuestion()"
+          class="question-add my-5"
+        >
           <v-icon>mdi-plus</v-icon>
         </div>
       </div>
@@ -242,6 +262,37 @@
         class="m-card pa-4"
       />
     </v-dialog>
+
+    <!-- DLG PUBLISH -->
+    <v-dialog v-model="dlg_publish" max-width="400">
+      <div class="m-card">
+        <div class="m-card__body">
+          <div class="close-modal">
+            <h3>Confirmar publicación</h3>
+            <v-btn class="mx-2" icon small @click="dlg_publish = false">
+              <v-icon> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
+          <p class="mt-4">
+            Una vez publicada la evaluación, no podrá modificar su contenido.
+          </p>
+        </div>
+        <div class="m-card__actions">
+          <m-btn @click="dlg_publish = false" small text class="cancel-button"
+            >Cancelar</m-btn
+          >
+          <m-btn
+            @click="
+              dlg_publish = false;
+              publish();
+            "
+            color="primary"
+            small
+            >Publicar</m-btn
+          >
+        </div>
+      </div>
+    </v-dialog>
   </div>
 </template>
 
@@ -249,10 +300,8 @@
 import Files from "@/components/globals/File/Files";
 import DateTime from "@/components/globals/DateTime";
 
-import { updateEvaluationByTeacher } from "@/services/evaluationService";
-
 export default {
-  props: ["evaluation", "unselect"],
+  props: ["evaluation"],
   data: () => ({
     session_id: "",
     question_idx_selected: -1,
@@ -268,10 +317,10 @@ export default {
     ],
     //
     dlg_files: false,
+    dlg_publish: false,
   }),
   created() {
     this.session_id = this.$route.params["session_id"];
-    // this.evaluation.public = true;
   },
   methods: {
     async save() {
@@ -281,11 +330,27 @@ export default {
       }
 
       this.showLoading("Guardando");
-      this.evaluation.id = this.evaluation._id;
       try {
-        await updateEvaluationByTeacher(this.evaluation);
+        await this.$api.evaluation.update(this.evaluation._id, this.evaluation);
+        this.hideLoading();
+        return true;
       } catch (error) {
         this.showMessage("", error.msg || "Ha ocurrido un error.");
+        this.hideLoading();
+        return false;
+      }
+    },
+    async publish() {
+      let success = await this.save();
+      if (!success) return;
+
+      this.showLoading("Publicando");
+      try {
+        await this.$api.evaluation.publish(this.evaluation._id);
+        this.evaluation.is_public = true;
+        this.$forceUpdate();
+      } catch (error) {
+        this.showMessage("", error.msg || error);
       }
       this.hideLoading();
     },
