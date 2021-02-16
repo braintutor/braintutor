@@ -81,23 +81,22 @@
         <SubjectChooser @choose="chooseSubject" :value="entity.subject_id"></SubjectChooser>
         <GradeChooser @choose="chooseGrade" :value="entity.grade_id"></GradeChooser>
         <TeacherChooser @choose="chooseTeacher" :value="entity.teacher_id" label="Encargado"></TeacherChooser>
-
-        <!-- <label>Elegir el color del curso:</label> -->
-        <!-- <v-color-picker
+        <label>Elegir el color del curso:</label>
+        <v-color-picker
             class="ma-2"
-            width=560
+            width="350"
+            :swatches="swatches"
             show-swatches
             hide-canvas
             hide-sliders
             hide-inputs
             flat
-          ></v-color-picker> -->
-      </template>
-      <template #actions>
-        <m-btn color="primary" type="submit" :loading="loading_save" small
-          >Guardar</m-btn
-        >
-      </template>
+          ></v-color-picker>
+        </template>
+        <template #actions>
+          <m-btn color="primary" type="submit" :loading="loading_save" small
+            >Guardar</m-btn>
+        </template>
     </brain-dialog>
     <!-- DIALOG REMOVE -->
     <v-dialog v-model="dialog_remove" max-width="400">
@@ -129,9 +128,6 @@
 
 <script>
 import CourseModel from "@/models/Course";
-import GradeChooser from "@/components/globals/Grade/Choose";
-import SubjectChooser from "@/components/globals/Subject/Choose";
-import TeacherChooser from "@/components/globals/Teacher/Choose";
 
 import {
   getCoursesBySchool,
@@ -141,6 +137,10 @@ import {
 } from "@/services/courseService";
 import BrainDialog from "./BrainDialog";
 import variables from "@/models/variables";
+
+import TeacherChooser from "@/components/globals/Teacher/Choose"
+import SubjectChooser from "@/components/globals/Subject/Choose"
+import GradeChooser from "@/components/globals/Grade/Choose"
 
 export default {
   components: {
@@ -159,6 +159,14 @@ export default {
     loading_save: false,
     CourseModel,
     variables,
+    swatches: [
+      ['#FF0000', '#add8e6', '#FFFF00', '#FFFF00'],
+      ['#FF69B4', '#00FFFF', '#555500', '#555500'],
+      ['#800080', '#008080', '#FFBF00', '#FFBF00'],
+      ['#30106b', '#00FF00', '#FFA500', '#FFA500'],
+      ['#4b0082', '#90ee90', '#ff8c00', '#ff8c00'],
+      ['#0000FF', '#BFFF00', '#A52A2A', '#A52A2A'],
+    ]
   }),
   async mounted() {
     this.getData()
@@ -233,7 +241,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 .editor {
   padding: 10px 16px;
   &__menu {
@@ -261,4 +269,5 @@ export default {
   border: 1px solid gray;
   margin-right: 8px;
 }
+
 </style>
