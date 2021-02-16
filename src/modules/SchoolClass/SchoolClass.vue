@@ -12,17 +12,25 @@
             <p class="p-canvas">08:00 - 10:30</p>
             <h3 class="p-canvas">Clase de sumas y restas</h3>
             <div class="d-flex justify-end">
-              <v-btn
-                class="mx-4"
-                fab
-                dark
-                small
-                color="teal"
-              >
-                <v-icon dark>
-                  mdi-notebook-edit-outline
-                </v-icon>
-              </v-btn>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    class="mx-4"
+                    to="tasks"
+                    fab
+                    dark
+                    open-on-focus
+                    small
+                    color="teal"
+                    v-on="on"
+                  >
+                    <v-icon dark>
+                      mdi-notebook-edit-outline
+                    </v-icon>
+                  </v-btn>                  
+                </template>              
+                <span>tareas</span>
+              </v-tooltip>
               <!-- <v-btn
                 class="mx-4 bt-pencil"
                 fab
