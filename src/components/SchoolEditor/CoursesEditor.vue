@@ -88,14 +88,15 @@
         </div>
         <SubjectChooser @choose="chooseSubject"></SubjectChooser>
         <GradeChooser @choose="chooseGrade"></GradeChooser>
+        <TeacherChooser @choose="chooseTeacher" label="Encargado"></TeacherChooser>
 
-        <v-select
+        <!-- <v-select
           v-model="entity.teacher_id"
           :items="teachers_aux"
           item-text="name"
           item-value="_id"
           label="Encargado"
-        ></v-select>
+        ></v-select> -->
         <!-- <label>Elegir el color del curso:</label> -->
         <!-- <v-color-picker
             class="ma-2"
@@ -145,6 +146,7 @@
 import CourseModel from "@/models/Course";
 import GradeChooser from "@/components/globals/Grade/Choose";
 import SubjectChooser from "@/components/globals/Subject/Choose";
+import TeacherChooser from "@/components/globals/Teacher/Choose";
 
 import {
   getCoursesBySchool,
@@ -161,6 +163,7 @@ export default {
     BrainDialog,
     SubjectChooser,
     GradeChooser,
+    TeacherChooser
   },
   data: () => ({
     entities: [],
@@ -213,6 +216,9 @@ export default {
     },
     chooseSubject(subject) {
       this.entity.subject_id = subject.id;
+    },
+    chooseTeacher(teacher) {
+      this.entity.teacher_id = teacher._id;
     },
     add() {
       this.action = "create";
