@@ -91,17 +91,6 @@
           :value="entity.teacher_id"
           label="Encargado"
         ></TeacherChooser>
-        <label>Elegir el color del curso:</label>
-        <v-color-picker
-          class="ma-2"
-          width="350"
-          :swatches="swatches"
-          show-swatches
-          hide-canvas
-          hide-sliders
-          hide-inputs
-          flat
-        ></v-color-picker>
       </template>
       <template #actions>
         <m-btn color="primary" type="submit" :loading="loading_save" small
@@ -148,7 +137,6 @@ import {
 } from "@/services/courseService";
 import BrainDialog from "./BrainDialog";
 import variables from "@/models/variables";
-
 import TeacherChooser from "@/components/globals/Teacher/Choose"
 import SubjectChooser from "@/components/globals/Subject/Choose"
 import GradeChooser from "@/components/globals/Grade/Choose"
@@ -281,8 +269,4 @@ export default {
   margin-right: 8px;
 }
 
-.theme--light.v-color-picker .v-color-picker__dot,
-.theme--light.v-color-picker .v-color-picker__color {
-  height: 36px;
-}
 </style>

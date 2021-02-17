@@ -77,6 +77,17 @@
             label="Nombre"
             required
           ></v-text-field>
+          <label>Elija un color:</label>
+          <v-color-picker
+            class="ma-2 color-picker"
+            width="350"
+            :swatches="swatches"
+            show-swatches
+            hide-canvas
+            hide-sliders
+            hide-inputs
+            flat
+        ></v-color-picker>
         </div>
       </template>
       <template #actions>
@@ -100,13 +111,19 @@ export default {
   data: () => ({
     subjects: [],
     entity: {},
-    //
     action: "",
     dialog_edit: false,
     dialog_remove: false,
     loading_save: false,
-
     variables,
+    swatches: [
+      ["#f00",    "#80ff00", "#0af", "#a0f" ],
+      ["#ff4d00", "#08ff00", "#08f", "#f600ff" ],
+      ["#f90",       "#0f4", "#003bff", "#f0b" ],
+      ["#ffe500", "#00ff91", "#4000ff", "#ff006e" ],
+      ["#cf0",       "#0fd", "#5e00ff", "#000" ],
+      
+    ],
   }),
   async mounted() {
     this.getData();
@@ -216,4 +233,10 @@ export default {
   border: 1px solid gray;
   margin-right: 8px;
 }
+
+.color-picker ::v-deep .v-color-picker__color {
+  height: 36px;
+  max-height: 36px;
+}
+
 </style>
