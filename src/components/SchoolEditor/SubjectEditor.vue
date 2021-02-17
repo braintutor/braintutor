@@ -84,15 +84,14 @@
           <v-color-picker
             v-model="entity.color"
             class="ma-2 color-picker"
-            width="350"
+            width="550"
             :swatches="swatches"
             show-swatches
             hide-canvas
             hide-sliders
             hide-inputs
             flat
-        ></v-color-picker>
-        {{entity}}
+        ></v-color-picker>     
         </div>
       </template>
       <template #actions>
@@ -122,11 +121,16 @@ export default {
     loading_save: false,
     variables,
     swatches: [
-      ["#f00",    "#80ff00", "#0af", "#a0f" ],
-      ["#ff4d00", "#08ff00", "#08f", "#f600ff" ],
-      ["#f90",       "#0f4", "#003bff", "#f0b" ],
-      ["#ffe500", "#00ff91", "#4000ff", "#ff006e" ],
-      ["#cf0",       "#0fd", "#5e00ff", "#000" ],
+      ["#f00",   "#0fd", "#ff006e"          ],
+      ["#ff4d00", "#0af",   "#800000"   ],
+      ["#f90",     "#08f",  "#808080"  ],
+      ["#ffe500",   "#003bff", "#000"  ],
+      ["#cf0",       "#4000ff" ],
+      ["#80ff00",  "#5e00ff" ],
+      ["#08ff00",    "#a0f"   ],
+      ["#0f4",       "#f600ff"  ],
+      ["#00ff91",     "#f0b"    ],
+            
     ],
   }),
   async mounted() {
