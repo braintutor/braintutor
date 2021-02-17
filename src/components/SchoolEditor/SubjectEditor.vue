@@ -31,7 +31,10 @@
         <tbody>
           <tr v-for="(e, e_idx) in subjects" :key="e_idx">
             <td>{{ e.name }}</td>
-            <td>{{ e.color }}</td>
+            <td>
+              <div :style="getStyle(e.color)">
+              </div>
+            </td>
             <td class="text-center">
               <v-menu offset-y>
                 <template v-slot:activator="{ on, attrs }">
@@ -202,6 +205,14 @@ export default {
       }
       this.hideLoading();
     },
+
+    getStyle(c) {
+      return {
+        "background-color": `hsl(${c.h}deg ${c.s*100}% ${c.l*100}% / ${c.a*100}%)`,
+        "height": "20px",
+        "width": "20px",
+      }
+    }
   },
 };
 </script>
