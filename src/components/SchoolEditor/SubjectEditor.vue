@@ -84,7 +84,7 @@
           <v-color-picker
             v-model="entity.color"
             class="ma-2 color-picker"
-            width="550"
+            width="400"
             :swatches="swatches"
             show-swatches
             hide-canvas
@@ -121,16 +121,14 @@ export default {
     loading_save: false,
     variables,
     swatches: [
-      ["#f00",   "#0fd", "#ff006e"          ],
-      ["#ff4d00", "#0af",   "#800000"   ],
-      ["#f90",     "#08f",  "#808080"  ],
-      ["#ffe500",   "#003bff", "#000"  ],
-      ["#cf0",       "#4000ff" ],
-      ["#80ff00",  "#5e00ff" ],
-      ["#08ff00",    "#a0f"   ],
-      ["#0f4",       "#f600ff"  ],
-      ["#00ff91",     "#f0b"    ],
-            
+      ["#f00",    "#0f4"   , "#5e00ff"],
+      ["#ff4d00", "#00ff91",  "#a0f"  ],
+      ["#f90",    "#0fd" ,   "#f600ff"  ],
+      ["#ffe500", "#0af",    "#f0b"  ],
+      ["#cf0",    "#08f",    "#ff006e"  ],
+      ["#80ff00", "#003bff",  "#800000" ],
+      ["#08ff00", "#4000ff" , "#000"   ],
+                  
     ],
   }),
   async mounted() {
