@@ -79,6 +79,7 @@
           ></v-text-field>
           <label>Elija un color:</label>
           <v-color-picker
+            v-model="entity.color"
             class="ma-2 color-picker"
             width="350"
             :swatches="swatches"
@@ -88,6 +89,7 @@
             hide-inputs
             flat
         ></v-color-picker>
+        {{entity}}
         </div>
       </template>
       <template #actions>
@@ -122,7 +124,6 @@ export default {
       ["#f90",       "#0f4", "#003bff", "#f0b" ],
       ["#ffe500", "#00ff91", "#4000ff", "#ff006e" ],
       ["#cf0",       "#0fd", "#5e00ff", "#000" ],
-      
     ],
   }),
   async mounted() {
@@ -171,7 +172,7 @@ export default {
       if (this.action === "create") {
         // Create
         try {
-          let entity_id = await add(this.entity);
+          let entity_id = await add({ name: this.entity.name, color: this.entity.color.hsla });
           this.getData();
           this.entity._id = entity_id;
           this.dialog_edit = false;
@@ -181,7 +182,7 @@ export default {
       } else if (this.action === "edit") {
         // Update
         try {
-          await update(this.entity);
+          await update(this.entity.id, { name: this.entity.name, color: this.entity.color });
           this.getData(); // updates the array without modifying it
           this.dialog_edit = false;
         } catch (error) {
