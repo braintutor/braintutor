@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="isVisible" :max-width="maxWidth" persistent>
     <form @submit.prevent="$emit('submit')" class="m-card">
-      <div class="m-card__body m-body">
+      <div class="m-card__body">
           <slot name="body"></slot>
       </div>
       <div class="m-card__actions">
@@ -49,7 +49,4 @@ export default {
   margin-right: 8px;
 }
 
-.m-body {
-  padding: 12px;
-}
 </style>
