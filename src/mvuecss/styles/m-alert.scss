@@ -3,11 +3,9 @@
   width: 100%;
   padding: 16px 20px;
   border-radius: var(--border-radius-low);
-
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   transition: var(--time-transition);
 
   &__icon {
@@ -27,7 +25,6 @@
     padding-bottom: 0;
     // transform: translateY(-80px);
     transform: scale(0.5);
-
     opacity: 0;
     pointer-events: none;
   }
