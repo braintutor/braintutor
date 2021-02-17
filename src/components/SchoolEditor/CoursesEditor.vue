@@ -158,14 +158,7 @@ export default {
     loading_save: false,
     CourseModel,
     variables,
-    swatches: [
-      ["#f00",    "#80ff00", "#0af", "#a0f" ],
-      ["#ff4d00", "#08ff00", "#08f", "#f600ff" ],
-      ["#f90",       "#0f4", "#003bff", "#f0b" ],
-      ["#ffe500", "#00ff91", "#4000ff", "#ff006e" ],
-      ["#cf0",       "#0fd", "#5e00ff", "#000" ],
-      
-    ],
+   
   }),
   async mounted() {
     this.getData();
