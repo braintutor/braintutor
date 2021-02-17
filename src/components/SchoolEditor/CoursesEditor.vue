@@ -1,6 +1,6 @@
 <template>
   <div class="editor">
-    <div class="editor__menu">
+    <div class="editor__menu d-flex justify-space-between align-center">
       <div class="editor__title">
         <h2>Cursos</h2>
         <strong class="ml-2 mt-1" style="opacity: 0.5"
@@ -78,19 +78,21 @@
             <v-icon> mdi-close-thick </v-icon>
           </v-btn>
         </div>
-        <SubjectChooser
-          @choose="chooseSubject"
-          :value="entity.subject_id"
-        ></SubjectChooser>
-        <GradeChooser
-          @choose="chooseGrade"
-          :value="entity.grade_id"
-        ></GradeChooser>
-        <TeacherChooser
-          @choose="chooseTeacher"
-          :value="entity.teacher_id"
-          label="Encargado"
-        ></TeacherChooser>
+        <div class="pa-4">
+          <SubjectChooser
+            @choose="chooseSubject"
+            :value="entity.subject_id"
+          ></SubjectChooser>
+          <GradeChooser
+            @choose="chooseGrade"
+            :value="entity.grade_id"
+          ></GradeChooser>
+          <TeacherChooser
+            @choose="chooseTeacher"
+            :value="entity.teacher_id"
+            label="Encargado"
+          ></TeacherChooser>
+        </div>
       </template>
       <template #actions>
         <m-btn color="primary" type="submit" :loading="loading_save" small
@@ -137,28 +139,26 @@ import {
 } from "@/services/courseService";
 import BrainDialog from "./BrainDialog";
 import variables from "@/models/variables";
-import TeacherChooser from "@/components/globals/Teacher/Choose"
-import SubjectChooser from "@/components/globals/Subject/Choose"
-import GradeChooser from "@/components/globals/Grade/Choose"
+import TeacherChooser from "@/components/globals/Teacher/Choose";
+import SubjectChooser from "@/components/globals/Subject/Choose";
+import GradeChooser from "@/components/globals/Grade/Choose";
 
 export default {
   components: {
     BrainDialog,
     SubjectChooser,
     GradeChooser,
-    TeacherChooser
+    TeacherChooser,
   },
   data: () => ({
     courses: [],
     entity: {},
-    //
     action: "",
     dialog_edit: false,
     dialog_remove: false,
     loading_save: false,
     CourseModel,
     variables,
-   
   }),
   async mounted() {
     this.getData();
@@ -236,11 +236,7 @@ export default {
 <style lang='scss' scoped>
 .editor {
   padding: 10px 16px;
-  &__menu {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+ 
   &__title {
     display: flex;
     align-items: center;
@@ -261,5 +257,4 @@ export default {
   border: 1px solid gray;
   margin-right: 8px;
 }
-
 </style>
