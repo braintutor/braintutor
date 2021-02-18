@@ -70,12 +70,10 @@ export {
   updateEvaluationByTeacher,
   publicEvaluation,
   deleteEvaluation,
-  //
   getEvaluationByStudent,
   getResultByStudent,
   updateEvaluationAnswers,
   finishEvaluation,
   removeResult,
-
   getResults
 }

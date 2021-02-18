@@ -1,7 +1,6 @@
 import ConfirmDialog from "./component";
 import { events } from './events'
 
-
 const typesConfirm = {
   delete: {
     title: "¿Desea eliminar?",

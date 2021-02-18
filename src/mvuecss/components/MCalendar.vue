@@ -15,7 +15,6 @@
         >Cambiar vista</m-btn
       >
     </div>
-
     <section v-show="mode_calendar" class="calendar">
       <div class="calendar__control">
         <span class="calendar__month">{{ `${months[month]} de ${year}` }}</span>
@@ -31,7 +30,6 @@
           </m-btn>
         </div>
       </div>
-
       <div class="calendar__body">
         <div
           v-for="(_, idx) in Array(7)"
@@ -70,7 +68,6 @@
         </div>
       </div>
     </section>
-
     <section v-show="!mode_calendar">
       <div
         v-for="(e, idx) in events_ordered"
@@ -114,12 +111,10 @@
           <slot name="event_info" :event="e" :methods="{ hideEvent }"></slot>
         </div>
       </div>
-
       <div v-show="events_ordered.length <= 0" class="text-center">
         No hay Eventos
       </div>
     </section>
-
     <!-- EVENT SELECTED -->
     <div
       v-if="mode_calendar"
@@ -224,7 +219,6 @@ export default {
   },
   mounted() {
     this.showDate(this.date);
-
     this._updateSize();
     window.onresize = this._updateSize;
   },
@@ -274,7 +268,6 @@ export default {
       let first_day = new Date(year, month, 1).getDay();
       // 0 = last day of the previous month
       let total_days = new Date(year, month + 1, 0).getDate();
-
       return { year, month, first_day, total_days };
     },
     getDayValuesByIdx(idx) {
@@ -369,7 +362,6 @@ export default {
 
   &__control {
     padding: 20px;
-
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -424,7 +416,6 @@ export default {
     border-radius: 50%;
     font-size: 0.9rem;
     font-weight: bold;
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -436,12 +427,10 @@ export default {
     padding: 4px 8px 2px 8px;
     margin-top: 4px;
     cursor: pointer;
-
     font-size: 0.9rem;
     color: #fff;
     text-align: center;
     border-radius: 4px;
-
     white-space: nowrap;
     // display: -webkit-box;
     // -webkit-line-clamp: 1;
@@ -463,7 +452,6 @@ export default {
 .event {
   width: 100%;
   z-index: var(--z-event); // important from Braintutor
-
   position: fixed;
   top: 50%;
   left: 50%;
@@ -558,7 +546,6 @@ export default {
     margin: 0;
     padding: 10px;
     color: #fff;
-
     display: flex;
     flex-direction: column;
     align-items: center;
