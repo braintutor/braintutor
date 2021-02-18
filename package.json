@@ -25,7 +25,6 @@
     "lodash": "^4.17.20",
     "machinelearn": "^2.1.5",
     "normalize.css": "^8.0.1",
-    "randomcolor": "^0.6.2",
     "vue": "^2.6.12",
     "vue-router": "^3.4.9",
     "vuetify": "^2.4.2",
