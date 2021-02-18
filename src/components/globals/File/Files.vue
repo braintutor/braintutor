@@ -87,7 +87,7 @@
           </v-container>
         </div>
         <div v-show="show === 'UPLOAD'" class="pa-4">
-          <label for="ip-file">Seleccionar archivo</label>
+          <label for="ip-file" class="lab-file">Seleccionar archivo</label>
           <input
             v-show="!loading"
             type="file"
@@ -338,7 +338,7 @@ $background-file: rgba(0, 0, 255, 0.05);
   align-items: center;
 }
 
-label {
+.lab-file {
  cursor:pointer;
  background: #DADADA;
  padding: 10px;

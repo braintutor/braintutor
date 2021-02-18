@@ -1,5 +1,5 @@
 <template>
-  <div class="editor">
+  <div class="m-container px-4">
     <div class="editor__menu d-flex justify-space-between align-center">
       <div class="editor__title align-center">
         <h2 class="pb-3">Asistencia</h2>
