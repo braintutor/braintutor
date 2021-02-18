@@ -35,7 +35,6 @@
             </template>
             <span style="font-size: 0.75rem">Agregar Pregunta</span>
           </v-tooltip>
-
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
               <v-btn icon v-bind="attrs" v-on="on" @click="save()">
@@ -44,7 +43,6 @@
             </template>
             <span style="font-size: 0.75rem">Guardar Cambios</span>
           </v-tooltip>
-
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
@@ -74,7 +72,6 @@
             :disabled="evaluation.public"
           />
         </div>
-
         <div class="m-card mb-5">
           <div class="score m-card__body">
             <p class="score__title">Convertir Puntaje a Nota</p>
@@ -144,7 +141,6 @@
             </div>
           </div>
         </div>
-
         <div
           v-for="(c, c_idx) in evaluation.content"
           :key="c_idx"
@@ -195,7 +191,6 @@
               </v-btn>
             </div>
             <span v-else>{{ c.question }}</span>
-
             <v-tooltip
               bottom
               v-if="!evaluation.public && evaluation.content.length > 1"
@@ -290,7 +285,6 @@
         </div>
       </div>
     </div>
-
     <!-- Dialog Public -->
     <v-dialog v-model="dialog_public" max-width="400">
       <div class="m-card">
@@ -592,7 +586,6 @@ export default {
 
   &__rule {
     font-size: 0.9rem;
-
     display: flex;
     align-items: center;
     justify-content: space-between;

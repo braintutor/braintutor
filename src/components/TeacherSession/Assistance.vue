@@ -23,7 +23,7 @@
         </thead>
         <tbody>
           <tr v-for="attendanceRecord of school_class.attendance_records" :key="attendanceRecord.id">
-            <td class="text-center"><v-icon>mdi-account-circle</v-icon></td>
+            <td class="text-center"><img class="st-user" src="@/assets/icons/icon-student.svg" alt /></td>
             <td class="student-td">{{ attendanceRecord.student }}</td>
             <td class="assistance-td">
               <v-select
@@ -122,6 +122,10 @@ export default {
 
 .theme--light.v-data-table > .v-data-table__wrapper > table > thead > tr > th {
   color: black;
+}
+
+.st-user {
+  width: 32px;
 }
 
 </style>

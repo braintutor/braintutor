@@ -4,7 +4,6 @@
       <v-btn icon @click="$emit('onClose')">
         <v-icon>mdi-close</v-icon>
       </v-btn>
-
       <div v-if="!evaluation.is_public">
         <m-btn @click="save()" color="primary" small class="mr-2"
           >Guardar</m-btn
@@ -12,7 +11,6 @@
         <m-btn @click="dlg_publish = true" color="dark" small>Publicar</m-btn>
       </div>
     </div>
-
     <div id="editor__body" class="editor__body">
       <div class="evaluation">
         <!-- NAME -->
@@ -28,7 +26,6 @@
             ></v-text-field>
           </div>
         </div>
-
         <!-- DATE -->
         <div class="m-card mt-4">
           <div class="m-card__body">
@@ -45,7 +42,6 @@
             />
           </div>
         </div>
-
         <!-- QUESTION -->
         <div
           v-for="(c, c_idx) in evaluation.content"
@@ -111,7 +107,6 @@
                 <span>Quitar Imagen</span>
               </v-tooltip>
             </div>
-
             <div v-if="c.type === 'closed'">
               <v-radio-group v-model="c.correct" hide-details dense>
                 <!-- ALTERNATIVE -->
@@ -239,7 +234,6 @@
             </div>
           </div>
         </div>
-
         <!-- QUESTION ADD -->
         <div
           v-if="!evaluation.is_public"
@@ -250,7 +244,6 @@
         </div>
       </div>
     </div>
-
     <!-- DLG FILES -->
     <v-dialog v-model="dlg_files" max-width="1000">
       <Files
@@ -262,7 +255,6 @@
         class="m-card pa-4"
       />
     </v-dialog>
-
     <!-- DLG PUBLISH -->
     <v-dialog v-model="dlg_publish" max-width="400">
       <div class="m-card">
@@ -416,13 +408,11 @@ export default {
 <style lang='scss' scoped>
 .editor {
   height: 100%;
-
   display: flex;
   flex-direction: column;
 
   &__menu {
     padding: 8px 12px;
-
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -459,7 +449,6 @@ export default {
     margin: 0 20px;
     padding: 20px 0;
     border-top: 1px solid rgba(0, 0, 0, 0.15);
-
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -471,10 +460,8 @@ export default {
   height: 64px;
   margin: 0 auto;
   cursor: pointer;
-
   border-radius: 100%;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -489,13 +476,12 @@ export default {
   display: flex;
   justify-content: center;
 }
+
 .alternative-add {
   padding: 8px;
   cursor: pointer;
-
   border: 1px dashed #ccc;
   border-radius: 8px;
-
   display: flex;
   align-items: center;
   justify-content: center;
