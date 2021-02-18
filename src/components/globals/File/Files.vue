@@ -32,7 +32,6 @@
           <p v-show="files_f.length <= 0" class="text-center my-3">
             No hay archivos.
           </p>
-
           <v-container fluid class="pa-0">
             <v-row no-gutters>
               <v-col
@@ -71,7 +70,6 @@
                     />
                     <img v-else src="@/assets/file/icon-default.svg" />
                   </div>
-
                   <div @click.stop="showFile(file)" class="m-file__menu">
                     <span class="m-file__name pl-2">{{ file.name_f }}</span>
                     <v-btn
@@ -88,12 +86,14 @@
             </v-row>
           </v-container>
         </div>
-        <div v-show="show === 'UPLOAD'">
+        <div v-show="show === 'UPLOAD'" class="pa-4">
+          <label for="ip-file">Seleccionar archivo</label>
           <input
             v-show="!loading"
             type="file"
             onclick="value = null"
             @change="onFileSelected"
+            id="ip-file"
             class="mx-3"
           />
         </div>
@@ -273,7 +273,6 @@ $background-file: rgba(0, 0, 255, 0.05);
     height: 100%;
     padding: 40px;
     transition: 0.3s;
-
     display: flex;
     align-items: center;
     justify-content: center;
@@ -290,7 +289,6 @@ $background-file: rgba(0, 0, 255, 0.05);
   &__content {
     height: 100%;
     background: $background-file;
-
     display: flex;
     align-items: center;
     justify-content: center;
@@ -338,5 +336,20 @@ $background-file: rgba(0, 0, 255, 0.05);
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+label {
+ cursor:pointer;
+ background: #DADADA;
+ padding: 10px;
+ border-radius: 10px;
+ color: #000;
+//  text-transform: uppercase;
+}
+
+#ip-file {
+  opacity:0;
+  position: absolute;
+  z-index: -1;
 }
 </style>
