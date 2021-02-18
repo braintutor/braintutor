@@ -15,13 +15,15 @@
       <v-simple-table class="m-table" dense>
         <thead>
           <tr>
-            <th class="text-center"><v-icon>mdi-account-group</v-icon><h3>Alumnos</h3></th>
+            <th class="text-center"><h3>Alumnos</h3></th>
+            <th class="text-center"><v-icon>mdi-account-group</v-icon><h3>nombres</h3></th>
             <th class="text-center"><v-icon>mdi-pencil</v-icon><h3>Asistencia</h3></th>
             <th class="text-center"><v-icon>mdi-file-find-outline</v-icon><h3>Observaciones</h3></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="attendanceRecord of school_class.attendance_records" :key="attendanceRecord.id">
+            <td class="text-center"><v-icon>mdi-account-circle</v-icon></td>
             <td class="student-td">{{ attendanceRecord.student }}</td>
             <td class="assistance-td">
               <v-select
@@ -107,6 +109,7 @@ export default {
 
 .student-td {
   text-align: center;
+  width: 40%;
 }
 
 .observaciones-td {
