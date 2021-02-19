@@ -38,7 +38,6 @@
           </m-btn>
         </div> -->
       </div>
-
       <slot></slot>
     </div>
     <div v-if="buttons" class="evaluation__actions m-card__actions">

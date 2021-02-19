@@ -225,8 +225,7 @@ export default {
 
 <style lang='scss' scoped>
 .evaluation {
-  &__question {
-  }
+ 
   &__statement {
     white-space: pre-line;
   }

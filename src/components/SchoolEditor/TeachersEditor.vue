@@ -65,7 +65,6 @@
         No hay docentes
       </p>
     </div>
-
     <!-- DIALOG -->
     <v-dialog v-model="dlg_edit" max-width="600" persistent>
       <form @submit.prevent="save()" class="m-card">
@@ -130,7 +129,6 @@
         </div>
       </form>
     </v-dialog>
-
     <v-dialog v-model="dlg_remove" width="400">
       <div class="m-card">
         <div class="m-card__body">
@@ -153,7 +151,6 @@
         </div>
       </div>
     </v-dialog>
-
     <v-dialog v-model="dlg_password" width="400" persistent>
       <form @submit.prevent="savePassword()" class="m-card">
         <div class="m-card__body">
@@ -207,7 +204,6 @@
         </div>
       </form>
     </v-dialog>
-
     <v-dialog v-model="dlg_import" width="1600" persistent>
       <div class="m-card">
         <div class="m-card__body">
@@ -441,7 +437,6 @@ import {
 import { updatePasswordByAdmin } from "@/services/userService";
 import { exportExcel } from "@/services/excel";
 import * as XLSX from "xlsx";
-
 import UserModel from "@/models/User";
 
 export default {

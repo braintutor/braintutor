@@ -15,7 +15,6 @@
       </m-btn>
     </div>
     <SessionFilter @query="filter"></SessionFilter>
-
     <!-- SESSIONS -->
     <div class="mt-3">
       <div v-for="(e, idx) in entities" :key="idx" class="session mb-3">
@@ -39,7 +38,6 @@
           </v-list>
         </v-menu>
       </div>
-
       <p
         v-show="query.section_id && entities.length <= 0"
         class="text-center my-4"
@@ -47,7 +45,6 @@
         No hay Sesiones
       </p>
     </div>
-
     <brain-dialog v-model="dlg_create" @submit="add" :loading="ldg_save">
       <template #body>
         <div class="close-modal">
@@ -72,7 +69,6 @@
         >
       </template>
     </brain-dialog>
-
     <brain-dialog v-model="dlg_edit" @submit="update" :loading="ldg_save">
       <template #body>
         <div class="close-modal">
@@ -237,14 +233,12 @@ export default {
   background: rgba(0, 0, 0, 0.05);
   border-radius: 12px;
   user-select: none;
-
   display: flex;
   align-items: center;
 
   &__body {
     padding: 18px 24px;
     flex-grow: 1;
-
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     column-gap: 20px;

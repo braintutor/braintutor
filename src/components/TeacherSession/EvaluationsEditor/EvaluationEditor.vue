@@ -42,7 +42,6 @@
             />
           </div>
         </div>
-
         <!-- MAP SCORE -->
         <div class="score m-card mt-4">
           <div class="m-card__body">
@@ -115,7 +114,6 @@
             </div>
           </div>
         </div>
-
         <!-- QUESTION -->
         <div
           v-for="(c, c_idx) in evaluation.content"
@@ -519,7 +517,6 @@ export default {
 
   &__rule {
     font-size: 0.9rem;
-
     display: flex;
     align-items: center;
     justify-content: space-between;

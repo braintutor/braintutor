@@ -21,7 +21,6 @@
           <div v-if="c.image" class="question__image">
             <img :src="c.image" />
           </div>
-
           <div v-if="c.type === 'closed'">
             <v-radio-group v-model="answers[c_idx].alternative">
               <v-radio

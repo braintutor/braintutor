@@ -15,7 +15,6 @@ import { parse } from "date-fns/fp";
 const dateFormat = "yyyy-MM-dd";
 const parseDate = parse(new Date())(dateFormat);
 
-
 export default {
   props: {
     segment: Object, // expects Segment to have start & end in format {dateFormat}
