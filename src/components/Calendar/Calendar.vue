@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { getEvents, generateColor } from "@/services/eventService";
+import { getEvents } from "@/services/eventService";
 import CalendarItemDetail from "./CalendarItemDetail";
 
 export default {
@@ -105,7 +105,6 @@ export default {
       this.events = response.results;
       this.events.map((e) => {
         e['session'] = e['color']
-        e["color"] = generateColor(e["color"]+'a1');
         return e;
       });
     },

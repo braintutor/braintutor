@@ -31,14 +31,7 @@ function removeEvent(event_id) {
   });
 }
 
-var randomColor = require('randomcolor');
 
-function generateColor(text){
-  return text.length > 20? randomColor({
-    seed: text
-  }) : text
-
-}
 
 function getEvents(query){
   return fetch_post('event2', query)
@@ -51,7 +44,6 @@ function join(payload){
 export {
   join,
   getEvents,
-  generateColor,
   getEventsBySession,
   getEventsBySessionStudent,
   addEvent,
