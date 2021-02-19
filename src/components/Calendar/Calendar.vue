@@ -13,6 +13,32 @@
             {{ $refs.calendar.title }}
           </v-toolbar-title>
           <v-spacer></v-spacer>
+          <v-menu
+            bottom
+            right
+          >
+          <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                outlined
+                color="grey darken-2"
+                v-bind="attrs"
+                v-on="on"
+              >
+                <span>{{ typeToLabel[type] }}</span>
+                <v-icon right>
+                  mdi-menu-down
+                </v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item @click="type = 'day'">
+                <v-list-item-title>DIA</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="type = 'week'">
+                <v-list-item-title>SEMANA</v-list-item-title>
+              </v-list-item>
+            </v-list>
+            </v-menu>
         </v-toolbar>
       </v-col>
     </v-row>
@@ -25,7 +51,7 @@
             v-model="focus"
             ref="calendar"
             color="primary"
-            type="week"
+            :type="type"
             :start ="start"
             :events="events"
             :interval-minutes="30"
@@ -71,7 +97,13 @@ export default {
     eventSelected: null,
     focus: "",
     weekdays: [1, 2, 3, 4, 5, 6],
+    type: 'week',
     range: {},
+    typeToLabel: {
+        week: 'semana',
+        day: 'día',
+        
+      },
     // desde las 6 hasta las 22, son 16 horas, si el intervalo es de 30 min, entonces es 32
     intervalCount: 32
   }),
