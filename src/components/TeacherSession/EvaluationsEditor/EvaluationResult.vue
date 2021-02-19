@@ -8,34 +8,52 @@
       <div class="m-card__body">
         <div class="score mb-4">
           <strong>Puntaje: </strong>
-          <span class="score__value ml-2">{{ c.score }}</span>
+          <span
+            v-if="c.type === 'closed'"
+            class="score__value score__value--disabled ml-2"
+            >{{ c.score }}</span
+          >
+          <input
+            v-else-if="c.type === 'open'"
+            v-model.number="teacher_responses[c_idx].score"
+            type="number"
+            step="1"
+            class="score__value ml-2"
+          />
         </div>
         <p class="evaluation__statement">{{ c.question }}</p>
         <div v-if="c.image" class="evaluation__image">
           <img :src="c.image" />
         </div>
-        <div
-          v-for="(alternative, a_idx) in c.alternatives"
-          :key="a_idx"
-          class="alternative mt-3"
-        >
-          <span
-            class="alternative__checkbox mr-3"
-            :class="{
-              'alternative__checkbox--active':
-                a_idx === studentEvaluation.answers[c_idx],
-            }"
-          ></span>
-          <span
-            class="alternative__text"
-            :class="{
-              'alternative__text--correct': a_idx === c.correct,
-              'alternative__text--incorrect':
-                a_idx !== c.correct &&
-                a_idx === studentEvaluation.answers[c_idx],
-            }"
-            >{{ alternative }}</span
+
+        <div v-if="c.type === 'closed'">
+          <div
+            v-for="(alternative, a_idx) in c.alternatives"
+            :key="a_idx"
+            class="alternative mt-3"
           >
+            <span
+              class="alternative__checkbox mr-3"
+              :class="{
+                'alternative__checkbox--active':
+                  a_idx === studentEvaluation.answers[c_idx].alternative,
+              }"
+            ></span>
+            <span
+              class="alternative__text"
+              :class="{
+                'alternative__text--correct': a_idx === c.correct,
+                'alternative__text--incorrect':
+                  a_idx !== c.correct &&
+                  a_idx === studentEvaluation.answers[c_idx].alternative,
+              }"
+              >{{ alternative }}</span
+            >
+          </div>
+        </div>
+        <div v-else-if="c.type === 'open'">
+          <h3>Respuesta:</h3>
+          <p class="ma-0 mt-3">{{ studentEvaluation.answers[c_idx].text }}</p>
         </div>
       </div>
     </div>
@@ -62,7 +80,7 @@
         <div>
           <strong>Comentario:</strong>
           <v-textarea
-            v-model="studentEvaluation.comment"
+            v-model="comment"
             dense
             auto-grow
             rows="3"
@@ -112,20 +130,34 @@ export default {
   },
   data: () => ({
     studentEvaluation: [],
-    //
-    score: 0,
-    note: "",
+    teacher_responses: [],
+    comment: "",
   }),
+  computed: {
+    score() {
+      return this.getScore(
+        this.studentEvaluation.evaluation,
+        this.studentEvaluation
+      );
+    },
+    note() {
+      return this.getNote(this.studentEvaluation.evaluation, this.score);
+    },
+  },
   watch: {
     studentEvaluationId: {
       immediate: true,
       handler: async function (id) {
-        this.studentEvaluation = await getStudentEvaluation(id);
-        this.score = this.getScore(
-          this.studentEvaluation.evaluation,
-          this.studentEvaluation
+        let studentEvaluation = await getStudentEvaluation(id);
+        this.evaluation = studentEvaluation.evaluation;
+        this.comment = studentEvaluation.comment;
+        this.teacher_responses = studentEvaluation.evaluation.content.map(
+          (_, idx) =>
+            studentEvaluation.teacher_responses[idx]
+              ? studentEvaluation.teacher_responses[idx]
+              : { score: 0 }
         );
-        this.note = this.getNote(this.studentEvaluation.evaluation, this.score);
+        this.studentEvaluation = studentEvaluation;
       },
     },
   },
@@ -133,7 +165,12 @@ export default {
     getScore(evaluation, result) {
       let score = 0;
       evaluation.content.forEach((question, idx) => {
-        if (question.correct === result.answers[idx]) score += question.score;
+        if (question.type === "closed") {
+          if (question.correct === result.answers[idx].alternative)
+            score += question.score;
+        } else if (question.type === "open") {
+          score += this.teacher_responses[idx].score || 0;
+        }
       });
       return score;
     },
@@ -158,10 +195,11 @@ export default {
           this.studentEvaluationId,
           this.studentEvaluation.score
         );
-        await this.$api.evaluation_result.updateComment(
+        await this.$api.evaluation_result.updateTeacherResponses(
           this.studentEvaluationId,
           {
-            comment: this.studentEvaluation.comment,
+            comment: this.comment,
+            teacher_responses: this.teacher_responses,
           }
         );
       } catch (error) {
@@ -252,9 +290,15 @@ export default {
   align-items: center;
 
   &__value {
+    width: 80px;
     padding: 6px 8px;
-    border: 1px solid #ccc;
+    border: 2px solid #000;
     border-radius: 8px;
+
+    &--disabled {
+      border: 2px solid #ccc;
+      opacity: 0.5;
+    }
   }
 }
 </style>

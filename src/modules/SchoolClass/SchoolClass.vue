@@ -1,17 +1,24 @@
 <template>
   <div class="m-container">
     <!-- <v-card v-for="(item, idx) in classes" :key="idx" class="mx-auto my-12"> -->
-    <v-card v-for="(item, idx) in classes" :key="idx" class="mx-auto my-4 card-class" flat rounded="sm">
+    <v-card
+      v-for="(item, idx) in classes"
+      :key="idx"
+      class="mx-auto my-4 card-class"
+      flat
+      rounded="sm"
+    >
       <v-card-title>
-        <p>12 Marzo | Viernes</p>
+        <p> {{ item.start | dayMonth }} | {{ item.start | dayWeek }} </p>
+
       </v-card-title>
       <v-card-text>
         <div class="d-flex">
           <canvas></canvas>
           <div style="width: 100%">
-            <p class="p-canvas">08:00 - 10:30</p>
-            <h3 class="p-canvas">Clase de sumas y restas</h3>
-            <div class="d-flex justify-end">
+            <p class="p-canvas"> {{ item.start | time }} - {{ item.end | time }}</p>
+            <h3 class="p-canvas">Clase</h3>
+            <div class="d-flex justify-end align-center">
               <v-tooltip bottom>
                 <template v-slot:activator="{ on }">
                   <v-btn
@@ -27,10 +34,20 @@
                     <v-icon dark>
                       mdi-notebook-edit-outline
                     </v-icon>
-                  </v-btn>                  
-                </template>              
+                  </v-btn>
+                </template>
                 <span>tareas</span>
               </v-tooltip>
+              <v-btn
+                v-if="item.recording"
+                :href="item.recording.url"
+                target="__blank"
+                color="primary"
+                small
+                rounded
+              >
+                <v-icon small class="mr-2">mdi-eye</v-icon>Ver grabación
+              </v-btn>
               <!-- <v-btn
                 class="mx-4 bt-pencil"
                 fab
@@ -42,10 +59,10 @@
                   mdi-book-open-variant
                 </v-icon>
               </v-btn> -->
-            </div>            
-          </div>          
-        </div>        
-      </v-card-text>     
+            </div>
+          </div>
+        </div>
+      </v-card-text>
       <!-- <v-card-title class="time"
         >Clase del dia {{ item.start | date }}
       </v-card-title>
@@ -109,7 +126,7 @@ export default {
         });
     },
     next() {
-      this.page = this.page + 1
+      this.page = this.page + 1;
       this.getData();
     },
     seeRecord({ url }) {
@@ -119,14 +136,13 @@ export default {
   filters: {
     parseDate(timestamp) {
       return new Date(parseInt(timestamp));
-    }
+    },
   },
   components: {},
 };
 </script>
 
 <style lang="scss" scoped>
-
 .card-class {
   border-top: 1px solid gray;
 }
@@ -136,7 +152,7 @@ p {
 }
 
 canvas {
-  background: rgba(0,0,0,1);
+  background: rgba(0, 0, 0, 1);
 }
 
 .p-canvas {
@@ -147,8 +163,7 @@ canvas {
   padding: 10px 16px 10px 16px;
 }
 
-.v-card__text{
+.v-card__text {
   padding: 0px 16px 10px;
 }
-
 </style>

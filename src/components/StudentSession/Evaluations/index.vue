@@ -223,7 +223,7 @@ export default {
     },
     isAvailable({ result, time_end }) {
       if (result && result.time_end) return false;
-      if (new Date() >= time_end) return false;
+      if (new Date() >= new Date(time_end + "Z")) return false;
       return true;
     },
     //
