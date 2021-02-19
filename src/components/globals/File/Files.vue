@@ -344,7 +344,6 @@ $background-file: rgba(0, 0, 255, 0.05);
  padding: 10px;
  border-radius: 10px;
  color: #000;
-//  text-transform: uppercase;
 }
 
 #ip-file {

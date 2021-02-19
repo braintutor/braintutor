@@ -10,11 +10,15 @@
         required
         class="mt-4"
       ></v-text-field>
-      <input
-        @change="onFileSelected($event)"
-        onclick="value = null"
-        type="file"
-      />
+      <div class="py-4">
+        <label for="ip-file" class="lab-file">Seleccionar archivo</label>
+        <input
+          id="ip-file"
+          @change="onFileSelected($event)"
+          onclick="value = null"
+          type="file"
+         />
+      </div>      
       <div class="school__image my-4">
         <img :src="school.image" />
       </div>
@@ -88,5 +92,19 @@ export default {
       max-width: 100%;
     }
   }
+}
+
+.lab-file {
+  cursor: pointer;
+  background: #DADADA;
+  padding: 10px;
+  border-radius: 10px;
+  color:#000;
+}
+
+#ip-file {
+  opacity: 0;
+  position: absolute;
+  z-index: -1;
 }
 </style>
