@@ -20,16 +20,24 @@
           <p class="question__text ma-0 mb-3">
             <span class="ml-2">{{ question.question }}</span>
           </p>
-          <div v-if="question.image" class="question__image mt-2">
+          <div v-if="question.image" class="question__image my-2">
             <img :src="question.image" alt="" />
           </div>
-          <div
-            v-for="(alternative, a_idx) in question.alternatives"
-            :key="a_idx"
-            class="alternative mt-2"
-            :class="{ 'alternative--selected': a_idx === result.answers[idx] }"
-          >
-            <p class="alternative__text ma-0">{{ alternative }}</p>
+          <div v-if="question.type === 'closed'">
+            <div
+              v-for="(alternative, a_idx) in question.alternatives"
+              :key="a_idx"
+              class="alternative mt-2"
+              :class="{
+                'alternative--selected': a_idx === result.answers[idx].alternative,
+              }"
+            >
+              <p class="alternative__text ma-0">{{ alternative }}</p>
+            </div>
+          </div>
+          <div v-else-if="question.type === 'open'">
+            <h3>Respuesta</h3>
+            <p class="ma-0 mt-3">{{result.answers[idx].text}}</p>
           </div>
         </div>
       </div>

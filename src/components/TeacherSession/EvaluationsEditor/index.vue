@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100%">
-    <div v-show="!show_editor" class="list m-container">
+    <div v-show="!show_editor && !show_results" class="list m-container">
       <!-- MENU -->
       <div class="list__menu">
         <m-btn @click="create()" color="primary" small>
@@ -42,7 +42,13 @@
           </v-tooltip>
           <v-tooltip v-if="evaluation.is_public" bottom>
             <template v-slot:activator="{ on }">
-              <v-btn v-on="on" icon small class="ml-2">
+              <v-btn
+                @click="showResults(evaluation)"
+                v-on="on"
+                icon
+                small
+                class="ml-2"
+              >
                 <v-icon style="font-size: 1.3rem">mdi-poll</v-icon>
               </v-btn>
             </template>
@@ -104,11 +110,25 @@
         init();
       "
     />
+
+    <!-- EVALUATION RESULTS -->
+    <div v-if="show_results" class="m-container">
+      <div class="m-menu mb-3">
+        <div class="m-menu__left">
+          <v-btn icon @click="show_results = false">
+            <v-icon style="font-size: 1.4rem">mdi-arrow-left</v-icon>
+          </v-btn>
+          <span class="m-menu__title">{{ evaluation_selected.name }}</span>
+        </div>
+      </div>
+      <EvaluationResults :evaluation="evaluation_selected" />
+    </div>
   </div>
 </template>
 
 <script>
 import EvaluationEditor from "./EvaluationEditor";
+import EvaluationResults from "./EvaluationResults";
 
 import { getStudentsBySession } from "@/services/studentService";
 
@@ -119,6 +139,7 @@ export default {
     evaluation_selected: null,
     //
     show_editor: false,
+    show_results: false,
     dlg_remove: false,
   }),
   computed: {
@@ -210,6 +231,18 @@ export default {
       }
       this.hideLoading();
     },
+    async showResults(evaluation) {
+      this.showLoading("Cargando Evaluación");
+      try {
+        this.evaluation_selected = this.mongo(
+          await this.$api.evaluation.get(evaluation.id)
+        );
+        this.show_results = true;
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
+    },
     async showRemove(evaluation) {
       this.evaluation_selected = evaluation;
       this.dlg_remove = true;
@@ -229,6 +262,7 @@ export default {
   },
   components: {
     EvaluationEditor,
+    EvaluationResults,
   },
 };
 </script>
