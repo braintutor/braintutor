@@ -17,7 +17,7 @@
           <canvas></canvas>
           <div style="width: 100%">
             <p class="p-canvas"> {{ item.start | time }} - {{ item.end | time }}</p>
-            <h3 class="p-canvas">Clase de sumas y restas</h3>
+            <h3 class="p-canvas">Clase</h3>
             <div class="d-flex justify-end align-center">
               <v-tooltip bottom>
                 <template v-slot:activator="{ on }">
