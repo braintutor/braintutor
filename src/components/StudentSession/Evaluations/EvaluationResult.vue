@@ -29,7 +29,8 @@
               :key="a_idx"
               class="alternative mt-2"
               :class="{
-                'alternative--selected': a_idx === result.answers[idx].alternative,
+                'alternative--selected':
+                  a_idx === result.answers[idx].alternative,
               }"
             >
               <p class="alternative__text ma-0">{{ alternative }}</p>
@@ -37,7 +38,7 @@
           </div>
           <div v-else-if="question.type === 'open'">
             <h3>Respuesta</h3>
-            <p class="ma-0 mt-3">{{result.answers[idx].text}}</p>
+            <p class="ma-0 mt-3">{{ result.answers[idx].text }}</p>
           </div>
         </div>
       </div>
