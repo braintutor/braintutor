@@ -162,7 +162,9 @@ export default {
   computed: {
     evaluations_filtered() {
       let evaluations = this.evaluations.map((e) => e);
-      evaluations.sort((a, b) => b.time_start - a.time_start);
+      evaluations.sort(
+        (a, b) => new Date(b.time_start) - new Date(a.time_start)
+      );
       return evaluations;
     },
   },
