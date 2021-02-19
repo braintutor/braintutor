@@ -46,6 +46,79 @@
           </div>
         </div>
 
+        <!-- MAP SCORE -->
+        <div class="score m-card mt-4">
+          <div class="m-card__body">
+            <h3 class="mb-3"><strong>Convertir Puntaje a Nota</strong></h3>
+            <div
+              v-for="(item, idx) in evaluation.map_score_to_note"
+              :key="idx"
+              class="score__rule mb-3"
+            >
+              <div>
+                <span>Si es</span>
+                <span v-if="idx > 0">
+                  {{
+                    `${
+                      evaluation.map_score_to_note[idx - 1].is_equal
+                        ? "mayor a"
+                        : "mayor o igual a"
+                    } ${evaluation.map_score_to_note[idx - 1].max || "?"}`
+                  }}
+                </span>
+                <span
+                  v-if="
+                    idx > 0 && idx < evaluation.map_score_to_note.length - 1
+                  "
+                  >y</span
+                >
+                <span v-if="idx < evaluation.map_score_to_note.length - 1">
+                  <select
+                    v-model="item.is_equal"
+                    :disabled="evaluation.is_public"
+                  >
+                    <option :value="false">menor a</option>
+                    <option :value="true">menor o igual a</option>
+                  </select>
+                  <input
+                    type="number"
+                    v-model="item.max"
+                    :disabled="evaluation.is_public"
+                  />
+                  <!-- :min="idx > 0 ? evaluation.map_score_to_note[idx - 1].max : 0" -->
+                </span>
+                <span>tiene</span>
+                <input
+                  type="text"
+                  v-model="item.note"
+                  :disabled="evaluation.is_public"
+                />
+              </div>
+              <v-tooltip v-if="!evaluation.is_public" bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    v-bind="attrs"
+                    v-on="on"
+                    @click="removeMapScoreToNoteRule(evaluation, idx)"
+                    icon
+                    small
+                  >
+                    <v-icon style="font-size: 1.4rem">mdi-close</v-icon>
+                  </v-btn>
+                </template>
+                <span style="font-size: 0.75rem">Quitar</span>
+              </v-tooltip>
+            </div>
+            <div
+              v-if="!evaluation.is_public"
+              @click="addMapScoreToNoteRule(evaluation)"
+              class="score__add"
+            >
+              +
+            </div>
+          </div>
+        </div>
+
         <!-- QUESTION -->
         <div
           v-for="(c, c_idx) in evaluation.content"
@@ -354,11 +427,25 @@ export default {
       }
       this.hideLoading();
     },
+    addMapScoreToNoteRule(evaluation) {
+      evaluation.map_score_to_note.push({});
+      if (this.evaluation.map_score_to_note.length === 1)
+        evaluation.map_score_to_note.push({});
+      this.$forceUpdate();
+    },
+    removeMapScoreToNoteRule(evaluation, idx) {
+      evaluation.map_score_to_note.splice(idx, 1);
+      if (this.evaluation.map_score_to_note.length === 1)
+        evaluation.map_score_to_note.splice(0, 1);
+      this.$forceUpdate();
+    },
     addQuestion() {
       let question = {
+        type: "closed",
         question: "Pregunta",
         alternatives: ["Alternativa", "Alternativa"],
-        type: "closed",
+        correct: 0,
+        score: 0,
       };
       this.evaluation.content.push(question);
 
@@ -430,6 +517,49 @@ export default {
 
   &__body {
     overflow: auto;
+  }
+}
+
+.score {
+  &__title {
+    font-weight: bold;
+    font-size: 1rem;
+  }
+
+  &__rule {
+    font-size: 0.9rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__add {
+    text-align: center;
+    font-size: 1.5rem;
+    color: rgb(151, 151, 151);
+    border: 1.5px dashed #ccc;
+    border-radius: 8px;
+    transition: 0.3s;
+    cursor: pointer;
+
+    &:hover {
+      background: rgb(241, 241, 241);
+    }
+  }
+
+  select,
+  input {
+    padding: 6px 12px;
+    margin: 0 8px;
+    box-shadow: 0 2px 10px #ccc;
+    border-radius: 6px;
+  }
+  input[type="number"] {
+    max-width: 90px;
+  }
+  input[type="text"] {
+    max-width: 120px;
   }
 }
 

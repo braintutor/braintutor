@@ -40,6 +40,14 @@
               evaluation.is_public ? "Ver" : "Editar"
             }}</span>
           </v-tooltip>
+          <v-tooltip v-if="evaluation.is_public" bottom>
+            <template v-slot:activator="{ on }">
+              <v-btn v-on="on" icon small class="ml-2">
+                <v-icon style="font-size: 1.3rem">mdi-poll</v-icon>
+              </v-btn>
+            </template>
+            <span style="font-size: 0.75rem">Resultados</span>
+          </v-tooltip>
           <v-tooltip bottom>
             <template v-slot:activator="{ on }">
               <v-btn
