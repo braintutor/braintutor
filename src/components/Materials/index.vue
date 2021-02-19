@@ -296,6 +296,7 @@ export default {
 
           //Knowledge
           this.showLoading("Cargando Conocimiento");
+          // knowledge base
           let knowledge = this.course.knowledge || [];
 
           // Knowledge Material
