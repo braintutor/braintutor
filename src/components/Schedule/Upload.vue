@@ -15,7 +15,6 @@
             </v-btn>
           </div>
         </div>
-
         <div class="mt-2 ">
           <div class="mt-4 box">
             <div v-if="scheduleItems.length == 0">
@@ -27,10 +26,12 @@
               <v-icon>mdi-download</v-icon>
             </div>
           </div>
-
           <form @submit.prevent="save()" class="mt-1 pa-4 box">
             <p>Suba el archivo con los horarios:</p>
-            <input @change="onFileSelected($event)" accept=".xlsx" type="file" />
+            <div>
+              <label for="ip-file" class="lab-file">Seleccionar archivo</label>
+              <input @change="onFileSelected($event)" accept=".xlsx" type="file" id="ip-file" />
+            </div>           
           </form>
         </div>
       </template>
@@ -107,3 +108,20 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+
+.lab-file {
+ cursor:pointer;
+ background: #DADADA;
+ padding: 10px;
+ border-radius: 10px;
+ color: #000;
+}
+
+#ip-file {
+  opacity:0;
+  position: absolute;
+  z-index: -1;
+}
+</style>
