@@ -1,6 +1,9 @@
 <template>
   <div>
-    <h4>{{ name }}</h4>
+    <div class="d-flex">
+      <h4 class="school-cycle">{{ name }}</h4>
+      <v-icon>mdi-calendar</v-icon>
+    </div>    
     <p>
       Inicio: {{ start | date }} - Fin:
       {{ end | date }}
@@ -40,4 +43,11 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+
+.school-cycle {
+  font-size: 1.4rem;
+  margin-right: 10px;
+}
+
+</style>

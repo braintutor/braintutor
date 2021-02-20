@@ -32,7 +32,7 @@
             </template>
             <v-list>
               <v-list-item @click="type = 'day'">
-                <v-list-item-title>DIA</v-list-item-title>
+                <v-list-item-title>DÍA</v-list-item-title>
               </v-list-item>
               <v-list-item @click="type = 'week'">
                 <v-list-item-title>SEMANA</v-list-item-title>
@@ -178,5 +178,9 @@ export default {
 
 .date-modal {
   padding: 10px 0px 0px 0px;
+}
+
+.v-toolbar__title {
+  font-weight: bold;
 }
 </style>
