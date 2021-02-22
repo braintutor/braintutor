@@ -154,10 +154,8 @@ export default {
     menuStart: null,
     menuEnd: null,
     days: days,
-
     calendarStart: null,
     selectedDays: [],
-
     loadingCycle: false,
     cycle: null,
     selectedCycleSegment: null,

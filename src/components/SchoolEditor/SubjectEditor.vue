@@ -203,7 +203,7 @@ export default {
         await remove(this.entity.id);
         this.getData();
       } catch (error) {
-        this.showMessage("", error.msg || error);
+        this.showMessage("", error.message || error);
       }
       this.hideLoading();
     },
