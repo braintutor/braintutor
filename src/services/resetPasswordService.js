@@ -1,4 +1,5 @@
+import { fetch_post } from "./fetch";
 
 export function requestResetPassword(email) {
-    alert(email)
+    fetch_post('api/v1/auth/reset-password', { email })
 }

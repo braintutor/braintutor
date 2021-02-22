@@ -19,9 +19,9 @@ export default {
          }
     },
     methods: {
-        resetPassword() {
-            requestResetPassword(this.email)
-        }
+      async resetPassword() {
+          await requestResetPassword(this.email)
+      }
     }
 }
 </script>
