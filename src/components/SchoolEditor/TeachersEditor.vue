@@ -371,7 +371,13 @@
                         autocomplete="off"
                       ></v-text-field>
                     </td>
-                    <td v-if="!is_first_import" class="text-center" style="font-size: .8rem">{{ entity.error }}</td>
+                    <td
+                      v-if="!is_first_import"
+                      class="text-center"
+                      style="font-size: 0.8rem"
+                    >
+                      {{ entity.error }}
+                    </td>
                     <td>
                       <v-btn class="mb-2" @click="new_data.splice(idx, 1)" icon>
                         <v-icon style="font-size: 1.3rem">mdi-close</v-icon>
@@ -383,7 +389,10 @@
               <p v-if="new_data.length <= 0" class="text-center mt-2">
                 No hay información
               </p>
-              <div style="display: flex; justify-content: flex-end" class="mt-3">
+              <div
+                style="display: flex; justify-content: flex-end"
+                class="mt-3"
+              >
                 <m-btn
                   type="button"
                   @click="generatePasswords()"
@@ -414,7 +423,14 @@
                 style="display: flex; justify-content: flex-end"
                 class="mt-3"
               >
-                <m-btn @click="dlg_import = false" type="button" color="primary" small text>Cerrar</m-btn>
+                <m-btn
+                  @click="dlg_import = false"
+                  type="button"
+                  color="primary"
+                  small
+                  text
+                  >Cerrar</m-btn
+                >
                 <m-btn type="submit" color="primary" small class="ml-2"
                   >Guardar</m-btn
                 >
