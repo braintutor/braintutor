@@ -3,20 +3,14 @@
     <div class="filter">
       <span class="filter__text">Mostrar:</span>
       <label class="filter__item">
-        <input
-          class="mr-1"
-          type="checkbox"
-          value="event"
-          v-model="filters"
-        />Eventos
+        <input class="mr-1" type="checkbox" value="event" v-model="filters" />
+        <v-icon small class="mr-1 mb-1">{{ icons["event"] }}</v-icon>
+        <span>Eventos</span>
       </label>
       <label class="filter__item">
-        <input
-          class="mr-1"
-          type="checkbox"
-          value="task"
-          v-model="filters"
-        />Tareas
+        <input class="mr-1" type="checkbox" value="task" v-model="filters" />
+        <v-icon small class="mr-1 mb-1">{{ icons["task"] }}</v-icon>
+        <span>Tareas</span>
       </label>
       <label class="filter__item">
         <input
@@ -24,7 +18,9 @@
           type="checkbox"
           value="evaluation"
           v-model="filters"
-        />Evaluaciones
+        />
+        <v-icon small class="mr-1 mb-1">{{ icons["evaluation"] }}</v-icon>
+        <span>Evaluaciones</span>
       </label>
     </div>
     <div class="m-legend">
@@ -72,6 +68,11 @@ export default {
   data: () => ({
     sessions: [],
     events: [],
+    icons: {
+      task: "mdi-file-document-edit",
+      evaluation: "mdi-format-list-checks",
+      event: "mdi-calendar",
+    },
     filters: ["task", "event", "evaluation"],
   }),
   computed: {
@@ -101,6 +102,7 @@ export default {
                 date: i.time_start,
                 type: "event",
                 color,
+                icon: this.icons["event"],
                 ...i,
               };
             })
@@ -111,6 +113,7 @@ export default {
                 date: i.time_start,
                 type: "task",
                 color,
+                icon: this.icons["task"],
                 ...i,
               };
             })
@@ -132,6 +135,7 @@ export default {
                 date: i.time_start,
                 type: "evaluation",
                 color,
+                icon: this.icons["evaluation"],
                 ...i,
               };
             })
@@ -176,7 +180,7 @@ export default {
     font-weight: bolder;
   }
   &__item {
-    margin-left: 0.75rem;
+    margin-left: 1rem;
     font-size: 0.9rem;
     cursor: pointer;
   }
