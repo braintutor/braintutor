@@ -33,6 +33,11 @@
       <m-btn :loading="loading_login" color="primary" block
         >Iniciar Sesión</m-btn
       >
+      <div class="pt-4 mt-4">
+        <router-link :to="'/reset-password/' + school._id.$oid">
+          ¿Olvidaste tu contraseña?
+        </router-link>
+      </div>
     </div>
   </v-form>
 </template>
