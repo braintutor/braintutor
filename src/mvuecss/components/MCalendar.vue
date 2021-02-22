@@ -61,7 +61,10 @@
                 class="day__event"
                 :style="{ background: event.color }"
               >
-                {{ event.title }}
+                <v-icon v-if="event.icon" small dark class="mr-2">{{
+                  event.icon
+                }}</v-icon>
+                <span>{{ event.title }}</span>
               </div>
             </div>
           </div>
