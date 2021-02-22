@@ -35,6 +35,10 @@ const routes = [
     component: () => import("../views/ResetPassword.vue"),
   },
   {
+    path: "/new-password/:school_id",
+    component: ()=> import ("../views/NewPassword.vue"),
+  },
+  {
     path: "/profile",
     name: "profile",
     meta: { roles: ["ADM", "TEA", "STU", "DIR", "PAR"] },
