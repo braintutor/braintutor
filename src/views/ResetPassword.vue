@@ -1,6 +1,6 @@
 <template>
   <div class="m-container">
-    <div v-if="sended">
+    <div v-if="isSended">
       <p>Enviado</p>
     </div>
     <div v-else>
@@ -8,7 +8,7 @@
       <p>Te enviaremos un correo electrónico a tu cuenta</p>
       <v-form @submit.prevent="resetPassword">
         <v-text-field class="text-f" v-model="email" placeholder="Correo" type="email" filled rounded dense :rules="emailRules"></v-text-field>
-        <v-btn type="submit"  color="primary" :loading="loading">Enviar</v-btn>
+        <v-btn type="submit" color="primary">Enviar</v-btn>
       </v-form>
     </div>
   </div>
@@ -19,19 +19,23 @@ import { requestResetPassword } from "@/services/resetPasswordService";
 export default {
     data() {
       return {
-        status: "loading",
+        status: "",
+        isSended: false,
         email: "",
         emailRules: [v => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'Correo invalido'],
       }
     },
     methods: {
       async resetPassword() {
-        await requestResetPassword(this.email)
-      }
-    },
-    computed: {
-      loading() { return this.status === 'loading' },
-      sended() { return this.status === 'sended' }
+        this.showLoading("Enviando correo");
+        try {
+          await requestResetPassword(this.email);
+          this.isSended = true
+        } catch (error) {
+          this.showMessage("", error.msg || error);
+        }
+        this.hideLoading();
+      }      
     }
 }
 </script>
