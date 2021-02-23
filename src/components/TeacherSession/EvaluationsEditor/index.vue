@@ -54,6 +54,20 @@
             </template>
             <span style="font-size: 0.75rem">Resultados</span>
           </v-tooltip>
+          <v-tooltip v-if="evaluation.is_public" bottom>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                @click="showUpdateTime(evaluation)"
+                v-on="on"
+                icon
+                small
+                class="ml-2"
+              >
+                <v-icon style="font-size: 1.3rem">mdi-clock-time-four</v-icon>
+              </v-btn>
+            </template>
+            <span style="font-size: 0.75rem">Modificar Tiempo</span>
+          </v-tooltip>
           <v-tooltip bottom>
             <template v-slot:activator="{ on }">
               <v-btn
@@ -99,6 +113,42 @@
           </div>
         </div>
       </v-dialog>
+      <!-- DLG UPDATE TIME -->
+      <v-dialog v-model="dlg_update_time" max-width="450" persistent>
+        <div class="m-card">
+          <div class="m-card__body">
+            <div class="close-modal">
+              <h3>Modificar Tiempo</h3>
+              <v-btn class="mx-2" icon small @click="dlg_update_time = false">
+                <v-icon>mdi-close-thick</v-icon>
+              </v-btn>
+            </div>
+            <div v-if="evaluation_selected" class="mt-4">
+              <span class="mr-4">Tiempo de Fin:</span>
+              <date-time v-model="evaluation_selected.time_end" />
+            </div>
+          </div>
+          <div class="m-card__actions">
+            <m-btn
+              @click="dlg_update_time = false"
+              class="cancel-button"
+              small
+              text
+              >Cancelar</m-btn
+            >
+            <m-btn
+              @click="
+                dlg_update_time = false;
+                updateTime(evaluation_selected);
+              "
+              color="primary"
+              small
+              class="ml-2"
+              >Guardar</m-btn
+            >
+          </div>
+        </div>
+      </v-dialog>
     </div>
 
     <!-- EVALUATION EDITOR -->
@@ -129,6 +179,7 @@
 <script>
 import EvaluationEditor from "./EvaluationEditor";
 import EvaluationResults from "./EvaluationResults";
+import DateTime from "@/components/globals/DateTime";
 
 import { getStudentsBySession } from "@/services/studentService";
 
@@ -141,13 +192,16 @@ export default {
     show_editor: false,
     show_results: false,
     dlg_remove: false,
+    dlg_update_time: false,
   }),
   computed: {
     evaluations_filtered() {
-      let evaluations = this.evaluations.map((e) => e);
-      evaluations.sort(
-        (a, b) => new Date(b.time_start) - new Date(a.time_start)
-      );
+      let evaluations = this.evaluations.map((e) => ({
+        ...e,
+        time_start: new Date(e.time_start + "Z"),
+        time_end: new Date(e.time_end + "Z"),
+      }));
+      evaluations.sort((a, b) => b.time_start - a.time_start);
       return evaluations;
     },
   },
@@ -219,6 +273,17 @@ export default {
       }
       this.hideLoading();
     },
+    async updateTime(evaluation) {
+      this.showLoading("Guardando Cambios");
+      try {
+        await this.$api.evaluation.updateTime(evaluation.id, evaluation);
+        await this.init();
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
+    },
+    //
     async showEditor(evaluation) {
       this.showLoading("Cargando Evaluación");
       try {
@@ -243,13 +308,16 @@ export default {
       }
       this.hideLoading();
     },
-    async showRemove(evaluation) {
+    showRemove(evaluation) {
       this.evaluation_selected = evaluation;
       this.dlg_remove = true;
     },
+    showUpdateTime(evaluation) {
+      this.evaluation_selected = Object.assign({}, evaluation);
+      this.dlg_update_time = true;
+    },
     //
     toDateString(date) {
-      date = new Date(date + "Z");
       let date_format = date.toLocaleDateString("es-ES", {
         day: "2-digit",
         month: "2-digit",
@@ -263,6 +331,7 @@ export default {
   components: {
     EvaluationEditor,
     EvaluationResults,
+    DateTime,
   },
 };
 </script>

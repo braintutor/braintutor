@@ -17,11 +17,9 @@ export default (_fetch) => ({
   publish(evaluation_id) {
     return _fetch('POST', `evaluation/${evaluation_id}/publish`)
   },
-  // update(id, time_end) {
-  //   return _fetch('PATCH', 'evaluation', {
-  //     id, time_end
-  //   });
-  // },
+  updateTime(evaluation_id, data) {
+    return _fetch('PATCH', `evaluation/${evaluation_id}/time`, data)
+  },
   getSessionResults(session_id) {
     return _fetch('GET', `evaluation/session-result/${session_id}`);
   },
