@@ -9,7 +9,7 @@
       <v-text-field type="password" v-model="confirmPassword" placeholder="Confirme su nueva contraseña" 
         filled rounded dense
         :rules="confirmationPasswordRules"></v-text-field>
-      <v-btn type="submit" color="primary">Guardar contraseña</v-btn>      
+      <v-btn type="submit" color="primary">Cambiar contraseña</v-btn>      
     </v-form>
   </div>
 </template>
@@ -22,7 +22,6 @@ export default {
     return{
       password: "",
       confirmPassword: "",
-      token: "",
       passwordRules: [
         (v) => !!v || 'Password es requerido',
         // (v) => passwordPolicy(v)
@@ -41,6 +40,9 @@ export default {
     }
   },
   computed: {
+    token() {
+      return this.$route.params.token 
+    },
     confirmationPasswordRules() {
       return [
         () => (this.password === this.confirmPassword) || 'Password deben ser iguales',

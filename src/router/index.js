@@ -35,7 +35,7 @@ const routes = [
     component: () => import("../views/ResetPassword.vue"),
   },
   {
-    path: "/new-password/:school_id",
+    path: "/new-password/:token",
     component: ()=> import ("../views/NewPassword.vue"),
   },
   {
