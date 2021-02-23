@@ -8,6 +8,7 @@ import Course from "./course";
 import CourseMaterial from "./courseMaterial";
 import Student from "./student";
 import Teacher from "./teacher";
+import Director from "./director";
 import Task from "./task";
 import School from "./school";
 import Material from "./material";
@@ -27,6 +28,7 @@ export default {
       session: Session(_fetch),
       student: Student(_fetch),
       teacher: Teacher(_fetch),
+      director: Director(_fetch),
       task: Task(_fetch),
       school: School(_fetch),
       material: Material(_fetch),

@@ -86,7 +86,6 @@ export default {
   data: () => ({
     evaluation_result_selected: null,
     show_evaluation_result: false,
-
     selected: [],
     students: [],
     headers: [{ text: 'Nombres', value: 'fullName' }, { text: "Nota", value: "score"}]

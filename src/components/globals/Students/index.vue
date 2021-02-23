@@ -36,7 +36,6 @@
           </v-menu>
         </div>
       </div>
-
       <!-- STUDENT LEARN -->
       <div v-show="students.length > 0" class="chart m-card mt-3">
         <div class="m-card__body">
@@ -45,7 +44,6 @@
         </div>
       </div>
     </div>
-
     <!-- Student -->
     <div v-if="student_selected">
       <div class="m-menu">

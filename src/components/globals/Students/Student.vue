@@ -12,13 +12,11 @@
         <strong class="mr-3">correo:</strong>
         <span>{{ student.email }}</span>
       </div>
-
       <div class="student__t">
         <h3>Tiempo de Sesión</h3>
         <p class="mt-2">Ultima Sesión: {{ time.time_last_f }}</p>
         <canvas id="crt-t"></canvas>
       </div>
-
       <div v-if="student.learning_style" class="student__ls">
         <h3>Estilo de Aprendizaje</h3>
         <canvas id="crt-ls"></canvas>
