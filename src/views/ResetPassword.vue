@@ -23,7 +23,7 @@ export default {
     data() {
       return {
         status: "",
-        isSended: true,
+        isSended: false,
         email: "",
         emailRules: [v => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'Correo invalido'],
       }
