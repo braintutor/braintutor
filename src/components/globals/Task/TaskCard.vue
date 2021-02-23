@@ -31,7 +31,6 @@
       <p class="task__title">{{ title }}</p>
       <p class="task__description">{{ description }}</p>
     </div>
-
     <div v-if="buttons" class="m-card__actions">
       <m-btn
         v-for="(button, idx) in buttons"
@@ -86,7 +85,6 @@ export default {
     color: var(--color-subtitle);
     font-size: 0.9rem;
     font-weight: bold;
-
     display: flex;
     align-items: center;
 

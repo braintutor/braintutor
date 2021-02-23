@@ -38,7 +38,6 @@ export default {
     grade_id: "",
     sections: [],
     section_id: "",
-
     level_selected: "PRI",
     levels: [
       {

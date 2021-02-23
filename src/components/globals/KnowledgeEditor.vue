@@ -25,7 +25,6 @@
           </template>
           <span style="font-size: 0.75rem">Agregar Conocimiento</span>
         </v-tooltip>
-
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
             <v-btn icon v-bind="attrs" v-on="on" @click="restoreKnowledge()">
@@ -34,7 +33,6 @@
           </template>
           <span style="font-size: 0.75rem">Restaurar Cambios</span>
         </v-tooltip>
-
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
             <v-btn icon v-bind="attrs" v-on="on" @click="saveKnowledge()">

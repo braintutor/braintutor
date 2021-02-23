@@ -25,7 +25,6 @@
           >
         </div>
       </EvaluationCard>
-
       <div v-show="evaluations_ordered.length <= 0" class="text-center">
         No hay Evaluaciones
       </div>
