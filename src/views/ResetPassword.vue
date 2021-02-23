@@ -1,10 +1,13 @@
 <template>
   <div class="m-container">
     <div v-if="isSended">
-      <p>Enviado</p>
+      <div class="m-container d-flex justify-center" >
+        <img src="@/assets/email/email.png" width="500" alt="">
+        <!-- <p>Enviado</p> -->
+      </div>      
     </div>
     <div v-else>
-      <h2>¿Cómo deseas restablecer tu contraseña?</h2>
+      <h2 class="pb-4">Restablecer contraseña</h2>
       <p>Te enviaremos un correo electrónico a tu cuenta</p>
       <v-form @submit.prevent="resetPassword">
         <v-text-field class="text-f" v-model="email" placeholder="Correo" type="email" filled rounded dense :rules="emailRules"></v-text-field>
