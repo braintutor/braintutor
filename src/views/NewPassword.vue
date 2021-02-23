@@ -4,8 +4,8 @@
     <p>Hola Arthur</p>
     <v-form>
       <v-text-field type="password" v-model="password" placeholder="Ingrese su nueva contraseña" filled rounded dense></v-text-field>
-      <v-text-field type="password" placeholder="confirme su nueva contraseña" filled rounded dense></v-text-field>
-      <v-btn type="submit" color="primary">Enviar</v-btn>
+      <v-text-field type="password" v-model="confirmPassword" placeholder="confirme su nueva contraseña" filled rounded dense></v-text-field>
+      <v-btn type="submit" color="primary">Guardar contraseña</v-btn>      
     </v-form>
   </div>
 </template>
@@ -14,7 +14,8 @@
 export default {
   data(){
     return{
-      password: ""
+      password: "",
+      confirmPassword: ""
     }
   }
 };
