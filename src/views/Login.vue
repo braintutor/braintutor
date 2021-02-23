@@ -34,7 +34,7 @@
         >Iniciar Sesión</m-btn
       >
       <div class="pt-4 mt-4">
-        <router-link :to="'/reset-password/' + school._id.$oid">
+        <router-link to="/reset-password">
           ¿Olvidaste tu contraseña?
         </router-link>
       </div>

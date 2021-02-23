@@ -31,7 +31,7 @@ const routes = [
     component: () => import("../views/Login.vue"),
   },
   {
-    path: "/reset-password/:school_id",
+    path: "/reset-password",
     component: () => import("../views/ResetPassword.vue"),
   },
   {
