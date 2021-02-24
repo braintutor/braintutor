@@ -193,7 +193,6 @@ export default {
     async exportSchedule() {
       this.loadingExport= true
       const schedules = await getAllSchedule(this.selectedCycleSegment.id);
-      console.log(this.displayType(this.cycle.segment_type))
       this.loadingExport= false
       exportExcel(schedules.items, this.displayType(this.cycle.segment_type) );
     },
