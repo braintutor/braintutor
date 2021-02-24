@@ -12,9 +12,9 @@
     <div class="editor__menu">
       <h2 class="editor__title">Equipo de Dirección</h2>
       <div>
-        <!-- <m-btn onclick="ipt_file.click()" color="dark" small class="mr-2">
+        <m-btn onclick="ipt_file.click()" color="dark" small class="mr-2">
           <v-icon left small>mdi-file-excel</v-icon>Importar
-        </m-btn> -->
+        </m-btn>
         <m-btn @click="showCreate()" color="primary" small>
           <v-icon left small>mdi-plus</v-icon>Crear
         </m-btn>
@@ -29,6 +29,8 @@
             <th class="text-left">Apellidos</th>
             <th class="text-left">Correo</th>
             <th class="text-left">Usuario</th>
+            <th class="text-left">Teléfono</th>
+            <th class="text-left">Cargo</th>
             <th></th>
           </tr>
         </thead>
@@ -38,6 +40,8 @@
             <td>{{ e.last_name }}</td>
             <td>{{ e.email }}</td>
             <td>{{ e.username }}</td>
+            <td>{{ e.phone }}</td>
+            <td>{{ e.job }}</td>
             <td class="text-center">
               <v-menu offset-y>
                 <template v-slot:activator="{ on, attrs }">
@@ -102,6 +106,16 @@
             v-model="entity.username"
             :maxlength="UserModel.username.max_length"
             label="Usuario"
+            required
+          ></v-text-field>
+          <v-text-field
+            v-model="entity.phone"
+            label="Teléfono"
+            required
+          ></v-text-field>
+          <v-text-field
+            v-model="entity.job"
+            label="Cargo"
             required
           ></v-text-field>
           <v-text-field
@@ -240,6 +254,8 @@
                     <th class="text-left">Apellidos</th>
                     <th class="text-left">Correo</th>
                     <th class="text-left">Usuario</th>
+                    <th class="text-left">Teléfono</th>
+                    <th class="text-left">Cargo</th>
                     <th class="text-left">
                       <span>Contraseña</span>
                       <v-btn
@@ -269,6 +285,12 @@
                     </td>
                     <td class="px-1">
                       <span>{{ entity.username }}</span>
+                    </td>
+                    <td class="px-1">
+                      <span>{{ entity.phone }}</span>
+                    </td>
+                    <td class="px-1">
+                      <span>{{ entity.job }}</span>
                     </td>
                     <td class="px-1">
                       <span v-if="show_passwords_success">{{
@@ -317,6 +339,8 @@
                     <th class="text-left">Apellidos</th>
                     <th class="text-left">Correo</th>
                     <th class="text-left">Usuario</th>
+                    <th class="text-left">Teléfono</th>
+                    <th class="text-left">Cargo</th>
                     <th class="text-left">
                       <span>Contraseña</span>
                       <v-btn
@@ -363,6 +387,22 @@
                       <v-text-field
                         v-model="entity.username"
                         :rules="usernameRules"
+                        dense
+                        autocomplete="off"
+                      ></v-text-field>
+                    </td>
+                    <td class="px-1">
+                      <v-text-field
+                        v-model="entity.phone"
+                        :rules="phoneRules"
+                        dense
+                        autocomplete="off"
+                      ></v-text-field>
+                    </td>
+                    <td class="px-1">
+                      <v-text-field
+                        v-model="entity.job"
+                        :rules="jobRules"
                         dense
                         autocomplete="off"
                       ></v-text-field>
@@ -488,6 +528,8 @@ export default {
       (v) => !!v || "Contraseña requerida",
       (v) => /^\S+$/.test(v) || "Contraseña inválida",
     ],
+    phoneRules: [(v) => !!v || "Teléfono requerido"],
+    jobRules: [(v) => !!v || "Cargo requerido"],
     show_passwords_success: false,
     show_passwords_errors: false,
     import_success: [],
@@ -517,7 +559,7 @@ export default {
         } else {
           await this.$api.director.update(this.entity.id, this.entity);
           let entity_idx = this.entities.findIndex(
-            (entity) => entity._id === this.entity._id
+            (entity) => entity.id === this.entity.id
           );
           this.entities[entity_idx] = Object.assign({}, this.entity);
         }
@@ -532,7 +574,7 @@ export default {
       this.dlg_remove = false;
       try {
         await this.$api.director.remove(this.entity.id);
-        this.entities = this.entities.filter((e) => e._id !== this.entity._id);
+        this.entities = this.entities.filter((e) => e.id !== this.entity.id);
       } catch (error) {
         this.showMessage("", error.msg || error);
       }

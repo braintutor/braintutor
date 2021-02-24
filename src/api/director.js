@@ -11,4 +11,7 @@ export default (_fetch) => ({
     remove(user_id) {
         return _fetch('DELETE', `director/${user_id}`);
     },
+    createMassive(data) {
+        return _fetch('POST', `director/load`, data);
+    },
 });
