@@ -3,8 +3,11 @@
     <div class="d-flex justify-space-between">
       <h2>Horario del año {{ cycle.year }}</h2>
       <div v-if="selectedCycleSegment">
+        <v-btn text @click="exportSchedule" :loading="loadingExport" small class="mr-2">
+          <v-icon left small>mdi-export</v-icon>Exportar horario
+        </v-btn>
         <m-btn @click="showImportFile" color="dark" small class="mr-2">
-          <v-icon left small>mdi-file-excel</v-icon>Importar
+          <v-icon left small>mdi-file-excel</v-icon>Subir horario
         </m-btn>
       </div>
     </div>
@@ -128,12 +131,13 @@ import {
   formatSegment,
   displayType,
 } from "@/services/schoolCycleService";
-import { deleteProposed } from "@/services/scheduleService";
+import { deleteProposed, getAllSchedule } from "@/services/scheduleService";
 import SchoolModel from "@/models/School";
 import Calendario from "@/components/Calendar";
 import UploadFileSchedule from "@/components/Schedule/Upload";
 import SessionFilter from "@/components/globals/Session/Filter";
 import SchoolCycleSegmentCard from "./SchoolCycleSegmentCard";
+import { exportExcel } from "@/services/excel";
 
 const days = ["Lu", "Ma", "Mi", "Ju", "Vi", "Sa"];
 export default {
@@ -144,6 +148,7 @@ export default {
     SchoolCycleSegmentCard,
   },
   data: () => ({
+    loadingExport:false,
     school: {},
     SchoolModel,
     file: null,
@@ -185,6 +190,13 @@ export default {
     displaySegment(segment) {
       return formatSegment(this.cycle.segment_type, segment.number);
     },
+    async exportSchedule() {
+      this.loadingExport= true
+      const schedules = await getAllSchedule(this.selectedCycleSegment.id);
+      console.log(this.displayType(this.cycle.segment_type))
+      this.loadingExport= false
+      exportExcel(schedules.items, this.displayType(this.cycle.segment_type) );
+    },
     async getCycle(cycleId) {
       this.showLoading("Cargando Datos");
       this.loadingCycle = true;
@@ -214,7 +226,7 @@ export default {
         {
           callback: (confirm) => {
             if (confirm) {
-               deleteProposed(item["schedule"]);
+              deleteProposed(item["schedule"]);
             }
           },
           message: `
@@ -225,8 +237,6 @@ export default {
         },
         "delete"
       );
-
-     
     },
     updateScheduleDate(date, item) {
       /*eslint-disable */
