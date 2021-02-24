@@ -29,8 +29,8 @@
           <form @submit.prevent="save()" class="mt-1 pa-4 box">
             <p>Suba el archivo con los horarios:</p>
             <div>
-              <label for="ip-file" class="lab-file">Seleccionar archivo</label>
-              <input @change="onFileSelected($event)" accept=".xlsx" type="file" id="ip-file" />
+              <label for="ip-file" >Seleccionar archivo</label>
+              <input  ref="inputFile"  @change="onFileSelected($event)" accept=".xlsx" type="file"  />
             </div>           
           </form>
         </div>
@@ -71,6 +71,12 @@ export default {
       this.scheduleItems[0]["fin"] = "22:30"
     });
   },
+  computed: {
+    filename(){
+      return this.file ? this.file.name : ''
+    }
+
+  },
   methods: {
     downloadTemplate() {
       const nameFile =  formatSegment(this.cycle.segment_type, this.cycleNumber);
@@ -100,6 +106,8 @@ export default {
         .finally(() => {
           this.hideLoading();
           this.loading = false;
+          this.file = null
+          this.$refs.inputFile.value=null
         });
     },
     async onFileSelected(e) {
