@@ -65,7 +65,7 @@
         <div v-if="itemDetail.type == 'class'">
           <v-btn small @click="close" v-if="featureFlag && user && user.role == 'TEA'">Finalizar clase</v-btn>
           <v-btn
-            v-if="isActive(itemDetail)"
+            v-if="isActive(itemDetail) && ['TEA', 'STU'].includes(user.role)"
             color="primary"
             small
             class="ml-2"
