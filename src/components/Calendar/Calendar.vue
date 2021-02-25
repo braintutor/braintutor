@@ -60,7 +60,6 @@
             @click:event="seeDetail"
             @change="changeDate"
           ></v-calendar>
-          <!-- @click:time="addEvent" -->
           <CalendarItemDetail
             :item="eventSelected"
             @close="eventSelected = null"

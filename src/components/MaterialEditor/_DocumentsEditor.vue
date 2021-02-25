@@ -4,7 +4,6 @@
     <!-- <div>
       <v-btn v-for="(document, idx) in documents" :key="idx" small rounded outlined>{{idx + 1}}</v-btn>
     </div>-->
-
     <div class="menu">
       <v-btn @click="save()" small rounded outlined text>
         <v-icon class="mr-2" small>mdi-content-save</v-icon>Guardar
@@ -24,7 +23,6 @@
 
 <script>
 import DocumentEditor from "@/components/globals/DocumentEditor/index";
-
 import { updateMaterialDocuments } from "@/services/materialService";
 
 export default {

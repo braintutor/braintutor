@@ -151,7 +151,6 @@
         <v-icon small>mdi-dots-vertical</v-icon>
       </v-btn>
     </div>
-
     <!-- DLG FILES -->
     <v-dialog v-model="dlg_files" max-width="1000">
       <Files
@@ -174,7 +173,6 @@ export default {
     data: [],
     edit: false,
     question_selected: -1,
-    //
     dlg_files: false,
   }),
   watch: {

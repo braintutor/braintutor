@@ -25,7 +25,6 @@
         >Eliminar Material</m-btn
       >
     </div>
-
     <!-- dlg remove -->
     <v-dialog v-model="dlg_remove" max-width="400">
       <div class="m-card">
@@ -71,7 +70,6 @@ export default {
   },
   data: () => ({
     material_clone: {},
-    //
     dlg_remove: false,
     MaterialModel,
   }),

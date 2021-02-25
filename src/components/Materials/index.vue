@@ -88,7 +88,6 @@
         </div>
       </section>
     </section>
-
     <section class="list2">
       <div v-if="material" @click="show = !show" class="list2__menu">
         <template v-if="material.type === 'adaptive'">
@@ -133,7 +132,6 @@
         </section>
       </div>
     </section>
-
     <!-- Material -->
     <div id="scroll" class="pa-3" style="overflow-y: auto; width: 100%">
       <div v-if="material" class="material">
@@ -155,7 +153,6 @@
         />
       </div>
     </div>
-
     <!-- Remove Progress -->
     <v-dialog v-model="dlg_remove" max-width="400">
       <div class="m-card">
@@ -187,13 +184,11 @@
 <script>
 import FS from "./FS/index";
 import CourseMaterial from "./CourseMaterial";
-
 // import { getQuestionTemplate } from "@/services/chatService";
 import {
   getCategoriesByLearningStyle,
   updateStudentProgress,
 } from "@/services/studentService";
-
 import { mapState, mapMutations } from "vuex";
 
 export default {
@@ -206,7 +201,6 @@ export default {
     progress_materials: [],
     categories: [],
     progress: [],
-    //
     dlg_remove: false,
     show: false,
   }),
@@ -470,7 +464,6 @@ export default {
     font-size: 1.5rem;
     margin: 16px 24px;
     cursor: pointer;
-
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -502,7 +495,6 @@ export default {
     padding: 10px 20px;
     color: #8d8a8a;
     font-size: 1rem;
-
     cursor: pointer;
     display: flex;
     justify-content: space-between;
@@ -530,7 +522,6 @@ export default {
   font-size: 0.85rem;
   transition: 0.2s;
   cursor: pointer;
-
   display: flex;
   align-items: center;
 
@@ -558,7 +549,6 @@ export default {
   background: var(--background-active);
   font-size: 0.95rem;
   border-radius: 6px;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -575,7 +565,6 @@ export default {
   height: 1rem;
   width: 1rem;
   border-radius: 50%;
-
   display: flex;
   justify-content: center;
   align-items: center;

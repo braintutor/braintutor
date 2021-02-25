@@ -85,7 +85,6 @@ export default {
           },
         },
       });
-
       // UPDATING
       let { time } = this.student;
       this.crtT.data = {
