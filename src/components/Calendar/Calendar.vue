@@ -30,7 +30,7 @@
                 </v-icon>
               </v-btn>
             </template>
-            <v-list>
+            <v-list v-if="!isMobile">
               <v-list-item @click="type = 'day'">
                 <v-list-item-title>DÍA</v-list-item-title>
               </v-list-item>
@@ -102,11 +102,16 @@ export default {
     typeToLabel: {
         week: 'semana',
         day: 'día',
-        
-      },
+    },
     // desde las 6 hasta las 22, son 16 horas, si el intervalo es de 30 min, entonces es 32
-    intervalCount: 32
+    intervalCount: 32,
+    
   }),
+  computed:{
+    isMobile(){
+      return this.$vuetify.breakpoint.name == 'xs'
+    }
+  },
   props: {
     query: {
       type: Object,
@@ -124,6 +129,7 @@ export default {
     },
   },
   async mounted() {
+    this.type = this.isMobile? "day" : "week",
     this.$refs.calendar.scrollToTime("07:00");
   },
 
