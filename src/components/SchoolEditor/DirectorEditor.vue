@@ -1,18 +1,16 @@
 <template>
   <div class="editor">
     <!-- EDITOR Menu -->
-    <input
-      style="display: none"
-      id="ipt_file"
-      type="file"
-      onclick="this.value=null"
-      accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-      @change="onLoadFile($event)"
-    />
     <div class="editor__menu">
       <h2 class="editor__title">Equipo de Dirección</h2>
       <div>
-        <m-btn onclick="ipt_file.click()" color="dark" small class="mr-2">
+        <m-btn
+          @click="dlg_import_file = true"
+          onclick="ipt_file.value = null"
+          color="dark"
+          small
+          class="mr-2"
+        >
           <v-icon left small>mdi-file-excel</v-icon>Importar
         </m-btn>
         <m-btn @click="showCreate()" color="primary" small>
@@ -221,6 +219,42 @@
           >
         </div>
       </form>
+    </v-dialog>
+
+    <v-dialog v-model="dlg_import_file" width="500" persistent>
+      <div class="m-card">
+        <div class="m-card__body">
+          <div class="close-modal">
+            <h3>Cargar Archivo</h3>
+            <v-btn class="mx-2" icon small @click="dlg_import_file = false">
+              <v-icon dark> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
+          <div class="mt-4">
+            <input
+              id="ipt_file"
+              type="file"
+              onclick="this.value=null"
+              accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+              @change="onLoadFile($event)"
+            />
+            <div class="mt-4">
+              <a href="#" @click="downloadTemplate()"
+                >Descargar plantilla de ejemplo</a
+              >
+            </div>
+          </div>
+        </div>
+        <div class="m-card__actions">
+          <m-btn
+            @click="dlg_import_file = false"
+            type="button"
+            small
+            class="cancel-button"
+            >Cancelar</m-btn
+          >
+        </div>
+      </div>
     </v-dialog>
 
     <v-dialog v-model="dlg_import" width="1600" persistent>
@@ -535,6 +569,7 @@ export default {
     import_success: [],
     is_first_import: true,
     dlg_import: false,
+    dlg_import_file: false,
   }),
   async created() {
     await this.init();
@@ -594,7 +629,22 @@ export default {
       this.loading_btn = false;
     },
     // Import
+    downloadTemplate() {
+      let data = [
+        {
+          nombres: "",
+          apellidos: "",
+          correo: "",
+          usuario: "",
+          contraseña: "",
+          telefono: "",
+          cargo: "",
+        },
+      ];
+      this.exportExcel(data, "director");
+    },
     onLoadFile(e) {
+      this.dlg_import_file = false;
       let file = e.target.files[0];
       this.new_data = [];
       this.import_success = [];
@@ -621,6 +671,10 @@ export default {
               Usuario,
               Correo,
               Contraseña,
+              Telefono,
+              telefono,
+              Cargo,
+              cargo,
             } = d;
             return {
               first_name: nombres || Nombres || "",
@@ -628,6 +682,8 @@ export default {
               email: correo || Correo || "",
               username: usuario || Usuario || "",
               password: contraseña || Contraseña || "",
+              phone: telefono || Telefono || "",
+              job: cargo || Cargo || "",
             };
           });
           this.dlg_import = true;
