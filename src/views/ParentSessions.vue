@@ -16,7 +16,7 @@
       :session="session"
       :buttons="[
         {
-          text: 'Aprender',
+          text: 'Material de clase',
           icon: 'mdi-book',
           color: 'primary',
           action: () => selectSession(session, 'learn'),
@@ -34,7 +34,7 @@
           action: () => selectSession(session, 'tasks'),
         },
         {
-          text: 'Evaluaciones',
+          text: 'Notas',
           icon: 'mdi-list-status',
           color: 'warning',
           action: () => selectSession(session, 'evaluations'),
