@@ -1,5 +1,5 @@
 <template>
-  <div class="mcontainer px-4">
+  <div class="m-container">
     <h1 class="mtitle mb-4">
       <v-icon class="mr-3" style="font-size: 2.4rem">mdi-bookshelf</v-icon>
       <span>Mis Cursos</span>
@@ -85,10 +85,10 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.mcontainer {
-  max-width: 950px;
-  margin: 0 auto;
-}
+// .mcontainer {
+//   max-width: 950px;
+//   margin: 0 auto;
+// }
 
 .mtitle {
   margin: 10px;
