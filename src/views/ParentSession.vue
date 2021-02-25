@@ -13,7 +13,7 @@ export default {
     links: [
       {
         image: require(`@/assets/icons/icon-course.svg`),
-        text: "Aprender",
+        text: "Material de clase",
         name: "parent-session-learn",
       },
       {
@@ -28,12 +28,12 @@ export default {
       },
       {
         image: require("@/assets/icons/icon-evaluation.svg"),
-        text: "Evaluaciones",
+        text: "Notas",
         name: "parent-session-evaluations",
       },
       {
         image: require("@/assets/icons/icon-student.svg"),
-        text: "Alumnos",
+        text: "Perfil de aprendizaje",
         name: "parent-session-students",
       },
     ],

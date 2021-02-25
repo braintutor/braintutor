@@ -4,7 +4,7 @@ const routes =   {
   meta: { roles: ["PAR"] },
   children: [
     {
-      path: "",
+      path: "material",
       name: "parent-session-learn",
       component: () => import("../components/Materials/index"),
     },
@@ -19,13 +19,13 @@ const routes =   {
       component: () => import("../components/ParentSession/Tasks/index"),
     },
     {
-      path: "evaluations",
+      path: "grades",
       name: "parent-session-evaluations",
       component: () =>
         import("../components/ParentSession/Evaluations/index"),
     },
     {
-      path: "students",
+      path: "learning-profile",
       name: "parent-session-students",
       component: () => import("../components/ParentSession/Students"),
     },
