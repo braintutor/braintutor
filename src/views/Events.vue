@@ -66,6 +66,7 @@ import { mapState } from "vuex";
 
 export default {
   data: () => ({
+    query: {},
     sessions: [],
     events: [],
     icons: {
@@ -88,7 +89,7 @@ export default {
     async init() {
       this.showLoading("Cargando Eventos");
       try {
-        let sessions = this.mongoArr(await this.$api.event.getAll({}));
+        let sessions = this.mongoArr(await this.$api.event.getAll(this.$route.query));
         let events = [];
 
         sessions.forEach((session) => {
