@@ -44,7 +44,7 @@
             <slot name="reSchedule" v-bind:item="itemDetail"></slot>
           </div>
         </div>
-        <div v-else-if="user && user.role == 'TEA' && featureFlag">
+        <div v-else-if="user && user.role == 'TEA'">
           <div class="my-2">
             <v-btn
               id="attendance"
