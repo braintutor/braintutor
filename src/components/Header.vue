@@ -182,18 +182,18 @@ export default {
         session_roles: ["DIR"],
       },
       // PAR
-      {
-        title: "Cursos",
-        name: "parent-sessions",
-        icon: "mdi-book",
-        session_roles: ["PAR"],
-      },
-      {
-        title: "Alumnos",
-        name: "parent-students",
-        icon: "mdi-school",
-        session_roles: ["PAR"],
-      },
+      // {
+      //   title: "Cursos",
+      //   name: "parent-sessions",
+      //   icon: "mdi-book",
+      //   session_roles: ["PAR"],
+      // },
+      // {
+      //   title: "Alumnos",
+      //   name: "parent-students",
+      //   icon: "mdi-school",
+      //   session_roles: ["PAR"],
+      // },
       // *
       {
         title: "Agenda",
