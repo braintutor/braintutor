@@ -19,6 +19,7 @@
         filled
         rounded
         dense
+        class="text-f"
       ></v-text-field>
       <v-text-field
         v-model="password"
@@ -29,6 +30,7 @@
         filled
         rounded
         dense
+        class="text-f"
       ></v-text-field>
       <m-btn :loading="loading_login" color="primary" block
         >Iniciar Sesión</m-btn
@@ -108,5 +110,9 @@ export default {
     font-size: 1.2rem;
     cursor: pointer;
   }
+}
+
+.text-f ::v-deep .v-messages__message {
+  padding: 8px 0px;
 }
 </style>

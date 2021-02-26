@@ -1,7 +1,7 @@
 <template>
   <div class="m-container">
     <EvaluationCard
-      v-for="(evaluation, c_idx) in evaluations_ordered"
+      v-for="(evaluation, c_idx) in evaluations_filtered"
       :key="c_idx"
       :name="evaluation.name"
       :time_start="evaluation.time_start"
@@ -9,7 +9,7 @@
       class="mb-4"
     />
 
-    <div v-show="evaluations_ordered.length <= 0" class="text-center">
+    <div v-show="evaluations_filtered.length <= 0" class="text-center">
       No hay Evaluaciones
     </div>
   </div>
@@ -17,26 +17,29 @@
 
 <script>
 import EvaluationCard from "@/components/globals/Evaluation/EvaluationCard";
-import {
-  getEvaluationsBySession
-} from "@/services/evaluationService.js"; 
 
 export default {
   data: () => ({
     evaluations: [],
   }),
   computed: {
-    evaluations_ordered() {
-      return this.orderObjectsByDate(this.evaluations, "time_start");
+    evaluations_filtered() {
+      let evaluations = this.evaluations.map((e) => ({
+        ...e,
+        time_start: new Date(e.time_start + "Z"),
+        time_end: new Date(e.time_end + "Z"),
+      }));
+      evaluations.sort(
+        (a, b) => new Date(b.time_start) - new Date(a.time_start)
+      );
+      return evaluations;
     },
   },
   async created() {
     let session_id = this.$router.currentRoute.params["session_id"];
     this.showLoading("Cargando Evaluaciones");
     try {
-      this.evaluations = this.mongoArr(
-        await getEvaluationsBySession(session_id)
-      );
+      this.evaluations = await this.$api.evaluation.getAll(session_id);
     } catch (error) {
       this.showMessage("", error.msg || error);
     }
