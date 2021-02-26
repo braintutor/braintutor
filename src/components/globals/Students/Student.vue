@@ -64,7 +64,6 @@ export default {
           key: `${date.getFullYear()}-${month}-${day}`,
         };
       });
-
       // CREATING
       let ctx = document.getElementById("crt-t").getContext("2d");
       this.crtT = new Chart(ctx, {

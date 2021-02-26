@@ -153,7 +153,6 @@ export default {
   data: () => ({
     files: [],
     file_selected: null,
-    //
     show: "LIST",
     loading: false,
     dlg_remove: false,

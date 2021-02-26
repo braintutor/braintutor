@@ -203,7 +203,6 @@ export default {
   padding-right: 16px;
   border-radius: 6px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-
   display: flex;
   justify-content: space-between;
   align-items: center;
