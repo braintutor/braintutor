@@ -10,17 +10,20 @@
       </div>
       <!-- Students List -->
       <div
-        v-for="student in students_filtered"
+        v-for="(student, idx) in students_filtered"
         :key="student._id"
         @click="student_selected = student"
         class="student"
       >
         <div class="student__body">
           <div class="student__name">
-            <v-icon class="mr-3">mdi-account-circle</v-icon>
-            <span class="mt-1">{{
-              `${student.last_name}, ${student.first_name}`
-            }}</span>
+            <!-- <v-icon class="mr-3">mdi-account-circle</v-icon> -->
+            <div class="d-flex" style="align-items: center">
+              <strong class="student__number">{{ idx + 1 }}</strong>
+              <span class="ml-3">{{
+                `${student.last_name}, ${student.first_name}`
+              }}</span>
+            </div>
           </div>
           <v-menu offset-y>
             <template v-slot:activator="{ on }">
@@ -102,13 +105,17 @@ export default {
   },
   computed: {
     students_filtered() {
-      return this.students.filter(
+      let students = this.students.filter(
         (s) =>
           s.first_name
             .toLowerCase()
             .includes(this.student_search.toLowerCase()) ||
           s.last_name.toLowerCase().includes(this.student_search.toLowerCase())
       );
+      students.sort(function (a, b) {
+        return a.last_name.localeCompare(b.last_name);
+      });
+      return students;
     },
   },
   methods: {
@@ -238,6 +245,19 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+  &__number {
+    display: block;
+    width: 24px;
+    height: 24px;
+    background: #7c7c7c;
+    color: #fff;
+    border-radius: 100%;
+    font-size: 0.75rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 </style>
