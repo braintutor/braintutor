@@ -9,7 +9,7 @@
       <div
         v-for="(link, idx) in links"
         :key="idx"
-        @click="redirect(link.name)"
+        @click="redirect(link.name, link.query)"
         class="link"
         :class="{ 'link--active': link.name === name }"
       >
@@ -56,10 +56,11 @@ export default {
     showSelected() {
       this.name = this.$route.name;
     },
-    redirect(name) {
+    redirect(name, query) {
       this.$router
         .push({
           name,
+          query:  query
         })
         .catch(() => {});
     },
