@@ -171,7 +171,7 @@
           <span class="m-menu__title">{{ evaluation_selected.name }}</span>
         </div>
       </div>
-      <EvaluationResults :evaluation="evaluation_selected" />
+      <EvaluationResults :evaluation="evaluation_selected"  :role="'TEA'" />
     </div>
   </div>
 </template>
@@ -327,6 +327,21 @@ export default {
       });
       return date_format;
     },
+    // TODO: add
+    // async removeResult() {
+    //   this.showLoading("Eliminando Resultado");
+    //   let student_id = this.student_selected._id;
+    //   try {
+    //     await removeResult(this.evaluation._id, student_id);
+    //     this.evaluation.results = this.evaluation.results.filter(
+    //       (result) => result._id !== student_id
+    //     );
+    //     this.$refs.evaluation_results.init();
+    //   } catch (error) {
+    //     this.showMessage("", error.msg || error);
+    //   }
+    //   this.hideLoading();
+    // },
   },
   components: {
     EvaluationEditor,
