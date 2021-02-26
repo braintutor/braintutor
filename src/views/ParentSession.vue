@@ -1,5 +1,12 @@
 <template>
   <Layout :links="links" fluid>
+    <section slot="header" class="m-path">
+      <span @click="redirectCourses()" class="m-path__name m-path__name--link"
+        >Hijo</span
+      >
+      <span class="m-path__icon">></span>
+      <span class="m-path__name">{{course.name}}</span>
+    </section>
     <router-view v-if="course._id" :course="course" />
   </Layout>
 </template>
