@@ -17,7 +17,6 @@
         </v-col>
       </v-row>
     </v-container>
-
     <!-- CategoryEditor -->
     <section v-if="category" class="editor">
       <div class="editor__menu">

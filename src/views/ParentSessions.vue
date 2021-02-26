@@ -5,11 +5,10 @@
       :items="students"
       item-value="_id"
       item-text="name"
-      label="Alumno"
+      label="Hijo"
       class="px-2 mb-3"
     ></v-select>
-    <div v-show="!student_id" class="text-center">Seleccione un Alumno</div>
-
+    <div v-show="!student_id" class="text-center">Ver Alumno</div>
     <SessionCard
       v-for="session in sessions"
       :key="session._id"
@@ -17,7 +16,7 @@
       :session="session"
       :buttons="[
         {
-          text: 'Aprender',
+          text: 'Material de clase',
           icon: 'mdi-book',
           color: 'primary',
           action: () => selectSession(session, 'learn'),
@@ -35,7 +34,7 @@
           action: () => selectSession(session, 'tasks'),
         },
         {
-          text: 'Evaluaciones',
+          text: 'Notas',
           icon: 'mdi-list-status',
           color: 'warning',
           action: () => selectSession(session, 'evaluations'),

@@ -137,7 +137,6 @@
 
 <script>
 import { scrollDown } from "@/services/scroll";
-
 import KnowledgeModel from "@/models/Knowledge";
 import CourseModel from "@/models/Course";
 
@@ -145,7 +144,6 @@ export default {
   props: ["get", "update"],
   data: () => ({
     knowledge: [],
-    //
     loading: false,
     loading_message: "",
     KnowledgeModel,

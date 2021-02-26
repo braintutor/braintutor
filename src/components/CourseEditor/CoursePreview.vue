@@ -4,7 +4,6 @@
 
 <script>
 import Materials from "@/components/Materials/index";
-
 import { getParam } from "@/services/router.js";
 import { getCourseByTeacher } from "@/services/courseService";
 

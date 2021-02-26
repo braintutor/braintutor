@@ -5,7 +5,6 @@
         <v-icon class="mr-2" small>mdi-content-save</v-icon>Guardar
       </v-btn>
     </div>
-
     <v-textarea
       class="editor__text"
       v-model="data"

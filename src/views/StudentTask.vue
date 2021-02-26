@@ -130,7 +130,6 @@ export default {
     files: [],
     file_selected: null,
     dlg_remove: false,
-    //
     AnswerModel,
   }),
   computed: {

@@ -189,7 +189,7 @@ export default {
         session_roles: ["PAR"],
       },
       {
-        title: "Alumnos",
+        title: "Hijos",
         name: "parent-students",
         icon: "mdi-school",
         session_roles: ["PAR"],
