@@ -23,6 +23,7 @@
       <table class="m-table">
         <thead>
           <tr>
+            <th class="text-left">#</th>
             <th class="text-left">Nombre</th>
             <th class="text-left">Color</th>
             <th></th>
@@ -30,6 +31,7 @@
         </thead>
         <tbody>
           <tr v-for="(e, e_idx) in subjects" :key="e_idx">
+            <td>{{ e_idx + 1}}</td>
             <td>{{ e.name }}</td>
             <td>
               <div :style="getStyle(e.color)">
