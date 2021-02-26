@@ -2,6 +2,7 @@
   <div>
     <div v-show="!show_evaluation_result" class="results">
       <v-btn
+        v-if="role === 'TEA'"
         class="mb-4"
         :disabled="selected.length === 0"
         @click="publishScores"
@@ -12,7 +13,7 @@
         :headers="headers"
         :items="students"
         item-key="id"
-        show-select
+        :show-select="role === 'TEA'"
         disable-pagination
         hide-default-footer
       >
@@ -22,6 +23,7 @@
         <template v-slot:item.score="{ item }">
           <div class="d-flex">
             <v-text-field
+              :disabled="role !== 'TEA'"
               class="box-sm"
               placeholder="0"
               v-model="item.score"
@@ -29,7 +31,7 @@
               :hint="!item.is_score_published ? 'Aún no devuelto' : false"
               persistent-hint
             >
-              <template v-slot:append-outer>
+              <template v-if="role === 'TEA'" v-slot:append-outer>
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn
@@ -90,6 +92,7 @@ export default {
   props: {
     evaluation: Object,
     buttons: Array,
+    role: String,
   },
   watch: {
     evaluation: {
