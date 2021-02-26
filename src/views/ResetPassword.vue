@@ -46,6 +46,6 @@ export default {
 <style lang="scss" scoped>
 
 .text-f ::v-deep .v-messages__message {
-  padding-top: 8px;
+  padding: 8px 0px;
 }
 </style>
