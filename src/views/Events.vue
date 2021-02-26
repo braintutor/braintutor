@@ -66,7 +66,6 @@ import { mapState } from "vuex";
 
 export default {
   data: () => ({
-    query: {},
     sessions: [],
     events: [],
     icons: {
