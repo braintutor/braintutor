@@ -15,7 +15,7 @@
             <v-btn
               class="principal-action"
               color="grey darken-3"
-              @click="redirect('login', {school_url: 'maria-prado-de-bellido'})"
+              @click="redirect('login')"
             >Empezar</v-btn>
           </div>
           <div class="principal-image col-md-6">

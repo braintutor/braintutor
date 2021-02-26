@@ -1,7 +1,6 @@
 <template>
   <div class="m-container">
     <h2>Cambio de contraseña</h2>
-    <!-- <p>Hola Arthur</p> -->
     <v-form @submit.prevent="newPassword">
       <v-text-field type="password" v-model="password" placeholder="Ingrese su nueva contraseña" 
         filled rounded dense
@@ -34,7 +33,7 @@ export default {
       try {
         await resetPassword(this.password, this.token)
         this.showMessage("", "Contraseña cambiada correctamente");
-        this.$router.push("/schools")
+        this.$router.push("/login")
       } catch (error) {
         this.showMessage("", error.msg || error);
       }

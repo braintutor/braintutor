@@ -13,7 +13,6 @@
         class="m-chatbot__img"
       />
     </div>
-
     <div class="chatbot" :class="{ 'chatbot--disabled': !(show && !loading) }">
       <!-- Avatar -->
       <div class="chatbot__avatar">
@@ -212,13 +211,11 @@ $color-message-user: #0078ff;
       border-radius: 50%;
       border: 4px solid var(--color-active);
       border-top: 4px solid transparent;
-
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-
       animation: rotating 1s ease infinite;
     }
   }
@@ -230,10 +227,8 @@ $color-message-user: #0078ff;
   max-height: calc(100vh - 56px);
   max-width: 90vw;
   background: #fff;
-
   display: flex;
   flex-direction: column;
-
   position: fixed;
   bottom: 10px;
   right: 10px;
@@ -284,7 +279,6 @@ $color-message-user: #0078ff;
     color: $color-message-user;
     font-weight: bold;
     text-align: center;
-
     cursor: pointer;
   }
 
@@ -318,7 +312,6 @@ $color-message-user: #0078ff;
       margin-left: 0.3rem;
       background: rgb(128, 128, 128);
       border-radius: 50%;
-
       animation: blink 1s linear infinite var(--offset);
     }
   }
@@ -331,7 +324,6 @@ $color-message-user: #0078ff;
   input[type="text"] {
     flex-grow: 1;
     padding: 8px 14px;
-
     background: #ececec;
     font-size: 0.95rem;
     border-radius: 20px;

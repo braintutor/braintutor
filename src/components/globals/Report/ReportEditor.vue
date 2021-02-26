@@ -244,7 +244,6 @@
           />
         </div>
       </div>
-
       <!-- DIALOG REMOVE -->
       <v-dialog v-model="dlg_remove" max-width="400">
         <div class="m-card">
@@ -294,7 +293,6 @@ export default {
     report: null,
     course: null,
     sessions: [],
-    //
     // show_material: true,
     show_material: false,
     show_phase: {},

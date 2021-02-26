@@ -4,7 +4,7 @@
       <div
         v-for="(school, idx) in schools"
         :key="idx"
-        @click="selectSchool(school)"
+        @click="selectSchool"
         class="school m-card"
       >
         <div class="school__image">
@@ -31,12 +31,9 @@ export default {
     this.hideLoading();
   },
   methods: {
-    selectSchool(school) {
+    selectSchool() {
       this.$router.push({
-        name: "login",
-        params: {
-          school_url: school.url,
-        },
+        name: "login"
       });
     },
   },

@@ -82,7 +82,6 @@ export default {
   display: block;
   background: rgba(0, 0, 255, 0.07);
   border-radius: 6px;
-
   display: flex;
   align-items: center;
 
@@ -91,7 +90,6 @@ export default {
     flex-grow: 1;
     color: rgba(0, 0, 0, 0.75);
     text-decoration: none;
-
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -104,7 +102,6 @@ export default {
   &__type {
     padding: 16px;
     opacity: 0.6;
-
     display: flex;
     align-items: center;
 

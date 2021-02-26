@@ -2,8 +2,7 @@
   <v-form ref="form_login" @submit.prevent="login" class="login m-card">
     <div class="m-card__body">
       <div class="login__img">
-        <!-- <img :src="require('@/assets/logo/logo-long.jpg')" width="100%" /> -->
-        <img :src="school.image" width="100%" />
+        <img :src="require('@/assets/logo/logo-long.jpg')" width="100%" />
       </div>
       <div v-if="show_error" class="alert">
         <span>Datos incorrectos.</span>
@@ -12,13 +11,15 @@
         >
       </div>
       <v-text-field
-        v-model="username"
-        :rules="usernameRules"
-        :maxlength="UserModel.username.max_length"
-        placeholder="Usuario"
+        v-model="email"
+        :rules="emailRules"
+        :maxlength="UserModel.email.max_length"
+        placeholder="E-mail"
+        type="email"
         filled
         rounded
         dense
+        class="text-f"
       ></v-text-field>
       <v-text-field
         v-model="password"
@@ -29,6 +30,7 @@
         filled
         rounded
         dense
+        class="text-f"
       ></v-text-field>
       <m-btn :loading="loading_login" color="primary" block
         >Iniciar Sesión</m-btn
@@ -43,42 +45,32 @@
 </template>
 
 <script>
-import { getSchoolByURL } from "@/services/schoolService";
 import { login } from "@/services/loginService";
-import { getParam, redirect } from "@/services/router.js";
+import { redirect } from "@/services/router.js";
 import UserModel from "@/models/User";
 
 export default {
   data: () => ({
-    school: {},
     //
     UserModel,
-    username: "",
+    email: "",
     password: "",
-    usernameRules: [(v) => !!v || "Usuario es requerido"],
+    emailRules: [
+      (v) => !!v || "Correo requerido",
+      (v) => /^[^@]+@[^@]+\.[^@]+$/.test(v) || "Correo inválido",
+    ],
     passwordRules: [(v) => !!v || "Contraseña es requerida"],
     //
     loading_login: false,
     show_error: false,
   }),
-  async created() {
-    this.showLoading("Cargando");
-    let school_url = getParam("school_url");
-    try {
-      this.school = await getSchoolByURL(school_url);
-    } catch (error) {
-      this.showMessage("", error.msg || error);
-    }
-    this.hideLoading();
-  },
   methods: {
     async login() {
       try {
         if (this.$refs.form_login.validate()) {
           this.loading_login = true;
 
-          let school_id = this.school._id.$oid;
-          let { token } = await login(school_id, this.username, this.password);
+          let { token } = await login(this.email, this.password);
           localStorage.setItem("token", token);
           redirect("home");
         }
@@ -118,5 +110,9 @@ export default {
     font-size: 1.2rem;
     cursor: pointer;
   }
+}
+
+.text-f ::v-deep .v-messages__message {
+  padding: 8px 0px;
 }
 </style>

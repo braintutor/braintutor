@@ -9,7 +9,7 @@
     <div v-for="(exercise, q_idx) in exercises" :key="q_idx" class="pb-6">
       <div class="category-text-content">
         <strong class="mr-3">{{ q_idx + 1 }}.</strong>
-        <div>{{ exercise.question }}</div>
+        <div v-html="toHTML(exercise.question)"></div>
       </div>
       <!-- QUESTION IMAGE -->
       <div v-if="exercise.image" class="question__image">

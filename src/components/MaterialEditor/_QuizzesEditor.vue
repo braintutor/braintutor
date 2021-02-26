@@ -26,7 +26,6 @@
         >Avanzado</m-btn
       >
     </section>
-
     <section v-show="show_type === 'BAS'" class="quiz">
       <QuizEditor
         :quiz="getQuiz('BAS')"
@@ -53,9 +52,7 @@
 
 <script>
 import QuizEditor from "@/components/globals/QuizEditor";
-
 import { updateMaterialQuiz } from "@/services/materialService";
-
 import MaterialModel from "@/models/Material";
 
 export default {
