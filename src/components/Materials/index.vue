@@ -260,7 +260,7 @@ export default {
             "examples",
             "exercises",
             "hyperlinks",
-            "faq",
+            // "faq",
           ];
           if (this.user.role === "STU") {
             let res = await getCategoriesByLearningStyle();
