@@ -35,7 +35,7 @@
             <v-btn small text @click="closeSession()">Cerrar Sesión</v-btn>
           </div>
         </div>
-        <v-btn class="header__action" v-else text @click="redirect('login')"
+        <v-btn class="header__action" v-else text @click="redirect('schools')"
           >Iniciar Sesión</v-btn
         >
       </div>
@@ -114,7 +114,7 @@
           <v-list-item
             v-else
             @click="
-              redirect('login');
+              redirect('schools');
               drawer = false;
             "
           >
@@ -241,9 +241,15 @@ export default {
   methods: {
     redirect,
     closeSession() {
+      let user = this.$store.state.user;
       this.$store.state.user = null;
       localStorage.removeItem("token");
-      this.$router.push({ name: "login" });
+      if (user && user.school)
+        this.$router.push({
+          name: "login",
+          params: { school_url: user.school.url },
+        });
+      else redirect("schools");
     },
     enableFullscreen() {
       let container = document.getElementById("braintutor");
