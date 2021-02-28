@@ -46,7 +46,8 @@
 
 <script>
 import { getSchoolByURL } from "@/services/schoolService";
-import { getParam, login } from "@/services/loginService";
+import { login } from "@/services/loginService";
+import { getParam, redirect } from "@/services/router.js";
 import UserModel from "@/models/User";
 
 export default {
