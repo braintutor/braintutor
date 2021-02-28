@@ -5,7 +5,6 @@
       <m-btn class="quizzes__type" @click="selectQuiz('INT')" color="warning" small>Intermedio</m-btn>
       <m-btn class="quizzes__type" @click="selectQuiz('ADV')" color="warning" small>Avanzado</m-btn>
     </section>
-
     <!-- QUIZ -->
     <div v-if="quiz" class="quiz">
       <section class="question m-card">

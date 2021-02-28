@@ -38,7 +38,6 @@ export default {
     links: [],
     school: {},
     school_img: null,
-    //
     SchoolModel,
   }),
   async mounted() {

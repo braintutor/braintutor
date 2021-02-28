@@ -151,7 +151,6 @@
         </div>
       </div>
     </div>
-
     <course-material-editor
       v-if="show_course_material_editor"
       @exit="
