@@ -10,7 +10,9 @@
         <div class="ma-2">
           <v-expansion-panels v-model="showClass">
             <v-expansion-panel>
-              <v-expansion-panel-header>Opciones avanzadas:</v-expansion-panel-header>
+              <v-expansion-panel-header
+                >Opciones avanzadas:</v-expansion-panel-header
+              >
               <v-expansion-panel-content>
                 <v-radio-group v-model="selectedAction">
                   <v-radio label="Cancelar" value="cancel"></v-radio>
@@ -63,6 +65,17 @@ import SchoolCycleSegmentCard from "@/components/SchoolEditor/SchoolCycleSegment
 import { getCurrentOrNextSegment } from "@/services/schoolCycleService";
 import { editMeetingUrl } from "@/modules/SchoolClass/service";
 
+function validURL(str) {
+  let url;
+
+  try {
+    url = new URL(str);
+  } catch (_) {
+    return false;
+  }
+
+  return url.protocol === "http:" || url.protocol === "https:";
+}
 export default {
   components: { Calendar, DateTime, SchoolCycleSegmentCard },
   data: () => ({
@@ -72,26 +85,31 @@ export default {
     selectedAction: "cancel",
     segment: null,
     showClass: false,
-    selectedMeeting: 'bbb',
-    meetingUrl: ''
+    selectedMeeting: "bbb",
+    meetingUrl: "",
   }),
   mounted() {
     this.role = localStorage.getItem("role");
     getCurrentOrNextSegment().then((x) => (this.segment = x));
   },
   methods: {
-    saveLink({ id }){
-      editMeetingUrl(id, this.meetingUrl).then( r => {
-        /*eslint-disable */
-        console.log(r)
-        /*eslint-enable */
-      })
-    }
+    saveLink({ id }) {
+      if (this.isValid(this.meetingUrl))
+        editMeetingUrl(id, this.meetingUrl).then((r) => {
+          /*eslint-disable */
+          console.log(r);
+          /*eslint-enable */
+        });
+    },
+    isValid(url) {
+      if (!url) return false;
+      return validURL(url);
+    },
   },
 };
 </script>
-<style  lang="scss"  scoped>
-.all{
-  width: 100%
+<style lang="scss" scoped>
+.all {
+  width: 100%;
 }
 </style>
