@@ -2,11 +2,11 @@
   <div>
     <div class="student">
       <h2 class="student__name">
-        {{ `${student.last_name}, ${student.first_name}` }}
+        {{  student.full_name || `${student.last_name}, ${student.first_name}` }}
       </h2>
-      <div class="student__username">
-        <strong class="mr-3">usuario:</strong>
-        <span>{{ student.username }}</span>
+      <div v-if="student.classroom" class="student__username">
+        <strong class="mr-3">Aula:</strong>
+        <span>{{ student.classroom }}</span>
       </div>
       <div class="student__email">
         <strong class="mr-3">correo:</strong>
