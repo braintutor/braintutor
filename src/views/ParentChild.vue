@@ -47,11 +47,7 @@ export default {
     this.hideLoading();
   },
   methods: {
-    redirectChilds() {
-      this.$router.push({
-        name: "parent-sessions",
-      });
-    },
+ 
   },
   components: {
     Layout,
