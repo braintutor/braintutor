@@ -45,13 +45,14 @@
 </template>
 
 <script>
-import { login } from "@/services/loginService";
-import { redirect } from "@/services/router.js";
+import { getSchoolByURL } from "@/services/schoolService";
+import { getParam, login } from "@/services/loginService";
 import UserModel from "@/models/User";
 
 export default {
   data: () => ({
     //
+    school: {},
     UserModel,
     email: "",
     password: "",
@@ -65,6 +66,16 @@ export default {
     show_error: false,
   }),
   methods: {
+    async created() {
+      this.showLoading("Cargando");
+      let school_url = getParam("school_url");
+      try {
+        this.school = await getSchoolByURL(school_url);
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
+    },
     async login() {
       try {
         if (this.$refs.form_login.validate()) {
