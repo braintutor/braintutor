@@ -162,7 +162,6 @@
             small
             text
             class="cancel-button"
-            v-show="!loading_save"
             @click="dialog_password = false"
             >Cancelar</m-btn
           >
