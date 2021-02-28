@@ -63,23 +63,24 @@ export default {
     loading_login: false,
     show_error: false,
   }),
+  async created() {
+    this.showLoading("Cargando");
+    let school_url = getParam("school_url");
+    try {
+      this.school = await getSchoolByURL(school_url);
+    } catch (error) {
+      this.showMessage("", error.msg || error);
+    }
+    this.hideLoading();
+  },
   methods: {
-    async created() {
-      this.showLoading("Cargando");
-      let school_url = getParam("school_url");
-      try {
-        this.school = await getSchoolByURL(school_url);
-      } catch (error) {
-        this.showMessage("", error.msg || error);
-      }
-      this.hideLoading();
-    },
     async login() {
       try {
         if (this.$refs.form_login.validate()) {
           this.loading_login = true;
 
-          let { token } = await login(this.username, this.password);
+          let school_id = this.school._id.$oid;
+          let { token } = await login(school_id, this.username, this.password);
           localStorage.setItem("token", token);
           redirect("home");
         }
