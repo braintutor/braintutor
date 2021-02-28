@@ -2,7 +2,8 @@
   <v-form ref="form_login" @submit.prevent="login" class="login m-card">
     <div class="m-card__body">
       <div class="login__img">
-        <img :src="require('@/assets/logo/logo-long.jpg')" width="100%" />
+        <!-- <img :src="require('@/assets/logo/logo-long.jpg')" width="100%" /> -->
+        <img :src="school.image" width="100%" />
       </div>
       <div v-if="show_error" class="alert">
         <span>Datos incorrectos.</span>
@@ -11,11 +12,10 @@
         >
       </div>
       <v-text-field
-        v-model="email"
-        :rules="emailRules"
-        :maxlength="UserModel.email.max_length"
-        placeholder="E-mail"
-        type="email"
+        v-model="username"
+        :rules="usernameRules"
+        :maxlength="UserModel.username.max_length"
+        placeholder="Usuario"
         filled
         rounded
         dense
@@ -54,12 +54,9 @@ export default {
     //
     school: {},
     UserModel,
-    email: "",
+    username: "",
     password: "",
-    emailRules: [
-      (v) => !!v || "Correo requerido",
-      (v) => /^[^@]+@[^@]+\.[^@]+$/.test(v) || "Correo inválido",
-    ],
+    usernameRules: [(v) => !!v || "Usuario es requerido"],
     passwordRules: [(v) => !!v || "Contraseña es requerida"],
     //
     loading_login: false,
