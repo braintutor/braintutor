@@ -1,6 +1,6 @@
 <template>
   <Layout :links="links" fluid>
-    <router-view :child="child" />
+    <router-view :child="child" v-if="child" />
   </Layout>
 </template>
 
@@ -10,13 +10,11 @@ import { getUserById } from "@/services/userService";
 
 export default {
   data: () => ({
-    child: {
-      name: "...",
-    },
+    child: null,
   }),
   computed: {
     links() {
-      return [
+      return this.child ? [
         {
           image: require(`@/assets/icons/icon-course.svg`),
           text: "Perfil",
@@ -35,7 +33,7 @@ export default {
           text: "Cursos",
           name: "parent-child-courses",
         },
-      ];
+      ] : [];
     },
   },
   async created() {
@@ -43,7 +41,6 @@ export default {
     this.showLoading("Cargando");
     try {
       this.child = await getUserById(childId);
-      console.log(this.child);
     } catch (error) {
       this.showMessage("", error.msg || error);
     }
