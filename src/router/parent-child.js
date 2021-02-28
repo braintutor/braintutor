@@ -1,3 +1,5 @@
+import routesParentSession from "./parent-session";
+
 const routes = {
   path: "/parent",
   name: "parent",
@@ -16,7 +18,7 @@ const routes = {
           component: () => import("../views/Events.vue"),
         },
         {
-          path: "",
+          path: "info",
           name: "parent-child-info",
           component: () => import("../views/StudentDetail.vue"),
         },
@@ -25,6 +27,7 @@ const routes = {
           name: "parent-child-courses",
           component: () => import("../views/ParentSessions.vue"),
         },
+        routesParentSession
       ],
     },
   ],

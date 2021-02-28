@@ -1,5 +1,5 @@
 const routes =   {
-  path: "/parent-session/:session_id",
+  path: "courses/session/:session_id",
   component: () => import("../views/ParentSession.vue"),
   meta: { roles: ["PAR"] },
   children: [

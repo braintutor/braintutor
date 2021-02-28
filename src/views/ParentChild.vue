@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Layout from "@/components/Layout2";
+import Layout from "@/components/LayoutParent";
 import { getUserById } from "@/services/userService";
 
 export default {

@@ -1,17 +1,17 @@
 <template>
-  <div class="">
+  <div >
     <div class="m-container">
-  <v-select
-      v-model="student_id"
-      :items="students"
-      item-value="_id"
-      item-text="name"
-      label="Seleccione un hijo"
-      @change="showChildDetail"
-      class="px-2 mb-3 text-center"
-    ></v-select>
+      <v-select
+        v-model="student_id"
+        :items="students"
+        item-value="_id"
+        item-text="name"
+        label="Seleccione un hijo"
+        @change="showChildDetail"
+        class="px-2 mb-3 text-center"
+      ></v-select>
     </div>
-  
+
     <div>
       <router-view></router-view>
     </div>
@@ -28,7 +28,7 @@ export default {
   watch: {
     "$route.params": {
       handler: async function({ childId }) {
-        this.student_id = childId
+        this.student_id = childId;
       },
       immediate: true,
     },
