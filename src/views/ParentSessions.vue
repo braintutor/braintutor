@@ -42,15 +42,20 @@ export default {
   data: () => ({
     sessions: [],
   }),
-  watch: {},
+
   props: ["child"],
-  mounted() {
-    this.getSessions(this.child);
+  watch: {
+    child: {
+      immediate: true,
+      handler: async function(val) {
+        this.getSessions(val);
+      },
+    },
   },
+  mounted() {},
 
   methods: {
     async getSessions({ grade_id, section_id }) {
-  
       this.showLoading("Cargando Sesiones");
       try {
         this.sessions = this.mongoArr(
