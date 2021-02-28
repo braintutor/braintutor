@@ -2,7 +2,7 @@
   <div >
     <div class="m-container">
       <v-select
-        v-model="student_id"
+        :value="student_id"
         :items="students"
         item-value="_id"
         item-text="name"
@@ -35,14 +35,13 @@ export default {
   },
   async created() {
     this.showLoading("Cargando Alumnos");
-    let student_id = this.$route.query.student_id;
     try {
       this.students = this.mongoArr(await this.$api.student.getAll({}));
       this.students.forEach((student) => {
         student.name = `${student.last_name}, ${student.first_name}`;
       });
-      if (this.students.map((s) => s._id).includes(student_id))
-        this.student_id = student_id;
+
+      if(this.students.length > 0) this.showChildDetail(this.students[0]["_id"])
     } catch (error) {
       this.showMessage("", error.msg || error);
     }
@@ -50,6 +49,7 @@ export default {
   },
   methods: {
     showChildDetail(id) {
+      this.student_id = id
       this.$router.push({ name: "parent-child-info", params: { childId: id } });
     },
   },
