@@ -33,7 +33,7 @@ export default {
       try {
         await resetPassword(this.password, this.token)
         this.showMessage("", "Contraseña cambiada correctamente");
-        this.$router.push("/login")
+        this.$router.push("/schools")
       } catch (error) {
         this.showMessage("", error.msg || error);
       }

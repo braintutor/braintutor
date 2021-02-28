@@ -15,7 +15,7 @@
             <v-btn
               class="principal-action"
               color="grey darken-3"
-              @click="redirect('login')"
+              @click="redirect('schools')"
             >Empezar</v-btn>
           </div>
           <div class="principal-image col-md-6">

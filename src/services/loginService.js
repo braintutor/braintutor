@@ -1,8 +1,9 @@
 import { fetch_post } from "./fetch";
 
-function login(email, password) {
+function login(school_id, username, password) {
   return fetch_post('login', {
-    email, 
+    school_id,
+    username,
     password
   })
 }
