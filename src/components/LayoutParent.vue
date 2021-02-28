@@ -48,7 +48,6 @@ export default {
   },
   methods: {
     showSelected() {
-      console.log(this.$route);
       this.name = this.$route.name;
     },
     redirect(name, query) {
