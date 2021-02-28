@@ -79,7 +79,7 @@ export default {
         if (this.$refs.form_login.validate()) {
           this.loading_login = true;
 
-          let { token } = await login(this.email, this.password);
+          let { token } = await login(this.username, this.password);
           localStorage.setItem("token", token);
           redirect("home");
         }
