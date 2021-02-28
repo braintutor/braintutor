@@ -1,19 +1,37 @@
 <template>
-  <div>
-      <p>Info del hijo: </p>
-       <Student v-if="false" :student="student_selected" />
+  <div v-if="student">
+    <Student :student="student" />
   </div>
 </template>
 
 <script>
-import Student from "../components/globals/Students/Student";
+import Student from "@/components/globals/Students/Student";
+import { getStudentById } from "@/services/studentService";
 
 export default {
-    components: { Student }
-
-}
+  props: {},
+  data: () => ({
+    student: null,
+  }),
+  watch: {
+    "$route.params": {
+      handler: async function({ childId }) {
+        this.getDetail(childId);
+      },
+      immediate: true,
+    },
+  },
+  mounted() {},
+  computed: {},
+  methods: {
+    async getDetail(id) {
+      this.student = await getStudentById(id);
+    },
+  },
+  components: {
+    Student,
+  },
+};
 </script>
 
-<style>
-
-</style>
+<style lang="scss" scoped></style>

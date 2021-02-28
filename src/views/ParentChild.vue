@@ -15,11 +15,11 @@ export default {
   computed: {
     links() {
       return this.child ? [
-        // {
-        //   image: require(`@/assets/icons/icon-course.svg`),
-        //   text: "Perfil",
-        //   name: "parent-child-info",
-        // },
+        {
+          image: require(`@/assets/icons/icon-course.svg`),
+          text: "Perfil",
+          name: "parent-child-info",
+        },
         {
           image: require(`@/assets/icons/icon-course.svg`),
           text: "Agenda",

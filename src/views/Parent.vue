@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     showChildDetail(id) {
-      this.$router.push({ name: "parent-child-courses", params: { childId: id } });
+      this.$router.push({ name: "parent-child-info", params: { childId: id } });
     },
   },
   components: {},

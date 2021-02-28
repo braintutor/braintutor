@@ -1,5 +1,9 @@
 import { fetch_get, fetch_post } from "./fetch";
 
+function getStudentById(id) {
+  return fetch_get(`api/v1/student/${id}`);
+}
+
 function getStudentsBySession(session_id) {
   return fetch_post("getStudentsBySession", {
     session_id,
@@ -60,4 +64,5 @@ export {
   removeStudent,
   updateLearningStyle,
   getCategoriesByLearningStyle,
+  getStudentById
 };
