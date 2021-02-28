@@ -6,7 +6,6 @@
         <v-icon small class="mr-2">mdi-plus</v-icon>Crear
       </m-btn>
     </div>
-
     <table class="m-table">
       <thead>
         <tr>
@@ -46,7 +45,6 @@
         </tr>
       </tbody>
     </table>
-
     <v-dialog v-model="dlg_new" width="400" persistent>
       <form @submit.prevent="save()" class="m-card">
         <div class="m-card__body">
@@ -108,7 +106,6 @@
         </div>
       </form>
     </v-dialog>
-
     <v-dialog v-model="dlg_remove" width="400" persistent>
       <div class="m-card">
         <div class="m-card__body close-modal">
@@ -125,7 +122,6 @@
         </div>
       </div>
     </v-dialog>
-
     <v-dialog v-model="dlg_password" width="400" persistent>
       <form @submit.prevent="savePassword()" class="m-card">
         <div class="m-card__body">
@@ -184,12 +180,10 @@ export default {
     entity: {},
     entities: [],
     action: "",
-    //
     loading_save: false,
     dlg_new: false,
     dlg_remove: false,
     dlg_password: false,
-    //
     new_password: "",
     confirm_new_password: "",
     UserModel,

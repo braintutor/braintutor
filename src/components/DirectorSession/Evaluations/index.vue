@@ -2,17 +2,11 @@
   <div>
     <div v-show="!evaluation_selected">
       <EvaluationCard
-        v-for="(evaluation, c_idx) in evaluations_ordered"
+        v-for="(evaluation, c_idx) in evaluations_filtered"
         :key="c_idx"
         :name="evaluation.name"
         :time_start="evaluation.time_start"
         :time_end="evaluation.time_end"
-        :items="[
-          {
-            label: 'N° Preguntas',
-            value: `${evaluation.content.length} preguntas`,
-          },
-        ]"
         class="mb-4"
       >
         <div class="text-center pt-4">
@@ -25,7 +19,7 @@
           >
         </div>
       </EvaluationCard>
-      <div v-show="evaluations_ordered.length <= 0" class="text-center">
+      <div v-show="evaluations_filtered.length <= 0" class="text-center">
         No hay Evaluaciones
       </div>
     </div>
@@ -38,45 +32,39 @@
           <span class="m-menu__title">{{ evaluation_selected.name }}</span>
         </div>
       </div>
-      <EvaluationResults
-        :evaluation="evaluation_selected"
-      />
+      <EvaluationResults :evaluation="evaluation_selected" :role="'DIR'" />
     </div>
   </div>
 </template>
 
 <script>
 import EvaluationCard from "@/components/globals/Evaluation/EvaluationCard";
-import EvaluationResults from "@/components/globals/Evaluation/EvaluationResults";
-import {
-  getEvaluationsBySession
-} from "@/services/evaluationService.js"; 
+import EvaluationResults from "@/components/TeacherSession/EvaluationsEditor/EvaluationResults";
 
 export default {
   data: () => ({
     evaluations: [],
-    students: [],
     evaluation_selected: null,
   }),
   computed: {
-    evaluations_ordered() {
-      return this.orderObjectsByDate(this.evaluations, "time_start");
+    evaluations_filtered() {
+      let evaluations = this.evaluations.map((e) => ({
+        ...e,
+        _id: e.id,
+        time_start: new Date(e.time_start + "Z"),
+        time_end: new Date(e.time_end + "Z"),
+      }));
+      evaluations.sort(
+        (a, b) => new Date(b.time_start) - new Date(a.time_start)
+      );
+      return evaluations;
     },
   },
   async created() {
     let session_id = this.$router.currentRoute.params["session_id"];
     this.showLoading("Cargando Evaluaciones");
     try {
-      let session = this.mongo(await this.$api.session.get(session_id));
-      this.students = this.mongoArr(
-        await this.$api.student.getAll({
-          grade_id: session.grade_id,
-          section_id: session.section_id,
-        })
-      );
-      this.evaluations = this.mongoArr(
-        await getEvaluationsBySession(session_id)
-      );
+      this.evaluations = await this.$api.evaluation.getAll(session_id);
     } catch (error) {
       this.showMessage("", error.msg || error);
     }
