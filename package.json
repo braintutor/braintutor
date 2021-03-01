@@ -30,7 +30,8 @@
     "vuetify": "^2.4.2",
     "vuetify-datetime-picker": "^2.1.1",
     "vuex": "^3.6.0",
-    "xlsx": "^0.16.9"
+    "xlsx": "^0.16.9",
+    "vue-gtm": "3.0.0-vue2"
   },
   "devDependencies": {
     "@editorjs/delimiter": "^1.2.0",
