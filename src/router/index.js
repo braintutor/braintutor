@@ -8,7 +8,7 @@ import { onRouterChange } from "../knowledge";
 import routesAdmin from "./admin";
 import routesStudentSession from "./student-session";
 import routesTeacherSession from "./teacher-session";
-import routesParentSession from "./parent-session";
+import routesParentChild from "./parent-child";
 import routesDirectorSession from "./director-session";
 import routesCourseMaterialEditor from "./course-material-editor";
 
@@ -47,7 +47,7 @@ const routes = [
   {
     path: "/events",
     name: "events",
-    meta: { roles: ["TEA", "STU"] },
+    meta: { roles: ["TEA", "STU", "PAR"] },
     component: () => import("../views/Events.vue"),
   },
   {
@@ -74,12 +74,7 @@ const routes = [
     meta: { roles: ["DIR"] },
     component: () => import("../views/DirectorSessions.vue"),
   },
-  {
-    path: "/parent-sessions",
-    name: "parent-sessions",
-    meta: { roles: ["PAR"] },
-    component: () => import("../views/ParentSessions.vue"),
-  },
+
   {
     path:"/assistance/:class_id",
     name:"teacher-session-assistance",
@@ -89,7 +84,7 @@ const routes = [
   routesTeacherSession,
   routesStudentSession,
   routesDirectorSession,
-  routesParentSession,
+  routesParentChild,
   {
     path: "/courses-editor",
     name: "courses-editor",
@@ -164,7 +159,7 @@ router.beforeEach(async (to, from, next) => {
     TEA: "teacher-sessions",
     STU: "student-sessions",
     DIR: "director-sessions",
-    PAR: "parent-sessions",
+    PAR: "parent",
   };
 
   // if route auth required

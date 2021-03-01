@@ -1,14 +1,5 @@
 <template>
   <div class="m-container">
-    <v-select
-      v-model="student_id"
-      :items="students"
-      item-value="_id"
-      item-text="name"
-      label="Hijo"
-      class="px-2 mb-3"
-    ></v-select>
-    <div v-show="!student_id" class="text-center">Ver Alumno</div>
     <SessionCard
       v-for="session in sessions"
       :key="session._id"
@@ -49,44 +40,24 @@ import SessionCard from "@/components/globals/Session/SessionCard";
 
 export default {
   data: () => ({
-    students: [],
-    student_id: null,
     sessions: [],
   }),
+
+  props: ["child"],
   watch: {
-    async student_id() {
-      this.$router
-        .push({
-          query: { student_id: this.student_id },
-        })
-        .catch(() => {});
-      await this.getSessions(this.student_id);
+    child: {
+      immediate: true,
+      handler: async function(val) {
+        this.getSessions(val);
+      },
     },
   },
-  async created() {
-    this.showLoading("Cargando Alumnos");
-    let student_id = this.$route.query.student_id;
-    try {
-      this.students = this.mongoArr(await this.$api.student.getAll({}));
-      this.students.forEach((student) => {
-        student.name = `${student.last_name}, ${student.first_name}`;
-      });
-      if (this.students.map((s) => s._id).includes(student_id))
-        this.student_id = student_id;
-    } catch (error) {
-      this.showMessage("", error.msg || error);
-    }
-    this.hideLoading();
-  },
-  methods: {
-    async getSessions(student_id) {
-      if (!student_id) return;
+  mounted() {},
 
+  methods: {
+    async getSessions({ grade_id, section_id }) {
       this.showLoading("Cargando Sesiones");
       try {
-        let { grade_id, section_id } = this.students.find(
-          (s) => s._id === student_id
-        );
         this.sessions = this.mongoArr(
           await this.$api.session.getAll({ grade_id, section_id })
         );
@@ -102,8 +73,6 @@ export default {
       });
     },
   },
-  components: {
-    SessionCard,
-  },
+  components: { SessionCard },
 };
 </script>

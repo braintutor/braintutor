@@ -2,10 +2,10 @@
   <Layout :links="links" fluid>
     <section slot="header" class="m-path">
       <span @click="redirectCourses()" class="m-path__name m-path__name--link"
-        >Hijo</span
+        >Cursos</span
       >
       <span class="m-path__icon">></span>
-      <span class="m-path__name">{{course.name}}</span>
+      <span class="m-path__name">{{ course.name }}</span>
     </section>
     <router-view v-if="course._id" :course="course" />
   </Layout>
@@ -22,11 +22,6 @@ export default {
         image: require(`@/assets/icons/icon-course.svg`),
         text: "Material de clase",
         name: "parent-session-learn",
-      },
-      {
-        image: require("@/assets/icons/icon-calendar.svg"),
-        text: "Agenda",
-        name: "parent-session-events",
       },
       {
         image: require(`@/assets/icons/icon-task.svg`),
@@ -58,6 +53,13 @@ export default {
   },
   components: {
     Layout,
+  },
+  methods: {
+    redirectCourses() {
+      this.$router.push({
+        name: "parent-child-courses",
+      });
+    },
   },
 };
 </script>

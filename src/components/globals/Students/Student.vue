@@ -2,11 +2,11 @@
   <div>
     <div class="student">
       <h2 class="student__name">
-        {{ `${student.last_name}, ${student.first_name}` }}
+        {{ student.full_name || `${student.last_name}, ${student.first_name}` }}
       </h2>
-      <div class="student__username">
-        <strong class="mr-3">usuario:</strong>
-        <span>{{ student.username }}</span>
+      <div v-if="student.classroom" class="student__username">
+        <strong class="mr-3">Aula:</strong>
+        <span>{{ student.classroom }}</span>
       </div>
       <div class="student__email">
         <strong class="mr-3">correo:</strong>
@@ -17,7 +17,7 @@
         <p class="mt-2">Ultima Sesión: {{ time.time_last_f }}</p>
         <canvas id="crt-t"></canvas>
       </div>
-      <div v-if="student.learning_style" class="student__ls">
+      <div  class="student__ls">
         <h3>Estilo de Aprendizaje</h3>
         <canvas id="crt-ls"></canvas>
       </div>
@@ -32,6 +32,14 @@ export default {
   props: {
     student: Object,
   },
+  watch: {
+    student: {
+      immediate: true,
+      handler: async function(val) {
+        if (val && this.crtLS && this.crtT ) this.init();
+      },
+    },
+  },
   data: () => ({
     crtLS: null,
     crtT: null,
@@ -39,32 +47,23 @@ export default {
     time_size: 7,
   }),
   mounted() {
-    this.time = this.student.time || {};
-    if (this.time.time_last) {
-      this.time.time_last_f = this.formatDate(
-        new Date(this.time.time_last.$date).addHours(5)
-      );
-    }
-    this.showChartT();
-    this.showChartLS();
+    this.createChartT()
+    this.createChartLS()
+    this.init()
   },
   methods: {
-    showChartT() {
-      let date = new Date();
-      date.setDate(date.getDate() - this.time_size);
-
-      let dates = [...Array(this.time_size)].map(() => {
-        date.setDate(date.getDate() + 1);
-        let month = date.getMonth() + 1;
-        let day = date.getDate();
-        month = month > 9 ? month : "0" + month;
-        day = day > 9 ? day : "0" + day;
-        return {
-          name: `${day}-${month}-${date.getFullYear()}`,
-          key: `${date.getFullYear()}-${month}-${day}`,
-        };
-      });
-      // CREATING
+    init() {
+      console.log("cambiando")
+      this.time = this.student.time || {};
+      if (this.time.time_last) {
+        this.time.time_last_f = this.formatDate(
+          new Date(this.time.time_last.$date || this.time.time_last).addHours(5)
+        );
+      }
+      this.showChartT();
+      this.showChartLS();
+    },
+    createChartT() {
       let ctx = document.getElementById("crt-t").getContext("2d");
       this.crtT = new Chart(ctx, {
         type: "bar",
@@ -84,8 +83,32 @@ export default {
           },
         },
       });
+    },
+    processDate() {
+      let date = new Date();
+      date.setDate(date.getDate() - this.time_size);
+
+       return  [...Array(this.time_size)].map(() => {
+        date.setDate(date.getDate() + 1);
+        let month = date.getMonth() + 1;
+        let day = date.getDate();
+        month = month > 9 ? month : "0" + month;
+        day = day > 9 ? day : "0" + day;
+        return {
+          name: `${day}-${month}-${date.getFullYear()}`,
+          key: `${date.getFullYear()}-${month}-${day}`,
+        };
+      });
+    },
+    showChartT() {
+      // process
+      // CREATING
       // UPDATING
+      this.updateChartT();
+    },
+    updateChartT() {
       let { time } = this.student;
+      let dates = this.processDate()
       this.crtT.data = {
         labels: dates.map(({ name }) => name),
         datasets: time
@@ -102,11 +125,7 @@ export default {
       };
       this.crtT.update();
     },
-    showChartLS() {
-      let { learning_style } = this.student;
-      if (!learning_style) return;
-
-      // CREATING
+    createChartLS() {
       let ctx = document.getElementById("crt-ls").getContext("2d");
       this.crtLS = new Chart(ctx, {
         type: "bar",
@@ -127,7 +146,10 @@ export default {
           },
         },
       });
-      // UPDATING
+    },
+    updateChartLS() {
+      let { learning_style  } = this.student;
+      learning_style = learning_style || {}
       let {
         procesamiento,
         procesamiento_valor,
@@ -167,11 +189,16 @@ export default {
       };
       this.crtLS.update();
     },
+    showChartLS() {
+   
+      // UPDATING
+      this.updateChartLS();
+    },
   },
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .student {
   max-width: 750px;
   margin: 0 auto;

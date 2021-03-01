@@ -1,17 +1,12 @@
 <template>
-  <div class="app">
-    <!-- Header -->
-    <div class="header">
-      <slot name="header"></slot>
-    </div>
-    <!-- Sidebar -->
-    <nav class="sidebar">
-      <div
+  <div>
+    <div class="d-flex justify-center">
+      <router-link
+        active-class='link--active'
         v-for="(link, idx) in links"
         :key="idx"
-        @click="redirect(link.name, link.query)"
+        :to="redirect(link.name, link.query)"
         class="link"
-        :class="{ 'link--active': link.name === name }"
       >
         <div
           class="link__image"
@@ -24,11 +19,10 @@
         <div class="link__name" :style="{ color: `${link.color}` }">
           {{ link.text }}
         </div>
-      </div>
-    </nav>
-    <!-- Body -->
-    <div id="app__body" class="app__body">
-      <div class="content" :class="{ 'm-container': !fluid }" >
+      </router-link>
+    </div>
+    <div class="">
+      <div class="content">
         <slot></slot>
       </div>
     </div>
@@ -57,45 +51,17 @@ export default {
       this.name = this.$route.name;
     },
     redirect(name, query) {
-      this.$router
-        .push({
-          name,
-          query:  query
-        })
-        .catch(() => {});
+      return {
+        name,
+        query: query,
+      };
     },
   },
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 $sidebar-spacing: 6px;
-
-.app {
-  height: calc(100vh - 56px);
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-rows: auto 1fr;
-
-  &__body {
-    overflow-y: auto;
-    flex-grow: 1;
-  }
-}
-
-.header {
-  grid-column-start: 1;
-  grid-column-end: 3;
-  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.15);
-  z-index: 1;
-}
-
-.sidebar {
-  padding: $sidebar-spacing;
-  width: 120px;
-  overflow-y: auto;
-  // border-right: 1px solid #ccc;
-}
 
 .content {
   // padding: 10px;
@@ -104,7 +70,9 @@ $sidebar-spacing: 6px;
 }
 
 .link {
+  text-decoration: none;
   padding: 8px;
+  margin: 5px;
   padding-top: 10px;
   margin-bottom: $sidebar-spacing;
   color: #000;
@@ -115,7 +83,6 @@ $sidebar-spacing: 6px;
   transition: 0.3s;
   cursor: pointer;
   display: flex;
-  flex-direction: column;
   align-items: center;
 
   &:hover {
@@ -154,23 +121,6 @@ $sidebar-spacing: 6px;
 
 // @media only screen and (max-width: 2000px) {
 @media only screen and (max-width: 768px) {
-  .app {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto 1fr;
-  }
-
-  .header {
-    grid-column-start: 1;
-    grid-column-end: 2;
-  }
-
-  .sidebar {
-    width: 100%;
-    border: none;
-    display: flex;
-    justify-content: center;
-  }
-
   .link {
     width: 42px;
     padding: 6px;

@@ -4,6 +4,10 @@ function getUser() {
   return fetch_get('getUser')
 }
 
+function getUserById(id) {
+  return fetch_get(`getUser/${id}`)
+}
+
 function updatePassword(current_password, new_password) {
   return fetch_post('updatePassword', {
     current_password,
@@ -21,4 +25,4 @@ function generatePassword() {
   return Math.random().toString(36).slice(-8).toUpperCase()
 }
 
-export { getUser, updatePassword, updatePasswordByAdmin, generatePassword }
+export { getUser, getUserById, updatePassword, updatePasswordByAdmin, generatePassword }
