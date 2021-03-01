@@ -53,6 +53,7 @@ export default {
   },
   methods: {
     init() {
+      console.log("cambiando")
       this.time = this.student.time || {};
       if (this.time.time_last) {
         this.time.time_last_f = this.formatDate(
@@ -147,7 +148,8 @@ export default {
       });
     },
     updateChartLS() {
-      let { learning_style } = this.student;
+      let { learning_style  } = this.student;
+      learning_style = learning_style || {}
       let {
         procesamiento,
         procesamiento_valor,
@@ -188,10 +190,7 @@ export default {
       this.crtLS.update();
     },
     showChartLS() {
-      let { learning_style } = this.student;
-      if (!learning_style) return;
-      console.log("aaq llego");
-
+   
       // UPDATING
       this.updateChartLS();
     },
