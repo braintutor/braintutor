@@ -28,7 +28,7 @@ export default {
       },
       {
         image: require("@/assets/icons/icon-evaluation.svg"),
-        text: "Evaluaciones",
+        text: "Notas",
         name: "director-session-evaluations",
       },
       {
