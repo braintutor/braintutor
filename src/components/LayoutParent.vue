@@ -21,11 +21,9 @@
         </div>
       </router-link>
     </div>
-    <div class="">
-      <div class="content">
+      <div class="m-container">
         <slot></slot>
       </div>
-    </div>
   </div>
 </template>
 

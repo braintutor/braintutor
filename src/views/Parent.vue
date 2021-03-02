@@ -6,7 +6,7 @@
         :items="students"
         item-value="_id"
         item-text="name"
-        label="Seleccione un hijo"
+        label="Hijo:"
         @change="showChildDetail"
         class="px-2 mb-3 text-center"
       ></v-select>
