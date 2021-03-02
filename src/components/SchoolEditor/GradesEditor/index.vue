@@ -176,22 +176,14 @@
 <script>
 import SectionsEditor from "./SectionsEditor";
 import GradeModel from "@/models/Grade";
+import { getLevels } from "@/services/levelService";
 
 export default {
   data: () => ({
     grades: [],
     grade: {},
     grade_selected: null,
-    levels: [
-      {
-        _id: "PRI",
-        name: "Primaria",
-      },
-      {
-        _id: "SEC",
-        name: "Secundaria",
-      },
-    ],
+    levels: [],
     level_selected: "PRI",
     //
     dlg_create: false,
@@ -213,6 +205,7 @@ export default {
     async init() {
       this.showLoading("Cargando");
       try {
+        this.levels = await getLevels()
         this.grades = this.mongoArr(await this.$api.grade.getAll());
       } catch (error) {
         this.showMessage("", error.msg || error);
