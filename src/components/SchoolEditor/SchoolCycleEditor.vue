@@ -50,7 +50,7 @@
 						<v-icon> mdi-close-thick </v-icon>
 					</v-btn>
 				</div>
-				<v-text-field label="Año escolar" v-model="year" type="number" />
+				<v-text-field label="Año escolar" v-model="year" type="number" @input="updateSegments" />
 				<v-tabs v-model="tab" grow @change="changeSegments">
 					<v-tab key="bimester">Bimestral</v-tab>
 					<v-tab key="trimester">Trimestral</v-tab>
@@ -82,7 +82,7 @@
 <script>
 import BrainDialog from './BrainDialog';
 import SchoolCycleSegments from './SchoolCycleSegments.vue';
-import {createSchoolCycle, getSchoolCycles} from '@/services/schoolCycleService';
+import {createSchoolCycle, getSchoolCycles, fill0Number} from '@/services/schoolCycleService';
 
 export default {
 	components: {
@@ -124,6 +124,9 @@ export default {
 		changeSegments(tab) {
 			this.segments = this.getSegments(tab);
 		},
+		updateSegments() {
+			this.changeSegments(this.tab);
+		},
 		getSegments(tab) {
 			const numbers = tab == 0 ? [1, 2, 3, 4] : [1, 2, 3]; // [[1,2],[3,4], [5,6], [7,8]], [[1,2,3],[4,5,6]. [7,8,9]]
 			let year = parseInt(this.year);
@@ -134,44 +137,17 @@ export default {
 					start: {value: null, min: min},
 					end: {value: null, min: min},
 				};
-				if (tab == 0) {
-					// fecha.start = {
-					//   value: new Date(year, (2*x) - 2, 1).toDateString(),
-					//   min: min,
-					// };
-					// fecha.end = {
-					//   value: new Date(year, (2*x) - 1, 1).toDateString(),
-					//   min: min,
-					// }
-					fecha.start = {
-						value: year + '-' + this.fill0Number((2*x) - 1) + '-' + "01",
-						min: min
-					};
-					fecha.end = {
-						value: year + '-' + this.fill0Number((2*x) + 1) + '-' + "01",
-            min: min,
-            max: fecha.start
-					};
-				} else {
-					fecha.start = {
-						value: year + '-' + this.fill0Number((3*x) - 2) + '-' + "01",
-						min: min,
-					};
-					fecha.end = {
-						value: year + '-' + this.fill0Number((3*x) + 1) + '-' + "01",
-						min: min,
-					};
-				}
+				fecha.start = {
+					value: year + '-' + fill0Number((tab + 2) * x - (tab + 1)) + '-' + '01',
+					min: min,
+				};
+				fecha.end = {
+					value: year + '-' + fill0Number((tab + 2) * x + 1) + '-' + '01',
+					min: min
+				};
 				return fecha;
 			});
-    },
-    fill0Number(number) {
-      if(number < 10) {
-        return '0' + number;
-      } else {
-        return number;
-      }
-    },
+		},
 	},
 };
 </script>

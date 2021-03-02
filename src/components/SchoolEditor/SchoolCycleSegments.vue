@@ -17,7 +17,11 @@
 			<v-col>
 				<date-input
 					label="Fin"
-					:date-picker-props="{min: segment.start.value, 'show-current': segment.start.value}"
+					:date-picker-props="{
+						min: segment.start.value,
+						max: calculateMax(segment.start.value),
+						'show-current': segment.end.value,
+					}"
 					v-model="segment.end.value"
 				/>
 			</v-col>
@@ -27,7 +31,13 @@
 
 <script>
 import DateInput from './DateInput';
-import {displayType} from '@/services/schoolCycleService';
+import {
+	displayType,
+	fill0Number,
+	returnMesNumber,
+	numberType,
+	displayNumber
+} from '@/services/schoolCycleService';
 
 export default {
 	components: {
@@ -49,6 +59,9 @@ export default {
 	},
 	methods: {
 		displayType,
+		formatSegment2(type, number) {
+			return displayType(type) + ' ' + displayNumber(number);
+		},
 		showCurrent(segment) {
 			const segmentIndex = this.segments.indexOf(segment);
 			if (segmentIndex == 0) return true; // if first return current date
@@ -56,20 +69,15 @@ export default {
 			const lastSegment = this.segments[segmentIndex - 1];
 			return lastSegment.end;
 		},
-		displayNumber(number) {
-			switch (number) {
-				case 2:
-					return 'II';
-				case 3:
-					return 'III';
-				case 4:
-					return 'IV';
-				default:
-					return 'I';
-			}
-		},
-		formatSegment2(type, number) {
-			return displayType(type) + ' ' + this.displayNumber(number);
+		calculateMax(fecha) {
+			let res = fecha.split('-');
+			let max =
+				res[0] +
+				'-' +
+				fill0Number(returnMesNumber(res[1]) + (numberType(this.type) + 2)) +
+				'-' +
+				res[2];
+			return max;
 		},
 	},
 };
