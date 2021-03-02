@@ -1,7 +1,7 @@
 <template>
   <Layout :links="links" fluid>
-    <section slot="header2">
-      <span class="m-path__name ">{{ course.name }}</span>
+    <section slot="header">
+      <span class="ma-2 m-path__name ">{{ course.name }}</span>
     </section>
     <router-view v-if="course._id" :course="course" />
   </Layout>
@@ -15,11 +15,6 @@ export default {
     course: {},
     links: [
       {
-        image: require(`@/assets/icons/icon-course.svg`),
-        text: "Material de clase",
-        name: "parent-session-learn",
-      },
-      {
         image: require(`@/assets/icons/icon-task.svg`),
         text: "Tareas",
         name: "parent-session-tasks",
@@ -30,9 +25,9 @@ export default {
         name: "parent-session-evaluations",
       },
       {
-        image: require("@/assets/icons/icon-student.svg"),
-        text: "Perfil de aprendizaje",
-        name: "parent-session-students",
+        image: require(`@/assets/icons/icon-course.svg`),
+        text: "Material de clase",
+        name: "parent-session-learn",
       },
     ],
   }),
@@ -59,4 +54,3 @@ export default {
   },
 };
 </script>
-
