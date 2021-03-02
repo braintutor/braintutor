@@ -229,7 +229,7 @@ export default {
       return this.$store.state.user;
     },
     isMobile(){
-      return this.$vuetify.breakpoint.name == 'xs'
+      return this.$vuetify.breakpoint.name == 'xs' || this.$vuetify.breakpoint.name =='sm'
     }
   },
   methods: {
@@ -332,7 +332,7 @@ export default {
   }
 }
 
-@media only screen and (max-width: 690px) {
+@media only screen and (max-width: 960px) {
   .header {
     &__actions {
       display: none;
