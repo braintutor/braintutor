@@ -50,17 +50,25 @@
 						<v-icon> mdi-close-thick </v-icon>
 					</v-btn>
 				</div>
-				<v-text-field label="Año escolar" v-model="year" />
+				<v-text-field label="Año escolar" v-model="year" type="number" />
 				<v-tabs v-model="tab" grow @change="changeSegments">
 					<v-tab key="bimester">Bimestral</v-tab>
 					<v-tab key="trimester">Trimestral</v-tab>
 				</v-tabs>
 				<v-tabs-items v-model="tab">
 					<v-tab-item key="bimester">
-						<school-cycle-segments v-model="segments" type="bimester" />
+						<school-cycle-segments
+							v-model="segments"
+							type="bimester"
+							v-bind:year="parseInt(year)"
+						/>
 					</v-tab-item>
 					<v-tab-item key="trimester">
-						<school-cycle-segments v-model="segments" type="trimester" />
+						<school-cycle-segments
+							v-model="segments"
+							type="trimester"
+							v-bind:year="parseInt(year)"
+						/>
 					</v-tab-item>
 				</v-tabs-items>
 			</template>
@@ -86,13 +94,15 @@ export default {
 			isEditDialogVisible: false,
 			loading_save: false,
 			tab: 0, // 0 == bimester, 1 == trimester
-			segments: this.getSegments(0),
+			segments: [],
 			year: new Date().getFullYear().toString(),
 			schoolCycles: [],
 		};
 	},
 	mounted() {
 		getSchoolCycles().then((x) => (this.schoolCycles = x));
+		this.segments = this.getSegments(0);
+		console.log(this.year);
 	},
 	methods: {
 		async save() {
@@ -115,11 +125,59 @@ export default {
 		},
 		changeSegments(tab) {
 			this.segments = this.getSegments(tab);
+			console.log(this.segments);
 		},
 		getSegments(tab) {
-			const numbers = tab == 0 ? ['I', 'II', 'III', 'IV'] : ['I', 'II', 'III'];
-			return numbers.map((x) => ({number: x, start: null, end: null}));
-		},
+			const numbers = tab == 0 ? [1, 2, 3, 4] : [1, 2, 3]; // [[1,2],[3,4], [5,6], [7,8]], [[1,2,3],[4,5,6]. [7,8,9]]
+			let year = parseInt(this.year);
+			let min = year + '-01-01';
+			return numbers.map((x) => {
+				let fecha = {
+					number: x,
+					start: {value: null, min: min},
+					end: {value: null, min: min},
+				};
+				console.log(x);
+				console.log(new Date(year, 2 * x - 2, 1).toDateString());
+				if (tab == 0) {
+					// fecha.start = {
+					//   value: new Date(year, (2*x) - 2, 1).toDateString(),
+					//   min: min,
+					// };
+					// fecha.end = {
+					//   value: new Date(year, (2*x) - 1, 1).toDateString(),
+					//   min: min,
+					// }
+					fecha.start = {
+						value: year + '-' + this.fill0Number((2*x) - 1) + '-' + "01",
+						min: min
+					};
+					fecha.end = {
+						value: year + '-' + this.fill0Number((2*x) + 1) + '-' + "01",
+            min: min,
+            max: fecha.start
+					};
+				} else {
+					fecha.start = {
+						value: year + '-' + this.fill0Number((3*x) - 2) + '-' + "01",
+						min: min,
+					};
+					fecha.end = {
+						value: year + '-' + this.fill0Number((3*x) + 1) + '-' + "01",
+						min: min,
+					};
+				}
+				console.log(fecha);
+				return fecha;
+			});
+    },
+    fill0Number(number) {
+      if(number < 10) {
+        return '0' + number;
+      } else {
+        return number;
+      }
+    },
 	},
 };
 </script>
