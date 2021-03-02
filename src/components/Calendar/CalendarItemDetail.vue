@@ -139,8 +139,8 @@ export default {
       const { url } = await join({
         meetingName: this.itemDetail["name"],
         meetingID: this.itemDetail["id"],
-      }).catch(({ message }) => {
-        this.showMessage('Error',message);
+      }).catch(({ msg }) => {
+        this.showMessage('Error', msg);
         this.loadingMeeting = false;
       });
       this.loadingMeeting = false;
