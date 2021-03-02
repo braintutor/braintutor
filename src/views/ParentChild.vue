@@ -44,7 +44,7 @@ export default {
           name: "parent-child-info",
         },
         {
-          image: require(`@/assets/icons/icon-course.svg`),
+          image: require(`@/assets/icons/icon-calendar.svg`),
           text: "Agenda",
           name: "parent-child-calendar",
           query: {
@@ -52,7 +52,7 @@ export default {
           },
         },
         {
-          image: require("@/assets/icons/icon-calendar.svg"),
+          image: require("@/assets/icons/icon-course.svg"),
           text: "Cursos",
           name: "parent-child-courses",
         },

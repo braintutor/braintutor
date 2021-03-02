@@ -23,17 +23,17 @@
           id="user"
           class="user"
           v-if="user"
-          @click="user_options = !user_options"
+          @click="drawer = true"
         >
           <span class="user__name">{{ user.name }}</span>
           <span class="user__role">{{ roles[user.role] }}</span>
           <div class="user__avatar">
             <img src="@/assets/icons/icon-user.svg" alt />
           </div>
-          <div v-show="user_options" class="user__options">
+          <!-- <div v-show="user_options" class="user__options">
             <v-btn small text @click="redirect('profile')">Perfil</v-btn>
             <v-btn small text @click="closeSession()">Cerrar Sesión</v-btn>
-          </div>
+          </div> -->
         </div>
         <v-btn class="header__action" v-else text @click="redirect('schools')"
           >Iniciar Sesión</v-btn
@@ -63,19 +63,21 @@
       </div>
       <v-list>
         <v-list-item-group active-class="blue--text text--accent-4">
-          <v-list-item
-            v-for="(link, l_idx) in links_filtered"
-            :key="l_idx"
-            @click="
-              redirect(link.name);
-              drawer = false;
-            "
-          >
-            <v-list-item-icon>
-              <v-icon>{{ link.icon }}</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>{{ link.title }}</v-list-item-title>
-          </v-list-item>
+          <div v-if="isMobile">
+            <v-list-item
+              v-for="(link, l_idx) in links_filtered"
+              :key="l_idx"
+              @click="
+                redirect(link.name);
+                drawer = false;
+              "
+            >
+              <v-list-item-icon>
+                <v-icon>{{ link.icon }}</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>{{ link.title }}</v-list-item-title>
+            </v-list-item>
+          </div>
           <v-list-item
             v-if="user"
             @click="
@@ -188,12 +190,12 @@ export default {
       //   icon: "mdi-book",
       //   session_roles: ["PAR"],
       // },
-      // {
-      //   title: "Alumnos",
-      //   name: "parent-students",
-      //   icon: "mdi-school",
-      //   session_roles: ["PAR"],
-      // },
+      {
+        title: "Hijos",
+        name: "parent-students",
+        icon: "mdi-school",
+        session_roles: ["PAR"],
+      },
       // *
       {
         title: "Agenda",
@@ -237,6 +239,9 @@ export default {
     user() {
       return this.$store.state.user;
     },
+    isMobile(){
+      return this.$vuetify.breakpoint.name == 'xs'
+    }
   },
   methods: {
     redirect,
