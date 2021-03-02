@@ -102,14 +102,12 @@ export default {
 	mounted() {
 		getSchoolCycles().then((x) => (this.schoolCycles = x));
 		this.segments = this.getSegments(0);
-		console.log(this.year);
 	},
 	methods: {
 		async save() {
 			this.showLoading('Registrando ciclo escolar');
 			try {
 				let schoolCycle = await createSchoolCycle(this.year, this.getSegmentType(), this.segments);
-				console.log(schoolCycle);
 				this.schoolCycles.push(schoolCycle);
 				this.showMessage(
 					'Ciclo Registrado',
@@ -125,7 +123,6 @@ export default {
 		},
 		changeSegments(tab) {
 			this.segments = this.getSegments(tab);
-			console.log(this.segments);
 		},
 		getSegments(tab) {
 			const numbers = tab == 0 ? [1, 2, 3, 4] : [1, 2, 3]; // [[1,2],[3,4], [5,6], [7,8]], [[1,2,3],[4,5,6]. [7,8,9]]
@@ -137,8 +134,6 @@ export default {
 					start: {value: null, min: min},
 					end: {value: null, min: min},
 				};
-				console.log(x);
-				console.log(new Date(year, 2 * x - 2, 1).toDateString());
 				if (tab == 0) {
 					// fecha.start = {
 					//   value: new Date(year, (2*x) - 2, 1).toDateString(),
@@ -167,7 +162,6 @@ export default {
 						min: min,
 					};
 				}
-				console.log(fecha);
 				return fecha;
 			});
     },

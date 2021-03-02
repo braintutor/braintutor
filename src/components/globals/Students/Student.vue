@@ -53,7 +53,6 @@ export default {
   },
   methods: {
     init() {
-      console.log("cambiando")
       this.time = this.student.time || {};
       if (this.time.time_last) {
         this.time.time_last_f = this.formatDate(
