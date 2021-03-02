@@ -403,6 +403,7 @@ import { updatePasswordByAdmin } from "@/services/userService";
 import { getParents } from "@/services/parentService";
 import * as XLSX from "xlsx";
 import UserModel from "@/models/User";
+import { getLevels } from "@/services/levelService";
 
 export default {
   data: () => ({
@@ -415,16 +416,7 @@ export default {
     section_id: "",
     sections_form: [],
     level_form: null,
-    levels: [
-      {
-        _id: "PRI",
-        name: "Primaria",
-      },
-      {
-        _id: "SEC",
-        name: "Secundaria",
-      },
-    ],
+    levels: [],
     level_selected: "PRI",
     parents: [],
     UserModel,
@@ -545,6 +537,8 @@ export default {
   async created() {
     this.showLoading("Cargando Datos");
     try {
+      this.levels = await getLevels()
+
       let grades = this.mongoArr(await this.$api.grade.getAll());
       grades = [...grades].sort((a, b) => a.name.localeCompare(b.name));
       this.grades = [

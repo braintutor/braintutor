@@ -32,6 +32,8 @@
 </template>
 
 <script>
+import { getLevels } from "@/services/levelService";
+
 export default {
   data: () => ({
     grades: [],
@@ -39,18 +41,11 @@ export default {
     sections: [],
     section_id: "",
     level_selected: "PRI",
-    levels: [
-      {
-        _id: "PRI",
-        name: "Primaria",
-      },
-      {
-        _id: "SEC",
-        name: "Secundaria",
-      },
-    ],
+    levels: [],
   }),
   async created() {
+    this.levels = await getLevels()
+
     let grades = this.mongoArr(await this.$api.grade.getAll());
     grades.sort((a, b) => a.name.localeCompare(b.name));
     this.grades = [

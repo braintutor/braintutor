@@ -65,6 +65,7 @@
 
 <script>
 import SessionCard from "@/components/globals/Session/SessionCard";
+import { getLevels } from "@/services/levelService";
 
 export default {
   data: () => ({
@@ -73,16 +74,7 @@ export default {
     sections: [],
     section_id: null,
     sessions: [],
-    levels: [
-      {
-        _id: "PRI",
-        name: "Primaria",
-      },
-      {
-        _id: "SEC",
-        name: "Secundaria",
-      },
-    ],
+    levels: [],
     level_selected: "PRI",
   }),
   computed: {
@@ -136,6 +128,8 @@ export default {
   async created() {
     this.showLoading("Cargando Aulas");
     try {
+      this.levels = await getLevels()
+
       let grades = this.mongoArr(await this.$api.grade.getAll());
       grades.sort((a, b) => a.name.localeCompare(b.name));
       this.grades = grades;

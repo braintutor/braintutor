@@ -51,7 +51,6 @@ export default {
 		displayType,
 		showCurrent(segment) {
 			const segmentIndex = this.segments.indexOf(segment);
-			console.log(segmentIndex);
 			if (segmentIndex == 0) return true; // if first return current date
 
 			const lastSegment = this.segments[segmentIndex - 1];

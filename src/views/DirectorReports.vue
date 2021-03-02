@@ -130,6 +130,7 @@
 
 <script>
 import ReportEditor from "@/components/globals/Report/ReportEditor";
+import { getLevels } from "@/services/levelService";
 
 export default {
   data: () => ({
@@ -139,16 +140,7 @@ export default {
     course_selected: null,
     reports: [],
     report_selected: null,
-    levels: [
-      {
-        _id: "PRI",
-        name: "Primaria",
-      },
-      {
-        _id: "SEC",
-        name: "Secundaria",
-      },
-    ],
+    levels: [],
     level_selected: "PRI",
     time_start: null,
     time_end: null,
@@ -170,6 +162,8 @@ export default {
     },
   },
   async created() {
+    this.levels = await getLevels()
+
     let date = new Date();
     this.time_end =
       date.getFullYear().toString() +
