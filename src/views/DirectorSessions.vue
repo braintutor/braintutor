@@ -50,7 +50,7 @@
           action: () => selectSession(session, 'tasks'),
         },
         {
-          text: 'Evaluaciones',
+          text: 'Notas',
           icon: 'mdi-list-status',
           color: 'warning',
           action: () => selectSession(session, 'evaluations'),
