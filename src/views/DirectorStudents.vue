@@ -110,9 +110,7 @@ export default {
     try {
       this.levels = await getLevels()
 
-      let grades = this.mongoArr(await this.$api.grade.getAll());
-      grades.sort((a, b) => a.name.localeCompare(b.name));
-      this.grades = grades;
+      this.grades = this.mongoArr(await this.$api.grade.getAll());
     } catch (error) {
       this.showMessage("", error.msg || error);
     }
