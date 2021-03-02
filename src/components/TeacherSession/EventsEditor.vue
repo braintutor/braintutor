@@ -263,7 +263,6 @@ export default {
     event_selected: null,
     date_selected: new Date(),
     new_event: {},
-    //
     action: "",
     ldg_videocall: false,
     dlg_create: false,

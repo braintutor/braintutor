@@ -49,7 +49,6 @@
           No hay información
         </p>
       </div>
-
       <!-- DLG CREATE -->
       <v-dialog v-model="dlg_create" max-width="600" persistent>
         <form @submit.prevent="create()" class="m-card">
@@ -93,7 +92,6 @@
           </div>
         </form>
       </v-dialog>
-
       <!-- DLG EDIT -->
       <v-dialog v-model="dlg_edit" max-width="600" persistent>
         <form @submit.prevent="update()" class="m-card">
@@ -136,7 +134,6 @@
           </div>
         </form>
       </v-dialog>
-
       <!-- DLG REMOVE -->
       <v-dialog v-model="dlg_remove" max-width="400">
         <div class="m-card">
@@ -163,7 +160,6 @@
         </div>
       </v-dialog>
     </div>
-
     <!-- SECTIONS -->
     <SectionsEditor
       v-if="grade_selected"
@@ -282,7 +278,6 @@ export default {
   border-radius: 12px;
   user-select: none;
   cursor: pointer;
-
   display: flex;
   align-items: center;
 

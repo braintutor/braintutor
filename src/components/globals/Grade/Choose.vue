@@ -23,12 +23,7 @@ export default {
     "label": { type: String, default: 'Grado' }
   },
   async created() {
-    let grades = this.mongoArr(await this.$api.grade.getAll());
-    grades.sort((a, b) => a.name.localeCompare(b.name));
-    this.items = [
-      ...grades.filter((g) => g.level === "PRI"),
-      ...grades.filter((g) => g.level === "SEC"),
-    ].map( x =>  { return {...x, fullName: x["name"] + '° ' + x["level"] }})
+    this.items = this.mongoArr(await this.$api.grade.getAll()).map( x =>  { return {...x, fullName: x["name"] + '° ' + x["level"] }})
   },
   methods: {
     choose(item) {

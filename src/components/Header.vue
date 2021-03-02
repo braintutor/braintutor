@@ -89,18 +89,7 @@
               <v-icon>mdi-account</v-icon>
             </v-list-item-icon>
             <v-list-item-title>Perfil</v-list-item-title>
-          </v-list-item>
-          <v-list-item
-            @click="
-              enableFullscreen();
-              drawer = false;
-            "
-          >
-            <v-list-item-icon>
-              <v-icon>mdi-fullscreen</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Pantalla completa</v-list-item-title>
-          </v-list-item>
+          </v-list-item>          
           <v-list-item
             v-if="user"
             @click="
@@ -240,7 +229,7 @@ export default {
       return this.$store.state.user;
     },
     isMobile(){
-      return this.$vuetify.breakpoint.name == 'xs'
+      return this.$vuetify.breakpoint.name == 'xs' || this.$vuetify.breakpoint.name =='sm'
     }
   },
   methods: {
@@ -256,10 +245,7 @@ export default {
         });
       else redirect("schools");
     },
-    enableFullscreen() {
-      let container = document.getElementById("braintutor");
-      container.requestFullscreen();
-    },
+    
   },
 };
 </script>
@@ -346,7 +332,7 @@ export default {
   }
 }
 
-@media only screen and (max-width: 690px) {
+@media only screen and (max-width: 960px) {
   .header {
     &__actions {
       display: none;

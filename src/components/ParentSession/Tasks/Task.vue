@@ -8,7 +8,6 @@
         <span class="m-menu__title">Ver Tareas</span>
       </div>
     </div>
-
     <div v-if="task">
       <!-- TASK -->
       <TaskCard
@@ -18,7 +17,6 @@
         disabled
         class="mb-4"
       />
-
       <div class="answers m-card">
         <!-- STUDENTS -->
         <div class="students">
@@ -77,7 +75,6 @@
                 <span class="file__name">{{ file.name_f }}</span>
               </a>
             </a>
-
             <!-- ANSWER EMPTY -->
             <p
               v-if="!((answer && answer.text) || files_f.length > 0)"
@@ -102,7 +99,6 @@
 
 <script>
 import { getStudentsByParent } from "@/services/studentService";
-
 import TaskCard from "@/components/globals/Task/TaskCard";
 
 export default {
@@ -194,7 +190,6 @@ $background-active: #e4e9ff;
   border-radius: 8px;
   user-select: none;
   cursor: pointer;
-
   display: flex;
   align-items: center;
 
@@ -221,7 +216,6 @@ $background-active: #e4e9ff;
   display: block;
   background: rgba(0, 0, 255, 0.07);
   border-radius: 6px;
-
   display: flex;
   align-items: center;
 
@@ -230,7 +224,6 @@ $background-active: #e4e9ff;
     flex-grow: 1;
     color: rgba(0, 0, 0, 0.75);
     text-decoration: none;
-
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -245,7 +238,6 @@ $background-active: #e4e9ff;
   &__type {
     padding: 16px;
     opacity: 0.6;
-
     display: flex;
     align-items: center;
 

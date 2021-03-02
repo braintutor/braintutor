@@ -1,5 +1,5 @@
 <template>
-  <div class="m-container pb-3 px-1">
+  <div class="m-container">
     <v-row no-gutters class="mb-3">
       <v-col class="col-4 px-2">
         <v-select
@@ -50,7 +50,7 @@
           action: () => selectSession(session, 'tasks'),
         },
         {
-          text: 'Evaluaciones',
+          text: 'Notas',
           icon: 'mdi-list-status',
           color: 'warning',
           action: () => selectSession(session, 'evaluations'),
@@ -130,9 +130,7 @@ export default {
     try {
       this.levels = await getLevels()
 
-      let grades = this.mongoArr(await this.$api.grade.getAll());
-      grades.sort((a, b) => a.name.localeCompare(b.name));
-      this.grades = grades;
+      this.grades = this.mongoArr(await this.$api.grade.getAll());
     } catch (error) {
       this.showMessage("", error.msg || error);
     }

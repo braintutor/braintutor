@@ -142,7 +142,6 @@ export default {
   &__input {
     padding: 8px 12px;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
-
     display: flex;
     align-items: center;
   }

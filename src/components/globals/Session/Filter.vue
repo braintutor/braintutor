@@ -46,12 +46,7 @@ export default {
   async created() {
     this.levels = await getLevels()
 
-    let grades = this.mongoArr(await this.$api.grade.getAll());
-    grades.sort((a, b) => a.name.localeCompare(b.name));
-    this.grades = [
-      ...grades.filter((g) => g.level === "PRI"),
-      ...grades.filter((g) => g.level === "SEC"),
-    ];
+    this.grades = this.mongoArr(await this.$api.grade.getAll());
   },
   computed: {
     grades_f() {
