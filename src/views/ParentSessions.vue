@@ -13,12 +13,6 @@
           action: () => selectSession(session, 'learn'),
         },
         {
-          text: 'Eventos',
-          icon: 'mdi-calendar',
-          color: 'error',
-          action: () => selectSession(session, 'events'),
-        },
-        {
           text: 'Tareas',
           icon: 'mdi-format-list-checks',
           color: 'success',

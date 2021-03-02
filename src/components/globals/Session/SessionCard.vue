@@ -2,7 +2,7 @@
   <div class="session m-card">
     <div class="m-card__body">
       <div class="mb-3">
-        <span class="session__level">{{ levels[session.grade.level] }}</span>
+        <span class="session__level">{{ session.grade.level }}</span>
         <span class="session__grade">{{ session.grade.name }}</span>
         <span class="session__section">{{ session.section.name }}</span>
       </div>
@@ -40,13 +40,7 @@ export default {
   props: {
     session: Object,
     buttons: Array,
-  },
-  data: () => ({
-    levels: {
-      PRI: "Primaria",
-      SEC: "Secundaria",
-    },
-  }),
+  }
 };
 </script>
 
