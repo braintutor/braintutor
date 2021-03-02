@@ -82,7 +82,12 @@
 <script>
 import BrainDialog from './BrainDialog';
 import SchoolCycleSegments from './SchoolCycleSegments.vue';
-import {createSchoolCycle, getSchoolCycles, fill0Number} from '@/services/schoolCycleService';
+import {
+	createSchoolCycle,
+	getSchoolCycles,
+	fill0Number,
+	displayNumber,
+} from '@/services/schoolCycleService';
 
 export default {
 	components: {
@@ -107,7 +112,17 @@ export default {
 		async save() {
 			this.showLoading('Registrando ciclo escolar');
 			try {
-				let schoolCycle = await createSchoolCycle(this.year, this.getSegmentType(), this.segments);
+				let schoolCycle = await createSchoolCycle(
+					this.year,
+					this.getSegmentType(),
+					this.segments.map((segment) => {
+						return {
+							number: displayNumber(segment.number),
+							start: segment.start.value,
+							end: segment.end.value
+						};
+					}),
+				);
 				this.schoolCycles.push(schoolCycle);
 				this.showMessage(
 					'Ciclo Registrado',
@@ -143,7 +158,7 @@ export default {
 				};
 				fecha.end = {
 					value: year + '-' + fill0Number((tab + 2) * x + 1) + '-' + '01',
-					min: min
+					min: min,
 				};
 				return fecha;
 			});

@@ -12,6 +12,7 @@
 						'show-current': showCurrent(segment),
 					}"
 					v-model="segment.start.value"
+					@input="segment.end.value = calculateMax(segment.start.value)"
 				/>
 			</v-col>
 			<v-col>
