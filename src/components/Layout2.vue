@@ -86,9 +86,10 @@ $sidebar-spacing: 6px;
 .header {
   grid-column-start: 1;
   grid-column-end: 3;
-  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 1px 10px #e5dfdf;
   z-index: 1;
 }
+
 
 .sidebar {
   padding: $sidebar-spacing;
