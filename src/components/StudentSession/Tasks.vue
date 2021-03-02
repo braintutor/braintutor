@@ -24,7 +24,7 @@
       :key="idx"
       @click="select(task)"
       :time_start="task.time_start"
-      :title="task.title"
+      :title="task.name"
       :description="task.description"
       class="mb-3"
     />
@@ -50,8 +50,8 @@ export default {
   },
   computed: {
     tasks_ordered() {
-      let tasks = this.tasks.filter(({ answer }) => {
-        if (answer.text) return !this.show_pending;
+      let tasks = this.tasks.filter(({ hasAnswer }) => {
+        if (hasAnswer) return !this.show_pending;
         else return this.show_pending;
       });
       return this.orderObjectsByDate(tasks, "time_start");
@@ -70,7 +70,7 @@ export default {
       this.hideLoading();
     },
     select(task) {
-      redirect("student-task", { task_id: task._id });
+      redirect("student-task", { task_id: task.id });
     },
   },
   components: {

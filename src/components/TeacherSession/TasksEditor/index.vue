@@ -23,9 +23,9 @@
       v-for="(task, idx) in tasks_ordered"
       :key="idx"
       :time_start="task.time_start || new Date()"
-      :title="task.title"
+      :title="task.name"
       :description="task.description"
-      :isPublic="task.public"
+      :isPublic="task.is_public"
       :options="[
         {
           text: 'Editar Tarea',
