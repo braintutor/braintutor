@@ -1,6 +1,6 @@
 <template>
 	<v-container>
-		<v-row v-for="segment in segments" :key="segment.number" class="d-flex justify-space-around">
+		<v-row v-for="(segment, index) in segments" :key="segment.number" class="d-flex justify-space-around">
 			<v-col cols="3" class="d-flex align-center">
 				<h4>{{ formatSegment2(type, segment.number) }}</h4>
 			</v-col>
@@ -9,10 +9,10 @@
 					label="Inicio"
 					:date-picker-props="{
 						min: segment.start.min,
-						'show-current': showCurrent(segment),
+						'show-current': showCurrent(segment)
 					}"
 					v-model="segment.start.value"
-					@input="segment.end.value = calculateMax(segment.start.value)"
+					@input="updateNextSegments(index)"
 				/>
 			</v-col>
 			<v-col>
@@ -20,8 +20,8 @@
 					label="Fin"
 					:date-picker-props="{
 						min: segment.start.value,
-						max: calculateMax(segment.start.value),
-						'show-current': segment.end.value,
+						max: nextDate(segment.start.value),
+						'show-current': false
 					}"
 					v-model="segment.end.value"
 				/>
@@ -68,9 +68,9 @@ export default {
 			if (segmentIndex == 0) return true; // if first return current date
 
 			const lastSegment = this.segments[segmentIndex - 1];
-			return lastSegment.end;
+			return lastSegment.end.value;
 		},
-		calculateMax(fecha) {
+		nextDate(fecha) {
 			let res = fecha.split('-');
 			let max =
 				res[0] +
@@ -80,6 +80,13 @@ export default {
 				res[2];
 			return max;
 		},
+		updateNextSegments(indexI){
+			this.segments[indexI].end.value = this.nextDate(this.segments[indexI].start.value);
+			for (let index = indexI+1; index < this.segments.length; index++) {
+				this.segments[index].start.value = this.segments[index - 1].end.value;
+				this.segments[index].end.value =this.nextDate(this.segments[index].start.value);
+			}
+		}
 	},
 };
 </script>
