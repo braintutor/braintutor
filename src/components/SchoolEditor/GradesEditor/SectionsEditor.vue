@@ -43,7 +43,6 @@
         No hay Secciones
       </p>
     </div>
-
     <!-- DLG CREATE -->
     <v-dialog v-model="dlg_create" max-width="600" persistent>
       <form @submit.prevent="create()" class="m-card">
@@ -80,7 +79,6 @@
         </div>
       </form>
     </v-dialog>
-
     <!-- DLG EDIT -->
     <v-dialog v-model="dlg_edit" max-width="600" persistent>
       <form @submit.prevent="update()" class="m-card">
@@ -116,7 +114,6 @@
         </div>
       </form>
     </v-dialog>
-
     <!-- DLG REMOVE -->
     <v-dialog v-model="dlg_remove" max-width="400">
       <div class="m-card">
@@ -243,7 +240,6 @@ export default {
   background: rgba(0, 0, 0, 0.05);
   border-radius: 12px;
   user-select: none;
-
   display: flex;
   align-items: center;
 

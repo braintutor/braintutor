@@ -26,13 +26,11 @@ export default {
   left: 0;
   height: 100vh;
   width: 100vw;
-  //
   background: rgba(255, 255, 255, 0);
   pointer-events: none;
   opacity: 0;
   z-index: var(--z-loading) !important;
   transition: all 0.3s;
-  //
   display: flex;
   justify-content: center;
   align-items: center;
