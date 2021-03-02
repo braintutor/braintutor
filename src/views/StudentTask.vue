@@ -126,6 +126,7 @@ import { AnswerModel } from "@/models/Task";
 export default {
   data: () => ({
     task: null,
+    resultId: null,
     answer: "",
     files: [],
     file_selected: null,
@@ -152,11 +153,12 @@ export default {
     async init() {
       this.showLoading("Cargando Tarea");
       try {
-        const { task, answers } = this.mongo(await getTaskByStudent(this.task_id));
-        this.task = task
+        const { id, evaluation, answers } = this.mongo(await getTaskByStudent(this.task_id));
+        this.task = evaluation
+        this.taskResultId = id
         this.answer = answers.length > 0 ? answers[0] : {}
         // Files
-        let { files } = await this.$api.file.getFilesTask(this.task_id);
+        let { files } = await this.$api.file.getFilesTask(id);
         this.files = files;
       } catch (error) {
         this.showMessage("", error.msg || error);
@@ -166,9 +168,7 @@ export default {
     async save() {
       this.showLoading("Guardando Respuesta");
       try {
-        await updateTaskAnswer(this.task._id, {
-          text: this.text || "",
-        });
+        await updateTaskAnswer(this.taskResultId, this.answer);
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
@@ -188,7 +188,7 @@ export default {
           url,
           size,
           content_type,
-        } = await this.$api.file.addFileTask(this.task_id, formData);
+        } = await this.$api.file.addFileTask(this.taskResultId, formData);
         this.files.push({
           name,
           url,
@@ -209,7 +209,7 @@ export default {
       let file_name = this.file_selected.name;
       let file_name_f = file_name.replaceAll("/", "&&");
       try {
-        await this.$api.file.removeFileTask(this.task_id, file_name_f);
+        await this.$api.file.removeFileTask(this.taskResultId, file_name_f);
         this.files = this.files.filter((f) => f.name !== file_name);
         await this.save();
       } catch (error) {
