@@ -4,6 +4,10 @@
     <div class="header">
       <slot name="header"></slot>
     </div>
+
+     <div class="header2">
+      <slot name="header2"></slot>
+    </div>
     <!-- Sidebar -->
     <nav class="sidebar">
       <div
@@ -87,6 +91,11 @@ $sidebar-spacing: 6px;
   grid-column-start: 1;
   grid-column-end: 3;
   box-shadow: 0 1px 10px rgba(0, 0, 0, 0.15);
+  z-index: 1;
+}
+.header2 {
+  grid-column-start: 1;
+  grid-column-end: 3;
   z-index: 1;
 }
 
