@@ -49,7 +49,7 @@
       <template #body>
         <div class="close-modal">
           <h3>Nueva Sesión</h3>
-          <v-btn class="mx-2" icon small @click="dlg_create = false">
+          <v-btn class="mx-2" icon small @click="close()">
             <v-icon> mdi-close-thick </v-icon>
           </v-btn>
         </div>
@@ -129,6 +129,10 @@ export default {
       this.entity.teacher = teacher;
       this.entity.teacher_id = teacher._id;
     },
+    close(){
+      this.dlg_create = false;
+      this.entity = {};
+    },
     async filter(query) {
       this.query = query;
       if (query["section_id"]) {
@@ -152,7 +156,7 @@ export default {
           (c) => c._id === this.entity.course_id
         );
         this.entities.push(this.entity);
-        this.dlg_create = false;
+        this.close();
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
@@ -183,7 +187,7 @@ export default {
     },
     //
     async showCreate() {
-      this.entity = this.query;
+      this.entity = Object.assign({},this.query);
       this.dlg_create = true;
     },
     async showEdit(e) {
