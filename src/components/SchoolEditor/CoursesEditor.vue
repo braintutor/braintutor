@@ -2,7 +2,7 @@
   <div class="editor">
     <div class="editor__menu d-flex justify-space-between align-center">
       <div class="editor__title">
-        <h2>Cursos</h2>
+        <h2>Encargados de Material</h2>
       </div>
       <m-btn
         @click="
@@ -44,7 +44,7 @@
                       edit(e);
                     "
                   >
-                    <v-list-item-title>Editar Curso</v-list-item-title>
+                    <v-list-item-title>Editar</v-list-item-title>
                   </v-list-item>
                   <v-list-item
                     @click="
@@ -52,7 +52,7 @@
                       entity = e;
                     "
                   >
-                    <v-list-item-title>Eliminar Curso</v-list-item-title>
+                    <v-list-item-title>Eliminar</v-list-item-title>
                   </v-list-item>
                 </v-list>
               </v-menu>
@@ -68,7 +68,7 @@
     <brain-dialog v-model="dialog_edit" @submit="save" :loading="loading_save">
       <template #body>
         <div class="close-modal">
-          <h3 v-if="action === 'create'">Crear curso</h3>
+          <h3 v-if="action === 'create'">Crear Encargado de material</h3>
           <h3 v-else>Editar</h3>
           <v-btn class="mx-2" icon small @click="dialog_edit = false">
             <v-icon> mdi-close-thick </v-icon>
