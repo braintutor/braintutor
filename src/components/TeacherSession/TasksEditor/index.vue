@@ -136,7 +136,7 @@
             label="Descripción"
             required
           ></v-textarea>
-          <v-checkbox v-model="task.public" label="Público"></v-checkbox>
+          <v-checkbox v-model="task.is_public" label="Público"></v-checkbox>
         </div>
         <div class="m-card__actions">
           <m-btn
