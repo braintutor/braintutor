@@ -25,14 +25,16 @@
       <table class="m-table">
         <thead>
           <tr>
-            <th class="text-left">Nombre</th>
+            <th class="text-left">Material</th>
+            <th class="text-left">Grado</th>
             <th class="text-left">Encargado</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(e, e_idx) in courses" :key="e_idx">
-            <td>{{ e.name }}</td>
+          <tr v-for="e in courses" :key="e.id">
+            <td>{{ e.subject_name }}</td>
+            <td>{{ e.grade_name }}</td>
             <td>{{ e.teacher_name }}</td>
             <td class="text-center">
               <v-menu offset-y>
@@ -199,9 +201,7 @@ export default {
           this.entity.knowledge = [];
           let entity_id = await addCourse(this.entity);
           this.getData();
-          this.entity._id = entity_id;
-          this.entity.units_count = 0;
-          this.entity.materials_count = 0;
+          this.entity.id = entity_id;
           this.dialog_edit = false;
         } catch (error) {
           this.showMessage("", error.msg || error);
