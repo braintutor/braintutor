@@ -83,6 +83,7 @@
 import SessionFilter from '@/components/globals/Session/Filter';
 import TeacherChooser from '@/components/globals/Teacher/Choose';
 import BrainDialog from './BrainDialog';
+import { getCourses } from "@/services/courseService";
 
 export default {
 	components: {SessionFilter, BrainDialog, TeacherChooser},
@@ -97,19 +98,6 @@ export default {
 		ldg_save: false,
 		query: {},
 	}),
-
-	async created() {
-		this.showLoading('Cargando Aulas');
-		try {
-			// this.grade_id = this.grades[0] ? this.grades[0]._id : null;
-
-			this.courses = this.mongoArr(await this.$api.course.getAll({}));
-			this.courses.sort((a, b) => a.name.localeCompare(b.name));
-		} catch (error) {
-			this.showMessage('', error.msg || error);
-		}
-		this.hideLoading();
-	},
 	methods: {
 		chooseTeacher(teacher) {
 			this.entity.teacher = teacher;
@@ -124,17 +112,30 @@ export default {
 		async filter(query) {
 			this.query = query;
 			if (query['section_id']) {
-				this.showLoading('Cargando Sesiones');
-				try {
-					this.entities = this.mongoArr(await this.$api.session.getAll(query));
-				} catch (error) {
-					this.showMessage('', error.msg || error);
-				}
-				this.hideLoading();
+				this.loadSessions(query)
+        this.loadCourses(query.grade_id)
 			} else {
 				this.entities = [];
 			}
-		},
+    },
+    async loadCourses(grade_id) {
+      this.showLoading("Cargando Cursos");
+      try {
+        this.courses = await getCourses(grade_id);
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
+    },
+    async loadSessions(query) {
+      this.showLoading("Cargando Sesiones");
+        try {
+          this.entities = this.mongoArr(await this.$api.session.getAll(query));
+        } catch (error) {
+          this.showMessage("", error.msg || error);
+        }
+      this.hideLoading();
+    },
 		async add() {
 			this.ldg_save = true;
 			try {

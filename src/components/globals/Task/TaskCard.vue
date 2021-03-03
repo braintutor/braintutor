@@ -9,7 +9,7 @@
         <p class="task__time_start">
           <span class="task__public mr-3" v-show="!isPublic">Privado</span>
           <v-icon class="mr-2" style="font-size: 0.9rem">mdi-calendar</v-icon>
-          <span>{{ toDateTimeString(time_start) }}</span>
+          <span>{{ time_start | datetime }}</span>
         </p>
         <v-menu v-if="options" offset-y left>
           <template v-slot:activator="{ on }">
@@ -46,13 +46,11 @@
 </template>
 
 <script>
-import { toDateTimeString } from "@/services/date";
 
 export default {
   props: {
     time_start: {
-      type: Date,
-      default: new Date(),
+      type: String
     },
     title: String,
     description: String,
@@ -68,7 +66,7 @@ export default {
     },
   },
   methods: {
-    toDateTimeString,
+    
   },
 };
 </script>

@@ -2,19 +2,8 @@
   <div v-if="!task_show_id" class="m-container">
     <!-- MENU -->
     <div class="tasks__menu mb-3">
-      <strong
-        v-show="$store.state.show_limits"
-        class="mt-1"
-        style="opacity: 0.5"
-        >({{ `${tasks.length}/${variables.max_tasks_per_session}` }})</strong
-      >
       <div></div>
-      <m-btn
-        @click="showCreate()"
-        :disabled="tasks.length >= variables.max_tasks_per_session"
-        color="primary"
-        small
-      >
+      <m-btn @click="showCreate()" color="primary" small>
         <v-icon left style="font-size: 0.9rem">mdi-plus</v-icon>Crear Tarea
       </m-btn>
     </div>
@@ -23,9 +12,9 @@
       v-for="(task, idx) in tasks_ordered"
       :key="idx"
       :time_start="task.time_start || new Date()"
-      :title="task.title"
+      :title="task.name"
       :description="task.description"
-      :isPublic="task.public"
+      :isPublic="task.is_public"
       :options="[
         {
           text: 'Editar Tarea',
@@ -50,7 +39,7 @@
         {
           text: 'Ver Respuestas',
           action: () => {
-            showAnswers(task._id);
+            showAnswers(task.id);
           },
         },
       ]"
@@ -73,12 +62,9 @@
             </v-btn>
           </div>
           <div>
-              <span class="mr-2">Tiempo de Inicio:</span>
-              <date-time
-                v-model="task.time_start_f"
-                :disabled="task.public"
-              />
-            </div>
+            <span class="mr-2">Tiempo de Inicio:</span>
+            <date-time v-model="task.time_start_f" :disabled="task.public" />
+          </div>
           <v-text-field
             v-model="task.title"
             :maxlength="TaskModel.title.max_length"
@@ -136,7 +122,7 @@
             label="Descripción"
             required
           ></v-textarea>
-          <v-checkbox v-model="task.public" label="Público"></v-checkbox>
+          <v-checkbox v-model="task.is_public" label="Público"></v-checkbox>
         </div>
         <div class="m-card__actions">
           <m-btn
@@ -160,14 +146,14 @@
         <div class="m-card__body">
           <div class="close-modal modal-pd">
             <h3>Editar Fecha</h3>
-            <v-btn class="mx-2" icon small @click="dlg_edit_date= false">
+            <v-btn class="mx-2" icon small @click="dlg_edit_date = false">
               <v-icon dark> mdi-close-thick </v-icon>
-            </v-btn>  
+            </v-btn>
           </div>
-            <div class="datetime-section">
-              <span class="mr-2">Tiempo de Inicio:</span>
-              <date-time v-model="task.time_start_f" />
-            </div>
+          <div class="datetime-section">
+            <span class="mr-2">Tiempo de Inicio:</span>
+            <date-time v-model="task.time_start_f" />
+          </div>
         </div>
         <div class="m-card__actions">
           <m-btn
@@ -191,7 +177,7 @@
         <div class="m-card__body">
           <div class="close-modal">
             <h3>¿Eliminar la Tarea?</h3>
-            <v-btn class="mx-2" icon small @click="dlg_remove= false">
+            <v-btn class="mx-2" icon small @click="dlg_remove = false">
               <v-icon dark> mdi-close-thick </v-icon>
             </v-btn>
           </div>
@@ -231,8 +217,7 @@ import TaskCard from "@/components/globals/Task/TaskCard";
 import Task from "./Task";
 import { addTask, removeTask } from "@/services/taskService";
 import { TaskModel } from "@/models/Task";
-import variables from "@/models/variables";
-import DateTime from '@/components/globals/DateTime';
+import DateTime from "@/components/globals/DateTime";
 
 export default {
   data: () => ({
@@ -247,14 +232,13 @@ export default {
     dlg_edit_date: false,
     dlg_remove: false,
     TaskModel,
-    variables,
   }),
   async created() {
     this.session_id = this.$route.params["session_id"];
     let task_id = this.$route.query.task_id;
 
     await this.init();
-    if (this.tasks.map((t) => t._id).includes(task_id))
+    if (this.tasks.map((t) => t.id).includes(task_id))
       this.task_show_id = task_id;
   },
   computed: {
@@ -293,7 +277,7 @@ export default {
           ...this.task,
           time_start: new Date(this.task.time_start_f),
         });
-        this.task._id = _id.$oid;
+        this.task.id = _id.$oid;
         this.task.time_start = new Date(this.task.time_start_f);
         this.tasks.push(this.task);
         this.dlg_new = false;
@@ -305,10 +289,10 @@ export default {
     async save() {
       this.loading_save = true;
       try {
-        await this.$api.task.update(this.task._id, {
+        await this.$api.task.update(this.task.id, {
           ...this.task,
         });
-        let task_idx = this.tasks.findIndex((t) => t._id === this.task._id);
+        let task_idx = this.tasks.findIndex((t) => t.id === this.task.id);
         this.tasks[task_idx] = {
           ...this.tasks[task_idx],
           ...this.task,
@@ -323,11 +307,11 @@ export default {
     async saveDate() {
       this.loading_save = true;
       try {
-        await this.$api.task.update(this.task._id, {
+        await this.$api.task.update(this.task.id, {
           time_start: new Date(this.task.time_start_f),
         });
         this.task.time_start = new Date(this.task.time_start_f);
-        let task_idx = this.tasks.findIndex((t) => t._id === this.task._id);
+        let task_idx = this.tasks.findIndex((t) => t.id === this.task.id);
         this.tasks[task_idx].time_start = this.task.time_start;
         this.tasks.splice();
         this.dlg_edit_date = false;
@@ -339,9 +323,9 @@ export default {
     async remove() {
       this.showLoading("Eliminando Tarea");
       try {
-        let task_id_to_remove = this.task._id;
+        let task_id_to_remove = this.task.id;
         await removeTask(task_id_to_remove);
-        this.tasks = this.tasks.filter((t) => t._id !== task_id_to_remove);
+        this.tasks = this.tasks.filter((t) => t.id !== task_id_to_remove);
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
@@ -356,23 +340,23 @@ export default {
     },
     showEdit(task) {
       this.task = {
-        _id: task._id,
-        title: task.title,
+        id: task.id,
+        title: task.name,
         description: task.description,
-        public: task.public,
+        public: task.is_public,
       };
       this.dlg_edit = true;
     },
     showEditDate(task) {
       this.task = {
-        _id: task._id,
+        id: task.id,
         time_start_f: task.time_start,
       };
       this.dlg_edit_date = true;
     },
     showRemove(task) {
       this.task = Object.assign({}, task);
-      this.task.id = this.task._id;
+      this.task.id = this.task.id;
       this.dlg_remove = true;
     },
     showAnswers(task_id) {
@@ -387,7 +371,7 @@ export default {
   components: {
     Task,
     TaskCard,
-    DateTime
+    DateTime,
   },
 };
 </script>

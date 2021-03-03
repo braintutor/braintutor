@@ -3,18 +3,12 @@
     <div class="editor__menu d-flex justify-space-between align-center">
       <div class="editor__title">
         <h2>Cursos</h2>
-        <strong class="ml-2 mt-1" style="opacity: 0.5"
-          >({{
-            `${courses.length}/${variables.max_courses_per_school}`
-          }})</strong
-        >
       </div>
       <m-btn
         @click="
           dialog_edit = true;
           add();
         "
-        :disabled="courses.length >= variables.max_courses_per_school"
         color="primary"
         small
       >
@@ -25,14 +19,16 @@
       <table class="m-table">
         <thead>
           <tr>
-            <th class="text-left">Nombre</th>
+            <th class="text-left">Material</th>
+            <th class="text-left">Grado</th>
             <th class="text-left">Encargado</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(e, e_idx) in courses" :key="e_idx">
-            <td>{{ e.name }}</td>
+          <tr v-for="e in courses" :key="e.id">
+            <td>{{ e.subject_name }}</td>
+            <td>{{ e.grade_name }}</td>
             <td>{{ e.teacher_name }}</td>
             <td class="text-center">
               <v-menu offset-y>
@@ -129,8 +125,6 @@
 </template>
 
 <script>
-import CourseModel from "@/models/Course";
-
 import {
   getCoursesBySchool,
   addCourse,
@@ -138,7 +132,6 @@ import {
   removeCourse,
 } from "@/services/courseService";
 import BrainDialog from "./BrainDialog";
-import variables from "@/models/variables";
 import TeacherChooser from "@/components/globals/Teacher/Choose";
 import SubjectChooser from "@/components/globals/Subject/Choose";
 import GradeChooser from "@/components/globals/Grade/Choose";
@@ -157,8 +150,6 @@ export default {
     dialog_edit: false,
     dialog_remove: false,
     loading_save: false,
-    CourseModel,
-    variables,
   }),
   async mounted() {
     this.getData();
@@ -199,9 +190,7 @@ export default {
           this.entity.knowledge = [];
           let entity_id = await addCourse(this.entity);
           this.getData();
-          this.entity._id = entity_id;
-          this.entity.units_count = 0;
-          this.entity.materials_count = 0;
+          this.entity.id = entity_id;
           this.dialog_edit = false;
         } catch (error) {
           this.showMessage("", error.msg || error);
@@ -236,7 +225,7 @@ export default {
 <style lang='scss' scoped>
 .editor {
   padding: 10px 16px;
- 
+
   &__title {
     display: flex;
     align-items: center;
