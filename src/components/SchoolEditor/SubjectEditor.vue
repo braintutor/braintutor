@@ -12,7 +12,6 @@
           dialog_edit = true;
           add();
         "
-        :disabled="subjects.length >= variables.max_subjects_per_school"
         color="primary"
         small
       >
@@ -108,7 +107,6 @@
 <script>
 import { index, add, update, remove } from "@/services/subjectService";
 import BrainDialog from "./BrainDialog";
-import variables from "@/models/variables";
 
 export default {
   components: {
@@ -121,7 +119,6 @@ export default {
     dialog_edit: false,
     dialog_remove: false,
     loading_save: false,
-    variables,
     swatches: [
       ["#f00",    "#0f4"   , "#5e00ff"],
       ["#ff4d00", "#00ff91",  "#a0f"  ],

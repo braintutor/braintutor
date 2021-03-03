@@ -123,13 +123,13 @@
           <div class="close-modal">
             <h2 v-if="action === 'create'">Nuevo Evento</h2>
             <h2 v-else>Editar Evento</h2>
-            <v-btn class="mx-2" icon small @click="dlg_create= false">
+            <v-btn class="mx-2" icon small @click="dlg_create = false">
               <v-icon dark> mdi-close-thick </v-icon>
             </v-btn>
           </div>
           <div class="mt-5">
             <strong class="mr-3">Fecha:</strong>
-            <date-time v-model="date_selected"/>            
+            <date-time v-model="date_selected" />
           </div>
           <div class="mt-4">
             <v-text-field
@@ -248,15 +248,12 @@
 
 <script>
 import { getParam, redirect } from "@/services/router.js";
-import { 
-  addEvent, updateEvent, 
-removeEvent } from "@/services/eventService";
+import { addEvent, updateEvent, removeEvent } from "@/services/eventService";
 import EventModel from "@/models/Event";
-import variables from "@/models/variables";
-import DateTime from "@/components/globals/DateTime"
+import DateTime from "@/components/globals/DateTime";
 
 export default {
-  components: {DateTime},
+  components: { DateTime },
   data: () => ({
     session_id: "",
     events: [],
@@ -268,7 +265,6 @@ export default {
     dlg_create: false,
     dlg_delete: false,
     EventModel,
-    variables,
   }),
   async created() {
     await this.init();
@@ -363,27 +359,21 @@ export default {
       this.action = "edit";
       this.dlg_create = true;
       this.new_event = { ...event };
-      this.date_selected = new Date(event.date.getTime());// create a copy
+      this.date_selected = new Date(event.date.getTime()); // create a copy
       if (next) next();
     },
     showCreateByDate(date) {
       this.action = "create";
       this.dlg_create = true;
       this.new_event = {};
-      this.date_selected = date
+      this.date_selected = date;
     },
     showCreate(year, month, day) {
-      if (
-        this.events.filter((e) => e.type === "event").length >=
-        this.variables.max_events_per_session
-      )
-        return;
-
       this.action = "create";
       this.dlg_create = true;
       this.new_event = {};
 
-      this.date_selected =  new Date(year, month, day);
+      this.date_selected = new Date(year, month, day);
     },
     showRemove(event, next) {
       this.event_selected = event;
@@ -412,7 +402,6 @@ export default {
 };
 </script>
 <style lang='scss' scoped>
-
 .close-modal {
   display: flex;
   justify-content: space-between;
@@ -424,5 +413,4 @@ export default {
   border: 1px solid gray;
   margin-right: 8px;
 }
-
 </style>

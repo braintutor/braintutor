@@ -3,18 +3,12 @@
     <div class="editor__menu d-flex justify-space-between align-center">
       <div class="editor__title">
         <h2>Cursos</h2>
-        <strong class="ml-2 mt-1" style="opacity: 0.5"
-          >({{
-            `${courses.length}/${variables.max_courses_per_school}`
-          }})</strong
-        >
       </div>
       <m-btn
         @click="
           dialog_edit = true;
           add();
         "
-        :disabled="courses.length >= variables.max_courses_per_school"
         color="primary"
         small
       >
@@ -140,7 +134,6 @@ import {
   removeCourse,
 } from "@/services/courseService";
 import BrainDialog from "./BrainDialog";
-import variables from "@/models/variables";
 import TeacherChooser from "@/components/globals/Teacher/Choose";
 import SubjectChooser from "@/components/globals/Subject/Choose";
 import GradeChooser from "@/components/globals/Grade/Choose";
@@ -160,7 +153,6 @@ export default {
     dialog_remove: false,
     loading_save: false,
     CourseModel,
-    variables,
   }),
   async mounted() {
     this.getData();
@@ -236,7 +228,7 @@ export default {
 <style lang='scss' scoped>
 .editor {
   padding: 10px 16px;
- 
+
   &__title {
     display: flex;
     align-items: center;

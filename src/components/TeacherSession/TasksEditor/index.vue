@@ -2,19 +2,8 @@
   <div v-if="!task_show_id" class="m-container">
     <!-- MENU -->
     <div class="tasks__menu mb-3">
-      <strong
-        v-show="$store.state.show_limits"
-        class="mt-1"
-        style="opacity: 0.5"
-        >({{ `${tasks.length}/${variables.max_tasks_per_session}` }})</strong
-      >
       <div></div>
-      <m-btn
-        @click="showCreate()"
-        :disabled="tasks.length >= variables.max_tasks_per_session"
-        color="primary"
-        small
-      >
+      <m-btn @click="showCreate()" color="primary" small>
         <v-icon left style="font-size: 0.9rem">mdi-plus</v-icon>Crear Tarea
       </m-btn>
     </div>
@@ -73,12 +62,9 @@
             </v-btn>
           </div>
           <div>
-              <span class="mr-2">Tiempo de Inicio:</span>
-              <date-time
-                v-model="task.time_start_f"
-                :disabled="task.public"
-              />
-            </div>
+            <span class="mr-2">Tiempo de Inicio:</span>
+            <date-time v-model="task.time_start_f" :disabled="task.public" />
+          </div>
           <v-text-field
             v-model="task.title"
             :maxlength="TaskModel.title.max_length"
@@ -160,14 +146,14 @@
         <div class="m-card__body">
           <div class="close-modal modal-pd">
             <h3>Editar Fecha</h3>
-            <v-btn class="mx-2" icon small @click="dlg_edit_date= false">
+            <v-btn class="mx-2" icon small @click="dlg_edit_date = false">
               <v-icon dark> mdi-close-thick </v-icon>
-            </v-btn>  
+            </v-btn>
           </div>
-            <div class="datetime-section">
-              <span class="mr-2">Tiempo de Inicio:</span>
-              <date-time v-model="task.time_start_f" />
-            </div>
+          <div class="datetime-section">
+            <span class="mr-2">Tiempo de Inicio:</span>
+            <date-time v-model="task.time_start_f" />
+          </div>
         </div>
         <div class="m-card__actions">
           <m-btn
@@ -191,7 +177,7 @@
         <div class="m-card__body">
           <div class="close-modal">
             <h3>¿Eliminar la Tarea?</h3>
-            <v-btn class="mx-2" icon small @click="dlg_remove= false">
+            <v-btn class="mx-2" icon small @click="dlg_remove = false">
               <v-icon dark> mdi-close-thick </v-icon>
             </v-btn>
           </div>
@@ -231,8 +217,7 @@ import TaskCard from "@/components/globals/Task/TaskCard";
 import Task from "./Task";
 import { addTask, removeTask } from "@/services/taskService";
 import { TaskModel } from "@/models/Task";
-import variables from "@/models/variables";
-import DateTime from '@/components/globals/DateTime';
+import DateTime from "@/components/globals/DateTime";
 
 export default {
   data: () => ({
@@ -247,7 +232,6 @@ export default {
     dlg_edit_date: false,
     dlg_remove: false,
     TaskModel,
-    variables,
   }),
   async created() {
     this.session_id = this.$route.params["session_id"];
@@ -387,7 +371,7 @@ export default {
   components: {
     Task,
     TaskCard,
-    DateTime
+    DateTime,
   },
 };
 </script>
