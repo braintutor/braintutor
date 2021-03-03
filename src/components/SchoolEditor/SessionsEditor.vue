@@ -187,7 +187,7 @@ export default {
       this.dlg_create = true;
     },
     async showEdit(e) {
-      this.entity = e;
+      this.entity = Object.assign({}, e);
       this.dlg_edit = true;
     },
     async showRemove(e) {
