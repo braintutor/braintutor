@@ -50,8 +50,8 @@ export default {
   },
   computed: {
     tasks_ordered() {
-      let tasks = this.tasks.filter(({ hasAnswer }) => {
-        if (hasAnswer) return !this.show_pending;
+      let tasks = this.tasks.filter(({ has_answer }) => {
+        if (has_answer) return !this.show_pending;
         else return this.show_pending;
       });
       return this.orderObjectsByDate(tasks, "time_start");

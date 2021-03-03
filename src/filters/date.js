@@ -11,6 +11,7 @@ const formatDateTime = (defaultFormat) =>
     }
 
 Vue.filter("date", formatDateTime("dd/MM"))
+Vue.filter("datetime", formatDateTime("dd/MM/yy HH:mm"))
 Vue.filter("dayMonth", formatDateTime("d MMMM"))
 Vue.filter("time", formatDateTime("HH:mm"))
 Vue.filter("dayWeek", formatDateTime("eeee"))
