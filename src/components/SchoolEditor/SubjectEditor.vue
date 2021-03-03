@@ -93,7 +93,7 @@
             hide-sliders
             hide-inputs
             flat
-        ></v-color-picker>     
+        ></v-color-picker>
         </div>
       </template>
       <template #actions>
@@ -130,7 +130,7 @@ export default {
       ["#cf0",    "#08f",    "#ff006e"  ],
       ["#80ff00", "#003bff",  "#800000" ],
       ["#08ff00", "#4000ff" , "#000"   ],
-                  
+
     ],
   }),
   async mounted() {
@@ -171,7 +171,7 @@ export default {
     },
     edit(entity) {
       this.action = "edit";
-      this.entity = entity;
+      this.entity =Object.assign({} , entity);
       this.entity.id = this.entity.id;
     },
     async save() {
