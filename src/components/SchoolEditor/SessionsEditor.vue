@@ -57,7 +57,7 @@
           v-model="entity.course_id"
           :items="courses"
           item-text="name"
-          item-value="_id"
+          item-value="id"
           label="Curso"
           class="mt-4"
         ></v-select>
@@ -79,7 +79,7 @@
         </div>
         <p class="mt-4">
           <strong>{{
-            (courses.find((c) => c._id === entity.course_id) || {}).name
+            (courses.find((c) => c.id === entity.course_id) || {}).name
           }}</strong>
         </p>
         <TeacherChooser @choose="chooseTeacher"></TeacherChooser>
@@ -97,6 +97,7 @@
 import SessionFilter from "@/components/globals/Session/Filter";
 import TeacherChooser from "@/components/globals/Teacher/Choose";
 import BrainDialog from "./BrainDialog";
+import { getCourses } from "@/services/courseService";
 
 export default {
   components: { SessionFilter, BrainDialog, TeacherChooser },
@@ -104,26 +105,11 @@ export default {
     entities: [],
     entity: {},
     courses: [],
-    teachers: [],
     dlg_create: false,
     dlg_edit: false,
     ldg_save: false,
     query: {},
   }),
-
-  async created() {
-    this.showLoading("Cargando Aulas");
-    try {
-      // this.grade_id = this.grades[0] ? this.grades[0]._id : null;
-
-      this.courses = this.mongoArr(await this.$api.course.getAll({}));
-      this.courses.sort((a, b) => a.name.localeCompare(b.name));
-
-    } catch (error) {
-      this.showMessage("", error.msg || error);
-    }
-    this.hideLoading();
-  },
   methods: {
     chooseTeacher(teacher) {
       this.entity.teacher = teacher;
@@ -132,24 +118,38 @@ export default {
     async filter(query) {
       this.query = query;
       if (query["section_id"]) {
-        this.showLoading("Cargando Sesiones");
+        this.loadSessions(query)
+        this.loadCourses(query.grade_id)
+      } else {
+        this.entities = [];
+      }
+    },
+    async loadCourses(grade_id) {
+      this.showLoading("Cargando Cursos");
+      try {
+        this.courses = await getCourses(grade_id);
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
+    },
+    async loadSessions(query) {
+      this.showLoading("Cargando Sesiones");
         try {
           this.entities = this.mongoArr(await this.$api.session.getAll(query));
         } catch (error) {
           this.showMessage("", error.msg || error);
         }
-        this.hideLoading();
-      } else {
-        this.entities = [];
-      }
+      this.hideLoading();
     },
+
     async add() {
       this.ldg_save = true;
       try {
         let { _id } = await this.$api.session.add(this.entity);
         this.entity._id = _id;
         this.entity.course = this.courses.find(
-          (c) => c._id === this.entity.course_id
+          (c) => c.id === this.entity.course_id
         );
         this.entities.push(this.entity);
         this.dlg_create = false;
