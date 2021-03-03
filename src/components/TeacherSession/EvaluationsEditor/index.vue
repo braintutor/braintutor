@@ -84,7 +84,6 @@
           </v-tooltip>
         </div>
       </div>
-
       <!-- DLG REMOVE -->
       <v-dialog v-model="dlg_remove" max-width="400">
         <div class="m-card">
@@ -150,7 +149,6 @@
         </div>
       </v-dialog>
     </div>
-
     <!-- EVALUATION EDITOR -->
     <EvaluationEditor
       v-if="show_editor"
@@ -160,7 +158,6 @@
         init();
       "
     />
-
     <!-- EVALUATION RESULTS -->
     <div v-if="show_results" class="m-container">
       <div class="m-menu mb-3">
@@ -180,7 +177,6 @@
 import EvaluationEditor from "./EvaluationEditor";
 import EvaluationResults from "./EvaluationResults";
 import DateTime from "@/components/globals/DateTime";
-
 import { getStudentsBySession } from "@/services/studentService";
 
 export default {

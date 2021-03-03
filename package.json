@@ -26,12 +26,12 @@
     "machinelearn": "^2.1.5",
     "normalize.css": "^8.0.1",
     "vue": "^2.6.12",
+    "vue-gtm": "^3.0.0-vue2",
     "vue-router": "^3.4.9",
     "vuetify": "^2.4.2",
     "vuetify-datetime-picker": "^2.1.1",
     "vuex": "^3.6.0",
-    "xlsx": "^0.16.9",
-    "vue-gtm": "3.0.0-vue2"
+    "xlsx": "^0.16.9"
   },
   "devDependencies": {
     "@editorjs/delimiter": "^1.2.0",

@@ -1,5 +1,5 @@
 <template>
-  <div class="m-container pb-3 px-1">
+  <div class="m-container">
     <v-row no-gutters class="mb-3">
       <v-col class="col-4 px-2">
         <v-select
