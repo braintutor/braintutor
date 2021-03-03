@@ -125,8 +125,6 @@
 </template>
 
 <script>
-import CourseModel from "@/models/Course";
-
 import {
   getCoursesBySchool,
   addCourse,
@@ -152,7 +150,6 @@ export default {
     dialog_edit: false,
     dialog_remove: false,
     loading_save: false,
-    CourseModel,
   }),
   async mounted() {
     this.getData();
