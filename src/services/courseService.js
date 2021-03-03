@@ -46,6 +46,10 @@ function removeCourse(id) {
   })
 }
 
+export function getCourses(gradeId) {
+  return fetch_get(`api/v1/course/v2?grade_id=${gradeId}`)
+}
+
 export {
   getCourseByTeacher,
   getCoursesByTeacher,
