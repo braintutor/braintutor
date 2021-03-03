@@ -52,14 +52,12 @@ import UserModel from "@/models/User";
 
 export default {
   data: () => ({
-    //
     school: {},
     UserModel,
     username: "",
     password: "",
     usernameRules: [(v) => !!v || "Usuario es requerido"],
     passwordRules: [(v) => !!v || "Contraseña es requerida"],
-    //
     loading_login: false,
     show_error: false,
   }),

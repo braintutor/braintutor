@@ -7,7 +7,6 @@
           <v-icon small class="mr-2">mdi-plus</v-icon>Crear
         </m-btn>
       </div>
-
       <v-select
         v-model="level_selected"
         :items="levels"
@@ -16,7 +15,6 @@
         label="Nivel"
         class="mt-3"
       ></v-select>
-
       <div class="mt-3">
         <div v-for="(grade, idx) in grades_f" :key="idx" class="grade mb-3">
           <div @click="grade_selected = grade" class="grade__body">
@@ -24,7 +22,6 @@
               {{ grade.name }}
             </span>
           </div>
-
           <v-menu offset-y>
             <template v-slot:activator="{ on }">
               <v-btn class="mx-3" icon small v-on="on">
@@ -44,7 +41,6 @@
             </v-list>
           </v-menu>
         </div>
-
         <p v-show="grades_f.length <= 0" class="text-center my-4">
           No hay información
         </p>
