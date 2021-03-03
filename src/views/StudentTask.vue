@@ -120,7 +120,7 @@
 <script>
 import TaskCard from "@/components/globals/Task/TaskCard";
 import { getTaskByStudent, updateTaskAnswer } from "@/services/taskService";
-import {current_size, max_task_size} from "@/models/variables";
+import { current_size, max_task_size } from "@/models/variables";
 import { AnswerModel } from "@/models/Task";
 
 export default {
@@ -142,7 +142,9 @@ export default {
       }));
     },
     size() {
-      return `Espacio utilizado: ${current_size(this.files)} / ${max_task_size}`;
+      return `Espacio utilizado: ${current_size(
+        this.files
+      )} / ${max_task_size}`;
     },
   },
   async created() {
@@ -153,10 +155,12 @@ export default {
     async init() {
       this.showLoading("Cargando Tarea");
       try {
-        const { id, evaluation, answers } = this.mongo(await getTaskByStudent(this.task_id));
-        this.task = evaluation
-        this.taskResultId = id
-        this.answer = answers.length > 0 ? answers[0] : {}
+        const { id, evaluation, answers } = this.mongo(
+          await getTaskByStudent(this.task_id)
+        );
+        this.task = evaluation;
+        this.taskResultId = id;
+        this.answer = answers.length > 0 ? answers[0] : {};
         // Files
         let { files } = await this.$api.file.getFilesTask(id);
         this.files = files;
@@ -267,7 +271,7 @@ export default {
       background: rgba(0, 0, 255, 0.05);
     }
   }
- 
+
   &__type {
     padding: 16px;
     opacity: 0.6;
