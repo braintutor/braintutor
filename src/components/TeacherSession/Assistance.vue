@@ -88,7 +88,7 @@ export default {
       attendanceRecord.status = newStatus
       markAttendance(classId, attendanceRecord.id, newStatus)
         .catch(() => {
-          alert("Algo salio mal!")
+         this.showMessage("Algo salio mal!", "")
           attendanceRecord.status = oldStatus
         }).finally(() => {
           attendanceRecord.loading = false
