@@ -215,7 +215,7 @@
 <script>
 import TaskCard from "@/components/globals/Task/TaskCard";
 import Task from "./Task";
-import { addTask, removeTask } from "@/services/taskService";
+import { addTask, removeTask, getTask } from "@/services/taskService";
 import { TaskModel } from "@/models/Task";
 import DateTime from "@/components/globals/DateTime";
 
@@ -338,11 +338,12 @@ export default {
       };
       this.dlg_new = true;
     },
-    showEdit(task) {
+    async showEdit(task) {
+      const t = await getTask(task.id);
       this.task = {
         id: task.id,
         title: task.name,
-        description: task.description,
+        description: t["evaluation"]["content"][0]["question"],
         public: task.is_public,
       };
       this.dlg_edit = true;
@@ -376,7 +377,7 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .tasks__menu {
   display: flex;
   justify-content: space-between;
