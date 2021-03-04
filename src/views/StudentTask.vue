@@ -119,7 +119,7 @@
 
 <script>
 import TaskCard from "@/components/globals/Task/TaskCard";
-import { getTaskByStudent, updateTaskAnswer } from "@/services/taskService";
+import { getTask, updateTaskAnswer } from "@/services/taskService";
 import { current_size, max_task_size } from "@/models/variables";
 import { AnswerModel } from "@/models/Task";
 
@@ -156,7 +156,7 @@ export default {
       this.showLoading("Cargando Tarea");
       try {
         const { id, evaluation, answers } = this.mongo(
-          await getTaskByStudent(this.task_id)
+          await getTask(this.task_id)
         );
         this.task = evaluation;
         this.taskResultId = id;
