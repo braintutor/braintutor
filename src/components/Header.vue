@@ -19,12 +19,7 @@
           >{{ link.title }}
         </v-btn>
         <!-- User -->
-        <div
-          id="user"
-          class="user"
-          v-if="user"
-          @click="drawer = true"
-        >
+        <div id="user" class="user" v-if="user" @click="drawer = true">
           <span class="user__name">{{ user.name }}</span>
           <span class="user__role">{{ roles[user.role] }}</span>
           <div class="user__avatar">
@@ -89,7 +84,20 @@
               <v-icon>mdi-account</v-icon>
             </v-list-item-icon>
             <v-list-item-title>Perfil</v-list-item-title>
-          </v-list-item>          
+          </v-list-item>
+          <v-list-item
+            v-for="link of extraLinks"
+            :key="link.id"
+            @click="
+              redirect(link.url.name, link.url.params);
+              drawer = false;
+            "
+          >
+            <v-list-item-icon>
+              <v-icon>mdi-account</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>{{ link.title }}</v-list-item-title>
+          </v-list-item>
           <v-list-item
             v-if="user"
             @click="
@@ -192,7 +200,7 @@ export default {
         icon: "mdi-calendar",
         session_roles: ["TEA", "STU"],
       },
-       {
+      {
         title: "Horario",
         name: "schedule",
         icon: "mdi-calendar",
@@ -208,6 +216,7 @@ export default {
     },
     user_options: false,
     drawer: false,
+    extraLinks: [],
   }),
   mounted() {
     window.addEventListener("click", (e) => {
@@ -218,6 +227,19 @@ export default {
         if (this.user_options) this.user_options = false;
       }
     });
+    this.$root.$on("Sesion del padre", (links) => {
+      console.log(links);
+      this.extraLinks = links;
+    });
+    // while (true) {
+
+    //   setTimeout(() => {
+    //   let storage = localStorage.getItem("links");
+    //   if (storage != null && storage != undefined) {
+    //     this.extraLinks = JSON.parse(storage);
+    //   }
+    //   }, 100);
+    // }
   },
   computed: {
     links_filtered() {
@@ -228,9 +250,12 @@ export default {
     user() {
       return this.$store.state.user;
     },
-    isMobile(){
-      return this.$vuetify.breakpoint.name == 'xs' || this.$vuetify.breakpoint.name =='sm'
-    }
+    isMobile() {
+      return (
+        this.$vuetify.breakpoint.name == "xs" ||
+        this.$vuetify.breakpoint.name == "sm"
+      );
+    },
   },
   methods: {
     redirect,
@@ -245,7 +270,6 @@ export default {
         });
       else redirect("schools");
     },
-    
   },
 };
 </script>

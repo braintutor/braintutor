@@ -1,20 +1,6 @@
 <template>
-  <div >
-    <div class="m-container">
-      <v-select
-        :value="student_id"
-        :items="students"
-        item-value="_id"
-        item-text="name"
-        label="Hijo:"
-        @change="showChildDetail"
-        class="px-2 mb-3 text-center"
-      ></v-select>
-    </div>
-
-    <div>
-      <router-view></router-view>
-    </div>
+  <div>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -27,7 +13,7 @@ export default {
   }),
   watch: {
     "$route.params": {
-      handler: async function({ childId }) {
+      handler: async function ({ childId }) {
         this.student_id = childId;
       },
       immediate: true,
@@ -40,17 +26,23 @@ export default {
       this.students.forEach((student) => {
         student.name = `${student.last_name}, ${student.first_name}`;
       });
-
-      if(this.students.length > 0) this.showChildDetail(this.students[0]["_id"])
+      if (this.students.length > 0) this.sendChilds();
     } catch (error) {
       this.showMessage("", error.msg || error);
     }
     this.hideLoading();
   },
+  destroyed() {
+    this.$root.$emit("Sesion del padre", []);
+  },
   methods: {
-    showChildDetail(id) {
-      this.student_id = id
-      this.$router.push({ name: "parent-child-info", params: { childId: id } });
+    sendChilds() {
+      let links = this.students.map((student) => ({
+        id: student._id,
+        title: student.name,
+        url: { name: "parent-child-info", params: { childId: student._id } },
+      }));
+      this.$root.$emit("Sesion del padre", links);
     },
   },
   components: {},
