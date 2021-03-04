@@ -37,7 +37,7 @@
 				No hay Sesiones
 			</p>
 		</div>
-		<brain-dialog v-model="dlg_create" @submit="add" :loading="ldg_save">
+		<brain-dialog v-model="dlg_create" @cancel="value='1'" @submit="add" :loading="ldg_save">
 			<template #body>
 				<div class="close-modal">
 					<h3>Nueva Sesión</h3>
@@ -59,7 +59,7 @@
 				<m-btn type="submit" :loading="ldg_save" color="primary" small>Guardar</m-btn>
 			</template>
 		</brain-dialog>
-		<brain-dialog v-model="dlg_edit" @submit="update" :loading="ldg_save">
+		<brain-dialog v-model="dlg_edit"  @cancel="value='1'" @submit="update" :loading="ldg_save">
 			<template #body>
 				<div class="close-modal">
 					<h3>Asignar Docente</h3>
@@ -179,10 +179,12 @@ export default {
       console.log(this.query);
 			this.entity = Object.assign({}, this.query);
 			this.dlg_create = true;
+			this.value = "0";
 		},
 		async showEdit(e) {
 			this.entity = Object.assign({}, e);
 			this.dlg_edit = true;
+			this.value = "0";
 		},
 		async showRemove(e) {
 			this.entity = e;
