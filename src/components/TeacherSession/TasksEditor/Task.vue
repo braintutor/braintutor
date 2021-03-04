@@ -12,86 +12,12 @@
       <!-- TASK -->
       <TaskCard
         :time_start="task.time_start"
-        :title="task.title"
-        :description="task.description"
+        :title="task.name"
         disabled
         class="mb-4"
       />
-      <div class="answers m-card">
-        <!-- STUDENTS -->
-        <div class="students">
-          <div
-            v-for="(student, idx) in students"
-            :key="idx"
-            @click="student_selected = student"
-            class="student"
-            :class="{ 'student--active': student._id === student_selected._id }"
-          >
-            <v-icon class="mr-2" style="font-size: 1.2rem"
-              >mdi-account-circle</v-icon
-            >
-            <div class="student__name">
-              {{ `${student.last_name}, ${student.first_name}` }}
-            </div>
-          </div>
-        </div>
-        <!-- ANSWER -->
-        <div v-if="student_selected" class="answer">
-          <div v-if="!loading">
-            <!-- ANSWER STUDENT -->
-            <!-- <p>
-              {{
-                `${student_selected.last_name}, ${student_selected.first_name}`
-              }}
-            </p> -->
-            <!-- ANSWER TEXT -->
-            <div v-if="answer">
-              <p class="answer__time">{{ formatDateTime(answer.time_end) }}</p>
-              <p>{{ answer.text }}</p>
-            </div>
-            <!-- ANSWER FILES -->
-            <a v-for="(file, idx) in files_f" :key="idx" class="file mt-2">
-              <a :href="file.url" target="_blank" class="file__body">
-                <div class="file__type">
-                  <img
-                    v-if="file.type === 'audio'"
-                    src="@/assets/file/icon-audio.svg"
-                  />
-                  <img
-                    v-else-if="file.type === 'image'"
-                    src="@/assets/file/icon-image.svg"
-                  />
-                  <img
-                    v-else-if="file.type === 'video'"
-                    src="@/assets/file/icon-video.svg"
-                  />
-                  <!--  -->
-                  <img
-                    v-else-if="file.content_type === 'application/pdf'"
-                    src="@/assets/file/icon-application-pdf.svg"
-                  />
-                  <img v-else src="@/assets/file/icon-default.svg" />
-                </div>
-                <span class="file__name">{{ file.name_f }}</span>
-              </a>
-            </a>
-            <!-- ANSWER EMPTY -->
-            <p
-              v-if="!((answer && answer.text) || files_f.length > 0)"
-              class="text-center"
-            >
-              No hay respuesta
-            </p>
-          </div>
-          <div v-else style="width: max-content" class="pa-4 mx-auto">
-            <v-progress-circular
-              :width="3"
-              :size="80"
-              indeterminate
-              color="var(--color-subtitle)"
-            ></v-progress-circular>
-          </div>
-        </div>
+      <div class="">
+            <EvaluationResults type="tarea" :showPublishScore="false" :evaluation="task"  :role="'TEA'" />
       </div>
     </div>
   </div>
@@ -99,6 +25,8 @@
 
 <script>
 import TaskCard from "@/components/globals/Task/TaskCard";
+import EvaluationResults from "@/components/TeacherSession/EvaluationsEditor/EvaluationResults";
+import {  getTask } from "@/services/taskService";
 
 export default {
   props: ["task_id", "unselect"],
@@ -124,37 +52,15 @@ export default {
     },
   },
   watch: {
-    async student_selected() {
-      this.loading = true;
-
-      let answer = (this.task.answers || []).find(
-        (answer) => answer._id === this.student_selected._id
-      );
-      this.answer = answer;
-      let { files } = await this.$api.file.getFilesTask(
-        this.task._id,
-        this.student_selected._id
-      );
-      this.files = files;
-
-      this.loading = false;
-    },
+  
   },
   methods: {
     async init() {
       this.showLoading("Cargando Tarea");
       try {
-        this.task = this.mongo(await this.$api.task.get(this.task_id));
-        let session = this.mongo(
-          await this.$api.session.get(this.task.session_id)
-        );
-        this.students = this.mongoArr(
-          await this.$api.student.getAll({
-            grade_id: session.grade_id,
-            section_id: session.section_id,
-          })
-        );
-        this.student_selected = this.students[0];
+        const  { evaluation } = await getTask(this.task_id);
+        this.task = evaluation
+
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
@@ -163,6 +69,7 @@ export default {
   },
   components: {
     TaskCard,
+    EvaluationResults
   },
 };
 </script>
