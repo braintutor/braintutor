@@ -49,7 +49,7 @@
 					v-model="entity.course_id"
 					:items="courses"
 					item-text="name"
-					item-value="_id"
+					item-value="id"
 					label="Curso"
 					class="mt-4"
 				></v-select>
@@ -90,7 +90,7 @@ export default {
 	data: () => ({
 		entities: [],
 		entity: {},
-		value: 0,
+		value: "0",
 		courses: [],
 		teachers: [],
 		dlg_create: false,
@@ -106,8 +106,8 @@ export default {
 		close() {
       this.dlg_create = false;
       this.dlg_edit = false;
-			this.entity = {};
-			this.value = 1;
+      this.entity = {};
+      this.value = "1";
 		},
 		async filter(query) {
 			this.query = query;
@@ -122,6 +122,7 @@ export default {
       this.showLoading("Cargando Cursos");
       try {
         this.courses = await getCourses(grade_id);
+        console.log(this.courses);
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
@@ -139,9 +140,10 @@ export default {
 		async add() {
 			this.ldg_save = true;
 			try {
+        console.log(this.entity);
 				let {_id} = await this.$api.session.add(this.entity);
 				this.entity._id = _id;
-				this.entity.course = this.courses.find((c) => c._id === this.entity.course_id);
+				this.entity.course = this.courses.find((c) => c.id === this.entity.course_id);
 				this.entities.push(this.entity);
 				this.close();
 			} catch (error) {
@@ -174,6 +176,7 @@ export default {
 		},
 		//
 		async showCreate() {
+      console.log(this.query);
 			this.entity = Object.assign({}, this.query);
 			this.dlg_create = true;
 		},
