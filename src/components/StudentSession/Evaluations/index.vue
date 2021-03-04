@@ -43,10 +43,7 @@
           <v-tooltip bottom>
             <template v-if="item.isAvailable" v-slot:activator="{ on }">
               <v-btn
-                @click="
-                  dlg_start = true;
-                  evaluation_selected = item;
-                "
+                @click="startEvaluation(item)"
                 v-on="on"
                 color="primary"
                 icon
@@ -77,39 +74,6 @@
           </v-tooltip>
         </div>
       </div>
-      <!-- Dialog Start Evaluation -->
-      <v-dialog v-model="dlg_start" persistent max-width="400">
-        <div class="m-card">
-          <div class="m-card__body">
-            <div class="close-modal">
-              <h3>Iniciar Evaluación</h3>
-              <v-btn class="mx-2" icon small @click="dlg_start = false">
-                <v-icon dark> mdi-close-thick </v-icon>
-              </v-btn>
-            </div>
-            <p class="mt-4">
-              Una vez que inicias una evaluación, solo tendrás una oportunidad
-              para responderla.
-            </p>
-            <!-- <p class="mt-4">No cierres la pestaña o cambies de página.</p> -->
-          </div>
-          <div class="m-card__actions">
-            <m-btn @click="dlg_start = false" small text color="dark"
-              >Cancelar</m-btn
-            >
-            <m-btn
-              @click="
-                dlg_start = false;
-                startEvaluation(evaluation_selected);
-              "
-              color="primary"
-              small
-              class="ml-2"
-              >Iniciar</m-btn
-            >
-          </div>
-        </div>
-      </v-dialog>
       <!-- Dialog Result Comment -->
       <v-dialog v-model="dlg_result" persistent max-width="1200">
         <div class="m-card">
@@ -156,7 +120,6 @@ export default {
     evaluation_to_start: null,
     result_selected: null,
     //
-    dlg_start: false,
     dlg_result: false,
   }),
   computed: {
