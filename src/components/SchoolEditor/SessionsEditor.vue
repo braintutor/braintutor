@@ -122,7 +122,6 @@ export default {
       this.showLoading("Cargando Cursos");
       try {
         this.courses = await getCourses(grade_id);
-        console.log(this.courses);
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
@@ -140,8 +139,7 @@ export default {
 		async add() {
 			this.ldg_save = true;
 			try {
-        console.log(this.entity);
-				let {_id} = await this.$api.session.add(this.entity);
+        		let {_id} = await this.$api.session.add(this.entity);
 				this.entity._id = _id;
 				this.entity.course = this.courses.find((c) => c.id === this.entity.course_id);
 				this.entities.push(this.entity);
@@ -176,8 +174,7 @@ export default {
 		},
 		//
 		async showCreate() {
-      console.log(this.query);
-			this.entity = Object.assign({}, this.query);
+      		this.entity = Object.assign({}, this.query);
 			this.dlg_create = true;
 		},
 		async showEdit(e) {
