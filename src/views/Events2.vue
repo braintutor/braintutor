@@ -36,22 +36,18 @@
       <template v-slot:meeting="{ item }">
         <div class="ma-2">
           <p>Realizar videollamada:</p>
-          <v-radio-group v-model="selectedMeeting">
-            <v-radio label="Usando BBB" value="bbb"></v-radio>
-            <v-radio value="other">
-              <template v-slot:label>
-                <div class="all d-flex justify-space-between align-center">
-                  Usando link:
-                  <v-text-field
-                    class="ml-2"
-                    v-model="meetingUrl"
-                    @blur="saveLink(item)"
-                    placeholder="De zoom, google meet,teams u otros"
-                  />
-                </div>
-              </template>
-            </v-radio>
+          <v-radio-group v-model="item.meeting_strategy._cls">
+            <v-radio label="Usar BigBlueButton (BBB)" value="BBBMeeting" @change="saveBBB(item)"></v-radio>
+            <v-radio label="Usar link (de zoom, google meet, teams)" value="ManualLink"></v-radio>
           </v-radio-group>
+          <div v-if="item.meeting_strategy._cls === 'ManualLink'">
+            <v-text-field
+              class="ml-2"
+              v-model="item.meeting_strategy.url"
+              @blur="saveLink(item)"
+              placeholder="e.g., https://meet.google.com/gdb-ryqe-hsn"
+            />
+          </div>
         </div>
       </template>
     </calendar>
@@ -63,7 +59,7 @@ import Calendar from "@/components/Calendar";
 import DateTime from "@/components/globals/DateTime";
 import SchoolCycleSegmentCard from "@/components/SchoolEditor/SchoolCycleSegmentCard";
 import { getCurrentOrNextSegment } from "@/services/schoolCycleService";
-import { editMeetingUrl } from "@/modules/SchoolClass/service";
+import { editMeetingUrl, editUseBBB } from "@/modules/SchoolClass/service";
 
 function validURL(str) {
   let url;
@@ -84,25 +80,39 @@ export default {
     showEdit: false,
     selectedAction: "cancel",
     segment: null,
-    showClass: false,
-    selectedMeeting: "bbb",
-    meetingUrl: "",
+    showClass: false
   }),
   mounted() {
     this.role = localStorage.getItem("role");
     getCurrentOrNextSegment().then((x) => (this.segment = x));
   },
   methods: {
-    saveLink({ id }) {
-      if (this.isValid(this.meetingUrl))
-        editMeetingUrl(id, this.meetingUrl).then(() => {
-          this.showMessage("Se ha guardado el nuevo link", "");
+    saveLink(item) {
+      const { url } = item.meeting_strategy
+      if (this.isValid(url))
+        editMeetingUrl(item.id, url)
+        .then(response => {
+          this.showMessage("Cambio satisfactorio", "Se usara el nuevo link");
+          item.meeting_strategy = response
+        })
+        .catch(error => {
+          this.showMessage("", error.msg || error);
         });
     },
     isValid(url) {
       if (!url) return false;
       return validURL(url);
     },
+    saveBBB(item) {
+      editUseBBB(item.id)
+        .then(response => {
+          this.showMessage("Cambio satisfactorio", "Se usara BBB");
+          item.meeting_strategy = response
+        })
+        .catch(() => {
+          this.showMessage("Upss", "Algo salio mal, porfavor intentelo de nuevo");
+        });
+    }
   },
 };
 </script>

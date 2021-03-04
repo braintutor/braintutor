@@ -16,74 +16,15 @@
         :description="task.content[0].question"
         disabled
       />
+      <QuestionTypeFile
+        :evaluationId="task.id"
+        v-model="answer"
+      ></QuestionTypeFile>
+
       <!-- ANSWER -->
-      <div class="m-card mt-3">
-        <div class="m-card__body">
-          <div>
-            <v-textarea
-              v-model="answer.text"
-              :maxlength="AnswerModel.text.max_length"
-              :counter="AnswerModel.text.max_length"
-              label="Escribe tu respuesta"
-              rows="1"
-              auto-grow
-            ></v-textarea>
-          </div>
-          <input
-            v-show="false"
-            id="ipt_file"
-            type="file"
-            onclick="value = null"
-            @change="onFileSelected"
-          />
-          <!-- FILES -->
-          <div class="files mt-4">
-            <div class="files__menu mb-4">
-              <span>{{ size }}</span>
-              <m-btn onclick="ipt_file.click()" color="primary" small text
-                >Subir Archivo</m-btn
-              >
-            </div>
-            <!-- FILE -->
-            <a v-for="(file, idx) in files_f" :key="idx" class="file mt-2">
-              <a :href="file.url" target="_blank" class="file__body">
-                <div class="file__type">
-                  <img
-                    v-if="file.type === 'audio'"
-                    src="@/assets/file/icon-audio.svg"
-                  />
-                  <img
-                    v-else-if="file.type === 'image'"
-                    src="@/assets/file/icon-image.svg"
-                  />
-                  <img
-                    v-else-if="file.type === 'video'"
-                    src="@/assets/file/icon-video.svg"
-                  />
-                  <!--  -->
-                  <img
-                    v-else-if="file.content_type === 'application/pdf'"
-                    src="@/assets/file/icon-application-pdf.svg"
-                  />
-                  <img v-else src="@/assets/file/icon-default.svg" />
-                </div>
-                <span class="file__name">{{ file.name_f }}</span>
-              </a>
-              <div class="file__actions mx-2">
-                <v-btn @click="showRemove(file)" icon>
-                  <v-icon style="font-size: 1.5rem">mdi-delete</v-icon>
-                </v-btn>
-              </div>
-            </a>
-            <p v-show="files_f.length <= 0" class="text-center ma-0">
-              No hay Archivos.
-            </p>
-          </div>
-        </div>
-        <div class="m-card__actions">
-          <m-btn @click="save()" color="primary" small>Guardar</m-btn>
-        </div>
-      </div>
+
+      <m-btn @click="save()" color="primary" small>Guardar</m-btn>
+
       <!-- DLG REMOVE -->
       <v-dialog v-model="dlg_remove" max-width="400">
         <div class="m-card">
@@ -119,7 +60,7 @@
 
 <script>
 import TaskCard from "@/components/globals/Task/TaskCard";
-import { getTaskByStudent, updateTaskAnswer } from "@/services/taskService";
+import { getTask, updateTaskAnswer } from "@/services/taskService";
 import { current_size, max_task_size } from "@/models/variables";
 import { AnswerModel } from "@/models/Task";
 
@@ -156,7 +97,7 @@ export default {
       this.showLoading("Cargando Tarea");
       try {
         const { id, evaluation, answers } = this.mongo(
-          await getTaskByStudent(this.task_id)
+          await getTask(this.task_id)
         );
         this.task = evaluation;
         this.taskResultId = id;
@@ -241,7 +182,7 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .files {
   &__menu {
     color: rgba(0, 0, 0, 0.6);
