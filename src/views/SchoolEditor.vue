@@ -32,7 +32,7 @@ export default {
       },
       {
         image: require(`@/assets/icons/icon-course.svg`),
-        text: "Cursos",
+        text: "Encargados de Material",
         name: "school-editor-courses",
       },
       {

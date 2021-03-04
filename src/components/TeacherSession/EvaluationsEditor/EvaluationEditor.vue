@@ -375,8 +375,12 @@ export default {
         value: "closed",
       },
       {
-        text: "Respuesta",
+        text: "Respuesta Abierta",
         value: "open",
+      },
+      {
+        text: "Subir Archivo",
+        value: "file",
       },
     ],
     //

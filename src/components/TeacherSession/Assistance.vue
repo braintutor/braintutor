@@ -4,7 +4,7 @@
       <div class="editor__title align-center">
         <h2 class="pb-3">Asistencia</h2>
         <h3 class="pb-3">{{ school_class.full_name }}</h3>
-        <h3>
+        <h3 v-if="school_class.proposed_range">
           {{school_class.proposed_range.start | date }}, 
           {{school_class.proposed_range.start | time }} - 
           {{school_class.proposed_range.end | time }}
@@ -54,7 +54,10 @@ import { getAttendanceRecords, markAttendance } from "@/services/attendanceServi
 export default {
   data() {
     return {
-      school_class: {},
+      school_class: {
+        full_name: "",
+        proposed_range: null 
+      },
       items: [
         { text: "Asistió", value: "attended" }, 
         { text: "Tardanza", value: "late" }, 
@@ -85,7 +88,7 @@ export default {
       attendanceRecord.status = newStatus
       markAttendance(classId, attendanceRecord.id, newStatus)
         .catch(() => {
-          alert("Algo salio mal!")
+         this.showMessage("Algo salio mal!", "")
           attendanceRecord.status = oldStatus
         }).finally(() => {
           attendanceRecord.loading = false

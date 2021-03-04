@@ -13,7 +13,6 @@
         </m-btn>
       </div>
     </div>
-
     <div class="mt-4">
       <div v-for="(section, idx) in sections_f" :key="idx" class="section mb-3">
         <div class="section__body">
@@ -21,7 +20,6 @@
             {{ section.name }}
           </span>
         </div>
-
         <v-menu offset-y>
           <template v-slot:activator="{ on }">
             <v-btn class="mx-3" icon small v-on="on">
@@ -38,7 +36,6 @@
           </v-list>
         </v-menu>
       </div>
-
       <p v-show="sections.length <= 0" class="text-center my-4">
         No hay Secciones
       </p>
