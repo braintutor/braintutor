@@ -57,18 +57,24 @@ export default {
     evaluationId: null,
     value: {},
   },
-  data() {
+ data() {
     return {
       answer: this.value,
     };
   },
   watch: {
-    answer() {
-      this.handleChange();
+    answer: {
+      handler:  function() {
+        console.log("aca", this.answer)
+        this.handleChange();
+        console.log("chane")
+      },
+      immediate: true,
     },
   },
   methods: {
     handleChange() {
+      console.log(this.answer)
       this.$emit("input", this.answer);
     },
     getName(file) {
@@ -85,17 +91,23 @@ export default {
       formData.append("file", file);
 
       this.showLoading("Subiendo Archivo");
+      let new_file;
       try {
-        let new_file = await this.$api.evaluation.addFile(
+        new_file = await this.$api.evaluation.addFile(
           this.evaluationId,
           formData
         );
-        this.answer.files.push(new_file);
       } catch (error) {
         this.showMessage(
           "",
           error.msg || "Ha ocurrido un error al subir el archivo."
         );
+      } finally {
+        let { files = [] } = this.answer
+        files.push(new_file);
+        this.answer = { ...this.answer, files }
+        this.handleChange()
+     
       }
       this.hideLoading();
     },
