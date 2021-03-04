@@ -29,7 +29,7 @@
         </v-menu>
       </div>
       <p class="task__title">{{ title }}</p>
-      <p class="task__description">{{ description }}</p>
+      <p class="task__description font-weight-bold">Enunciado de la tarea: {{ description }}</p>
     </div>
     <div v-if="buttons" class="m-card__actions">
       <m-btn
