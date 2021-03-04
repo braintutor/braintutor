@@ -36,15 +36,15 @@
       <template v-slot:meeting="{ item }">
         <div class="ma-2">
           <p>Realizar videollamada:</p>
-          <v-radio-group v-model="selectedMeeting">
-            <v-radio label="Usando BBB" value="bbb"></v-radio>
-            <v-radio value="other">
+          <v-radio-group v-model="item.meeting_strategy._cls">
+            <v-radio label="Usando BBB" value="BBBMeeting"></v-radio>
+            <v-radio value="ManualLink">
               <template v-slot:label>
                 <div class="all d-flex justify-space-between align-center">
-                  Usando link:
+                  Usar link:
                   <v-text-field
                     class="ml-2"
-                    v-model="meetingUrl"
+                    v-model="item.meeting_strategy.url"
                     @blur="saveLink(item)"
                     placeholder="De zoom, google meet,teams u otros"
                   />
@@ -84,19 +84,21 @@ export default {
     showEdit: false,
     selectedAction: "cancel",
     segment: null,
-    showClass: false,
-    selectedMeeting: "bbb",
-    meetingUrl: "",
+    showClass: false
   }),
   mounted() {
     this.role = localStorage.getItem("role");
     getCurrentOrNextSegment().then((x) => (this.segment = x));
   },
   methods: {
-    saveLink({ id }) {
-      if (this.isValid(this.meetingUrl))
-        editMeetingUrl(id, this.meetingUrl).then(() => {
+    saveLink(item) {
+      const { url } = item.meeting_strategy
+      if (this.isValid(url))
+        editMeetingUrl(item.id, url).then(() => {
           this.showMessage("Se ha guardado el nuevo link", "");
+        })
+        .catch(error => {
+          this.showMessage("", error.msg || error);
         });
     },
     isValid(url) {
