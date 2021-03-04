@@ -72,7 +72,6 @@
 import QuizEditor from "@/components/globals/QuizEditor";
 import FAQEditor from "./FAQEditor";
 import DocumentEditor from "@/components/globals/DocumentEditor/index";
-
 import { updateMaterialCategory } from "@/services/materialService";
 
 export default {
@@ -150,7 +149,6 @@ export default {
   transition: 0.5s;
   border-radius: 6px;
   cursor: pointer;
-
   display: flex;
   flex-direction: column;
   align-items: center;

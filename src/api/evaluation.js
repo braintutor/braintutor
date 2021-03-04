@@ -33,4 +33,7 @@ export default (_fetch) => ({
   updateAnswers(evaluation_id, data) {
     return _fetch('POST', `evaluation/${evaluation_id}/answer`, data)
   },
+  addFile(evaluation_id, data) {
+    return _fetch('POST', `evaluation/${evaluation_id}/file`, data, false)
+  }
 });

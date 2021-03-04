@@ -253,7 +253,6 @@ export default {
     color: #fff;
     border-radius: 100%;
     font-size: 0.75rem;
-
     display: flex;
     align-items: center;
     justify-content: center;

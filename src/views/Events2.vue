@@ -95,10 +95,8 @@ export default {
   methods: {
     saveLink({ id }) {
       if (this.isValid(this.meetingUrl))
-        editMeetingUrl(id, this.meetingUrl).then((r) => {
-          /*eslint-disable */
-          console.log(r);
-          /*eslint-enable */
+        editMeetingUrl(id, this.meetingUrl).then(() => {
+          this.showMessage("Se ha guardado el nuevo link", "");
         });
     },
     isValid(url) {
