@@ -57,13 +57,66 @@
             class="pt-4"
             style="border-top: 1px solid #ddd"
           >
-          <QuestionTypeFile :evaluationId="evaluation._id" v-model="answers[c_idx]" ></QuestionTypeFile>
-           
+            <v-textarea
+              v-model="answers[c_idx].text"
+              placeholder="Escribe tu respuesta"
+              dense
+              hide-details
+            ></v-textarea>
+            <div class="mt-4">
+              <input
+                id="ipt_file"
+                type="file"
+                onclick="this.value = null"
+                @change="onFileSelected($event, answers[c_idx].files)"
+                style="display: none"
+              />
+              <m-btn onclick="ipt_file.click()" color="primary" small text
+                >Subir Archivo</m-btn
+              >
+            </div>
+            <a
+              v-for="(file, f_idx) in answers[c_idx].files"
+              :key="f_idx"
+              class="file mt-2"
+            >
+              <a :href="file.url" target="_blank" class="file__body">
+                <div class="file__type">
+                  <img
+                    v-if="getType(file) === 'audio'"
+                    src="@/assets/file/icon-audio.svg"
+                  />
+                  <img
+                    v-else-if="getType(file) === 'image'"
+                    src="@/assets/file/icon-image.svg"
+                  />
+                  <img
+                    v-else-if="getType(file) === 'video'"
+                    src="@/assets/file/icon-video.svg"
+                  />
+                  <!--  -->
+                  <img
+                    v-else-if="file.content_type === 'application/pdf'"
+                    src="@/assets/file/icon-application-pdf.svg"
+                  />
+                  <img v-else src="@/assets/file/icon-default.svg" />
+                </div>
+                <span class="file__name">{{ getName(file) }}</span>
+              </a>
+              <div class="file__actions mx-2">
+                <v-btn @click="removeFile(answers[c_idx].files, f_idx)" icon>
+                  <v-icon style="font-size: 1.5rem">mdi-close</v-icon>
+                </v-btn>
+              </div>
+            </a>
           </div>
         </div>
       </div>
       <div class="evaluation__action">
-        <m-btn @click="dlg_save = true" color="primary" small>Finalizar</m-btn>
+        <m-btn @click="save()" color="primary" small>Guardar</m-btn>
+        <m-btn @click="dlg_save = true" color="dark" small class="ml-2"
+          >Finalizar</m-btn
+        >
       </div>
     </div>
     <!-- Dialog Save -->
@@ -100,9 +153,7 @@
 </template>
 
 <script>
-import QuestionTypeFile from "./QuestionTypeFile"
 export default {
-  components: { QuestionTypeFile },
   props: ["evaluation"],
   data: () => ({
     time_remaining: 0,
@@ -111,10 +162,18 @@ export default {
     //
     dlg_save: false,
   }),
-  created() {
+  async created() {
     this.answers = this.evaluation.content.map(() => ({
       files: [],
     }));
+    this.showLoading("Cargando");
+    try {
+      this.answers = await this.$api.evaluation.getAnswers(this.evaluation._id);
+    } catch (error) {
+      this.showMessage("", "Ha ocurrido un error");
+      this.$emit("onExit");
+    }
+    this.hideLoading();
   },
   methods: {
     async save() {
@@ -140,8 +199,51 @@ export default {
       this.$emit("onExit");
     },
     // Files
-  
-   
+    handleChange() {
+      this.$emit("input", this.answer);
+    },
+    getName(file) {
+      return file.name.substring(file.name.lastIndexOf("/") + 1);
+    },
+    getType(file) {
+      return file.content_type.split("/")[0];
+    },
+    async onFileSelected(e, files) {
+      let file = e.target.files[0];
+      if (!file) return;
+
+      var formData = new FormData();
+      formData.append("file", file);
+
+      this.showLoading("Subiendo Archivo");
+      try {
+        let new_file = await this.$api.evaluation.addFile(
+          this.evaluation._id,
+          formData
+        );
+        files.push(new_file);
+        await this.save();
+      } catch (error) {
+        this.showMessage(
+          "",
+          error.msg || "Ha ocurrido un error al subir el archivo."
+        );
+      }
+      this.hideLoading();
+    },
+    async removeFile(files, idx) {
+      this.showLoading("Eliminando Archivo");
+      let file_name = files[idx].name;
+      let file_name_f = file_name.replaceAll("/", "&&");
+      try {
+        await this.$api.evaluation.removeFile(this.evaluation._id, file_name_f);
+        files.splice(idx, 1);
+        await this.save();
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
+    },
   },
 };
 </script>

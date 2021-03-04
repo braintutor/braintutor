@@ -24,6 +24,9 @@ export default (_fetch) => ({
     return _fetch('GET', `evaluation/session-result/${session_id}`);
   },
   // Student
+  getAnswers(evaluation_id) {
+    return _fetch('GET', `evaluation/${evaluation_id}/answers`)
+  },
   takeExam(evaluation_id) {
     return _fetch('POST', `evaluation/${evaluation_id}/take`)
   },
@@ -35,5 +38,8 @@ export default (_fetch) => ({
   },
   addFile(evaluation_id, data) {
     return _fetch('POST', `evaluation/${evaluation_id}/file`, data, false)
+  },
+  removeFile(evaluation_id, file_id) {
+    return _fetch('POST', `evaluation/${evaluation_id}/file/${file_id}`)
   }
 });
