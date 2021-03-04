@@ -57,58 +57,8 @@
             class="pt-4"
             style="border-top: 1px solid #ddd"
           >
-            <v-textarea
-              v-model="answers[c_idx].text"
-              placeholder="Escribe tu respuesta"
-              dense
-              hide-details
-            ></v-textarea>
-            <div class="mt-4">
-              <input
-                id="ipt_file"
-                type="file"
-                onclick="this.value = null"
-                @change="onFileSelected($event, c_idx)"
-                style="display: none"
-              />
-              <m-btn onclick="ipt_file.click()" color="primary" small text
-                >Subir Archivo</m-btn
-              >
-            </div>
-            <a
-              v-for="(file, f_idx) in answers[c_idx].files"
-              :key="f_idx"
-              class="file mt-2"
-            >
-              <a :href="file.url" target="_blank" class="file__body">
-                <div class="file__type">
-                  <img
-                    v-if="getType(file) === 'audio'"
-                    src="@/assets/file/icon-audio.svg"
-                  />
-                  <img
-                    v-else-if="getType(file) === 'image'"
-                    src="@/assets/file/icon-image.svg"
-                  />
-                  <img
-                    v-else-if="getType(file) === 'video'"
-                    src="@/assets/file/icon-video.svg"
-                  />
-                  <!--  -->
-                  <img
-                    v-else-if="file.content_type === 'application/pdf'"
-                    src="@/assets/file/icon-application-pdf.svg"
-                  />
-                  <img v-else src="@/assets/file/icon-default.svg" />
-                </div>
-                <span class="file__name">{{ getName(file) }}</span>
-              </a>
-              <div class="file__actions mx-2">
-                <v-btn @click="showRemove(file)" icon>
-                  <v-icon style="font-size: 1.5rem">mdi-delete</v-icon>
-                </v-btn>
-              </div>
-            </a>
+          <QuestionTypeFile :evaluationId="evaluation._id" v-model="answers[c_idx]" ></QuestionTypeFile>
+           
           </div>
         </div>
       </div>
@@ -150,7 +100,9 @@
 </template>
 
 <script>
+import QuestionTypeFile from "./QuestionTypeFile"
 export default {
+  components: { QuestionTypeFile },
   props: ["evaluation"],
   data: () => ({
     time_remaining: 0,
@@ -188,34 +140,8 @@ export default {
       this.$emit("onExit");
     },
     // Files
-    async onFileSelected(e, idx) {
-      let file = e.target.files[0];
-      if (!file) return;
-
-      var formData = new FormData();
-      formData.append("file", file);
-
-      this.showLoading("Subiendo Archivo");
-      try {
-        let new_file = await this.$api.evaluation.addFile(
-          this.evaluation._id,
-          formData
-        );
-        this.answers[idx].files.push(new_file);
-      } catch (error) {
-        this.showMessage(
-          "",
-          error.msg || "Ha ocurrido un error al subir el archivo."
-        );
-      }
-      this.hideLoading();
-    },
-    getName(file) {
-      return file.name.substring(file.name.lastIndexOf("/") + 1);
-    },
-    getType(file) {
-      return file.content_type.split("/")[0];
-    },
+  
+   
   },
 };
 </script>
