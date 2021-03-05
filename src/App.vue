@@ -1,6 +1,6 @@
 <template>
   <v-app class="m-app" id="braintutor">
-     <vue-confirm></vue-confirm>
+    <vue-confirm></vue-confirm>
     <Header />
     <v-main class="m-app__body">
       <router-view></router-view>
@@ -89,7 +89,7 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
-  
+
   &__body {
     height: calc(100vh - 56px);
     // overflow-y: overlay;
@@ -144,6 +144,7 @@ export default {
 // HTML
 p {
   font-size: 0.9rem;
+  white-space: pre-line;
 }
 textarea {
   font-size: 0.9rem !important;
