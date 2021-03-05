@@ -201,7 +201,7 @@ export default {
         if (question.type === "closed") {
           if (question.correct === result.answers[idx].alternative)
             score += question.score;
-        } else if (question.type === "open") {
+        } else if (question.type === "open" || question.type === "file") {
           score += this.teacher_responses[idx].score || 0;
         }
       });
