@@ -58,10 +58,6 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-// .mcontainer {
-//   max-width: 950px;
-//   margin: 0 auto;
-// }
 
 .mtitle {
   margin: 10px;

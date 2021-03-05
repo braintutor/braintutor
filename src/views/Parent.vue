@@ -11,7 +11,6 @@
         class="px-2 mb-3 text-center"
       ></v-select>
     </div>
-
     <div>
       <router-view></router-view>
     </div>

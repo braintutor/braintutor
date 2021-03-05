@@ -98,7 +98,6 @@ export default {
     time_remaining: 0,
     time_total: 0,
     answers: [],
-    //
     dlg_save: false,
   }),
   created() {
