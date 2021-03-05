@@ -58,12 +58,18 @@
         <div v-else-if="c.type === 'file'">
           <h3>Respuesta:</h3>
           <p class="ma-0 mt-3">{{ studentEvaluation.answers[c_idx].text }}</p>
-          <a
+          <div
             v-for="(file, f_idx) in studentEvaluation.answers[c_idx].files"
             :key="f_idx"
             class="file mt-2"
           >
-            <a :href="file.url" target="_blank" class="file__body">
+            <div
+              @click="
+                file_selected = file;
+                dlg_file = true;
+              "
+              class="file__body"
+            >
               <div class="file__type">
                 <img
                   v-if="getType(file) === 'audio'"
@@ -85,8 +91,8 @@
                 <img v-else src="@/assets/file/icon-default.svg" />
               </div>
               <span class="file__name">{{ getName(file) }}</span>
-            </a>
-          </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -147,6 +153,50 @@
         >
       </div>
     </div>
+
+    <v-dialog v-if="file_selected" v-model="dlg_file" width="1000">
+      <div class="view m-card">
+        <div class="m-card__body">
+          <template v-if="getType(file_selected) === 'image'">
+            <img :src="file_selected.url" />
+          </template>
+          <template v-else-if="getType(file_selected) === 'audio'">
+            <embed :src="file_selected.url"
+          /></template>
+          <template v-else-if="getType(file_selected) === 'video'">
+            <embed :src="file_selected.url" />
+          </template>
+          <template
+            v-else-if="file_selected.content_type === 'application/pdf'"
+          >
+            <embed :src="file_selected.url" type="application/pdf" />
+          </template>
+          <div v-else class="file">
+            <a :href="file_selected.url" target="_blank" class="file__body">
+              <div class="file__type">
+                <img src="@/assets/file/icon-default.svg" />
+              </div>
+              <span class="file__name">{{ getName(file_selected) }}</span>
+              <v-btn icon class="mx-3">
+                <v-icon style="font-size: 1.5rem">mdi-download</v-icon>
+              </v-btn>
+            </a>
+          </div>
+        </div>
+        <div class="m-card__actions">
+          <m-btn
+            @click="
+              file_selected = null;
+              dlg_file = false;
+            "
+            color="dark"
+            text
+            small
+            >Cerrar</m-btn
+          >
+        </div>
+      </div>
+    </v-dialog>
   </div>
 </template>
 
@@ -165,6 +215,9 @@ export default {
     studentEvaluation: [],
     teacher_responses: [],
     comment: "",
+    // FILE
+    file_selected: null,
+    dlg_file: false,
   }),
   computed: {
     score() {
@@ -375,6 +428,18 @@ export default {
   &__name {
     flex-grow: 1;
     padding: 8px;
+  }
+}
+
+.view {
+  img {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+  }
+  embed {
+    width: 100%;
+    height: 75vh;
   }
 }
 </style>
