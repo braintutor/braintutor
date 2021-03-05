@@ -2,13 +2,13 @@
   <v-dialog v-model="isVisible" :max-width="maxWidth" persistent>
     <form @submit.prevent="$emit('submit')" class="m-card">
       <div class="m-card__body">
-          <slot name="body"></slot>
+        <slot name="body"></slot>
       </div>
       <div class="m-card__actions">
         <m-btn
           v-if="!loading && showCancel"
-          @click="isVisible = false"
-          type="button" 
+          @click="cancel()"
+          type="button"
           small
           text
           class="cancel-button"
@@ -22,23 +22,28 @@
 
 <script>
 export default {
-    props: {
-        value: { type: Boolean, default: false },
-        loading: { type: Boolean, default: false },
-        maxWidth:{ type: String, default: "600"},
-        showCancel: { type: Boolean, default: true}
+  props: {
+    value: { type: Boolean, default: false },
+    loading: { type: Boolean, default: false },
+    maxWidth: { type: String, default: "600" },
+    showCancel: { type: Boolean, default: true },
+  },
+  computed: {
+    isVisible: {
+      get() {
+        return this.value;
+      },
+      set(isVisible) {
+        this.$emit("input", isVisible);
+      },
     },
-    computed: {
-        isVisible: {
-            get() {
-                return this.value;
-            },
-            set(isVisible) {
-                this.$emit("input", isVisible);
-            },
-        },
+  },
+  methods: {
+    cancel() {
+      this.isVisible = false;
+      this.$emit("cancel", true);
     },
-
+  },
 };
 </script>
 
@@ -48,5 +53,4 @@ export default {
   border: 1px solid gray;
   margin-right: 8px;
 }
-
 </style>

@@ -16,74 +16,18 @@
         :description="task.content[0].question"
         disabled
       />
+      <div class="my-2">Responder tarea:</div>
+      <QuestionTypeFile
+        class="my-3"
+        :evaluationId="task.id"
+        v-model="answer"
+      ></QuestionTypeFile>
+
       <!-- ANSWER -->
-      <div class="m-card mt-3">
-        <div class="m-card__body">
-          <div>
-            <v-textarea
-              v-model="answer.text"
-              :maxlength="AnswerModel.text.max_length"
-              :counter="AnswerModel.text.max_length"
-              label="Escribe tu respuesta"
-              rows="1"
-              auto-grow
-            ></v-textarea>
-          </div>
-          <input
-            v-show="false"
-            id="ipt_file"
-            type="file"
-            onclick="value = null"
-            @change="onFileSelected"
-          />
-          <!-- FILES -->
-          <div class="files mt-4">
-            <div class="files__menu mb-4">
-              <span>{{ size }}</span>
-              <m-btn onclick="ipt_file.click()" color="primary" small text
-                >Subir Archivo</m-btn
-              >
-            </div>
-            <!-- FILE -->
-            <a v-for="(file, idx) in files_f" :key="idx" class="file mt-2">
-              <a :href="file.url" target="_blank" class="file__body">
-                <div class="file__type">
-                  <img
-                    v-if="file.type === 'audio'"
-                    src="@/assets/file/icon-audio.svg"
-                  />
-                  <img
-                    v-else-if="file.type === 'image'"
-                    src="@/assets/file/icon-image.svg"
-                  />
-                  <img
-                    v-else-if="file.type === 'video'"
-                    src="@/assets/file/icon-video.svg"
-                  />
-                  <!--  -->
-                  <img
-                    v-else-if="file.content_type === 'application/pdf'"
-                    src="@/assets/file/icon-application-pdf.svg"
-                  />
-                  <img v-else src="@/assets/file/icon-default.svg" />
-                </div>
-                <span class="file__name">{{ file.name_f }}</span>
-              </a>
-              <div class="file__actions mx-2">
-                <v-btn @click="showRemove(file)" icon>
-                  <v-icon style="font-size: 1.5rem">mdi-delete</v-icon>
-                </v-btn>
-              </div>
-            </a>
-            <p v-show="files_f.length <= 0" class="text-center ma-0">
-              No hay Archivos.
-            </p>
-          </div>
-        </div>
-        <div class="m-card__actions">
-          <m-btn @click="save()" color="primary" small>Guardar</m-btn>
-        </div>
+      <div class="d-flex justify-end">
+        <m-btn @click="save()" color="primary" small>Guardar</m-btn>
       </div>
+
       <!-- DLG REMOVE -->
       <v-dialog v-model="dlg_remove" max-width="400">
         <div class="m-card">
@@ -119,34 +63,19 @@
 
 <script>
 import TaskCard from "@/components/globals/Task/TaskCard";
-import { getTaskByStudent, updateTaskAnswer } from "@/services/taskService";
-import { current_size, max_task_size } from "@/models/variables";
+import { getTask, updateTaskAnswer } from "@/services/taskService";
 import { AnswerModel } from "@/models/Task";
-
+import QuestionTypeFile from "@/components/StudentSession/Evaluations/QuestionTypeFile";
 export default {
   data: () => ({
     task: null,
     resultId: null,
-    answer: "",
-    files: [],
+    answer: null,
     file_selected: null,
     dlg_remove: false,
     AnswerModel,
   }),
-  computed: {
-    files_f() {
-      return this.files.map((f) => ({
-        ...f,
-        name_f: f.name.substring(f.name.lastIndexOf("/") + 1),
-        type: f.content_type.split("/")[0],
-      }));
-    },
-    size() {
-      return `Espacio utilizado: ${current_size(
-        this.files
-      )} / ${max_task_size}`;
-    },
-  },
+  computed: {},
   async created() {
     this.task_id = this.$route.params["task_id"];
     await this.init();
@@ -156,14 +85,11 @@ export default {
       this.showLoading("Cargando Tarea");
       try {
         const { id, evaluation, answers } = this.mongo(
-          await getTaskByStudent(this.task_id)
+          await getTask(this.task_id)
         );
         this.task = evaluation;
         this.taskResultId = id;
         this.answer = answers.length > 0 ? answers[0] : {};
-        // Files
-        let { files } = await this.$api.file.getFilesTask(id);
-        this.files = files;
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
@@ -178,49 +104,7 @@ export default {
       }
       this.hideLoading();
     },
-    // FILE
-    async onFileSelected(e) {
-      let file = e.target.files[0];
-      if (!file) return;
-      this.showLoading("Subiendo Archivo");
-      var formData = new FormData();
-      formData.append("file", file);
 
-      try {
-        let {
-          name,
-          url,
-          size,
-          content_type,
-        } = await this.$api.file.addFileTask(this.taskResultId, formData);
-        this.files.push({
-          name,
-          url,
-          size,
-          content_type,
-        });
-        await this.save();
-      } catch (error) {
-        this.showMessage(
-          "",
-          error.msg || "Ha ocurrido un error al subir el archivo."
-        );
-      }
-      this.hideLoading();
-    },
-    async removeFile() {
-      this.showLoading("Eliminando Archivo");
-      let file_name = this.file_selected.name;
-      let file_name_f = file_name.replaceAll("/", "&&");
-      try {
-        await this.$api.file.removeFileTask(this.taskResultId, file_name_f);
-        this.files = this.files.filter((f) => f.name !== file_name);
-        await this.save();
-      } catch (error) {
-        this.showMessage("", error.msg || error);
-      }
-      this.hideLoading();
-    },
     async showRemove(file) {
       this.file_selected = file;
       this.dlg_remove = true;
@@ -237,11 +121,12 @@ export default {
   },
   components: {
     TaskCard,
+    QuestionTypeFile,
   },
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .files {
   &__menu {
     color: rgba(0, 0, 0, 0.6);
