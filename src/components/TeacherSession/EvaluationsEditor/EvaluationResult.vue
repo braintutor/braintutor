@@ -55,6 +55,39 @@
           <h3>Respuesta:</h3>
           <p class="ma-0 mt-3">{{ studentEvaluation.answers[c_idx].text }}</p>
         </div>
+        <div v-else-if="c.type === 'file'">
+          <h3>Respuesta:</h3>
+          <p class="ma-0 mt-3">{{ studentEvaluation.answers[c_idx].text }}</p>
+          <a
+            v-for="(file, f_idx) in studentEvaluation.answers[c_idx].files"
+            :key="f_idx"
+            class="file mt-2"
+          >
+            <a :href="file.url" target="_blank" class="file__body">
+              <div class="file__type">
+                <img
+                  v-if="getType(file) === 'audio'"
+                  src="@/assets/file/icon-audio.svg"
+                />
+                <img
+                  v-else-if="getType(file) === 'image'"
+                  src="@/assets/file/icon-image.svg"
+                />
+                <img
+                  v-else-if="getType(file) === 'video'"
+                  src="@/assets/file/icon-video.svg"
+                />
+                <!--  -->
+                <img
+                  v-else-if="file.content_type === 'application/pdf'"
+                  src="@/assets/file/icon-application-pdf.svg"
+                />
+                <img v-else src="@/assets/file/icon-default.svg" />
+              </div>
+              <span class="file__name">{{ getName(file) }}</span>
+            </a>
+          </a>
+        </div>
       </div>
     </div>
     <div class="m-card mt-5">
@@ -219,13 +252,19 @@ export default {
       }
       this.hideLoading();
     },
+    // File
+    getName(file) {
+      return file.name.substring(file.name.lastIndexOf("/") + 1);
+    },
+    getType(file) {
+      return file.content_type.split("/")[0];
+    },
   },
 };
 </script>
 
 <style lang='scss' scoped>
 .evaluation {
- 
   &__statement {
     white-space: pre-line;
   }
@@ -298,6 +337,44 @@ export default {
       border: 2px solid #ccc;
       opacity: 0.5;
     }
+  }
+}
+
+.file {
+  display: block;
+  background: rgba(0, 0, 255, 0.07);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+
+  &__body {
+    overflow: hidden;
+    flex-grow: 1;
+    color: rgba(0, 0, 0, 0.75);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(0, 0, 255, 0.05);
+    }
+  }
+
+  &__type {
+    padding: 16px;
+    opacity: 0.6;
+    display: flex;
+    align-items: center;
+
+    img {
+      height: 32px;
+      width: 32px;
+    }
+  }
+  &__name {
+    flex-grow: 1;
+    padding: 8px;
   }
 }
 </style>
