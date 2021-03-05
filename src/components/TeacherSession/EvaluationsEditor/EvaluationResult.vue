@@ -14,7 +14,7 @@
             >{{ c.score }}</span
           >
           <input
-            v-else-if="c.type === 'open'"
+            v-else-if="c.type === 'open' || c.type === 'file'"
             v-model.number="teacher_responses[c_idx].score"
             type="number"
             step="1"
