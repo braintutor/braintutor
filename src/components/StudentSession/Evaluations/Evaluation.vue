@@ -58,6 +58,7 @@
             style="border-top: 1px solid #ddd"
           >
             <QuestionTypeFile
+              @selectedFile="showFile"
               :evaluationId="evaluation._id"
               v-model="answers[c_idx]"
             ></QuestionTypeFile>
@@ -129,6 +130,10 @@ export default {
     this.hideLoading();
   },
   methods: {
+    showFile({ url }) {
+      window.open(url, '_blank');
+
+    },
     async save() {
       this.showLoading("Guardando Respuestas");
       try {
@@ -151,9 +156,6 @@ export default {
       this.hideLoading();
       this.$emit("onExit");
     },
-   
-    
-   
   },
 };
 </script>
