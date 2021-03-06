@@ -301,7 +301,6 @@ export default {
       this.showLoading("Cargando Evaluación");
       try {
         this.evaluation_selected = evaluation
-        console.log('jj', this.evaluation_selected)
         this.show_results = true;
       } catch (error) {
         this.showMessage("", error.msg || error);

@@ -175,7 +175,6 @@ export default {
       this.hideLoading();
     },
 		async showCreate() {
-      console.log(this.query);
 			this.entity = Object.assign({}, this.query);
 			this.dlg_create = true;
 			this.value = "0";
