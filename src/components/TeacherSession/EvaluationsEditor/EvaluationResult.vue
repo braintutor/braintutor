@@ -56,43 +56,12 @@
           <p class="ma-0 mt-3">{{ studentEvaluation.answers[c_idx].text }}</p>
         </div>
         <div v-else-if="c.type === 'file'">
-          <h3>Respuesta:</h3>
-          <p class="ma-0 mt-3">{{ studentEvaluation.answers[c_idx].text }}</p>
-          <div
-            v-for="(file, f_idx) in studentEvaluation.answers[c_idx].files"
-            :key="f_idx"
-            class="file mt-2"
-          >
-            <div
-              @click="
-                file_selected = file;
-                dlg_file = true;
-              "
-              class="file__body"
-            >
-              <div class="file__type">
-                <img
-                  v-if="getType(file) === 'audio'"
-                  src="@/assets/file/icon-audio.svg"
-                />
-                <img
-                  v-else-if="getType(file) === 'image'"
-                  src="@/assets/file/icon-image.svg"
-                />
-                <img
-                  v-else-if="getType(file) === 'video'"
-                  src="@/assets/file/icon-video.svg"
-                />
-                <!--  -->
-                <img
-                  v-else-if="file.content_type === 'application/pdf'"
-                  src="@/assets/file/icon-application-pdf.svg"
-                />
-                <img v-else src="@/assets/file/icon-default.svg" />
-              </div>
-              <span class="file__name">{{ getName(file) }}</span>
-            </div>
-          </div>
+          <QuestionTypeFile
+            @selectedFile="showFile"
+            :evaluationId="studentEvaluation.evaluation.id"
+            :isReadonly="true"
+            :value="studentEvaluation.answers[c_idx]"
+          ></QuestionTypeFile>
         </div>
       </div>
     </div>
@@ -155,47 +124,10 @@
     </div>
 
     <v-dialog v-if="file_selected" v-model="dlg_file" width="1000">
-      <div class="view m-card">
-        <div class="m-card__body">
-          <template v-if="getType(file_selected) === 'image'">
-            <img :src="file_selected.url" />
-          </template>
-          <template v-else-if="getType(file_selected) === 'audio'">
-            <embed :src="file_selected.url"
-          /></template>
-          <template v-else-if="getType(file_selected) === 'video'">
-            <embed :src="file_selected.url" />
-          </template>
-          <template
-            v-else-if="file_selected.content_type === 'application/pdf'"
-          >
-            <embed :src="file_selected.url" type="application/pdf" />
-          </template>
-          <div v-else class="file">
-            <a :href="file_selected.url" target="_blank" class="file__body">
-              <div class="file__type">
-                <img src="@/assets/file/icon-default.svg" />
-              </div>
-              <span class="file__name">{{ getName(file_selected) }}</span>
-              <v-btn icon class="mx-3">
-                <v-icon style="font-size: 1.5rem">mdi-download</v-icon>
-              </v-btn>
-            </a>
-          </div>
-        </div>
-        <div class="m-card__actions">
-          <m-btn
-            @click="
-              file_selected = null;
-              dlg_file = false;
-            "
-            color="dark"
-            text
-            small
-            >Cerrar</m-btn
-          >
-        </div>
+      <div class="d-flex justify-end">
+        <v-btn @click="dlg_file=false">Cerrar</v-btn>
       </div>
+      <ViewerFile :file_selected="file_selected"></ViewerFile>
     </v-dialog>
   </div>
 </template>
@@ -206,8 +138,13 @@ import {
   getStudentEvaluation,
   publishScores,
 } from "@/services/evaluationResultService";
-
+import ViewerFile from "./ViewerFile";
+import QuestionTypeFile from "@/components/StudentSession/Evaluations/QuestionTypeFile";
 export default {
+  components: {
+    ViewerFile,
+    QuestionTypeFile,
+  },
   props: {
     studentEvaluationId: String,
   },
@@ -233,7 +170,7 @@ export default {
   watch: {
     studentEvaluationId: {
       immediate: true,
-      handler: async function (id) {
+      handler: async function(id) {
         let studentEvaluation = await getStudentEvaluation(id);
         this.evaluation = studentEvaluation.evaluation;
         this.comment = studentEvaluation.comment;
@@ -248,6 +185,10 @@ export default {
     },
   },
   methods: {
+    showFile(file) {
+      this.file_selected = file;
+      this.dlg_file = true
+    },
     getScore(evaluation, result) {
       let score = 0;
       evaluation.content.forEach((question, idx) => {
@@ -306,17 +247,11 @@ export default {
       this.hideLoading();
     },
     // File
-    getName(file) {
-      return file.name.substring(file.name.lastIndexOf("/") + 1);
-    },
-    getType(file) {
-      return file.content_type.split("/")[0];
-    },
   },
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .evaluation {
   &__statement {
     white-space: pre-line;
