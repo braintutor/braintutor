@@ -21,6 +21,7 @@
         class="my-3"
         :evaluationId="task.id"
         v-model="answer"
+        @selectedFile="showFile"
       ></QuestionTypeFile>
 
       <!-- ANSWER -->
@@ -57,6 +58,13 @@
           </div>
         </div>
       </v-dialog>
+
+      <v-dialog v-if="file_selected" v-model="dlg_file" width="1000">
+        <div class="d-flex justify-end">
+          <v-btn @click="dlg_file = false">Cerrar</v-btn>
+        </div>
+        <ViewerFile :file_selected="file_selected"></ViewerFile>
+      </v-dialog>
     </div>
   </div>
 </template>
@@ -65,6 +73,8 @@
 import TaskCard from "@/components/globals/Task/TaskCard";
 import { getTask, updateTaskAnswer } from "@/services/taskService";
 import { AnswerModel } from "@/models/Task";
+import ViewerFile from "@/components/TeacherSession/EvaluationsEditor/ViewerFile";
+
 import QuestionTypeFile from "@/components/StudentSession/Evaluations/QuestionTypeFile";
 export default {
   data: () => ({
@@ -72,6 +82,7 @@ export default {
     resultId: null,
     answer: null,
     file_selected: null,
+    dlg_file: false,
     dlg_remove: false,
     AnswerModel,
   }),
@@ -81,6 +92,10 @@ export default {
     await this.init();
   },
   methods: {
+    showFile(file) {
+      this.file_selected = file;
+      this.dlg_file = true;
+    },
     async init() {
       this.showLoading("Cargando Tarea");
       try {
@@ -122,6 +137,7 @@ export default {
   components: {
     TaskCard,
     QuestionTypeFile,
+    ViewerFile
   },
 };
 </script>
