@@ -215,7 +215,7 @@ export default {
 
       this.showLoading("Cargando Evaluaciones");
       try {
-        this.evaluations = await this.$api.evaluation.getAll(this.session_id);
+        this.evaluations = await this.$api.evaluation.getAll(this.session_id, this.type);
         this.students = this.mongoArr(
           await getStudentsBySession(this.session_id)
         );

@@ -1,6 +1,6 @@
 export default (_fetch) => ({
-  getAll(session_id) {
-    return _fetch('GET', `evaluation?session=${session_id}`)
+  getAll(session_id, type = "EVALUATION") {
+    return _fetch('GET', `evaluation?session=${session_id}&type=${type}`)
   },
   get(evaluation_id) {
     return _fetch('GET', `evaluation/${evaluation_id}`)
