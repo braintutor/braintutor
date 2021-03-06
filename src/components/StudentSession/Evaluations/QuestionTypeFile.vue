@@ -1,5 +1,6 @@
 <template>
   <div>
+   
     <div v-if="!isReadonly">
       <v-textarea
         v-model="answer.text"
@@ -75,22 +76,24 @@ export default {
     };
   },
   watch: {
+    value: {
+      handler: function(value) {
+        this.answer = value
+      },
+      immediate: true,
+    },
     answer: {
       handler: function() {
-        console.log("aca", this.answer);
         this.handleChange();
-        console.log("chane");
       },
       immediate: true,
     },
   },
   methods: {
     handleSelectionFile(file) {
-      console.log("emit");
       this.$emit("selectedFile", file);
     },
     handleChange() {
-      console.log(this.answer);
       this.$emit("input", this.answer);
     },
     getName(file) {
@@ -105,7 +108,7 @@ export default {
       let file_name_f = file_name.replaceAll("/", "&&");
       try {
         await this.$api.evaluation.removeFile(this.evaluationId, file_name_f);
-        let { files } = this.answer
+        let { files } = this.answer;
         files.splice(idx, 1);
         this.answer = { ...this.answer, files };
       } catch (error) {
