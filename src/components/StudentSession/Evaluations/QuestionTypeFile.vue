@@ -9,12 +9,13 @@
     <div class="mt-4">
       <input
         id="ipt_file"
+        ref="inputFile"
         type="file"
         onclick="this.value = null"
         @change="onFileSelected($event)"
         style="display: none"
       />
-      <m-btn onclick="ipt_file.click()" color="primary" small text
+      <m-btn @click="$refs.inputFile.click()" color="primary" small text
         >Subir Archivo</m-btn
       >
     </div>
@@ -57,24 +58,24 @@ export default {
     evaluationId: null,
     value: {},
   },
- data() {
+  data() {
     return {
       answer: this.value,
     };
   },
   watch: {
     answer: {
-      handler:  function() {
-        console.log("aca", this.answer)
+      handler: function() {
+        console.log("aca", this.answer);
         this.handleChange();
-        console.log("chane")
+        console.log("chane");
       },
       immediate: true,
     },
   },
   methods: {
     handleChange() {
-      console.log(this.answer)
+      console.log(this.answer);
       this.$emit("input", this.answer);
     },
     getName(file) {
@@ -103,11 +104,10 @@ export default {
           error.msg || "Ha ocurrido un error al subir el archivo."
         );
       } finally {
-        let { files = [] } = this.answer
+        let { files = [] } = this.answer;
         files.push(new_file);
-        this.answer = { ...this.answer, files }
-        this.handleChange()
-     
+        this.answer = { ...this.answer, files };
+        this.handleChange();
       }
       this.hideLoading();
     },
@@ -115,4 +115,42 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.file {
+  display: block;
+  background: rgba(0, 0, 255, 0.07);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+
+  &__body {
+    overflow: hidden;
+    flex-grow: 1;
+    color: rgba(0, 0, 0, 0.75);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(0, 0, 255, 0.05);
+    }
+  }
+
+  &__type {
+    padding: 16px;
+    opacity: 0.6;
+    display: flex;
+    align-items: center;
+
+    img {
+      height: 32px;
+      width: 32px;
+    }
+  }
+  &__name {
+    flex-grow: 1;
+    padding: 8px;
+  }
+}
+</style>
