@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import QuestionTypeFile from "./QuestionTypeFile";
+import QuestionTypeFile from "@/components/Evaluations/QuestionTypeFile";
 export default {
   components: { QuestionTypeFile },
   props: ["evaluation"],
