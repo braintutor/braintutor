@@ -1,14 +1,14 @@
 <template>
-  <EvaluationList
+  <Dashboard
     type="EVALUATION"
     createTitle="Crear Evaluación"
-  ></EvaluationList>
+  ></Dashboard>
 </template>
 
 <script>
-import EvaluationList from "@/components/Evaluations/List"
+import Dashboard from "./Dashboard"
 export default {
-  components: { EvaluationList }
+  components: { Dashboard }
 
 
 };

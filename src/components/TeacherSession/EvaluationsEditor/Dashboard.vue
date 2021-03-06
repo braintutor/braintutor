@@ -9,81 +9,13 @@
         >
       </div>
       <!-- EVALUATIONS -->
-      <div class="header">
-        <span class="header__name">Nombre</span>
-        <span class="header__name">Inicio</span>
-        <span class="header__name">Fin</span>
-      </div>
-      <div
-        v-for="(evaluation, idx) in evaluations_filtered"
-        :key="idx"
-        class="evaluation mb-2"
-        :class="{ 'evaluation--disabled': !evaluation.is_public }"
-      >
-        <span class="evaluation__name">{{ evaluation.name }}</span>
-        <span class="evaluation__date">{{
-          toDateString(evaluation.time_start)
-        }}</span>
-        <span class="evaluation__date">{{
-          toDateString(evaluation.time_end)
-        }}</span>
-        <div class="evaluation__options">
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on }">
-              <v-btn @click="showEditor(evaluation)" v-on="on" icon small>
-                <v-icon style="font-size: 1.3rem">
-                  {{ evaluation.is_public ? "mdi-eye" : "mdi-pencil" }}
-                </v-icon>
-              </v-btn>
-            </template>
-            <span style="font-size: 0.75rem">{{
-              evaluation.is_public ? "Ver" : "Editar"
-            }}</span>
-          </v-tooltip>
-          <v-tooltip v-if="evaluation.is_public" bottom>
-            <template v-slot:activator="{ on }">
-              <v-btn
-                @click="showResults(evaluation)"
-                v-on="on"
-                icon
-                small
-                class="ml-2"
-              >
-                <v-icon style="font-size: 1.3rem">mdi-poll</v-icon>
-              </v-btn>
-            </template>
-            <span style="font-size: 0.75rem">Resultados</span>
-          </v-tooltip>
-          <v-tooltip v-if="evaluation.is_public" bottom>
-            <template v-slot:activator="{ on }">
-              <v-btn
-                @click="showUpdateTime(evaluation)"
-                v-on="on"
-                icon
-                small
-                class="ml-2"
-              >
-                <v-icon style="font-size: 1.3rem">mdi-clock-time-four</v-icon>
-              </v-btn>
-            </template>
-            <span style="font-size: 0.75rem">Modificar Tiempo</span>
-          </v-tooltip>
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on }">
-              <v-btn
-                @click="showRemove(evaluation)"
-                v-on="on"
-                icon
-                small
-                class="ml-2"
-              >
-                <v-icon style="font-size: 1.3rem"> mdi-delete </v-icon>
-              </v-btn>
-            </template>
-            <span style="font-size: 0.75rem">Eliminar</span>
-          </v-tooltip>
-        </div>
-      </div>
+      <EvaluationList 
+        :evaluations="evaluations_filtered"
+        @edit="showEditor"
+        @showResults="showResults"
+        @updateTime="showUpdateTime"
+        @remove="showRemove"
+      ></EvaluationList> 
       <!-- DLG REMOVE -->
       <v-dialog v-model="dlg_remove" max-width="400">
         <div class="m-card">
@@ -174,8 +106,9 @@
 </template>
 
 <script>
+import EvaluationList from "./List";
 import EvaluationEditor from "./Editor";
-import EvaluationResults from "@/components/TeacherSession/EvaluationsEditor/EvaluationResults";
+import EvaluationResults from "./EvaluationResults";
 import DateTime from "@/components/globals/DateTime";
 import { getStudentsBySession } from "@/services/studentService";
 
@@ -301,7 +234,6 @@ export default {
       this.showLoading("Cargando Evaluación");
       try {
         this.evaluation_selected = evaluation
-        console.log('jj', this.evaluation_selected)
         this.show_results = true;
       } catch (error) {
         this.showMessage("", error.msg || error);
@@ -315,17 +247,6 @@ export default {
     showUpdateTime(evaluation) {
       this.evaluation_selected = Object.assign({}, evaluation);
       this.dlg_update_time = true;
-    },
-    //
-    toDateString(date) {
-      let date_format = date.toLocaleDateString("es-ES", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-      return date_format;
     },
     // TODO: add
     // async removeResult() {
@@ -347,6 +268,7 @@ export default {
     EvaluationEditor,
     EvaluationResults,
     DateTime,
+    EvaluationList
   },
 };
 </script>
@@ -356,52 +278,6 @@ export default {
   &__menu {
     display: flex;
     justify-content: flex-end;
-  }
-}
-
-$grid-template-columns: 4fr 3fr 3fr 100px;
-
-.header {
-  padding: 12px 20px;
-  font-size: 1rem;
-  display: grid;
-  grid-template-columns: $grid-template-columns;
-
-  &__name {
-    font-weight: bold;
-  }
-}
-
-.evaluation {
-  padding: 12px 20px;
-  font-size: 0.9rem;
-  background: #e8e8ff;
-  border-radius: 12px;
-  transition: 0.3s;
-  display: grid;
-  grid-template-columns: $grid-template-columns;
-  align-items: center;
-
-  &__name {
-    font-weight: bold;
-  }
-
-  &__score {
-    font-weight: bold;
-  }
-
-  &__options {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-  }
-
-  &--disabled {
-    background: #f7f7f7;
-    .evaluation__name,
-    .evaluation__date {
-      color: #8a8a8a;
-    }
   }
 }
 </style>
