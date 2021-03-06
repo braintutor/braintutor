@@ -33,6 +33,7 @@ import { Annotorious } from "@recogito/annotorious";
 import "@recogito/annotorious/dist/annotorious.min.css";
 
 export default {
+  props: [ "file_selected"],
   mounted() {
     const anno = new Annotorious({ image: "imageAnnotation" }); // image element or ID
     anno.loadAnnotations();
