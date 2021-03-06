@@ -151,52 +151,9 @@ export default {
       this.hideLoading();
       this.$emit("onExit");
     },
-    // Files
-    handleChange() {
-      this.$emit("input", this.answer);
-    },
-    getName(file) {
-      return file.name.substring(file.name.lastIndexOf("/") + 1);
-    },
-    getType(file) {
-      return file.content_type.split("/")[0];
-    },
-    async onFileSelected(e, files) {
-      let file = e.target.files[0];
-      if (!file) return;
-
-      var formData = new FormData();
-      formData.append("file", file);
-
-      this.showLoading("Subiendo Archivo");
-      try {
-        let new_file = await this.$api.evaluation.addFile(
-          this.evaluation._id,
-          formData
-        );
-        files.push(new_file);
-        await this.save();
-      } catch (error) {
-        this.showMessage(
-          "",
-          error.msg || "Ha ocurrido un error al subir el archivo."
-        );
-      }
-      this.hideLoading();
-    },
-    async removeFile(files, idx) {
-      this.showLoading("Eliminando Archivo");
-      let file_name = files[idx].name;
-      let file_name_f = file_name.replaceAll("/", "&&");
-      try {
-        await this.$api.evaluation.removeFile(this.evaluation._id, file_name_f);
-        files.splice(idx, 1);
-        await this.save();
-      } catch (error) {
-        this.showMessage("", error.msg || error);
-      }
-      this.hideLoading();
-    },
+   
+    
+   
   },
 };
 </script>
