@@ -2,7 +2,7 @@
   <div class="view m-card">
     <div class="m-card__body">
       <template v-if="getType(file_selected) === 'image'">
-        <img :src="file_selected.url" />
+        <img :src="file_selected.url" id="imageAnnotation" />
       </template>
       <template v-else-if="getType(file_selected) === 'audio'">
         <embed :src="file_selected.url"
@@ -29,15 +29,21 @@
 </template>
 
 <script>
+import { Annotorious } from "@recogito/annotorious";
+import "@recogito/annotorious/dist/annotorious.min.css";
+
 export default {
-  props: ["file_selected"],
+  mounted() {
+    const anno = new Annotorious({ image: "imageAnnotation" }); // image element or ID
+    anno.loadAnnotations();
+  },
   methods: {
     getName(file) {
       return file.name.substring(file.name.lastIndexOf("/") + 1);
     },
     getType(file) {
       return file.content_type.split("/")[0];
-    }
+    },
   },
 };
 </script>
