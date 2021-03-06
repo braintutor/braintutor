@@ -1,5 +1,6 @@
 <template>
   <div class="m-container">
+    holas
     <div v-show="!evaluation_to_start">
       <div class="header">
         <span class="header__name">Nombre</span>
@@ -24,7 +25,7 @@
         <span v-else>-</span>
         <div class="evaluation__options">
           <v-tooltip
-            v-if="item.result && item.result.is_score_published"
+            v-if="hasPermission('see') && item.result && item.result.is_score_published"
             bottom
           >
             <template v-slot:activator="{ on }">
@@ -41,7 +42,7 @@
             <span style="font-size: 0.75rem">Ver Resultados</span>
           </v-tooltip>
           <v-tooltip bottom>
-            <template v-if="item.isAvailable" v-slot:activator="{ on }">
+            <template v-if="hasPermission('take') && item.isAvailable" v-slot:activator="{ on }">
               <v-btn
                 @click="startEvaluation(item)"
                 v-on="on"
@@ -84,6 +85,7 @@
                 <v-icon dark> mdi-close-thick </v-icon>
               </v-btn>
             </div>
+            holas
             <EvaluationResult
               v-if="evaluation_selected && result_selected"
               :evaluation="evaluation_selected"
@@ -98,6 +100,7 @@
         </div>
       </v-dialog>
     </div>
+  
     <Evaluation
       v-if="evaluation_to_start"
       :evaluation="evaluation_to_start"
@@ -114,7 +117,10 @@ import Evaluation from "./Detail";
 import EvaluationResult from "./EvaluationResult";
 
 export default {
-  props: [ "type"], 
+  props: { 
+    type: { type: String }, 
+    permissions : { type: Array, default: () =>  [ "see", "take"]  }
+  }, 
   data: () => ({
     evaluations: [],
     evaluation_selected: null,
@@ -136,6 +142,11 @@ export default {
     await this.init();
   },
   methods: {
+
+    hasPermission(action){
+      return this.permissions.includes(action)
+
+    },
     async init() {
       let session_id = this.$route.params["session_id"];
       this.evaluations = [];
@@ -143,7 +154,7 @@ export default {
       this.showLoading("Cargando Evaluaciones");
       try {
         let evaluations = await this.$api.evaluation.getAll(session_id, this.type);
-        let results = await this.$api.evaluation.getSessionResults(session_id);
+        let results = await this.$api.evaluation.getSessionResults(session_id, this.type);
 
         evaluations.forEach((evaluation) => {
           evaluation.result = this.getResult(evaluation, results);
@@ -168,6 +179,7 @@ export default {
       this.hideLoading();
     },
     async showResult(evaluation) {
+      console.log("resul")
       this.showLoading("Cargando Resultados");
       try {
         this.evaluation_selected = this.mongo(
@@ -175,6 +187,8 @@ export default {
         );
         this.dlg_result = true;
         this.result_selected = evaluation.result;
+        console.log(this.evaluation_selected)
+        console.log(evaluation.result)
       } catch (error) {
         this.showMessage("", error.msg || error);
       }

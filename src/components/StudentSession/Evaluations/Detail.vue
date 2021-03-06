@@ -10,6 +10,8 @@
           <span class="m-menu__title">Volver</span>
         </div>
       </div>
+      eval
+      {{ evaluation }}
       <p class="evaluation__name">{{ evaluation.name }}</p>
       <div
         class="question m-card mb-4"
