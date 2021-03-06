@@ -236,7 +236,7 @@ export default {
         time_start: now().addHours(1),
         time_end: now().addHours(2),
         map_score_to_note: [],
-        
+        type: this.type,  
         content: [
           {
             question: "Pregunta",
