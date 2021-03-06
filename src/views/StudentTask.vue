@@ -75,7 +75,7 @@ import { getTask, updateTaskAnswer } from "@/services/taskService";
 import { AnswerModel } from "@/models/Task";
 import ViewerFile from "@/components/TeacherSession/EvaluationsEditor/ViewerFile";
 
-import QuestionTypeFile from "@/components/StudentSession/Evaluations/QuestionTypeFile";
+import QuestionTypeFile from "@/components/Evaluations/QuestionTypeFile";
 export default {
   data: () => ({
     task: null,

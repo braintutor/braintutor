@@ -139,7 +139,7 @@ import {
   publishScores,
 } from "@/services/evaluationResultService";
 import ViewerFile from "./ViewerFile";
-import QuestionTypeFile from "@/components/StudentSession/Evaluations/QuestionTypeFile";
+import QuestionTypeFile from "@/components/Evaluations/QuestionTypeFile";
 export default {
   components: {
     ViewerFile,
