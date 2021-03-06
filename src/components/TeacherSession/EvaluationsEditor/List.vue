@@ -175,7 +175,7 @@
 
 <script>
 import EvaluationEditor from "./Editor";
-import EvaluationResults from "@/components/TeacherSession/EvaluationsEditor/EvaluationResults";
+import EvaluationResults from "./EvaluationResults";
 import DateTime from "@/components/globals/DateTime";
 import { getStudentsBySession } from "@/services/studentService";
 

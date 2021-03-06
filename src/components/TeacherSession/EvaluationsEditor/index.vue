@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import EvaluationList from "@/components/Evaluations/List"
+import EvaluationList from "./List"
 export default {
   components: { EvaluationList }
 
