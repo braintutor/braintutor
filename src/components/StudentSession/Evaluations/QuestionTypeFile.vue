@@ -1,26 +1,33 @@
 <template>
   <div>
-    <v-textarea
-      v-model="answer.text"
-      placeholder="Escribe tu respuesta"
-      dense
-      hide-details
-    ></v-textarea>
-    <div class="mt-4">
-      <input
-        id="ipt_file"
-        ref="inputFile"
-        type="file"
-        onclick="this.value = null"
-        @change="onFileSelected($event)"
-        style="display: none"
-      />
-      <m-btn @click="$refs.inputFile.click()" color="primary" small text
-        >Subir Archivo</m-btn
-      >
+    <div v-if="!isReadonly">
+      <v-textarea
+        v-model="answer.text"
+        placeholder="Escribe tu respuesta"
+        dense
+        hide-details
+      ></v-textarea>
+      <div class="mt-4">
+        <input
+          id="ipt_file"
+          ref="inputFile"
+          type="file"
+          onclick="this.value = null"
+          @change="onFileSelected($event)"
+          style="display: none"
+        />
+        <m-btn @click="$refs.inputFile.click()" color="primary" small text
+          >Subir Archivo</m-btn
+        >
+      </div>
     </div>
+    <div v-else>
+      <h3>Respuesta:</h3>
+      <p class="ma-0 mt-3">{{ answer.text }}</p>
+    </div>
+
     <a v-for="(file, f_idx) in answer.files" :key="f_idx" class="file mt-2">
-      <a :href="file.url" target="_blank" class="file__body">
+      <a class="file__body" @click="handleSelectionFile(file)">
         <div class="file__type">
           <img
             v-if="getType(file) === 'audio'"
@@ -43,8 +50,8 @@
         </div>
         <span class="file__name">{{ getName(file) }}</span>
       </a>
-      <div class="file__actions mx-2">
-        <v-btn @click="showRemove(file)" icon>
+      <div class="file__actions mx-2" v-if="!isReadonly">
+        <v-btn @click="removeFile(file, f_idx)" icon>
           <v-icon style="font-size: 1.5rem">mdi-delete</v-icon>
         </v-btn>
       </div>
@@ -57,6 +64,10 @@ export default {
   props: {
     evaluationId: null,
     value: {},
+    isReadonly: {
+      type: Boolean,
+      default: () => false,
+    },
   },
   data() {
     return {
@@ -74,6 +85,10 @@ export default {
     },
   },
   methods: {
+    handleSelectionFile(file) {
+      console.log("emit");
+      this.$emit("selectedFile", file);
+    },
     handleChange() {
       console.log(this.answer);
       this.$emit("input", this.answer);
@@ -83,6 +98,20 @@ export default {
     },
     getType(file) {
       return file.content_type.split("/")[0];
+    },
+    async removeFile(file, idx) {
+      this.showLoading("Eliminando Archivo");
+      let file_name = file.name;
+      let file_name_f = file_name.replaceAll("/", "&&");
+      try {
+        await this.$api.evaluation.removeFile(this.evaluationId, file_name_f);
+        let { files } = this.answer
+        files.splice(idx, 1);
+        this.answer = { ...this.answer, files };
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
     },
     async onFileSelected(e) {
       let file = e.target.files[0];
