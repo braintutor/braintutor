@@ -1,6 +1,5 @@
 <template>
   <div class="m-container">
-    holas
     <div v-show="!evaluation_to_start">
       <div class="header">
         <span class="header__name">Nombre</span>
@@ -85,7 +84,7 @@
                 <v-icon dark> mdi-close-thick </v-icon>
               </v-btn>
             </div>
-            holas
+            
             <EvaluationResult
               v-if="evaluation_selected && result_selected"
               :evaluation="evaluation_selected"
@@ -119,6 +118,7 @@ import EvaluationResult from "./EvaluationResult";
 export default {
   props: { 
     type: { type: String }, 
+    childId: { type: String, default: () => null },
     permissions : { type: Array, default: () =>  [ "see", "take"]  }
   }, 
   data: () => ({
@@ -153,8 +153,8 @@ export default {
 
       this.showLoading("Cargando Evaluaciones");
       try {
-        let evaluations = await this.$api.evaluation.getAll(session_id, this.type);
-        let results = await this.$api.evaluation.getSessionResults(session_id, this.type);
+        let evaluations = await this.$api.evaluation.getAll(session_id, this.type, this.childId);
+        let results = await this.$api.evaluation.getSessionResults(session_id, this.type, this.childId);
 
         evaluations.forEach((evaluation) => {
           evaluation.result = this.getResult(evaluation, results);

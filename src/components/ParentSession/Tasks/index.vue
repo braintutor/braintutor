@@ -1,5 +1,5 @@
 <template>
-  <ListAsStudent type="TASK" :permissions="permissions"></ListAsStudent>
+  <ListAsStudent :childId="$route.params.childId" type="TASK" :permissions="permissions"></ListAsStudent>
 </template>
 
 <script>
