@@ -49,4 +49,16 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.view {
+  img {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+  }
+  embed {
+    width: 100%;
+    height: 75vh;
+  }
+}
+</style>
