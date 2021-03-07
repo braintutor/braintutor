@@ -27,33 +27,19 @@
         </div>
 
         <div v-if="c.type === 'closed'">
-          <div
-            v-for="(alternative, a_idx) in c.alternatives"
-            :key="a_idx"
-            class="alternative mt-3"
-          >
-            <span
-              class="alternative__checkbox mr-3"
-              :class="{
-                'alternative__checkbox--active':
-                  a_idx === studentEvaluation.answers[c_idx].alternative,
-              }"
-            ></span>
-            <span
-              class="alternative__text"
-              :class="{
-                'alternative__text--correct': a_idx === c.correct,
-                'alternative__text--incorrect':
-                  a_idx !== c.correct &&
-                  a_idx === studentEvaluation.answers[c_idx].alternative,
-              }"
-              >{{ alternative }}</span
-            >
-          </div>
+          <AnswerTypeClose
+            :evaluationId="studentEvaluation.evaluation.id"
+            :isReadonly="true"
+            :value="studentEvaluation.answers[c_idx]"
+            :question="c"
+          ></AnswerTypeClose>
         </div>
         <div v-else-if="c.type === 'open'">
-          <h3>Respuesta:</h3>
-          <p class="ma-0 mt-3">{{ studentEvaluation.answers[c_idx].text }}</p>
+          <AnswerTypeOpen
+            :evaluationId="studentEvaluation.evaluation.id"
+            :isReadonly="true"
+            :value="studentEvaluation.answers[c_idx]"
+          ></AnswerTypeOpen>
         </div>
         <div v-else-if="c.type === 'file'">
           <QuestionTypeFile
@@ -125,7 +111,7 @@
 
     <v-dialog v-if="file_selected" v-model="dlg_file" width="1000">
       <div class="d-flex justify-end">
-        <v-btn @click="dlg_file=false">Cerrar</v-btn>
+        <v-btn @click="dlg_file = false">Cerrar</v-btn>
       </div>
       <ViewerFile :file_selected="file_selected"></ViewerFile>
     </v-dialog>
@@ -140,10 +126,15 @@ import {
 } from "@/services/evaluationResultService";
 import ViewerFile from "./ViewerFile";
 import QuestionTypeFile from "@/components/Evaluations/QuestionTypeFile";
+import AnswerTypeOpen from "@/components/Evaluations/AnswerTypeOpen";
+import AnswerTypeClose from "@/components/Evaluations/AnswerTypeClose";
+
 export default {
   components: {
     ViewerFile,
     QuestionTypeFile,
+    AnswerTypeOpen,
+    AnswerTypeClose,
   },
   props: {
     studentEvaluationId: String,
@@ -187,7 +178,7 @@ export default {
   methods: {
     showFile(file) {
       this.file_selected = file;
-      this.dlg_file = true
+      this.dlg_file = true;
     },
     getScore(evaluation, result) {
       let score = 0;
@@ -267,48 +258,7 @@ export default {
   }
 }
 
-.alternative {
-  display: flex;
-  align-items: center;
-  &__checkbox {
-    position: relative;
-    flex-shrink: 0;
-    display: block;
-    width: 18px;
-    height: 18px;
-    border: 1px solid var(--color-active);
-    border-radius: 50%;
 
-    &--active:before {
-      content: " ";
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      right: 2px;
-      bottom: 2px;
-      background: var(--color-active);
-      border-radius: 50%;
-    }
-  }
-  &__text {
-    flex-grow: 1;
-    padding: 8px 12px;
-    background: rgba(0, 0, 0, 0.025);
-    border-radius: 6px;
-    white-space: pre-line;
-    &:last-child {
-      margin-bottom: 0;
-    }
-    &--correct {
-      background: rgba(17, 192, 70, 0.2);
-      color: rgb(17, 192, 69);
-    }
-    &--incorrect {
-      background: rgba(197, 47, 47, 0.2);
-      color: rgb(197, 47, 47);
-    }
-  }
-}
 
 .score {
   display: flex;
@@ -328,53 +278,6 @@ export default {
   }
 }
 
-.file {
-  display: block;
-  background: rgba(0, 0, 255, 0.07);
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
 
-  &__body {
-    overflow: hidden;
-    flex-grow: 1;
-    color: rgba(0, 0, 0, 0.75);
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
 
-    &:hover {
-      background: rgba(0, 0, 255, 0.05);
-    }
-  }
-
-  &__type {
-    padding: 16px;
-    opacity: 0.6;
-    display: flex;
-    align-items: center;
-
-    img {
-      height: 32px;
-      width: 32px;
-    }
-  }
-  &__name {
-    flex-grow: 1;
-    padding: 8px;
-  }
-}
-
-.view {
-  img {
-    display: block;
-    margin: 0 auto;
-    max-width: 100%;
-  }
-  embed {
-    width: 100%;
-    height: 75vh;
-  }
-}
 </style>

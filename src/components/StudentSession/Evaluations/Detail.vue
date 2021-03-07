@@ -10,8 +10,7 @@
           <span class="m-menu__title">Volver</span>
         </div>
       </div>
-      eval
-      {{ evaluation }}
+   
       <p class="evaluation__name">{{ evaluation.name }}</p>
       <div
         class="question m-card mb-4"
@@ -24,35 +23,22 @@
             <img :src="c.image" />
           </div>
           <div v-if="c.type === 'closed'">
-            <v-radio-group v-model="answers[c_idx].alternative">
-              <v-radio
-                class="question__alternative"
-                v-for="(alternative, a_idx) in c.alternatives"
-                :key="a_idx"
-                :label="alternative"
-                :value="a_idx"
-              ></v-radio>
-              <label
-                class="m-btn m-btn--dark m-btn--text m-btn--small mt-3 mx-auto"
-                style="width: max-content"
-                :for="c_idx + ''"
-              >
-                Limpiar
-              </label>
-              <v-radio v-show="false" :value="-1" :id="c_idx + ''"></v-radio>
-            </v-radio-group>
+            <AnswerTypeClose
+            :evaluationId="evaluation._id"
+            v-model="answers[c_idx]"
+            :question="c"
+            :id="c_idx"
+          ></AnswerTypeClose>
           </div>
           <div
             v-else-if="c.type === 'open'"
             class="pt-4"
             style="border-top: 1px solid #ddd"
           >
-            <v-textarea
-              v-model="answers[c_idx].text"
-              placeholder="Escribe tu respuesta"
-              dense
-              hide-details
-            ></v-textarea>
+             <AnswerTypeOpen
+              :evaluationId="evaluation._id"
+              v-model="answers[c_idx]"
+            ></AnswerTypeOpen>
           </div>
           <div
             v-else-if="c.type === 'file'"
@@ -108,9 +94,12 @@
 </template>
 
 <script>
+import AnswerTypeClose from "@/components/Evaluations/AnswerTypeClose";
+import AnswerTypeOpen from "@/components/Evaluations/AnswerTypeOpen";
 import QuestionTypeFile from "@/components/Evaluations/QuestionTypeFile";
+
 export default {
-  components: { QuestionTypeFile },
+  components: { QuestionTypeFile, AnswerTypeOpen, AnswerTypeClose },
   props: ["evaluation"],
   data: () => ({
     time_remaining: 0,
