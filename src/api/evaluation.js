@@ -20,8 +20,8 @@ export default (_fetch) => ({
   updateTime(evaluation_id, data) {
     return _fetch('PATCH', `evaluation/${evaluation_id}/time`, data)
   },
-  getSessionResults(session_id, type = "EVALUATION") {
-    return _fetch('GET', `evaluation/session-result/${session_id}?type=${type}`);
+  getSessionResults(session_id, type = "EVALUATION", childId = null) {
+    return _fetch('GET', `evaluation/session-result/${session_id}?type=${type}${childId ? '&childId='+ childId: ''}`);
   },
   // Student
   getAnswers(evaluation_id) {
