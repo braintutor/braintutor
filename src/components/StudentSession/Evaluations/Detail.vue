@@ -45,11 +45,11 @@
             class="pt-4"
             style="border-top: 1px solid #ddd"
           >
-            <QuestionTypeFile
+            <AnswerTypeFile
               @selectedFile="showFile"
               :evaluationId="evaluation._id"
               v-model="answers[c_idx]"
-            ></QuestionTypeFile>
+            ></AnswerTypeFile>
           </div>
         </div>
       </div>
@@ -96,10 +96,10 @@
 <script>
 import AnswerTypeClose from "@/components/Evaluations/AnswerTypeClose";
 import AnswerTypeOpen from "@/components/Evaluations/AnswerTypeOpen";
-import QuestionTypeFile from "@/components/Evaluations/QuestionTypeFile";
+import AnswerTypeFile from "@/components/Evaluations/AnswerTypeFile";
 
 export default {
-  components: { QuestionTypeFile, AnswerTypeOpen, AnswerTypeClose },
+  components: { AnswerTypeFile, AnswerTypeOpen, AnswerTypeClose },
   props: ["evaluation"],
   data: () => ({
     time_remaining: 0,

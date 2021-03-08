@@ -28,12 +28,12 @@
           ></AnswerTypeOpen>
         </div>
         <div v-else-if="c.type === 'file'">
-          <QuestionTypeFile
+          <AnswerTypeFile
             @selectedFile="showFile"
             :evaluationId="evaluation.id"
             :isReadonly="true"
             :value="answers[c_idx]"
-          ></QuestionTypeFile>
+          ></AnswerTypeFile>
         </div>
       </div>
     </div>
@@ -41,13 +41,13 @@
 </template>
 
 <script>
-import QuestionTypeFile from "@/components/Evaluations/QuestionTypeFile";
+import AnswerTypeFile from "@/components/Evaluations/AnswerTypeFile";
 import AnswerTypeOpen from "@/components/Evaluations/AnswerTypeOpen";
 import AnswerTypeClose from "@/components/Evaluations/AnswerTypeClose";
 
 export default {
   components: {
-    QuestionTypeFile,
+    AnswerTypeFile,
     AnswerTypeOpen,
     AnswerTypeClose,
   },
