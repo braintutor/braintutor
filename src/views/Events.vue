@@ -149,17 +149,16 @@ export default {
       this.hideLoading();
     },
     redirectTask(event) {
-      if (this.user.role === "TEA")
-        redirect("teacher-session-tasks", {
-          session_id: event.session,
-        });
-      else redirect("student-task", { task_id: event._id });
+      this.redirectByType(event, "tasks")
     },
     redirectEvaluation(event) {
+      this.redirectByType(event, "evaluations")
+    },
+    redirectByType(event, type) {
       redirect(
         this.user.role === "TEA"
-          ? "teacher-session-evaluations"
-          : "student-session-evaluations",
+          ? `teacher-session-${type}`
+          : `student-session-${type}`,
         {
           session_id: event.session,
         }
