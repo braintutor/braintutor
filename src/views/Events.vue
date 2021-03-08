@@ -8,7 +8,7 @@
         <span>Eventos</span>
       </label>
       <label class="filter__item">
-        <input class="mr-1" type="checkbox" value="task" v-model="filters" />
+        <input class="mr-1" type="checkbox" value="TASK" v-model="filters" />
         <v-icon small class="mr-1 mb-1">{{ icons["task"] }}</v-icon>
         <span>Tareas</span>
       </label>
@@ -16,7 +16,7 @@
         <input
           class="mr-1"
           type="checkbox"
-          value="evaluation"
+          value="EVALUATION"
           v-model="filters"
         />
         <v-icon small class="mr-1 mb-1">{{ icons["evaluation"] }}</v-icon>
@@ -38,7 +38,7 @@
     </div>
     <m-calendar :events="events_f">
       <template v-slot:event_info="{ event }">
-        <div v-if="event.type === 'task'" class="m-card__actions pa-0 pt-4">
+        <div v-if="event.type === 'TASK' && ['TEA','STU'].includes(user.role)" class="m-card__actions pa-0 pt-4">
           <m-btn
             @click="redirectTask(event)"
             color="primary"
@@ -48,7 +48,7 @@
           >
         </div>
         <div
-          v-if="event.type === 'evaluation'"
+          v-if="event.type === 'EVALUATION'  && ['TEA','STU'].includes(user.role)"
           class="m-card__actions pa-0 pt-4"
         >
           <m-btn @click="redirectEvaluation(event)" color="primary" small text
@@ -73,7 +73,7 @@ export default {
       evaluation: "mdi-format-list-checks",
       event: "mdi-calendar",
     },
-    filters: ["task", "event", "evaluation"],
+    filters: ["TASK", "event", "EVALUATION"],
   }),
   computed: {
     ...mapState(["user"]),
@@ -111,7 +111,6 @@ export default {
             session.tasks.map((i) => {
               return {
                 date: i.time_start,
-                type: "task",
                 color,
                 icon: this.icons["task"],
                 ...i,
@@ -133,7 +132,6 @@ export default {
               )}`;
               return {
                 date: i.time_start,
-                type: "evaluation",
                 color,
                 icon: this.icons["evaluation"],
                 ...i,
@@ -149,19 +147,18 @@ export default {
       this.hideLoading();
     },
     redirectTask(event) {
-      if (this.user.role === "TEA")
-        redirect("teacher-session-tasks", {
-          session_id: event.session_id,
-        });
-      else redirect("student-task", { task_id: event._id });
+      this.redirectByType(event, "tasks")
     },
     redirectEvaluation(event) {
+      this.redirectByType(event, "evaluations")
+    },
+    redirectByType(event, type) {
       redirect(
         this.user.role === "TEA"
-          ? "teacher-session-evaluations"
-          : "student-session-evaluations",
+          ? `teacher-session-${type}`
+          : `student-session-${type}`,
         {
-          session_id: event.session_id,
+          session_id: event.session,
         }
       );
     },

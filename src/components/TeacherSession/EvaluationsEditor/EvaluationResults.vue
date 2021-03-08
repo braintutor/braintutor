@@ -2,7 +2,7 @@
   <div>
     <div v-show="!show_evaluation_result" class="results">
       <v-btn
-        v-if="role === 'TEA'"
+        v-if="role === 'TEA' && showPublishScore"
         class="mb-4"
         :disabled="selected.length === 0"
         @click="publishScores"
@@ -13,7 +13,7 @@
         :headers="headers"
         :items="students"
         item-key="id"
-        :show-select="role === 'TEA'"
+        :show-select="role === 'TEA' && showPublishScore"
         disable-pagination
         hide-default-footer
       >
@@ -28,7 +28,7 @@
               placeholder="0"
               v-model="item.score"
               @blur="saveScore(item)"
-              :hint="!item.is_score_published ? 'Aún no devuelto' : false"
+              :hint="!item.is_score_published ? 'Aún no devuelto' : ''"
               persistent-hint
             >
               <template v-if="role === 'TEA'" v-slot:append-outer>
@@ -44,7 +44,7 @@
                       <v-icon>mdi-magnify</v-icon>
                     </v-btn>
                   </template>
-                  <span>Ver Examen</span>
+                  <span>Ver {{ type }}</span>
                 </v-tooltip>
               </template>
             </v-text-field>
@@ -93,11 +93,20 @@ export default {
     evaluation: Object,
     buttons: Array,
     role: String,
+
+    showPublishScore: {
+      type: Boolean,
+      default: true,
+    },
+     type: {
+      type: String,
+      default: "evaluación",
+    },
   },
   watch: {
     evaluation: {
       immediate: true,
-      handler: async function () {
+      handler: async function() {
         await this.init();
       },
     },
@@ -115,7 +124,7 @@ export default {
   methods: {
     async init() {
       this.showLoading("Cargando Resultados");
-      this.students = (await getResults(this.evaluation._id)).results;
+      this.students = (await getResults(this.evaluation.id)).results;
       this.hideLoading();
     },
     showEvaluationResult(student) {
@@ -141,7 +150,7 @@ export default {
       try {
         await publishScores(studentEvaluationIds);
         // refresh
-        this.students = (await getResults(this.evaluation._id)).results;
+        this.students = (await getResults(this.evaluation.id)).results;
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
@@ -154,7 +163,7 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 $size-name: 180px;
 $size-value: 32px;
 $size-icon: 32px;

@@ -149,7 +149,6 @@ export default {
   data: () => ({
     sections: [],
     section: {},
-    //
     dlg_create: false,
     dlg_edit: false,
     dlg_remove: false,

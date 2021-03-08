@@ -1,8 +1,11 @@
 import { fetch_post } from "./fetch";
 
 
-function getTaskByStudent(id) {
-  return fetch_post('getTaskByStudent', {
+
+
+
+function getTask(id) {
+  return fetch_post('getTaskById', {
     id
   })
 }
@@ -27,4 +30,4 @@ function removeTask(task_id) {
   })
 }
 
-export { getTaskByStudent, addTask, updateTaskAnswer, removeTask }
+export { getTask, addTask, updateTaskAnswer, removeTask }

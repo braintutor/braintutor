@@ -10,6 +10,7 @@
           <span class="m-menu__title">Volver</span>
         </div>
       </div>
+   
       <p class="evaluation__name">{{ evaluation.name }}</p>
       <div
         class="question m-card mb-4"
@@ -22,98 +23,41 @@
             <img :src="c.image" />
           </div>
           <div v-if="c.type === 'closed'">
-            <v-radio-group v-model="answers[c_idx].alternative">
-              <v-radio
-                class="question__alternative"
-                v-for="(alternative, a_idx) in c.alternatives"
-                :key="a_idx"
-                :label="alternative"
-                :value="a_idx"
-              ></v-radio>
-              <label
-                class="m-btn m-btn--dark m-btn--text m-btn--small mt-3 mx-auto"
-                style="width: max-content"
-                :for="c_idx + ''"
-              >
-                Limpiar
-              </label>
-              <v-radio v-show="false" :value="-1" :id="c_idx + ''"></v-radio>
-            </v-radio-group>
+            <AnswerTypeClose
+            :evaluationId="evaluation._id"
+            v-model="answers[c_idx]"
+            :question="c"
+            :id="c_idx"
+          ></AnswerTypeClose>
           </div>
           <div
             v-else-if="c.type === 'open'"
             class="pt-4"
             style="border-top: 1px solid #ddd"
           >
-            <v-textarea
-              v-model="answers[c_idx].text"
-              placeholder="Escribe tu respuesta"
-              dense
-              hide-details
-            ></v-textarea>
+             <AnswerTypeOpen
+              :evaluationId="evaluation._id"
+              v-model="answers[c_idx]"
+            ></AnswerTypeOpen>
           </div>
           <div
             v-else-if="c.type === 'file'"
             class="pt-4"
             style="border-top: 1px solid #ddd"
           >
-            <v-textarea
-              v-model="answers[c_idx].text"
-              placeholder="Escribe tu respuesta"
-              dense
-              hide-details
-            ></v-textarea>
-            <div class="mt-4">
-              <input
-                id="ipt_file"
-                type="file"
-                onclick="this.value = null"
-                @change="onFileSelected($event, c_idx)"
-                style="display: none"
-              />
-              <m-btn onclick="ipt_file.click()" color="primary" small text
-                >Subir Archivo</m-btn
-              >
-            </div>
-            <a
-              v-for="(file, f_idx) in answers[c_idx].files"
-              :key="f_idx"
-              class="file mt-2"
-            >
-              <a :href="file.url" target="_blank" class="file__body">
-                <div class="file__type">
-                  <img
-                    v-if="getType(file) === 'audio'"
-                    src="@/assets/file/icon-audio.svg"
-                  />
-                  <img
-                    v-else-if="getType(file) === 'image'"
-                    src="@/assets/file/icon-image.svg"
-                  />
-                  <img
-                    v-else-if="getType(file) === 'video'"
-                    src="@/assets/file/icon-video.svg"
-                  />
-                  <!--  -->
-                  <img
-                    v-else-if="file.content_type === 'application/pdf'"
-                    src="@/assets/file/icon-application-pdf.svg"
-                  />
-                  <img v-else src="@/assets/file/icon-default.svg" />
-                </div>
-                <span class="file__name">{{ getName(file) }}</span>
-              </a>
-              <div class="file__actions mx-2">
-                <v-btn @click="showRemove(file)" icon>
-                  <v-icon style="font-size: 1.5rem">mdi-delete</v-icon>
-                </v-btn>
-              </div>
-            </a>
+            <AnswerTypeFile
+              @selectedFile="showFile"
+              :evaluationId="evaluation._id"
+              v-model="answers[c_idx]"
+            ></AnswerTypeFile>
           </div>
         </div>
       </div>
       <div class="evaluation__action">
-        <m-btn @click="dlg_save = true" color="primary" small>Finalizar</m-btn>
+        <m-btn @click="save()" color="primary" small>Guardar</m-btn>
+        <m-btn @click="dlg_save = true" color="dark" small class="ml-2"
+          >Finalizar</m-btn
+        >
       </div>
     </div>
     <!-- Dialog Save -->
@@ -150,21 +94,37 @@
 </template>
 
 <script>
+import AnswerTypeClose from "@/components/Evaluations/AnswerTypeClose";
+import AnswerTypeOpen from "@/components/Evaluations/AnswerTypeOpen";
+import AnswerTypeFile from "@/components/Evaluations/AnswerTypeFile";
+
 export default {
+  components: { AnswerTypeFile, AnswerTypeOpen, AnswerTypeClose },
   props: ["evaluation"],
   data: () => ({
     time_remaining: 0,
     time_total: 0,
     answers: [],
-    //
     dlg_save: false,
   }),
-  created() {
+  async created() {
     this.answers = this.evaluation.content.map(() => ({
       files: [],
     }));
+    this.showLoading("Cargando");
+    try {
+      this.answers = await this.$api.evaluation.getAnswers(this.evaluation._id);
+    } catch (error) {
+      this.showMessage("", "Ha ocurrido un error");
+      this.$emit("onExit");
+    }
+    this.hideLoading();
   },
   methods: {
+    showFile({ url }) {
+      window.open(url, '_blank');
+
+    },
     async save() {
       this.showLoading("Guardando Respuestas");
       try {
@@ -187,40 +147,11 @@ export default {
       this.hideLoading();
       this.$emit("onExit");
     },
-    // Files
-    async onFileSelected(e, idx) {
-      let file = e.target.files[0];
-      if (!file) return;
-
-      var formData = new FormData();
-      formData.append("file", file);
-
-      this.showLoading("Subiendo Archivo");
-      try {
-        let new_file = await this.$api.evaluation.addFile(
-          this.evaluation._id,
-          formData
-        );
-        this.answers[idx].files.push(new_file);
-      } catch (error) {
-        this.showMessage(
-          "",
-          error.msg || "Ha ocurrido un error al subir el archivo."
-        );
-      }
-      this.hideLoading();
-    },
-    getName(file) {
-      return file.name.substring(file.name.lastIndexOf("/") + 1);
-    },
-    getType(file) {
-      return file.content_type.split("/")[0];
-    },
   },
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .evaluation {
   &__name {
     margin: 12px 0 28px;

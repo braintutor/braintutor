@@ -177,7 +177,6 @@ export default {
     grade_selected: null,
     levels: [],
     level_selected: "PRI",
-    //
     dlg_create: false,
     dlg_edit: false,
     dlg_remove: false,

@@ -1,62 +1,29 @@
 <template>
   <div v-if="studentEvaluation.evaluation" class="evaluation">
-    <div
-      v-for="(c, c_idx) in studentEvaluation.evaluation.content"
-      :key="c_idx"
-      class="evaluation__question m-card mb-3"
+    <EvaluationDetail
+      :evaluation="studentEvaluation.evaluation"
+      :answers="studentEvaluation.answers"
+      @showFile="showFile"
     >
-      <div class="m-card__body">
+      <template v-slot:score="{ question, idx }">
         <div class="score mb-4">
           <strong>Puntaje: </strong>
           <span
-            v-if="c.type === 'closed'"
+            v-if="question.type === 'closed'"
             class="score__value score__value--disabled ml-2"
-            >{{ c.score }}</span
+            >{{ question.score }}</span
           >
           <input
-            v-else-if="c.type === 'open'"
-            v-model.number="teacher_responses[c_idx].score"
+            v-else-if="question.type === 'open' || question.type === 'file'"
+            v-model.number="teacher_responses[idx].score"
             type="number"
             step="1"
             class="score__value ml-2"
           />
         </div>
-        <p class="evaluation__statement">{{ c.question }}</p>
-        <div v-if="c.image" class="evaluation__image">
-          <img :src="c.image" />
-        </div>
+      </template>
+    </EvaluationDetail>
 
-        <div v-if="c.type === 'closed'">
-          <div
-            v-for="(alternative, a_idx) in c.alternatives"
-            :key="a_idx"
-            class="alternative mt-3"
-          >
-            <span
-              class="alternative__checkbox mr-3"
-              :class="{
-                'alternative__checkbox--active':
-                  a_idx === studentEvaluation.answers[c_idx].alternative,
-              }"
-            ></span>
-            <span
-              class="alternative__text"
-              :class="{
-                'alternative__text--correct': a_idx === c.correct,
-                'alternative__text--incorrect':
-                  a_idx !== c.correct &&
-                  a_idx === studentEvaluation.answers[c_idx].alternative,
-              }"
-              >{{ alternative }}</span
-            >
-          </div>
-        </div>
-        <div v-else-if="c.type === 'open'">
-          <h3>Respuesta:</h3>
-          <p class="ma-0 mt-3">{{ studentEvaluation.answers[c_idx].text }}</p>
-        </div>
-      </div>
-    </div>
     <div class="m-card mt-5">
       <div class="m-card__body">
         <div>
@@ -114,6 +81,13 @@
         >
       </div>
     </div>
+
+    <v-dialog v-if="file_selected" v-model="dlg_file" width="1000">
+      <div class="d-flex justify-end">
+        <v-btn @click="dlg_file = false">Cerrar</v-btn>
+      </div>
+      <ViewerFile :file_selected="file_selected"></ViewerFile>
+    </v-dialog>
   </div>
 </template>
 
@@ -123,8 +97,14 @@ import {
   getStudentEvaluation,
   publishScores,
 } from "@/services/evaluationResultService";
+import EvaluationDetail from "@/components/Evaluations/Detail";
+import ViewerFile from "@/components/TeacherSession/EvaluationsEditor/ViewerFile";
 
 export default {
+  components: {
+    ViewerFile,
+    EvaluationDetail
+  },
   props: {
     studentEvaluationId: String,
   },
@@ -132,6 +112,9 @@ export default {
     studentEvaluation: [],
     teacher_responses: [],
     comment: "",
+    // FILE
+    file_selected: null,
+    dlg_file: false,
   }),
   computed: {
     score() {
@@ -147,7 +130,7 @@ export default {
   watch: {
     studentEvaluationId: {
       immediate: true,
-      handler: async function (id) {
+      handler: async function(id) {
         let studentEvaluation = await getStudentEvaluation(id);
         this.evaluation = studentEvaluation.evaluation;
         this.comment = studentEvaluation.comment;
@@ -162,13 +145,17 @@ export default {
     },
   },
   methods: {
+    showFile(file) {
+      this.file_selected = file;
+      this.dlg_file = true;
+    },
     getScore(evaluation, result) {
       let score = 0;
       evaluation.content.forEach((question, idx) => {
         if (question.type === "closed") {
           if (question.correct === result.answers[idx].alternative)
             score += question.score;
-        } else if (question.type === "open") {
+        } else if (question.type === "open" || question.type === "file") {
           score += this.teacher_responses[idx].score || 0;
         }
       });
@@ -219,13 +206,13 @@ export default {
       }
       this.hideLoading();
     },
+    // File
   },
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .evaluation {
- 
   &__statement {
     white-space: pre-line;
   }
@@ -236,49 +223,6 @@ export default {
       display: block;
       max-width: 100%;
       margin: 0 auto;
-    }
-  }
-}
-
-.alternative {
-  display: flex;
-  align-items: center;
-  &__checkbox {
-    position: relative;
-    flex-shrink: 0;
-    display: block;
-    width: 18px;
-    height: 18px;
-    border: 1px solid var(--color-active);
-    border-radius: 50%;
-
-    &--active:before {
-      content: " ";
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      right: 2px;
-      bottom: 2px;
-      background: var(--color-active);
-      border-radius: 50%;
-    }
-  }
-  &__text {
-    flex-grow: 1;
-    padding: 8px 12px;
-    background: rgba(0, 0, 0, 0.025);
-    border-radius: 6px;
-    white-space: pre-line;
-    &:last-child {
-      margin-bottom: 0;
-    }
-    &--correct {
-      background: rgba(17, 192, 70, 0.2);
-      color: rgb(17, 192, 69);
-    }
-    &--incorrect {
-      background: rgba(197, 47, 47, 0.2);
-      color: rgb(197, 47, 47);
     }
   }
 }

@@ -93,21 +93,6 @@ const routes = [
   },
   ...routesCourseMaterialEditor,
   routesAdmin,
-
-  {
-    path: "/student-task/:task_id",
-    name: "student-task",
-    meta: { roles: ["STU"] },
-    component: () => import("../views/StudentTask.vue"),
-  },
-
-  {
-    path: "/tasks",
-    name: "tasks",
-    meta: { roles: ["STU"] },
-    component: () => import("../views/Tasks.vue"),
-  },
-
   {
     path: "/director-students",
     name: "director-students",
