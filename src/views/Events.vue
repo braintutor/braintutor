@@ -38,7 +38,7 @@
     </div>
     <m-calendar :events="events_f">
       <template v-slot:event_info="{ event }">
-        <div v-if="event.type === 'task'" class="m-card__actions pa-0 pt-4">
+        <div v-if="event.type === 'TASK'" class="m-card__actions pa-0 pt-4">
           <m-btn
             @click="redirectTask(event)"
             color="primary"
@@ -48,7 +48,7 @@
           >
         </div>
         <div
-          v-if="event.type === 'evaluation'"
+          v-if="event.type === 'EVALUATION'"
           class="m-card__actions pa-0 pt-4"
         >
           <m-btn @click="redirectEvaluation(event)" color="primary" small text
@@ -151,7 +151,7 @@ export default {
     redirectTask(event) {
       if (this.user.role === "TEA")
         redirect("teacher-session-tasks", {
-          session_id: event.session_id,
+          session_id: event.session,
         });
       else redirect("student-task", { task_id: event._id });
     },
@@ -161,7 +161,7 @@ export default {
           ? "teacher-session-evaluations"
           : "student-session-evaluations",
         {
-          session_id: event.session_id,
+          session_id: event.session,
         }
       );
     },
