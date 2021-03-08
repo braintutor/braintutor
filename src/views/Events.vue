@@ -8,7 +8,7 @@
         <span>Eventos</span>
       </label>
       <label class="filter__item">
-        <input class="mr-1" type="checkbox" value="task" v-model="filters" />
+        <input class="mr-1" type="checkbox" value="TASK" v-model="filters" />
         <v-icon small class="mr-1 mb-1">{{ icons["task"] }}</v-icon>
         <span>Tareas</span>
       </label>
@@ -16,7 +16,7 @@
         <input
           class="mr-1"
           type="checkbox"
-          value="evaluation"
+          value="EVALUATION"
           v-model="filters"
         />
         <v-icon small class="mr-1 mb-1">{{ icons["evaluation"] }}</v-icon>
@@ -111,7 +111,6 @@ export default {
             session.tasks.map((i) => {
               return {
                 date: i.time_start,
-                type: "task",
                 color,
                 icon: this.icons["task"],
                 ...i,
@@ -133,7 +132,6 @@ export default {
               )}`;
               return {
                 date: i.time_start,
-                type: "evaluation",
                 color,
                 icon: this.icons["evaluation"],
                 ...i,
