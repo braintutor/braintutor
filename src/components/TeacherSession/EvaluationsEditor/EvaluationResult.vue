@@ -1,56 +1,29 @@
 <template>
   <div v-if="studentEvaluation.evaluation" class="evaluation">
-    <div
-      v-for="(c, c_idx) in studentEvaluation.evaluation.content"
-      :key="c_idx"
-      class="evaluation__question m-card mb-3"
+    <EvaluationDetail
+      :evaluation="studentEvaluation.evaluation"
+      :answers="studentEvaluation.answers"
+      @showFile="showFile"
     >
-      <div class="m-card__body">
+      <template v-slot:score="{ question, idx }">
         <div class="score mb-4">
           <strong>Puntaje: </strong>
           <span
-            v-if="c.type === 'closed'"
+            v-if="question.type === 'closed'"
             class="score__value score__value--disabled ml-2"
-            >{{ c.score }}</span
+            >{{ question.score }}</span
           >
           <input
-            v-else-if="c.type === 'open' || c.type === 'file'"
-            v-model.number="teacher_responses[c_idx].score"
+            v-else-if="question.type === 'open' || question.type === 'file'"
+            v-model.number="teacher_responses[idx].score"
             type="number"
             step="1"
             class="score__value ml-2"
           />
         </div>
-        <p class="evaluation__statement">{{ c.question }}</p>
-        <div v-if="c.image" class="evaluation__image">
-          <img :src="c.image" />
-        </div>
+      </template>
+    </EvaluationDetail>
 
-        <div v-if="c.type === 'closed'">
-          <AnswerTypeClose
-            :evaluationId="studentEvaluation.evaluation.id"
-            :isReadonly="true"
-            :value="studentEvaluation.answers[c_idx]"
-            :question="c"
-          ></AnswerTypeClose>
-        </div>
-        <div v-else-if="c.type === 'open'">
-          <AnswerTypeOpen
-            :evaluationId="studentEvaluation.evaluation.id"
-            :isReadonly="true"
-            :value="studentEvaluation.answers[c_idx]"
-          ></AnswerTypeOpen>
-        </div>
-        <div v-else-if="c.type === 'file'">
-          <QuestionTypeFile
-            @selectedFile="showFile"
-            :evaluationId="studentEvaluation.evaluation.id"
-            :isReadonly="true"
-            :value="studentEvaluation.answers[c_idx]"
-          ></QuestionTypeFile>
-        </div>
-      </div>
-    </div>
     <div class="m-card mt-5">
       <div class="m-card__body">
         <div>
@@ -124,17 +97,13 @@ import {
   getStudentEvaluation,
   publishScores,
 } from "@/services/evaluationResultService";
-import ViewerFile from "./ViewerFile";
-import QuestionTypeFile from "@/components/Evaluations/QuestionTypeFile";
-import AnswerTypeOpen from "@/components/Evaluations/AnswerTypeOpen";
-import AnswerTypeClose from "@/components/Evaluations/AnswerTypeClose";
+import EvaluationDetail from "@/components/Evaluations/Detail";
+import ViewerFile from "@/components/TeacherSession/EvaluationsEditor/ViewerFile";
 
 export default {
   components: {
     ViewerFile,
-    QuestionTypeFile,
-    AnswerTypeOpen,
-    AnswerTypeClose,
+    EvaluationDetail
   },
   props: {
     studentEvaluationId: String,
@@ -258,8 +227,6 @@ export default {
   }
 }
 
-
-
 .score {
   display: flex;
   justify-content: flex-end;
@@ -277,7 +244,4 @@ export default {
     }
   }
 }
-
-
-
 </style>
