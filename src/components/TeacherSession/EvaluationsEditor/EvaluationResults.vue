@@ -150,7 +150,7 @@ export default {
       try {
         await publishScores(studentEvaluationIds);
         // refresh
-        this.students = (await getResults(this.evaluation._id)).results;
+        this.students = (await getResults(this.evaluation.id)).results;
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
