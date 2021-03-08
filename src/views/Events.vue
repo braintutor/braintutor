@@ -73,7 +73,7 @@ export default {
       evaluation: "mdi-format-list-checks",
       event: "mdi-calendar",
     },
-    filters: ["task", "event", "evaluation"],
+    filters: ["TASK", "event", "EVALUATION"],
   }),
   computed: {
     ...mapState(["user"]),
