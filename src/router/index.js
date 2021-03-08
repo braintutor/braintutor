@@ -101,12 +101,7 @@ const routes = [
     component: () => import("../views/StudentTask.vue"),
   },
 
-  {
-    path: "/tasks",
-    name: "tasks",
-    meta: { roles: ["STU"] },
-    component: () => import("../views/Tasks.vue"),
-  },
+
 
   {
     path: "/director-students",
