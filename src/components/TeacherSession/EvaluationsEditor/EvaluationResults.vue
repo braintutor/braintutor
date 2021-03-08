@@ -28,7 +28,7 @@
               placeholder="0"
               v-model="item.score"
               @blur="saveScore(item)"
-              :hint="!item.is_score_published ? 'Aún no devuelto' : false"
+              :hint="!item.is_score_published ? 'Aún no devuelto' : ''"
               persistent-hint
             >
               <template v-if="role === 'TEA'" v-slot:append-outer>
