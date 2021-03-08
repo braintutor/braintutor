@@ -38,7 +38,7 @@
     </div>
     <m-calendar :events="events_f">
       <template v-slot:event_info="{ event }">
-        <div v-if="event.type === 'TASK'" class="m-card__actions pa-0 pt-4">
+        <div v-if="event.type === 'TASK' && ['TEA','STU'].includes(user.role)" class="m-card__actions pa-0 pt-4">
           <m-btn
             @click="redirectTask(event)"
             color="primary"
@@ -48,7 +48,7 @@
           >
         </div>
         <div
-          v-if="event.type === 'EVALUATION'"
+          v-if="event.type === 'EVALUATION'  && ['TEA','STU'].includes(user.role)"
           class="m-card__actions pa-0 pt-4"
         >
           <m-btn @click="redirectEvaluation(event)" color="primary" small text
