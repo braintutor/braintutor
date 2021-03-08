@@ -64,7 +64,7 @@
                 <v-icon v-if="event.icon" small dark class="mr-2">{{
                   event.icon
                 }}</v-icon>
-                <span>{{ event.title }}</span>
+                <span>{{ event.title || event.name }}</span>
               </div>
             </div>
           </div>
@@ -108,7 +108,7 @@
         </div>
         <div class="hevent__body">
           <p class="hevent__time">{{ _getTime(e.date) }}</p>
-          <p class="hevent__title">{{ e.title }}</p>
+          <p class="hevent__title">{{ e.title || e.name}}</p>
           <!-- CUSTOM INFO -->
           <!-- TODO Add to MVUECSS (methods) -->
           <slot name="event_info" :event="e" :methods="{ hideEvent }"></slot>
@@ -138,7 +138,7 @@
         </m-btn>
       </div>
       <div class="event__body m-card__body">
-        <h2 class="event__title">{{ event_selected.title }}</h2>
+        <h2 class="event__title">{{ event_selected.title || event_selected.name  }}</h2>
         <p class="event__date">
           {{ _formatDate(event_selected.date || new Date()) }}
         </p>
