@@ -179,7 +179,6 @@ export default {
       this.hideLoading();
     },
     async showResult(evaluation) {
-      console.log("resul")
       this.showLoading("Cargando Resultados");
       try {
         this.evaluation_selected = this.mongo(
@@ -187,8 +186,6 @@ export default {
         );
         this.dlg_result = true;
         this.result_selected = evaluation.result;
-        console.log(this.evaluation_selected)
-        console.log(evaluation.result)
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
