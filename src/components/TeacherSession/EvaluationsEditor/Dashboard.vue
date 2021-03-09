@@ -9,13 +9,13 @@
         >
       </div>
       <!-- EVALUATIONS -->
-      <EvaluationList 
+      <EvaluationList
         :evaluations="evaluations_filtered"
         @edit="showEditor"
         @showResults="showResults"
         @updateTime="showUpdateTime"
         @remove="showRemove"
-      ></EvaluationList> 
+      ></EvaluationList>
       <!-- DLG REMOVE -->
       <v-dialog v-model="dlg_remove" max-width="400">
         <div class="m-card">
@@ -91,17 +91,10 @@
       "
     />
     <!-- EVALUATION RESULTS -->
-    <div v-if="show_results" class="m-container">
-      <div class="m-menu mb-3">
-        <div class="m-menu__left">
-          <v-btn icon @click="show_results = false">
-            <v-icon style="font-size: 1.4rem">mdi-arrow-left</v-icon>
-          </v-btn>
-          <span class="m-menu__title">{{ evaluation_selected.name }}</span>
-        </div>
-      </div>
-      <EvaluationResults :evaluation="evaluation_selected"  :role="'TEA'" />
-    </div>
+    <EvaluationResults
+      v-if="show_results"
+      :evaluation="evaluation_selected"
+    />
   </div>
 </template>
 
@@ -113,10 +106,10 @@ import DateTime from "@/components/globals/DateTime";
 import { getStudentsBySession } from "@/services/studentService";
 
 export default {
-    props: {
-        createTitle: String,
-        type: String
-    },
+  props: {
+    createTitle: String,
+    type: String,
+  },
   data: () => ({
     session_id: "",
     evaluations: [],
@@ -148,7 +141,10 @@ export default {
 
       this.showLoading("Cargando Evaluaciones");
       try {
-        this.evaluations = await this.$api.evaluation.getAll(this.session_id, this.type);
+        this.evaluations = await this.$api.evaluation.getAll(
+          this.session_id,
+          this.type
+        );
         this.students = this.mongoArr(
           await getStudentsBySession(this.session_id)
         );
@@ -169,7 +165,7 @@ export default {
         time_start: now().addHours(1),
         time_end: now().addHours(2),
         map_score_to_note: [],
-        type: this.type,  
+        type: this.type,
         content: [
           {
             question: "Pregunta",
@@ -233,7 +229,7 @@ export default {
     async showResults(evaluation) {
       this.showLoading("Cargando Evaluación");
       try {
-        this.evaluation_selected = evaluation
+        this.evaluation_selected = evaluation;
         this.show_results = true;
       } catch (error) {
         this.showMessage("", error.msg || error);
@@ -268,7 +264,7 @@ export default {
     EvaluationEditor,
     EvaluationResults,
     DateTime,
-    EvaluationList
+    EvaluationList,
   },
 };
 </script>

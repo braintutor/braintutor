@@ -11,17 +11,12 @@
     </EvaluationList>
 
     <!-- EVALUATION RESULTS -->
-    <div v-if="show_results" class="m-container">
-      <div class="m-menu mb-3">
-        <div class="m-menu__left">
-          <v-btn icon @click="show_results = false">
-            <v-icon style="font-size: 1.4rem">mdi-arrow-left</v-icon>
-          </v-btn>
-          <span class="m-menu__title">{{ evaluation_selected.name }}</span>
-        </div>
-      </div>
-      <EvaluationResults :evaluation="evaluation_selected" :role="'DIR'" />
-    </div>
+    <EvaluationResults
+      v-if="show_results"
+      readOnly
+      :evaluation="evaluation_selected"
+      @showResults="show_results = false"
+    />
   </div>
 </template>
 
