@@ -3,9 +3,6 @@
     <EvaluationList
       v-if="!show_results"
       :evaluations="evaluations_filtered"
-      :hasShow="false"
-      :hasTime="false"
-      :hasDelete="false"
       @showResults="showResults"
     >
     </EvaluationList>
@@ -15,7 +12,7 @@
       v-if="show_results"
       readOnly
       :evaluation="evaluation_selected"
-      @showResults="show_results = false"
+      @close="show_results = false"
     />
   </div>
 </template>

@@ -19,19 +19,7 @@
         evaluation.time_end | datetime
       }}</span>
       <div class="evaluation__options">
-        <v-tooltip bottom v-if="hasShow">
-          <template v-slot:activator="{ on }">
-            <v-btn @click="$emit('edit', evaluation)" v-on="on" icon small>
-              <v-icon style="font-size: 1.3rem">
-                {{ evaluation.is_public ? "mdi-eye" : "mdi-pencil" }}
-              </v-icon>
-            </v-btn>
-          </template>
-          <span style="font-size: 0.75rem">{{
-            evaluation.is_public ? "Ver" : "Editar"
-          }}</span>
-        </v-tooltip>
-        <v-tooltip v-if="evaluation.is_public && hasResults" bottom>
+        <v-tooltip v-if="evaluation.is_public " bottom>
           <template v-slot:activator="{ on }">
             <v-btn
               @click="$emit('showResults', evaluation)"
@@ -45,34 +33,7 @@
           </template>
           <span style="font-size: 0.75rem">Resultados</span>
         </v-tooltip>
-        <v-tooltip v-if="evaluation.is_public && hasTime" bottom>
-          <template v-slot:activator="{ on }">
-            <v-btn
-              @click="$emit('updateTime', evaluation)"
-              v-on="on"
-              icon
-              small
-              class="ml-2"
-            >
-              <v-icon style="font-size: 1.3rem">mdi-clock-time-four</v-icon>
-            </v-btn>
-          </template>
-          <span style="font-size: 0.75rem">Modificar Tiempo</span>
-        </v-tooltip>
-        <v-tooltip v-if="hasDelete" bottom>
-          <template v-slot:activator="{ on }">
-            <v-btn
-              @click="$emit('remove', evaluation)"
-              v-on="on"
-              icon
-              small
-              class="ml-2"
-            >
-              <v-icon style="font-size: 1.3rem"> mdi-delete </v-icon>
-            </v-btn>
-          </template>
-          <span style="font-size: 0.75rem">Eliminar</span>
-        </v-tooltip>
+        <slot v-bind:evaluation="evaluation"></slot>
       </div>
     </div>
   </div>
@@ -82,23 +43,6 @@
 export default {
   props: {
     evaluations: Array,
-    hasShow:{
-      type: Boolean,
-      default: true
-    },
-    hasResults: {
-      type: Boolean,
-      default: true
-    },
-    hasTime: {
-      type: Boolean,
-      default: true
-    },
-    hasDelete: {
-      type: Boolean,
-      default:true
-    }
-
   },
 };
 </script>

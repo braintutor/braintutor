@@ -11,11 +11,51 @@
       <!-- EVALUATIONS -->
       <EvaluationList
         :evaluations="evaluations_filtered"
-        @edit="showEditor"
         @showResults="showResults"
-        @updateTime="showUpdateTime"
-        @remove="showRemove"
-      ></EvaluationList>
+      >
+        <template v-slot="{ evaluation }">
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+              <v-btn @click="showEditor(evaluation)" v-on="on" icon small>
+                <v-icon style="font-size: 1.3rem">
+                  {{ evaluation.is_public ? "mdi-eye" : "mdi-pencil" }}
+                </v-icon>
+              </v-btn>
+            </template>
+            <span style="font-size: 0.75rem">{{
+              evaluation.is_public ? "Ver" : "Editar"
+            }}</span>
+          </v-tooltip>
+          <v-tooltip v-if="evaluation.is_public" bottom>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                @click="showUpdateTime(evaluation)"
+                v-on="on"
+                icon
+                small
+                class="ml-2"
+              >
+                <v-icon style="font-size: 1.3rem">mdi-clock-time-four</v-icon>
+              </v-btn>
+            </template>
+            <span style="font-size: 0.75rem">Modificar Tiempo</span>
+          </v-tooltip>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                @click="showRemove(evaluation)"
+                v-on="on"
+                icon
+                small
+                class="ml-2"
+              >
+                <v-icon style="font-size: 1.3rem"> mdi-delete </v-icon>
+              </v-btn>
+            </template>
+            <span style="font-size: 0.75rem">Eliminar</span>
+          </v-tooltip>
+        </template>
+      </EvaluationList>
       <!-- DLG REMOVE -->
       <v-dialog v-model="dlg_remove" max-width="400">
         <div class="m-card">
@@ -94,7 +134,9 @@
     <EvaluationResults
       v-if="show_results"
       :evaluation="evaluation_selected"
-    />
+      @close="show_results = false"
+    >
+    </EvaluationResults>
   </div>
 </template>
 

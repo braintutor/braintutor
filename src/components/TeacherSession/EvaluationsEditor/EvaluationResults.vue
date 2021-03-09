@@ -2,7 +2,7 @@
   <div class="m-container">
     <div class="m-menu mb-3">
         <div class="m-menu__left">
-          <v-btn icon @click="$emit('showResults')">
+          <v-btn icon @click="$emit('close')">
             <v-icon style="font-size: 1.4rem">mdi-arrow-left</v-icon>
           </v-btn>
           <span class="m-menu__title">{{ evaluation.name }}</span>
