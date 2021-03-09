@@ -19,7 +19,7 @@
         toDateString(evaluation.time_end)
       }}</span>
       <div class="evaluation__options">
-        <v-tooltip bottom>
+        <v-tooltip bottom v-if="hasShow">
           <template v-slot:activator="{ on }">
             <v-btn @click="$emit('edit', evaluation)" v-on="on" icon small>
               <v-icon style="font-size: 1.3rem">
@@ -31,7 +31,7 @@
             evaluation.is_public ? "Ver" : "Editar"
           }}</span>
         </v-tooltip>
-        <v-tooltip v-if="evaluation.is_public" bottom>
+        <v-tooltip v-if="evaluation.is_public && hasResults" bottom>
           <template v-slot:activator="{ on }">
             <v-btn
               @click="$emit('showResults', evaluation)"
@@ -45,7 +45,7 @@
           </template>
           <span style="font-size: 0.75rem">Resultados</span>
         </v-tooltip>
-        <v-tooltip v-if="evaluation.is_public" bottom>
+        <v-tooltip v-if="evaluation.is_public && hasTime" bottom>
           <template v-slot:activator="{ on }">
             <v-btn
               @click="$emit('updateTime', evaluation)"
@@ -59,7 +59,7 @@
           </template>
           <span style="font-size: 0.75rem">Modificar Tiempo</span>
         </v-tooltip>
-        <v-tooltip bottom>
+        <v-tooltip v-if="hasDelete" bottom>
           <template v-slot:activator="{ on }">
             <v-btn
               @click="$emit('remove', evaluation)"
@@ -80,7 +80,26 @@
 
 <script>
 export default {
-  props: ["evaluations"],
+  props: {
+    evaluations: Array,
+    hasShow:{
+      type: Boolean,
+      default: true
+    },
+    hasResults: {
+      type: Boolean,
+      default: true
+    },
+    hasTime: {
+      type: Boolean,
+      default: true
+    },
+    hasDelete: {
+      type: Boolean,
+      default:true
+    }
+
+  },
   methods: {
     toDateString(date) {
       let date_format = date.toLocaleDateString("es-ES", {
