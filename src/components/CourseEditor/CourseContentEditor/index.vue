@@ -64,7 +64,7 @@
                 <v-icon style="font-size: 1.2rem" class="mb-1 mr-2"
                   >mdi-robot</v-icon
                 >
-                {{ item.name }}
+                {{ item.title }}
               </template>
               <template v-else-if="item.type === 'material'">
                 <v-icon style="font-size: 1.2rem" class="mb-1 mr-2"
@@ -327,7 +327,7 @@
           </div>
           <v-text-field
             v-if="item_selected.type === 'adaptive'"
-            v-model="item_selected.name"
+            v-model="item_selected.title"
             label="Nombre"
             required
             class="mt-4"
@@ -600,7 +600,7 @@ export default {
 
       let new_material = {
         unit_id: this.unit_selected._id,
-        name: this.new_course_adaptive_name,
+        title: this.new_course_adaptive_name,
         data_fs: {
           overview,
           explanation,
@@ -691,7 +691,7 @@ export default {
         if (this.item_selected.type === "adaptive")
           await updateMaterial(
             this.item_selected._id,
-            this.item_selected.name,
+            this.item_selected.title,
             this.item_selected.is_private
           );
         else if (this.item_selected.type === "material")
@@ -702,10 +702,8 @@ export default {
         let item = this.unit_selected.content.find(
           (item) => item._id === this.item_selected._id
         );
-        if (this.item_selected.type === "adaptive")
-          item.name = this.item_selected.name;
-        else if (this.item_selected.type === "material")
-          item.title = this.item_selected.title;
+       
+        item.title = this.item_selected.title;
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
