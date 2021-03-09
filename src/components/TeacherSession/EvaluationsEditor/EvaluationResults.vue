@@ -1,8 +1,16 @@
 <template>
-  <div>
+  <div class="m-container">
+    <div class="m-menu mb-3">
+        <div class="m-menu__left">
+          <v-btn icon @click="$emit('close')">
+            <v-icon style="font-size: 1.4rem">mdi-arrow-left</v-icon>
+          </v-btn>
+          <span class="m-menu__title">{{ evaluation.name }}</span>
+        </div>
+      </div>
     <div v-show="!show_evaluation_result" class="results">
       <v-btn
-        v-if="role === 'TEA' && showPublishScore"
+        v-if="!readOnly && showPublishScore"
         class="mb-4"
         :disabled="selected.length === 0"
         @click="publishScores"
@@ -13,7 +21,7 @@
         :headers="headers"
         :items="students"
         item-key="id"
-        :show-select="role === 'TEA' && showPublishScore"
+        :show-select="!readOnly && showPublishScore"
         disable-pagination
         hide-default-footer
       >
@@ -23,7 +31,7 @@
         <template v-slot:item.score="{ item }">
           <div class="d-flex">
             <v-text-field
-              :disabled="role !== 'TEA'"
+              :disabled="readOnly"
               class="box-sm"
               placeholder="0"
               v-model="item.score"
@@ -31,7 +39,7 @@
               :hint="!item.is_score_published ? 'Aún no devuelto' : ''"
               persistent-hint
             >
-              <template v-if="role === 'TEA'" v-slot:append-outer>
+              <template v-if="!readOnly" v-slot:append-outer>
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn
@@ -49,7 +57,7 @@
               </template>
             </v-text-field>
           </div>
-          <!--:disabled="!student.has_answer" 
+          <!--:disabled="!student.has_answer"
              <td v-for="(button, idx) in buttons" :key="idx" @click="button.action(student)">
             <v-btn>{{ button.text }}</v-btn>
           </td> -->
@@ -92,7 +100,10 @@ export default {
   props: {
     evaluation: Object,
     buttons: Array,
-    role: String,
+    readOnly: {
+      type:Boolean,
+      default: false
+    },
 
     showPublishScore: {
       type: Boolean,
