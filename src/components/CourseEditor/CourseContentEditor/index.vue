@@ -583,15 +583,14 @@ export default {
     },
     // Item
     showItemEdit(item) {
-      if (item.material.type === "adaptative") {
-        this.$router.push({
-          name: "material-adaptative-editor",
-          params: { material_id: item.material.id },
-        });
-      } else if (item.material.type === "file") {
-        this.course_material = item.material;
-        this.show_course_material_editor = true;
-      }
+        // this.course_material = item.material;
+        // this.show_course_material_editor = true;
+
+
+      this.$router.push({
+        name: item.material.type === "adaptative"? "material-adaptative-editor": "material-file-editor",
+        params: { material_id: item.material.id }
+      });
     },
     showItemCreate(type) {
       this.dlg_new_item = false;
