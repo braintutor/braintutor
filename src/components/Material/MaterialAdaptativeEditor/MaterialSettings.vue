@@ -59,8 +59,7 @@
 </template>
 
 <script>
-import { redirect } from "@/services/router.js";
-import { updateMaterial, removeMaterial } from "@/services/materialService";
+import { updateMaterial } from "@/services/materialService";
 import MaterialModel from "@/models/Material";
 
 export default {
@@ -79,7 +78,7 @@ export default {
   methods: {
     async saveMaterial() {
       this.showLoading("Guardando");
-      let material_id = this.material._id.$oid;
+      let material_id = this.material.id;
       let { title } = this.material_clone;
       try {
         await updateMaterial(
@@ -95,11 +94,10 @@ export default {
     },
     async removeMaterial() {
       this.showLoading("Eliminando");
-      let material_id = this.material._id.$oid;
-      let course_id = this.course._id.$oid;
+      let material_id = this.material.id;
       try {
-        await removeMaterial(material_id);
-        redirect("course-editor", { course_id });
+        console.log(material_id);
+        this.$router.push({ name: "teacher-materials" });
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
