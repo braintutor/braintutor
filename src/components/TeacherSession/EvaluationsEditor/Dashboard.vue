@@ -131,11 +131,7 @@
       "
     />
     <!-- EVALUATION RESULTS -->
-    <EvaluationResults
-      v-if="show_results"
-      :evaluation="evaluation_selected"
-      @close="show_results = false"
-    >
+    <EvaluationResults v-if="show_results" :evaluation="evaluation_selected">
     </EvaluationResults>
   </div>
 </template>
@@ -143,7 +139,6 @@
 <script>
 import EvaluationList from "./List";
 import EvaluationEditor from "./Editor";
-import EvaluationResults from "./EvaluationResults";
 import DateTime from "@/components/globals/DateTime";
 import { getStudentsBySession } from "@/services/studentService";
 
@@ -272,6 +267,7 @@ export default {
       this.showLoading("Cargando Evaluación");
       try {
         this.evaluation_selected = evaluation;
+        localStorage.setItem("evaluation", JSON.stringify(evaluation));
         this.show_results = true;
       } catch (error) {
         this.showMessage("", error.msg || error);
@@ -304,7 +300,6 @@ export default {
   },
   components: {
     EvaluationEditor,
-    EvaluationResults,
     DateTime,
     EvaluationList,
   },
