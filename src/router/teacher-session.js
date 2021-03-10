@@ -26,6 +26,11 @@ const routes = {
       component: () => import("../components/DirectorSession/Results/Results")
     },
     {
+      path: "editor",
+      name: "teacher-session-editor",
+      component: () => import("../components/TeacherSession/EvaluationsEditor/Editor")
+    },
+    {
       path: "lessons",
       name: "teacher-session-lessons",
       component: () => import("../modules/SchoolClass/SchoolClass"),

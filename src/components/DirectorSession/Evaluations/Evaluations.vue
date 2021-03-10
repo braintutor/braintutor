@@ -5,12 +5,6 @@
       @showResults="showResults"
     >
     </EvaluationList>
-
-    <!-- EVALUATION RESULTS -->
-    <!-- <EvaluationResults
-      readOnly
-      :evaluation="evaluation_selected"
-    /> -->
   </div>
 </template>
 

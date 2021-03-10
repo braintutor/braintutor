@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100%">
-    <div v-show="!show_editor" class="list m-container">
+    <div class="list m-container">
       <!-- MENU -->
       <div class="list__menu">
         <m-btn @click="create()" color="primary" small>
@@ -121,21 +121,11 @@
         </div>
       </v-dialog>
     </div>
-    <!-- EVALUATION EDITOR -->
-    <EvaluationEditor
-      v-if="show_editor"
-      :evaluation="evaluation_selected"
-      @onClose="
-        show_editor = false;
-        init();
-      "
-    />
   </div>
 </template>
 
 <script>
 import EvaluationList from "./List";
-import EvaluationEditor from "./Editor";
 import DateTime from "@/components/globals/DateTime";
 import { getStudentsBySession } from "@/services/studentService";
 
@@ -148,8 +138,6 @@ export default {
     session_id: "",
     evaluations: [],
     evaluation_selected: null,
-    //
-    show_editor: false,
     dlg_remove: false,
     dlg_update_time: false,
   }),
@@ -253,7 +241,11 @@ export default {
         this.evaluation_selected = this.mongo(
           await this.$api.evaluation.get(evaluation.id)
         );
-        this.show_editor = true;
+        localStorage.setItem(
+          "evaluation",
+          JSON.stringify(this.evaluation_selected)
+        );
+        this.$router.push("editor");
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
@@ -297,7 +289,6 @@ export default {
     // },
   },
   components: {
-    EvaluationEditor,
     DateTime,
     EvaluationList,
   },

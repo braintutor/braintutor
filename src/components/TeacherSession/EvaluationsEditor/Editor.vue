@@ -1,7 +1,7 @@
 <template>
-  <div class="editor">
+  <div v-if="evaluation" class="editor">
     <div class="editor__menu">
-      <v-btn icon @click="$emit('onClose')">
+      <v-btn icon @click="$router.go(-1)">
         <v-icon>mdi-close</v-icon>
       </v-btn>
       <div v-if="!evaluation.is_public">
@@ -365,9 +365,9 @@ import Files from "@/components/globals/File/Files";
 import DateTime from "@/components/globals/DateTime";
 
 export default {
-  props: ["evaluation"],
   data: () => ({
     session_id: "",
+    evaluation: null,
     question_idx_selected: -1,
     types: [
       {
@@ -389,6 +389,9 @@ export default {
   }),
   created() {
     this.session_id = this.$route.params["session_id"];
+    this.evaluation = JSON.parse(localStorage.getItem("evaluation"));
+    this.evaluation.time_start = new Date(this.evaluation.time_start);
+    this.evaluation.time_end = new Date(this.evaluation.time_end);
   },
   methods: {
     async save() {
