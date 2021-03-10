@@ -62,36 +62,7 @@
                 </v-btn>
               </template>
               <v-list class="pa-0" dense>
-                <v-list-item @click="moveItemUp(unit, idx)">
-                  <v-list-item-title>Mover Arriba</v-list-item-title>
-                </v-list-item>
-                <v-list-item @click="moveItemDown(unit, idx)">
-                  <v-list-item-title>Mover Abajo</v-list-item-title>
-                </v-list-item>
-                <v-list-item
-                  @click="
-                    unit_selected = unit;
-                    item_selected = Object.assign({}, item);
-                    dlg_edit_item_name = true;
-                  "
-                >
-                  <v-list-item-title>Editar Nombre</v-list-item-title>
-                </v-list-item>
-                <v-list-item
-                  @click="
-                    unit_selected = unit;
-                    item_selected = Object.assign({}, item);
-                    dlg_edit_item = true;
-                  "
-                >
-                  <v-list-item-title>Cambiar Tema</v-list-item-title>
-                </v-list-item>
-                <v-list-item
-                  @click="
-                    item_selected = Object.assign({}, item);
-                    dlg_remove_item = true;
-                  "
-                >
+                <v-list-item @click="dlg_remove_item = true">
                   <v-list-item-title>Eliminar Material</v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -128,7 +99,7 @@
           </div>
           <div class="new-items">
             <!-- CONTENIDO -->
-            <div class="new-item">
+            <div @click="showCreator('adaptative')" class="new-item">
               <div class="new-item__img">
                 <img
                   src="https://cdn2.iconfinder.com/data/icons/machine-learning-filled-color/300/134026380Untitled-3-512.png"
@@ -137,7 +108,7 @@
               </div>
               <p class="new-item__name ma-0">Adaptativo</p>
             </div>
-            <div @click="showCreator()" class="new-item">
+            <div @click="showCreator('file')" class="new-item">
               <div class="new-item__img">
                 <img
                   src="https://icon-library.com/images/png-file-icon/png-file-icon-6.jpg"
@@ -199,7 +170,7 @@ export default {
 
         if (material_selected.type === "adaptative")
           this.$router.push({
-            name: "material-editor",
+            name: "material-adaptative-editor",
             params: { material_id: material_selected.id },
           });
         else if (material_selected.type === "file") {
@@ -211,15 +182,74 @@ export default {
       }
       this.hideLoading();
     },
-    async showCreator() {
+    async showCreator(type) {
       this.dlg_new_material = false;
-      this.show_material_editor = true;
-      this.material_selected = {
-        type: "file",
-        subject_id: this.subject_id,
-        files: [],
-        is_private: true,
-      };
+      if (type === "file") {
+        this.show_material_editor = true;
+        this.material_selected = {
+          type,
+          subject_id: this.subject_id,
+          files: [],
+          is_private: true,
+        };
+      } else if (type === "adaptative") {
+        let new_material = {
+          type,
+          subject_id: this.subject_id,
+          title: "Nuevo Material",
+          data_fs: {
+            overview: JSON.stringify({
+              blocks: [{ type: "header", data: { text: "Resumen", level: 2 } }],
+            }),
+            explanation: JSON.stringify({
+              blocks: [{ type: "header", data: { text: "Título", level: 2 } }],
+            }),
+            movies: JSON.stringify({
+              blocks: [{ type: "header", data: { text: "Videos", level: 2 } }],
+            }),
+            images: JSON.stringify({
+              blocks: [
+                { type: "header", data: { text: "Imágenes", level: 2 } },
+              ],
+            }),
+            hyperlinks: JSON.stringify({
+              blocks: [{ type: "header", data: { text: "Enlaces", level: 2 } }],
+            }),
+            examples: JSON.stringify({
+              blocks: [
+                { type: "header", data: { text: "Ejemplos", level: 2 } },
+                {
+                  type: "list",
+                  data: {
+                    style: "unordered",
+                    items: ["Ejemplo 1", "Ejemplo 2"],
+                  },
+                },
+              ],
+            }),
+            exercises: [
+              {
+                question: "Pregunta",
+                alternatives: ["Alternativa", "Alternativa"],
+                correct: 0,
+              },
+            ],
+            faq: [{ question: "Pregunta", answer: "Respuesta" }],
+          },
+          is_private: true,
+        };
+
+        this.showLoading("Cargando");
+        try {
+          let { $oid } = await this.$api.material.create(new_material);
+          this.$router.push({
+            name: "material-adaptative-editor",
+            params: { material_id: $oid },
+          });
+        } catch (error) {
+          this.showMessage("", "Ha ocurrido un error");
+        }
+      }
     },
   },
   components: {
