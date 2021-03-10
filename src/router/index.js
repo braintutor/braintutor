@@ -11,6 +11,7 @@ import routesTeacherSession from "./teacher-session";
 import routesParentChild from "./parent-child";
 import routesDirectorSession from "./director-session";
 import routesCourseMaterialEditor from "./course-material-editor";
+import routesMaterialEditor from "./material-editor";
 
 Vue.use(VueRouter);
 
@@ -36,7 +37,7 @@ const routes = [
   },
   {
     path: "/new-password/:token",
-    component: ()=> import ("../views/NewPassword.vue"),
+    component: () => import("../views/NewPassword.vue"),
   },
   {
     path: "/profile",
@@ -82,8 +83,8 @@ const routes = [
   },
 
   {
-    path:"/assistance/:class_id",
-    name:"teacher-session-assistance",
+    path: "/assistance/:class_id",
+    name: "teacher-session-assistance",
     meta: { roles: ["TEA"] },
     component: () => import("../components/TeacherSession/Assistance"),
   },
@@ -98,6 +99,7 @@ const routes = [
     component: () => import("../views/CoursesEditor.vue"),
   },
   ...routesCourseMaterialEditor,
+  ...routesMaterialEditor,
   routesAdmin,
   {
     path: "/director-students",

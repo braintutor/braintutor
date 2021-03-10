@@ -192,18 +192,18 @@ export default {
 
       try {
         if (this.material._id) {
-          let new_material = {
-            title: this.material.title,
-            description: this.material.description,
-            files: this.material.files,
-            is_private: this.material.is_private,
-          };
-          await this.$api.courseMaterial.update(
-            this.material._id,
-            new_material
-          );
+          // let new_material = {
+          //   title: this.material.title,
+          //   description: this.material.description,
+          //   files: this.material.files,
+          //   is_private: this.material.is_private,
+          // };
+          // await this.$api.courseMaterial.update(
+          //   this.material._id,
+          //   new_material
+          // );
         } else {
-          await this.$api.courseMaterial.add(this.material);
+          await this.$api.material.create(this.material);
         }
         this.$emit("exit");
       } catch (error) {
