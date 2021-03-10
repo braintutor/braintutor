@@ -2,8 +2,9 @@
   <div class="m-container">
     <h1 class="mtitle mb-4">
       <v-icon class="mr-4" style="font-size: 2.4rem">mdi-monitor-edit</v-icon
-      >Editar Cursos
+      >Syllabus
     </h1>
+    <p>Usted es responsable de los siguientes syllabus</p>
     <div v-for="(course, idx) in courses" :key="idx" class="session mb-3">
       <section @click="selectCourse(course)" class="course m-card">
         <section class="m-card__body">
