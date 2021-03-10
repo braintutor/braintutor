@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100%">
-    <div v-show="!show_editor && !show_results" class="list m-container">
+    <div v-show="!show_editor" class="list m-container">
       <!-- MENU -->
       <div class="list__menu">
         <m-btn @click="create()" color="primary" small>
@@ -130,9 +130,6 @@
         init();
       "
     />
-    <!-- EVALUATION RESULTS -->
-    <EvaluationResults v-if="show_results" :evaluation="evaluation_selected">
-    </EvaluationResults>
   </div>
 </template>
 
@@ -153,7 +150,6 @@ export default {
     evaluation_selected: null,
     //
     show_editor: false,
-    show_results: false,
     dlg_remove: false,
     dlg_update_time: false,
   }),
@@ -268,7 +264,9 @@ export default {
       try {
         this.evaluation_selected = evaluation;
         localStorage.setItem("evaluation", JSON.stringify(evaluation));
-        this.show_results = true;
+        this.$router.push({
+          path: "results",
+        });
       } catch (error) {
         this.showMessage("", error.msg || error);
       }

@@ -100,10 +100,6 @@ export default {
   props: {
     evaluation: Object,
     buttons: Array,
-    readOnly: {
-      type: Boolean,
-      default: false,
-    },
     showPublishScore: {
       type: Boolean,
       default: true,
@@ -124,6 +120,7 @@ export default {
   data: () => ({
     evaluation_result_selected: null,
     show_evaluation_result: false,
+    readOnly: false,
     selected: [],
     students: [],
     headers: [
@@ -133,6 +130,9 @@ export default {
   }),
   methods: {
     async init() {
+      this.readOnly = (this.$route.name + "").includes("director")
+        ? true
+        : false;
       this.showLoading("Cargando Resultados");
       this.students = (await getResults(this.evaluation.id)).results;
       this.hideLoading();
