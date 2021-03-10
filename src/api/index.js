@@ -12,6 +12,7 @@ import Director from "./director";
 import Task from "./task";
 import School from "./school";
 import Material from "./material";
+import Syllabus from "./syllabus";
 import Unit from "./unit";
 import File from "./file";
 import Report from "./report";
@@ -32,6 +33,7 @@ export default {
       task: Task(_fetch),
       school: School(_fetch),
       material: Material(_fetch, Fetch),
+      syllabus: Syllabus(_fetch),
       unit: Unit(_fetch),
       file: File(_fetch),
       report: Report(_fetch),

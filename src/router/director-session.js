@@ -1,4 +1,4 @@
-const routes =    {
+const routes = {
   path: "/director-session/:session_id",
   component: () => import("../views/DirectorSession.vue"),
   meta: { roles: ["DIR"] },
@@ -16,13 +16,19 @@ const routes =    {
     {
       path: "tasks",
       name: "director-session-tasks",
-      component: () => import("../components/DirectorSession/Tasks/index"),
+      component: () =>
+        import("../components/DirectorSession/Evaluations/Evaluations"),
     },
     {
       path: "evaluations",
       name: "director-session-evaluations",
       component: () =>
-        import("../components/DirectorSession/Evaluations/index"),
+        import("../components/DirectorSession/Evaluations/Evaluations"),
+    },
+    {
+      path: "results",
+      name: "director-session-results",
+      component: () => import("../components/DirectorSession/Results/Results")
     },
     {
       path: "students",

@@ -1,13 +1,13 @@
 <template>
   <div class="m-container">
     <div class="m-menu mb-3">
-        <div class="m-menu__left">
-          <v-btn icon @click="$emit('close')">
-            <v-icon style="font-size: 1.4rem">mdi-arrow-left</v-icon>
-          </v-btn>
-          <span class="m-menu__title">{{ evaluation.name }}</span>
-        </div>
+      <div class="m-menu__left">
+        <v-btn icon @click="$router.go(-1)">
+          <v-icon style="font-size: 1.4rem">mdi-arrow-left</v-icon>
+        </v-btn>
+        <span class="m-menu__title">{{ evaluation.name }}</span>
       </div>
+    </div>
     <div v-show="!show_evaluation_result" class="results">
       <v-btn
         v-if="!readOnly && showPublishScore"
@@ -100,16 +100,11 @@ export default {
   props: {
     evaluation: Object,
     buttons: Array,
-    readOnly: {
-      type:Boolean,
-      default: false
-    },
-
     showPublishScore: {
       type: Boolean,
       default: true,
     },
-     type: {
+    type: {
       type: String,
       default: "evaluación",
     },
@@ -117,7 +112,7 @@ export default {
   watch: {
     evaluation: {
       immediate: true,
-      handler: async function() {
+      handler: async function () {
         await this.init();
       },
     },
@@ -125,6 +120,7 @@ export default {
   data: () => ({
     evaluation_result_selected: null,
     show_evaluation_result: false,
+    readOnly: false,
     selected: [],
     students: [],
     headers: [
@@ -134,6 +130,9 @@ export default {
   }),
   methods: {
     async init() {
+      this.readOnly = (this.$route.name + "").includes("director")
+        ? true
+        : false;
       this.showLoading("Cargando Resultados");
       this.students = (await getResults(this.evaluation.id)).results;
       this.hideLoading();

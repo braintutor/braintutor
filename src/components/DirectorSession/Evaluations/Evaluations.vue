@@ -1,33 +1,18 @@
 <template>
   <div>
     <EvaluationList
-      v-if="!show_results"
       :evaluations="evaluations_filtered"
       @showResults="showResults"
     >
     </EvaluationList>
-
-    <!-- EVALUATION RESULTS -->
-    <EvaluationResults
-      v-if="show_results"
-      readOnly
-      :evaluation="evaluation_selected"
-      @close="show_results = false"
-    />
   </div>
 </template>
 
 <script>
 import EvaluationList from "@/components/TeacherSession/EvaluationsEditor/List";
-import EvaluationResults from "@/components/TeacherSession/EvaluationsEditor/EvaluationResults";
 export default {
-  props: {
-    type: String,
-  },
   data: () => ({
     evaluations: [],
-    evaluation_selected: null,
-    show_results: false,
   }),
   computed: {
     evaluations_filtered() {
@@ -44,24 +29,33 @@ export default {
     },
   },
   async created() {
-    let session_id = this.$router.currentRoute.params["session_id"];
-    this.showLoading("Cargando Evaluaciones");
-    try {
-      this.evaluations = await this.$api.evaluation.getAll(
-        session_id,
-        this.type
-      );
-    } catch (error) {
-      this.showMessage("", error.msg || error);
-    }
-    this.hideLoading();
+    this.fetchData();
+  },
+  watch: {
+    $route: "fetchData",
   },
   methods: {
-    async showResults(evaluation) {
+    async fetchData() {
+      let session_id = this.$router.currentRoute.params["session_id"];
+      this.showLoading("Cargando Evaluaciones");
+      console.log(this.$route);
+      let type = (this.$route.name + "").includes("tasks")
+        ? "TASK"
+        : "EVALUATION";
+      try {
+        this.evaluations = await this.$api.evaluation.getAll(session_id, type);
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
+    },
+    showResults(evaluation) {
       this.showLoading("Cargando Evaluación");
       try {
-        this.evaluation_selected = evaluation;
-        this.show_results = true;
+        localStorage.setItem("evaluation", JSON.stringify(evaluation));
+        this.$router.push({
+          path: "results",
+        });
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
@@ -70,7 +64,6 @@ export default {
   },
   components: {
     EvaluationList,
-    EvaluationResults,
   },
 };
 </script>

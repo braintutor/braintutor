@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100%">
-    <div v-show="!show_editor && !show_results" class="list m-container">
+    <div class="list m-container">
       <!-- MENU -->
       <div class="list__menu">
         <m-btn @click="create()" color="primary" small>
@@ -121,29 +121,11 @@
         </div>
       </v-dialog>
     </div>
-    <!-- EVALUATION EDITOR -->
-    <EvaluationEditor
-      v-if="show_editor"
-      :evaluation="evaluation_selected"
-      @onClose="
-        show_editor = false;
-        init();
-      "
-    />
-    <!-- EVALUATION RESULTS -->
-    <EvaluationResults
-      v-if="show_results"
-      :evaluation="evaluation_selected"
-      @close="show_results = false"
-    >
-    </EvaluationResults>
   </div>
 </template>
 
 <script>
 import EvaluationList from "./List";
-import EvaluationEditor from "./Editor";
-import EvaluationResults from "./EvaluationResults";
 import DateTime from "@/components/globals/DateTime";
 import { getStudentsBySession } from "@/services/studentService";
 
@@ -156,9 +138,6 @@ export default {
     session_id: "",
     evaluations: [],
     evaluation_selected: null,
-    //
-    show_editor: false,
-    show_results: false,
     dlg_remove: false,
     dlg_update_time: false,
   }),
@@ -262,7 +241,11 @@ export default {
         this.evaluation_selected = this.mongo(
           await this.$api.evaluation.get(evaluation.id)
         );
-        this.show_editor = true;
+        localStorage.setItem(
+          "evaluation",
+          JSON.stringify(this.evaluation_selected)
+        );
+        this.$router.push("editor");
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
@@ -272,7 +255,10 @@ export default {
       this.showLoading("Cargando Evaluación");
       try {
         this.evaluation_selected = evaluation;
-        this.show_results = true;
+        localStorage.setItem("evaluation", JSON.stringify(evaluation));
+        this.$router.push({
+          path: "results",
+        });
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
@@ -303,8 +289,6 @@ export default {
     // },
   },
   components: {
-    EvaluationEditor,
-    EvaluationResults,
     DateTime,
     EvaluationList,
   },

@@ -57,24 +57,16 @@
             v-for="(item, idx) in unit.content"
             :key="idx"
             class="item"
-            :class="{ 'item--disabled': item.is_private }"
+            :class="{ 'item--disabled': item.material.is_private }"
           >
             <p class="item__name">
-              <template v-if="item.type === 'adaptive'">
                 <v-icon style="font-size: 1.2rem" class="mb-1 mr-2"
-                  >mdi-robot</v-icon
+                  >{{item.material.type === 'adaptative'? 'mdi-robot': 'mdi-paperclip'}}</v-icon
                 >
-                {{ item.title }}
-              </template>
-              <template v-else-if="item.type === 'material'">
-                <v-icon style="font-size: 1.2rem" class="mb-1 mr-2"
-                  >mdi-paperclip</v-icon
-                >
-                {{ item.title }}
-              </template>
+                {{ item.material.title }}
             </p>
             <div class="item__actions">
-              <v-tooltip bottom v-if="item.is_private">
+              <v-tooltip bottom v-if="item.material.is_private">
                 <template v-slot:activator="{ on, attrs }">
                   <v-icon
                     v-bind="attrs"
@@ -261,7 +253,7 @@
           </div>
           <div class="new-items">
             <!-- CONTENIDO -->
-            <div @click="showItemCreate('adaptive')" class="new-item">
+            <div @click="showItemCreate('adaptative')" class="new-item">
               <div class="new-item__img">
                 <img
                   src="https://cdn2.iconfinder.com/data/icons/machine-learning-filled-color/300/134026380Untitled-3-512.png"
@@ -270,7 +262,7 @@
               </div>
               <p class="new-item__name ma-0">Adaptativo</p>
             </div>
-            <div @click="showItemCreate('material')" class="new-item">
+            <div @click="showItemCreate('file')" class="new-item">
               <div class="new-item__img">
                 <img
                   src="https://icon-library.com/images/png-file-icon/png-file-icon-6.jpg"
@@ -326,14 +318,14 @@
             </v-btn>
           </div>
           <v-text-field
-            v-if="item_selected.type === 'adaptive'"
+            v-if="item_selected.type === 'adaptative'"
             v-model="item_selected.title"
             label="Nombre"
             required
             class="mt-4"
           ></v-text-field>
           <v-text-field
-            v-else-if="item_selected.type === 'material'"
+            v-else-if="item_selected.type === 'file'"
             v-model="item_selected.title"
             label="Nombre"
             required
@@ -470,34 +462,27 @@ export default {
         // Get Course Content
         let [
           units,
-          course_adaptive_arr,
-          course_material_arr,
+          materials
         ] = await Promise.all([
           this.$api.unit.getAll(course_id),
-          this.$api.material.getAll(course_id),
-          this.$api.courseMaterial.getAll(course_id),
+          this.$api.syllabus.byCourse(course_id),
         ]);
 
         // Set Item Type
         units = this.mongoArr(units);
-        course_adaptive_arr = this.mongoArr(course_adaptive_arr).map((i) => ({
+        materials = materials.map((i) => ({
           ...i,
-          type: "adaptive",
-        }));
-        course_material_arr = this.mongoArr(course_material_arr).map((i) => ({
-          ...i,
-          type: "material",
+          type: i.material.type,
         }));
 
         // Set Unit Items
-        let items = course_adaptive_arr.concat(course_material_arr);
         for (let unit of units) {
-          unit.content = items.filter((i) => i.unit_id === unit._id);
+          unit.content = materials.filter((i) => i.unit.id === unit._id);
 
           let order = (unit.order || []).reverse();
           unit.content.sort((a, b) => {
-            let a_order = order.indexOf(a._id);
-            let b_order = order.indexOf(b._id);
+            let a_order = order.indexOf(a.id);
+            let b_order = order.indexOf(b.id);
             return b_order - a_order;
           });
         }
@@ -628,23 +613,23 @@ export default {
     },
     // Item
     showItemEdit(item) {
-      if (item.type === "adaptive") {
+      if (item.material.type === "adaptative") {
         this.$router.push({
-          name: "material-editor",
-          params: { material_id: item._id },
+          name: "material-adaptative-editor",
+          params: { material_id: item.material.id },
         });
-      } else if (item.type === "material") {
-        this.course_material = item;
+      } else if (item.material.type === "file") {
+        this.course_material = item.material;
         this.show_course_material_editor = true;
       }
     },
     showItemCreate(type) {
       this.dlg_new_item = false;
 
-      if (type === "adaptive") {
+      if (type === "adaptative") {
         this.new_course_adaptive_name = "";
         this.dlg_new_course_adaptive = true;
-      } else if (type === "material") {
+      } else if (type === "file") {
         this.course_material = {
           course_id: this.$route.params["course_id"],
           unit_id: this.unit_selected._id,
@@ -660,18 +645,18 @@ export default {
 
       this.showLoading("Guardando");
       try {
-        if (this.item_selected.type === "adaptive")
+        if (this.item_selected.type === "adaptative")
           await updateMaterialUnit(
             this.item_selected._id,
             this.item_selected.unit_id
           );
-        else if (this.item_selected.type === "material")
+        else if (this.item_selected.type === "file")
           await this.$api.courseMaterial.update(this.item_selected._id, {
             unit_id: this.item_selected.unit_id,
           });
 
         this.unit_selected.content = this.unit_selected.content.filter(
-          (item) => item._id !== this.item_selected._id
+          (item) => item.id !== this.item_selected.id
         );
         let to_unit = this.units.find(
           (unit) => unit._id === this.item_selected.unit_id
@@ -688,19 +673,19 @@ export default {
 
       this.showLoading("Guardando");
       try {
-        if (this.item_selected.type === "adaptive")
+        if (this.item_selected.type === "adaptative")
           await updateMaterial(
             this.item_selected._id,
             this.item_selected.title,
             this.item_selected.is_private
           );
-        else if (this.item_selected.type === "material")
+        else if (this.item_selected.type === "file")
           await this.$api.courseMaterial.update(this.item_selected._id, {
             title: this.item_selected.title,
           });
 
         let item = this.unit_selected.content.find(
-          (item) => item._id === this.item_selected._id
+          (item) => item.id === this.item_selected.id
         );
        
         item.title = this.item_selected.title;
@@ -714,13 +699,13 @@ export default {
 
       this.showLoading("Guardando");
       try {
-        if (this.item_selected.type === "adaptive")
-          await removeMaterial(this.item_selected._id);
-        else if (this.item_selected.type === "material")
-          await this.$api.courseMaterial.remove(this.item_selected._id);
+        if (this.item_selected.type === "adaptative")
+          await removeMaterial(this.item_selected.id);
+        else if (this.item_selected.type === "file")
+          await this.$api.courseMaterial.remove(this.item_selected.id);
 
         this.unit_selected.content = this.unit_selected.content.filter(
-          (item) => item._id !== this.item_selected._id
+          (item) => item.id !== this.item_selected.id
         );
       } catch (error) {
         this.showMessage("", error.msg || error);
@@ -729,7 +714,7 @@ export default {
     },
     // Move Item
     async updateUnitOrder(unit) {
-      let order = unit.content.map((item) => item._id);
+      let order = unit.content.map((item) => item.id);
       try {
         await updateUnitOrder(unit._id, order);
       } catch (error) {
