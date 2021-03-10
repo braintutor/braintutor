@@ -1,6 +1,6 @@
 <template>
   <div class="m-container">
-    <div v-show="!show_course_material_editor">
+    <div>
       <div style="display: flex; justify-content: flex-end" class="mb-2">
         <m-btn
           @click="
@@ -113,15 +113,6 @@
                     @click="
                       unit_selected = unit;
                       item_selected = Object.assign({}, item);
-                      dlg_edit_item_name = true;
-                    "
-                  >
-                    <v-list-item-title>Editar Nombre</v-list-item-title>
-                  </v-list-item>
-                  <v-list-item
-                    @click="
-                      unit_selected = unit;
-                      item_selected = Object.assign({}, item);
                       dlg_edit_item = true;
                     "
                   >
@@ -143,14 +134,6 @@
         </div>
       </div>
     </div>
-    <course-material-editor
-      v-if="show_course_material_editor"
-      @exit="
-        show_course_material_editor = false;
-        init();
-      "
-      :material="course_material"
-    />
     <!-- DIALOG NEW UNIT -->
     <v-dialog v-model="dlg_new_unit" width="400" persistent>
       <form @submit.prevent="addUnit()" class="m-card">
@@ -345,45 +328,10 @@
         </div>
       </div>
     </v-dialog>
-    <!-- DIALOG NEW COURSE ADAPTIVE -->
-    <v-dialog v-model="dlg_new_course_adaptive" width="400" persistent>
-      <form @submit.prevent="addCourseAdaptive()" class="m-card">
-        <div class="m-card__body">
-          <div class="close-modal">
-            <h3>Crear Material</h3>
-            <v-btn
-              class="mx-2"
-              icon
-              small
-              @click="dlg_new_course_adaptive = false"
-            >
-              <v-icon> mdi-close-thick </v-icon>
-            </v-btn>
-          </div>
-          <v-text-field
-            v-model="new_course_adaptive_name"
-            label="Nombre"
-            required
-          ></v-text-field>
-        </div>
-        <div class="m-card__actions">
-          <m-btn
-            @click="dlg_new_course_adaptive = false"
-            type="button"
-            text
-            small
-            class="cancel-button"
-            >Cancelar</m-btn
-          >
-          <m-btn type="submit" color="primary" small>Guardar</m-btn>
-        </div>
-      </form>
-    </v-dialog>
   </div>
 </template>
 
 <script>
-import CourseMaterialEditor from "./CourseMaterialEditor.vue";
 import AssignMaterialSyllabus from "./AsignMaterialSyllabus"
 import {
   addUnit,
@@ -412,12 +360,6 @@ export default {
     dlg_edit_item_name: false,
     dlg_new_item: false,
     dlg_remove_item: false,
-    // Course Adaptive
-    new_course_adaptive_name: "",
-    dlg_new_course_adaptive: false,
-    // Course Material
-    course_material: {},
-    show_course_material_editor: false,
   }),
   async created() {
     await this.init();
@@ -516,97 +458,12 @@ export default {
       }
       this.hideLoading();
     },
-    // Course Adaptive
-    async addCourseAdaptive() {
-      this.dlg_new_course_adaptive = false;
-      if (!this.new_course_adaptive_name) return;
-
-      let overview = JSON.stringify({
-        blocks: [{ type: "header", data: { text: "Resumen", level: 2 } }],
-      });
-      let explanation = JSON.stringify({
-        blocks: [{ type: "header", data: { text: "Título", level: 2 } }],
-      });
-      let examples = JSON.stringify({
-        blocks: [
-          { type: "header", data: { text: "Ejemplos", level: 2 } },
-          {
-            type: "list",
-            data: { style: "unordered", items: ["Ejemplo 1", "Ejemplo 2"] },
-          },
-        ],
-      });
-      let movies = JSON.stringify({
-        blocks: [{ type: "header", data: { text: "Videos", level: 2 } }],
-      });
-      let images = JSON.stringify({
-        blocks: [{ type: "header", data: { text: "Imágenes", level: 2 } }],
-      });
-      let hyperlinks = JSON.stringify({
-        blocks: [{ type: "header", data: { text: "Enlaces", level: 2 } }],
-      });
-      let exercises = [
-        {
-          question: "Pregunta",
-          alternatives: ["Alternativa", "Alternativa"],
-          correct: 0,
-        },
-      ];
-
-      let new_material = {
-        unit_id: this.unit_selected._id,
-        title: this.new_course_adaptive_name,
-        data_fs: {
-          overview,
-          explanation,
-          movies,
-          images,
-          hyperlinks,
-          examples,
-          exercises,
-          faq: [{ question: "Pregunta", answer: "Respuesta" }],
-        },
-      };
-
-      this.showLoading("Guardando");
-      try {
-        let res = await this.$api.material.add(new_material);
-
-        this.$router.push({
-          name: "material-editor",
-          params: { material_id: res.$oid },
-        });
-      } catch (error) {
-        this.showMessage("", error.msg || error);
-      }
-      this.hideLoading();
-    },
     // Item
     showItemEdit(item) {
-        // this.course_material = item.material;
-        // this.show_course_material_editor = true;
-
-
       this.$router.push({
         name: item.material.type === "adaptative"? "material-adaptative-editor": "material-file-editor",
         params: { material_id: item.material.id }
       });
-    },
-    showItemCreate(type) {
-      this.dlg_new_item = false;
-
-      if (type === "adaptative") {
-        this.new_course_adaptive_name = "";
-        this.dlg_new_course_adaptive = true;
-      } else if (type === "file") {
-        this.course_material = {
-          course_id: this.$route.params["course_id"],
-          unit_id: this.unit_selected._id,
-          files: [],
-          is_private: true,
-        };
-        this.show_course_material_editor = true;
-      }
     },
     async updateItemUnit() {
       this.dlg_edit_item = false;
@@ -713,7 +570,7 @@ export default {
       }
     },
   },
-  components: { CourseMaterialEditor, AssignMaterialSyllabus },
+  components: { AssignMaterialSyllabus },
 };
 </script>
 
