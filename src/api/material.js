@@ -15,4 +15,7 @@ export default (_fetch, Fetch) => ({
     show(material_id) {
         return Fetch('v2', 'GET', `material/${material_id}`);
     },
+    create(data) {
+        return Fetch('v2', 'POST', `material`, data);
+    }
 });

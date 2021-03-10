@@ -116,7 +116,7 @@
       />
     </div>
 
-    <!-- DIALOG NEW ITEM -->
+    <!-- DIALOG NEW MATERIAL -->
     <v-dialog v-model="dlg_new_material" width="400" persistent>
       <div class="m-card">
         <div class="m-card__body">
@@ -137,7 +137,7 @@
               </div>
               <p class="new-item__name ma-0">Adaptativo</p>
             </div>
-            <div class="new-item">
+            <div @click="showCreator()" class="new-item">
               <div class="new-item__img">
                 <img
                   src="https://icon-library.com/images/png-file-icon/png-file-icon-6.jpg"
@@ -210,6 +210,16 @@ export default {
         this.showMessage("", "Ha ocurrido un error");
       }
       this.hideLoading();
+    },
+    async showCreator() {
+      this.dlg_new_material = false;
+      this.show_material_editor = true;
+      this.material_selected = {
+        type: "file",
+        subject_id: this.subject_id,
+        files: [],
+        is_private: true,
+      };
     },
   },
   components: {
