@@ -32,6 +32,21 @@ async function _fetch(method, name, data, isJSON = true) {
   return json;
 }
 
+async function Fetch(version, method, name, data, isJSON = true) {
+  let res = await fetch(`${process.env.VUE_APP_API_URL}/api/${version}/${name}`, {
+    method,
+    body: isJSON ? JSON.stringify(data) : data,
+    headers: getHeaders(isJSON)
+  });
+  let json = await res.json();
+  if (res.status >= 400 && res.status < 600) {
+    handlerCode(json.code);
+    throw json;
+  }
+
+  return json;
+}
+
 async function _fetchTemp(method, name, data, isJSON = true) {
   let res = await fetch(`${process.env.VUE_APP_API_URL}/${name}`, {
     method,
@@ -58,4 +73,4 @@ function handlerCode(code) {
   }
 }
 
-export { _fetch, _fetchTemp };
+export { _fetch, _fetchTemp, Fetch };

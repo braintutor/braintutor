@@ -1,4 +1,4 @@
-import { _fetch } from "./helpers";
+import { _fetch, Fetch } from "./helpers";
 
 import Evaluation from "./evaluation";
 import EvaluationResult from "./evaluationResult";
@@ -17,7 +17,7 @@ import File from "./file";
 import Report from "./report";
 import Grade from "./grade";
 import Section from "./section";
-// import Message from "./message";
+import Subject from "./subject";
 
 export default {
   install(Vue) {
@@ -31,7 +31,7 @@ export default {
       director: Director(_fetch),
       task: Task(_fetch),
       school: School(_fetch),
-      material: Material(_fetch),
+      material: Material(_fetch, Fetch),
       unit: Unit(_fetch),
       file: File(_fetch),
       report: Report(_fetch),
@@ -39,7 +39,7 @@ export default {
       courseMaterial: CourseMaterial(_fetch),
       grade: Grade(_fetch),
       section: Section(_fetch),
-      // message: Message(_fetch),
+      subject: Subject(_fetch),
     };
     Vue.prototype.$api = repositories;
   },

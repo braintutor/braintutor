@@ -63,6 +63,12 @@ const routes = [
     component: () => import("../views/TeacherSessions.vue"),
   },
   {
+    path: "/teacher-materials",
+    name: "teacher-materials",
+    meta: { roles: ["TEA"] },
+    component: () => import("../views/TeacherMaterials.vue"),
+  },
+  {
     path: "/student-sessions",
     name: "student-sessions",
     meta: { roles: ["STU"] },

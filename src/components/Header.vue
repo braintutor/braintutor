@@ -141,7 +141,13 @@ export default {
         session_roles: ["TEA"],
       },
       {
-        title: "Editar",
+        title: "Material",
+        name: "teacher-materials",
+        icon: "mdi-file-edit",
+        session_roles: ["TEA"],
+      },
+      {
+        title: "Syllabus",
         name: "courses-editor",
         icon: "mdi-file-edit",
         session_roles: ["TEA"],
