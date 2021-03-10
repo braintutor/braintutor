@@ -30,7 +30,7 @@
                   dlg_new_item = true;
                 "
               >
-                <v-list-item-title>Crear Material</v-list-item-title>
+                <v-list-item-title>Asignar Material</v-list-item-title>
               </v-list-item>
               <v-list-item
                 @click="
@@ -243,37 +243,7 @@
     </v-dialog>
     <!-- DIALOG NEW ITEM -->
     <v-dialog v-model="dlg_new_item" width="400" persistent>
-      <div class="m-card">
-        <div class="m-card__body">
-          <div class="close-modal">
-            <h3>Crear Material</h3>
-            <v-btn class="mx-2" icon small @click="dlg_new_item = false">
-              <v-icon> mdi-close-thick </v-icon>
-            </v-btn>
-          </div>
-          <div class="new-items">
-            <!-- CONTENIDO -->
-            <div @click="showItemCreate('adaptative')" class="new-item">
-              <div class="new-item__img">
-                <img
-                  src="https://cdn2.iconfinder.com/data/icons/machine-learning-filled-color/300/134026380Untitled-3-512.png"
-                  alt=""
-                />
-              </div>
-              <p class="new-item__name ma-0">Adaptativo</p>
-            </div>
-            <div @click="showItemCreate('file')" class="new-item">
-              <div class="new-item__img">
-                <img
-                  src="https://icon-library.com/images/png-file-icon/png-file-icon-6.jpg"
-                  alt=""
-                />
-              </div>
-              <p class="new-item__name ma-0">Archivos</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <AssignMaterialSyllabus :unit="unit_selected" :course="$route.params['course_id']" @close="dlg_new_item=null"></AssignMaterialSyllabus>
     </v-dialog>
     <!-- DIALOG EDIT ITEM -->
     <v-dialog v-model="dlg_edit_item" width="400" persistent>
@@ -414,7 +384,7 @@
 
 <script>
 import CourseMaterialEditor from "./CourseMaterialEditor.vue";
-
+import AssignMaterialSyllabus from "./AsignMaterialSyllabus"
 import {
   addUnit,
   updateUnitOrder,
@@ -744,7 +714,7 @@ export default {
       }
     },
   },
-  components: { CourseMaterialEditor },
+  components: { CourseMaterialEditor, AssignMaterialSyllabus },
 };
 </script>
 
