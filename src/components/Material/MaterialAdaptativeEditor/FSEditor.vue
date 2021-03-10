@@ -25,27 +25,11 @@
         </v-btn>
         <span class="editor__title">{{ categories[category].name }}</span>
       </div>
-      <!-- Overview -->
-      <!-- <TextEditor
-        v-if="category === 'overview'"
-        :text="material.data_fs[category]"
-        :maxlength="false"
-        @submit="save"
-      /> -->
-      <DocumentEditor
-        v-if="category === 'overview'"
-        :data="material.data_fs[category]"
-        @submit="save"
-        :document_type="'course'"
-        :document_id="material.course_id.$oid"
-      />
       <!-- Exercises -->
       <QuizEditor
-        v-else-if="category === 'exercises'"
+        v-if="category === 'exercises'"
         :quiz="material.data_fs[category]"
         :maxlength="100"
-        document_type="course"
-        :document_id="material.course_id.$oid"
         @submit="save"
       />
       <!-- FAQ -->
@@ -60,8 +44,6 @@
         v-else
         :data="material.data_fs[category]"
         @submit="save"
-        :document_type="'course'"
-        :document_id="material.course_id.$oid"
       />
     </section>
   </div>

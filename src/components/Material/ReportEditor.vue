@@ -12,7 +12,7 @@
 
       <div class="report__time my-4 mx-2">
         <strong>Título de la Unidad:</strong>
-        <span>{{ material.name }}</span>
+        <span>{{ material.title }}</span>
 
         <strong>Curso:</strong>
         <span v-if="course">{{ course.name }}</span>
