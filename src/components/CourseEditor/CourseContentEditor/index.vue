@@ -471,16 +471,11 @@ export default {
 
       this.showLoading("Guardando");
       try {
-        if (this.item_selected.type === "adaptative")
-          await updateMaterialUnit(
-            this.item_selected._id,
-            this.item_selected.unit_id
-          );
-        else if (this.item_selected.type === "file")
-          await this.$api.courseMaterial.update(this.item_selected._id, {
-            unit_id: this.item_selected.unit_id,
-          });
-
+        await updateMaterialUnit(
+          this.item_selected.id,
+          this.item_selected.unit_id
+        );
+      
         this.unit_selected.content = this.unit_selected.content.filter(
           (item) => item.id !== this.item_selected.id
         );
@@ -489,6 +484,7 @@ export default {
         );
         to_unit.content = to_unit.content || [];
         to_unit.content.push(this.item_selected);
+      
       } catch (error) {
         this.showMessage("", error.msg || error);
       }
