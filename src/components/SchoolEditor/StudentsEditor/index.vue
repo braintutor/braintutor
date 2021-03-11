@@ -1,20 +1,18 @@
 <template>
   <div v-if="this.grades.length > 0" class="editor">
     <!-- EDITOR Menu -->
-    <!-- <input
-      style="display: none"
-      id="ipt_file"
-      type="file"
-      onclick="this.value=null"
-      accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-      @change="onLoadFile($event)"
-    /> -->
     <div class="editor__menu">
       <h2 class="editor__title">Alumnos</h2>
       <div v-if="section_id">
-        <!-- <m-btn onclick="ipt_file.click()" color="dark" small class="mr-2">
+        <m-btn
+          @click="dlg_import_file = true"
+          onclick="ipt_file.value = null"
+          color="dark"
+          small
+          class="mr-2"
+        >
           <v-icon left small>mdi-file-excel</v-icon>Importar
-        </m-btn> -->
+        </m-btn>
         <m-btn @click="showCreate()" color="primary" small>
           <v-icon left small>mdi-plus</v-icon>Crear
         </m-btn>
@@ -288,104 +286,293 @@
         </div>
       </form>
     </v-dialog>
-    <v-dialog v-model="dlg_import" width="1200" persistent>
-      <div class="import m-card">
+
+    <v-dialog v-model="dlg_import_file" width="500" persistent>
+      <div class="m-card">
         <div class="m-card__body">
-          <v-select
-            v-model="grade_id_import"
-            :items="grades"
-            item-text="name"
-            item-value="_id"
-            label="Aula"
-          ></v-select>
-        </div>
-        <div class="import__body m-card__body">
+          <div class="close-modal">
+            <h3>Cargar Archivo</h3>
+            <v-btn class="mx-2" icon small @click="dlg_import_file = false">
+              <v-icon dark> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
           <div class="mt-4">
-            <table class="m-table">
-              <thead>
-                <tr>
-                  <th>Nombres</th>
-                  <th>Apellidos</th>
-                  <th>Correo</th>
-                  <th>Usuario</th>
-                  <th>Contraseña</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(entity, idx) in new_data" :key="idx">
-                  <td>
-                    <v-text-field
-                      v-model="entity.first_name"
-                      :maxlength="UserModel.first_name.max_length"
-                      dense
-                      hide-details
-                      autocomplete="off"
-                    ></v-text-field>
-                  </td>
-                  <td>
-                    <v-text-field
-                      v-model="entity.last_name"
-                      :maxlength="UserModel.last_name.max_length"
-                      dense
-                      hide-details
-                      autocomplete="off"
-                    ></v-text-field>
-                  </td>
-                  <td>
-                    <v-text-field
-                      v-model="entity.email"
-                      :maxlength="UserModel.email.max_length"
-                      dense
-                      hide-details
-                      autocomplete="off"
-                    ></v-text-field>
-                  </td>
-                  <td>
-                    <v-text-field
-                      v-model="entity.username"
-                      :maxlength="UserModel.username.max_length"
-                      dense
-                      hide-details
-                      autocomplete="off"
-                    ></v-text-field>
-                  </td>
-                  <td>
-                    <v-text-field
-                      :type="entity.showPassword ? 'text' : 'password'"
-                      v-model="entity.password"
-                      :maxlength="UserModel.password.max_length"
-                      dense
-                      hide-details
-                      autocomplete="off"
-                      :append-icon="
-                        entity.showPassword ? 'mdi-eye' : 'mdi-eye-off'
-                      "
-                      @click:append="toogleShowPassword(entity)"
-                    ></v-text-field>
-                  </td>
-                  <td style="color: red; font-size: 0.8rem">
-                    {{ entity.response }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <input
+              id="ipt_file"
+              type="file"
+              onclick="this.value=null"
+              accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+              @change="onLoadFile($event)"
+            />
+            <div class="mt-4">
+              <a href="#" @click="downloadTemplate()"
+                >Descargar plantilla de ejemplo</a
+              >
+            </div>
           </div>
         </div>
         <div class="m-card__actions">
           <m-btn
-            v-if="!loading_btn"
-            @click="dlg_import = false"
+            @click="dlg_import_file = false"
+            type="button"
             small
-            text
             class="cancel-button"
             >Cancelar</m-btn
-          >
-          <m-btn @click="saveAll()" :loading="loading_btn" color="primary" small
-            >Guardar</m-btn
           >
         </div>
       </div>
     </v-dialog>
+    <v-dialog v-if="dlg_import" v-model="dlg_import" width="1600" persistent>
+      <div class="m-card">
+        <div class="m-card__body">
+          <div class="close-modal">
+            <div></div>
+            <v-btn class="mx-2" icon small @click="dlg_import = false">
+              <v-icon dark> mdi-close-thick </v-icon>
+            </v-btn>
+          </div>
+          <div v-if="!is_first_import" class="mb-4">
+            <div style="display: flex">
+              <h3>Usuarios Creados</h3>
+              <m-btn
+                @click="exportExcel(import_success, 'success')"
+                color="primary"
+                type="submit"
+                small
+                text
+                class="ml-3 pa-1"
+              >
+                <v-icon style="font-size: 1.2rem">mdi-download</v-icon>
+              </m-btn>
+            </div>
+            <div class="mt-3 py-2 px-3" style="border: 1px solid #ccc">
+              <table class="m-table">
+                <thead>
+                  <tr>
+                    <th class="text-left">Nombres</th>
+                    <th class="text-left">Apellidos</th>
+                    <th class="text-left">Correo</th>
+                    <th class="text-left">Usuario</th>
+                    <th class="text-left">
+                      <span>Contraseña</span>
+                      <v-btn
+                        class="ml-1"
+                        @click="
+                          show_passwords_success = !show_passwords_success
+                        "
+                        icon
+                      >
+                        <v-icon style="font-size: 1.3rem">{{
+                          show_passwords_success ? "mdi-eye" : "mdi-eye-off"
+                        }}</v-icon>
+                      </v-btn>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(entity, idx) in import_success" :key="idx">
+                    <td class="px-1">
+                      <span>{{ entity.first_name }}</span>
+                    </td>
+                    <td class="px-1">
+                      <span>{{ entity.last_name }}</span>
+                    </td>
+                    <td class="px-1">
+                      <span>{{ entity.email }}</span>
+                    </td>
+                    <td class="px-1">
+                      <span>{{ entity.username }}</span>
+                    </td>
+                    <td class="px-1">
+                      <span v-if="show_passwords_success">{{
+                        entity.password
+                      }}</span>
+                      <span v-else>******</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <p v-if="import_success.length <= 0" class="text-center mt-2">
+                No hay información
+              </p>
+            </div>
+          </div>
+          <div>
+            <div>
+              <div style="display: flex">
+                <h3 v-if="is_first_import">Nuevos Usuarios</h3>
+                <h3 v-else>Errores</h3>
+                <m-btn
+                  @click="exportExcel(new_data, 'errors')"
+                  color="primary"
+                  type="submit"
+                  small
+                  text
+                  class="ml-3 pa-1"
+                >
+                  <v-icon style="font-size: 1.2rem">mdi-download</v-icon>
+                </m-btn>
+              </div>
+              <!-- <ul class="mt-2">
+                <li>Verifique que el nombre de usuario no esté en uso</li>
+              </ul> -->
+              <div class="my-2">
+                <div>
+                  <strong>Grado:</strong>
+                  <span class="ml-2">{{
+                    grades_f.find((g) => g._id === grade_id).name
+                  }}</span>
+                </div>
+                <div>
+                  <strong>Sección:</strong>
+                  <span class="ml-2">{{
+                    sections.find((s) => s._id === section_id).name
+                  }}</span>
+                </div>
+              </div>
+            </div>
+            <v-form
+              ref="form_import"
+              @submit.prevent="saveAll()"
+              class="mt-3 py-2 px-3"
+              style="border: 1px solid #ccc"
+            >
+              <table class="m-table">
+                <thead>
+                  <tr>
+                    <th class="text-left">Nombres</th>
+                    <th class="text-left">Apellidos</th>
+                    <th class="text-left">Correo</th>
+                    <th class="text-left">Usuario</th>
+                    <th class="text-left">
+                      <span>Contraseña</span>
+                      <v-btn
+                        class="ml-1"
+                        @click="show_passwords_errors = !show_passwords_errors"
+                        icon
+                      >
+                        <v-icon style="font-size: 1.3rem">{{
+                          show_passwords_errors ? "mdi-eye" : "mdi-eye-off"
+                        }}</v-icon>
+                      </v-btn>
+                    </th>
+                    <th v-if="!is_first_import">Observación</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(entity, idx) in new_data" :key="idx">
+                    <td class="px-1">
+                      <v-text-field
+                        v-model="entity.first_name"
+                        :rules="nameRules"
+                        dense
+                        autocomplete="off"
+                      ></v-text-field>
+                    </td>
+                    <td class="px-1">
+                      <v-text-field
+                        v-model="entity.last_name"
+                        :rules="nameRules"
+                        dense
+                        autocomplete="off"
+                      ></v-text-field>
+                    </td>
+                    <td class="px-1">
+                      <v-text-field
+                        v-model="entity.email"
+                        :rules="emailRules"
+                        dense
+                        autocomplete="off"
+                      ></v-text-field>
+                    </td>
+                    <td class="px-1">
+                      <v-text-field
+                        v-model="entity.username"
+                        :rules="usernameRules"
+                        dense
+                        autocomplete="off"
+                      ></v-text-field>
+                    </td>
+                    <td class="px-1">
+                      <v-text-field
+                        v-model="entity.password"
+                        :rules="passwordRules"
+                        :type="show_passwords_errors ? 'text' : 'password'"
+                        dense
+                        autocomplete="off"
+                      ></v-text-field>
+                    </td>
+                    <td
+                      v-if="!is_first_import"
+                      class="text-center"
+                      style="font-size: 0.8rem"
+                    >
+                      {{ entity.error }}
+                    </td>
+                    <td>
+                      <v-btn class="mb-2" @click="new_data.splice(idx, 1)" icon>
+                        <v-icon style="font-size: 1.3rem">mdi-close</v-icon>
+                      </v-btn>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <p v-if="new_data.length <= 0" class="text-center mt-2">
+                No hay información
+              </p>
+              <div
+                style="display: flex; justify-content: flex-end"
+                class="mt-3"
+              >
+                <m-btn
+                  type="button"
+                  @click="generatePasswords()"
+                  color="dark"
+                  text
+                  small
+                >
+                  <v-icon style="font-size: 1.1rem" class="mr-2"
+                    >mdi-lock-reset</v-icon
+                  ><span>Generar Contraseñas</span></m-btn
+                >
+                <m-btn
+                  type="button"
+                  @click="new_data.push({})"
+                  color="dark"
+                  text
+                  small
+                  class="ml-2"
+                >
+                  <v-icon style="font-size: 1.1rem" class="mr-2"
+                    >mdi-plus</v-icon
+                  >
+                  <span>Añadir Usuario</span>
+                </m-btn>
+              </div>
+              <div
+                v-if="new_data.length > 0"
+                style="display: flex; justify-content: flex-end"
+                class="mt-3"
+              >
+                <m-btn
+                  @click="dlg_import = false"
+                  type="button"
+                  color="primary"
+                  small
+                  text
+                  >Cerrar</m-btn
+                >
+                <m-btn type="submit" color="primary" small class="ml-2"
+                  >Guardar</m-btn
+                >
+              </div>
+            </v-form>
+          </div>
+        </div>
+      </div>
+    </v-dialog>
+
     <ParentSelector
       v-if="dlg_parent && entity"
       v-model="dlg_parent"
@@ -401,9 +588,11 @@ import ParentSelector from "./ParentSelector";
 import { removeStudent } from "@/services/studentService";
 import { updatePasswordByAdmin } from "@/services/userService";
 import { getParents } from "@/services/parentService";
-import * as XLSX from "xlsx";
-import UserModel from "@/models/User";
 import { getLevels } from "@/services/levelService";
+
+import * as XLSX from "xlsx";
+import { exportExcel } from "@/services/excel";
+import UserModel from "@/models/User";
 
 export default {
   data: () => ({
@@ -431,12 +620,32 @@ export default {
     new_password: "",
     confirm_new_password: "",
     dlg_password: false,
-    // import
-    new_data: [],
-    grade_id_import: "",
-    dlg_import: false,
     // parent
     dlg_parent: false,
+    // import
+    dlg_import: false,
+    dlg_import_file: false,
+    new_data: [],
+    import_success: [],
+    is_first_import: true,
+    show_passwords_success: false,
+    show_passwords_errors: false,
+    nameRules: [
+      (v) => !!v || "Nombre requerido",
+      (v) => /^[a-zA-ZÀ-ÿ\s]+$/.test(v) || "Nombre inválido",
+    ],
+    emailRules: [
+      (v) => !!v || "Correo requerido",
+      (v) => /^[^@]+@[^@]+\.[^@]+$/.test(v) || "Correo inválido",
+    ],
+    usernameRules: [
+      (v) => !!v || "Nombre de usuario requerido",
+      (v) => /^[a-z][a-zñ0-9._@]*$/.test(v) || "Nombre de usuario inválido",
+    ],
+    passwordRules: [
+      (v) => !!v || "Contraseña requerida",
+      (v) => /^\S+$/.test(v) || "Contraseña inválida",
+    ],
   }),
   computed: {
     grades_f() {
@@ -485,22 +694,7 @@ export default {
       }
     },
     async section_id() {
-      this.entities = [];
-
-      if (this.section_id) {
-        this.showLoading("Cargando Datos");
-        try {
-          this.entities = this.mongoArr(
-            await this.$api.student.getAll({
-              grade_id: this.grade_id,
-              section_id: this.section_id,
-            })
-          );
-        } catch (error) {
-          this.showMessage("", error.msg || error);
-        }
-        this.hideLoading();
-      }
+      await this.getStudents();
     },
     //
     level_form() {
@@ -537,7 +731,7 @@ export default {
   async created() {
     this.showLoading("Cargando Datos");
     try {
-      this.levels = await getLevels()
+      this.levels = await getLevels();
 
       this.grades = this.mongoArr(await this.$api.grade.getAll());
 
@@ -551,6 +745,24 @@ export default {
     this.hideLoading();
   },
   methods: {
+    async getStudents() {
+      this.entities = [];
+
+      if (this.section_id) {
+        this.showLoading("Cargando Datos");
+        try {
+          this.entities = this.mongoArr(
+            await this.$api.student.getAll({
+              grade_id: this.grade_id,
+              section_id: this.section_id,
+            })
+          );
+        } catch (error) {
+          this.showMessage("", error.msg || error);
+        }
+        this.hideLoading();
+      }
+    },
     async save() {
       if (this.loading_btn) return;
       if (!(this.grade_id_form && this.entity.section_id)) return;
@@ -616,62 +828,88 @@ export default {
       this.loading_btn = false;
     },
     // Import
-    async saveAll() {
-      this.loading_btn = true;
-      let i = 0;
-      while (i < this.new_data.length) {
-        let entity = this.new_data[i];
-        entity.grade_id = this.grade_id_import;
-        // entity.pass = generatePassword();
-        try {
-          let { _id } = await this.$api.student.add(this.entity);
-          entity._id = _id;
-          if (entity.grade_id === this.grade_id) this.entities.push(entity);
-          this.new_data.splice(i, 1);
-        } catch (error) {
-          entity.response = error.msg || error;
-          i++;
-        }
-      }
-      if (this.new_data.length <= 0) this.dlg_import = false;
-      this.loading_btn = false;
+    exportExcel,
+    downloadTemplate() {
+      let data = [
+        {
+          nombres: "",
+          apellidos: "",
+          correo: "",
+          usuario: "",
+          contraseña: "",
+        },
+      ];
+      this.exportExcel(data, "students");
     },
     onLoadFile(e) {
+      this.dlg_import_file = false;
       let file = e.target.files[0];
-      if (file) {
-        let reader = new FileReader();
-        reader.onload = (e) => {
-          let file_data = e.target.result;
-          let excel = XLSX.read(file_data, { type: "binary" });
-          let names = excel.SheetNames;
-          let data = XLSX.utils.sheet_to_json(excel.Sheets[names[0]]);
-          //
-          if (data.length <= 1000) {
-            this.new_data = data.map((d) => {
-              let {
-                nombres,
-                apellidos,
-                usuario,
-                correo,
-                Nombres,
-                Apellidos,
-                Usuario,
-                Correo,
-              } = d;
-              return {
-                first_name: nombres || Nombres || "",
-                last_name: apellidos || Apellidos || "",
-                email: correo || Correo || "",
-                username: usuario || Usuario || "",
-              };
-            });
-            this.showImport();
-          } else {
-            this.showMessage("", "Error al Importar");
-          }
-        };
-        reader.readAsBinaryString(file);
+      this.new_data = [];
+      this.import_success = [];
+      this.is_first_import = true;
+      if (!file) return;
+
+      let reader = new FileReader();
+      reader.onload = (e) => {
+        let file_data = e.target.result;
+        let excel = XLSX.read(file_data, { type: "binary" });
+        let names = excel.SheetNames;
+        let data = XLSX.utils.sheet_to_json(excel.Sheets[names[0]]);
+        //
+        if (data.length <= 1000) {
+          this.new_data = data.map((d) => {
+            let {
+              nombres,
+              apellidos,
+              usuario,
+              correo,
+              contraseña,
+              Nombres,
+              Apellidos,
+              Usuario,
+              Correo,
+              Contraseña,
+            } = d;
+            return {
+              first_name: nombres || Nombres || "",
+              last_name: apellidos || Apellidos || "",
+              email: correo || Correo || "",
+              username: usuario || Usuario || "",
+              password: contraseña || Contraseña || "",
+            };
+          });
+          this.dlg_import = true;
+        } else {
+          this.showMessage("", "Error al Importar");
+        }
+      };
+      reader.readAsBinaryString(file);
+    },
+    async saveAll() {
+      if (this.new_data.length <= 0) return;
+      if (!this.$refs.form_import.validate()) return;
+
+      this.dlg_import = false;
+      this.showLoading("Guardando");
+      try {
+        let users = this.new_data.map((user) => ({
+          ...user,
+          password: user.password + "",
+        }));
+        let { success, errors } = await this.$api.student.createMassive({
+          users,
+          section_id: this.section_id,
+          grade_id: this.grade_id,
+        });
+        await this.getStudents();
+        this.import_success = this.import_success.concat(success);
+        this.new_data = errors;
+        this.dlg_import = true;
+        this.is_first_import = false;
+      } catch (error) {
+        this.showMessage("", error.msg || error);
       }
+      this.hideLoading();
     },
     //
     toogleShowPassword(e) {
@@ -707,10 +945,6 @@ export default {
     showParent(e) {
       this.entity = e;
       this.dlg_parent = true;
-    },
-    showImport() {
-      this.grade_id_import = this.grade_id;
-      this.dlg_import = true;
     },
   },
   components: {
