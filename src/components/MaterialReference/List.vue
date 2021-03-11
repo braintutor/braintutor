@@ -1,16 +1,31 @@
 <template>
   <div>
     <div v-for="(unit, unit_idx) in units" :key="unit_idx" class="unit">
-      <div class="unit__menu">
+      <div
+        class="unit__menu"
+        @click="
+          unit.show = !unit.show;
+          $forceUpdate();
+        "
+      >
         <p class="unit__name">{{ unit.name }}</p>
-        <slot name="unitMenu" v-bind:unit="unit" ></slot>
+        <v-icon class="list__show" :class="{ 'list__show--active': unit.show }"
+          >mdi-chevron-down</v-icon
+        >
+        <slot name="unitMenu" v-bind:unit="unit"></slot>
       </div>
-      <div class="unit__content">
+      <div class="unit__content" v-show="unit.show">
         <div
           v-for="(item, idx) in unit.content"
           :key="idx"
-          class="item"
-          :class="{ 'item--disabled': item.material.is_private }"
+          @click="select(item)"
+          class="d-flex justify-space-between"
+          :class="{
+            'item': !isReadonly,
+            'link': isReadonly,
+            'item--disabled': item.material.is_private,
+            'link--active': selectedMaterial && item.material.id === selectedMaterial.id,
+          }"
         >
           <p class="item__name">
             <v-icon style="font-size: 1.2rem" class="mb-1 mr-2">{{
@@ -21,7 +36,7 @@
             {{ item.material.title }}
           </p>
           <div class="item__actions d-flex">
-            <v-tooltip v-if="!isReadonly && item.material.is_private" bottom >
+            <v-tooltip v-if="item.material.is_private" bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-icon
                   v-bind="attrs"
@@ -36,8 +51,14 @@
               </template>
               <span>Privado</span>
             </v-tooltip>
-           
-            <slot name="materialMenu" v-bind:unit_idx="unit_idx" v-bind:unit="unit" v-bind:idx="idx" v-bind:material="item"></slot>
+
+            <slot
+              name="materialMenu"
+              v-bind:unit_idx="unit_idx"
+              v-bind:unit="unit"
+              v-bind:idx="idx"
+              v-bind:material="item"
+            ></slot>
           </div>
         </div>
       </div>
@@ -47,16 +68,22 @@
 
 <script>
 export default {
-  props: { 
-    units: { type: Array }, 
-    isReadonly: { type: Boolean, default: false } 
+  props: {
+    selectedMaterial: { type: Object },
+    units: { type: Array },
+    isReadonly: { type: Boolean, default: false },
+  },
+  data: () => ({
+  }),
+  methods: {
+    select(material) {
+      this.$emit("selected", material);
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-
-
 .unit {
   margin-bottom: 24px;
   &__menu {
@@ -94,4 +121,66 @@ export default {
   }
 }
 
+.link {
+  margin: 6px;
+  padding: 10px 12px;
+  color: #414141;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  transition: 0.2s;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    background: var(--background-hover);
+  }
+
+  &--active {
+    color: var(--color-active);
+    background: var(--background-active);
+    // font-weight: bold;
+    &:hover {
+      background: var(--background-active);
+    }
+
+    & * {
+      color: var(--color-active);
+    }
+  }
+}
+
+.list {
+  overflow-y: auto;
+  flex-shrink: 0;
+  height: 100%;
+  width: 320px;
+
+  &__title {
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin: 16px 24px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__show {
+    font-size: 2rem;
+    border-radius: 50%;
+
+    &:hover {
+      background: #e5e5e5;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &--active {
+      transform: rotate(180deg);
+    }
+  }
+}
 </style>
