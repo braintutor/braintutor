@@ -4,7 +4,7 @@
       <span
         @click="redirectCoursesEditor()"
         class="m-path__name m-path__name--link"
-        >Editar Cursos</span
+        >Editar syllabus</span
       >
       <span class="m-path__icon">></span>
       <span class="m-path__name">{{ course.name }}</span>

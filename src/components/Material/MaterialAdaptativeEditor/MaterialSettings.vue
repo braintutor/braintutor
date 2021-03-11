@@ -13,7 +13,7 @@
         ></v-text-field>
         <v-checkbox
           v-model="material_clone.is_private"
-          label="Privado (sus alumnos no podran ver este contenido)"
+          label="Privado (solo usted puede ver y editar este material)"
         ></v-checkbox>
       </div>
       <div class="m-card__actions">

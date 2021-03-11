@@ -29,68 +29,24 @@
         >
       </div>
       <!-- Units -->
-      <section v-for="(u, u_idx) in units" :key="u_idx">
-        <div
-          @click="
-            u.show = !u.show;
-            $forceUpdate();
-          "
-          class="list__title"
-        >
-          <span>{{ u.name }}</span>
-          <v-icon class="list__show" :class="{ 'list__show--active': u.show }"
-            >mdi-chevron-down</v-icon
-          >
-        </div>
-        <div v-show="u.show">
-          <section
-            v-for="(m, m_idx) in u.materials"
-            :key="m_idx"
-            @click="selectMaterial(m)"
-            class="link"
-            :class="{
-              'link--active': m && material && m._id === material._id,
-            }"
-          >
-            <div class="material-name">
-              <div style="display: flex; justify-content: center; align-items: center">
-                <template v-if="m.type === 'adaptive'">
-                  <v-icon style="font-size: 1.2rem" class="mr-2 mb-1"
-                    >mdi-robot</v-icon
-                  >
-                  <span> {{ m.name }}</span>
-                </template>
-                <template v-else-if="m.type === 'material'">
-                  <v-icon style="font-size: 1.2rem" class="mr-2 mb-1"
-                    >mdi-paperclip</v-icon
-                  >
-                  <span>{{ m.title }}</span>
-                </template>
-              </div>
-              <v-tooltip bottom v-if="m.is_private">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-icon v-bind="attrs" v-on="on" style="font-size: 1.3rem">
-                    mdi-eye-off-outline
-                  </v-icon>
-                </template>
-                <span>Privado</span>
-              </v-tooltip>
-            </div>
-            <div
-              v-if="progress_materials.includes(m._id)"
+
+        <MaterialReference :selectedMaterial="material" :isReadonly="true" :units="units" @selected="selectMaterial">
+        <template v-slot:progress="{ material }">
+           <div
+              v-if="progress_materials.includes(material.id)"
               class="progress progress--complete"
             >
               <v-icon style="font-size: 1.25rem; opacity: 0.7"
                 >mdi-check</v-icon
               >
             </div>
-          </section>
-        </div>
-      </section>
+        </template>
+        </MaterialReference>
+  
     </section>
     <section class="list2">
       <div v-if="material" @click="show = !show" class="list2__menu">
-        <template v-if="material.type === 'adaptive'">
+        <template v-if="material.type === 'adaptative'">
           <v-icon style="font-size: 1.2rem" class="mb-1 mr-2">mdi-robot</v-icon>
           {{ material.name }}
         </template>
@@ -116,7 +72,7 @@
             class="link"
             :class="{ 'link--active': m === material }"
           >
-            <template v-if="m.type === 'adaptive'">
+            <template v-if="m.type === 'adaptative'">
               <v-icon style="font-size: 1.2rem" class="mb-1 mr-2"
                 >mdi-robot</v-icon
               >
@@ -135,18 +91,15 @@
     <!-- Material -->
     <div id="scroll" class="pa-3" style="overflow-y: auto; width: 100%">
       <div v-if="material" class="material">
-        <!-- <div class="material__menu">
-          <span class="material__name">{{material.name}}</span>
-        </div>-->
         <FS
-          v-if="material.type === 'adaptive'"
+          v-if="material.type === 'adaptative'"
           :material="material"
           :categories="categories"
           @finish="saveProgress"
           @next="showNextMaterial"
         />
         <course-material
-          v-if="material.type === 'material'"
+          v-if="material.type === 'file'"
           :material="material"
           @finish="saveProgress"
           @next="showNextMaterial"
@@ -157,7 +110,7 @@
     <v-dialog v-model="dlg_remove" max-width="400">
       <div class="m-card">
         <div class="m-card__body">
-            <h3>¿Quieres reiniciar el progreso?</h3>
+          <h3>¿Quieres reiniciar el progreso?</h3>
           <p class="mt-4">
             El progreso de este curso se reiniciará. ¿Quieres continuar?
           </p>
@@ -190,6 +143,8 @@ import {
   updateStudentProgress,
 } from "@/services/studentService";
 import { mapState, mapMutations } from "vuex";
+import { processUnits } from "@/components/MaterialReference/util.js";
+import  MaterialReference from "@/components/MaterialReference/List";
 
 export default {
   props: {
@@ -218,28 +173,12 @@ export default {
         this.showLoading("Cargando Material");
         let course_id = this.course._id.$oid;
         try {
-          let [
-            units,
-            course_adaptive_arr,
-            course_material_arr,
-          ] = await Promise.all([
-            this.$api.unit.getAll(course_id),
-            this.$api.material.getAll(course_id),
-            this.$api.courseMaterial.getAll(course_id),
-          ]);
-
-          units = this.mongoArr(units);
-          course_adaptive_arr = this.mongoArr(course_adaptive_arr).map((i) => ({
-            ...i,
-            type: "adaptive",
-          }));
-          course_material_arr = this.mongoArr(course_material_arr).map((i) => ({
-            ...i,
-            type: "material",
-          }));
-          this.materials = course_adaptive_arr.concat(course_material_arr);
-
-          // Validate Materials
+          let [units, materials] = await Promise.all([
+          this.$api.unit.getAll(course_id),
+          this.$api.syllabus.byCourse(course_id)
+        ]);
+        this.units = processUnits(this.mongoArr(units), materials);
+         // Validate Materials
           let progress_materials = (
             (
               (this.user.progress || []).find(
@@ -248,10 +187,10 @@ export default {
             ).materials || []
           ).map((p) => p.$oid); // get progress by course
           progress_materials = progress_materials.filter((pm) =>
-            this.materials.map((m) => m._id).includes(pm)
+            materials.map((m) => m.id).includes(pm)
           ); // map to only ids
           this.progress_materials = [...new Set(progress_materials)]; // remove duplicates
-
+          this.materials = materials
           // Categories by Style
           let categories = [
             "explanation",
@@ -268,25 +207,9 @@ export default {
           }
           this.categories = categories.concat(["quizzes"]);
 
-          //Materials
-          units.forEach((u) => {
-            u.show = true;
-            // Find Materials
-            let materials = this.materials.filter((m) => {
-              return m.unit_id === u._id;
-            });
-            // Sorting Materials
-            let order = (u.order || []).reverse();
-            materials.sort((a, b) => {
-              let a_order = order.indexOf(a._id);
-              let b_order = order.indexOf(b._id);
-              return b_order - a_order;
-            });
-            u.materials = materials;
-          });
-          this.units = units.filter((u) => u.materials.length > 0); // Only show units with materials
-          if (this.units[0] && this.units[0].materials[0])
-            this.selectMaterial(this.units[0].materials[0]);
+         this.units = this.units.filter((u) => u.content.length > 0); // Only show units with materials
+          if (this.units[0] && this.units[0].content[0])
+            this.selectMaterial(this.units[0].content[0]);
 
           //Knowledge
           this.showLoading("Cargando Conocimiento");
@@ -296,35 +219,9 @@ export default {
           // Knowledge Material
           if (this.course.adaptive) {
             // let question_template = await getQuestionTemplate();
-            this.materials.forEach((material) => {
-              // Object.entries(question_template).forEach(
-              //   ([category, questions]) => {
-              //     if (questions[0]) {
-              //       questions = questions.map((question) =>
-              //         question.replace(/@/, material.name)
-              //       );
-              //       knowledge.push({
-              //         questions,
-              //         answers: [
-              //           "Esto te puede servir.",
-              //           "He encontrado esta información.",
-              //         ],
-              //         actions: [
-              //           {
-              //             text: "Ver información",
-              //             action: () =>
-              //               this.selectMaterialByID(
-              //                 material._id,
-              //                 category
-              //               ),
-              //           },
-              //         ],
-              //       });
-              //     }
-              //   }
-              // );
-              // FS
-              if (material.type === "adaptive")
+            this.materials.forEach(( { id, type, material }) => {
+ 
+              if (type === "adaptative")
                 material.data_fs.faq.forEach(({ question, answer }) => {
                   knowledge.push({
                     questions: [question],
@@ -333,7 +230,7 @@ export default {
                       {
                         text: "Ver información",
                         action: () =>
-                          this.selectMaterialByID(material._id, null),
+                          this.selectMaterialByID(id, null),
                       },
                     ],
                   });
@@ -345,8 +242,8 @@ export default {
               "Háblame sobre @.",
               "Explícame sobre @.",
             ];
-            this.materials.forEach((material) => {
-              if (material.type === "adaptive")
+            this.materials.forEach(( { id, type, material }) => {
+              if (type === "adaptative")
                 knowledge.push({
                   questions: questions.map((question) =>
                     question.replace(/@/, material.name)
@@ -358,7 +255,7 @@ export default {
                   actions: [
                     {
                       text: "Ver información",
-                      action: () => this.selectMaterialByID(material._id, null),
+                      action: () => this.selectMaterialByID(id, null),
                     },
                   ],
                 });
@@ -401,26 +298,23 @@ export default {
       }
     },
     showNextMaterial(material) {
-      let unit_idx = this.units.findIndex((c) => c._id === material.unit_id);
-      let { materials } = this.units[unit_idx];
-      let material_idx = materials.findIndex((m) => m._id === material._id);
+      let unit_idx = this.units.findIndex((c) => c._id === material.unit.id);
+      let { content } = this.units[unit_idx];
+      let material_idx = content.findIndex((m) => m.id === material.id);
 
-      if (materials.length > material_idx + 1) {
-        this.selectMaterial(materials[material_idx + 1]);
+      if (content.length > material_idx + 1) {
+        this.selectMaterial(content[material_idx + 1]);
       } else if (this.units.length > unit_idx + 1) {
-        materials = this.units[unit_idx + 1].materials;
-        this.selectMaterial(materials[0]);
-      } else if (this.units[0]) this.selectMaterial(this.units[0].materials[0]);
+        content = this.units[unit_idx + 1].content;
+        this.selectMaterial(content[0]);
+      } else if (this.units[0]) this.selectMaterial(this.units[0].content[0]);
     },
-    selectMaterial(material) {
+    async selectMaterial( { material, unit } ) {
       this.setMaterial(null);
-      // this.material = null;
       this.show = false;
-      setTimeout(() => {
-        material.default = null;
-        this.setMaterial(material);
-        // this.material = material;
-      }, 100);
+      const materialTemp = await this.$api.material.show(material.id)
+      this.setMaterial({ ...materialTemp, unit });
+
     },
     selectMaterialByID(material_id, category) {
       // if (this.material && this.material._id === material_id) return;
@@ -444,11 +338,12 @@ export default {
   components: {
     FS,
     CourseMaterial,
+    MaterialReference
   },
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .layout {
   height: 100%;
 }
@@ -514,34 +409,6 @@ export default {
   width: 100%;
 }
 
-.link {
-  margin: 6px;
-  padding: 10px 12px;
-  color: #414141;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  transition: 0.2s;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-
-  &:hover {
-    background: var(--background-hover);
-  }
-
-  &--active {
-    color: var(--color-active);
-    background: var(--background-active);
-    // font-weight: bold;
-    &:hover {
-      background: var(--background-active);
-    }
-
-    & * {
-      color: var(--color-active);
-    }
-  }
-}
 
 .m-progress {
   margin-top: 6px;

@@ -1,6 +1,6 @@
 <template>
   <div class="m-container">
-    <div v-show="!show_material_editor" class="materials">
+    <div class="materials">
       <div class="materials__menu">
         <v-select
           v-model="subject_id"
@@ -42,7 +42,7 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <v-btn
-                  @click="showEditor(material.id)"
+                  @click="showEditor(material)"
                   v-on="on"
                   icon
                   small
@@ -73,18 +73,6 @@
           No hay materiales
         </p>
       </div>
-    </div>
-
-    <!-- MATERIAL FILE EDITOR -->
-    <div v-if="show_material_editor && material_selected">
-      <material-file-editor
-        v-if="material_selected.type === 'file'"
-        :material="material_selected"
-        @exit="
-          show_material_editor = false;
-          getMaterials(subject_id);
-        "
-      />
     </div>
 
     <!-- DIALOG NEW MATERIAL -->
@@ -125,16 +113,12 @@
 </template>
 
 <script>
-import MaterialFileEditor from "@/components/Material/MaterialFileEditor";
-
 export default {
   data: () => ({
     subjects: [],
     subject_id: null,
     materials: [],
-    material_selected: null,
     //
-    show_material_editor: false,
     dlg_new_material: false,
   }),
   watch: {
@@ -163,97 +147,78 @@ export default {
       }
       this.hideLoading();
     },
-    async showEditor(material_id) {
-      this.showLoading("Cargando");
-      try {
-        let material_selected = await this.$api.material.show(material_id);
-
-        if (material_selected.type === "adaptative")
-          this.$router.push({
-            name: "material-adaptative-editor",
-            params: { material_id: material_selected.id },
-          });
-        else if (material_selected.type === "file") {
-          this.show_material_editor = true;
-          this.material_selected = material_selected;
-        }
-      } catch (error) {
-        this.showMessage("", "Ha ocurrido un error");
+    showEditor(material) {
+      if (material.type === "adaptative")
+        this.$router.push({
+          name: "material-adaptative-editor",
+          params: { material_id: material.id },
+        });
+      else if (material.type === "file") {
+        this.$router.push({
+          name: "material-file-editor",
+          params: { material_id: material.id },
+        });
       }
-      this.hideLoading();
     },
     async showCreator(type) {
       this.dlg_new_material = false;
-      if (type === "file") {
-        this.show_material_editor = true;
-        this.material_selected = {
-          type,
-          subject_id: this.subject_id,
-          files: [],
-          is_private: true,
-        };
-      } else if (type === "adaptative") {
-        let new_material = {
-          type,
-          subject_id: this.subject_id,
-          title: "Nuevo Material",
-          data_fs: {
-            overview: JSON.stringify({
-              blocks: [{ type: "header", data: { text: "Resumen", level: 2 } }],
-            }),
-            explanation: JSON.stringify({
-              blocks: [{ type: "header", data: { text: "Título", level: 2 } }],
-            }),
-            movies: JSON.stringify({
-              blocks: [{ type: "header", data: { text: "Videos", level: 2 } }],
-            }),
-            images: JSON.stringify({
-              blocks: [
-                { type: "header", data: { text: "Imágenes", level: 2 } },
-              ],
-            }),
-            hyperlinks: JSON.stringify({
-              blocks: [{ type: "header", data: { text: "Enlaces", level: 2 } }],
-            }),
-            examples: JSON.stringify({
-              blocks: [
-                { type: "header", data: { text: "Ejemplos", level: 2 } },
-                {
-                  type: "list",
-                  data: {
-                    style: "unordered",
-                    items: ["Ejemplo 1", "Ejemplo 2"],
-                  },
-                },
-              ],
-            }),
-            exercises: [
+      let new_material = {
+        type,
+        subject_id: this.subject_id,
+        title: "Nuevo Material",
+        description: "",
+        is_private: true,
+      };
+
+      if (type === "file") new_material["files"] = [];
+      else if (type === "adaptative")
+        new_material["data_fs"] = {
+          overview: JSON.stringify({
+            blocks: [{ type: "header", data: { text: "Resumen", level: 2 } }],
+          }),
+          explanation: JSON.stringify({
+            blocks: [{ type: "header", data: { text: "Título", level: 2 } }],
+          }),
+          movies: JSON.stringify({
+            blocks: [{ type: "header", data: { text: "Videos", level: 2 } }],
+          }),
+          images: JSON.stringify({
+            blocks: [{ type: "header", data: { text: "Imágenes", level: 2 } }],
+          }),
+          hyperlinks: JSON.stringify({
+            blocks: [{ type: "header", data: { text: "Enlaces", level: 2 } }],
+          }),
+          examples: JSON.stringify({
+            blocks: [
+              { type: "header", data: { text: "Ejemplos", level: 2 } },
               {
-                question: "Pregunta",
-                alternatives: ["Alternativa", "Alternativa"],
-                correct: 0,
+                type: "list",
+                data: {
+                  style: "unordered",
+                  items: ["Ejemplo 1", "Ejemplo 2"],
+                },
               },
             ],
-            faq: [{ question: "Pregunta", answer: "Respuesta" }],
-          },
-          is_private: true,
+          }),
+          exercises: [
+            {
+              question: "Pregunta",
+              alternatives: ["Alternativa", "Alternativa"],
+              correct: 0,
+            },
+          ],
+          faq: [{ question: "Pregunta", answer: "Respuesta" }],
         };
 
-        this.showLoading("Cargando");
-        try {
-          let { $oid } = await this.$api.material.create(new_material);
-          this.$router.push({
-            name: "material-adaptative-editor",
-            params: { material_id: $oid },
-          });
-        } catch (error) {
-          this.showMessage("", "Ha ocurrido un error");
-        }
+      this.showLoading("Cargando");
+      try {
+        let { $oid } = await this.$api.material.create(new_material);
+        new_material["id"] = $oid;
+        this.showEditor(new_material);
+      } catch (error) {
+        this.showMessage("", "Ha ocurrido un error");
       }
     },
-  },
-  components: {
-    MaterialFileEditor,
   },
 };
 </script>

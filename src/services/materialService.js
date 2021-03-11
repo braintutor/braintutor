@@ -8,33 +8,11 @@ function updateMaterialCategory(material_id, category, data) {
   });
 }
 
-function updateMaterialUnit(id, unit_id) {
-  return fetch_post("updateMaterialUnit", {
-    id,
-    unit_id,
-  });
-}
-
-function updateMaterialDocuments(material_id, documents) {
-  return fetch_post("updateMaterialDocuments", {
-    material_id,
-    documents,
-  });
-}
-
 function updateMaterial(id, title, isPrivate) {
   return fetch_post("updateMaterial", {
     id,
     title,
     is_private: isPrivate,
-  });
-}
-
-function updateMaterialQuiz(id, quiz, quiz_type) {
-  return fetch_post("updateMaterialQuiz", {
-    id,
-    quiz,
-    quiz_type,
   });
 }
 
@@ -53,10 +31,7 @@ function removeMaterial(material_id) {
 
 export {
   updateMaterialCategory,
-  updateMaterialUnit,
-  updateMaterialDocuments,
   updateMaterial,
   updateMaterialImage,
-  updateMaterialQuiz,
   removeMaterial,
 };
