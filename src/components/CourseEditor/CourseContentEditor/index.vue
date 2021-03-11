@@ -109,15 +109,7 @@
                   <v-list-item @click="moveItemDown(unit, idx)">
                     <v-list-item-title>Mover Abajo</v-list-item-title>
                   </v-list-item>
-                  <v-list-item
-                    @click="
-                      unit_selected = unit;
-                      item_selected = Object.assign({}, item);
-                      dlg_edit_item = true;
-                    "
-                  >
-                    <v-list-item-title>Cambiar Tema</v-list-item-title>
-                  </v-list-item>
+                 
                   <v-list-item
                     @click="
                       unit_selected = unit;
@@ -228,39 +220,7 @@
     <v-dialog v-model="dlg_new_item" width="400" persistent>
       <AssignMaterialSyllabus :unit="unit_selected" :course="$route.params['course_id']" @close="dlg_new_item=null"></AssignMaterialSyllabus>
     </v-dialog>
-    <!-- DIALOG EDIT ITEM -->
-    <v-dialog v-model="dlg_edit_item" width="400" persistent>
-      <form @submit.prevent="updateItemUnit()" class="m-card">
-        <div class="m-card__body">
-          <div class="close-modal">
-            <h3>Cambiar Tema</h3>
-            <v-btn class="mx-2" icon small @click="dlg_edit_item = false">
-              <v-icon> mdi-close-thick </v-icon>
-            </v-btn>
-          </div>
-          <v-select
-            v-model="item_selected.unit_id"
-            :items="units"
-            item-text="name"
-            item-value="_id"
-            label="Tema"
-            class="mt-4"
-          ></v-select>
-        </div>
-        <div class="m-card__actions">
-          <m-btn
-            @click="dlg_edit_item = false"
-            type="button"
-            text
-            small
-            class="cancel-button"
-            >Cancelar</m-btn
-          >
-          <m-btn type="submit" color="primary" small>Guardar</m-btn>
-        </div>
-      </form>
-    </v-dialog>
-    <!-- DIALOG EDIT ITEM NAME -->
+
     <v-dialog v-model="dlg_edit_item_name" width="400" persistent>
       <form @submit.prevent="updateItemName()" class="m-card">
         <div class="m-card__body">
@@ -340,8 +300,7 @@ import {
   removeUnit,
 } from "@/services/unitService.js";
 import {
-  updateMaterial,
-  updateMaterialUnit,
+  updateMaterial
 } from "@/services/materialService.js";
 import { scrollDown } from "@/services/scroll";
 
@@ -464,31 +423,7 @@ export default {
         params: { material_id: item.material.id }
       });
     },
-    async updateItemUnit() {
-      this.dlg_edit_item = false;
-      if (this.unit_selected._id === this.item_selected.unit_id) return;
-
-      this.showLoading("Guardando");
-      try {
-        await updateMaterialUnit(
-          this.item_selected.id,
-          this.item_selected.unit_id
-        );
-      
-        this.unit_selected.content = this.unit_selected.content.filter(
-          (item) => item.id !== this.item_selected.id
-        );
-        let to_unit = this.units.find(
-          (unit) => unit._id === this.item_selected.unit_id
-        );
-        to_unit.content = to_unit.content || [];
-        to_unit.content.push(this.item_selected);
-      
-      } catch (error) {
-        this.showMessage("", error.msg || error);
-      }
-      this.hideLoading();
-    },
+  
     async updateItemName() {
       this.dlg_edit_item_name = false;
 
