@@ -15,9 +15,9 @@
       >
         <span class="evaluation__name">{{ item.name }}</span>
         <span class="evaluation__date">{{
-          toDateString(item.time_start)
+          toDate(item.time_start) | datetime
         }}</span>
-        <span class="evaluation__date">{{ toDateString(item.time_end) }}</span>
+        <span class="evaluation__date">{{ toDate(item.time_end) | datetime}}</span>
         <span v-if="item.result" class="evaluation__score">{{
           item.result.score || "-"
         }}</span>
@@ -84,7 +84,7 @@
                 <v-icon dark> mdi-close-thick </v-icon>
               </v-btn>
             </div>
-            
+
             <EvaluationResult
               v-if="evaluation_selected && result_selected"
               :evaluation="evaluation_selected"
@@ -99,7 +99,7 @@
         </div>
       </v-dialog>
     </div>
-  
+
     <Evaluation
       v-if="evaluation_to_start"
       :evaluation="evaluation_to_start"
@@ -116,11 +116,11 @@ import Evaluation from "./Detail";
 import EvaluationResult from "./EvaluationResult";
 
 export default {
-  props: { 
-    type: { type: String }, 
+  props: {
+    type: { type: String },
     childId: { type: String, default: () => null },
     permissions : { type: Array, default: () =>  [ "see", "take"]  }
-  }, 
+  },
   data: () => ({
     evaluations: [],
     evaluation_selected: null,
@@ -207,16 +207,9 @@ export default {
       return true;
     },
     //
-    toDateString(date) {
+    toDate(date) {
       date = new Date(date + "Z");
-      let date_format = date.toLocaleDateString("es-ES", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-      return date_format;
+      return date;
     },
   },
   components: {
