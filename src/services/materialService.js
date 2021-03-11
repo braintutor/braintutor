@@ -8,14 +8,6 @@ function updateMaterialCategory(material_id, category, data) {
   });
 }
 
-function updateMaterialUnit(id, unit_id) {
-  return fetch_post("updateMaterialUnit", {
-    id,
-    unit_id,
-  });
-}
-
-
 function updateMaterial(id, title, isPrivate) {
   return fetch_post("updateMaterial", {
     id,
@@ -39,7 +31,6 @@ function removeMaterial(material_id) {
 
 export {
   updateMaterialCategory,
-  updateMaterialUnit,
   updateMaterial,
   updateMaterialImage,
   removeMaterial,
