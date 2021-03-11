@@ -1,15 +1,14 @@
 <template>
   <Layout :links="links">
     <FSEditor :slot="0" :material="material" />
-    <ReportEditor :slot="1" :material_id="material.id" />
-    <MaterialSettings :slot="2" :material="material" />
+    <!-- <ReportEditor :slot="1" :material_id="material.id" /> -->
+    <MaterialSettings :slot="1" :material="material" />
   </Layout>
 </template>
 
 <script>
 import Layout from "@/components/Layout";
 import FSEditor from "@/components/Material/MaterialAdaptativeEditor/FSEditor";
-import ReportEditor from "@/components/Material/ReportEditor";
 import MaterialSettings from "@/components/Material/MaterialAdaptativeEditor/MaterialSettings";
 
 export default {
@@ -19,10 +18,10 @@ export default {
         image: require("@/assets/braintutor/icon-material.png"),
         name: "Material",
       },
-      {
-        image: require("@/assets/braintutor/icon-quiz.png"),
-        name: "Reporte",
-      },
+      // {
+      //   image: require("@/assets/braintutor/icon-quiz.png"),
+      //   name: "Reporte",
+      // },
       {
         image: require("@/assets/braintutor/icon-settings.png"),
         name: "Configuración",
@@ -43,7 +42,6 @@ export default {
   components: {
     Layout,
     FSEditor,
-    ReportEditor,
     MaterialSettings,
   },
 };
