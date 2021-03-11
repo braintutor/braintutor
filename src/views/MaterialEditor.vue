@@ -14,16 +14,13 @@
     <ContentEditor :slot="0" v-if="material._id" :material="material" />
     <!-- <QuizzesEditor :slot="1" :material="material" /> -->
     <Report :slot="1" />
-    <MaterialSettings :slot="2" :material="material" :course="course" />
   </Layout>
 </template>
 
 <script>
 import Layout from "@/components/Layout";
 import ContentEditor from "@/components/MaterialEditor/ContentEditor";
-// import QuizzesEditor from "@/components/MaterialEditor/QuizzesEditor";
 import Report from "@/components/MaterialEditor/Report";
-import MaterialSettings from "@/components/MaterialEditor/MaterialSettings";
 import { getParam, redirect } from "@/services/router.js";
 import { getCourseByTeacher } from "@/services/courseService";
 
@@ -73,9 +70,7 @@ export default {
   components: {
     Layout,
     ContentEditor,
-    Report,
-    // QuizzesEditor,
-    MaterialSettings,
+    Report
   },
 };
 </script>
