@@ -35,7 +35,7 @@ export default {
       material: Material(_fetch, Fetch),
       syllabus: Syllabus(_fetch),
       unit: Unit(_fetch),
-      file: File(_fetch),
+      file: File(_fetch, Fetch),
       report: Report(_fetch),
       course: Course(_fetch),
       courseMaterial: CourseMaterial(_fetch),

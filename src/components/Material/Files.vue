@@ -133,18 +133,10 @@
 </template>
 
 <script>
-import { max_session_size, current_size } from "@/models/variables";
+import { current_size } from "@/models/variables";
 
 export default {
   props: {
-    document_type: {
-      type: String,
-      required: true,
-    },
-    document_id: {
-      type: String,
-      required: true,
-    },
     filters: {
       type: Array,
       default: () => [],
@@ -159,9 +151,7 @@ export default {
   }),
   computed: {
     size() {
-      return `Espacio utilizado: ${current_size(
-        this.files
-      )} / ${max_session_size}`;
+      return `Espacio utilizado: ${current_size(this.files)}`;
     },
     files_f() {
       return this.files
@@ -183,10 +173,7 @@ export default {
     async init() {
       this.loading = true;
       try {
-        let { files } = await this.$api.file.getFiles(
-          this.document_type,
-          this.document_id
-        );
+        let { files } = await this.$api.file.index();
         this.files = files;
       } catch (error) {
         this.showMessage("", error.msg || error);
@@ -198,11 +185,7 @@ export default {
       let file_name = this.file_selected.name;
       let file_name_f = file_name.replaceAll("/", "&&");
       try {
-        await this.$api.file.removeFile(
-          this.document_type,
-          this.document_id,
-          file_name_f
-        );
+        await this.$api.file.destroy(file_name_f);
         this.files = this.files.filter((f) => f.name !== file_name);
       } catch (error) {
         this.showMessage("", error.msg || error);
@@ -226,11 +209,7 @@ export default {
       formData.append("file", file);
 
       try {
-        let file = await this.$api.file.addFile(
-          this.document_type,
-          this.document_id,
-          formData
-        );
+        let file = await this.$api.file.create(formData);
         this.files.push(file);
         this.show = "LIST";
       } catch (error) {
@@ -338,15 +317,15 @@ $background-file: rgba(0, 0, 255, 0.05);
 }
 
 .lab-file {
- cursor:pointer;
- background: #DADADA;
- padding: 10px;
- border-radius: 10px;
- color: #000;
+  cursor: pointer;
+  background: #dadada;
+  padding: 10px;
+  border-radius: 10px;
+  color: #000;
 }
 
 #ip-file {
-  opacity:0;
+  opacity: 0;
   position: absolute;
   z-index: -1;
 }

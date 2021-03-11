@@ -53,7 +53,7 @@
 // import TextEditor from "./TextEditor";
 import QuizEditor from "@/components/globals/QuizEditor";
 import FAQEditor from "./FAQEditor";
-import DocumentEditor from "@/components/globals/DocumentEditor/index";
+import DocumentEditor from "@/components/Material/DocumentEditor/index";
 import { updateMaterialCategory } from "@/services/materialService";
 
 export default {
@@ -103,7 +103,7 @@ export default {
     },
     async save(data) {
       this.showLoading("Guardando");
-      
+
       let category = this.category;
       try {
         await updateMaterialCategory(this.material.id, category, data);
