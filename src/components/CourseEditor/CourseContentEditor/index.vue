@@ -125,7 +125,7 @@
                       dlg_remove_item = true;
                     "
                   >
-                    <v-list-item-title>Eliminar Material</v-list-item-title>
+                    <v-list-item-title>Quitar material</v-list-item-title>
                   </v-list-item>
                 </v-list>
               </v-menu>
@@ -342,7 +342,6 @@ import {
 import {
   updateMaterial,
   updateMaterialUnit,
-  removeMaterial,
 } from "@/services/materialService.js";
 import { scrollDown } from "@/services/scroll";
 
@@ -521,10 +520,7 @@ export default {
 
       this.showLoading("Guardando");
       try {
-        if (this.item_selected.type === "adaptative")
-          await removeMaterial(this.item_selected.id);
-        else if (this.item_selected.type === "file")
-          await this.$api.courseMaterial.remove(this.item_selected.id);
+        this.$api.syllabus.removeMaterialItem(this.item_selected.id);
 
         this.unit_selected.content = this.unit_selected.content.filter(
           (item) => item.id !== this.item_selected.id
