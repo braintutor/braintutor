@@ -14,9 +14,8 @@
         >
       </div>
       <!-- Unit -->
-      <div v-for="(unit, idx) in units" :key="idx" class="unit">
-        <div class="unit__menu">
-          <p class="unit__name">{{ unit.name }}</p>
+      <MaterialReference :units="units">
+        <template v-slot:unitMenu="{ unit }">
           <v-menu offset-y>
             <template v-slot:activator="{ on }">
               <v-btn class="ml-2" icon small v-on="on">
@@ -50,83 +49,52 @@
               </v-list-item>
             </v-list>
           </v-menu>
-        </div>
-        <div class="unit__content">
-          <!-- Item -->
-          <div
-            v-for="(item, idx) in unit.content"
-            :key="idx"
-            class="item"
-            :class="{ 'item--disabled': item.material.is_private }"
-          >
-            <p class="item__name">
-              <v-icon style="font-size: 1.2rem" class="mb-1 mr-2">{{
-                item.material.type === "adaptative"
-                  ? "mdi-robot"
-                  : "mdi-paperclip"
-              }}</v-icon>
-              {{ item.material.title }}
-            </p>
-            <div class="item__actions">
-              <v-tooltip bottom v-if="item.material.is_private">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-icon
-                    v-bind="attrs"
-                    v-on="on"
-                    icon
-                    small
-                    class="mr-4"
-                    style="font-size: 1.3rem"
-                  >
-                    mdi-eye-off-outline
-                  </v-icon>
-                </template>
-                <span>Privado</span>
-              </v-tooltip>
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    @click="showItemEdit(item)"
-                    v-bind="attrs"
-                    v-on="on"
-                    icon
-                    small
-                    class="mr-2"
-                  >
-                    <v-icon style="font-size: 1.3rem">mdi-pencil</v-icon>
-                  </v-btn>
-                </template>
-                <span>Editar</span>
-              </v-tooltip>
-              <v-menu offset-y>
-                <template v-slot:activator="{ on }">
-                  <v-btn icon small v-on="on">
-                    <v-icon>mdi-dots-vertical</v-icon>
-                  </v-btn>
-                </template>
-                <v-list class="pa-0" dense>
-                  <v-list-item @click="moveItemUp(unit, idx)">
-                    <v-list-item-title>Mover Arriba</v-list-item-title>
-                  </v-list-item>
-                  <v-list-item @click="moveItemDown(unit, idx)">
-                    <v-list-item-title>Mover Abajo</v-list-item-title>
-                  </v-list-item>
+        </template>
+        <template v-slot:materialMenu="{ unit, idx, unit_idx, material }">
+          <div>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  @click="showItemEdit(material)"
+                  v-bind="attrs"
+                  v-on="on"
+                  icon
+                  small
+                  class="mr-2"
+                >
+                  <v-icon style="font-size: 1.3rem">mdi-pencil</v-icon>
+                </v-btn>
+              </template>
+              <span>Editar</span>
+            </v-tooltip>
+            <v-menu offset-y>
+              <template v-slot:activator="{ on }">
+                <v-btn icon small v-on="on">
+                  <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
+              </template>
+              <v-list class="pa-0" dense>
+                <v-list-item @click="moveItemUp(unit, idx, unit_idx)">
+                  <v-list-item-title>Mover Arriba</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="moveItemDown(unit, idx, unit_idx)">
+                  <v-list-item-title>Mover Abajo</v-list-item-title>
+                </v-list-item>
 
-                  <v-list-item
-                    @click="
-                      unit_selected = unit;
-                      item_selected = Object.assign({}, item);
-                      dlg_remove_item = true;
-                    "
-                  >
-                    <v-list-item-title>Quitar material</v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
-            </div>
+                <v-list-item
+                  @click="
+                    unit_selected = unit;
+                    item_selected = Object.assign({}, material);
+                    dlg_remove_item = true;
+                  "
+                >
+                  <v-list-item-title>Quitar material</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </div>
-        </div>
-      </div>
+        </template>
+      </MaterialReference>
     </div>
     <!-- DIALOG NEW UNIT -->
     <v-dialog v-model="dlg_new_unit" width="400" persistent>
@@ -307,6 +275,8 @@ import {
 } from "@/services/unitService.js";
 import { updateMaterial } from "@/services/materialService.js";
 import { scrollDown } from "@/services/scroll";
+import { processUnits } from "@/components/MaterialReference/util.js";
+import MaterialReference from "@/components/MaterialReference/List";
 
 export default {
   data: () => ({
@@ -328,37 +298,15 @@ export default {
   },
   methods: {
     async init() {
-      this.units = [];
       let course_id = this.$route.params["course_id"];
 
       this.showLoading("Cargando contenido");
       try {
-        // Get Course Content
         let [units, materials] = await Promise.all([
           this.$api.unit.getAll(course_id),
           this.$api.syllabus.byCourse(course_id),
         ]);
-
-        // Set Item Type
-        units = this.mongoArr(units);
-        materials = materials.map((i) => ({
-          ...i,
-          type: i.material.type,
-        }));
-
-        // Set Unit Items
-        for (let unit of units) {
-          unit.content = materials.filter((i) => i.unit.id === unit._id);
-
-          let order = (unit.order || []).reverse();
-          unit.content.sort((a, b) => {
-            let a_order = order.indexOf(a.id);
-            let b_order = order.indexOf(b.id);
-            return b_order - a_order;
-          });
-        }
-
-        this.units = units;
+        this.units = processUnits(this.mongoArr(units), materials);
       } catch (error) {
         this.showMessage("", "Ha ocurrido un error");
       }
@@ -478,30 +426,34 @@ export default {
         this.showMessage("", "Ha ocurrido un error");
       }
     },
-    async moveItemUp(unit, idx) {
+    async moveItemUp(unit, idx, unit_idx) {
       let arr = unit.content;
       if (idx > 0) {
         let aux = arr[idx];
         arr[idx] = arr[idx - 1];
         arr[idx - 1] = aux;
+        unit = { ...unit, content: arr };
+        this.units[unit_idx] = unit;
+        this.units = [...this.units];
 
-        this.$forceUpdate();
         await this.updateUnitOrder(unit);
       }
     },
-    async moveItemDown(unit, idx) {
+    async moveItemDown(unit, idx, unit_idx) {
       let arr = unit.content;
       if (idx < arr.length - 1) {
         let aux = arr[idx];
         arr[idx] = arr[idx + 1];
         arr[idx + 1] = aux;
 
-        this.$forceUpdate();
+        unit = { ...unit, content: arr };
+        this.units[unit_idx] = unit;
+        this.units = [...this.units];
         await this.updateUnitOrder(unit);
       }
     },
   },
-  components: { AssignMaterialSyllabus },
+  components: { AssignMaterialSyllabus, MaterialReference },
 };
 </script>
 
@@ -510,42 +462,6 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-.unit {
-  margin-bottom: 24px;
-  &__menu {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  &__name {
-    padding: 6px 4px;
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-}
-
-.item {
-  padding: 12px 20px;
-  margin-top: 8px;
-  background: #dfdfdf;
-  border-radius: 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  &__name {
-    margin: 0;
-    font-weight: bold;
-  }
-
-  &--disabled {
-    background: #f0f0f0e7;
-    .item__name {
-      opacity: 0.5;
-    }
-  }
 }
 
 // New Item
