@@ -12,4 +12,7 @@ export default (_fetch) => ({
   update(user_id, data) {
     return _fetch('PATCH', `student/${user_id}`, data);
   },
+  createMassive(data) {
+    return _fetch('POST', `student/load`, data);
+  },
 });
