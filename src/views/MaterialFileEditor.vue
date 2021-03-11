@@ -74,16 +74,6 @@
       </div>
       <div class="m-card__actions">
         <m-btn
-          @click="show_remove = true"
-          type="button"
-          color="error"
-          :loading="loading"
-          small
-          :rounded="false"
-          class="mr-2"
-          >Eliminar</m-btn
-        >
-        <m-btn
           type="submit"
           color="primary"
           :loading="loading"
@@ -100,35 +90,6 @@
           class="m-card"
           style="height: 75vh"
         />
-      </v-dialog>
-      <v-dialog v-model="show_remove" max-width="400">
-        <div class="m-card">
-          <div class="m-card__body">
-            <div class="close-modal">
-              <h3>Confirmar eliminación</h3>
-              <v-btn class="mx-2" icon small @click="show_remove = false">
-                <v-icon> mdi-close-thick </v-icon>
-              </v-btn>
-            </div>
-            <p class="mt-4">
-              Si elimina este contenido, no podrá revertir los cambios.
-            </p>
-          </div>
-          <div class="m-card__actions">
-            <m-btn @click="show_remove = false" small class="cancel-button"
-              >Cancelar</m-btn
-            >
-            <m-btn
-              @click="
-                show_remove = false;
-                remove();
-              "
-              color="error"
-              small
-              >Eliminar</m-btn
-            >
-          </div>
-        </div>
       </v-dialog>
       <v-dialog v-model="show_date" width="320">
         <form @submit.prevent="show_date = false" class="m-card">
@@ -165,7 +126,6 @@ export default {
     date: null,
     // File
     show_date: false,
-    show_remove: false,
     show_files: false,
   }),
   async created() {
@@ -182,21 +142,21 @@ export default {
     async save() {
       this.loading = true;
       try {
-        // await this.$api.courseMaterial.update(this.material._id, new_material);
+
+        const payload = {
+          description: this.material.description,
+          files: this.material.files,
+          is_private: this.material.is_private,
+          title: this.material.title
+        }
+
+        await this.$api.courseMaterial.update(this.material.id, payload);
+        
+        this.showMessage("", "Guardado correctamente");
       } catch (error) {
         this.showMessage("", "Ha ocurrido un error");
       }
       this.loading = false;
-    },
-    async remove() {
-      this.loading = true;
-      try {
-        // await this.$api.material.remove(this.material._id);
-      } catch (error) {
-        this.showMessage("", "Ha ocurrido un error");
-      }
-      this.loading = false;
-      this.$router.push({ name: "teacher-materials" });
     },
     onFileSelected({ name, url, content_type }) {
       this.show_files = false;
