@@ -25,12 +25,6 @@ const routes = [
             component: () => import("../components/CourseEditor/Files"),
           },
         ],
-      },
-      {
-        path: "/material-editor/:material_id",
-        name: "material-editor",
-        meta: { roles: ["TEA"] },
-        component: () => import("../views/MaterialEditor.vue"),
-      },
+      }
 ]
 export default routes
