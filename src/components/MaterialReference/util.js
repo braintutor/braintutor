@@ -5,6 +5,7 @@ const processUnits = (units, materials) => {
       type: i.material.type,
     }));
     for (let unit of units) {
+      unit.show = true
       unit.content = materials.filter((i) => i.unit.id === unit._id);
 
       let order = (unit.order || []).reverse();
