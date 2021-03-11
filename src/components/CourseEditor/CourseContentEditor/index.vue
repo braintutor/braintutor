@@ -60,10 +60,12 @@
             :class="{ 'item--disabled': item.material.is_private }"
           >
             <p class="item__name">
-                <v-icon style="font-size: 1.2rem" class="mb-1 mr-2"
-                  >{{item.material.type === 'adaptative'? 'mdi-robot': 'mdi-paperclip'}}</v-icon
-                >
-                {{ item.material.title }}
+              <v-icon style="font-size: 1.2rem" class="mb-1 mr-2">{{
+                item.material.type === "adaptative"
+                  ? "mdi-robot"
+                  : "mdi-paperclip"
+              }}</v-icon>
+              {{ item.material.title }}
             </p>
             <div class="item__actions">
               <v-tooltip bottom v-if="item.material.is_private">
@@ -109,7 +111,7 @@
                   <v-list-item @click="moveItemDown(unit, idx)">
                     <v-list-item-title>Mover Abajo</v-list-item-title>
                   </v-list-item>
-                 
+
                   <v-list-item
                     @click="
                       unit_selected = unit;
@@ -218,7 +220,11 @@
     </v-dialog>
     <!-- DIALOG NEW ITEM -->
     <v-dialog v-model="dlg_new_item" width="400" persistent>
-      <AssignMaterialSyllabus :unit="unit_selected" :course="$route.params['course_id']" @close="dlg_new_item=null"></AssignMaterialSyllabus>
+      <AssignMaterialSyllabus
+        :unit="unit_selected"
+        :course="$route.params['course_id']"
+        @close="dlg_new_item = null"
+      ></AssignMaterialSyllabus>
     </v-dialog>
 
     <v-dialog v-model="dlg_edit_item_name" width="400" persistent>
@@ -292,16 +298,14 @@
 </template>
 
 <script>
-import AssignMaterialSyllabus from "./AsignMaterialSyllabus"
+import AssignMaterialSyllabus from "./AsignMaterialSyllabus";
 import {
   addUnit,
   updateUnitOrder,
   updateUnit,
   removeUnit,
 } from "@/services/unitService.js";
-import {
-  updateMaterial
-} from "@/services/materialService.js";
+import { updateMaterial } from "@/services/materialService.js";
 import { scrollDown } from "@/services/scroll";
 
 export default {
@@ -330,10 +334,7 @@ export default {
       this.showLoading("Cargando contenido");
       try {
         // Get Course Content
-        let [
-          units,
-          materials
-        ] = await Promise.all([
+        let [units, materials] = await Promise.all([
           this.$api.unit.getAll(course_id),
           this.$api.syllabus.byCourse(course_id),
         ]);
@@ -419,11 +420,14 @@ export default {
     // Item
     showItemEdit(item) {
       this.$router.push({
-        name: item.material.type === "adaptative"? "material-adaptative-editor": "material-file-editor",
-        params: { material_id: item.material.id }
+        name:
+          item.material.type === "adaptative"
+            ? "material-adaptative-editor"
+            : "material-file-editor",
+        params: { material_id: item.material.id },
       });
     },
-  
+
     async updateItemName() {
       this.dlg_edit_item_name = false;
 
@@ -443,7 +447,7 @@ export default {
         let item = this.unit_selected.content.find(
           (item) => item.id === this.item_selected.id
         );
-       
+
         item.title = this.item_selected.title;
       } catch (error) {
         this.showMessage("", error.msg || error);
@@ -501,7 +505,12 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
+.close-modal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .unit {
   margin-bottom: 24px;
   &__menu {
