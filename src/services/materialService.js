@@ -15,12 +15,6 @@ function updateMaterialUnit(id, unit_id) {
   });
 }
 
-function updateMaterialDocuments(material_id, documents) {
-  return fetch_post("updateMaterialDocuments", {
-    material_id,
-    documents,
-  });
-}
 
 function updateMaterial(id, title, isPrivate) {
   return fetch_post("updateMaterial", {
@@ -46,7 +40,6 @@ function removeMaterial(material_id) {
 export {
   updateMaterialCategory,
   updateMaterialUnit,
-  updateMaterialDocuments,
   updateMaterial,
   updateMaterialImage,
   removeMaterial,
