@@ -30,14 +30,6 @@ function updateMaterial(id, title, isPrivate) {
   });
 }
 
-function updateMaterialQuiz(id, quiz, quiz_type) {
-  return fetch_post("updateMaterialQuiz", {
-    id,
-    quiz,
-    quiz_type,
-  });
-}
-
 function updateMaterialImage(id, image) {
   return fetch_post("updateMaterialImage", {
     id,
@@ -57,6 +49,5 @@ export {
   updateMaterialDocuments,
   updateMaterial,
   updateMaterialImage,
-  updateMaterialQuiz,
   removeMaterial,
 };
