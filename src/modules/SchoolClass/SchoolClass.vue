@@ -1,22 +1,23 @@
 <template>
-  <div class="m-container">
+  <div class="m-container" id="clases_lista" @wheel="moverse">
     <!-- <v-card v-for="(item, idx) in classes" :key="idx" class="mx-auto my-12"> -->
     <v-card
-      v-for="(item, idx) in classes"
+      v-for="(item, idx) in classesShow"
       :key="idx"
       class="mx-auto my-4 card-class"
       flat
       rounded="sm"
     >
       <v-card-title>
-        <p> {{ item.start | dayMonth }} | {{ item.start | dayWeek }} </p>
-
+        <p>{{ item.start | dayMonth }} | {{ item.start | dayWeek }}</p>
       </v-card-title>
       <v-card-text>
         <div class="d-flex">
           <canvas></canvas>
           <div style="width: 100%">
-            <p class="p-canvas"> {{ item.start | time }} - {{ item.end | time }}</p>
+            <p class="p-canvas">
+              {{ item.start | time }} - {{ item.end | time }}
+            </p>
             <h3 class="p-canvas">Clase</h3>
             <div class="d-flex justify-end align-center">
               <v-tooltip bottom>
@@ -31,9 +32,7 @@
                     color="teal"
                     v-on="on"
                   >
-                    <v-icon dark>
-                      mdi-notebook-edit-outline
-                    </v-icon>
+                    <v-icon dark> mdi-notebook-edit-outline </v-icon>
                   </v-btn>
                 </template>
                 <span>tareas</span>
@@ -67,7 +66,7 @@
         >Clase del dia {{ item.start | date }}
       </v-card-title>
       <v-card-text v-if="item.recording">
-        Inicio: {{ item.recording.startTime | parseDate | time }} 
+        Inicio: {{ item.recording.startTime | parseDate | time }}
         <p> </p>
         Fin: {{ item.recording.endTime | parseDate | time }}
       </v-card-text>
@@ -99,7 +98,10 @@ export default {
     session_id: "",
     page: 1,
     classes: [],
+    classesShow: [],
+    cantidad: 0,
     loading: true,
+    bloquear_traer_mas: false,
   }),
   mounted() {
     this.showLoading("Cargando Clases");
@@ -108,15 +110,36 @@ export default {
   },
   async created() {
     this.session_id = getParam("session_id");
+    window.addEventListener("scroll", this.moverse);
+  },
+  destroyed() {
+    window.removeEventListener("scroll", this.moverse);
   },
   computed: {},
   methods: {
+    mostrarMasSchools(cantidadAagregar) {
+      console.log(this.cantidad);
+      for (
+        let index = this.cantidad;
+        this.cantidad < this.classes.length &&
+        this.cantidad < index + cantidadAagregar;
+        this.cantidad++
+      ) {
+        const clase = this.classes[this.cantidad];
+        console.log(clase);
+        this.classesShow.push(clase);
+      }
+      console.log(this.classesShow);
+    },
     getData() {
       getAll({ session: this.session_id, page: this.page })
         .then(({ items, page }) => {
           this.classes = items;
+          console.log(this.classes);
+          this.mostrarMasSchools(3);
           this.page = page;
           this.loading = false;
+          this.posicionarse_abajo();
           this.hideLoading();
         })
         .catch((error) => {
@@ -131,6 +154,45 @@ export default {
     },
     seeRecord({ url }) {
       redirect(url);
+    },
+    moverse(event) {
+      console.log(event);
+      if (
+        !this.bloquear_traer_mas &&
+        this.classes &&
+        this.classes.length > 5 &&
+        this.classes.length > this.classesShow.length
+      ) {
+        const clases = document.getElementById("clases_lista");
+        if (clases && clases !== null) {
+          console.log(clases.offsetHeight);
+          console.log(clases.clientHeight);
+          console.log(clases.scrollHeight);
+          console.log(clases.scrollTop);
+          if (clases.scrollTop < 65) {
+            this.bloquear_traer_mas = true;
+            this.traer_mas();
+          }
+        }
+      }
+    },
+    posicionarse_abajo() {
+      const clases = document.getElementById("clases_lista");
+      if (clases && clases !== null) {
+        console.log(clases.offsetHeight);
+        console.log(clases.clientHeight);
+        console.log(clases.scrollHeight);
+        console.log(clases.scrollTop);
+        clases.scrollTop = clases.scrollHeight - 20;
+        sessionStorage.setItem("anchoInicial", window.innerWidth + "");
+        sessionStorage.setItem("altoInicial", window.innerHeight + "");
+        this.bloquear_traer_mas = false;
+      }
+    },
+    traer_mas() {
+      console.log("Click en traer mas");
+      this.mostrarMasSchools(5);
+      // this.store.dispatch(new MostrarMasComentariosAction(this.elementos.length))
     },
   },
   filters: {
