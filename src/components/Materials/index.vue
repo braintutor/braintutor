@@ -177,6 +177,8 @@ export default {
           this.$api.unit.getAll(course_id),
           this.$api.syllabus.byCourse(course_id)
         ]);
+
+        
         this.units = processUnits(this.mongoArr(units), materials);
          // Validate Materials
           let progress_materials = (
@@ -215,14 +217,10 @@ export default {
           this.showLoading("Cargando Conocimiento");
           // knowledge base
           let knowledge = this.course.knowledge || [];
-
-          // Knowledge Material
-          
+          const materialsKnowledge = await this.$api.course.getKnowledge(course_id)
           if (this.course.adaptive) {
-            // let question_template = await getQuestionTemplate();
-            this.materials.forEach(( { id, material }) => {
-              if (material.type === "adaptative")
-                (material.data_fs || { faq: []}).faq.forEach(({ question, answer }) => {
+            materialsKnowledge.forEach(( { id, data_fs }) => {
+                data_fs.faq.forEach(({ question, answer }) => {
                   knowledge.push({
                     questions: [question],
                     answers: [answer],
@@ -242,11 +240,10 @@ export default {
               "Háblame sobre @.",
               "Explícame sobre @.",
             ];
-            this.materials.forEach(( { id, material }) => {
-              if (material.type === "adaptative")
+            materialsKnowledge.forEach(( { id, title }) => {
                 knowledge.push({
                   questions: questions.map((question) =>
-                    question.replace(/@/, material.name)
+                    question.replace(/@/, title)
                   ),
                   answers: [
                     "Esto te puede servir.",
