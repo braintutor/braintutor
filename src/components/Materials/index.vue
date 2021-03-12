@@ -48,7 +48,7 @@
       <div v-if="material" @click="show = !show" class="list2__menu">
         <template v-if="material.type === 'adaptative'">
           <v-icon style="font-size: 1.2rem" class="mb-1 mr-2">mdi-robot</v-icon>
-          {{ material.name }}
+          {{ material.title }}
         </template>
         <template v-else-if="material.type === 'file'">
           <v-icon style="font-size: 1.2rem" class="mb-1 mr-2"
@@ -66,7 +66,7 @@
             <span>{{ u.name }}</span>
           </div>
           <section
-            v-for="(m, m_idx) in u.materials"
+            v-for="(m, m_idx) in u.content"
             :key="m_idx"
             @click="selectMaterial(m)"
             class="link"
@@ -76,13 +76,13 @@
               <v-icon style="font-size: 1.2rem" class="mb-1 mr-2"
                 >mdi-robot</v-icon
               >
-              {{ m.title }}
+              {{ m.material.title }}
             </template>
             <template v-else-if="m.type === 'type'">
               <v-icon style="font-size: 1.2rem" class="mb-1 mr-2"
                 >mdi-paperclip</v-icon
               >
-              {{ m.title }}
+              {{ m.material.title }}
             </template>
           </section>
         </section>
@@ -345,6 +345,34 @@ export default {
   height: 100%;
 }
 
+.link {
+  margin: 6px;
+  padding: 10px 12px;
+  color: #414141;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  transition: 0.2s;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    background: var(--background-hover);
+  }
+
+  &--active {
+    color: var(--color-active);
+    background: var(--background-active);
+    // font-weight: bold;
+    &:hover {
+      background: var(--background-active);
+    }
+
+    & * {
+      color: var(--color-active);
+    }
+  }
+}
 .list {
   overflow-y: auto;
   flex-shrink: 0;
