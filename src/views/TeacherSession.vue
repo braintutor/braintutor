@@ -22,13 +22,13 @@ export default {
     links: [
       {
         image: require(`@/assets/icons/icon-course.svg`),
-        text: "Material",
-        name: "teacher-session-material",
+        text: "Vista Previa",
+        name: "teacher-session-learn",
       },
       {
         image: require(`@/assets/icons/icon-course.svg`),
-        text: "Vista Previa",
-        name: "teacher-session-learn",
+        text: "Material",
+        name: "teacher-session-material",
       },
       {
         image: require("@/assets/icons/icon-calendar.svg"),
@@ -91,5 +91,4 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped>
-</style>
+<style lang="scss" scoped></style>
