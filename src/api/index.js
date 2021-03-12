@@ -19,6 +19,8 @@ import Report from "./report";
 import Grade from "./grade";
 import Section from "./section";
 import Subject from "./subject";
+import Marketplace from "./marketplace";
+
 
 export default {
   install(Vue) {
@@ -42,6 +44,7 @@ export default {
       grade: Grade(_fetch),
       section: Section(_fetch),
       subject: Subject(_fetch),
+      marketplace: Marketplace(_fetch)
     };
     Vue.prototype.$api = repositories;
   },
