@@ -5,6 +5,11 @@ const routes = {
   children: [
     {
       path: "",
+      name: "teacher-session-material", 
+      component: () => import("../components/CourseEditor/CourseContentEditor/AsTeacher"),
+    },
+    {
+      path: "",
       name: "teacher-session-learn",
       component: () => import("../components/Materials/index"),
     },

@@ -12,10 +12,16 @@
       :session="session"
       :buttons="[
         {
-          text: 'Material',
+          text: 'Ver material',
           icon: 'mdi-book',
           color: 'primary',
           action: () => selectSession(session, 'learn'),
+        },
+         {
+          text: 'Material',
+          icon: 'mdi-book',
+          color: 'primary',
+          action: () => selectSession(session, 'material'),
         },
         {
           text: 'Eventos',
