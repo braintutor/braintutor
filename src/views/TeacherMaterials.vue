@@ -55,6 +55,18 @@
               </template>
               <span style="font-size: 0.75rem">Ver</span>
             </v-tooltip>
+            <v-menu offset-y>
+              <template v-slot:activator="{ on }">
+                <v-btn v-on="on" icon small class="ml-2">
+                  <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
+              </template>
+              <v-list class="pa-0" dense>
+                <v-list-item @click="material_to_delete = material">
+                  <v-list-item-title>Eliminar Material</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </div>
         </div>
         <p v-if="materials.length === 0" class="text-center">
@@ -97,6 +109,30 @@
         </div>
       </div>
     </v-dialog>
+
+    <!-- dlg remove -->
+    <v-dialog v-model="dlg_remove_material" max-width="400">
+      <div class="m-card">
+        <div class="m-card__body">
+          <div class="close-modal">
+            <h3>Confirmar eliminación</h3>
+          </div>
+          <p class="mt-4">
+            Si elimina este contenido, no podrá revertir los cambios.
+          </p>
+        </div>
+        <div class="m-card__actions">
+          <m-btn @click="material_to_delete = null" small class="cancel-button"
+            >Cancelar</m-btn>
+          <m-btn
+            @click="removeMaterial"
+            color="error"
+            small
+            >Eliminar</m-btn
+          >
+        </div>
+      </div>
+    </v-dialog>
   </div>
 </template>
 
@@ -108,6 +144,7 @@ export default {
     materials: [],
     //
     dlg_new_material: false,
+    material_to_delete: null
   }),
   watch: {
     async subject_id() {
@@ -207,7 +244,25 @@ export default {
         this.showMessage("", "Ha ocurrido un error");
       }
     },
+    async removeMaterial() {
+      this.showLoading("Eliminando");
+      try {
+        await this.$api.material.remove(this.material_to_delete.id);
+        this.material_to_delete = null
+
+        // reload
+        await this.getMaterials(this.subject_id);
+      } catch (error) {
+        this.showMessage("", error.msg || error);
+      }
+      this.hideLoading();
+    },
   },
+  computed: {
+    dlg_remove_material() {
+      return !!this.material_to_delete
+    }
+  }
 };
 </script>
 

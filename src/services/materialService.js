@@ -23,15 +23,8 @@ function updateMaterialImage(id, image) {
   });
 }
 
-function removeMaterial(material_id) {
-  return fetch_post("removeMaterial", {
-    material_id,
-  });
-}
-
 export {
   updateMaterialCategory,
   updateMaterial,
-  updateMaterialImage,
-  removeMaterial,
+  updateMaterialImage
 };

@@ -17,5 +17,8 @@ export default (_fetch, Fetch) => ({
     },
     create(data) {
         return Fetch('v2', 'POST', `material`, data);
-    }
+    },    
+    remove(id) {
+        return _fetch('DELETE', `material/${id}`);
+    },
 });
