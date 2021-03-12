@@ -174,7 +174,8 @@ export default {
     },
 
     canEdit({ material }){
-      return this.user._id == material.created_by.id
+
+      return this.user._id.$oid == material.created_by.id
 
     }
   },
