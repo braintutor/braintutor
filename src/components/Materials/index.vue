@@ -50,7 +50,7 @@
           <v-icon style="font-size: 1.2rem" class="mb-1 mr-2">mdi-robot</v-icon>
           {{ material.name }}
         </template>
-        <template v-else-if="material.type === 'material'">
+        <template v-else-if="material.type === 'file'">
           <v-icon style="font-size: 1.2rem" class="mb-1 mr-2"
             >mdi-paperclip</v-icon
           >
@@ -76,9 +76,9 @@
               <v-icon style="font-size: 1.2rem" class="mb-1 mr-2"
                 >mdi-robot</v-icon
               >
-              {{ m.name }}
+              {{ m.title }}
             </template>
-            <template v-else-if="m.type === 'material'">
+            <template v-else-if="m.type === 'type'">
               <v-icon style="font-size: 1.2rem" class="mb-1 mr-2"
                 >mdi-paperclip</v-icon
               >
@@ -217,12 +217,12 @@ export default {
           let knowledge = this.course.knowledge || [];
 
           // Knowledge Material
+          
           if (this.course.adaptive) {
             // let question_template = await getQuestionTemplate();
-            this.materials.forEach(( { id, type, material }) => {
- 
-              if (type === "adaptative")
-                material.data_fs.faq.forEach(({ question, answer }) => {
+            this.materials.forEach(( { id, material }) => {
+              if (material.type === "adaptative")
+                (material.data_fs || { faq: []}).faq.forEach(({ question, answer }) => {
                   knowledge.push({
                     questions: [question],
                     answers: [answer],
@@ -242,8 +242,8 @@ export default {
               "Háblame sobre @.",
               "Explícame sobre @.",
             ];
-            this.materials.forEach(( { id, type, material }) => {
-              if (type === "adaptative")
+            this.materials.forEach(( { id, material }) => {
+              if (material.type === "adaptative")
                 knowledge.push({
                   questions: questions.map((question) =>
                     question.replace(/@/, material.name)
@@ -271,7 +271,7 @@ export default {
     async saveProgress(material) {
       if (this.user.role === "STU") {
         let course_id = this.course._id.$oid;
-        let new_material_id = material._id;
+        let new_material_id = material.id;
         let materials = this.progress_materials;
 
         if (!materials.includes(new_material_id))
