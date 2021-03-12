@@ -18,14 +18,12 @@
               >
                 <v-list-item-title>Asignar Material</v-list-item-title>
               </v-list-item>
-             
-            
             </v-list>
           </v-menu>
         </template>
         <template v-slot:materialMenu="{ unit, idx, unit_idx, material }">
           <div>
-            <v-tooltip bottom>
+            <v-tooltip bottom v-if="canEdit(material)">
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                   @click="showItemEdit(material)"
@@ -47,9 +45,8 @@
                 </v-btn>
               </template>
               <v-list class="pa-0" dense>
-               
-
                 <v-list-item
+                  v-if="canEdit(material)"
                   @click="
                     unit_selected = unit;
                     item_selected = Object.assign({}, material);
@@ -64,7 +61,7 @@
         </template>
       </MaterialReference>
     </div>
- 
+
     <!-- DIALOG NEW ITEM -->
     <v-dialog v-model="dlg_new_item" width="400" persistent>
       <AssignMaterialSyllabus
@@ -111,9 +108,10 @@
 import AssignMaterialSyllabus from "./AsignMaterialSyllabus";
 import { processUnits } from "@/components/MaterialReference/util.js";
 import MaterialReference from "@/components/MaterialReference/List";
+import { mapState } from "vuex";
 
 export default {
-  props: [ "course"],
+  props: ["course"],
   data: () => ({
     units: [],
     unit_selected: {},
@@ -127,12 +125,14 @@ export default {
     dlg_new_item: false,
     dlg_remove_item: false,
   }),
+   computed: {
+    ...mapState(["user"]),
+  },
   async mounted() {
     await this.init();
   },
   methods: {
     async init() {
-      console.log(this.course["_id"]["$oid"])
       let course_id = this.course["_id"]["$oid"];
       this.showLoading("Cargando contenido");
       try {
@@ -146,8 +146,7 @@ export default {
       }
       this.hideLoading("");
     },
-    
-   
+
     showItemEdit(item) {
       this.$router.push({
         name:
@@ -173,7 +172,11 @@ export default {
       }
       this.hideLoading();
     },
-  
+
+    canEdit({ material }){
+      return this.user._id == material.created_by.id
+
+    }
   },
   components: { AssignMaterialSyllabus, MaterialReference },
 };
