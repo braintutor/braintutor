@@ -22,7 +22,12 @@ export default {
     links: [
       {
         image: require(`@/assets/icons/icon-course.svg`),
-        text: "Aprender",
+        text: "Material",
+        name: "teacher-session-material",
+      },
+      {
+        image: require(`@/assets/icons/icon-course.svg`),
+        text: "Vista Previa",
         name: "teacher-session-learn",
       },
       {
