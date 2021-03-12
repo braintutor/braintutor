@@ -49,24 +49,12 @@
                   class="ml-2"
                 >
                   <v-icon v-on="on" style="font-size: 1.3rem"
-                    >mdi-pencil</v-icon
+                    >mdi-arrow-right</v-icon
                   >
                 </v-btn>
               </template>
-              <span style="font-size: 0.75rem">Editar</span>
+              <span style="font-size: 0.75rem">Ver</span>
             </v-tooltip>
-            <v-menu offset-y>
-              <template v-slot:activator="{ on }">
-                <v-btn v-on="on" icon small class="ml-2">
-                  <v-icon>mdi-dots-vertical</v-icon>
-                </v-btn>
-              </template>
-              <v-list class="pa-0" dense>
-                <v-list-item @click="dlg_remove_item = true">
-                  <v-list-item-title>Eliminar Material</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
           </div>
         </div>
         <p v-if="materials.length === 0" class="text-center">

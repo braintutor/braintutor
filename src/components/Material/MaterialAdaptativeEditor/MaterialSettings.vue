@@ -20,41 +20,6 @@
         <m-btn type="submit" color="primary" small>Guardar</m-btn>
       </div>
     </form>
-    <div class="text-center mt-4">
-      <m-btn @click="dlg_remove = true" color="error" small
-        >Eliminar Material</m-btn
-      >
-    </div>
-    <!-- dlg remove -->
-    <v-dialog v-model="dlg_remove" max-width="400">
-      <div class="m-card">
-        <div class="m-card__body">
-          <div class="close-modal">
-            <h3>Confirmar eliminación</h3>
-            <v-btn class="mx-2" icon small @click="dlg_remove = false">
-              <v-icon dark> mdi-close-thick </v-icon>
-            </v-btn>
-          </div>
-          <p class="mt-4">
-            Si elimina este contenido, no podrá revertir los cambios.
-          </p>
-        </div>
-        <div class="m-card__actions">
-          <m-btn @click="dlg_remove = false" small class="cancel-button"
-            >Cancelar</m-btn
-          >
-          <m-btn
-            @click="
-              dlg_remove = false;
-              removeMaterial();
-            "
-            color="error"
-            small
-            >Eliminar</m-btn
-          >
-        </div>
-      </div>
-    </v-dialog>
   </div>
 </template>
 
@@ -91,18 +56,7 @@ export default {
         this.showMessage("", error.msg || error);
       }
       this.hideLoading();
-    },
-    async removeMaterial() {
-      this.showLoading("Eliminando");
-      let material_id = this.material.id;
-      try {
-        console.log(material_id);
-        this.$router.push({ name: "teacher-materials" });
-      } catch (error) {
-        this.showMessage("", error.msg || error);
-      }
-      this.hideLoading();
-    },
+    }
   },
 };
 </script>
