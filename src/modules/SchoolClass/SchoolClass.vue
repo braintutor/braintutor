@@ -1,5 +1,10 @@
 <template>
-  <div class="m-container" id="clases_lista" @wheel="moverse">
+  <div
+    class="m-container"
+    id="clases_lista"
+    @wheel="moverse"
+    v-on:scroll="moverse"
+  >
     <!-- <v-card v-for="(item, idx) in classes" :key="idx" class="mx-auto my-12"> -->
     <v-card
       v-for="(item, idx) in classesShow"
@@ -101,7 +106,6 @@ export default {
     classesShow: [],
     cantidad: 0,
     loading: true,
-    bloquear_traer_mas: false,
   }),
   mounted() {
     this.showLoading("Cargando Clases");
@@ -118,7 +122,6 @@ export default {
   computed: {},
   methods: {
     mostrarMasSchools(cantidadAagregar) {
-      console.log(this.cantidad);
       for (
         let index = this.cantidad;
         this.cantidad < this.classes.length &&
@@ -126,16 +129,13 @@ export default {
         this.cantidad++
       ) {
         const clase = this.classes[this.cantidad];
-        console.log(clase);
         this.classesShow.push(clase);
       }
-      console.log(this.classesShow);
     },
     getData() {
       getAll({ session: this.session_id, page: this.page })
         .then(({ items, page }) => {
           this.classes = items;
-          console.log(this.classes);
           this.mostrarMasSchools(3);
           this.page = page;
           this.loading = false;
@@ -155,22 +155,15 @@ export default {
     seeRecord({ url }) {
       redirect(url);
     },
-    moverse(event) {
-      console.log(event);
+    moverse() {
       if (
-        !this.bloquear_traer_mas &&
         this.classes &&
         this.classes.length > 5 &&
         this.classes.length > this.classesShow.length
       ) {
         const clases = document.getElementById("clases_lista");
         if (clases && clases !== null) {
-          console.log(clases.offsetHeight);
-          console.log(clases.clientHeight);
-          console.log(clases.scrollHeight);
-          console.log(clases.scrollTop);
           if (clases.scrollTop < 65) {
-            this.bloquear_traer_mas = true;
             this.traer_mas();
           }
         }
@@ -179,14 +172,9 @@ export default {
     posicionarse_abajo() {
       const clases = document.getElementById("clases_lista");
       if (clases && clases !== null) {
-        console.log(clases.offsetHeight);
-        console.log(clases.clientHeight);
-        console.log(clases.scrollHeight);
-        console.log(clases.scrollTop);
         clases.scrollTop = clases.scrollHeight - 20;
         sessionStorage.setItem("anchoInicial", window.innerWidth + "");
         sessionStorage.setItem("altoInicial", window.innerHeight + "");
-        this.bloquear_traer_mas = false;
       }
     },
     traer_mas() {
@@ -207,6 +195,11 @@ export default {
 <style lang="scss" scoped>
 .card-class {
   border-top: 1px solid gray;
+}
+
+#clases_lista {
+  height: 100%;
+  overflow: auto;
 }
 
 p {
